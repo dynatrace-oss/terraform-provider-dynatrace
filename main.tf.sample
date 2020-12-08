@@ -1,0 +1,22 @@
+terraform {
+  required_providers {
+    dynatrace = {
+      versions = ["0.1.0"]
+      source = "dynatrace.com/com/dynatrace"
+    }
+  }
+}
+
+provider "dynatrace" {
+    dt_env_url    = "https://########.live.dynatrace.com"
+    dt_api_token  = "################"
+}
+
+resource "dynatrace_sample" "sample-a" {
+    name = "somename"
+    legend_shown = true
+    children {
+      number = 3
+      right_axis_custom_unit = "asdf"
+    }
+}

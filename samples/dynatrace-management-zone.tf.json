@@ -1,0 +1,94 @@
+{
+	"resource": {
+		"dynatrace_management_zone": {
+			"Foo": {
+				"metadata": {
+					"cluster_version": "1.205.99.20201030-113829",
+					"configuration_versions": [
+						0
+					]
+				},
+				"name": "NewFoo",
+				"rules": [
+					{
+						"conditions": [
+							{
+								"service_type_comparison": {
+									"type": "SERVICE_TYPE",
+									"negate": false,
+									"operator": "EQUALS",
+									"value": "CUSTOM_SERVICE"
+								},
+								"base_condition_key": {
+									"attribute": "SERVICE_TYPE"
+								}
+							},
+							{
+								"simple_tech_comparison": {
+									"type": "SIMPLE_TECH",
+									"negate": false,
+									"operator": "EQUALS",
+									"value": {
+										"type": "ASP_DOTNET_CORE"
+									}
+								},
+								"base_condition_key": {
+									"attribute": "SERVICE_TECHNOLOGY"
+								}
+							},
+							{
+								"service_topology_comparison": {
+									"type": "SERVICE_TOPOLOGY",
+									"negate": false,
+									"value": "FULLY_MONITORED",
+									"operator": "EQUALS"
+								},
+								"base_condition_key": {
+									"attribute": "SERVICE_TOPOLOGY"
+								}
+							},
+							{
+								"entity_id_comparison": {
+									"type": "ENTITY_ID",
+									"negate": false,
+									"value": "PROCESS_GROUP-623A2BC5ADE555BD",
+									"operator": "EQUALS"
+								},
+								"base_condition_key": {
+									"attribute": "PROCESS_GROUP_ID"
+								}
+							},
+							{
+								"entity_id_comparison": {
+									"type": "ENTITY_ID",
+									"negate": false,
+									"value": "HOST_GROUP-A9129E5BE20E0F25",
+									"operator": "EQUALS"
+								},
+								"base_condition_key": {
+									"attribute": "HOST_GROUP_ID"
+								}
+							},
+							{
+								"string_comparison": {
+									"type": "STRING",
+									"negate": false,
+									"case_sensitive": true,
+									"operator": "BEGINS_WITH",
+									"value": "ss"
+								},
+								"process_metadata_condition_key": {
+									"attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+									"type": "PROCESS_PREDEFINED_METADATA_KEY",
+									"dynamic_key": "DOTNET_COMMAND"
+								}
+							}
+						],
+						"enabled": false,
+						"type": "SERVICE"
+					}
+				]
+			}
+		}
+	}
+}

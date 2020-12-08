@@ -1,0 +1,64 @@
+{
+    "metadata": {
+      "currentConfigurationVersions": [
+        "0"
+      ],
+      "configurationVersions": [],
+      "clusterVersion": "1.206.95.20201116-094826"
+    },
+    "id": "0afadfcb-1f89-4aac-aa48-4ed97c180aca",
+    "displayName": "Example A",
+    "rules": [
+      {
+        "severityLevel": "AVAILABILITY",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      },
+      {
+        "severityLevel": "ERROR",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      },
+      {
+        "severityLevel": "PERFORMANCE",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      },
+      {
+        "severityLevel": "RESOURCE_CONTENTION",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      },
+      {
+        "severityLevel": "CUSTOM_ALERT",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      },
+      {
+        "severityLevel": "MONITORING_UNAVAILABLE",
+        "tagFilter": {
+          "includeMode": "NONE",
+          "tagFilters": []
+        },
+        "delayInMinutes": 0
+      }
+    ],
+    "managementZoneId": null,
+    "mzId": null,
+    "eventTypeFilters": []
+  }

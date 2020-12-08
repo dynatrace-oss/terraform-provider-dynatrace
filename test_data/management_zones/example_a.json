@@ -1,0 +1,39 @@
+{
+	"metadata": {
+		"configurationVersions": [0],
+		"clusterVersion": "1.206.95.20201116-094826"
+	},
+	"id": "5573272509509554797",
+	"name": "xkvcfajfff",
+	"rules": [{
+		"type": "HOST",
+		"enabled": true,
+		"propagationTypes": [],
+		"conditions": [{
+			"key": {
+				"attribute": "HOST_TECHNOLOGY"
+			},
+			"comparisonInfo": {
+				"type": "SIMPLE_HOST_TECH",
+				"operator": "EQUALS",
+				"value": {
+					"type": "APPARMOR"
+				},
+				"negate": false
+			}
+		}, {
+			"key": {
+				"attribute": "HOST_TAGS"
+			},
+			"comparisonInfo": {
+				"type": "TAG",
+				"operator": "TAG_KEY_EQUALS",
+				"value": {
+					"context": "CONTEXTLESS",
+					"key": "Asddf"
+				},
+				"negate": false
+			}
+		}]
+	}]
+}

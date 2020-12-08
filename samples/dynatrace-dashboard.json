@@ -1,0 +1,754 @@
+{
+    "metadata": {
+        "configurationVersions": [3],
+        "clusterVersion": "1.204.79.20201013-115444"
+    },
+    "id": "bbbbbbbb-0001-0000-0000-000000000000",
+    "dashboardMetadata": {
+        "name": "\uD83D\uDD78 Kubernetes Overview",
+        "shared": true,
+        "owner": "asad-coe@ruxitlabs.com",
+        "sharingDetails": {
+            "linkShared": true,
+            "published": true
+        },
+        "dashboardFilter": {
+            "timeframe": ""
+        },
+        "tags": ["Configurator"]
+    },
+    "tiles": [{
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 0,
+            "width": 342,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###Cluster Overview   - [Cluster Insights](/ui/kubernetes/)"
+    }, {
+        "name": "",
+        "tileType": "HOSTS",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 152,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "HOST",
+            "customName": "Full-Stack Kubernetes nodes",
+            "defaultName": "Full-Stack Kubernetes nodes",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "TIMESERIES",
+                "series": [],
+                "resultMetadata": {}
+            },
+            "filtersPerEntityType": {
+                "HOST": {
+                    "HOST_SOFTWARE_TECH": ["KUBERNETES"]
+                }
+            }
+        },
+        "chartVisible": true
+    }, {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 456,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "CPU available [last 5 min]",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.cluster.cpuAvailable",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "KUBERNETES_CLUSTER",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {}
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 190,
+            "left": 456,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Memory available [last 5 min]",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.cluster.memoryAvailable",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "KUBERNETES_CLUSTER",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {}
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 304,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Cores",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.cluster.cores",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "KUBERNETES_CLUSTER",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {}
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 190,
+            "left": 304,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Memory total",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.cluster.memory",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "KUBERNETES_CLUSTER",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {}
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Smartscape",
+        "tileType": "PURE_MODEL",
+        "configured": true,
+        "bounds": {
+            "top": 190,
+            "left": 0,
+            "width": 304,
+            "height": 152
+        },
+        "tileFilter": {}
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 342,
+            "width": 266,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###Cluster Utilization"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 1064,
+            "width": 266,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###Pods phases "
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 1064,
+            "width": 266,
+            "height": 304
+        },
+        "tileFilter": {
+            "timeframe": "now-5m"
+        },
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "\uD83D\uDEA6Pods phases",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "PIE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.workload.pods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION",
+                    "dimensions": [{
+                        "id": "1",
+                        "name": "Pod phase",
+                        "values": [],
+                        "entityDimension": false
+                    }],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                }
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 0,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Nodes / Cluster",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "PIE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.cluster.nodes",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "KUBERNETES_CLUSTER",
+                    "dimensions": [{
+                        "id": "0",
+                        "name": "dt.entity.kubernetes_cluster",
+                        "values": [],
+                        "entityDimension": true
+                    }],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER": {
+                        "lastModified": 1594146638933,
+                        "customColor": "#b4e5f9"
+                    },
+                    "KUBERNETES_CLUSTER-5E463319734AB4DD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-5E463319734AB4DD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER": {
+                        "lastModified": 1594146636359,
+                        "customColor": "#008cdb"
+                    },
+                    "KUBERNETES_CLUSTER-FA15B65ACE980EAD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-FA15B65ACE980EAD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER": {
+                        "lastModified": 1594146627924,
+                        "customColor": "#2ab6f4"
+                    }
+                }
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 190,
+            "left": 1330,
+            "width": 304,
+            "height": 152
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Desired vs Running pods",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "TIMESERIES",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.namespace.desiredPods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": false,
+                    "aggregationRate": "TOTAL"
+                }, {
+                    "metric": "builtin:cloud.kubernetes.namespace.runningPods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "nullbuiltin:cloud.kubernetes.namespace.runningPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147621067,
+                        "customColor": "#64bd64"
+                    },
+                    "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147642285,
+                        "customColor": "#ff0000"
+                    },
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                },
+                "leftAxisCustomUnit": "Count"
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 608,
+            "width": 228,
+            "height": 304
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Workloads",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "TOP_LIST",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.namespace.workloads",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [{
+                        "id": "1",
+                        "name": "Deployment type",
+                        "values": [],
+                        "entityDimension": false
+                    }],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                }
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 836,
+            "width": 228,
+            "height": 304
+        },
+        "tileFilter": {},
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "Pods by namespace",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "TOP_LIST",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.namespace.workloads",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [{
+                        "id": "0",
+                        "name": "dt.entity.cloud_application_namespace",
+                        "values": [],
+                        "entityDimension": true
+                    }],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                }
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 1330,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {
+            "timeframe": "now-5m"
+        },
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "desired pods",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.namespace.desiredPods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": false,
+                    "aggregationRate": "TOTAL"
+                }, {
+                    "metric": "builtin:cloud.kubernetes.namespace.runningPods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "nullbuiltin:cloud.kubernetes.namespace.runningPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147621067,
+                        "customColor": "#64bd64"
+                    },
+                    "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147642285,
+                        "customColor": "#ff0000"
+                    },
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                },
+                "leftAxisCustomUnit": "Count"
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+            "top": 38,
+            "left": 1482,
+            "width": 152,
+            "height": 152
+        },
+        "tileFilter": {
+            "timeframe": "now-5m"
+        },
+        "filterConfig": {
+            "type": "MIXED",
+            "customName": "running pods",
+            "defaultName": "Custom chart",
+            "chartConfig": {
+                "legendShown": true,
+                "type": "SINGLE_VALUE",
+                "series": [{
+                    "metric": "builtin:cloud.kubernetes.namespace.runningPods",
+                    "aggregation": "SUM_DIMENSIONS",
+                    "type": "LINE",
+                    "entityType": "CLOUD_APPLICATION_NAMESPACE",
+                    "dimensions": [],
+                    "sortAscending": false,
+                    "sortColumn": true,
+                    "aggregationRate": "TOTAL"
+                }],
+                "resultMetadata": {
+                    "nullbuiltin:cloud.kubernetes.namespace.runningPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147621067,
+                        "customColor": "#64bd64"
+                    },
+                    "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE": {
+                        "lastModified": 1594147642285,
+                        "customColor": "#ff0000"
+                    },
+                    "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594115586538,
+                        "customColor": "#f5d30f"
+                    },
+                    "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594141365181,
+                        "customColor": "#64bd64"
+                    },
+                    "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION": {
+                        "lastModified": 1594025904142,
+                        "customColor": "#ff0000"
+                    }
+                },
+                "leftAxisCustomUnit": "Count"
+            },
+            "filtersPerEntityType": {}
+        }
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 608,
+            "width": 456,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###Cluster Workloads & Namespaces"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 0,
+            "left": 1330,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "Running vs. desired pods"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 342,
+            "left": 0,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###[Cluster utilization](#dashboard;id=bbbbbbbb-0001-0000-0000-000000000001;)"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 342,
+            "left": 304,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###[Resource Quotas](#dashboard;id=bbbbbbbb-0001-0000-0000-000000000003;)\n"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 342,
+            "left": 608,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###[Container usage & health](#dashboard;id=bbbbbbbb-0001-0000-0000-000000000002;)"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 342,
+            "left": 912,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###[Performance Engineering](#dashboard;id=bbbbbbbb-0001-0000-0000-000000000004;)\n"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 342,
+            "left": 1216,
+            "width": 304,
+            "height": 38
+        },
+        "tileFilter": {},
+        "markdown": "###[User Experience](#dashboard;id=bbbbbbbb-0001-0000-0000-000000000005;)\n"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 380,
+            "left": 0,
+            "width": 304,
+            "height": 228
+        },
+        "tileFilter": {},
+        "markdown": "_____________________\nSee the Kubernetes cluster utilization. CPU and Memory Request and limits over time for all nodes and splitted by namespaces.\n"
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 380,
+            "left": 304,
+            "width": 304,
+            "height": 228
+        },
+        "tileFilter": {},
+        "markdown": "_____________________\nGet an overview and understanding of the Kubernetes resource quotas (Memory and CPU) assigned to your namespaces and its usage. "
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 380,
+            "left": 608,
+            "width": 304,
+            "height": 228
+        },
+        "tileFilter": {},
+        "markdown": "_____________________\nUnderstand the health and phases of your Pods in your clusters. Their memory and cpu usage, which pods are throttled, have failed or are pending to be scheduled. Also check if you have Out-of-memory killed containers."
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 380,
+            "left": 912,
+            "width": 304,
+            "height": 228
+        },
+        "tileFilter": {},
+        "markdown": "_____________________\nGive your developers and SRE engineers all they need to understand and improve the performance of each app, pod and each transaction on your clusters. View the response time percentiles, slow transactions, database executions per microservice, its network usage and more. Filter the transactions by App label, namespace and much more."
+    }, {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+            "top": 380,
+            "left": 1216,
+            "width": 304,
+            "height": 228
+        },
+        "tileFilter": {},
+        "markdown": "_____________________\nAre your endusers satisfied? how is the engagement, experience and user behaviour of your applications? Get the insights of all your applications and users in an instance."
+    }]
+}
