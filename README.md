@@ -31,6 +31,7 @@ For Terraform version 0.12.x
         }
     }
     ```
+    
 
 For Terraform version 0.13.x
 
