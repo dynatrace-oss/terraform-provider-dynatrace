@@ -42,6 +42,7 @@ func NewAlertingProfileTest() ResourceTest {
 func (test *AlertingProfileTest) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "displayName")
+	delete(m, "metadata")
 }
 
 func (test *AlertingProfileTest) ResourceKey() string {
