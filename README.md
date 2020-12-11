@@ -1,5 +1,5 @@
 # Dynatrace Terraform Provider
-<a href="github.com/dynatrace-oss/terraform-provider-dynatrace/terraform-provider-dynatrace"><img alt="GitHub Actions status" src="github.com/dynatrace-oss/terraform-provider-dynatrace/workflows/Tests/badge.svg"></a> [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+<a href="https://github.com/dynatrace-oss/terraform-provider-dynatrace/terraform-provider-dynatrace"><img alt="GitHub Actions status" src="https://github.com/dynatrace-oss/terraform-provider-dynatrace/workflows/Tests/badge.svg"></a> [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Terraform Website: [https://www.terraform.io](https://www.terraform.io)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 ## Requirements
