@@ -1,5 +1,5 @@
 ---
-page_title: "dynatrace_custom_service Resource - terraform-provider-dynatrace-1"
+page_title: "dynatrace_custom_service Resource - terraform-provider-dynatrace"
 subcategory: ""
 description: |-
   

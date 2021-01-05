@@ -1,5 +1,5 @@
 ---
-page_title: "dynatrace_alerting_profile Resource - terraform-provider-dynatrace-1"
+page_title: "dynatrace_alerting_profile Resource - terraform-provider-dynatrace"
 subcategory: ""
 description: |-
   

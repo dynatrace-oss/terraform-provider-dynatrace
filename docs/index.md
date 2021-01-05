@@ -1,11 +1,11 @@
 ---
-page_title: "dynatrace-1 Provider"
+page_title: "dynatrace Provider"
 subcategory: ""
 description: |-
   
 ---
 
-# dynatrace-1 Provider
+# dynatrace Provider
 
 
 

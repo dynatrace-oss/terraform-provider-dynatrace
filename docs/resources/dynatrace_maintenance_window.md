@@ -1,5 +1,5 @@
 ---
-page_title: "dynatrace_maintenance_window Resource - terraform-provider-dynatrace-1"
+page_title: "dynatrace_maintenance_window Resource - terraform-provider-dynatrace"
 subcategory: ""
 description: |-
   
