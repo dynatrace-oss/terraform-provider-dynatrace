@@ -10,7 +10,7 @@
 
 If you want to run Terraform with the dynatrace provider plugin on your system, complete the following steps:
 
-1. [Download](https://github.com/dtcookie/terraform-provider-dynatrace/releases/latest) the dynatrace provider plugin for Terraform.
+1. [Download](https://github.com/dynatrace-oss/terraform-provider-dynatrace/releases/latest) the dynatrace provider plugin for Terraform.
 
 1. Unzip the release archive to extract the plugin binary (`terraform-provider-dynatrace_vX.Y.Z`).
 
