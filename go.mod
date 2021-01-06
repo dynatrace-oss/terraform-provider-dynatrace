@@ -14,5 +14,6 @@ require (
 	github.com/dtcookie/dynatrace/terraform v1.0.3
 	github.com/dtcookie/opt v1.0.0
 	github.com/google/uuid v1.1.2
+	github.com/hashicorp/terraform-plugin-docs v0.3.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.3.0
 )
