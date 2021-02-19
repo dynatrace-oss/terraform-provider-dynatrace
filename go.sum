@@ -77,6 +77,8 @@ github.com/dtcookie/dynatrace/api/config v1.0.0 h1:ehm8BeuEoGzwfOr0xrkaQPVrg0AYq
 github.com/dtcookie/dynatrace/api/config v1.0.0/go.mod h1:Xs0giyHjICPbjFEYJgNMU19xm7/+I6vXtDX5rKRvF30=
 github.com/dtcookie/dynatrace/api/config/alertingprofiles v1.0.0 h1:+1hMk/Od1dmXEZrt5Zvr+Sh9TRitgwLNW0OMIbJVH+w=
 github.com/dtcookie/dynatrace/api/config/alertingprofiles v1.0.0/go.mod h1:899rqi4A407xN40NL7c+tmThwVHJ94Kt9a2hymaQzqM=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.3 h1:7Ob3RV/WUdkJnkfZXJYmCswcmaEwzrYSSiZ4Onuwa8U=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.3/go.mod h1:K3LfHLAu/pc1Xbgdu/3h5LPHk5QmFO6OxwAZXHlY63I=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.6 h1:L+VXmmofEHuLYUdiSNpdM1KqVhq551d/FytTRndTmsI=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.6/go.mod h1:uTtP1YeYZHtZMtILQpTdmjW6Uq9t1ui3pk+ZBWWMIfI=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.1 h1:+WQpjQeThUh00jNy7n0Z3WSU7SMeNX3M6NxwIeoA9zc=
@@ -85,6 +87,8 @@ github.com/dtcookie/dynatrace/api/config/maintenancewindows v1.0.0 h1:FM0OosTtk/
 github.com/dtcookie/dynatrace/api/config/maintenancewindows v1.0.0/go.mod h1:BkXwNwdVlvdxGCqnfDZ9Uqt0xyB7PeaekkwA62cnQ2w=
 github.com/dtcookie/dynatrace/api/config/managementzones v1.0.1 h1:yMJTXVFe88TjabAMvu7UVyKupBfORGjysR3lfk83iaU=
 github.com/dtcookie/dynatrace/api/config/managementzones v1.0.1/go.mod h1:kOukzrzukBNGXQUAFPtyBlRLBh7mxsnfhJrnpL9/Zsw=
+github.com/dtcookie/dynatrace/api/config/notifications v1.0.3 h1:KdFVsNSxhP4oHpPCP4qBOULWGWMB1ciAXNuu8q+NcE4=
+github.com/dtcookie/dynatrace/api/config/notifications v1.0.3/go.mod h1:gPnccCr7FkzOfcR/pOKFNP1tqxe1TX/5FRIhEg7Drzw=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.1 h1:Do+OU5LqpUJVpbitR2KV9FE5Sn4kR08TGVvm8c5p52A=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.1/go.mod h1:DoN9+pUxR9KXdq6Bm/3y3TUPpLWKmhjsb5njQHehbVQ=
 github.com/dtcookie/dynatrace/rest v1.0.12/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
@@ -155,7 +159,6 @@ github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMyw
 github.com/google/go-cmp v0.3.1/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.4.1/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
-github.com/google/go-cmp v0.5.0 h1:/QaMHBdZ26BB3SSst0Iwl10Epc+xhTquomWX0oZEB6w=
 github.com/google/go-cmp v0.5.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
@@ -218,7 +221,6 @@ github.com/hashicorp/terraform-plugin-docs v0.3.0 h1:q9qVsL8LYLVDRhS5nqxubCzWtRZ
 github.com/hashicorp/terraform-plugin-docs v0.3.0/go.mod h1:4jopztPjeyZAr51wPzX4b8Ld8bFQKQ9dbF40JbCQIts=
 github.com/hashicorp/terraform-plugin-go v0.1.0 h1:kyXZ0nkHxiRev/q18N40IbRRk4AV0zE/MDJkDM3u8dY=
 github.com/hashicorp/terraform-plugin-go v0.1.0/go.mod h1:10V6F3taeDWVAoLlkmArKttR3IULlRWFAGtQIQTIDr4=
-github.com/hashicorp/terraform-plugin-sdk/v2 v2.2.0 h1:2m4uKA97R8ijHGLwhHdpSJyI8Op1FpS/ozpoF21jK7s=
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.2.0/go.mod h1:+12dJQebYjuU/yiq94iZUPuC66abfRBrXdpVJia3ojk=
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.3.0 h1:Egv+R1tOOjPNz643KBTx3tLT6RdFGGYJcZlyLvrPcEU=
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.3.0/go.mod h1:+12dJQebYjuU/yiq94iZUPuC66abfRBrXdpVJia3ojk=
@@ -317,7 +319,6 @@ github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/zclconf/go-cty v1.2.0/go.mod h1:hOPWgoHbaTUnI5k4D2ld+GRpFJSCe6bCM7m1q/N4PQ8=
-github.com/zclconf/go-cty v1.2.1 h1:vGMsygfmeCl4Xb6OA5U5XVAaQZ69FvoG7X2jUtQujb8=
 github.com/zclconf/go-cty v1.2.1/go.mod h1:hOPWgoHbaTUnI5k4D2ld+GRpFJSCe6bCM7m1q/N4PQ8=
 github.com/zclconf/go-cty v1.4.1 h1:Xzr4m4utRDhHDifag1onwwUSq32HLoLBsp+w6tD0880=
 github.com/zclconf/go-cty v1.4.1/go.mod h1:nHzOclRkoj++EU9ZjSrZvRG0BXIWt8c7loYc0qXAFGQ=
@@ -554,7 +555,6 @@ google.golang.org/grpc v1.27.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8
 google.golang.org/grpc v1.27.1/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 google.golang.org/grpc v1.28.0/go.mod h1:rpkK4SK4GF4Ach/+MFLZUBavHOvF2JJB5uozKKal+60=
 google.golang.org/grpc v1.29.1/go.mod h1:itym6AZVZYACWQqET3MqgPpjcuV5QH3BxFS3IjizoKk=
-google.golang.org/grpc v1.30.0 h1:M5a8xTlYTxwMn5ZFkwhRabsygDY5G8TYLyQDBxJNAxE=
 google.golang.org/grpc v1.30.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM8pak=
 google.golang.org/grpc v1.32.0 h1:zWTV+LMdc3kaiJMSTOFz2UgSBgx8RNQoTGiZu3fR9S0=
 google.golang.org/grpc v1.32.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM8pak=

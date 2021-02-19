@@ -22,24 +22,23 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
-
 	api "github.com/dtcookie/dynatrace/api/config"
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
+	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dtcookie/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type alertingProfiles struct {
+type autoTags struct {
 }
 
 // Resource produces terraform resource definition for Management Zones
-func (aps *alertingProfiles) Resource() *schema.Resource {
-	resource := terraform.ResourceFor(new(alertingprofiles.AlertingProfile))
+func (aps *autoTags) Resource() *schema.Resource {
+	resource := terraform.ResourceFor(new(autotags.AutoTag))
 	resource.CreateContext = logging.Enable(aps.Create)
 	resource.UpdateContext = logging.Enable(aps.Update)
 	resource.ReadContext = logging.Enable(aps.Read)
@@ -50,27 +49,27 @@ func (aps *alertingProfiles) Resource() *schema.Resource {
 
 // Create expects the configuration of a Management Zone within the given ResourceData
 // and send them to the Dynatrace Server in order to create that resource
-func (aps *alertingProfiles) Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *autoTags) Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AlertingProfiles.Create(..)")
+		log.Println("AutoTags.Create(..)")
 	}
 	var err error
 	var resolver terraform.Resolver
 	if resolver, err = terraform.NewResolver(d); err != nil {
 		return diag.FromErr(err)
 	}
-	var untypedProfile interface{}
-	if untypedProfile, err = resolver.Resolve(reflect.TypeOf(alertingprofiles.AlertingProfile{})); err != nil {
+	var untypedConfig interface{}
+	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(autotags.AutoTag{})); err != nil {
 		return diag.FromErr(err)
 	}
 
-	alertingprofile := untypedProfile.(alertingprofiles.AlertingProfile)
-	alertingprofile.ID = nil
+	typedConfig := untypedConfig.(autotags.AutoTag)
+	typedConfig.ID = nil
 	conf := m.(*config.ProviderConfiguration)
-	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	var objStub *api.EntityShortRepresentation
-	if objStub, err = apiService.Create(&alertingprofile); err != nil {
+	if objStub, err = apiService.Create(&typedConfig); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(objStub.ID)
@@ -80,26 +79,26 @@ func (aps *alertingProfiles) Create(ctx context.Context, d *schema.ResourceData,
 
 // Update expects the configuration of a Management Zone within the given ResourceData
 // and send them to the Dynatrace Server in order to update that resource
-func (aps *alertingProfiles) Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *autoTags) Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AlertingProfiles.Update(..)")
+		log.Println("AutoTags.Update(..)")
 	}
 	var err error
 	var resolver terraform.Resolver
 	if resolver, err = terraform.NewResolver(d); err != nil {
 		return diag.FromErr(err)
 	}
-	var untypedProfile interface{}
-	if untypedProfile, err = resolver.Resolve(reflect.TypeOf(alertingprofiles.AlertingProfile{})); err != nil {
+	var untypedConfig interface{}
+	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(autotags.AutoTag{})); err != nil {
 		return diag.FromErr(err)
 	}
 
-	alertingprofile := untypedProfile.(alertingprofiles.AlertingProfile)
-	alertingprofile.ID = opt.NewString(d.Id())
+	typedConfig := untypedConfig.(autotags.AutoTag)
+	typedConfig.ID = opt.NewString(d.Id())
 	conf := m.(*config.ProviderConfiguration)
-	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	if err = apiService.Update(&alertingprofile); err != nil {
+	if err = apiService.Update(&typedConfig); err != nil {
 		return diag.FromErr(err)
 	}
 	return aps.Read(ctx, d, m)
@@ -107,19 +106,19 @@ func (aps *alertingProfiles) Update(ctx context.Context, d *schema.ResourceData,
 
 // Read queries the Dynatrace Server for the configuration of a Management Zone
 // identified by the ID within the given ResourceData
-func (aps *alertingProfiles) Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *autoTags) Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AlertingProfiles.Read(..)")
+		log.Println("AutoTags.Read(..)")
 	}
 	var err error
 	conf := m.(*config.ProviderConfiguration)
-	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	alertingprofile := new(alertingprofiles.AlertingProfile)
-	if alertingprofile, err = apiService.Get(d.Id()); err != nil {
+	typedConfig := new(autotags.AutoTag)
+	if typedConfig, err = apiService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
-	if err = terraform.ToTerraform(alertingprofile, d); err != nil {
+	if err = terraform.ToTerraform(typedConfig, d); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -127,13 +126,13 @@ func (aps *alertingProfiles) Read(ctx context.Context, d *schema.ResourceData, m
 }
 
 // Delete a Management Zone on the Dynatrace Server
-func (aps *alertingProfiles) Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *autoTags) Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AlertingProfiles.Delete(..)")
+		log.Println("AutoTags.Delete(..)")
 	}
 	var err error
 	conf := m.(*config.ProviderConfiguration)
-	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	if err = apiService.Delete(d.Id()); err != nil {
 		return diag.FromErr(err)

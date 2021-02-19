@@ -28,8 +28,8 @@ import (
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dtcookie/opt"
-	"github.com/dtcookie/terraform-provider-dynatrace/config"
-	"github.com/dtcookie/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

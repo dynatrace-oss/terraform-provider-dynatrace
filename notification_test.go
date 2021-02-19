@@ -23,32 +23,34 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dtcookie/dynatrace/api/config/requestattributes"
+	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-type RequestAttributeTest struct {
+type NotificationTest struct {
 	resourceKey string
 }
 
-func NewRequestAttributeTest() ResourceTest {
-	return &RequestAttributeTest{resourceKey: "dynatrace_request_attribute"}
+func NewNotificationTest() ResourceTest {
+	return &NotificationTest{resourceKey: "dynatrace_notification"}
 }
 
-func (test *RequestAttributeTest) Anonymize(m map[string]interface{}) {
+func (test *NotificationTest) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "name")
+	delete(m, "instanceName")
+	delete(m, "displayName")
 	delete(m, "metadata")
 }
 
-func (test *RequestAttributeTest) ResourceKey() string {
+func (test *NotificationTest) ResourceKey() string {
 	return test.resourceKey
 }
 
-func (test *RequestAttributeTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
+func (test *NotificationTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
 	if content, err = ioutil.ReadFile(file); err != nil {
@@ -62,7 +64,7 @@ func (test *RequestAttributeTest) CreateTestCase(file string, localJSONFile stri
 		PreCheck:          func() { testAccPreCheck(t) },
 		IDRefreshName:     resourceName,
 		ProviderFactories: testAccProviderFactories,
-		CheckDestroy:      test.CheckDestroy(t),
+		// CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
@@ -75,13 +77,13 @@ func (test *RequestAttributeTest) CreateTestCase(file string, localJSONFile stri
 	}, nil
 }
 
-func TestAccRequestAttributeExampleA(t *testing.T) {
-	test := NewRequestAttributeTest()
+func TestAccNotificationExampleA(t *testing.T) {
+	test := NewNotificationTest()
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
-		"test_data/request_attributes/example_a.tf",
-		"test_data/request_attributes/example_a.json",
+		"test_data/notifications/example_a.tf",
+		"test_data/notifications/example_a.json",
 		t,
 	); err != nil {
 		t.Fatal(err)
@@ -90,43 +92,41 @@ func TestAccRequestAttributeExampleA(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
-func (test *RequestAttributeTest) URL(id string) string {
+func (test *NotificationTest) URL(id string) string {
 	envURL := testAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
-	reqPath := "%s/service/requestAttributes/%s?includeProcessGroupReferences=false"
+	reqPath := "%s/notifications/%s"
 	return fmt.Sprintf(reqPath, envURL, id)
 }
 
-func (test *RequestAttributeTest) CheckDestroy(t *testing.T) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := requestattributes.NewService(providerConf.DTenvURL, providerConf.APIToken)
+func (test *NotificationTest) CheckDestroy(s *terraform.State) error {
+	providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
+	restClient := notifications.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
-		for _, rs := range s.RootModule().Resources {
-			if rs.Type != "dynatrace_request_attribute" {
-				continue
-			}
-
-			id := rs.Primary.ID
-
-			if _, err := restClient.Get(id); err != nil {
-				// HTTP Response "404 Not Found" signals a success
-				if strings.Contains(err.Error(), `"code": 404`) {
-					return nil
-				}
-				// any other error should fail the test
-				return err
-			}
-			return fmt.Errorf("Custom Service still exists: %s", rs.Primary.ID)
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "dynatrace_notification" {
+			continue
 		}
 
-		return nil
+		id := rs.Primary.ID
+
+		if _, err := restClient.Get(id); err != nil {
+			// HTTP Response "404 Not Found" signals a success
+			if strings.Contains(err.Error(), `"code": 404`) {
+				return nil
+			}
+			// any other error should fail the test
+			return err
+		}
+		return fmt.Errorf("Custom Service still exists: %s", rs.Primary.ID)
 	}
+
+	return nil
 }
 
-func (test *RequestAttributeTest) CheckExists(n string, t *testing.T) resource.TestCheckFunc {
+func (test *NotificationTest) CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := requestattributes.NewService(providerConf.DTenvURL, providerConf.APIToken)
+		restClient := notifications.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {
 			if _, err := restClient.Get(rs.Primary.ID); err != nil {

@@ -1,20 +1,19 @@
 /**
 * @license
 * Copyright 2020 Dynatrace LLC
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*/
-
+ */
 
 package main
 
@@ -23,13 +22,40 @@ import (
 	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
+	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
+	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/rest"
 )
 
+func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := notifications.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		exporter := &NotificationExporter{NotificationConfig: config}
+		var file *os.File
+		fileName := targetFolder + "/" + strings.ReplaceAll(config.GetName(), ":", "_") + ".notification.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		exporter.ToHCL(file)
+	}
+	return nil
+}
 func importManagementZones(targetFolder string, environmentURL string, apiToken string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := managementzones.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -72,6 +98,32 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 		exporter := &AlertingProfileExporter{AlertingProfile: alertingProfile}
 		var file *os.File
 		fileName := targetFolder + "/" + strings.ReplaceAll(alertingProfile.DisplayName, ":", "_") + ".alerting_profile.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		exporter.ToHCL(file)
+	}
+	return nil
+}
+
+func importAutoTags(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := autotags.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		cfg, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		exporter := &AutoTagExporter{AutoTag: cfg}
+		var file *os.File
+		fileName := targetFolder + "/" + strings.ReplaceAll(cfg.Name, ":", "_") + ".autotag.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err

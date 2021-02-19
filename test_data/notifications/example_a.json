@@ -1,0 +1,14 @@
+{
+    "type": "SERVICE_NOW",
+    "id": "162b6e10-f6ba-4c79-bee0-f490a00f3de6",
+    "name": "dev87541",
+    "alertingProfile": "c21f969b-5f03-333d-83e0-4f8f136e7682",
+    "active": true,
+    "instanceName": "dev87541",
+    "url": null,
+    "username": "admin",
+    "password": null,
+    "message": "{State} {ProblemImpact} Problem {ProblemID}: {ProblemTitle}",
+    "sendIncidents": true,
+    "sendEvents": true
+  }
