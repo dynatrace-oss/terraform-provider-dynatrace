@@ -93,8 +93,8 @@ func (nc *notificationConfigs) Update(ctx context.Context, d *schema.ResourceDat
 		return diag.FromErr(err)
 	}
 	var untypedConfig interface{}
-	var ncfg notifications.NotificationConfig
-	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(ncfg)); err != nil {
+	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(NotificationCfg{})); err != nil {
+		panic(err)
 		return diag.FromErr(err)
 	}
 
