@@ -19,5 +19,3 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.3.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.3.0
 )
-
-replace github.com/dtcookie/dynatrace/api/config/managementzones => C:\Users\Reinhard.Pilz\go\src\github.com\dtcookie\dynatrace\api\config\managementzones
