@@ -60,6 +60,7 @@ For Terraform version 0.13.x
 * Custom Services
 * Request Attributes
 * Alerting Profiles
+* Problem Notifiations
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
