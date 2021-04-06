@@ -19,13 +19,14 @@ package config
 
 import (
 	"context"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
-const HTTPVerbose = false
+var HTTPVerbose = (os.Getenv("DYNATRACE_DEBUG") == "true")
 
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
