@@ -21,6 +21,7 @@ import (
 	"context"
 	"log"
 	"reflect"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
@@ -34,16 +35,73 @@ import (
 )
 
 type managementZones struct {
+	diffs map[string]diff
+}
+
+func (mzs *managementZones) AttachDiffSuppressFunc(sch *schema.Schema) {
+	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		if strings.HasPrefix(k, "metadata.") {
+			return true
+		}
+
+		if mzs.diffs == nil {
+			mzs.diffs = map[string]diff{}
+		}
+		if strings.HasSuffix(k, ".#") {
+			if old == "0" && new == "1" {
+				prefix := k[0 : len(k)-1]
+				found := false
+				for st := range mzs.diffs {
+					if strings.HasPrefix(st, prefix) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return true
+				}
+			}
+		}
+		mzs.diffs[k] = diff{old, new}
+		return false
+	})
+	if sch.Elem != nil {
+		switch typedSchema := sch.Elem.(type) {
+		case *schema.Schema:
+			mzs.AttachDiffSuppressFunc(typedSchema)
+		case *schema.Resource:
+			mzs.AttachDiffSuppressFuncs(typedSchema.Schema)
+		}
+	}
+}
+
+func (mzs *managementZones) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+	if schemas == nil {
+		return
+	}
+	for _, sch := range schemas {
+		mzs.AttachDiffSuppressFunc(sch)
+	}
+}
+
+func (mzs *managementZones) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+		mzs.diffs = map[string]diff{}
+		result := fn(ctx, d, m)
+		mzs.diffs = map[string]diff{}
+		return result
+	}
 }
 
 // Resource produces terraform resource definition for Management Zones
 func (mzs *managementZones) Resource() *schema.Resource {
 	resource := terraform.ResourceFor(new(managementzones.ManagementZone))
-	resource.CreateContext = logging.Enable(mzs.Create)
-	resource.UpdateContext = logging.Enable(mzs.Update)
-	resource.ReadContext = logging.Enable(mzs.Read)
-	resource.DeleteContext = logging.Enable(mzs.Delete)
-
+	resource.CreateContext = logging.Enable(mzs.wrap(mzs.Create))
+	resource.UpdateContext = logging.Enable(mzs.wrap(mzs.Update))
+	resource.ReadContext = logging.Enable(mzs.wrap(mzs.Read))
+	resource.DeleteContext = logging.Enable(mzs.wrap(mzs.Delete))
+	mzs.AttachDiffSuppressFuncs(resource.Schema)
+	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
 	return resource
 }
 

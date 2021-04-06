@@ -416,6 +416,11 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
+          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594025904142
+          custom_color  = "#ff0000"
+        }
+        result_metadata {
           key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594115586538
           custom_color  = "#f5d30f"
@@ -424,11 +429,6 @@ resource "dynatrace_dashboard" "#name#" {
           key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594141365181
           custom_color  = "#64bd64"
-        }
-        result_metadata {
-          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594025904142
-          custom_color  = "#ff0000"
         }
       }
     }
@@ -468,14 +468,14 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
-          key           = "KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER"
-          last_modified = 1594146638933
-          custom_color  = "#b4e5f9"
-        }
-        result_metadata {
           key           = "KUBERNETES_CLUSTER-5E463319734AB4DD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-5E463319734AB4DD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER"
           last_modified = 1594146636359
           custom_color  = "#008cdb"
+        }
+        result_metadata {
+          key           = "KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-EA9EB67E9CBAE0CD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER"
+          last_modified = 1594146638933
+          custom_color  = "#b4e5f9"
         }
         result_metadata {
           key           = "KUBERNETES_CLUSTER-FA15B65ACE980EAD¦KUBERNETES_CLUSTER»KUBERNETES_CLUSTER-FA15B65ACE980EAD»truebuiltin:cloud.kubernetes.cluster.nodes|SUM_DIMENSIONS|TOTAL|LINE|KUBERNETES_CLUSTER"
@@ -528,13 +528,8 @@ resource "dynatrace_dashboard" "#name#" {
           custom_color  = "#ff0000"
         }
         result_metadata {
-          key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594115586538
-          custom_color  = "#f5d30f"
-        }
-        result_metadata {
-          key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594141365181
+          key           = "nullbuiltin:cloud.kubernetes.namespace.runningPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
+          last_modified = 1594147621067
           custom_color  = "#64bd64"
         }
         result_metadata {
@@ -543,8 +538,13 @@ resource "dynatrace_dashboard" "#name#" {
           custom_color  = "#ff0000"
         }
         result_metadata {
-          key           = "nullbuiltin:cloud.kubernetes.namespace.runningPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
-          last_modified = 1594147621067
+          key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594115586538
+          custom_color  = "#f5d30f"
+        }
+        result_metadata {
+          key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594141365181
           custom_color  = "#64bd64"
         }
         left_axis_custom_unit = "Count"
@@ -586,6 +586,11 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
+          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594025904142
+          custom_color  = "#ff0000"
+        }
+        result_metadata {
           key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594115586538
           custom_color  = "#f5d30f"
@@ -594,11 +599,6 @@ resource "dynatrace_dashboard" "#name#" {
           key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594141365181
           custom_color  = "#64bd64"
-        }
-        result_metadata {
-          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594025904142
-          custom_color  = "#ff0000"
         }
       }
     }
@@ -638,6 +638,11 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
+          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594025904142
+          custom_color  = "#ff0000"
+        }
+        result_metadata {
           key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594115586538
           custom_color  = "#f5d30f"
@@ -646,11 +651,6 @@ resource "dynatrace_dashboard" "#name#" {
           key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594141365181
           custom_color  = "#64bd64"
-        }
-        result_metadata {
-          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594025904142
-          custom_color  = "#ff0000"
         }
       }
     }
@@ -694,8 +694,8 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
-          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594025904142
+          key           = "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
+          last_modified = 1594147642285
           custom_color  = "#ff0000"
         }
         result_metadata {
@@ -704,8 +704,8 @@ resource "dynatrace_dashboard" "#name#" {
           custom_color  = "#64bd64"
         }
         result_metadata {
-          key           = "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
-          last_modified = 1594147642285
+          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594025904142
           custom_color  = "#ff0000"
         }
         result_metadata {
@@ -722,6 +722,7 @@ resource "dynatrace_dashboard" "#name#" {
       }
     }
   }
+
   custom_charting_tile {
     name       = ""
     tile_type  = "CUSTOM_CHARTING"
@@ -752,13 +753,8 @@ resource "dynatrace_dashboard" "#name#" {
           aggregation_rate = "TOTAL"
         }
         result_metadata {
-          key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594141365181
-          custom_color  = "#64bd64"
-        }
-        result_metadata {
-          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
-          last_modified = 1594025904142
+          key           = "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
+          last_modified = 1594147642285
           custom_color  = "#ff0000"
         }
         result_metadata {
@@ -767,14 +763,19 @@ resource "dynatrace_dashboard" "#name#" {
           custom_color  = "#64bd64"
         }
         result_metadata {
-          key           = "nullbuiltin:cloud.kubernetes.namespace.desiredPods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION_NAMESPACE"
-          last_modified = 1594147642285
+          key           = "null¦Pod phase»Failed»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594025904142
           custom_color  = "#ff0000"
         }
         result_metadata {
           key           = "null¦Pod phase»Pending»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
           last_modified = 1594115586538
           custom_color  = "#f5d30f"
+        }
+        result_metadata {
+          key           = "null¦Pod phase»Running»falsebuiltin:cloud.kubernetes.workload.pods|SUM_DIMENSIONS|TOTAL|LINE|CLOUD_APPLICATION"
+          last_modified = 1594141365181
+          custom_color  = "#64bd64"
         }
         left_axis_custom_unit = "Count"
       }
@@ -793,5 +794,6 @@ resource "dynatrace_dashboard" "#name#" {
     tile_filter {
     }
   }
+
 }
 

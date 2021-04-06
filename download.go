@@ -169,6 +169,9 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		return err
 	}
 	for _, dashboardStub := range dashboards.Dashboards {
+		if dashboardStub.ID != "6b38732e-8c5c-4b32-80a1-7053ec8f37e1" {
+			continue
+		}
 		dashboard, err := restClient.Get(dashboardStub.ID)
 		if err != nil {
 			return err

@@ -1,20 +1,19 @@
 /**
 * @license
 * Copyright 2020 Dynatrace LLC
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*/
-
+ */
 
 package main
 
@@ -22,6 +21,7 @@ import (
 	"context"
 	"log"
 	"reflect"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
@@ -34,16 +34,74 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type reqAtts struct{}
+type reqAtts struct {
+	diffs map[string]diff
+}
+
+func (ra *reqAtts) AttachDiffSuppressFunc(sch *schema.Schema) {
+	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		if strings.HasPrefix(k, "metadata.") {
+			return true
+		}
+
+		if ra.diffs == nil {
+			ra.diffs = map[string]diff{}
+		}
+		if strings.HasSuffix(k, ".#") {
+			if old == "0" && new == "1" {
+				prefix := k[0 : len(k)-1]
+				found := false
+				for st := range ra.diffs {
+					if strings.HasPrefix(st, prefix) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return true
+				}
+			}
+		}
+		ra.diffs[k] = diff{old, new}
+		return false
+	})
+	if sch.Elem != nil {
+		switch typedSchema := sch.Elem.(type) {
+		case *schema.Schema:
+			ra.AttachDiffSuppressFunc(typedSchema)
+		case *schema.Resource:
+			ra.AttachDiffSuppressFuncs(typedSchema.Schema)
+		}
+	}
+}
+
+func (ra *reqAtts) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+	if schemas == nil {
+		return
+	}
+	for _, sch := range schemas {
+		ra.AttachDiffSuppressFunc(sch)
+	}
+}
+
+func (ra *reqAtts) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+		ra.diffs = map[string]diff{}
+		result := fn(ctx, d, m)
+		ra.diffs = map[string]diff{}
+		return result
+	}
+}
 
 // ResourceRequestAttributes has no documentation
 func (ra *reqAtts) Resource() *schema.Resource {
 	resource := terraform.ResourceFor(new(requestattributes.RequestAttribute))
-	resource.CreateContext = logging.Enable(ra.Create)
-	resource.UpdateContext = logging.Enable(ra.Update)
-	resource.ReadContext = logging.Enable(ra.Read)
-	resource.DeleteContext = logging.Enable(ra.Delete)
-
+	resource.CreateContext = logging.Enable(ra.wrap(ra.Create))
+	resource.UpdateContext = logging.Enable(ra.wrap(ra.Update))
+	resource.ReadContext = logging.Enable(ra.wrap(ra.Read))
+	resource.DeleteContext = logging.Enable(ra.wrap(ra.Delete))
+	ra.AttachDiffSuppressFuncs(resource.Schema)
+	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
 	return resource
 }
 

@@ -21,6 +21,7 @@ import (
 	"context"
 	"log"
 	"reflect"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
@@ -34,15 +35,72 @@ import (
 )
 
 type autoTags struct {
+	diffs map[string]diff
+}
+
+func (aps *autoTags) AttachDiffSuppressFunc(sch *schema.Schema) {
+	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		if k == "metadata.0.cluster_version" {
+			return true
+		}
+		if aps.diffs == nil {
+			aps.diffs = map[string]diff{}
+		}
+		if strings.HasSuffix(k, ".#") {
+			if old == "0" && new == "1" {
+				prefix := k[0 : len(k)-1]
+				found := false
+				for st := range aps.diffs {
+					if strings.HasPrefix(st, prefix) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return true
+				}
+			}
+		}
+		aps.diffs[k] = diff{old, new}
+		return false
+	})
+	if sch.Elem != nil {
+		switch typedSchema := sch.Elem.(type) {
+		case *schema.Schema:
+			aps.AttachDiffSuppressFunc(typedSchema)
+		case *schema.Resource:
+			aps.AttachDiffSuppressFuncs(typedSchema.Schema)
+		}
+	}
+}
+
+func (aps *autoTags) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+	if schemas == nil {
+		return
+	}
+	for _, sch := range schemas {
+		aps.AttachDiffSuppressFunc(sch)
+	}
+}
+
+func (aps *autoTags) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+		aps.diffs = map[string]diff{}
+		result := fn(ctx, d, m)
+		aps.diffs = map[string]diff{}
+		return result
+	}
 }
 
 // Resource produces terraform resource definition for Management Zones
 func (aps *autoTags) Resource() *schema.Resource {
 	resource := terraform.ResourceFor(new(autotags.AutoTag))
-	resource.CreateContext = logging.Enable(aps.Create)
-	resource.UpdateContext = logging.Enable(aps.Update)
-	resource.ReadContext = logging.Enable(aps.Read)
-	resource.DeleteContext = logging.Enable(aps.Delete)
+	resource.CreateContext = logging.Enable(aps.wrap(aps.Create))
+	resource.UpdateContext = logging.Enable(aps.wrap(aps.Update))
+	resource.ReadContext = logging.Enable(aps.wrap(aps.Read))
+	resource.DeleteContext = logging.Enable(aps.wrap(aps.Delete))
+	aps.AttachDiffSuppressFuncs(resource.Schema)
+	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
 
 	return resource
 }

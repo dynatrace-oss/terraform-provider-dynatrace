@@ -19,9 +19,9 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"reflect"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
@@ -34,16 +34,81 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type resDashboards struct{}
+type diff struct {
+	old string
+	new string
+}
+
+type resDashboards struct {
+	diffs map[string]diff
+}
+
+func (db *resDashboards) AttachDiffSuppressFunc(sch *schema.Schema) {
+	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		if strings.Contains(k, ".sharing_details.") {
+			return true
+		}
+		if strings.HasPrefix(k, "metadata.") {
+			return true
+		}
+		if db.diffs == nil {
+			db.diffs = map[string]diff{}
+		}
+		if strings.HasSuffix(k, ".#") {
+			if old == "0" && new == "1" {
+				prefix := k[0 : len(k)-1]
+				found := false
+				for st := range db.diffs {
+					if strings.HasPrefix(st, prefix) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return true
+				}
+			}
+		}
+		db.diffs[k] = diff{old, new}
+		return false
+	})
+	if sch.Elem != nil {
+		switch typedSchema := sch.Elem.(type) {
+		case *schema.Schema:
+			db.AttachDiffSuppressFunc(typedSchema)
+		case *schema.Resource:
+			db.AttachDiffSuppressFuncs(typedSchema.Schema)
+		}
+	}
+}
+
+func (db *resDashboards) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+	if schemas == nil {
+		return
+	}
+	for _, sch := range schemas {
+		db.AttachDiffSuppressFunc(sch)
+	}
+}
+
+func (db *resDashboards) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+		db.diffs = map[string]diff{}
+		result := fn(ctx, d, m)
+		db.diffs = map[string]diff{}
+		return result
+	}
+}
 
 // ResourceDashboards produces resource definitions for Dashboards
 func (db *resDashboards) Resource() *schema.Resource {
 	resource := terraform.ResourceFor(new(dashboards.Dashboard))
-	resource.CreateContext = logging.Enable(db.Create)
-	resource.UpdateContext = logging.Enable(db.Update)
-	resource.ReadContext = logging.Enable(db.Read)
-	resource.DeleteContext = logging.Enable(db.Delete)
-
+	resource.CreateContext = logging.Enable(db.wrap(db.Create))
+	resource.UpdateContext = logging.Enable(db.wrap(db.Update))
+	resource.ReadContext = logging.Enable(db.wrap(db.Read))
+	resource.DeleteContext = logging.Enable(db.wrap(db.Delete))
+	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
+	db.AttachDiffSuppressFuncs(resource.Schema)
 	return resource
 }
 
@@ -65,11 +130,6 @@ func (db *resDashboards) Create(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	dashboard := untypedDashboard.(dashboards.Dashboard)
-	var data []byte
-	if data, err = json.MarshalIndent(dashboard, "", "  "); err != nil {
-		return diag.FromErr(err)
-	}
-	log.Println(string(data))
 	dashboard.ID = nil
 	// dashboard.Metadata.Owner = nil
 	conf := m.(*config.ProviderConfiguration)

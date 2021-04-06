@@ -21,6 +21,7 @@ import (
 	"context"
 	"log"
 	"reflect"
+	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/rest"
@@ -38,15 +39,82 @@ type NotificationCfg struct {
 }
 
 type notificationConfigs struct {
+	diffs map[string]diff
+}
+
+func (nc *notificationConfigs) AttachDiffSuppressFunc(sch *schema.Schema) {
+	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		if strings.HasPrefix(k, "metadata.") {
+			return true
+		}
+
+		if nc.diffs == nil {
+			nc.diffs = map[string]diff{}
+		}
+		if strings.HasSuffix(k, ".#") {
+			if old == "0" && new == "1" {
+				prefix := k[0 : len(k)-1]
+				found := false
+				for st := range nc.diffs {
+					if strings.HasPrefix(st, prefix) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return true
+				}
+			}
+		}
+		nc.diffs[k] = diff{old, new}
+		return false
+	})
+	if sch.Elem != nil {
+		switch typedSchema := sch.Elem.(type) {
+		case *schema.Schema:
+			nc.AttachDiffSuppressFunc(typedSchema)
+		case *schema.Resource:
+			nc.AttachDiffSuppressFuncs(typedSchema.Schema)
+		}
+	}
+}
+
+func (nc *notificationConfigs) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+	if schemas == nil {
+		return
+	}
+	for _, sch := range schemas {
+		nc.AttachDiffSuppressFunc(sch)
+	}
+}
+
+func (nc *notificationConfigs) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+		nc.diffs = map[string]diff{}
+		result := fn(ctx, d, m)
+		nc.diffs = map[string]diff{}
+		return result
+	}
 }
 
 // Resource produces terraform resource definition for Management Zones
 func (nc *notificationConfigs) Resource() *schema.Resource {
 	resource := terraform.ResourceFor(new(NotificationCfg))
-	resource.CreateContext = logging.Enable(nc.Create)
-	resource.UpdateContext = logging.Enable(nc.Update)
-	resource.ReadContext = logging.Enable(nc.Read)
-	resource.DeleteContext = logging.Enable(nc.Delete)
+	resource.CreateContext = logging.Enable(nc.wrap(nc.Create))
+	resource.UpdateContext = logging.Enable(nc.wrap(nc.Update))
+	resource.ReadContext = logging.Enable(nc.wrap(nc.Read))
+	resource.DeleteContext = logging.Enable(nc.wrap(nc.Delete))
+	nc.AttachDiffSuppressFuncs(resource.Schema)
+	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
+	resource.Schema["service_now_notification_config"].DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		return strings.HasSuffix(k, ".password") && old == "---terraform---null"
+	})
+	resource.Schema["jira_notification_config"].DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		return strings.HasSuffix(k, ".password") && old == "---terraform---null"
+	})
+	resource.Schema["ansible_tower_notification_config"].DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
+		return strings.HasSuffix(k, ".password") && old == "---terraform---null"
+	})
 
 	return resource
 }
@@ -77,8 +145,8 @@ func (nc *notificationConfigs) Create(ctx context.Context, d *schema.ResourceDat
 		return diag.FromErr(err)
 	}
 	d.SetId(notificationConfigStub.ID)
-
-	return nc.Read(ctx, d, m)
+	return diag.Diagnostics{}
+	// return nc.Read(ctx, d, m)
 }
 
 // Update expects the configuration of a Management Zone within the given ResourceData
@@ -94,7 +162,6 @@ func (nc *notificationConfigs) Update(ctx context.Context, d *schema.ResourceDat
 	}
 	var untypedConfig interface{}
 	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(NotificationCfg{})); err != nil {
-		panic(err)
 		return diag.FromErr(err)
 	}
 
@@ -123,6 +190,25 @@ func (nc *notificationConfigs) Read(ctx context.Context, d *schema.ResourceData,
 	if notificationConfig, err = notificationConfigService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
+	switch notCfg := notificationConfig.(type) {
+	case *notifications.WebHookNotificationConfig:
+	case *notifications.EmailNotificationConfig:
+	case *notifications.SlackNotificationConfig:
+	case *notifications.PagerDutyNotificationConfig:
+	case *notifications.TrelloNotificationConfig:
+	case *notifications.VictorOpsNotificationConfig:
+	case *notifications.XMattersNotificationConfig:
+	case *notifications.OpsGenieNotificationConfig:
+	case *notifications.HipChatNotificationConfig:
+	case *notifications.JiraNotificationConfig:
+		notCfg.Password = opt.NewString("---terraform---null")
+	case *notifications.AnsibleTowerNotificationConfig:
+		notCfg.Password = opt.NewString("---terraform---null")
+	case *notifications.ServiceNowNotificationConfig:
+		notCfg.Password = opt.NewString("---terraform---null")
+	}
+
+	notificationConfig.SetID(nil)
 	notificationCfg := NotificationCfg{Config: notificationConfig}
 	if err = terraform.ToTerraform(notificationCfg, d); err != nil {
 		return diag.FromErr(err)

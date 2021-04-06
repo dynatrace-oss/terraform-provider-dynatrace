@@ -19,18 +19,16 @@ resource "dynatrace_request_attribute" "#name#" {
       }
     }
     technology = "JAVA"
+    /*
     value_processing {
       split_at = ""
       trim     = false
     }
+    */
     enabled = true
     source  = "METHOD_PARAM"
   }
-  data_type = "STRING"
-  metadata {
-    configuration_versions = [3]
-    cluster_version        = "1.206.95.20201116-094826"
-  }
+  data_type     = "STRING"
   normalization = "ORIGINAL"
   enabled       = true
   name          = "#name#"

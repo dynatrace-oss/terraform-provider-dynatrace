@@ -1,20 +1,19 @@
 /**
 * @license
 * Copyright 2020 Dynatrace LLC
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*/
-
+ */
 
 package customservice
 
@@ -189,20 +188,6 @@ func Resource() *schema.Resource {
 		},
 	}
 }
-
-// func validateDiagFunc(validateFunc func(interface{}, string) ([]string, []error)) schema.SchemaValidateDiagFunc {
-// 	return func(i interface{}, path cty.Path) diag.Diagnostics {
-// 		warnings, errs := validateFunc(i, fmt.Sprintf("%+v", path))
-// 		var diags diag.Diagnostics
-// 		for _, warning := range warnings {
-// 			diags = append(diags, diag.Diagnostic{Severity: diag.Warning, Summary: warning})
-// 		}
-// 		for _, err := range errs {
-// 			diags = append(diags, diag.Diagnostic{Severity: diag.Error, Summary: err.Error()})
-// 		}
-// 		return diags
-// 	}
-// }
 
 func resourceDataToCustomService(data *schema.ResourceData) *customservices.CustomService {
 	var customService customservices.CustomService

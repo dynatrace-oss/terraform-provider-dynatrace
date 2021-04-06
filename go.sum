@@ -94,8 +94,8 @@ github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.1/go.mod h1:DoN9
 github.com/dtcookie/dynatrace/rest v1.0.12/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/dynatrace/rest v1.0.13 h1:0fneNkit502mgaULbrhUdevleQqm3tXMqceODxXp3q0=
 github.com/dtcookie/dynatrace/rest v1.0.13/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
-github.com/dtcookie/dynatrace/terraform v1.0.3 h1:Zy1vLVwrGwRlDz3QCq/msWZQzHklj1HiShOdl2b3xpw=
-github.com/dtcookie/dynatrace/terraform v1.0.3/go.mod h1:1wKoRA18KTRr+PO1Z4yAgosolyqKGfnTLuaQ54oVPEk=
+github.com/dtcookie/dynatrace/terraform v1.0.4 h1:Stff4GTRNTMJOrBbP5LSWodaKc6OKlVzGL6nx/cvUBg=
+github.com/dtcookie/dynatrace/terraform v1.0.4/go.mod h1:1wKoRA18KTRr+PO1Z4yAgosolyqKGfnTLuaQ54oVPEk=
 github.com/dtcookie/gojson v0.9.1 h1:XsDBv2muNERQUE9qOsShqUe9EXIKF3gZNI2znLOC9H4=
 github.com/dtcookie/gojson v0.9.1/go.mod h1:0fxz4ibMLH2e40Ty+Lw4CBTJ/mHaDaLm3rrTPkupPJc=
 github.com/dtcookie/opt v1.0.0 h1:3YTf76sWRAjcJnTNNCjeJNikT05aOrVlg13xDbX5OGg=
