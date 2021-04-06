@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/dtcookie/dynatrace/api/config v1.0.0
 	github.com/dtcookie/dynatrace/api/config/alertingprofiles v1.0.0
-	github.com/dtcookie/dynatrace/api/config/autotags v1.0.3
+	github.com/dtcookie/dynatrace/api/config/autotags v1.0.4
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.6
 	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.1
 	github.com/dtcookie/dynatrace/api/config/maintenancewindows v1.0.0
