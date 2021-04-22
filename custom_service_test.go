@@ -27,6 +27,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -130,7 +131,10 @@ func (test *CustomServiceTest) CreateTestCase(file string, localJSONFile string,
 	}, nil
 }
 
-func TestAccCustomServiceExampleA(t *testing.T) {
+func TestAccCustomServices(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["custom_services"]; ok && disabled {
+		t.Skip()
+	}
 	test := NewCustomServiceTest()
 	var err error
 	var testCase *resource.TestCase

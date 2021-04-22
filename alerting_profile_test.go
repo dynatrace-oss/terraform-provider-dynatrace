@@ -24,6 +24,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 
 	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -76,7 +77,10 @@ func (test *AlertingProfileTest) CreateTestCase(file string, localJSONFile strin
 	}, nil
 }
 
-func TestAccAlertingProfileExampleA(t *testing.T) {
+func TestAccAlertingProfiles(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["alerting_profiles"]; ok && disabled {
+		t.Skip()
+	}
 	test := NewAlertingProfileTest()
 	var err error
 	var testCase *resource.TestCase
@@ -102,7 +106,7 @@ func (test *AlertingProfileTest) CheckDestroy(s *terraform.State) error {
 	restClient := alertingprofiles.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "dynatrace_custom_service" {
+		if rs.Type != "dynatrace_alerting_profile" {
 			continue
 		}
 
@@ -116,7 +120,7 @@ func (test *AlertingProfileTest) CheckDestroy(s *terraform.State) error {
 			// any other error should fail the test
 			return err
 		}
-		return fmt.Errorf("Custom Service still exists: %s", rs.Primary.ID)
+		return fmt.Errorf("configuration still exists: %s", rs.Primary.ID)
 	}
 
 	return nil
@@ -134,6 +138,6 @@ func (test *AlertingProfileTest) CheckExists(n string, t *testing.T) resource.Te
 			return nil
 		}
 
-		return fmt.Errorf("Not found: %s", n)
+		return fmt.Errorf("not found: %s", n)
 	}
 }

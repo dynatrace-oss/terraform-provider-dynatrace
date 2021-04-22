@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main
+package provider
 
 import (
 	"context"
@@ -23,24 +23,25 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+
 	api "github.com/dtcookie/dynatrace/api/config"
-	"github.com/dtcookie/dynatrace/api/config/autotags"
+	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dtcookie/opt"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type autoTags struct {
+type alertingProfiles struct {
 	diffs map[string]diff
 }
 
-func (aps *autoTags) AttachDiffSuppressFunc(sch *schema.Schema) {
+func (aps *alertingProfiles) AttachDiffSuppressFunc(sch *schema.Schema) {
 	sch.DiffSuppressFunc = logging.EnableSchemaDiff(func(k, old, new string, d *schema.ResourceData) bool {
-		if k == "metadata.0.cluster_version" {
+		if strings.HasPrefix(k, "metadata.") {
 			return true
 		}
 		if aps.diffs == nil {
@@ -74,7 +75,7 @@ func (aps *autoTags) AttachDiffSuppressFunc(sch *schema.Schema) {
 	}
 }
 
-func (aps *autoTags) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
+func (aps *alertingProfiles) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) {
 	if schemas == nil {
 		return
 	}
@@ -83,7 +84,7 @@ func (aps *autoTags) AttachDiffSuppressFuncs(schemas map[string]*schema.Schema) 
 	}
 }
 
-func (aps *autoTags) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+func (aps *alertingProfiles) wrap(fn func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics) func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
 	return func(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 		aps.diffs = map[string]diff{}
 		result := fn(ctx, d, m)
@@ -93,70 +94,64 @@ func (aps *autoTags) wrap(fn func(context.Context, *schema.ResourceData, interfa
 }
 
 // Resource produces terraform resource definition for Management Zones
-func (aps *autoTags) Resource() *schema.Resource {
-	resource := terraform.ResourceFor(new(autotags.AutoTag))
+func (aps *alertingProfiles) Resource() *schema.Resource {
+	resource := terraform.ResourceFor(new(alertingprofiles.AlertingProfile))
 	resource.CreateContext = logging.Enable(aps.wrap(aps.Create))
 	resource.UpdateContext = logging.Enable(aps.wrap(aps.Update))
 	resource.ReadContext = logging.Enable(aps.wrap(aps.Read))
 	resource.DeleteContext = logging.Enable(aps.wrap(aps.Delete))
 	aps.AttachDiffSuppressFuncs(resource.Schema)
-	resource.Importer = &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext}
-
 	return resource
 }
 
 // Create expects the configuration of a Management Zone within the given ResourceData
 // and send them to the Dynatrace Server in order to create that resource
-func (aps *autoTags) Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if config.HTTPVerbose {
-		log.Println("AutoTags.Create(..)")
-	}
+func (aps *alertingProfiles) Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var err error
 	var resolver terraform.Resolver
 	if resolver, err = terraform.NewResolver(d); err != nil {
 		return diag.FromErr(err)
 	}
-	var untypedConfig interface{}
-	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(autotags.AutoTag{})); err != nil {
+
+	var untypedProfile interface{}
+	if untypedProfile, err = resolver.Resolve(reflect.TypeOf(alertingprofiles.AlertingProfile{})); err != nil {
 		return diag.FromErr(err)
 	}
-
-	typedConfig := untypedConfig.(autotags.AutoTag)
-	typedConfig.ID = nil
+	alertingprofile := untypedProfile.(alertingprofiles.AlertingProfile)
+	alertingprofile.ID = nil
 	conf := m.(*config.ProviderConfiguration)
-	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	var objStub *api.EntityShortRepresentation
-	if objStub, err = apiService.Create(&typedConfig); err != nil {
+	if objStub, err = apiService.Create(&alertingprofile); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(objStub.ID)
-
 	return aps.Read(ctx, d, m)
 }
 
 // Update expects the configuration of a Management Zone within the given ResourceData
 // and send them to the Dynatrace Server in order to update that resource
-func (aps *autoTags) Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *alertingProfiles) Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AutoTags.Update(..)")
+		log.Println("AlertingProfiles.Update(..)")
 	}
 	var err error
 	var resolver terraform.Resolver
 	if resolver, err = terraform.NewResolver(d); err != nil {
 		return diag.FromErr(err)
 	}
-	var untypedConfig interface{}
-	if untypedConfig, err = resolver.Resolve(reflect.TypeOf(autotags.AutoTag{})); err != nil {
+	var untypedProfile interface{}
+	if untypedProfile, err = resolver.Resolve(reflect.TypeOf(alertingprofiles.AlertingProfile{})); err != nil {
 		return diag.FromErr(err)
 	}
 
-	typedConfig := untypedConfig.(autotags.AutoTag)
-	typedConfig.ID = opt.NewString(d.Id())
+	alertingprofile := untypedProfile.(alertingprofiles.AlertingProfile)
+	alertingprofile.ID = opt.NewString(d.Id())
 	conf := m.(*config.ProviderConfiguration)
-	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	if err = apiService.Update(&typedConfig); err != nil {
+	if err = apiService.Update(&alertingprofile); err != nil {
 		return diag.FromErr(err)
 	}
 	return aps.Read(ctx, d, m)
@@ -164,33 +159,32 @@ func (aps *autoTags) Update(ctx context.Context, d *schema.ResourceData, m inter
 
 // Read queries the Dynatrace Server for the configuration of a Management Zone
 // identified by the ID within the given ResourceData
-func (aps *autoTags) Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *alertingProfiles) Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AutoTags.Read(..)")
+		log.Println("AlertingProfiles.Read(..)")
 	}
 	var err error
 	conf := m.(*config.ProviderConfiguration)
-	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	typedConfig := new(autotags.AutoTag)
-	if typedConfig, err = apiService.Get(d.Id()); err != nil {
+	var alertingprofile *alertingprofiles.AlertingProfile
+	if alertingprofile, err = apiService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
-	if err = terraform.ToTerraform(typedConfig, d); err != nil {
+	if err = terraform.ToTerraform(alertingprofile, d); err != nil {
 		return diag.FromErr(err)
 	}
-
 	return diag.Diagnostics{}
 }
 
 // Delete a Management Zone on the Dynatrace Server
-func (aps *autoTags) Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func (aps *alertingProfiles) Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if config.HTTPVerbose {
-		log.Println("AutoTags.Delete(..)")
+		log.Println("AlertingProfiles.Delete(..)")
 	}
 	var err error
 	conf := m.(*config.ProviderConfiguration)
-	apiService := autotags.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := alertingprofiles.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	if err = apiService.Delete(d.Id()); err != nil {
 		return diag.FromErr(err)

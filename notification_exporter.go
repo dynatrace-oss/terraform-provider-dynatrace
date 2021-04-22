@@ -22,6 +22,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/terraform"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 )
 
 // NotificationExporter has no documentation
@@ -31,7 +32,7 @@ type NotificationExporter struct {
 
 // ToHCL has no documentation
 func (exporter *NotificationExporter) ToHCL(w io.Writer) error {
-	bytes, err := terraform.Marshal(NotificationCfg{Config: exporter.NotificationConfig}, "dynatrace_notification", exporter.NotificationConfig.GetName())
+	bytes, err := terraform.Marshal(provider.NotificationCfg{Config: exporter.NotificationConfig}, "dynatrace_notification", exporter.NotificationConfig.GetName())
 	if err != nil {
 		return err
 	}
@@ -41,7 +42,7 @@ func (exporter *NotificationExporter) ToHCL(w io.Writer) error {
 
 // ToJSON has no documentation
 func (exporter *NotificationExporter) ToJSON(w io.Writer) error {
-	bytes, err := terraform.MarshalJSON(NotificationCfg{Config: exporter.NotificationConfig}, "dynatrace_notification", exporter.NotificationConfig.GetName())
+	bytes, err := terraform.MarshalJSON(provider.NotificationCfg{Config: exporter.NotificationConfig}, "dynatrace_notification", exporter.NotificationConfig.GetName())
 	if err != nil {
 		return err
 	}

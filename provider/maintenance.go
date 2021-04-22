@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main
+package provider
 
 import (
 	"context"
@@ -107,7 +107,7 @@ func (mzs *maintWins) Read(ctx context.Context, d *schema.ResourceData, m interf
 	var err error
 	conf := m.(*config.ProviderConfiguration)
 	apiService := maintenancewindows.NewService(conf.DTenvURL, conf.APIToken)
-	instance := new(maintenancewindows.MaintenanceWindow)
+	var instance *maintenancewindows.MaintenanceWindow
 	if instance, err = apiService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}

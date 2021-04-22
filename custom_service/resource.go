@@ -115,7 +115,7 @@ var detectionRuleResource = &schema.Resource{
 					"returns": {
 						Type:        schema.TypeString,
 						Description: "Fully qualified type the method returns",
-						Required:    true,
+						Optional:    true,
 					},
 					"arguments": {
 						Type:        schema.TypeList,
@@ -155,7 +155,6 @@ func Resource() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Matcher applying to the file name (ENDS_WITH, EQUALS or STARTS_WITH). Default value is ENDS_WITH (if applicable)",
 				Required:    true,
-				// ValidateDiagFunc: validateDiagFunc(validation.StringInSlice([]string{"dotNet", "go", "java", "nodeJS", "php"}, false)),
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -165,13 +164,12 @@ func Resource() *schema.Resource {
 			"queue_entry_point": {
 				Type:        schema.TypeBool,
 				Description: "The queue entry point flag. Set to `true` for custom messaging services",
-				Required:    true,
+				Optional:    true,
 			},
 			"queue_entry_point_type": {
 				Type:        schema.TypeString,
 				Description: "The queue entry point type (IBM_MQ, JMS, KAFKA, MSMQ or RABBIT_MQ)",
 				Optional:    true,
-				// ValidateDiagFunc: validateDiagFunc(validation.StringInSlice([]string{"IBM_MQ", "JMS", "KAFKA", "MSMQ", "RABBIT_MQ"}, false)),
 			},
 			"process_groups": {
 				Type:        schema.TypeList,
@@ -189,7 +187,7 @@ func Resource() *schema.Resource {
 	}
 }
 
-func resourceDataToCustomService(data *schema.ResourceData) *customservices.CustomService {
+func resourceDataToCustomService(data *schema.ResourceData, tech customservices.Technology) *customservices.CustomService {
 	var customService customservices.CustomService
 	customService.Enabled = getBool(data, "enabled")
 	customService.Name = getString(data, "name")
@@ -202,8 +200,12 @@ func resourceDataToCustomService(data *schema.ResourceData) *customservices.Cust
 			customService.ProcessGroups = append(customService.ProcessGroups, processGroup.(string))
 		}
 	}
-	customService.QueueEntryPointType = customservices.QueueEntryPointType(data.Get("queue_entry_point_type").(string))
-	customService.Rules = extractDetectionRules(data.Get("rule"))
+	queueEntryPointType, ok := data.GetOk("queue_entry_point_type")
+	if !ok {
+		queueEntryPointType = ""
+	}
+	customService.QueueEntryPointType = customservices.QueueEntryPointType(queueEntryPointType.(string))
+	customService.Rules = extractDetectionRules(data.Get("rule"), tech)
 	return &customService
 }
 
@@ -228,9 +230,8 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 	var err error
 
-	customService := resourceDataToCustomService(d)
-
 	technology := customservices.Technology(d.Get("technology").(string))
+	customService := resourceDataToCustomService(d, technology)
 
 	rest.Verbose = config.HTTPVerbose
 
@@ -257,26 +258,57 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 	technology := customservices.Technology(d.Get("technology").(string))
 
 	conf := m.(*config.ProviderConfiguration)
-	customServices := customservices.NewService(conf.DTenvURL, conf.APIToken)
+	cServices := customservices.NewService(conf.DTenvURL, conf.APIToken)
 	var customService *customservices.CustomService
-	if customService, err = customServices.Get(d.Id(), technology, true); err != nil {
-		return diag.FromErr(err)
+
+	if technology == "" {
+		err = nil
+		for _, technology = range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP, customservices.Technologies.Go} {
+			if customService, err = cServices.Get(d.Id(), technology, true); err != nil {
+				if restErr, ok := err.(*rest.Error); ok {
+					if restErr.Code != 404 {
+						return diag.FromErr(err)
+					}
+				} else {
+					return diag.FromErr(err)
+				}
+			}
+			if customService != nil {
+				break
+			}
+		}
+		if customService == nil {
+			return diag.FromErr(err)
+		}
+	} else {
+		if customService, err = cServices.Get(d.Id(), technology, true); err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
+	d.Set("technology", technology)
 	d.Set("enabled", customService.Enabled)
 	d.Set("name", customService.Name)
 	d.Set("order", customService.Order)
-	d.Set("queue_entry_point", customService.QueueEntryPoint)
-	d.Set("queue_entry_point_type", customService.QueueEntryPointType)
+	if customService.QueueEntryPoint {
+		d.Set("queue_entry_point", customService.QueueEntryPoint)
+	}
+	if len(customService.QueueEntryPointType) > 0 {
+		d.Set("queue_entry_point_type", customService.QueueEntryPointType)
+	}
 	d.Set("process_groups", customService.ProcessGroups)
 
-	rules := make([]interface{}, 0)
+	rules := []interface{}{}
 	for _, detectionRule := range customService.Rules {
-		rule := make(map[string]interface{}, 0)
-		rule["id"] = detectionRule.ID
+		rule := map[string]interface{}{}
+		// rule["id"] = detectionRule.ID
 		rule["enabled"] = detectionRule.Enabled
 
-		rule["annotations"] = detectionRule.Annotations
+		if len(detectionRule.Annotations) > 0 {
+			rule["annotations"] = detectionRule.Annotations
+		} else {
+			delete(rule, "annotations")
+		}
 
 		if detectionRule.FileName != "" || detectionRule.FileNameMatcher != "" {
 			rule["file"] = []interface{}{
@@ -295,19 +327,22 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 			}
 		}
 
-		methodRules := make([]interface{}, 0)
+		methodRules := []interface{}{}
 		for _, method := range detectionRule.MethodRules {
 			methodRule := map[string]interface{}{
-				"id":        method.ID,
-				"name":      method.MethodName,
-				"returns":   method.ReturnType,
-				"arguments": []interface{}{},
+				// "id":        method.ID,
+				"name": method.MethodName,
+			}
+			if technology != customservices.Technologies.Go {
+				methodRule["returns"] = method.ReturnType
 			}
 			methodArguments := []interface{}{}
 			for _, arg := range method.ArgumentTypes {
 				methodArguments = append(methodArguments, arg)
 			}
-			methodRule["arguments"] = methodArguments
+			if len(methodArguments) > 0 {
+				methodRule["arguments"] = methodArguments
+			}
 			methodRules = append(methodRules, methodRule)
 		}
 		rule["method"] = methodRules
@@ -329,9 +364,9 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 	var err error
 
-	customService := resourceDataToCustomService(d)
-	customService.ID = d.Id()
 	technology := customservices.Technology(d.Get("technology").(string))
+	customService := resourceDataToCustomService(d, technology)
+	customService.ID = d.Id()
 
 	rest.Verbose = config.HTTPVerbose
 

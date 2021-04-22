@@ -22,10 +22,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/maintenancewindows"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/terraform"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
@@ -44,6 +46,8 @@ func createSchema(args []string) bool {
 		res = new(managementzones.ManagementZone)
 	} else if strings.TrimSpace(args[2]) == "maintenancewindow" {
 		res = new(maintenancewindows.MaintenanceWindow)
+	} else if strings.TrimSpace(args[2]) == "alertingprofile" {
+		res = new(alertingprofiles.AlertingProfile)
 	}
 	resource := terraform.ResourceFor(res)
 
@@ -121,6 +125,19 @@ func download(args []string) bool {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
+	if err := importAWSCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
+	if err := importAzureCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importK8sCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
 	return true
 }
 
@@ -136,7 +153,7 @@ func main() {
 	}
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
-			return Provider()
+			return provider.Provider()
 		},
 	})
 }

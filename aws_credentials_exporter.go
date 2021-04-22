@@ -20,18 +20,18 @@ package main
 import (
 	"io"
 
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
+	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/terraform"
 )
 
-// AlertingProfileExporter has no documentation
-type AlertingProfileExporter struct {
-	AlertingProfile *alertingprofiles.AlertingProfile
+// AWSCredentialsExporter has no documentation
+type AWSCredentialsExporter struct {
+	AWSCredentialsConfig *aws.AWSCredentialsConfig
 }
 
 // ToHCL has no documentation
-func (exporter *AlertingProfileExporter) ToHCL(w io.Writer) error {
-	bytes, err := terraform.Marshal(exporter.AlertingProfile, "dynatrace_alerting_profile", exporter.AlertingProfile.DisplayName)
+func (exporter *AWSCredentialsExporter) ToHCL(w io.Writer) error {
+	bytes, err := terraform.Marshal(exporter.AWSCredentialsConfig, "dynatrace_aws_credentials", exporter.AWSCredentialsConfig.Label)
 	if err != nil {
 		return err
 	}
@@ -40,8 +40,8 @@ func (exporter *AlertingProfileExporter) ToHCL(w io.Writer) error {
 }
 
 // ToJSON has no documentation
-func (exporter *AlertingProfileExporter) ToJSON(w io.Writer) error {
-	bytes, err := terraform.MarshalJSON(exporter.AlertingProfile, "dynatrace_alerting_profile", exporter.AlertingProfile.DisplayName)
+func (exporter *AWSCredentialsExporter) ToJSON(w io.Writer) error {
+	bytes, err := terraform.MarshalJSON(exporter.AWSCredentialsConfig, "dynatrace_aws_credentials", exporter.AWSCredentialsConfig.Label)
 	if err != nil {
 		return err
 	}

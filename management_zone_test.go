@@ -27,6 +27,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -84,7 +85,11 @@ func (test *ManagementZoneTest) CreateTestCase(file string, localJSONFile string
 	}, nil
 }
 
-func TestAccMgmzExampleA(t *testing.T) {
+func TestAccManagementZones(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["management_zones"]; ok && disabled {
+		t.Skip()
+	}
+
 	test := NewManagementZoneTest()
 	var err error
 	var testCase *resource.TestCase
@@ -142,7 +147,7 @@ func (test *ManagementZoneTest) CheckExists(n string) resource.TestCheckFunc {
 			return nil
 		}
 
-		return fmt.Errorf("Not found: %s", n)
+		return fmt.Errorf("not found: %s", n)
 	}
 }
 
@@ -171,7 +176,7 @@ func compareLocalRemote(test ResourceTest, n string, localJSONFile string, t *te
 			return nil
 		}
 
-		return fmt.Errorf("Not found: %s", n)
+		return fmt.Errorf("not found: %s", n)
 	}
 }
 

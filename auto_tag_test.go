@@ -24,6 +24,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -84,7 +85,10 @@ func (test *AutoTagTest) CreateTestCase(file string, localJSONFile string, t *te
 	}, nil
 }
 
-func TestAccAutoTagExampleA(t *testing.T) {
+func TestAccAutoTags(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["auto_tags"]; ok && disabled {
+		t.Skip()
+	}
 	test := NewAutoTagTest()
 	var err error
 	var testCase *resource.TestCase

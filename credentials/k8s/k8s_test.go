@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main_test
+package k8s_test
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dtcookie/dynatrace/api/config/notifications"
+	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -31,27 +31,28 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-type NotificationTest struct {
+const ResourceName = "dynatrace_k8s_credentials"
+const TestDataFolder = "../../test_data/credentials/k8s"
+const RequestPath = "%s/kubernetes/credentials/%s"
+const TestCaseID = "k8s_credentials"
+
+type TestStruct struct {
 	resourceKey string
 }
 
-func NewNotificationTest() ResourceTest {
-	return &NotificationTest{resourceKey: "dynatrace_notification"}
-}
-
-func (test *NotificationTest) Anonymize(m map[string]interface{}) {
+func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
-	delete(m, "name")
-	delete(m, "instanceName")
-	delete(m, "displayName")
+	delete(m, "label")
 	delete(m, "metadata")
+	delete(m, "endpointStatusInfo")
+	delete(m, "endpointStatus")
 }
 
-func (test *NotificationTest) ResourceKey() string {
+func (test *TestStruct) ResourceKey() string {
 	return test.resourceKey
 }
 
-func (test *NotificationTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
+func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
 	if content, err = ioutil.ReadFile(file); err != nil {
@@ -62,32 +63,32 @@ func (test *NotificationTest) CreateTestCase(file string, localJSONFile string, 
 	resourceName := test.ResourceKey() + "." + name
 	config = strings.ReplaceAll(config, "#name#", name)
 	return &resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
+		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
-		ProviderFactories: testAccProviderFactories,
+		ProviderFactories: testbase.TestAccProviderFactories,
 		CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					test.CheckExists(resourceName, t),
-					compareLocalRemote(test, resourceName, localJSONFile, t),
+					CheckExists(resourceName, t),
+					testbase.CompareLocalRemote(test, resourceName, localJSONFile, t),
 				),
 			},
 		},
 	}, nil
 }
 
-func TestAccNotifications(t *testing.T) {
-	if disabled, ok := testbase.DisabledTests["notifications"]; ok && disabled {
+func TestK8sCredentials(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
 	}
-	test := NewNotificationTest()
+	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
-		"test_data/notifications/example_a.tf",
-		"test_data/notifications/example_a.json",
+		TestDataFolder+"/example_a.tf",
+		TestDataFolder+"/example_a.json",
 		t,
 	); err != nil {
 		t.Fatal(err)
@@ -96,18 +97,18 @@ func TestAccNotifications(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
-func (test *NotificationTest) URL(id string) string {
-	envURL := testAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
-	reqPath := "%s/notifications/%s"
+func (test *TestStruct) URL(id string) string {
+	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
+	reqPath := RequestPath
 	return fmt.Sprintf(reqPath, envURL, id)
 }
 
-func (test *NotificationTest) CheckDestroy(s *terraform.State) error {
-	providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-	restClient := notifications.NewService(providerConf.DTenvURL, providerConf.APIToken)
+func (test *TestStruct) CheckDestroy(s *terraform.State) error {
+	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+	restClient := kubernetes.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "dynatrace_notification" {
+		if rs.Type != ResourceName {
 			continue
 		}
 
@@ -121,16 +122,16 @@ func (test *NotificationTest) CheckDestroy(s *terraform.State) error {
 			// any other error should fail the test
 			return err
 		}
-		return fmt.Errorf("Custom Service still exists: %s", rs.Primary.ID)
+		return fmt.Errorf("Configuration still exists: %s", rs.Primary.ID)
 	}
 
 	return nil
 }
 
-func (test *NotificationTest) CheckExists(n string, t *testing.T) resource.TestCheckFunc {
+func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := notifications.NewService(providerConf.DTenvURL, providerConf.APIToken)
+		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+		restClient := kubernetes.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {
 			if _, err := restClient.Get(rs.Primary.ID); err != nil {

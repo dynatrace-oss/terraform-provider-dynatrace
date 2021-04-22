@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main
+package provider
 
 import (
 	"context"
@@ -180,7 +180,7 @@ func (db *resDashboards) Read(ctx context.Context, d *schema.ResourceData, m int
 	conf := m.(*config.ProviderConfiguration)
 	dashboardService := dashboards.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	dashboard := new(dashboards.Dashboard)
+	var dashboard *dashboards.Dashboard
 	if dashboard, err = dashboardService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}

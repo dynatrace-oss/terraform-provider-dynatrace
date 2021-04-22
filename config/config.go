@@ -34,8 +34,15 @@ type ProviderConfiguration struct {
 	APIToken string
 }
 
-// ProviderConfigure has no documentation
+type Getter interface {
+	Get(key string) interface{}
+}
+
 func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	return ProviderConfigureGeneric(ctx, d)
+}
+
+func ProviderConfigureGeneric(ctx context.Context, d Getter) (interface{}, diag.Diagnostics) {
 	dtEnvURL := d.Get("dt_env_url").(string)
 	apiToken := d.Get("dt_api_token").(string)
 
@@ -46,5 +53,4 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		DTenvURL: fullURL,
 		APIToken: apiToken,
 	}, diags
-
 }

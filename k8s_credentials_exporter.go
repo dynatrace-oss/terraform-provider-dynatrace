@@ -20,18 +20,18 @@ package main
 import (
 	"io"
 
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
+	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/terraform"
 )
 
-// AlertingProfileExporter has no documentation
-type AlertingProfileExporter struct {
-	AlertingProfile *alertingprofiles.AlertingProfile
+// K8sCredentialsExporter has no documentation
+type K8sCredentialsExporter struct {
+	KubernetesCredentials *kubernetes.KubernetesCredentials
 }
 
 // ToHCL has no documentation
-func (exporter *AlertingProfileExporter) ToHCL(w io.Writer) error {
-	bytes, err := terraform.Marshal(exporter.AlertingProfile, "dynatrace_alerting_profile", exporter.AlertingProfile.DisplayName)
+func (exporter *K8sCredentialsExporter) ToHCL(w io.Writer) error {
+	bytes, err := terraform.Marshal(exporter.KubernetesCredentials, "dynatrace_k8s_credentials", exporter.KubernetesCredentials.Label)
 	if err != nil {
 		return err
 	}
@@ -40,8 +40,8 @@ func (exporter *AlertingProfileExporter) ToHCL(w io.Writer) error {
 }
 
 // ToJSON has no documentation
-func (exporter *AlertingProfileExporter) ToJSON(w io.Writer) error {
-	bytes, err := terraform.MarshalJSON(exporter.AlertingProfile, "dynatrace_alerting_profile", exporter.AlertingProfile.DisplayName)
+func (exporter *K8sCredentialsExporter) ToJSON(w io.Writer) error {
+	bytes, err := terraform.MarshalJSON(exporter.KubernetesCredentials, "dynatrace_k8s_credentials", exporter.KubernetesCredentials.Label)
 	if err != nil {
 		return err
 	}

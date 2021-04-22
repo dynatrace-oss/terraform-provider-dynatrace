@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main
+package provider
 
 import (
 	"context"
@@ -172,7 +172,7 @@ func (mzs *managementZones) Read(ctx context.Context, d *schema.ResourceData, m 
 	conf := m.(*config.ProviderConfiguration)
 	managementZoneService := managementzones.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	managementZone := new(managementzones.ManagementZone)
+	var managementZone *managementzones.ManagementZone
 	if managementZone, err = managementZoneService.Get(d.Id(), false); err != nil {
 		return diag.FromErr(err)
 	}

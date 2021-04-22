@@ -18,18 +18,134 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
+	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
+	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
+	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/rest"
+	"github.com/dtcookie/hcl"
 )
+
+func escape(s string) string {
+	s = strings.ReplaceAll(s, ":", "_")
+	s = strings.ReplaceAll(s, "/", "_")
+	return s
+}
+
+func importAWSCredentials(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := aws.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		config.Metadata = nil
+		var file *os.File
+		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.aws.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_aws_credentials", config.Label)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func importAzureCredentials(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := azure.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		config.Metadata = nil
+		var file *os.File
+		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.azure.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_azure_credentials", config.Label)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func importK8sCredentials(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := kubernetes.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		config.Metadata = nil
+		var file *os.File
+		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.k8s.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_k8s_credentials", config.Label)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
@@ -46,7 +162,7 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 		}
 		exporter := &NotificationExporter{NotificationConfig: config}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(config.GetName(), ":", "_") + ".notification.tf"
+		fileName := targetFolder + "/" + escape(config.GetName()) + ".notification.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -71,7 +187,7 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 		}
 		exporter := &ManagementZoneExporter{ManagementZone: mgmz}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(mgmz.Name, ":", "_") + ".management_zone.tf"
+		fileName := targetFolder + "/" + escape(mgmz.Name) + ".management_zone.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -97,7 +213,7 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 		}
 		exporter := &AlertingProfileExporter{AlertingProfile: alertingProfile}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(alertingProfile.DisplayName, ":", "_") + ".alerting_profile.tf"
+		fileName := targetFolder + "/" + escape(alertingProfile.DisplayName) + ".alerting_profile.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -123,7 +239,7 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 		}
 		exporter := &AutoTagExporter{AutoTag: cfg}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(cfg.Name, ":", "_") + ".autotag.tf"
+		fileName := targetFolder + "/" + escape(cfg.Name) + ".autotag.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -149,7 +265,7 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 		}
 		exporter := &RequestAttributeExporter{RequestAttribute: requestAttribute}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(requestAttribute.Name, ":", "_") + ".request_attribute.tf"
+		fileName := targetFolder + "/" + escape(requestAttribute.Name) + ".request_attribute.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -169,9 +285,6 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		return err
 	}
 	for _, dashboardStub := range dashboards.Dashboards {
-		if dashboardStub.ID != "6b38732e-8c5c-4b32-80a1-7053ec8f37e1" {
-			continue
-		}
 		dashboard, err := restClient.Get(dashboardStub.ID)
 		if err != nil {
 			return err
@@ -179,7 +292,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		exporter := &DashboardExporter{Dashboard: dashboard}
 		var file *os.File
 
-		fileName := targetFolder + "/" + strings.ReplaceAll(dashboard.Metadata.Name, ":", "_") + ".dashboard.tf"
+		fileName := targetFolder + "/" + escape(dashboard.Metadata.Name) + ".dashboard.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -224,7 +337,7 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 		}
 		exporter := &CustomServiceExporter{CustomService: customService}
 		var file *os.File
-		fileName := targetFolder + "/" + strings.ReplaceAll(customService.Name, ":", "_") + ".custom_service.tf"
+		fileName := targetFolder + "/" + escape(customService.Name) + ".custom_service.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err

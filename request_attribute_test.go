@@ -25,6 +25,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -75,7 +76,10 @@ func (test *RequestAttributeTest) CreateTestCase(file string, localJSONFile stri
 	}, nil
 }
 
-func TestAccRequestAttributeExampleA(t *testing.T) {
+func TestAccRequestAttributes(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["request_attributes"]; ok && disabled {
+		t.Skip()
+	}
 	test := NewRequestAttributeTest()
 	var err error
 	var testCase *resource.TestCase
@@ -116,7 +120,7 @@ func (test *RequestAttributeTest) CheckDestroy(t *testing.T) resource.TestCheckF
 				// any other error should fail the test
 				return err
 			}
-			return fmt.Errorf("Custom Service still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("custom Service still exists: %s", rs.Primary.ID)
 		}
 
 		return nil
@@ -135,6 +139,6 @@ func (test *RequestAttributeTest) CheckExists(n string, t *testing.T) resource.T
 			return nil
 		}
 
-		return fmt.Errorf("Not found: %s", n)
+		return fmt.Errorf("not found: %s", n)
 	}
 }

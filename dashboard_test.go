@@ -25,6 +25,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -79,7 +80,10 @@ func (test *DashboardTest) CreateTestCase(file string, localJSONFile string, t *
 	}, nil
 }
 
-func TestAccDashboardExampleA(t *testing.T) {
+func TestAccDashboards(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests["dashboards"]; ok && disabled {
+		t.Skip()
+	}
 	test := NewDashboardTest()
 	var err error
 	var testCase *resource.TestCase

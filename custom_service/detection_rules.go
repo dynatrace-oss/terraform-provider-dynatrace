@@ -1,20 +1,19 @@
 /**
 * @license
 * Copyright 2020 Dynatrace LLC
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*/
-
+ */
 
 package customservice
 
@@ -22,14 +21,14 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 )
 
-func extractDetectionRules(value interface{}) []customservices.DetectionRule {
+func extractDetectionRules(value interface{}, tech customservices.Technology) []customservices.DetectionRule {
 	if value == nil {
 		return nil
 	}
 	if detectionRuleSections, ok := value.([]interface{}); ok {
 		detectionRules := []customservices.DetectionRule{}
 		for _, detectionRuleSection := range detectionRuleSections {
-			detectionRule := *extractDetectionRule(detectionRuleSection)
+			detectionRule := *extractDetectionRule(detectionRuleSection, tech)
 			detectionRules = append(detectionRules, detectionRule)
 		}
 		return detectionRules
@@ -37,7 +36,7 @@ func extractDetectionRules(value interface{}) []customservices.DetectionRule {
 	return nil
 }
 
-func extractDetectionRule(value interface{}) *customservices.DetectionRule {
+func extractDetectionRule(value interface{}, tech customservices.Technology) *customservices.DetectionRule {
 	detectionRule := &customservices.DetectionRule{}
 	if value == nil {
 		return nil
@@ -49,8 +48,8 @@ func extractDetectionRule(value interface{}) *customservices.DetectionRule {
 		detectionRule.ID = values["id"].(string)
 		detectionRule.Enabled = values["enabled"].(bool)
 		annotations := values["annotations"]
+		detectionRule.Annotations = []string{}
 		if annotations != nil {
-			detectionRule.Annotations = []string{}
 			for _, annotation := range annotations.([]interface{}) {
 				detectionRule.Annotations = append(detectionRule.Annotations, annotation.(string))
 			}
@@ -69,7 +68,7 @@ func extractDetectionRule(value interface{}) *customservices.DetectionRule {
 			}
 		}
 
-		detectionRule.MethodRules = extractMethodRules(values["method"])
+		detectionRule.MethodRules = extractMethodRules(values["method"], tech)
 
 	}
 	return detectionRule

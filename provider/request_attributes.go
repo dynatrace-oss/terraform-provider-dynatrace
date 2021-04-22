@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main
+package provider
 
 import (
 	"context"
@@ -190,7 +190,7 @@ func (ra *reqAtts) Read(ctx context.Context, d *schema.ResourceData, m interface
 	conf := m.(*config.ProviderConfiguration)
 	apiService := requestattributes.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
-	instance := new(requestattributes.RequestAttribute)
+	var instance *requestattributes.RequestAttribute
 	if instance, err = apiService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
