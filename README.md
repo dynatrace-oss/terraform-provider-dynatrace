@@ -62,6 +62,9 @@ For Terraform version 0.13.x
 * Alerting Profiles
 * Problem Notifiations
 * Auto Tag Configuration
+* Kubernetes Credentials
+* AWS Credentials
+* Azure Credentials
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
