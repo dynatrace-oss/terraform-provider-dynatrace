@@ -47,7 +47,7 @@ For Terraform version 0.13.x
         required_version = "~> 0.13.0"
         required_providers {
             dynatrace = {
-                version = "1.0.5"
+                version = "1.0.6"
                 source = "dynatrace.com/com/dynatrace"
             }
         }
