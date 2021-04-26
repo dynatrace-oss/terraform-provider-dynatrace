@@ -26,7 +26,7 @@ For Terraform version 0.12.x
     terraform {
         required_providers {
             dynatrace = {
-                version = "1.0.5"
+                version = "1.0.6"
             }
         }
     }
