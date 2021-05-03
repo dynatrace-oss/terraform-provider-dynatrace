@@ -78,6 +78,7 @@ func convertResource(r *hcl.Resource) *schema.Resource {
 func convertSchema(s *hcl.Schema) *schema.Schema {
 	result := new(schema.Schema)
 	result.Description = s.Description
+	result.Deprecated = s.Deprecated
 	result.Optional = s.Optional
 	result.Required = s.Required
 	result.MaxItems = s.MaxItems

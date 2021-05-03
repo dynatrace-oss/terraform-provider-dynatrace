@@ -1,8 +1,4 @@
 {
-	"metadata": {
-		"configurationVersions": [0],
-		"clusterVersion": "1.206.95.20201116-094826"
-	},
 	"id": "5573272509509554797",
 	"name": "xkvcfajfff",
 	"rules": [{
@@ -19,7 +15,7 @@
 				"value": {
 					"type": "APPARMOR"
 				},
-				"negate": false
+				"negate": true
 			}
 		}, {
 			"key": {

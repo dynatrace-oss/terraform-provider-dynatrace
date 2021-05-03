@@ -25,6 +25,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/k8s"
 	customservice "github.com/dynatrace-oss/terraform-provider-dynatrace/custom_service"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -41,6 +43,7 @@ type ResourceSpecification interface {
 
 // Provider function for Dynatrace API
 func Provider() *schema.Provider {
+	logging.SetOutput()
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"dt_env_url": {
@@ -58,7 +61,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":     customservice.Resource(),
 			"dynatrace_dashboard":          new(resDashboards).Resource(),
-			"dynatrace_management_zone":    new(managementZones).Resource(),
+			"dynatrace_management_zone":    mgmz.Resource(),
 			"dynatrace_maintenance_window": new(maintWins).Resource(),
 			"dynatrace_request_attribute":  new(reqAtts).Resource(),
 			"dynatrace_alerting_profile":   new(alertingProfiles).Resource(),

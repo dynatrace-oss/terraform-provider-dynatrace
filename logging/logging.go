@@ -75,6 +75,11 @@ func Enable(fn func(context.Context, *schema.ResourceData, interface{}) diag.Dia
 	}
 }
 
+// Enable redirects logging into a an output file
+func SetOutput() {
+	log.SetOutput(odl)
+}
+
 // EnableSchemaDiff redirects logging into a an output file
 func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) func(k, old, new string, d *schema.ResourceData) bool {
 	return func(k, old, new string, d *schema.ResourceData) bool {

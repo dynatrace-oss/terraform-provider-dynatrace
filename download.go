@@ -172,7 +172,9 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 	}
 	return nil
 }
+
 func importManagementZones(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := managementzones.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
@@ -180,20 +182,28 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 	if err != nil {
 		return err
 	}
-	for _, stub := range stubList.Values {
-		mgmz, err := restClient.Get(stub.ID, false)
+	for _, stub := range stubList {
+		config, err := restClient.Get(stub.ID, false)
 		if err != nil {
 			return err
 		}
-		exporter := &ManagementZoneExporter{ManagementZone: mgmz}
+		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(mgmz.Name) + ".management_zone.tf"
+		fileName := targetFolder + "/" + escape(config.Name) + ".management_zone.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_management_zone", config.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }
