@@ -19,7 +19,6 @@ package mgmz
 
 import (
 	"context"
-	"log"
 
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/rest"
@@ -53,14 +52,13 @@ func NewService(m interface{}) *managementzones.ServiceClient {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Create")
-	credentials := new(managementzones.ManagementZone)
-	if err := credentials.UnmarshalHCL(d); err != nil {
+	config := new(managementzones.ManagementZone)
+	if err := config.UnmarshalHCL(d); err != nil {
 		return diag.FromErr(err)
 	}
-	credentials.ID = nil
-	credentials.Metadata = nil
-	objStub, err := NewService(m).Create(credentials)
+	config.ID = nil
+	config.Metadata = nil
+	objStub, err := NewService(m).Create(config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -70,14 +68,13 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Update")
-	credentials := new(managementzones.ManagementZone)
-	if err := credentials.UnmarshalHCL(d); err != nil {
+	config := new(managementzones.ManagementZone)
+	if err := config.UnmarshalHCL(d); err != nil {
 		return diag.FromErr(err)
 	}
-	credentials.ID = opt.NewString(d.Id())
-	credentials.Metadata = nil
-	if err := NewService(m).Update(credentials); err != nil {
+	config.ID = opt.NewString(d.Id())
+	config.Metadata = nil
+	if err := NewService(m).Update(config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -85,12 +82,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Read")
-	credentials, err := NewService(m).Get(d.Id(), false)
+	config, err := NewService(m).Get(d.Id(), false)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	marshalled, err := credentials.MarshalHCL()
+	marshalled, err := config.MarshalHCL()
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -102,7 +98,6 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Delete")
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}

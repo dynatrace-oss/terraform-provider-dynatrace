@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"reflect"
 	"testing"
@@ -101,7 +100,6 @@ func LoadHTTP(url string, token string) (map[string]interface{}, error) {
 	var response *http.Response
 	var data []byte
 
-	log.Println(url)
 	if request, err = http.NewRequest("GET", url, nil); err != nil {
 		return nil, err
 	}
