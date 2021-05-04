@@ -71,3 +71,4 @@ jobs:
         with:
           name: terraform-provider-dynatrace.log
           path: /home/runner/work/terraform-provider-dynatrace/terraform-provider-dynatrace/terraform-provider-dynatrace.log
+          if-no-files-found: ignore
