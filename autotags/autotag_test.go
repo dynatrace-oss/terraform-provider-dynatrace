@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main_test
+package autotags_test
 
 import (
 	"fmt"
@@ -23,42 +23,35 @@ import (
 	"strings"
 	"testing"
 
+	atags "github.com/dtcookie/dynatrace/api/config/autotags"
+	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
-
-	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-type AutoTagTest struct {
+const ResourceName = "dynatrace_autotag"
+const TestDataFolder = "../test_data/auto_tags"
+const RequestPath = "%s/autoTags/%s"
+const TestCaseID = "auto_tags"
+
+type TestStruct struct {
 	resourceKey string
-	testDataFld string
-	reqPath     string
-	display     string
 }
 
-func NewAutoTagTest() *AutoTagTest {
-	return &AutoTagTest{
-		resourceKey: "dynatrace_autotag",
-		testDataFld: "auto_tags",
-		reqPath:     "autoTags",
-		display:     "Auto Tag",
-	}
-}
-
-func (test *AutoTagTest) Anonymize(m map[string]interface{}) {
+func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "name")
 	delete(m, "metadata")
 }
 
-func (test *AutoTagTest) ResourceKey() string {
+func (test *TestStruct) ResourceKey() string {
 	return test.resourceKey
 }
 
-func (test *AutoTagTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
+func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
 	if content, err = ioutil.ReadFile(file); err != nil {
@@ -69,32 +62,32 @@ func (test *AutoTagTest) CreateTestCase(file string, localJSONFile string, t *te
 	resourceName := test.ResourceKey() + "." + name
 	config = strings.ReplaceAll(config, "#name#", name)
 	return &resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
+		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
-		ProviderFactories: testAccProviderFactories,
+		ProviderFactories: testbase.TestAccProviderFactories,
 		CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					test.CheckExists(resourceName, t),
-					compareLocalRemote(test, resourceName, localJSONFile, t),
+					CheckExists(resourceName, t),
+					testbase.CompareLocalRemote(test, resourceName, localJSONFile, t),
 				),
 			},
 		},
 	}, nil
 }
 
-func TestAccAutoTags(t *testing.T) {
-	if disabled, ok := testbase.DisabledTests["auto_tags"]; ok && disabled {
+func TestAutoTags(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
 	}
-	test := NewAutoTagTest()
+	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
-		fmt.Sprintf("test_data/%s/example_a.tf", test.testDataFld),
-		fmt.Sprintf("test_data/%s/example_a.json", test.testDataFld),
+		TestDataFolder+"/example_a.tf",
+		TestDataFolder+"/example_a.json",
 		t,
 	); err != nil {
 		t.Fatal(err)
@@ -103,24 +96,24 @@ func TestAccAutoTags(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
-func (test *AutoTagTest) URL(id string) string {
-	envURL := testAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
-	reqPath := "%s/" + test.reqPath + "/%s"
+func (test *TestStruct) URL(id string) string {
+	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
+	reqPath := RequestPath
 	return fmt.Sprintf(reqPath, envURL, id)
 }
 
-func (test *AutoTagTest) CheckDestroy(s *terraform.State) error {
-	providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-	restClient := autotags.NewService(providerConf.DTenvURL, providerConf.APIToken)
+func (test *TestStruct) CheckDestroy(s *terraform.State) error {
+	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+	restClient := managementzones.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != test.resourceKey {
+		if rs.Type != ResourceName {
 			continue
 		}
 
 		id := rs.Primary.ID
 
-		if _, err := restClient.Get(id); err != nil {
+		if _, err := restClient.Get(id, false); err != nil {
 			// HTTP Response "404 Not Found" signals a success
 			if strings.Contains(err.Error(), `"code": 404`) {
 				return nil
@@ -128,16 +121,16 @@ func (test *AutoTagTest) CheckDestroy(s *terraform.State) error {
 			// any other error should fail the test
 			return err
 		}
-		return fmt.Errorf("%s still exists: %s", test.display, rs.Primary.ID)
+		return fmt.Errorf("Configuration still exists: %s", rs.Primary.ID)
 	}
 
 	return nil
 }
 
-func (test *AutoTagTest) CheckExists(n string, t *testing.T) resource.TestCheckFunc {
+func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := autotags.NewService(providerConf.DTenvURL, providerConf.APIToken)
+		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+		restClient := atags.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {
 			if _, err := restClient.Get(rs.Primary.ID); err != nil {

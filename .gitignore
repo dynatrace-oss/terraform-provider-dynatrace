@@ -4,3 +4,4 @@ main.tf
 terraform-provider-dynatrace.exe
 terraform-provider-dynatrace.log
 download.cmd
+playground/*

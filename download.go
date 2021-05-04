@@ -235,6 +235,7 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 }
 
 func importAutoTags(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := autotags.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
@@ -243,19 +244,27 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 		return err
 	}
 	for _, stub := range stubList.Values {
-		cfg, err := restClient.Get(stub.ID)
+		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
 		}
-		exporter := &AutoTagExporter{AutoTag: cfg}
+		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(cfg.Name) + ".autotag.tf"
+		fileName := targetFolder + "/" + escape(config.Name) + ".autotag.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_autotag", config.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -20,6 +20,7 @@ package provider
 import (
 	"context"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure"
@@ -66,7 +67,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_attribute":  new(reqAtts).Resource(),
 			"dynatrace_alerting_profile":   new(alertingProfiles).Resource(),
 			"dynatrace_notification":       new(notificationConfigs).Resource(),
-			"dynatrace_autotag":            new(autoTags).Resource(),
+			"dynatrace_autotag":            autotags.Resource(),
 			"dynatrace_aws_credentials":    aws.Resource(),
 			"dynatrace_azure_credentials":  azure.Resource(),
 			"dynatrace_k8s_credentials":    k8s.Resource(),
