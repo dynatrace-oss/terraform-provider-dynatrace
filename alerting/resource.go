@@ -21,7 +21,6 @@ import (
 	"context"
 
 	alertingapi "github.com/dtcookie/dynatrace/api/config/alerting"
-	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
@@ -44,7 +43,6 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m interface{}) *alertingapi.Service {
-	rest.Verbose = true
 	conf := m.(*config.ProviderConfiguration)
 	apiService := alertingapi.NewService(conf.DTenvURL, conf.APIToken)
 	return apiService
@@ -58,9 +56,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	}
 	config.ID = nil
 	config.Metadata = nil
-	rest.Verbose = true
 	abc := NewService(m)
-	rest.Verbose = true
 	objStub, err := abc.Create(config)
 	if err != nil {
 		return diag.FromErr(err)
