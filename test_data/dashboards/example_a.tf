@@ -1,6 +1,6 @@
 resource "dynatrace_dashboard" "#name#" {
-  metadata {
-    cluster_version        = "1.206.95.20201116-094826"
+  metadata {    
+    cluster_version        = "1.216.107.20210505-135918"
     configuration_versions = [3]
   }
   dashboard_metadata {
