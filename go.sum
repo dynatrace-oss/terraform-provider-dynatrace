@@ -90,8 +90,8 @@ github.com/dtcookie/dynatrace/api/config v1.0.1 h1:36qTw4bLIc1LQGRvK5AoZ8cCphB3K
 github.com/dtcookie/dynatrace/api/config v1.0.1/go.mod h1:VoAijgw86LCbT5ghmUjuMRskSGzQok7oB0mS10BH5mg=
 github.com/dtcookie/dynatrace/api/config v1.0.2 h1:Zgp2rEb3iLWhjT2N5Cu7oLMxdx2FDnOysMs+ThWnqwE=
 github.com/dtcookie/dynatrace/api/config v1.0.2/go.mod h1:TdfHhh+I/w6R9RNMUeYAbhsZiXwdQvW11lbR4TGgXts=
-github.com/dtcookie/dynatrace/api/config/alerting v1.0.2 h1:G+jQd9trUmK9JgLPXPxCuCBbSk+PBrx4f/czwJzgKmg=
-github.com/dtcookie/dynatrace/api/config/alerting v1.0.2/go.mod h1:Wz97DOBImSR+5jQYq+9QULzaqGy2Qfvz93/skT9HSiM=
+github.com/dtcookie/dynatrace/api/config/alerting v1.0.4 h1:aqthGqWhh+dNAMOQ6doh1w13F3r+pgHvdCYdS9xEK/8=
+github.com/dtcookie/dynatrace/api/config/alerting v1.0.4/go.mod h1:rdArMVamAnokzcfUvYvqDShaPSawfDLNrBoCyudXN5g=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.6 h1:OYNpmNTq+YTFOA9ClpApkW9kBRjFN1KnXCEsKBSnRXw=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.6/go.mod h1:Kt4wrOegsJXZQPZ2l/P/qqBYQVaEjIHWGdXxtwLxGQU=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.1 h1:YbbEh3gatUXqyXCMY7C+1FJQv2ZE6+W515H1KmNgxxM=
