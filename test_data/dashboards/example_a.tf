@@ -1,8 +1,4 @@
 resource "dynatrace_dashboard" "#name#" {
-  metadata {    
-    cluster_version        = "1.216.107.20210505-135918"
-    configuration_versions = [3]
-  }
   dashboard_metadata {
     name   = "#name#"
     shared = true

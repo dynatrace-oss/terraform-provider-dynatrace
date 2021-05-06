@@ -131,7 +131,7 @@ func (db *resDashboards) Create(ctx context.Context, d *schema.ResourceData, m i
 
 	dashboard := untypedDashboard.(dashboards.Dashboard)
 	dashboard.ID = nil
-	// dashboard.Metadata.Owner = nil
+	dashboard.ConfigurationMetadata = nil
 	conf := m.(*config.ProviderConfiguration)
 	dashboardService := dashboards.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
@@ -161,6 +161,7 @@ func (db *resDashboards) Update(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	dashboard := untypedDashboard.(dashboards.Dashboard)
+	dashboard.ConfigurationMetadata = nil
 	dashboard.ID = opt.NewString(d.Id())
 	conf := m.(*config.ProviderConfiguration)
 	dashboardService := dashboards.NewService(conf.DTenvURL, conf.APIToken)
@@ -184,6 +185,7 @@ func (db *resDashboards) Read(ctx context.Context, d *schema.ResourceData, m int
 	if dashboard, err = dashboardService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
+	dashboard.ConfigurationMetadata = nil
 	if err = terraform.ToTerraform(dashboard, d); err != nil {
 		return diag.FromErr(err)
 	}

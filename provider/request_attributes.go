@@ -136,6 +136,7 @@ func (ra *reqAtts) Create(ctx context.Context, d *schema.ResourceData, m interfa
 	}
 
 	instance := untypedInstance.(requestattributes.RequestAttribute)
+	instance.Metadata = nil
 	instance.ID = nil
 	conf := m.(*config.ProviderConfiguration)
 	apiService := requestattributes.NewService(conf.DTenvURL, conf.APIToken)
@@ -172,6 +173,7 @@ func (ra *reqAtts) Update(ctx context.Context, d *schema.ResourceData, m interfa
 
 	instance := untypedInstance.(requestattributes.RequestAttribute)
 	instance.ID = opt.NewString(d.Id())
+	instance.Metadata = nil
 	conf := m.(*config.ProviderConfiguration)
 	apiService := requestattributes.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
@@ -194,6 +196,7 @@ func (ra *reqAtts) Read(ctx context.Context, d *schema.ResourceData, m interface
 	if instance, err = apiService.Get(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
+	instance.Metadata = nil
 	if err = terraform.ToTerraform(instance, d); err != nil {
 		return diag.FromErr(err)
 	}
