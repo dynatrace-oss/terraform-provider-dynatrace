@@ -24,7 +24,6 @@ import (
 	"testing"
 
 	atags "github.com/dtcookie/dynatrace/api/config/autotags"
-	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -104,7 +103,7 @@ func (test *TestStruct) URL(id string) string {
 
 func (test *TestStruct) CheckDestroy(s *terraform.State) error {
 	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
-	restClient := managementzones.NewService(providerConf.DTenvURL, providerConf.APIToken)
+	restClient := atags.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != ResourceName {
@@ -113,7 +112,7 @@ func (test *TestStruct) CheckDestroy(s *terraform.State) error {
 
 		id := rs.Primary.ID
 
-		if _, err := restClient.Get(id, false); err != nil {
+		if _, err := restClient.Get(id); err != nil {
 			// HTTP Response "404 Not Found" signals a success
 			if strings.Contains(err.Error(), `"code": 404`) {
 				return nil

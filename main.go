@@ -22,56 +22,51 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
-	"github.com/dtcookie/dynatrace/api/config/dashboards"
-	"github.com/dtcookie/dynatrace/api/config/maintenancewindows"
-	"github.com/dtcookie/dynatrace/api/config/managementzones"
-	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
-func createSchema(args []string) bool {
-	if len(args) == 1 {
-		return false
-	}
-	if strings.TrimSpace(args[1]) != "schema" {
-		return false
-	}
-	var res interface{}
-	if strings.TrimSpace(args[2]) == "dashboard" {
-		res = new(dashboards.Dashboard)
-	} else if strings.TrimSpace(args[2]) == "managementzone" {
-		res = new(managementzones.ManagementZone)
-	} else if strings.TrimSpace(args[2]) == "maintenancewindow" {
-		res = new(maintenancewindows.MaintenanceWindow)
-	} else if strings.TrimSpace(args[2]) == "alertingprofile" {
-		res = new(alertingprofiles.AlertingProfile)
-	}
-	resource := terraform.ResourceFor(res)
+// func createSchema(args []string) bool {
+// 	if len(args) == 1 {
+// 		return false
+// 	}
+// 	if strings.TrimSpace(args[1]) != "schema" {
+// 		return false
+// 	}
+// 	var res interface{}
+// 	if strings.TrimSpace(args[2]) == "dashboard" {
+// 		res = new(dashboards.Dashboard)
+// 	} else if strings.TrimSpace(args[2]) == "managementzone" {
+// 		res = new(managementzones.ManagementZone)
+// 	} else if strings.TrimSpace(args[2]) == "maintenancewindow" {
+// 		res = new(maintenancewindows.MaintenanceWindow)
+// 	} else if strings.TrimSpace(args[2]) == "alertingprofile" {
+// 		res = new(alertingprofiles.AlertingProfile)
+// 	}
+// 	resource := terraform.ResourceFor(res)
 
-	var err error
-	var w *os.File
+// 	var err error
+// 	var w *os.File
 
-	os.Remove("resource.go")
+// 	os.Remove("resource.go")
 
-	if w, err = os.Create(strings.TrimSpace("resource.go")); err != nil {
-		panic(err)
-	}
-	defer w.Close()
+// 	if w, err = os.Create(strings.TrimSpace("resource.go")); err != nil {
+// 		panic(err)
+// 	}
+// 	defer w.Close()
 
-	fmt.Fprintln(w, "package main")
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, `import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"`)
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, "func asdf() *schema.Resource {")
-	fmt.Fprint(w, "\treturn ")
-	terraform.DumpResource(w, resource, "")
-	fmt.Fprintln(w, "}")
+// 	fmt.Fprintln(w, "package main")
+// 	fmt.Fprintln(w)
+// 	fmt.Fprintln(w, `import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"`)
+// 	fmt.Fprintln(w)
+// 	fmt.Fprintln(w, "func asdf() *schema.Resource {")
+// 	fmt.Fprint(w, "\treturn ")
+// 	terraform.DumpResource(w, resource, "")
+// 	fmt.Fprintln(w, "}")
 
-	return true
-}
+// 	return true
+// }
 
 func download(args []string) bool {
 	if len(args) == 1 {
@@ -142,9 +137,9 @@ func download(args []string) bool {
 }
 
 func main() {
-	if createSchema(os.Args) {
-		return
-	}
+	// if createSchema(os.Args) {
+	// 	return
+	// }
 	if convert(os.Args) {
 		return
 	}

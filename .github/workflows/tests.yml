@@ -66,6 +66,14 @@ jobs:
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
         run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/autotags
+      - name: TestAlerting
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/alerting
       - uses: actions/upload-artifact@v1
         if: ${{ always() }}
         with:

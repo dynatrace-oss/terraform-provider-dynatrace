@@ -19,7 +19,6 @@ package customservice
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 
 	api "github.com/dtcookie/dynatrace/api/config"
@@ -207,16 +206,6 @@ func resourceDataToCustomService(data *schema.ResourceData, tech customservices.
 	customService.QueueEntryPointType = customservices.QueueEntryPointType(queueEntryPointType.(string))
 	customService.Rules = extractDetectionRules(data.Get("rule"), tech)
 	return &customService
-}
-
-func marshal(v interface{}) string {
-	result := ""
-	if data, err := json.MarshalIndent(v, "", "  "); err != nil {
-		result = err.Error()
-	} else {
-		result = string(data)
-	}
-	return result
 }
 
 // Create expects configuration data for a Custom Service within the given ResourceData

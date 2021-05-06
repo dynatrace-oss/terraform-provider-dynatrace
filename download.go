@@ -22,7 +22,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
+	"github.com/dtcookie/dynatrace/api/config/alerting"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
@@ -209,27 +209,36 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 }
 
 func importAlertingProfiles(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
-	restClient := alertingprofiles.NewService(environmentURL+"/api/config/v1", apiToken)
+	restClient := alerting.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
 	stubList, err := restClient.List()
 	if err != nil {
 		return err
 	}
 	for _, stub := range stubList.Values {
-		alertingProfile, err := restClient.Get(stub.ID)
+		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
 		}
-		exporter := &AlertingProfileExporter{AlertingProfile: alertingProfile}
+		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(alertingProfile.DisplayName) + ".alerting_profile.tf"
+		fileName := targetFolder + "/" + escape(config.DisplayName) + ".alerting_profile.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting_profile", config.DisplayName)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main_test
+package alerting_test
 
 import (
 	"fmt"
@@ -23,34 +23,34 @@ import (
 	"strings"
 	"testing"
 
+	alertingapi "github.com/dtcookie/dynatrace/api/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/testbase"
-
-	"github.com/dtcookie/dynatrace/api/config/alertingprofiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-type AlertingProfileTest struct {
+const ResourceName = "dynatrace_alerting_profile"
+const TestDataFolder = "../test_data/alerting_profiles"
+const RequestPath = "%s/alertingProfiles/%s"
+const TestCaseID = "alerting_profiles"
+
+type TestStruct struct {
 	resourceKey string
 }
 
-func NewAlertingProfileTest() ResourceTest {
-	return &AlertingProfileTest{resourceKey: "dynatrace_alerting_profile"}
-}
-
-func (test *AlertingProfileTest) Anonymize(m map[string]interface{}) {
+func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "displayName")
 	delete(m, "metadata")
 }
 
-func (test *AlertingProfileTest) ResourceKey() string {
+func (test *TestStruct) ResourceKey() string {
 	return test.resourceKey
 }
 
-func (test *AlertingProfileTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
+func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
 	if content, err = ioutil.ReadFile(file); err != nil {
@@ -61,32 +61,32 @@ func (test *AlertingProfileTest) CreateTestCase(file string, localJSONFile strin
 	resourceName := test.ResourceKey() + "." + name
 	config = strings.ReplaceAll(config, "#name#", name)
 	return &resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
+		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
-		ProviderFactories: testAccProviderFactories,
+		ProviderFactories: testbase.TestAccProviderFactories,
 		CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					test.CheckExists(resourceName, t),
-					compareLocalRemote(test, resourceName, localJSONFile, t),
+					CheckExists(resourceName, t),
+					testbase.CompareLocalRemote(test, resourceName, localJSONFile, t),
 				),
 			},
 		},
 	}, nil
 }
 
-func TestAccAlertingProfiles(t *testing.T) {
-	if disabled, ok := testbase.DisabledTests["alerting_profiles"]; ok && disabled {
+func TestAlerting(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
 	}
-	test := NewAlertingProfileTest()
+	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
-		"test_data/alerting_profiles/example_a.tf",
-		"test_data/alerting_profiles/example_a.json",
+		TestDataFolder+"/example_a.tf",
+		TestDataFolder+"/example_a.json",
 		t,
 	); err != nil {
 		t.Fatal(err)
@@ -95,18 +95,18 @@ func TestAccAlertingProfiles(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
-func (test *AlertingProfileTest) URL(id string) string {
-	envURL := testAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
-	reqPath := "%s/alertingProfiles/%s"
+func (test *TestStruct) URL(id string) string {
+	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
+	reqPath := RequestPath
 	return fmt.Sprintf(reqPath, envURL, id)
 }
 
-func (test *AlertingProfileTest) CheckDestroy(s *terraform.State) error {
-	providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-	restClient := alertingprofiles.NewService(providerConf.DTenvURL, providerConf.APIToken)
+func (test *TestStruct) CheckDestroy(s *terraform.State) error {
+	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+	restClient := alertingapi.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "dynatrace_alerting_profile" {
+		if rs.Type != ResourceName {
 			continue
 		}
 
@@ -120,16 +120,16 @@ func (test *AlertingProfileTest) CheckDestroy(s *terraform.State) error {
 			// any other error should fail the test
 			return err
 		}
-		return fmt.Errorf("configuration still exists: %s", rs.Primary.ID)
+		return fmt.Errorf("Configuration still exists: %s", rs.Primary.ID)
 	}
 
 	return nil
 }
 
-func (test *AlertingProfileTest) CheckExists(n string, t *testing.T) resource.TestCheckFunc {
+func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := alertingprofiles.NewService(providerConf.DTenvURL, providerConf.APIToken)
+		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
+		restClient := alertingapi.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {
 			if _, err := restClient.Get(rs.Primary.ID); err != nil {
@@ -138,6 +138,6 @@ func (test *AlertingProfileTest) CheckExists(n string, t *testing.T) resource.Te
 			return nil
 		}
 
-		return fmt.Errorf("not found: %s", n)
+		return fmt.Errorf("Not found: %s", n)
 	}
 }
