@@ -92,8 +92,8 @@ github.com/dtcookie/dynatrace/api/config v1.0.2 h1:Zgp2rEb3iLWhjT2N5Cu7oLMxdx2FD
 github.com/dtcookie/dynatrace/api/config v1.0.2/go.mod h1:TdfHhh+I/w6R9RNMUeYAbhsZiXwdQvW11lbR4TGgXts=
 github.com/dtcookie/dynatrace/api/config/alerting v1.0.4 h1:aqthGqWhh+dNAMOQ6doh1w13F3r+pgHvdCYdS9xEK/8=
 github.com/dtcookie/dynatrace/api/config/alerting v1.0.4/go.mod h1:rdArMVamAnokzcfUvYvqDShaPSawfDLNrBoCyudXN5g=
-github.com/dtcookie/dynatrace/api/config/autotags v1.0.7 h1:sKHYaH8FFIb7pHc1OG1S0DxdYK7FIhGZddAWoG17YiM=
-github.com/dtcookie/dynatrace/api/config/autotags v1.0.7/go.mod h1:Kt4wrOegsJXZQPZ2l/P/qqBYQVaEjIHWGdXxtwLxGQU=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.9 h1:eSGzcAFRAID/WewRItBn4wtm1yP0dxA0fpH9ldAdDw8=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.9/go.mod h1:oIBs/vE5V61wRO86wK/VU5ZB3lHb8JLPFpWX0fMWixI=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.1 h1:YbbEh3gatUXqyXCMY7C+1FJQv2ZE6+W515H1KmNgxxM=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.1/go.mod h1:EBPrDThsYcRM5yeu8zUSKyV9i3FwAsniy6GcvPNYmZ8=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.1 h1:2c8sxgZCT21KoOnRuRHdrSwPa6h6F+Jri3B/hl02VsM=
@@ -104,8 +104,9 @@ github.com/dtcookie/dynatrace/api/config/customservices v1.0.7 h1:qbYhcBtJxJC+vJ
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.7/go.mod h1:uTtP1YeYZHtZMtILQpTdmjW6Uq9t1ui3pk+ZBWWMIfI=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.1 h1:+WQpjQeThUh00jNy7n0Z3WSU7SMeNX3M6NxwIeoA9zc=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.1/go.mod h1:8OVqsPuH6YN6JC5fHCyGj/Lm5OBNVjXHzva8Ks9zPiY=
-github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.1 h1:2Qvsrv5yeEzJwiTjzJvn1wsygA9O4NnOyfnI5KOuNWg=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.1/go.mod h1:VrGsUZ30BeQDSUYUJhbygab4vrO5mAnTJO0YhYrx55c=
+github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.2 h1:ArWaMx0xGrCBR2c9RfICBjOxC8EjMZAa9b5mRy0Q8SE=
+github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.2/go.mod h1:VrGsUZ30BeQDSUYUJhbygab4vrO5mAnTJO0YhYrx55c=
 github.com/dtcookie/dynatrace/api/config/maintenancewindows v1.0.0 h1:FM0OosTtk/l7qsZ2Sjk+ylt/CF9q/LjY07+q/zjNb7w=
 github.com/dtcookie/dynatrace/api/config/maintenancewindows v1.0.0/go.mod h1:BkXwNwdVlvdxGCqnfDZ9Uqt0xyB7PeaekkwA62cnQ2w=
 github.com/dtcookie/dynatrace/api/config/managementzones v1.0.6 h1:kLmHIkm4666EsLJI5iPdre8mBDVnIewEvXyHZP6ELZw=

@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/dtcookie/dynatrace/api/config v1.0.2
 	github.com/dtcookie/dynatrace/api/config/alerting v1.0.4
-	github.com/dtcookie/dynatrace/api/config/autotags v1.0.7
+	github.com/dtcookie/dynatrace/api/config/autotags v1.0.9
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.1
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.1
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.3
