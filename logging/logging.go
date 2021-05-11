@@ -21,6 +21,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -57,7 +58,11 @@ func (odl *onDemandLogger) f() (*os.File, error) {
 }
 
 func (odl *onDemandLogger) Write(p []byte) (int, error) {
-	if p == nil || len(p) == 0 {
+	if len(p) == 0 {
+		return 0, nil
+	}
+	s := string(p)
+	if strings.Contains(s, "[WARN] Truncating attribute path of") {
 		return 0, nil
 	}
 	file, err := odl.f()

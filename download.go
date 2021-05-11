@@ -308,25 +308,32 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
-	dashboards, err := restClient.ListAll()
+	stubList, err := restClient.ListAll()
 	if err != nil {
 		return err
 	}
-	for _, dashboardStub := range dashboards.Dashboards {
-		dashboard, err := restClient.Get(dashboardStub.ID)
+	for _, stub := range stubList.Dashboards {
+		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
 		}
-		exporter := &DashboardExporter{Dashboard: dashboard}
+		config.ConfigurationMetadata = nil
 		var file *os.File
-
-		fileName := targetFolder + "/" + escape(dashboard.Metadata.Name) + ".dashboard.tf"
+		fileName := targetFolder + "/" + escape(config.Metadata.Name) + ".dashboard.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", config.Metadata.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

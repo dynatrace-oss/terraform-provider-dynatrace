@@ -21,6 +21,7 @@ import (
 	"context"
 
 	alertingapi "github.com/dtcookie/dynatrace/api/config/alerting"
+	"github.com/dtcookie/hcl"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
@@ -51,7 +52,7 @@ func NewService(m interface{}) *alertingapi.Service {
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	config := new(alertingapi.Profile)
-	if err := config.UnmarshalHCL(d); err != nil {
+	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	config.ID = nil
@@ -68,7 +69,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	config := new(alertingapi.Profile)
-	if err := config.UnmarshalHCL(d); err != nil {
+	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	config.ID = opt.NewString(d.Id())

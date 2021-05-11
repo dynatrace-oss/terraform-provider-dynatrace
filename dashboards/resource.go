@@ -15,15 +15,13 @@
 * limitations under the License.
  */
 
-package azure
+package dashboards
 
 import (
 	"context"
-	"reflect"
 
-	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
+	dbs "github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/rest"
-	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dtcookie/hcl"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
@@ -37,7 +35,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        hcl2sdk.Convert(new(azure.AzureCredentials).Schema()),
+		Schema:        hcl2sdk.Convert(new(dbs.Dashboard).Schema()),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -46,35 +44,22 @@ func Resource() *schema.Resource {
 	}
 }
 
-func Resolve(d *schema.ResourceData) (*azure.AzureCredentials, error) {
-	resolver, err := terraform.NewResolver(d)
-	if err != nil {
-		return nil, err
-	}
-	untypedConfig, err := resolver.Resolve(reflect.TypeOf(azure.AzureCredentials{}))
-	if err != nil {
-		return nil, err
-	}
-	typedConfig := untypedConfig.(azure.AzureCredentials)
-	return &typedConfig, nil
-}
-
-func NewService(m interface{}) *azure.ServiceClient {
+func NewService(m interface{}) *dbs.ServiceClient {
 	conf := m.(*config.ProviderConfiguration)
-	apiService := azure.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := dbs.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	return apiService
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	credentials := new(azure.AzureCredentials)
-	if err := credentials.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
+	config := new(dbs.Dashboard)
+	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	credentials.ID = nil
-	credentials.Metadata = nil
-	objStub, err := NewService(m).Create(credentials)
+	config.ID = nil
+	config.ConfigurationMetadata = nil
+	objStub, err := NewService(m).Create(config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -84,13 +69,13 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	credentials := new(azure.AzureCredentials)
-	if err := credentials.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
+	config := new(dbs.Dashboard)
+	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	credentials.ID = opt.NewString(d.Id())
-	credentials.Metadata = nil
-	if err := NewService(m).Update(credentials); err != nil {
+	config.ID = opt.NewString(d.Id())
+	config.Metadata = nil
+	if err := NewService(m).Update(config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -98,11 +83,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	credentials, err := NewService(m).Get(d.Id())
+	config, err := NewService(m).Get(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	marshalled, err := credentials.MarshalHCL()
+	marshalled, err := config.MarshalHCL()
 	if err != nil {
 		return diag.FromErr(err)
 	}

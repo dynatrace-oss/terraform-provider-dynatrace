@@ -24,6 +24,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/terraform"
+	"github.com/dtcookie/hcl"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
@@ -68,7 +69,7 @@ func NewService(m interface{}) *kubernetes.ServiceClient {
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	credentials := new(kubernetes.KubernetesCredentials)
-	if err := credentials.UnmarshalHCL(d); err != nil {
+	if err := credentials.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	credentials.ID = nil
@@ -84,7 +85,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	credentials := new(kubernetes.KubernetesCredentials)
-	if err := credentials.UnmarshalHCL(d); err != nil {
+	if err := credentials.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	credentials.ID = opt.NewString(d.Id())

@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package main_test
+package dashboards_test
 
 import (
 	"fmt"
@@ -31,29 +31,27 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-type DashboardTest struct {
+const ResourceName = "dynatrace_dashboard"
+const TestDataFolder = "../test_data/dashboards"
+const RequestPath = "%s/dashboards/%s"
+const TestCaseID = "dashboards"
+
+type TestStruct struct {
 	resourceKey string
 }
 
-func NewDashboardTest() ResourceTest {
-	return &DashboardTest{resourceKey: "dynatrace_dashboard"}
-}
-
-func (test *DashboardTest) ResourceKey() string {
-	return test.resourceKey
-}
-
-func (test *DashboardTest) Anonymize(m map[string]interface{}) {
+func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "name")
 	delete(m, "metadata")
 	delete(m["dashboardMetadata"].(map[string]interface{}), "name")
-	delete(m["dashboardMetadata"].(map[string]interface{}), "owner")
-	delete(m["dashboardMetadata"].(map[string]interface{}), "dashboardFilter")
-	delete(m["dashboardMetadata"].(map[string]interface{}), "sharingDetails")
 }
 
-func (test *DashboardTest) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
+func (test *TestStruct) ResourceKey() string {
+	return test.resourceKey
+}
+
+func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
 	if content, err = ioutil.ReadFile(file); err != nil {
@@ -64,32 +62,32 @@ func (test *DashboardTest) CreateTestCase(file string, localJSONFile string, t *
 	resourceName := test.ResourceKey() + "." + name
 	config = strings.ReplaceAll(config, "#name#", name)
 	return &resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
+		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
-		ProviderFactories: testAccProviderFactories,
+		ProviderFactories: testbase.TestAccProviderFactories,
 		CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					test.CheckExists(resourceName),
-					compareLocalRemote(test, resourceName, localJSONFile, t),
+					CheckExists(resourceName, t),
+					testbase.CompareLocalRemote(test, resourceName, localJSONFile, t),
 				),
 			},
 		},
 	}, nil
 }
 
-func TestAccDashboards(t *testing.T) {
-	if disabled, ok := testbase.DisabledTests["dashboards"]; ok && disabled {
+func TestDashboards(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
 	}
-	test := NewDashboardTest()
+	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
-		"test_data/dashboards/example_a.tf",
-		"test_data/dashboards/example_a.json",
+		TestDataFolder+"/example_a.tf",
+		TestDataFolder+"/example_a.json",
 		t,
 	); err != nil {
 		t.Fatal(err)
@@ -98,12 +96,18 @@ func TestAccDashboards(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
-func (test *DashboardTest) CheckDestroy(s *terraform.State) error {
-	providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
+func (test *TestStruct) URL(id string) string {
+	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
+	reqPath := RequestPath
+	return fmt.Sprintf(reqPath, envURL, id)
+}
+
+func (test *TestStruct) CheckDestroy(s *terraform.State) error {
+	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
 	restClient := dashboards.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "dynatrace_dashboard" {
+		if rs.Type != ResourceName {
 			continue
 		}
 
@@ -117,21 +121,15 @@ func (test *DashboardTest) CheckDestroy(s *terraform.State) error {
 			// any other error should fail the test
 			return err
 		}
-		return fmt.Errorf("Dashboard still exists: %s", rs.Primary.ID)
+		return fmt.Errorf("Configuration still exists: %s", rs.Primary.ID)
 	}
 
 	return nil
 }
 
-func (test *DashboardTest) URL(id string) string {
-	envURL := testAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
-	reqPath := "%s/dashboards/%s"
-	return fmt.Sprintf(reqPath, envURL, id)
-}
-
-func (test *DashboardTest) CheckExists(n string) resource.TestCheckFunc {
+func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		providerConf := testAccProvider.Meta().(*config.ProviderConfiguration)
+		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
 		restClient := dashboards.NewService(providerConf.DTenvURL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {

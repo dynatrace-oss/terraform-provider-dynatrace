@@ -27,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/k8s"
 	customservice "github.com/dynatrace-oss/terraform-provider-dynatrace/custom_service"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
 
@@ -62,7 +63,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":     customservice.Resource(),
-			"dynatrace_dashboard":          new(resDashboards).Resource(),
+			"dynatrace_dashboard":          dashboards.Resource(),
 			"dynatrace_management_zone":    mgmz.Resource(),
 			"dynatrace_maintenance_window": new(maintWins).Resource(),
 			"dynatrace_request_attribute":  new(reqAtts).Resource(),
