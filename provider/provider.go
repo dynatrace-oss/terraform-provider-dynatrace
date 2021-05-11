@@ -29,6 +29,7 @@ import (
 	customservice "github.com/dynatrace-oss/terraform-provider-dynatrace/custom_service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -65,7 +66,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_service":     customservice.Resource(),
 			"dynatrace_dashboard":          dashboards.Resource(),
 			"dynatrace_management_zone":    mgmz.Resource(),
-			"dynatrace_maintenance_window": new(maintWins).Resource(),
+			"dynatrace_maintenance_window": maintenance.Resource(),
 			"dynatrace_request_attribute":  new(reqAtts).Resource(),
 			"dynatrace_alerting_profile":   alerting.Resource(),
 			"dynatrace_notification":       new(notificationConfigs).Resource(),

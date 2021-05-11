@@ -29,6 +29,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
+	"github.com/dtcookie/dynatrace/api/config/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
@@ -266,6 +267,42 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 		}
 		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_autotag", config.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func importMaintenance(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := maintenance.NewService(environmentURL+"/api/config/v1", apiToken)
+	rest.Verbose = false
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		fmt.Println(stub.ID)
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		config.Metadata = nil
+		var file *os.File
+		fileName := targetFolder + "/" + escape(config.Name) + ".maintenance.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		defer file.Close()
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window", config.Name)); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {

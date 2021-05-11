@@ -33,6 +33,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+type diff struct {
+	old string
+	new string
+}
+
 // NotificationCfg has no documentation
 type NotificationCfg struct {
 	Config notifications.NotificationConfig `json:"config"` // The name of the notification configuration.

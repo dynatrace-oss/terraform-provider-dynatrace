@@ -133,6 +133,11 @@ func download(args []string) bool {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
+	if err := importMaintenance(targetFolder+"/maintenance", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
 	return true
 }
 
