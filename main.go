@@ -145,9 +145,9 @@ func main() {
 	// if createSchema(os.Args) {
 	// 	return
 	// }
-	if convert(os.Args) {
-		return
-	}
+	// if convert(os.Args) {
+	// 	return
+	// }
 	if download(os.Args) {
 		return
 	}
