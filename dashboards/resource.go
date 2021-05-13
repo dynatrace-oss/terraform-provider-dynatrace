@@ -74,7 +74,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	config.ID = opt.NewString(d.Id())
-	config.Metadata = nil
+	config.ConfigurationMetadata = nil
 	if err := NewService(m).Update(config); err != nil {
 		return diag.FromErr(err)
 	}
