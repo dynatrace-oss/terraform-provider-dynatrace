@@ -97,7 +97,7 @@ Optional:
 
 - **conditions** (Block List) A list of matching rules for the management zone. The management zone applies only if **all** conditions are fulfilled (see [below for nested schema](#nestedblock--rules--conditions))
 - **enabled** (Boolean) The rule is enabled (`true`) or disabled (`false`)
-- **propagation_types** (List of String) How to apply the management zone to underlying entities:
+- **propagation_types** (Set of String) How to apply the management zone to underlying entities:
    - `SERVICE_TO_HOST_LIKE`: Apply to underlying hosts of matching services
    - `SERVICE_TO_PROCESS_GROUP_LIKE`: Apply to underlying process groups of matching services
    - `PROCESS_GROUP_TO_HOST`: Apply to underlying hosts of matching process groups
