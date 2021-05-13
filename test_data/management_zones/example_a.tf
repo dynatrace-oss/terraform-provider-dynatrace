@@ -26,7 +26,9 @@ resource "dynatrace_management_zone" "#name#" {
         attribute = "HOST_TAGS"
       }
     }
-    enabled = true
-    type    = "HOST"
+    enabled           = true
+    propagation_types = ["PROCESS_GROUP_TO_SERVICE", "PROCESS_GROUP_TO_HOST"]
+    type              = "PROCESS_GROUP"
   }
 }
+
