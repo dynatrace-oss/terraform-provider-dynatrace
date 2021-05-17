@@ -289,7 +289,6 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 		return err
 	}
 	for _, stub := range stubList.Values {
-		fmt.Println(stub.ID)
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -316,6 +315,7 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 }
 
 func importRequestAttributes(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := requestattributes.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
@@ -324,19 +324,27 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 		return err
 	}
 	for _, stub := range stubList.Values {
-		requestAttribute, err := restClient.Get(stub.ID)
+		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
 		}
-		exporter := &RequestAttributeExporter{RequestAttribute: requestAttribute}
+		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(requestAttribute.Name) + ".request_attribute.tf"
+		fileName := targetFolder + "/" + escape(config.Name) + ".request_attribute.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_request_attribute", config.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -403,20 +411,52 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 		return err
 	}
 	for _, stub := range stubList.Values {
-		customService, err := restClient.Get(stub.ID, technology, false)
+		config, err := restClient.Get(stub.ID, technology, false)
 		if err != nil {
 			return err
 		}
-		exporter := &CustomServiceExporter{CustomService: customService}
+		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(customService.Name) + ".custom_service.tf"
+		fileName := targetFolder + "/" + escape(config.Name) + ".custom_service.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-
-		exporter.ToHCL(file, string(technology))
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", config.Name)); err != nil {
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
+
+	// os.MkdirAll(targetFolder, os.ModePerm)
+	// restClient := customservices.NewService(environmentURL+"/api/config/v1", apiToken)
+	// rest.Verbose = false
+	// stubList, err := restClient.List(technology)
+	// if err != nil {
+	// 	return err
+	// }
+	// for _, stub := range stubList.Values {
+	// 	customService, err := restClient.Get(stub.ID, technology, false)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	exporter := &CustomServiceExporter{CustomService: customService}
+	// 	var file *os.File
+	// 	fileName := targetFolder + "/" + escape(customService.Name) + ".custom_service.tf"
+	// 	os.Remove(fileName)
+	// 	if file, err = os.Create(fileName); err != nil {
+	// 		return err
+	// 	}
+	// 	defer file.Close()
+
+	// 	exporter.ToHCL(file, string(technology))
+	// }
+	// return nil
 }

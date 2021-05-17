@@ -1,68 +1,50 @@
 {
-    "metadata": {
-      "configurationVersions": [
-        0
+  "enabled": true,
+  "processGroups": [],
+  "queueEntryPoint": false,
+  "queueEntryPointType": null,
+  "rules": [
+    {
+      "annotations": [
+        "com.example.ExampleAnnotation"
       ],
-      "clusterVersion": "1.206.95.20201116-094826"
+      "className": "com.example.Prefix",
+      "enabled": true,
+      "matcher": "STARTS_WITH",
+      "methodRules": [
+        {
+          "argumentTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ],
+          "methodName": "methodA",
+          "returnType": "java.lang.String"
+        },
+        {
+          "methodName": "methodB",
+          "returnType": "void"
+        }
+      ]
     },
-    "id": "6489264c-24d4-4779-b014-3c7b92aaa658",
-    "name": "Example A",
-    "enabled": true,
-    "rules": [
-      {
-        "id": "d7dcb96b-1a07-47b4-a3ed-6697b580a530",
-        "enabled": true,
-        "fileName": "",
-        "className": "com.example.Prefix",
-        "matcher": "STARTS_WITH",
-        "methodRules": [
-          {
-            "id": "1af97da1-f9b6-4560-a710-90645bbcaf19",
-            "methodName": "methodA",
-            "argumentTypes": [
-              "java.lang.String",
-              "java.lang.String"
-            ],
-            "returnType": "java.lang.String"
-          },
-          {
-            "id": "4eef8ba8-bdce-4c36-a9a8-b7bdf533ff66",
-            "methodName": "methodB",
-            "argumentTypes": [],
-            "returnType": "void"
-          }
-        ],
-        "annotations": [
-          "com.example.ExampleAnnotation"
-        ]
-      },
-      {
-        "id": "9e51e95d-40a2-430d-831f-847ccb9edc54",
-        "enabled": true,
-        "fileName": "",
-        "className": "com.example.Suffix",
-        "matcher": "ENDS_WITH",
-        "methodRules": [
-          {
-            "id": "5b18659b-fe00-4ca1-b22e-7c63b0b5fe59",
-            "methodName": "methodC",
-            "argumentTypes": [
-              "java.lang.String",
-              "java.lang.String"
-            ],
-            "returnType": "java.lang.String"
-          },
-          {
-            "id": "de4a8431-d3b3-4be6-aa64-0e725f1e463c",
-            "methodName": "methodD",
-            "argumentTypes": [],
-            "returnType": "void"
-          }
-        ],
-        "annotations": []
-      }
-    ],
-    "queueEntryPoint": false,
-    "queueEntryPointType": null,
-    "processGroups": []
-  }
+    {
+      "annotations": [],
+      "className": "com.example.Suffix",
+      "enabled": true,
+      "matcher": "ENDS_WITH",
+      "methodRules": [
+        {
+          "argumentTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ],
+          "methodName": "methodC",
+          "returnType": "java.lang.String"
+        },
+        {
+          "methodName": "methodD",
+          "returnType": "void"
+        }
+      ]
+    }
+  ]
+}

@@ -26,11 +26,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/k8s"
-	customservice "github.com/dynatrace-oss/terraform-provider-dynatrace/custom_service"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/requestattributes"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -63,11 +64,11 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"dynatrace_custom_service":     customservice.Resource(),
+			"dynatrace_custom_service":     customservices.Resource(),
 			"dynatrace_dashboard":          dashboards.Resource(),
 			"dynatrace_management_zone":    mgmz.Resource(),
 			"dynatrace_maintenance_window": maintenance.Resource(),
-			"dynatrace_request_attribute":  new(reqAtts).Resource(),
+			"dynatrace_request_attribute":  requestattributes.Resource(),
 			"dynatrace_alerting_profile":   alerting.Resource(),
 			"dynatrace_notification":       new(notificationConfigs).Resource(),
 			"dynatrace_autotag":            autotags.Resource(),

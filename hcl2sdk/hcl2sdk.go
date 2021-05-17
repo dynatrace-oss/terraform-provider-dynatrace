@@ -85,6 +85,7 @@ func convertSchema(s *hcl.Schema) *schema.Schema {
 	result.MinItems = s.MinItems
 	result.Sensitive = s.Sensitive
 	result.Default = s.Default
+	result.Computed = s.Computed
 	result.Type = convertType(s.Type)
 	result.Elem = convertElem(s.Elem)
 	return result
