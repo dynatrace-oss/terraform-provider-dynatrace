@@ -65,7 +65,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	d.SetId(objStub.ID)
-	return diag.Diagnostics{}
+	return Read(ctx, d, m)
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
