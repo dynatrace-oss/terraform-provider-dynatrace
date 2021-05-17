@@ -23,6 +23,9 @@ import (
 	"reflect"
 	"testing"
 
+	"io/ioutil"
+	"net/http"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -123,4 +126,45 @@ func deepEqualMap(a map[string]interface{}, b map[string]interface{}) bool {
 		}
 	}
 	return true
+}
+
+func loadHTTP(url string, token string) (map[string]interface{}, error) {
+	var err error
+	var request *http.Request
+	var response *http.Response
+	var data []byte
+
+	if request, err = http.NewRequest("GET", url, nil); err != nil {
+		return nil, err
+	}
+	request.Header.Set("Authorization", "Api-Token "+token)
+
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(nil)}}
+	if response, err = client.Do(request); err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if data, err = ioutil.ReadAll(response.Body); err != nil {
+		return nil, err
+	}
+
+	m := map[string]interface{}{}
+	if err = json.Unmarshal(data, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func loadLocal(file string) (map[string]interface{}, error) {
+	var err error
+	var data []byte
+	if data, err = ioutil.ReadFile(file); err != nil {
+		return nil, err
+	}
+	m := map[string]interface{}{}
+	if err = json.Unmarshal(data, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
