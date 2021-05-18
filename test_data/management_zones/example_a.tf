@@ -11,6 +11,7 @@ resource "dynatrace_management_zone" "#name#" {
       }
       key {
         attribute = "HOST_TECHNOLOGY"
+        type      = "STATIC"
       }
     }
     conditions {
@@ -24,6 +25,7 @@ resource "dynatrace_management_zone" "#name#" {
       }
       key {
         attribute = "HOST_TAGS"
+        type      = "STATIC"
       }
     }
     enabled           = true

@@ -4,6 +4,7 @@ resource "dynatrace_azure_credentials" "#name#" {
   auto_tagging                 = true
   directory_id                 = "ABCDE"
   label                        = "#name#"
+  key                          = "aaaa"
   monitor_only_tagged_entities = true
 
   monitor_only_tag_pairs {

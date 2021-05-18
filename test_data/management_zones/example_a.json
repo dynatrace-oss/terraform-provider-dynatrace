@@ -13,7 +13,8 @@
 		"conditions": [
 		  {
 			"key": {
-			  "attribute": "HOST_TECHNOLOGY"
+			  "attribute": "HOST_TECHNOLOGY",
+			  "type": "STATIC"
 			},
 			"comparisonInfo": {
 			  "type": "SIMPLE_HOST_TECH",
@@ -26,7 +27,8 @@
 		  },
 		  {
 			"key": {
-			  "attribute": "HOST_TAGS"
+			  "attribute": "HOST_TAGS",
+			  "type": "STATIC"
 			},
 			"comparisonInfo": {
 			  "type": "TAG",

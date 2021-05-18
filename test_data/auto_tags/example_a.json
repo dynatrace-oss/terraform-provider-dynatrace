@@ -16,7 +16,9 @@
         "conditions": [
           {
             "key": {
-              "attribute": "SERVICE_TOPOLOGY"
+              "attribute": "SERVICE_TOPOLOGY",
+              "type": "STATIC"
+
             },
             "comparisonInfo": {
               "type": "SERVICE_TOPOLOGY",
@@ -27,7 +29,8 @@
           },
           {
             "key": {
-              "attribute": "SERVICE_DETECTED_NAME"
+              "attribute": "SERVICE_DETECTED_NAME",
+              "type": "STATIC"
             },
             "comparisonInfo": {
               "type": "STRING",

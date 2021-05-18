@@ -8,6 +8,7 @@ resource "dynatrace_autotag" "#name#" {
       }
       key {
         attribute = "SERVICE_TOPOLOGY"
+        type      = "STATIC"
       }
     }
     conditions {
@@ -19,6 +20,7 @@ resource "dynatrace_autotag" "#name#" {
       }
       key {
         attribute = "SERVICE_DETECTED_NAME"
+        type      = "STATIC"
       }
     }
     enabled      = true
