@@ -113,6 +113,24 @@ func TestEmailNotifications(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
+func TestWebHookNotifications(t *testing.T) {
+	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
+		t.Skip()
+	}
+	test := &TestStruct{resourceKey: ResourceName}
+	var err error
+	var testCase *resource.TestCase
+	if testCase, err = test.CreateTestCase(
+		TestDataFolder+"/example_c.tf",
+		TestDataFolder+"/example_c.json",
+		t,
+	); err != nil {
+		t.Fatal(err)
+		return
+	}
+	resource.Test(t, *testCase)
+}
+
 func (test *TestStruct) URL(id string) string {
 	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
 	reqPath := RequestPath
