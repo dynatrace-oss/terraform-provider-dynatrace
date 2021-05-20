@@ -26,7 +26,7 @@ For Terraform version 0.12.x
     terraform {
         required_providers {
             dynatrace = {
-                version = "1.0.6"
+                version = "1.1.0"
             }
         }
     }
@@ -47,7 +47,7 @@ For Terraform version 0.13.x
         required_version = "~> 0.13.0"
         required_providers {
             dynatrace = {
-                version = "1.0.6"
+                version = "1.1.0"
                 source = "dynatrace.com/com/dynatrace"
             }
         }
@@ -65,6 +65,7 @@ For Terraform version 0.13.x
 * Kubernetes Credentials
 * AWS Credentials
 * Azure Credentials
+* Maintenance Windows
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
