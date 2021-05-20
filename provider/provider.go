@@ -31,6 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/requestattributes"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -70,7 +71,7 @@ func Provider() *schema.Provider {
 			"dynatrace_maintenance_window": maintenance.Resource(),
 			"dynatrace_request_attribute":  requestattributes.Resource(),
 			"dynatrace_alerting_profile":   alerting.Resource(),
-			"dynatrace_notification":       new(notificationConfigs).Resource(),
+			"dynatrace_notification":       notifications.Resource(),
 			"dynatrace_autotag":            autotags.Resource(),
 			"dynatrace_aws_credentials":    aws.Resource(),
 			"dynatrace_azure_credentials":  azure.Resource(),

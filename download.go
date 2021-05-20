@@ -149,6 +149,7 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 }
 
 func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string) error {
+	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := notifications.NewService(environmentURL+"/api/config/v1", apiToken)
 	rest.Verbose = false
@@ -161,15 +162,22 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 		if err != nil {
 			return err
 		}
-		exporter := &NotificationExporter{NotificationConfig: config}
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.GetName()) + ".notification.tf"
+		fileName := targetFolder + "/" + escape(config.NotificationConfig.GetName()) + ".notification.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 		defer file.Close()
-		exporter.ToHCL(file)
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_notification", config.NotificationConfig.GetName())); err != nil {
+			return err
+		}
+		if err := hcl.ExtExport(config, file); err != nil {
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

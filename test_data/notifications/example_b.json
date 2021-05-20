@@ -1,0 +1,28 @@
+{
+  "type": "EMAIL",
+  "id": "c2dceb58-03cc-3f46-8117-2265c3ca0cb6",
+  "name": "Xemail",
+  "alertingProfile": "f75e68ef-aca7-3a07-9c21-94eb00ecfc56",
+  "active": true,
+  "subject": "{State} Problem {ProblemID}: {ImpactedEntity}",
+  "body": "{ProblemDetailsHTML}",
+  "receivers": [
+    "they@home.com",
+    "you@home.com",
+    "me@home.com",
+    "we@home.com"
+  ],
+  "ccReceivers": [
+    "they@home.com",
+    "you@home.com",
+    "me@home.com",
+    "we@home.com"
+  ],
+  "bccReceivers": [
+    "they@home.com",
+    "you@home.com",
+    "me@home.com",
+    "us@home.com",
+    "we@home.com"
+  ]
+}
