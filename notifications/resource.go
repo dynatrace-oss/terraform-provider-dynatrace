@@ -53,7 +53,6 @@ func NewService(m interface{}) *notifications.ServiceClient {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	d.SetId("FOOO")
 	config := new(notifications.NotificationRecord)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
