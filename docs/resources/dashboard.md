@@ -32,38 +32,14 @@ Required:
 
 Optional:
 
-- **dashboard_filter** (Block List, Max: 1) Global filter Settings for the Dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dashboard_filter))
 - **dynamic_filters** (Block List, Max: 1) Dashboard filter configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters))
+- **filter** (Block List, Max: 1) Global filter Settings for the Dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--filter))
 - **owner** (String) the owner of the dashboard
 - **shared** (Boolean) the dashboard is shared (`true`) or private (`false`)
 - **sharing_details** (Block List, Max: 1) represents sharing configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--sharing_details))
 - **tags** (Set of String) a set of tags assigned to the dashboard
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 - **valid_filter_keys** (Set of String) a set of all possible global dashboard filters that can be applied to dashboard
-
-<a id="nestedblock--dashboard_metadata--dashboard_filter"></a>
-### Nested Schema for `dashboard_metadata.dashboard_filter`
-
-Optional:
-
-- **management_zone** (Block List) the management zone this dashboard applies to (see [below for nested schema](#nestedblock--dashboard_metadata--dashboard_filter--management_zone))
-- **timeframe** (String) the default timeframe of the dashboard
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-
-<a id="nestedblock--dashboard_metadata--dashboard_filter--management_zone"></a>
-### Nested Schema for `dashboard_metadata.dashboard_filter.management_zone`
-
-Required:
-
-- **id** (String) the ID of the Dynatrace entity
-
-Optional:
-
-- **description** (String) a short description of the Dynatrace entity
-- **name** (String) the name of the Dynatrace entity
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-
-
 
 <a id="nestedblock--dashboard_metadata--dynamic_filters"></a>
 ### Nested Schema for `dashboard_metadata.dynamic_filters`
@@ -93,6 +69,30 @@ Optional:
 
 Only applicable if the **filters** set includes `TAG_KEY:<tagname>`
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+
+<a id="nestedblock--dashboard_metadata--filter"></a>
+### Nested Schema for `dashboard_metadata.filter`
+
+Optional:
+
+- **management_zone** (Block List) the management zone this dashboard applies to (see [below for nested schema](#nestedblock--dashboard_metadata--filter--management_zone))
+- **timeframe** (String) the default timeframe of the dashboard
+- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+<a id="nestedblock--dashboard_metadata--filter--management_zone"></a>
+### Nested Schema for `dashboard_metadata.filter.management_zone`
+
+Required:
+
+- **id** (String) the ID of the Dynatrace entity
+
+Optional:
+
+- **description** (String) a short description of the Dynatrace entity
+- **name** (String) the name of the Dynatrace entity
+- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
 
 
 <a id="nestedblock--dashboard_metadata--sharing_details"></a>

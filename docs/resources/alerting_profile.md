@@ -138,7 +138,6 @@ Required:
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 - **value** (String) The value of the tag. Not applicable to custom tags
 
 
