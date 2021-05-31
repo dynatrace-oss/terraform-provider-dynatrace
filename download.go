@@ -47,6 +47,7 @@ import (
 func escape(s string) string {
 	s = strings.ReplaceAll(s, ":", "_")
 	s = strings.ReplaceAll(s, "/", "_")
+	s = strings.ReplaceAll(s, " ", "_")
 	return s
 }
 
@@ -72,7 +73,7 @@ func importAWSCredentials(targetFolder string, environmentURL string, apiToken s
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_aws_credentials", config.Label)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_aws_credentials", escape(config.Label))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -107,7 +108,7 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_azure_credentials", config.Label)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_azure_credentials", escape(config.Label))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -142,7 +143,7 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_k8s_credentials", config.Label)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_k8s_credentials", escape(config.Label))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -176,7 +177,7 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_notification", config.NotificationConfig.GetName())); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_notification", escape(config.NotificationConfig.GetName()))); err != nil {
 			return err
 		}
 		if err := hcl.ExtExport(config, file); err != nil {
@@ -211,7 +212,7 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_management_zone", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_management_zone", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -246,7 +247,7 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting_profile", config.DisplayName)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting_profile", escape(config.DisplayName))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -281,7 +282,7 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_autotag", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_autotag", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -316,7 +317,7 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -351,7 +352,7 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_request_attribute", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_request_attribute", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -385,7 +386,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", config.Metadata.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Metadata.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -438,7 +439,7 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
@@ -471,7 +472,7 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 			return err
 		}
 		defer file.Close()
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_disk_anomalies", config.Name)); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_disk_anomalies", escape(config.Name))); err != nil {
 			return err
 		}
 		if err := hcl.ExtExport(config, file); err != nil {
