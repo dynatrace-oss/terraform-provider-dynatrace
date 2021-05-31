@@ -137,6 +137,30 @@ func download(args []string) bool {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
+	if err := importDiskAnomalies(targetFolder+"/anomalies/disks", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importMetricAnomalies(targetFolder+"/anomalies/custom", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importDatabaseAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importHostAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importApplicationAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if err := importServiceAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
 
 	return true
 }

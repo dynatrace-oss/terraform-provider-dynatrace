@@ -21,6 +21,12 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/applications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/databases"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/disks"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/hosts"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/metrics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/aws"
@@ -64,18 +70,27 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_API_TOKEN", "DT_API_TOKEN"}, nil),
 			},
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"dynatrace_alerting_profiles": alerting.DataSource(),
+		},
 		ResourcesMap: map[string]*schema.Resource{
-			"dynatrace_custom_service":     customservices.Resource(),
-			"dynatrace_dashboard":          dashboards.Resource(),
-			"dynatrace_management_zone":    mgmz.Resource(),
-			"dynatrace_maintenance_window": maintenance.Resource(),
-			"dynatrace_request_attribute":  requestattributes.Resource(),
-			"dynatrace_alerting_profile":   alerting.Resource(),
-			"dynatrace_notification":       notifications.Resource(),
-			"dynatrace_autotag":            autotags.Resource(),
-			"dynatrace_aws_credentials":    aws.Resource(),
-			"dynatrace_azure_credentials":  azure.Resource(),
-			"dynatrace_k8s_credentials":    k8s.Resource(),
+			"dynatrace_custom_service":        customservices.Resource(),
+			"dynatrace_dashboard":             dashboards.Resource(),
+			"dynatrace_management_zone":       mgmz.Resource(),
+			"dynatrace_maintenance_window":    maintenance.Resource(),
+			"dynatrace_request_attribute":     requestattributes.Resource(),
+			"dynatrace_alerting_profile":      alerting.Resource(),
+			"dynatrace_notification":          notifications.Resource(),
+			"dynatrace_autotag":               autotags.Resource(),
+			"dynatrace_aws_credentials":       aws.Resource(),
+			"dynatrace_azure_credentials":     azure.Resource(),
+			"dynatrace_k8s_credentials":       k8s.Resource(),
+			"dynatrace_service_anomalies":     services.Resource(),
+			"dynatrace_application_anomalies": applications.Resource(),
+			"dynatrace_host_anomalies":        hosts.Resource(),
+			"dynatrace_database_anomalies":    databases.Resource(),
+			"dynatrace_custom_anomalies":      metrics.Resource(),
+			"dynatrace_disk_anomalies":        disks.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

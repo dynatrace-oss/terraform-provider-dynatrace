@@ -248,6 +248,7 @@ Required:
 Optional:
 
 - **header** (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--web_hook--header))
+- **notify_event_merges** (Boolean) Call webhook if new events merge into existing problems
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--web_hook--header"></a>

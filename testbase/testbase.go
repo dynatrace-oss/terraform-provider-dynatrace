@@ -34,6 +34,13 @@ type ResourceTest interface {
 }
 
 func DeepEqual(a interface{}, b interface{}) bool {
+	return deepEqual(a, b, "", nil)
+}
+
+func deepEqual(a interface{}, b interface{}, addr string, t *testing.T) bool {
+	// if t != nil {
+	// 	t.Logf("deepEqual(%v)", addr)
+	// }
 	if a == nil && b == nil {
 		return true
 	}
@@ -48,7 +55,7 @@ func DeepEqual(a interface{}, b interface{}) bool {
 	}
 	switch ta := a.(type) {
 	case map[string]interface{}:
-		return deepEqualMap(ta, b.(map[string]interface{}))
+		return deepEqualMap(ta, b.(map[string]interface{}), addr, t)
 	case bool:
 		return ta == b.(bool)
 	case string:
@@ -56,20 +63,20 @@ func DeepEqual(a interface{}, b interface{}) bool {
 	case float64:
 		return ta == b.(float64)
 	case []interface{}:
-		return deepEqualSlice(ta, b.([]interface{}))
+		return deepEqualSlice(ta, b.([]interface{}), addr, t)
 	default:
 		panic(fmt.Errorf("unsupported type %T", ta))
 	}
 }
 
-func deepEqualSlice(a []interface{}, b []interface{}) bool {
+func deepEqualSlice(a []interface{}, b []interface{}, addr string, t *testing.T) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	for _, va := range a {
+	for idx, va := range a {
 		found := false
 		for _, vb := range b {
-			if DeepEqual(va, vb) {
+			if deepEqual(va, vb, fmt.Sprintf("%v[%v]", addr, idx), t) {
 				found = true
 				break
 			}
@@ -81,13 +88,13 @@ func deepEqualSlice(a []interface{}, b []interface{}) bool {
 	return true
 }
 
-func deepEqualMap(a map[string]interface{}, b map[string]interface{}) bool {
+func deepEqualMap(a map[string]interface{}, b map[string]interface{}, addr string, t *testing.T) bool {
 	for k, va := range a {
 		vb, found := b[k]
 		if !found {
 			return false
 		}
-		if !DeepEqual(va, vb) {
+		if !deepEqual(va, vb, addr+"."+k, t) {
 			return false
 		}
 	}
@@ -152,7 +159,7 @@ func CompareLocalRemote(test ResourceTest, n string, localJSONFile string, t *te
 			}
 			test.Anonymize(localMap)
 			test.Anonymize(remoteMap)
-			if !DeepEqual(localMap, remoteMap) {
+			if !deepEqual(localMap, remoteMap, "", t) {
 				sLocalMap, _ := json.Marshal(localMap)
 				sRemoteMap, _ := json.Marshal(remoteMap)
 				return fmt.Errorf("--LOCAL--\n%v\n\n\n--REMOTE--\n%v", string(sLocalMap), string(sRemoteMap))

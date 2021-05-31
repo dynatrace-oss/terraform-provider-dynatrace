@@ -1,0 +1,32 @@
+{
+    "metadata": {
+      "configurationVersions": [
+        3
+      ],
+      "clusterVersion": "1.217.139.20210521-170114"
+    },
+    "responseTimeDegradation": {
+      "detectionMode": "DETECT_AUTOMATICALLY",
+      "automaticDetection": {
+        "responseTimeDegradationMilliseconds": 100,
+        "responseTimeDegradationPercent": 50,
+        "slowestResponseTimeDegradationMilliseconds": 1000,
+        "slowestResponseTimeDegradationPercent": 100,
+        "loadThreshold": "TEN_REQUESTS_PER_MINUTE"
+      }
+    },
+    "trafficDrop": {
+      "enabled": true,
+      "trafficDropPercent": 50
+    },
+    "trafficSpike": {
+      "enabled": false
+    },
+    "failureRateIncrease": {
+      "detectionMode": "DETECT_AUTOMATICALLY",
+      "automaticDetection": {
+        "failingServiceCallPercentageIncreaseAbsolute": 5,
+        "failingServiceCallPercentageIncreaseRelative": 50
+      }
+    }
+  }
