@@ -7,7 +7,7 @@
 
 If you want to run Terraform with the dynatrace provider plugin on your system, add the plug-in provider to the Terraform configuration file.
 
-    ```hcl
+    ```
     terraform {
         required_version = "~> 0.13.0"
         required_providers {
@@ -21,7 +21,7 @@ If you want to run Terraform with the dynatrace provider plugin on your system, 
 
 In order to configure the provider, add a code section like this into your Terraform configuration file
 
-    ```hcl
+    ```
        provider "dynatrace" {
            dt_env_url   = "https://#######.live.dynatrace.com"
            dt_api_token = "##########################################"
