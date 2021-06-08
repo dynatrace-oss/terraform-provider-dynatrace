@@ -13,12 +13,12 @@ resource "dynatrace_maintenance_window" "#name#" {
     matches {
       tag_combination = "AND"
       tags {
-        context = "CONTEXTLESS"
-        key     = "deldel1"
-      }
-      tags {
         key     = "bggtedgxen"
         context = "CONTEXTLESS"
+      }
+      tags {
+        context = "CONTEXTLESS"
+        key     = "deldel1"
       }
     }
   }
