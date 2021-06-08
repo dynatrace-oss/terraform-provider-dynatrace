@@ -52,7 +52,6 @@ func NewService(m interface{}) *hosts.Service {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	d.SetId("dynatrace_host_anomalies")
 	config := new(hosts.AnomalyDetection)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -60,7 +59,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := NewService(m).Update(config); err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId("dynatrace_host_anomalies")
+	d.SetId("dynatrace_host_anomalies")	
 	return Read(ctx, d, m)
 }
 

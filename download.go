@@ -20,7 +20,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/dtcookie/dynatrace/api/config/alerting"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/applications"
@@ -45,10 +47,79 @@ import (
 )
 
 func escape(s string) string {
-	s = strings.ReplaceAll(s, ":", "_")
-	s = strings.ReplaceAll(s, "/", "_")
-	s = strings.ReplaceAll(s, " ", "_")
+	result := ""
+	for _, c := range s {
+		if unicode.IsLetter(c) {
+			result = result + string(c)
+		} else if unicode.IsDigit(c) {
+			result = result + string(c)
+		} else if c == '-' {
+			result = result + string(c)
+		} else if c == '_' {
+			result = result + string(c)
+		} else {
+			result = result + "_"
+		}
+	}
+	return result
+}
+
+/*
+  < (less than)
+  > (greater than)
+  : (colon - sometimes works, but is actually NTFS Alternate Data Streams)
+  " (double quote)
+  / (forward slash)
+  \ (backslash)
+  | (vertical bar or pipe)
+  ? (question mark)
+  * (asterisk)
+*/
+
+var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*"}
+
+func escf(s string) string {
+	for _, ch := range forbiddenFileNameChars {
+		s = strings.ReplaceAll(s, ch, "_")
+	}
 	return s
+}
+
+func escFileName(s string, id string) string {
+	if !IsValidUUID(id) && !IsValidID(id) {
+		return escf(s)
+	}
+	return escf(s + "." + id + ".")
+}
+
+func IsValidUUID(uuid string) bool {
+	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
+	return r.MatchString(uuid)
+}
+
+func IsValidID(uuid string) bool {
+	if uuid == "" {
+		return false
+	}
+	r := regexp.MustCompile("^[A-Z0-9]*$")
+	res := r.MatchString(uuid)
+	if res {
+		return true
+	}
+	r = regexp.MustCompile(`^[A-Z]*-[A-Z0-9]*$`)
+	res = r.MatchString(uuid)
+	if res {
+		return true
+	}
+	r = regexp.MustCompile(`^[A-Z]*_[A-Z]*-[A-Z0-9]*$`)
+	res = r.MatchString(uuid)
+	if res {
+		return true
+	}
+	// if !res {
+	// 	fmt.Printf("%v is not a valid ID\n", uuid)
+	// }
+	return res
 }
 
 func importAWSCredentials(targetFolder string, environmentURL string, apiToken string) error {
@@ -67,21 +138,24 @@ func importAWSCredentials(targetFolder string, environmentURL string, apiToken s
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.aws.tf"
+		fileName := targetFolder + "/" + escFileName(config.Label, stub.ID) + ".credentials.aws.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_aws_credentials", escape(config.Label))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -102,21 +176,24 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.azure.tf"
+		fileName := targetFolder + "/" + escFileName(config.Label, stub.ID) + ".credentials.azure.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_azure_credentials", escape(config.Label))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -137,21 +214,24 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Label) + ".credentials.k8s.tf"
+		fileName := targetFolder + "/" + escFileName(config.Label, stub.ID) + ".credentials.k8s.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_k8s_credentials", escape(config.Label))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -171,21 +251,24 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 			return err
 		}
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.NotificationConfig.GetName()) + ".notification.tf"
+		fileName := targetFolder + "/" + escFileName(config.NotificationConfig.GetName(), stub.ID) + ".notification.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_notification", escape(config.NotificationConfig.GetName()))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.ExtExport(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -206,21 +289,24 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".management_zone.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".management_zone.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_management_zone", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -241,19 +327,21 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.DisplayName) + ".alerting_profile.tf"
+		fileName := targetFolder + "/" + escFileName(config.DisplayName, stub.ID) + ".alerting_profile.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting_profile", escape(config.DisplayName))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
 	}
@@ -276,21 +364,24 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".autotag.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".autotag.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_autotag", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -311,21 +402,24 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".maintenance.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".maintenance.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -346,21 +440,24 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".request_attribute.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".request_attribute.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_request_attribute", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -380,21 +477,24 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		}
 		config.ConfigurationMetadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Metadata.Name) + ".dashboard.tf"
+		fileName := targetFolder + "/" + escFileName(config.Metadata.Name, stub.ID) + ".dashboard.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Metadata.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -433,21 +533,24 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 		}
 		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".custom_service.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".custom_service.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.Export(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -466,21 +569,24 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 			return err
 		}
 		var file *os.File
-		fileName := targetFolder + "/" + escape(config.Name) + ".disk_anomalies.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".disk_anomalies.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_disk_anomalies", escape(config.Name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.ExtExport(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -504,21 +610,24 @@ func importMetricAnomalies(targetFolder string, environmentURL string, apiToken 
 		if name == "" {
 			name = uuid.New().String()
 		}
-		fileName := targetFolder + "/" + escape(name) + ".custom_anomalies.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".custom_anomalies.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		defer file.Close()
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_custom_anomalies", escape(name))); err != nil {
+			file.Close()
 			return err
 		}
 		if err := hcl.ExtExport(config, file); err != nil {
+			file.Close()
 			return err
 		}
 		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
 			return err
 		}
+		file.Close()
 	}
 	return nil
 }
@@ -537,14 +646,16 @@ func importDatabaseAnomalies(targetFolder string, environmentURL string, apiToke
 	if file, err = os.Create(fileName); err != nil {
 		return err
 	}
-	defer file.Close()
 	if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_database_anomalies", "dynatrace_database_anomalies")); err != nil {
+		file.Close()
 		return err
 	}
 	if err := hcl.ExtExport(config, file); err != nil {
+		file.Close()
 		return err
 	}
 	if _, err := file.WriteString("}\n"); err != nil {
+		file.Close()
 		return err
 	}
 
@@ -565,16 +676,19 @@ func importHostAnomalies(targetFolder string, environmentURL string, apiToken st
 	if file, err = os.Create(fileName); err != nil {
 		return err
 	}
-	defer file.Close()
 	if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_host_anomalies", "dynatrace_host_anomalies")); err != nil {
+		file.Close()
 		return err
 	}
 	if err := hcl.ExtExport(config, file); err != nil {
+		file.Close()
 		return err
 	}
 	if _, err := file.WriteString("}\n"); err != nil {
+		file.Close()
 		return err
 	}
+	file.Close()
 
 	return nil
 }
@@ -593,16 +707,19 @@ func importApplicationAnomalies(targetFolder string, environmentURL string, apiT
 	if file, err = os.Create(fileName); err != nil {
 		return err
 	}
-	defer file.Close()
 	if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_application_anomalies", "dynatrace_application_anomalies")); err != nil {
+		file.Close()
 		return err
 	}
 	if err := hcl.ExtExport(config, file); err != nil {
+		file.Close()
 		return err
 	}
 	if _, err := file.WriteString("}\n"); err != nil {
+		file.Close()
 		return err
 	}
+	file.Close()
 
 	return nil
 }
@@ -621,16 +738,19 @@ func importServiceAnomalies(targetFolder string, environmentURL string, apiToken
 	if file, err = os.Create(fileName); err != nil {
 		return err
 	}
-	defer file.Close()
 	if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_service_anomalies", "dynatrace_service_anomalies")); err != nil {
+		file.Close()
 		return err
 	}
 	if err := hcl.ExtExport(config, file); err != nil {
+		file.Close()
 		return err
 	}
 	if _, err := file.WriteString("}\n"); err != nil {
+		file.Close()
 		return err
 	}
+	file.Close()
 
 	return nil
 }

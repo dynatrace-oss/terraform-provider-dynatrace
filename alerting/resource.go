@@ -80,33 +80,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	return Read(ctx, d, m)
 }
 
-// func traverseSlice(elems []interface{}) []interface{} {
-// 	return elems
-// }
-
-// func unique(v interface{}) int {
-// 	return 0
-// }
-
-// func traverseMap(m map[string]interface{}) map[string]interface{} {
-// 	if m == nil {
-// 		return m
-// 	}
-// 	for k, v := range m {
-// 		switch tv := v.(type) {
-// 		case hcl.Set:
-// 			m[k] = schema.NewSet(nil, []interface{}(tv))
-// 		case []interface{}:
-// 			m[k] = traverseSlice(tv)
-// 		case map[string]interface{}:
-// 			m[k] = traverseMap(tv)
-// 		default:
-// 			m[k] = tv
-// 		}
-// 	}
-// 	return m
-// }
-
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	config, err := NewService(m).Get(d.Id())

@@ -1,58 +1,33 @@
 # Dynatrace Terraform Provider
-[![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
-- Terraform Website: [https://www.terraform.io](https://www.terraform.io)
-- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 ## Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) 0.12+
+- [Terraform](https://www.terraform.io/downloads.html) 0.13.x+
 
 ## Using the provider
 
-If you want to run Terraform with the dynatrace provider plugin on your system, complete the following steps:
-
-1. [Download](https://github.com/dynatrace-oss/terraform-provider-dynatrace/releases/latest) the dynatrace provider plugin for Terraform.
-
-1. Unzip the release archive to extract the plugin binary (`terraform-provider-dynatrace_vX.Y.Z`).
-
-For Terraform version 0.12.x
-
-1. Move the binary into the Terraform [plugins directory] for the platform.
-    - Linux/Unix/macOS: `~/.terraform.d/plugins`
-    - Windows: `%APPDATA%\terraform.d\plugins`
-
-1. Add the plug-in provider to the Terraform configuration file.
-
-    ```hcl
-    terraform {
-        required_providers {
-            dynatrace = {
-                version = "1.1.0"
-            }
-        }
-    }
-    ```
-    
-
-For Terraform version 0.13.x
-
-1. Move the binary into the Terraform [plugins directory] for the platform.
-    - Linux: `~/.terraform.d/plugins/dynatrace.com/com/dynatrace/1.0.4/linux_amd64/`
-    - macOS: `~/.terraform.d/plugins/dynatrace.com/com/dynatrace/1.0.4/darwin_amd64/`
-    - Windows: `%APPDATA%\terraform.d\plugins\dynatrace.com\com\dynatrace\1.0.4\windows_amd64\`
-
-1. Add the plug-in provider to the Terraform configuration file.
+If you want to run Terraform with the dynatrace provider plugin on your system, add the plug-in provider to the Terraform configuration file.
 
     ```hcl
     terraform {
         required_version = "~> 0.13.0"
         required_providers {
             dynatrace = {
-                version = "1.1.0"
+                version = "1.2.2"
                 source = "dynatrace.com/com/dynatrace"
             }
         }
-    }
+    }   
     ```
+
+In order to configure the provider, add a code section like this into your Terraform configuration file
+
+    ```hcl
+       provider "dynatrace" {
+           dt_env_url   = "https://#######.live.dynatrace.com"
+           dt_api_token = "##########################################"
+       }    
+    ```
+where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_token` needs to be an API Token with the permissions `Read configuration` and `Capture request data`.
 
 ## Currently supported configuration settings
 * Dashboards

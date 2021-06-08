@@ -52,7 +52,6 @@ func NewService(m interface{}) *databaseservices.Service {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	d.SetId("dynatrace_database_anomalies")
 	config := new(databaseservices.AnomalyDetection)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)

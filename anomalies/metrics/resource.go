@@ -23,10 +23,10 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/anomalies/metricevents"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
+	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
-	"github.com/google/uuid"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -53,7 +53,6 @@ func NewService(m interface{}) *metricevents.Service {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	d.SetId(uuid.New().String())
 	config := new(metricevents.MetricEvent)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -70,6 +69,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	config := new(metricevents.MetricEvent)
+	config.ID = opt.NewString(d.Id())
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}

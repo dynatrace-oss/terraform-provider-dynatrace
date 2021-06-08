@@ -19,7 +19,6 @@ package main_test
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -74,22 +73,5 @@ func TestProvider_configure(t *testing.T) {
 	diags := p.Configure(ctx, rc)
 	if diags.HasError() {
 		t.Fatal(diags)
-	}
-}
-
-func testAccPreCheck(t *testing.T) {
-	ctx := context.TODO()
-
-	if v := os.Getenv("DYNATRACE_ENV_URL"); v == "" {
-		t.Fatalf("[WARN] DYNATRACE_ENV_URL has not been set for acceptance tests")
-	}
-
-	if v := os.Getenv("DYNATRACE_API_TOKEN"); v == "" {
-		t.Fatalf("[WARN] DYNATRACE_API_TOKEN must be set for acceptance tests")
-	}
-
-	diags := testAccProvider.Configure(ctx, terraform.NewResourceConfigRaw(nil))
-	if diags.HasError() {
-		t.Fatal(diags[0].Summary)
 	}
 }
