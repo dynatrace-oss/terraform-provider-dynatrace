@@ -7,26 +7,27 @@
 
 If you want to run Terraform with the dynatrace provider plugin on your system, add the plug-in provider to the Terraform configuration file.
 
-    ```
-    terraform {
-        required_version = "~> 0.13.0"
-        required_providers {
-            dynatrace = {
-                version = "1.2.2"
-                source = "dynatrace-oss/dynatrace"
-            }
+```hcl
+terraform {
+    required_version = "~> 0.13.0"
+    required_providers {
+        dynatrace = {
+            version = "1.2.2"
+            source = "dynatrace-oss/dynatrace"
         }
-    }   
-    ```
+    }
+}   
+```
 
 In order to configure the provider, add a code section like this into your Terraform configuration file
 
-    ```
-       provider "dynatrace" {
-           dt_env_url   = "https://#######.live.dynatrace.com"
-           dt_api_token = "##########################################"
-       }    
-    ```
+```hcl
+    provider "dynatrace" {
+        dt_env_url   = "https://#######.live.dynatrace.com"
+        dt_api_token = "##########################################"
+    }    
+```
+
 where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_token` needs to be an API Token with the permissions `Read configuration` and `Capture request data`.
 
 ## Currently supported configuration settings
