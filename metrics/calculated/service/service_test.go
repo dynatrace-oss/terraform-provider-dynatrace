@@ -69,7 +69,7 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					CheckExists(resourceName, t),
-					// testbase.CompareLocalRemote(test, resourceName, localJSONFile, t),
+					testbase.CompareLocalRemoteExt(test, resourceName, localJSONFile, t, true),
 				),
 			},
 		},

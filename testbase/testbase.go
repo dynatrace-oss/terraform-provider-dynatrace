@@ -143,6 +143,10 @@ func LoadLocal(file string) (map[string]interface{}, error) {
 }
 
 func CompareLocalRemote(test ResourceTest, n string, localJSONFile string, t *testing.T) resource.TestCheckFunc {
+	return CompareLocalRemoteExt(test, n, localJSONFile, t, false)
+}
+
+func CompareLocalRemoteExt(test ResourceTest, n string, localJSONFile string, t *testing.T, loadHTTPOnly bool) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		var err error
 		var localMap map[string]interface{}
@@ -154,15 +158,17 @@ func CompareLocalRemote(test ResourceTest, n string, localJSONFile string, t *te
 			if remoteMap, err = LoadHTTP(url, token); err != nil {
 				return err
 			}
-			if localMap, err = LoadLocal(localJSONFile); err != nil {
-				return err
-			}
-			test.Anonymize(localMap)
-			test.Anonymize(remoteMap)
-			if !deepEqual(localMap, remoteMap, "", t) {
-				sLocalMap, _ := json.Marshal(localMap)
-				sRemoteMap, _ := json.Marshal(remoteMap)
-				return fmt.Errorf("--LOCAL--\n%v\n\n\n--REMOTE--\n%v", string(sLocalMap), string(sRemoteMap))
+			if !loadHTTPOnly {
+				if localMap, err = LoadLocal(localJSONFile); err != nil {
+					return err
+				}
+				test.Anonymize(localMap)
+				test.Anonymize(remoteMap)
+				if !deepEqual(localMap, remoteMap, "", t) {
+					sLocalMap, _ := json.Marshal(localMap)
+					sRemoteMap, _ := json.Marshal(remoteMap)
+					return fmt.Errorf("--LOCAL--\n%v\n\n\n--REMOTE--\n%v", string(sLocalMap), string(sRemoteMap))
+				}
 			}
 			return nil
 		}
