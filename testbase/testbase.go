@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -169,6 +170,8 @@ func CompareLocalRemoteExt(test ResourceTest, n string, localJSONFile string, t 
 					sRemoteMap, _ := json.Marshal(remoteMap)
 					return fmt.Errorf("--LOCAL--\n%v\n\n\n--REMOTE--\n%v", string(sLocalMap), string(sRemoteMap))
 				}
+			} else {
+				time.Sleep(time.Second * 5)
 			}
 			return nil
 		}
