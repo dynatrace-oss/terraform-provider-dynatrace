@@ -39,9 +39,9 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
+	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
-	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
 )
@@ -592,7 +592,6 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 }
 
 func importMetricAnomalies(targetFolder string, environmentURL string, apiToken string) error {
-	rest.Verbose = true
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := metricevents.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -752,5 +751,45 @@ func importServiceAnomalies(targetFolder string, environmentURL string, apiToken
 	}
 	file.Close()
 
+	return nil
+}
+
+func importCalculatedServiceMetrics(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := service.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".calculated_service_metric.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_calculated_service_metric", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
 	return nil
 }

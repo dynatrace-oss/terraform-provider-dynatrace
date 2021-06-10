@@ -161,6 +161,10 @@ func download(args []string) bool {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
+	if err := importCalculatedServiceMetrics(targetFolder+"/metrics/calculated/service", environmentURL, apiToken); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
 
 	return true
 }
