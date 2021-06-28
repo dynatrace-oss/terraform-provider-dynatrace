@@ -40,6 +40,9 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
+	hostnaming "github.com/dtcookie/dynatrace/api/config/naming/hosts"
+	processgroupnaming "github.com/dtcookie/dynatrace/api/config/naming/processgroups"
+	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/hcl"
@@ -778,6 +781,126 @@ func importCalculatedServiceMetrics(targetFolder string, environmentURL string, 
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_calculated_service_metric", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importServiceNamings(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := servicenaming.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".service_naming.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_service_naming", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importHostNamings(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := hostnaming.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".host_naming.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_host_naming", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importProcessGroupNamings(targetFolder string, environmentURL string, apiToken string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := processgroupnaming.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".processgroup_naming.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_processgroup_naming", escape(name))); err != nil {
 			file.Close()
 			return err
 		}

@@ -20,26 +20,29 @@ package provider
 import (
 	"context"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/alerting"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/applications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/databases"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/disks"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/hosts"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/metrics"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/services"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/aws"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/k8s"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/customservices"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/maintenance"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/metrics/calculated/service"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/notifications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/requestattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/applications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/databases"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/disks"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/mgmz"
+	hostnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/hosts"
+	processgroupnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/processgroups"
+	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -93,6 +96,9 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_anomalies":          metrics.Resource(),
 			"dynatrace_disk_anomalies":            disks.Resource(),
 			"dynatrace_calculated_service_metric": service.Resource(),
+			"dynatrace_service_naming":            servicenaming.Resource(),
+			"dynatrace_host_naming":               hostnaming.Resource(),
+			"dynatrace_processgroup_naming":       processgroupnaming.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

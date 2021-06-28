@@ -92,76 +92,88 @@ func download(args []string) bool {
 		os.Exit(0)
 	}
 
-	if err := importAutoTags(targetFolder+"/autotags", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importDashboards(targetFolder+"/dashboards", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importManagementZones(targetFolder+"/management_zones", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importCustomServices(targetFolder+"/custom_services", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importAlertingProfiles(targetFolder+"/alerting_profiles", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importRequestAttributes(targetFolder+"/request_attributes", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importNotificationConfigs(targetFolder+"/notifications", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importAWSCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
+	// if err := importAutoTags(targetFolder+"/autotags", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importDashboards(targetFolder+"/dashboards", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importManagementZones(targetFolder+"/management_zones", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importCustomServices(targetFolder+"/custom_services", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importAlertingProfiles(targetFolder+"/alerting_profiles", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importRequestAttributes(targetFolder+"/request_attributes", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importNotificationConfigs(targetFolder+"/notifications", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importAWSCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
 
-	if err := importAzureCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+	// if err := importAzureCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importK8sCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importMaintenance(targetFolder+"/maintenance", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importDiskAnomalies(targetFolder+"/anomalies/disks", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importMetricAnomalies(targetFolder+"/anomalies/custom", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importDatabaseAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importHostAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importApplicationAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importServiceAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	// if err := importCalculatedServiceMetrics(targetFolder+"/metrics/calculated/service", environmentURL, apiToken); err != nil {
+	// 	fmt.Println(err.Error())
+	// 	os.Exit(0)
+	// }
+	if err := importServiceNamings(targetFolder+"/naming/services", environmentURL, apiToken); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
-	if err := importK8sCredentials(targetFolder+"/credentials", environmentURL, apiToken); err != nil {
+	if err := importHostNamings(targetFolder+"/naming/hosts", environmentURL, apiToken); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
-	if err := importMaintenance(targetFolder+"/maintenance", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importDiskAnomalies(targetFolder+"/anomalies/disks", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importMetricAnomalies(targetFolder+"/anomalies/custom", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importDatabaseAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importHostAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importApplicationAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importServiceAnomalies(targetFolder+"/anomalies", environmentURL, apiToken); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-	if err := importCalculatedServiceMetrics(targetFolder+"/metrics/calculated/service", environmentURL, apiToken); err != nil {
+	if err := importProcessGroupNamings(targetFolder+"/naming/process_groups", environmentURL, apiToken); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}

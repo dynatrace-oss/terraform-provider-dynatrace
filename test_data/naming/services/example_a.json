@@ -1,0 +1,68 @@
+{
+    "metadata": {
+      "configurationVersions": [
+        0
+      ],
+      "clusterVersion": "1.219.83.20210609-130419"
+    },
+    "id": "c93b26eb-9864-482d-b767-7958aeda077f",
+    "type": "SERVICE",
+    "nameFormat": "ABCD",
+    "displayName": "foo",
+    "enabled": true,
+    "rules": [
+      {
+        "key": {
+          "attribute": "SERVICE_TYPE",
+          "type": "STATIC"
+        },
+        "comparisonInfo": {
+          "type": "SERVICE_TYPE",
+          "operator": "EQUALS",
+          "value": "WEB_REQUEST_SERVICE",
+          "negate": false
+        }
+      },
+      {
+        "key": {
+          "attribute": "SERVICE_TECHNOLOGY",
+          "type": "STATIC"
+        },
+        "comparisonInfo": {
+          "type": "SIMPLE_TECH",
+          "operator": "EQUALS",
+          "value": {
+            "type": "APACHE_HTTP_SERVER"
+          },
+          "negate": false
+        }
+      },
+      {
+        "key": {
+          "attribute": "SERVICE_TOPOLOGY",
+          "type": "STATIC"
+        },
+        "comparisonInfo": {
+          "type": "SERVICE_TOPOLOGY",
+          "operator": "EQUALS",
+          "value": "FULLY_MONITORED",
+          "negate": false
+        }
+      },
+      {
+        "key": {
+          "attribute": "PROCESS_GROUP_TAGS",
+          "type": "STATIC"
+        },
+        "comparisonInfo": {
+          "type": "TAG",
+          "operator": "TAG_KEY_EQUALS",
+          "value": {
+            "context": "CONTEXTLESS",
+            "key": "dfoo"
+          },
+          "negate": true
+        }
+      }
+    ]
+  }

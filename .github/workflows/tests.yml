@@ -33,7 +33,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/k8s
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s
       - name: TestAWSCredentials
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -41,7 +41,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/aws
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws
       - name: TestAzureCredentials
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -49,7 +49,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/credentials/azure
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure
       - name: TestManagementZones
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -57,7 +57,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/mgmz
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/mgmz
       - name: TestAutoTags
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -65,7 +65,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/autotags
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags
       - name: TestAlerting
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -73,7 +73,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/alerting
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/alerting
       - name: TestDashboards
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -81,7 +81,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/dashboards
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards
       - name: TestMaintenance
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -89,7 +89,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/maintenance
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance
       - name: TestRequestAttributes
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -97,7 +97,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/requestattributes
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes
       - name: TestCustomServices
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -105,7 +105,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/customservices
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices
       - name: TestNotifications
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -113,7 +113,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/notifications
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications
       - name: TestMetricEventAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -121,7 +121,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/metrics
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics
       - name: TestDiskEventAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -129,7 +129,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/disks
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/disks
       - name: TestApplicationAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -137,7 +137,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/applications
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/applications
       - name: TestDatabasesAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -145,7 +145,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/databases
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/databases
       - name: TestHostAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -153,7 +153,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/hosts
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts
       - name: TestServiceAnomalies
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -161,7 +161,7 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/anomalies/services
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services
       - name: TestCalculatedServiceMetrics
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -169,5 +169,29 @@ jobs:
           DYNATRACE_DEBUG: true
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/metrics/calculated/service
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service
+      - name: TestServiceNaming
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services
+      - name: TestHostNaming
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/hosts
+      - name: TestProcessNaming
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/processgroups
         
