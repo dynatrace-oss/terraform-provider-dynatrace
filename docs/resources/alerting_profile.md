@@ -110,10 +110,10 @@ Required:
 
 - **delay_in_minutes** (Number) Send a notification if a problem remains open longer than *X* minutes
 - **severity_level** (String) The severity level to trigger the alert. Possible values are `AVAILABILITY`,	`CUSTOM_ALERT`,	`ERROR`,`MONITORING_UNAVAILABLE`,`PERFORMANCE` and `RESOURCE_CONTENTION`.
+- **tag_filter** (Block List, Min: 1) Configuration of the tag filtering of the alerting profile (see [below for nested schema](#nestedblock--rules--tag_filter))
 
 Optional:
 
-- **tag_filter** (Block List) Configuration of the tag filtering of the alerting profile (see [below for nested schema](#nestedblock--rules--tag_filter))
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--rules--tag_filter"></a>
