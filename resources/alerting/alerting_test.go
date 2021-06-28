@@ -32,7 +32,7 @@ import (
 )
 
 const ResourceName = "dynatrace_alerting_profile"
-const TestDataFolder = "../../../test_data/alerting_profiles"
+const TestDataFolder = "../../test_data/alerting_profiles"
 const RequestPath = "%s/alertingProfiles/%s"
 const TestCaseID = "alerting_profiles"
 
