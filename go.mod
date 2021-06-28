@@ -15,7 +15,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.7
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.10
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.13
-	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.10
+	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.11
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.6
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.14
 	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.1
