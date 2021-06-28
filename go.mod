@@ -3,7 +3,7 @@ module github.com/dynatrace-oss/terraform-provider-dynatrace
 go 1.15
 
 require (
-	github.com/dtcookie/dynatrace/api/config/alerting v1.0.17
+	github.com/dtcookie/dynatrace/api/config/alerting v1.0.18
 	github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.3
 	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.3
 	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.7
