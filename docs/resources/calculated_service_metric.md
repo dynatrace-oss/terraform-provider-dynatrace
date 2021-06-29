@@ -338,7 +338,22 @@ Optional:
 
 - **operator** (String) Operator of the comparison. You can reverse it by setting `negate` to `true`. Possible values are `EQUALS`, `EQUALS_ANY_OF`, `TAG_KEY_EQUALS` and `TAG_KEY_EQUALS_ANY_OF`
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- **value** (Block List, Max: 1) The values to compare to (see [below for nested schema](#nestedblock--conditions--condition--comparison--zos_call_type--value))
 - **values** (Block List, Max: 1) The values to compare to (see [below for nested schema](#nestedblock--conditions--condition--comparison--zos_call_type--values))
+
+<a id="nestedblock--conditions--condition--comparison--zos_call_type--value"></a>
+### Nested Schema for `conditions.condition.comparison.zos_call_type.value`
+
+Required:
+
+- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value. Possible values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`
+- **key** (String) The key of the tag. Custom tags have the tag value here
+
+Optional:
+
+- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- **value** (String) The value of the tag. Not applicable to custom tags
+
 
 <a id="nestedblock--conditions--condition--comparison--zos_call_type--values"></a>
 ### Nested Schema for `conditions.condition.comparison.zos_call_type.values`
