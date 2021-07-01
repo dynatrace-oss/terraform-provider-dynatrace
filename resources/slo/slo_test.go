@@ -76,12 +76,27 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 	}, nil
 }
 
-func TestSLOs(t *testing.T) {
+func TestSLOsA(t *testing.T) {
 	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
 	if testCase, err = test.CreateTestCase(
 		TestDataFolder+"/example_a.tf",
+		TestDataFolder+"/example_a.json",
+		t,
+	); err != nil {
+		t.Fatal(err)
+		return
+	}
+	resource.Test(t, *testCase)
+}
+
+func TestSLOsB(t *testing.T) {
+	test := &TestStruct{resourceKey: ResourceName}
+	var err error
+	var testCase *resource.TestCase
+	if testCase, err = test.CreateTestCase(
+		TestDataFolder+"/example_b.tf",
 		TestDataFolder+"/example_a.json",
 		t,
 	); err != nil {
