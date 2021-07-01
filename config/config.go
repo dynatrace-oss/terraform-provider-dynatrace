@@ -48,7 +48,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (interface{}, diag.
 	apiToken := d.Get("dt_api_token").(string)
 
 	fullURL := dtEnvURL + "/api/config/v1"
-	fullApiV2URL := dtEnvURL + "/api/config/v2"
+	fullApiV2URL := dtEnvURL + "/api/v2"
 	var diags diag.Diagnostics
 
 	return &ProviderConfiguration{

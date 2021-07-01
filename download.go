@@ -45,6 +45,7 @@ import (
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
+	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
 )
@@ -485,7 +486,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Metadata.Name))); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard", escape(config.Metadata.Name+"_"+stub.ID))); err != nil {
 			file.Close()
 			return err
 		}
@@ -901,6 +902,43 @@ func importProcessGroupNamings(targetFolder string, environmentURL string, apiTo
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_processgroup_naming", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importSLOs(targetFolder string, environmentURL string, apiToken string) error {
+
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := slo.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, id) + ".slo.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_slo", escape(config.Name))); err != nil {
 			file.Close()
 			return err
 		}

@@ -43,6 +43,7 @@ import (
 	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -99,6 +100,7 @@ func Provider() *schema.Provider {
 			"dynatrace_service_naming":            servicenaming.Resource(),
 			"dynatrace_host_naming":               hostnaming.Resource(),
 			"dynatrace_processgroup_naming":       processgroupnaming.Resource(),
+			"dynatrace_slo":                       slo.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
