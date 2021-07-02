@@ -61,6 +61,7 @@ Invoking the download functionality requires
 #### Linux
 `./terraform-provider-dynatrace export *[<resourcename>[=<id>]]`
 #### Usage Examples
+* `./terraform-provider-dynatrace export` downloads all available configuration settings
 * `./terraform-provider-dynatrace export dynatrace_dashboard` downloads all available dashboards
 * `./terraform-provider-dynatrace export dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
 * `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
