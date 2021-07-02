@@ -20,6 +20,7 @@ package slo
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/rest"
@@ -109,6 +110,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	for err != nil {
 		_, err = NewService(m).Get(d.Id())
 	}
+	time.Sleep(5000)
 
 	return diag.Diagnostics{}
 }
