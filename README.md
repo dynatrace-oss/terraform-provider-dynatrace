@@ -52,7 +52,7 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
 The utility then reaches out to the Dynatrace Environment specified by the command line arguments and fetches all currently supported configuration items. These results will then automatically get transformed into HCL (the configuration language to be used for `.tf` files) and places each configuration item into its own `.tf` file).
 ### Command Line Syntax
-Invoking the download functionality requires
+Invoking the export functionality requires
 * The environment varibale `DYNATRACE_ENV_URL` as the URL of your Dynatrace Environment
 * The environment variable `DYNATRACE_API_TOKEN` as the API Token with the permissions `Read configuration` and `Capture request data`
 * Optinonally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
