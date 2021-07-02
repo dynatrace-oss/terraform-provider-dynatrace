@@ -20,6 +20,8 @@ package slo
 import (
 	"context"
 	"log"
+	"os"
+	"time"
 
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/rest"
@@ -65,6 +67,9 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	d.SetId(id)
+	if "true" == os.Getenv("DYNATRACE_DEBUG") {
+		time.Sleep(10000)
+	}
 	return Read(ctx, d, m)
 }
 
