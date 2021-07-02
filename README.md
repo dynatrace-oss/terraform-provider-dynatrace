@@ -62,7 +62,7 @@ Invoking the download functionality requires
 `./terraform-provider-dynatrace export *[<resourcename>[=<id>]]`
 #### Usage Examples
 * `./terraform-provider-dynatrace export dynatrace_dashboard` downloads all available dashboards
-* * `./terraform-provider-dynatrace export dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
+* `./terraform-provider-dynatrace export dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
 * `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
 * `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
 * `./terraform-provider-dynatrace export dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
