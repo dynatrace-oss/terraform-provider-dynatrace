@@ -63,7 +63,7 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
 		ProviderFactories: testbase.TestAccProviderFactories,
-		CheckDestroy:      test.CheckDestroy,
+		// CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
