@@ -126,7 +126,19 @@ func IsValidID(uuid string) bool {
 	return res
 }
 
-func importAWSCredentials(targetFolder string, environmentURL string, apiToken string) error {
+func ctns(elems []string, elem string) bool {
+	if elems == nil {
+		return true
+	}
+	for _, el := range elems {
+		if el == elem {
+			return true
+		}
+	}
+	return false
+}
+
+func importAWSCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := aws.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -136,6 +148,9 @@ func importAWSCredentials(targetFolder string, environmentURL string, apiToken s
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -164,7 +179,7 @@ func importAWSCredentials(targetFolder string, environmentURL string, apiToken s
 	return nil
 }
 
-func importAzureCredentials(targetFolder string, environmentURL string, apiToken string) error {
+func importAzureCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := azure.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -174,6 +189,9 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -202,7 +220,7 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 	return nil
 }
 
-func importK8sCredentials(targetFolder string, environmentURL string, apiToken string) error {
+func importK8sCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := kubernetes.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -212,6 +230,9 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -240,7 +261,7 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 	return nil
 }
 
-func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string) error {
+func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := notifications.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -250,6 +271,9 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -277,7 +301,7 @@ func importNotificationConfigs(targetFolder string, environmentURL string, apiTo
 	return nil
 }
 
-func importManagementZones(targetFolder string, environmentURL string, apiToken string) error {
+func importManagementZones(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := managementzones.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -287,6 +311,9 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 		return err
 	}
 	for _, stub := range stubList {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID, false)
 		if err != nil {
 			return err
@@ -315,7 +342,7 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 	return nil
 }
 
-func importAlertingProfiles(targetFolder string, environmentURL string, apiToken string) error {
+func importAlertingProfiles(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := alerting.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -325,6 +352,9 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -352,7 +382,7 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 	return nil
 }
 
-func importAutoTags(targetFolder string, environmentURL string, apiToken string) error {
+func importAutoTags(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := autotags.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -362,6 +392,9 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -390,7 +423,7 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string)
 	return nil
 }
 
-func importMaintenance(targetFolder string, environmentURL string, apiToken string) error {
+func importMaintenance(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := maintenance.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -400,6 +433,9 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -428,7 +464,7 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 	return nil
 }
 
-func importRequestAttributes(targetFolder string, environmentURL string, apiToken string) error {
+func importRequestAttributes(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := requestattributes.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -438,6 +474,9 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -466,7 +505,7 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 	return nil
 }
 
-func importDashboards(targetFolder string, environmentURL string, apiToken string) error {
+func importDashboards(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -475,6 +514,9 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		return err
 	}
 	for _, stub := range stubList.Dashboards {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -503,26 +545,26 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 	return nil
 }
 
-func importCustomServices(targetFolder string, environmentURL string, apiToken string) error {
-	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.Java); err != nil {
+func importCustomServices(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.Java, argids); err != nil {
 		return err
 	}
-	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.DotNet); err != nil {
+	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.DotNet, argids); err != nil {
 		return err
 	}
-	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.Go); err != nil {
+	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.Go, argids); err != nil {
 		return err
 	}
-	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.NodeJS); err != nil {
+	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.NodeJS, argids); err != nil {
 		return err
 	}
-	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.PHP); err != nil {
+	if err := importCustomServicesTech(targetFolder, environmentURL, apiToken, customservices.Technologies.PHP, argids); err != nil {
 		return err
 	}
 	return nil
 }
 
-func importCustomServicesTech(targetFolder string, environmentURL string, apiToken string, technology customservices.Technology) error {
+func importCustomServicesTech(targetFolder string, environmentURL string, apiToken string, technology customservices.Technology, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := customservices.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -531,6 +573,9 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID, technology, false)
 		if err != nil {
 			return err
@@ -559,7 +604,7 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 	return nil
 }
 
-func importDiskAnomalies(targetFolder string, environmentURL string, apiToken string) error {
+func importDiskAnomalies(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := diskevents.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -568,6 +613,9 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -595,7 +643,7 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 	return nil
 }
 
-func importMetricAnomalies(targetFolder string, environmentURL string, apiToken string) error {
+func importMetricAnomalies(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := metricevents.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -604,6 +652,9 @@ func importMetricAnomalies(targetFolder string, environmentURL string, apiToken 
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -758,7 +809,7 @@ func importServiceAnomalies(targetFolder string, environmentURL string, apiToken
 	return nil
 }
 
-func importCalculatedServiceMetrics(targetFolder string, environmentURL string, apiToken string) error {
+func importCalculatedServiceMetrics(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := service.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -767,6 +818,9 @@ func importCalculatedServiceMetrics(targetFolder string, environmentURL string, 
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -798,7 +852,7 @@ func importCalculatedServiceMetrics(targetFolder string, environmentURL string, 
 	return nil
 }
 
-func importServiceNamings(targetFolder string, environmentURL string, apiToken string) error {
+func importServiceNamings(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := servicenaming.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -807,6 +861,9 @@ func importServiceNamings(targetFolder string, environmentURL string, apiToken s
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -838,7 +895,7 @@ func importServiceNamings(targetFolder string, environmentURL string, apiToken s
 	return nil
 }
 
-func importHostNamings(targetFolder string, environmentURL string, apiToken string) error {
+func importHostNamings(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := hostnaming.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -847,6 +904,9 @@ func importHostNamings(targetFolder string, environmentURL string, apiToken stri
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -878,7 +938,7 @@ func importHostNamings(targetFolder string, environmentURL string, apiToken stri
 	return nil
 }
 
-func importProcessGroupNamings(targetFolder string, environmentURL string, apiToken string) error {
+func importProcessGroupNamings(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := processgroupnaming.NewService(environmentURL+"/api/config/v1", apiToken)
 
@@ -887,6 +947,9 @@ func importProcessGroupNamings(targetFolder string, environmentURL string, apiTo
 		return err
 	}
 	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
 		config, err := restClient.Get(stub.ID)
 		if err != nil {
 			return err
@@ -918,7 +981,7 @@ func importProcessGroupNamings(targetFolder string, environmentURL string, apiTo
 	return nil
 }
 
-func importSLOs(targetFolder string, environmentURL string, apiToken string) error {
+func importSLOs(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := slo.NewService(environmentURL+"/api/v2", apiToken)
@@ -928,6 +991,9 @@ func importSLOs(targetFolder string, environmentURL string, apiToken string) err
 		return err
 	}
 	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
 		config, err := restClient.Get(id)
 		if err != nil {
 			return err

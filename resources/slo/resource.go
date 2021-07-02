@@ -67,7 +67,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	d.SetId(id)
-	if "true" == os.Getenv("DYNATRACE_DEBUG") {
+	if os.Getenv("DYNATRACE_DEBUG") == "true" {
 		time.Sleep(10000)
 	}
 	return Read(ctx, d, m)
