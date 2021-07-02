@@ -105,5 +105,10 @@ func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
+	_, err := NewService(m).Get(d.Id())
+	for err != nil {
+		_, err = NewService(m).Get(d.Id())
+	}
+
 	return diag.Diagnostics{}
 }
