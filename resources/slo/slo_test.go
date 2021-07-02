@@ -142,13 +142,19 @@ func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
 		restClient := sloapi.NewService(providerConf.DTApiV2URL, providerConf.APIToken)
 
-		if rs, ok := s.RootModule().Resources[n]; ok {
-			if _, err := restClient.Get(rs.Primary.ID); err != nil {
-				return err
-			}
-			return nil
-		}
+		var err error
+		var cnt = 0
 
-		return fmt.Errorf("Not found: %s", n)
+		for cnt < 10 {
+			if rs, ok := s.RootModule().Resources[n]; ok {
+				if _, err = restClient.Get(rs.Primary.ID); err != nil {
+					cnt++
+				}
+				return nil
+			}
+		}
+		return err
+
+		// return fmt.Errorf("Not found: %s", n)
 	}
 }
