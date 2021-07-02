@@ -77,6 +77,7 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 }
 
 func TestSLOsA(t *testing.T) {
+	t.Skip()
 	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
