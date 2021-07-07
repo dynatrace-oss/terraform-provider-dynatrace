@@ -50,6 +50,7 @@ var resArr = []string{
 	"dynatrace_host_naming",
 	"dynatrace_processgroup_naming",
 	"dynatrace_slo",
+	"dynatrace_span_entry_point",
 }
 
 func matchRes(keyVal string) (string, string) {
@@ -144,29 +145,9 @@ func download(args []string) bool {
 
 func downloadWith(environmentURL string, apiToken string, targetFolder string, m map[string][]string) bool {
 	if m == nil {
-		m = map[string][]string{
-			"dynatrace_custom_service":            nil,
-			"dynatrace_dashboard":                 nil,
-			"dynatrace_management_zone":           nil,
-			"dynatrace_maintenance_window":        nil,
-			"dynatrace_request_attribute":         nil,
-			"dynatrace_alerting_profile":          nil,
-			"dynatrace_notification":              nil,
-			"dynatrace_autotag":                   nil,
-			"dynatrace_aws_credentials":           nil,
-			"dynatrace_azure_credentials":         nil,
-			"dynatrace_k8s_credentials":           nil,
-			"dynatrace_service_anomalies":         nil,
-			"dynatrace_application_anomalies":     nil,
-			"dynatrace_host_anomalies":            nil,
-			"dynatrace_database_anomalies":        nil,
-			"dynatrace_custom_anomalies":          nil,
-			"dynatrace_disk_anomalies":            nil,
-			"dynatrace_calculated_service_metric": nil,
-			"dynatrace_service_naming":            nil,
-			"dynatrace_host_naming":               nil,
-			"dynatrace_processgroup_naming":       nil,
-			"dynatrace_slo":                       nil,
+		m = map[string][]string{}
+		for _, resn := range resArr {
+			m[resn] = nil
 		}
 	}
 	if err := os.RemoveAll(targetFolder); err != nil {
@@ -306,7 +287,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-
+	if rids, ok := m["dynatrace_span_entry_point"]; ok {
+		if err := importSpanEntryPoints(targetFolder+"/span/entry_points", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 	return true
 }
 

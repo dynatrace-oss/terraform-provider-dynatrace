@@ -25,6 +25,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/notifications v1.0.11
 	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.8
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.1
+	github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.0
 	github.com/dtcookie/dynatrace/rest v1.0.15
 	github.com/dtcookie/dynatrace/terraform v1.0.5
 	github.com/dtcookie/hcl v0.0.12

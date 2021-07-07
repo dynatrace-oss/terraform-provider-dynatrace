@@ -46,6 +46,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
+	"github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
 )
@@ -1005,6 +1006,45 @@ func importSLOs(targetFolder string, environmentURL string, apiToken string, arg
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_slo", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importSpanEntryPoints(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := entrypoints.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.EntryPointRule.Name, id) + ".span_entry_point.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_span_entry_point", escape(config.EntryPointRule.Name))); err != nil {
 			file.Close()
 			return err
 		}

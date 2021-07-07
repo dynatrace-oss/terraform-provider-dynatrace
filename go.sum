@@ -139,6 +139,10 @@ github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.8 h1:S6tUlLTXihX
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.8/go.mod h1:RV7SwtSzi92l9ragDGf3IFY/89iQRHJhIDnWmZvdEnQ=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.1 h1:rFeGkG+rOXxCOs6VvaDAFqULuvOO4nUbIxP8RVH/qcQ=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.1/go.mod h1:81tfzWzRw+tihXQ23AH3R1fjRsphvNlupu72agijDqM=
+github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.0 h1:UX9Gujbw6zESXt3XAy0Fdqx5hf8GptOZG3yjpjQhIpo=
+github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.0/go.mod h1:fVO3b14SYJEHgETVIYEBspHRM/TaT9LXP2rQYZA4atM=
+github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.0 h1:7MQo1NL+n6XalfJ7aidum7YmDP5m5w18g/DB2IeP+e8=
+github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.0/go.mod h1:qMeCX2nvXyGr8dOiIcxpeseUkqdQGwBdiE3612huoto=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/dynatrace/terraform v1.0.5 h1:PnKq25krzCtMtW7yAdlb0K5eEdoO4sN03cnQQEBId0A=
