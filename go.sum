@@ -87,8 +87,9 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dtcookie/dynatrace/api/config v1.0.9 h1:e5aAPfxopzWdGgtmkhs98FItvAEJx4WaNfczxQngTDo=
 github.com/dtcookie/dynatrace/api/config v1.0.9/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
+github.com/dtcookie/dynatrace/api/config v1.0.10 h1:FrNTPz2PYeCFQ4d+zGWtgepF4x5EwME6zO1zMk12AN0=
+github.com/dtcookie/dynatrace/api/config v1.0.10/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
 github.com/dtcookie/dynatrace/api/config/alerting v1.0.20 h1:HKyE6s4CPWy5oNCe4N2XD2KFTBaM5KKU2OJsTAVJnpU=
 github.com/dtcookie/dynatrace/api/config/alerting v1.0.20/go.mod h1:+MPUKwqWMDBf9zZ6YkDQsw5DrDEZcLUUZe+jML1N75E=
 github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.5 h1:QWhKqO0HFq/ctkzWWyfZarc+1qoCUc12v6yzCgKecQI=
@@ -117,8 +118,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.12 h1:hK5Vb
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.12/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15 h1:sBY7noTpYIBmcv3xTIV9XipmPOk1vSelpFZ+Vvcf9/g=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
-github.com/dtcookie/dynatrace/api/config/dashboards v1.0.13 h1:aajcYXgnMJT9B0C600WVNuK9JH85S42kI/uHzLBpphU=
-github.com/dtcookie/dynatrace/api/config/dashboards v1.0.13/go.mod h1:fkDWH+f2ii9EfKKiKSIpmH+OvYNjTbqSfcnwq5MBXoI=
+github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14 h1:xtM5e3MuvqGg3QDuWP4S+s4JQFCxEzEpk5m4YzxO7Vs=
+github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14/go.mod h1:KKLiLNR/rA6fCkb8y4rAaLVhLCx/RiI0Pqp/uz/OIdQ=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.9 h1:xo2nomvv8Njh0OUO90CTXtXh48rPlCym7PEE9SpJRWs=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.9/go.mod h1:4RUGKPBNwzaB7iYC4k/+uCm/wk7twuZt1EerpVpYAWs=
 github.com/dtcookie/dynatrace/api/config/maintenance v1.0.8 h1:WVk9APvLUr36tES0YoOAt6sSH6+olN970SV7ziJsGZY=

@@ -15,7 +15,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.9
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.12
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
-	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.13
+	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.8
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.16
 	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.3
@@ -38,3 +38,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.4.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.7.0
 )
+
+// replace github.com/dtcookie/dynatrace/api/config => C:\Users\Reinhard.Pilz\go\src\github.com\dtcookie\dynatrace\api\config
+
+// replace github.com/dtcookie/dynatrace/api/config/dashboards => C:\Users\Reinhard.Pilz\go\src\github.com\dtcookie\dynatrace\api\config\dashboards
