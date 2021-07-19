@@ -44,7 +44,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/capture"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/ctxprop"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/entrypoints"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/resattr"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -103,6 +106,9 @@ func Provider() *schema.Provider {
 			"dynatrace_processgroup_naming":       processgroupnaming.Resource(),
 			"dynatrace_slo":                       slo.Resource(),
 			"dynatrace_span_entry_point":          entrypoints.Resource(),
+			"dynatrace_span_capture_rule":         capture.Resource(),
+			"dynatrace_span_context_propagation":  ctxprop.Resource(),
+			"dynatrace_resource_attributes":       resattr.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

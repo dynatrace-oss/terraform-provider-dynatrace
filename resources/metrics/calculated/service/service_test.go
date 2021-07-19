@@ -268,6 +268,21 @@ func TestExampleM(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
+func TestExampleN(t *testing.T) {
+	test := &TestStruct{resourceKey: ResourceName}
+	var err error
+	var testCase *resource.TestCase
+	if testCase, err = test.CreateTestCase(
+		TestDataFolder+"/example_n.tf",
+		TestDataFolder+"/example_n.json",
+		t,
+	); err != nil {
+		t.Fatal(err)
+		return
+	}
+	resource.Test(t, *testCase)
+}
+
 func (test *TestStruct) URL(id string) string {
 	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
 	reqPath := RequestPath

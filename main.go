@@ -51,6 +51,10 @@ var resArr = []string{
 	"dynatrace_processgroup_naming",
 	"dynatrace_slo",
 	"dynatrace_span_entry_point",
+	"dynatrace_span_capture_rule",
+	"dynatrace_span_context_propagation",
+	"dynatrace_resource_attributes",
+	"dynatrace_span_attribute",
 }
 
 func matchRes(keyVal string) (string, string) {
@@ -293,6 +297,31 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
+	if rids, ok := m["dynatrace_span_capture_rule"]; ok {
+		if err := importSpanCaptureRules(targetFolder+"/span/capture", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_span_context_propagation"]; ok {
+		if err := importSpanContextPropagation(targetFolder+"/span/ctxprop", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_resource_attributes"]; ok {
+		if err := importResourceAttributes(targetFolder+"/span/resource_attributes", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_span_attribute"]; ok {
+		if err := importSpanAttributes(targetFolder+"/span/span_attributes", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+
 	return true
 }
 

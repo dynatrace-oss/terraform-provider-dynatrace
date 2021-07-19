@@ -26,6 +26,30 @@ jobs:
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
         run: go test -v
+      - name: TestResourceAttributes
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/resattr
+      - name: TestSpanContextPropagation
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/ctxprop
+      - name: TestSpanCapture
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/capture
       - name: TestSpanEntryPoints
         env:
           GOPROXY: "https://proxy.golang.org"
