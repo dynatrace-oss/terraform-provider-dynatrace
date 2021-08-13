@@ -24,6 +24,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/dtcookie/dynatrace/api/cluster/v2/envs"
 	"github.com/dtcookie/dynatrace/api/config/alerting"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/applications"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices"
@@ -31,12 +32,14 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/anomalies/hosts"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/metricevents"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/services"
+	"github.com/dtcookie/dynatrace/api/config/applications/mobile"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
 	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
+	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
 	"github.com/dtcookie/dynatrace/api/config/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
@@ -141,6 +144,46 @@ func ctns(elems []string, elem string) bool {
 		}
 	}
 	return false
+}
+
+func importEnvironments(targetFolder string, clusterURL string, apiToken string, argids []string) error {
+
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := envs.NewService(clusterURL+"/api/cluster/v2", apiToken)
+
+	environmentList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, environment := range environmentList.Environments {
+		if !ctns(argids, *environment.ID) {
+			continue
+		}
+		config, err := restClient.Get(*environment.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, *environment.ID) + ".environment.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_environment", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
 }
 
 func importAWSCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
@@ -545,6 +588,24 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 			file.Close()
 			return err
 		}
+		shareRestClient := sharing.NewService(environmentURL+"/api/config/v1", apiToken)
+		var shareSettings *sharing.DashboardSharing
+		if shareSettings, err = shareRestClient.Get(stub.ID); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard_sharing", escape(config.Metadata.Name+"_"+stub.ID))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(shareSettings, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
 		file.Close()
 	}
 	return nil
@@ -841,6 +902,49 @@ func importCalculatedServiceMetrics(targetFolder string, environmentURL string, 
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_calculated_service_metric", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importMobileApps(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := mobile.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".mobile_application.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_mobile_application", escape(name))); err != nil {
 			file.Close()
 			return err
 		}

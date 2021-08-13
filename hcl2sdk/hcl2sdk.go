@@ -27,6 +27,7 @@ import (
 func Convert(m map[string]*hcl.Schema) map[string]*schema.Schema {
 	result := map[string]*schema.Schema{}
 	for k, v := range m {
+		// log.Println(k)
 		result[k] = convertSchema(v)
 	}
 	return result

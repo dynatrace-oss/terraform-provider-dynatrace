@@ -27,6 +27,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
+var clusterResArr = []string{
+	"dynatrace_environment",
+}
+
 var resArr = []string{
 	"dynatrace_custom_service",
 	"dynatrace_dashboard",
@@ -55,6 +59,21 @@ var resArr = []string{
 	"dynatrace_span_context_propagation",
 	"dynatrace_resource_attributes",
 	"dynatrace_span_attribute",
+	"dynatrace_mobile_application",
+}
+
+func matchClusterRes(keyVal string) (string, string) {
+	res1 := ""
+	res2 := ""
+	for _, entry := range clusterResArr {
+		if strings.HasPrefix(keyVal, entry) {
+			res1 = entry
+			if strings.HasPrefix(keyVal, entry+"=") {
+				res2 = keyVal[len(entry)+1:]
+			}
+		}
+	}
+	return res1, res2
 }
 
 func matchRes(keyVal string) (string, string) {
@@ -69,6 +88,60 @@ func matchRes(keyVal string) (string, string) {
 		}
 	}
 	return res1, res2
+}
+
+func clusterExport(args []string) bool {
+	if len(args) == 1 {
+		return false
+	}
+	if strings.TrimSpace(args[1]) != "cluster_export" {
+		return false
+	}
+	clusterURL := os.Getenv("DYNATRACE_CLUSTER_URL")
+	if clusterURL == "" {
+		fmt.Println("The environment variable DYNATRACE_CLUSTER_URL needs to be set")
+		os.Exit(0)
+	}
+	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
+	if apiToken == "" {
+		fmt.Println("The environment variable DYNATRACE_API_TOKEN needs to be set")
+		os.Exit(0)
+	}
+	targetFolder := os.Getenv("DYNATRACE_TARGET_FOLDER")
+	if targetFolder == "" {
+		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
+		targetFolder = "configuration"
+	}
+	if len(args) == 2 {
+		return clusterDownloadWith(clusterURL, apiToken, targetFolder, nil)
+	}
+	m := map[string][]string{}
+	for idx := 2; idx < len(args); idx++ {
+		key, id := matchClusterRes(args[idx])
+		if key == "" {
+			fmt.Println("Unknown resource `" + args[idx] + "`")
+			os.Exit(0)
+		}
+		stored, ok := m[key]
+		if ok {
+			if stored != nil {
+				if id == "" {
+					m[key] = nil
+				} else {
+					stored = append(stored, id)
+					m[key] = stored
+				}
+			}
+		} else {
+			if id == "" {
+				m[key] = nil
+			} else {
+				stored = []string{id}
+				m[key] = stored
+			}
+		}
+	}
+	return clusterDownloadWith(clusterURL, apiToken, targetFolder, m)
 }
 
 func export(args []string) bool {
@@ -145,6 +218,26 @@ func download(args []string) bool {
 		targetFolder = args[4]
 	}
 	return downloadWith(environmentURL, apiToken, targetFolder, nil)
+}
+
+func clusterDownloadWith(clusterURL string, apiToken string, targetFolder string, m map[string][]string) bool {
+	if m == nil {
+		m = map[string][]string{}
+		for _, resn := range clusterResArr {
+			m[resn] = nil
+		}
+	}
+	if err := os.RemoveAll(targetFolder); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	if rids, ok := m["dynatrace_environment"]; ok {
+		if err := importEnvironments(targetFolder+"/environments", clusterURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	return true
 }
 
 func downloadWith(environmentURL string, apiToken string, targetFolder string, m map[string][]string) bool {
@@ -321,12 +414,21 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
+	if rids, ok := m["dynatrace_mobile_application"]; ok {
+		if err := importMobileApps(targetFolder+"/applications/mobile", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 
 	return true
 }
 
 func main() {
 	if export(os.Args) {
+		return
+	}
+	if clusterExport(os.Args) {
 		return
 	}
 	if download(os.Args) {

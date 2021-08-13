@@ -19,7 +19,7 @@ terraform {
     required_version = "~> 0.13.0"
     required_providers {
         dynatrace = {
-            version = "1.6.0"
+            version = "1.7.0"
             source = "dynatrace-oss/dynatrace"
         }
     }
@@ -40,4 +40,6 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 ### Optional
 
 - **dt_api_token** (String, Sensitive)
+- **dt_cluster_api_token** (String, Sensitive)
+- **dt_cluster_url** (String, Sensitive)
 - **dt_env_url** (String)
