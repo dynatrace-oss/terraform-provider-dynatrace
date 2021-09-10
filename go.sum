@@ -118,8 +118,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.10 h1:Ry3oI9IklKNe
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.10/go.mod h1:X/+5yqLZ5yhBjJVj1fVFi/Udvn9TPGE96ErOS0OPMqY=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.9 h1:kjEiWG+dvOcUFsfvN5Tf9sHvP2ibaLXvZEiHY/Xned8=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.9/go.mod h1:Y3Ae0HzFsC0+38d58uDao5DmxlPMGxrEwdIhMLKTfao=
-github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.12 h1:hK5VbDsi5dK+Groil6PXSdH+wLlzoeOUrLxSYqH6N4Y=
-github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.12/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
+github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13 h1:RfVXAZddmIEYLeR2gp0AqwGG0TNfzZ8domXeP5A/QAs=
+github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15 h1:sBY7noTpYIBmcv3xTIV9XipmPOk1vSelpFZ+Vvcf9/g=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14 h1:xtM5e3MuvqGg3QDuWP4S+s4JQFCxEzEpk5m4YzxO7Vs=
