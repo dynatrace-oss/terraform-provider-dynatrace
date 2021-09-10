@@ -9,7 +9,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.5
 	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.9
 	github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.6
-	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.7
+	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.8
 	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.0
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.21
