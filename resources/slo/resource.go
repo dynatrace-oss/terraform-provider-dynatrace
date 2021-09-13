@@ -19,9 +19,7 @@ package slo
 
 import (
 	"context"
-	"log"
-	"os"
-	"time"
+	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/rest"
@@ -67,10 +65,34 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	d.SetId(id)
-	if os.Getenv("DYNATRACE_DEBUG") == "true" {
-		time.Sleep(10000)
+	// if os.Getenv("DYNATRACE_DEBUG") == "true" {
+	// 	time.Sleep(10000)
+	// }
+	// dd := Read(ctx, d, m)
+	// notFound := false
+
+	// if len(dd) > 0 {
+	// 	if strings.Contains(dd[0].Summary, "not found") {
+	// 		notFound = true
+	// 		// mye := errors.New("this bloody not found issue encountered")
+	// 		// return diag.FromErr(mye)
+	// 	}
+	// 	return dd
+	// }
+	notFound := true
+	for notFound {
+		dd := Read(ctx, d, m)
+		if len(dd) > 0 {
+			if strings.Contains(dd[0].Summary, "not found") {
+				notFound = true
+				// mye := errors.New("this bloody not found issue encountered")
+				// return diag.FromErr(mye)
+			}
+			return dd
+		}
+		notFound = false
 	}
-	return Read(ctx, d, m)
+	return diag.Diagnostics{}
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
@@ -83,7 +105,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 	if err := NewService(m).Update(d.Id(), config); err != nil {
-		log.Println("Resource: " + err.Error())
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
