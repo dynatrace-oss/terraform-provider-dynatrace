@@ -104,8 +104,8 @@ github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.9 h1:aCcvDvqG
 github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.9/go.mod h1:O4akvOgblq/i4jEmTrtc3G2uo67Y8Trse97s3MCV//Q=
 github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.6 h1:ZR8yYSz9qb/RHy5JdqcV8RSyg3l9jBtF7XpgPnBcUaw=
 github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.6/go.mod h1:0Ng19xKu79QfwGlIBu1RSY2nczwiO4HjAQFMndoPOE4=
-github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.8 h1:kINJZ26DuegGMdeevY+cg40GGfeL8eu6XiNfCzBplVg=
-github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.8/go.mod h1:gxEf0Q4QSSIDXAD3AiAoBNkaZxUCDoSCoK6pzZkBxWc=
+github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.9 h1:yetEfjbvSFLXu2XnHoW1UJ5r2T1QU13euJ616o+Y/Co=
+github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.9/go.mod h1:gxEf0Q4QSSIDXAD3AiAoBNkaZxUCDoSCoK6pzZkBxWc=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11 h1:ET7Kr0nLfRFEDgPBS4lTQl7q0PidU6Sdb+yKsrJAsUg=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11/go.mod h1:dVxE7rtXV6KedBy9poMNHxl7X3c8Ve6yaIt1cLyvwmQ=
 github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.0 h1:+38te+qujCtU/x6fXamr58M7RJzeUowYnKoSjwUzPv0=
@@ -144,8 +144,8 @@ github.com/dtcookie/dynatrace/api/config/notifications v1.0.12 h1:XoAeK3wVjk35XI
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.12/go.mod h1:2xcTh8M75o69x7gPQbu0NCVN+4oTX27/HF4kWCHDaqs=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9 h1:Fwu8xeGK12QJrJfRXIizHFEwq83m+MGJxy6UJKpMPww=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9/go.mod h1:uMdIxTv0jQEJ+y85V2SaHYSouFiah0g1QvzXfwvALi4=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.3 h1:i/xmN/jWvXiquwF4sl/XFoaGNTALODNaY+1YzN2z+Ow=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.3/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4 h1:8Y8AY+23Ra/1Jm3HY4YNJYpd+4qYOEuqIA0VVJANfK8=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0 h1:aYyVLB2crHzTcTM9yTYv8KEWS2yJ7cSnEluj4j/EVg8=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0/go.mod h1:vLeWSxnFfzIDy+YHBSBSkveZIDjqQ8Z061XzJFBGY0M=
 github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.0 h1:Khb1xn2cMAH3E3lIWteN6+jliqxeBwbTXXm7SvZMCBk=
