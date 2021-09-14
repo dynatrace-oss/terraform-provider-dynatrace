@@ -30,7 +30,8 @@ description: |-
 - **disabled** (Boolean) The SLO is enabled (`false`) or disabled (`true`)
 - **filter** (String) The entity filter for the SLO evaluation. Use the [syntax of entity selector](https://dt-url.net/entityselector)
 - **id** (String) The ID of this resource.
-- **numerator** (String) The metric for the count of successes (the numerator in rate calculation)
+- **metric_expression** (String) The percentage-based metric expression for the calculation of the SLO
+- **numerator** (String, Deprecated) The metric for the count of successes (the numerator in rate calculation)
 - **rate** (String) The percentage-based metric for the calculation of the SLO
 
 

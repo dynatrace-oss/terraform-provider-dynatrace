@@ -16,10 +16,9 @@ Use the links to the left to learn about the available resources.
 # Terraform 0.13+ uses the Terraform Registry:
 ```
 terraform {
-    required_version = "~> 0.13.0"
     required_providers {
         dynatrace = {
-            version = "1.7.0"
+            version = "1.7.2"
             source = "dynatrace-oss/dynatrace"
         }
     }

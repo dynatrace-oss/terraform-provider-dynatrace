@@ -9,10 +9,9 @@ If you want to run Terraform with the dynatrace provider plugin on your system, 
 
 ```hcl
 terraform {
-    required_version = "~> 0.13.0"
     required_providers {
         dynatrace = {
-            version = "1.7.0"
+            version = "1.7.2"
             source = "dynatrace-oss/dynatrace"
         }
     }

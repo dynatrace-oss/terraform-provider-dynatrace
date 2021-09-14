@@ -19,7 +19,6 @@ description: |-
 
 - **description** (String) The description of the metric event
 - **enabled** (Boolean) The metric event is enabled (`true`) or disabled (`false`)
-- **metric_id** (String) The ID of the metric evaluated by the metric event
 - **name** (String) The name of the metric event displayed in the UI
 - **strategy** (Block List, Min: 1, Max: 1) A monitoring strategy for a metric event config. This is the base version of the monitoring strategy, depending on the type,  the actual JSON may contain additional fields (see [below for nested schema](#nestedblock--strategy))
 
@@ -29,6 +28,8 @@ description: |-
 - **dimensions** (Block List) Defines the dimensions of the metric to alert on. The filters are combined by conjunction (see [below for nested schema](#nestedblock--dimensions))
 - **disabled_reason** (String) The reason of automatic disabling.  The `NONE` means config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`, `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
 - **id** (String) The ID of this resource.
+- **metric_id** (String) The ID of the metric evaluated by the metric event
+- **metric_selector** (String) The metric selector that should be executed
 - **primary_dimension_key** (String) Defines which dimension key should be used for the **alertingScope**
 - **scopes** (Block List) Defines the scope of the metric event. Only one filter is allowed per filter type, except for tags, where up to 3 are allowed. The filters are combined by conjunction (see [below for nested schema](#nestedblock--scopes))
 - **severity** (String) The type of the event to trigger on the threshold violation.  The `CUSTOM_ALERT` type is not correlated with other alerts. The `INFO` type does not open a problem
