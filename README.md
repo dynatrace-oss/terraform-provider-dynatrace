@@ -65,14 +65,4 @@ Invoking the export functionality requires
 * `./terraform-provider-dynatrace export dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
 * `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
 * `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
-* `./terraform-provider-dynatrace export dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
-
-### DEPRECATED Command Line Syntax (commonly known as "download functionality")
-Invoking the download functionality requires
-* The URL of your Dynatrace Environment
-* An API Token with the permissions `Read configuration` and `Capture request data`
-* If the optional argument for the output folder is not specified `./configuration` is assumed
-#### Windows
-`terraform-provider-dynatrace.exe download https://<environment-id>.live.dynatrace.com <api-token> [<output-folder>]`
-#### Linux
-`./terraform-provider-dynatrace download https://<environment-id>.live.dynatrace.com <api-token> [<output-folder>]`
+* `./terraform-provider-dynatrace export dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5
