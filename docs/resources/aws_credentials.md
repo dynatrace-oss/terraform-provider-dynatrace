@@ -25,7 +25,7 @@ description: |-
 
 - **id** (String) The ID of this resource.
 - **label** (String) The name of the credentials
-- **supporting_services_to_monitor** (Block List, Max: 10) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
+- **supporting_services_to_monitor** (Block List) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
 - **tags_to_monitor** (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
 - **unknowns** (String) Any attributes that aren't yet supported by this provider
 
@@ -47,7 +47,7 @@ Optional:
 
 Optional:
 
-- **monitored_metrics** (Block List, Max: 10) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
+- **monitored_metrics** (Block List) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
 - **name** (String) the name of the supporting service
 - **unknowns** (String) Any attributes that aren't yet supported by this provider
 
