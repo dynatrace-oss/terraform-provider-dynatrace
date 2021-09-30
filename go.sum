@@ -114,8 +114,8 @@ github.com/dtcookie/dynatrace/api/config/autotags v1.0.21 h1:lNYHIA4TWNfYQeJlDHI
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.21/go.mod h1:DA1E1KzsCSgsqUpwWjCE87iWUhOhtwk2IjtqiwW7y14=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4 h1:FzP47UtNGHiH4DqOQbQOFZ/9lM9cwe2UitLfymy2YPU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4/go.mod h1:XbqktXHBJFINafYP6DbQ0HCZRlQOApcAFxhWA+UuzLg=
-github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.11 h1:i+ZAWA22lgkKXINLEfdIWGx8c1DsuW3kBWnYKKA4WjI=
-github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.11/go.mod h1:X/+5yqLZ5yhBjJVj1fVFi/Udvn9TPGE96ErOS0OPMqY=
+github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12 h1:9T0QRnCOLL4a6X2tEdo8wqLuet7Wu26DbgIJNR8xmbU=
+github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12/go.mod h1:X/+5yqLZ5yhBjJVj1fVFi/Udvn9TPGE96ErOS0OPMqY=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.9 h1:kjEiWG+dvOcUFsfvN5Tf9sHvP2ibaLXvZEiHY/Xned8=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.9/go.mod h1:Y3Ae0HzFsC0+38d58uDao5DmxlPMGxrEwdIhMLKTfao=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13 h1:RfVXAZddmIEYLeR2gp0AqwGG0TNfzZ8domXeP5A/QAs=
