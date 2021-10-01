@@ -18,7 +18,7 @@ description: |-
 ### Required
 
 - **enabled** (Boolean) Disk event rule enabled/disabled
-- **metric** (String) The metric to monitor
+- **metric** (String) The metric to monitor. Possible values are: `LOW_DISK_SPACE`, `LOW_INODES`, `READ_TIME_EXCEEDING` and `WRITE_TIME_EXCEEDING`
 - **name** (String) The name of the disk event rule
 - **samples** (Number) The number of samples to evaluate
 - **threshold** (Number) The threshold to trigger disk event.   * A percentage for `LowDiskSpace` or `LowInodes` metrics.   * In milliseconds for `ReadTimeExceeding` or `WriteTimeExceeding` metrics
