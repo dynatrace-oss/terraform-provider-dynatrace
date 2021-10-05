@@ -47,6 +47,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/attributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/capture"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/ctxprop"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/entrypoints"
@@ -124,6 +125,7 @@ func Provider() *schema.Provider {
 			"dynatrace_span_capture_rule":         capture.Resource(),
 			"dynatrace_span_context_propagation":  ctxprop.Resource(),
 			"dynatrace_resource_attributes":       resattr.Resource(),
+			"dynatrace_span_attribute":            attributes.Resource(),
 			// "dynatrace_api_token":                 tokens.Resource(),
 			"dynatrace_dashboard_sharing":  sharing.Resource(),
 			"dynatrace_environment":        environments.Resource(),
