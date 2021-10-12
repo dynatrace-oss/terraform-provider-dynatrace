@@ -47,6 +47,18 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 * Process Group Naming
 * Calculated Service Metrics
 
+## Using API Parameters not supported by this module
+
+By default, this terraform provider also includes an 'unknowns' operator for configuring properties that are not yet explicitly supported by this provider
+
+To use this, simply pass a [jsonencoded](https://www.terraform.io/docs/language/functions/jsonencode.html) list of key-value parameters you want the provider to also manage via API call
+
+```hcl
+    resource "dynatrace_k8s_credentials" "k8s_integration" {
+        unkowns = jsonencode("activeGateGroup"="myactivegategroup.nonp")
+    }
+```
+
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
 The utility then reaches out to the Dynatrace Environment specified by the command line arguments and fetches all currently supported configuration items. These results will then automatically get transformed into HCL (the configuration language to be used for `.tf` files) and places each configuration item into its own `.tf` file).
