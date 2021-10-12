@@ -7,7 +7,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/alerting v1.0.20
 	github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.5
 	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.5
-	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.9
+	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.10
 	github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.6
 	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.9
 	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11
