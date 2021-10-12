@@ -16,6 +16,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.10
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13
+	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
 	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14
 	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1
@@ -27,6 +28,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3
 	github.com/dtcookie/dynatrace/api/config/notifications v1.0.12
 	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9
+	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.0
@@ -35,7 +37,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.1
 	github.com/dtcookie/dynatrace/rest v1.0.15
 	github.com/dtcookie/dynatrace/terraform v1.0.5
-	github.com/dtcookie/hcl v0.0.13
+	github.com/dtcookie/hcl v0.0.14
 	github.com/dtcookie/opt v1.0.0
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/terraform-plugin-docs v0.4.0

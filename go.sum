@@ -89,6 +89,7 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dtcookie/dynatrace/api/cluster/v2/envs v1.0.3 h1:OikOdnz9N29QqR9Jhlsnpl4rGw7k6YeV6bS9tjaubNw=
 github.com/dtcookie/dynatrace/api/cluster/v2/envs v1.0.3/go.mod h1:1z+OaGDi4DwFIdjaM0+XxFPkIvNCQ740zgcMzkkK5qA=
+github.com/dtcookie/dynatrace/api/config v1.0.0/go.mod h1:Xs0giyHjICPbjFEYJgNMU19xm7/+I6vXtDX5rKRvF30=
 github.com/dtcookie/dynatrace/api/config v1.0.9/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
 github.com/dtcookie/dynatrace/api/config v1.0.10 h1:FrNTPz2PYeCFQ4d+zGWtgepF4x5EwME6zO1zMk12AN0=
 github.com/dtcookie/dynatrace/api/config v1.0.10/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
@@ -120,6 +121,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.10 h1:KfYdRFpIJD
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.10/go.mod h1:Y3Ae0HzFsC0+38d58uDao5DmxlPMGxrEwdIhMLKTfao=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13 h1:RfVXAZddmIEYLeR2gp0AqwGG0TNfzZ8domXeP5A/QAs=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
+github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1 h1:o+bFfgsDURcMBa31Sx6fOIqQ/LnVG1DIUci0eY5RLNw=
+github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1/go.mod h1:yU7GFfFce3lDLPJPQxHN4cfgBixe/0Rn5CAZ1sroPSo=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15 h1:sBY7noTpYIBmcv3xTIV9XipmPOk1vSelpFZ+Vvcf9/g=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.14 h1:xtM5e3MuvqGg3QDuWP4S+s4JQFCxEzEpk5m4YzxO7Vs=
@@ -144,6 +147,8 @@ github.com/dtcookie/dynatrace/api/config/notifications v1.0.12 h1:XoAeK3wVjk35XI
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.12/go.mod h1:2xcTh8M75o69x7gPQbu0NCVN+4oTX27/HF4kWCHDaqs=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9 h1:Fwu8xeGK12QJrJfRXIizHFEwq83m+MGJxy6UJKpMPww=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9/go.mod h1:uMdIxTv0jQEJ+y85V2SaHYSouFiah0g1QvzXfwvALi4=
+github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.0 h1:0l76ZZaaaK3yjenO4ROqgzw5f+yiL6h6Gk3DhvkgGAA=
+github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.0/go.mod h1:ww3HFnLtN6Xj/pM1IG6gtSk4owf0QjzILHZIYXmynI4=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4 h1:8Y8AY+23Ra/1Jm3HY4YNJYpd+4qYOEuqIA0VVJANfK8=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0 h1:aYyVLB2crHzTcTM9yTYv8KEWS2yJ7cSnEluj4j/EVg8=
@@ -158,12 +163,16 @@ github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.1 h1:8TQiNYFIVAvoyH
 github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.1/go.mod h1:1aEY0ha/31rGlg6vE+YT2qr3CLrqpp9F0EF7V7Pky/Q=
 github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.1 h1:zPIRD5b6+QyPWR6gkwsVqi9IvZAGgWZOkfaI6FzDleo=
 github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.1/go.mod h1:5vDVipAzuWdIQXiw1Gvervi8ugt6eUpboQ/GgqEzf2Q=
+github.com/dtcookie/dynatrace/rest v1.0.13/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/dynatrace/terraform v1.0.5 h1:PnKq25krzCtMtW7yAdlb0K5eEdoO4sN03cnQQEBId0A=
 github.com/dtcookie/dynatrace/terraform v1.0.5/go.mod h1:1wKoRA18KTRr+PO1Z4yAgosolyqKGfnTLuaQ54oVPEk=
-github.com/dtcookie/hcl v0.0.13 h1:ia4xn2BL5E6nmC6TXUvRKEAr8m6G//GvL1A9MZ9IMRs=
+github.com/dtcookie/gojson v0.9.1 h1:XsDBv2muNERQUE9qOsShqUe9EXIKF3gZNI2znLOC9H4=
+github.com/dtcookie/gojson v0.9.1/go.mod h1:0fxz4ibMLH2e40Ty+Lw4CBTJ/mHaDaLm3rrTPkupPJc=
 github.com/dtcookie/hcl v0.0.13/go.mod h1:7/ZeM2VnfoL+lIiX6NY06BqRwhUJGhyYFvK4BWJV2TY=
+github.com/dtcookie/hcl v0.0.14 h1:exgc0XU7bciv/4YYWIknRzj3J+B7abWs0LS7Lkwum4g=
+github.com/dtcookie/hcl v0.0.14/go.mod h1:7/ZeM2VnfoL+lIiX6NY06BqRwhUJGhyYFvK4BWJV2TY=
 github.com/dtcookie/opt v1.0.0 h1:3YTf76sWRAjcJnTNNCjeJNikT05aOrVlg13xDbX5OGg=
 github.com/dtcookie/opt v1.0.0/go.mod h1:3fHzYaPu0kQ/Esfd/L0GipVrrnA/6hXTnATyO6QbzW8=
 github.com/dtcookie/xjson v1.0.2 h1:9V3YO68umeJMvxZJoe+S4UFdKrf/iljGbl98zlSvxaE=

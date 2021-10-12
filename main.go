@@ -60,6 +60,9 @@ var resArr = []string{
 	"dynatrace_resource_attributes",
 	"dynatrace_span_attribute",
 	"dynatrace_mobile_application",
+	// "dynatrace_credentials",
+	"dynatrace_browser_monitor",
+	"dynatrace_http_monitor",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -420,7 +423,24 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-
+	// if rids, ok := m["dynatrace_credentials"]; ok {
+	// 	if err := importVaultCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
+	// 		fmt.Println(err.Error())
+	// 		os.Exit(0)
+	// 	}
+	// }
+	if rids, ok := m["dynatrace_browser_monitor"]; ok {
+		if err := importBrowserMonitors(targetFolder+"/synthetic/browser", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_http_monitor"]; ok {
+		if err := importHTTPMonitors(targetFolder+"/synthetic/http", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 	return true
 }
 

@@ -30,11 +30,12 @@ var HTTPVerbose = (os.Getenv("DYNATRACE_DEBUG") == "true")
 
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
-	DTenvURL        string
-	DTApiV2URL      string
-	ClusterAPIV2URL string
-	ClusterAPIToken string
-	APIToken        string
+	DTenvURL          string
+	DTNonConfigEnvURL string
+	DTApiV2URL        string
+	ClusterAPIV2URL   string
+	ClusterAPIToken   string
+	APIToken          string
 }
 
 type Getter interface {
@@ -52,14 +53,16 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (interface{}, diag.
 	clusterURL := d.Get("dt_cluster_url").(string)
 
 	fullURL := dtEnvURL + "/api/config/v1"
+	fullNonConfigURL := dtEnvURL + "/api/v1"
 	fullApiV2URL := dtEnvURL + "/api/v2"
 	var diags diag.Diagnostics
 
 	return &ProviderConfiguration{
-		DTenvURL:        fullURL,
-		DTApiV2URL:      fullApiV2URL,
-		APIToken:        apiToken,
-		ClusterAPIToken: clusterAPIToken,
-		ClusterAPIV2URL: clusterURL,
+		DTenvURL:          fullURL,
+		DTApiV2URL:        fullApiV2URL,
+		DTNonConfigEnvURL: fullNonConfigURL,
+		APIToken:          apiToken,
+		ClusterAPIToken:   clusterAPIToken,
+		ClusterAPIV2URL:   clusterURL,
 	}, diags
 }

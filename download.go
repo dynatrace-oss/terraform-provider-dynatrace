@@ -48,6 +48,7 @@ import (
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
+	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/capture"
@@ -185,6 +186,133 @@ func importEnvironments(targetFolder string, clusterURL string, apiToken string,
 	}
 	return nil
 }
+
+func importBrowserMonitors(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := monitors.NewService(environmentURL+"/api/v1", apiToken)
+
+	stubList, err := restClient.ListBrowser()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Monitors {
+		if !ctns(argids, stub.EntityID) {
+			continue
+		}
+		config, err := restClient.GetBrowser(stub.EntityID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.EntityID) + ".monitor.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_browser_monitor", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importHTTPMonitors(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := monitors.NewService(environmentURL+"/api/v1", apiToken)
+
+	stubList, err := restClient.ListHTTP()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Monitors {
+		if !ctns(argids, stub.EntityID) {
+			continue
+		}
+		config, err := restClient.GetHTTP(stub.EntityID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.EntityID) + ".monitor.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_http_monitor", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.Export(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+// func importVaultCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+
+// 	os.MkdirAll(targetFolder, os.ModePerm)
+// 	restClient := vault.NewService(environmentURL+"/api/config/v1", apiToken)
+
+// 	stubList, err := restClient.ListAll()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for _, stub := range stubList.Credentials {
+// 		if !ctns(argids, *stub.ID) {
+// 			continue
+// 		}
+// 		config, err := restClient.Get(*stub.ID)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		var file *os.File
+// 		fileName := targetFolder + "/" + escFileName(config.Name, *stub.ID) + ".credentials.vault.tf"
+// 		os.Remove(fileName)
+// 		if file, err = os.Create(fileName); err != nil {
+// 			return err
+// 		}
+// 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_credentials", escape(config.Name))); err != nil {
+// 			file.Close()
+// 			return err
+// 		}
+// 		if config.GetType() == vault.CredentialsTypes.UsernamePassword {
+// 			config.Username = opt.NewString("--redacted--")
+// 			config.Password = opt.NewString("--redacted--")
+// 		} else if (config.GetType() == vault.CredentialsTypes.Certificate) || (config.GetType() == vault.CredentialsTypes.PublicCertificate) {
+// 			config.Certificate = opt.NewString("--redacted--")
+// 			config.CertificateFormat = vault.CertificateFormat("--redacted--").Ref()
+// 		} else if config.GetType() == vault.CredentialsTypes.Token {
+// 			config.Token = opt.NewString("--redacted--")
+// 		}
+// 		if err := hcl.Export(config, file); err != nil {
+// 			file.Close()
+// 			return err
+// 		}
+// 		if _, err := file.WriteString("}\n"); err != nil {
+// 			file.Close()
+// 			return err
+// 		}
+// 		file.Close()
+// 	}
+// 	return nil
+// }
 
 func importAWSCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
