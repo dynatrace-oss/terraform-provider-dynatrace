@@ -28,7 +28,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3
 	github.com/dtcookie/dynatrace/api/config/notifications v1.0.12
 	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9
-	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.0
+	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.0
