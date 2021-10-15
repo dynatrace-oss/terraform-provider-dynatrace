@@ -4,7 +4,6 @@ import (
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
-	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -22,8 +21,8 @@ func UniqueDataSourceRead(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("id"); ok {
 		d.SetId(v.(string))
 		id = opt.NewString(v.(string))
-	} else {
-		d.SetId(uuid.New().String())
+		// } else {
+		// 	d.SetId(uuid.New().String())
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -61,8 +60,13 @@ func UniqueDataSourceRead(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 		for k, v := range marshalled {
-			d.Set(k, v)
+			if k != "id" {
+				d.Set(k, v)
+			} else {
+				d.SetId(v.(string))
+			}
 		}
+
 		break
 	}
 	return nil
