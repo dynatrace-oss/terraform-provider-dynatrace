@@ -18,7 +18,7 @@ Use the links to the left to learn about the available resources.
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.8.0"
+            version = "1.8.1"
             source = "dynatrace-oss/dynatrace"
         }
     }
