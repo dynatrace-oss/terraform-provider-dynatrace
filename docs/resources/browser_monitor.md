@@ -25,7 +25,7 @@ You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
 ### Optional
 
 - **anomaly_detection** (Block List, Max: 1) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
-- **enabled** (Number) The monitor is enabled (`true`) or disabled (`false`).
+- **enabled** (Boolean) The monitor is enabled (`true`) or disabled (`false`).
 - **id** (String) The ID of this resource.
 - **key_performance_metrics** (Block List, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
 - **locations** (Set of String) A list of locations from which the monitor is executed.
