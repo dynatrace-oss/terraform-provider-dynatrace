@@ -107,7 +107,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 			if strings.Contains(err.Error(), "Could not delete configuration") {
 				time.Sleep(2 * time.Second)
 				retries = retries + 1
-				if retries > 10 {
+				if retries > 20 {
 					return diag.FromErr(err)
 				}
 			} else {
