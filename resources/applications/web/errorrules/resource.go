@@ -15,12 +15,13 @@
 * limitations under the License.
  */
 
-package mobile
+package errorrules
 
 import (
 	"context"
+	"strings"
 
-	"github.com/dtcookie/dynatrace/api/config/applications/mobile"
+	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
@@ -34,7 +35,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        hcl2sdk.Convert(new(mobile.NewAppConfig).Schema()),
+		Schema:        hcl2sdk.Convert(new(web.ApplicationErrorRules).Schema()),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -43,35 +44,36 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m interface{}) *mobile.ServiceClient {
+func NewService(m interface{}) *web.ServiceClient {
 	conf := m.(*config.ProviderConfiguration)
-	apiService := mobile.NewService(conf.DTenvURL, conf.APIToken)
+	apiService := web.NewService(conf.DTenvURL, conf.APIToken)
 	rest.Verbose = config.HTTPVerbose
 	return apiService
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config := new(mobile.NewAppConfig)
+	config := new(web.ApplicationErrorRules)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	objStub, err := NewService(m).Create(config)
+	err := NewService(m).StoreErrorRules(config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(objStub.ID)
+	d.SetId("ERROR-RULES-" + config.WebApplicationID)
 	return Read(ctx, d, m)
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config := new(mobile.NewAppConfig)
+	config := new(web.ApplicationErrorRules)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	config.ID = d.Id()
-	if err := NewService(m).Update(config); err != nil {
+	config.WebApplicationID = strings.TrimPrefix(d.Id(), "ERROR-RULES-")
+	err := NewService(m).StoreErrorRules(config)
+	if err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -79,7 +81,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config, err := NewService(m).Get(d.Id())
+	config, err := NewService(m).GetErrorRules(strings.TrimPrefix(d.Id(), "ERROR-RULES-"))
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -95,8 +97,6 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if err := NewService(m).Delete(d.Id()); err != nil {
-		return diag.FromErr(err)
-	}
+	// This resource cannot get deleted
 	return diag.Diagnostics{}
 }

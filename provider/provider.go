@@ -30,6 +30,9 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/mobile"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/errorrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/privacy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
@@ -132,13 +135,14 @@ func Provider() *schema.Provider {
 			"dynatrace_span_context_propagation":  ctxprop.Resource(),
 			"dynatrace_resource_attributes":       resattr.Resource(),
 			"dynatrace_span_attribute":            attributes.Resource(),
-			// "dynatrace_api_token":                 tokens.Resource(),
-			"dynatrace_dashboard_sharing":  sharing.Resource(),
-			"dynatrace_environment":        environments.Resource(),
-			"dynatrace_mobile_application": mobile.Resource(),
-			// "dynatrace_credentials":        vault.Resource(),
-			"dynatrace_browser_monitor": monitors.BrowserResource(),
-			"dynatrace_http_monitor":    monitors.HTTPResource(),
+			"dynatrace_dashboard_sharing":         sharing.Resource(),
+			"dynatrace_environment":               environments.Resource(),
+			"dynatrace_mobile_application":        mobile.Resource(),
+			"dynatrace_browser_monitor":           monitors.BrowserResource(),
+			"dynatrace_http_monitor":              monitors.HTTPResource(),
+			"dynatrace_web_application":           web.Resource(),
+			"dynatrace_application_data_privacy":  privacy.Resource(),
+			"dynatrace_application_error_rules":   errorrules.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

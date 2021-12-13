@@ -33,6 +33,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/anomalies/metricevents"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/services"
 	"github.com/dtcookie/dynatrace/api/config/applications/mobile"
+	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
@@ -174,7 +175,7 @@ func importEnvironments(targetFolder string, clusterURL string, apiToken string,
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -213,7 +214,7 @@ func importBrowserMonitors(targetFolder string, environmentURL string, apiToken 
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -252,7 +253,7 @@ func importHTTPMonitors(targetFolder string, environmentURL string, apiToken str
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -301,7 +302,7 @@ func importHTTPMonitors(targetFolder string, environmentURL string, apiToken str
 // 		} else if config.GetType() == vault.CredentialsTypes.Token {
 // 			config.Token = opt.NewString("--redacted--")
 // 		}
-// 		if err := hcl.Export(config, file); err != nil {
+// 		if err := hcl.ExportOpt(config, file); err != nil {
 // 			file.Close()
 // 			return err
 // 		}
@@ -342,7 +343,7 @@ func importAWSCredentials(targetFolder string, environmentURL string, apiToken s
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -383,7 +384,7 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -424,7 +425,7 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -505,7 +506,7 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -546,7 +547,7 @@ func importAlertingProfiles(targetFolder string, environmentURL string, apiToken
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -586,7 +587,7 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string,
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -627,7 +628,7 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -668,7 +669,7 @@ func importRequestAttributes(targetFolder string, environmentURL string, apiToke
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -708,7 +709,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -719,20 +720,24 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		shareRestClient := sharing.NewService(environmentURL+"/api/config/v1", apiToken)
 		var shareSettings *sharing.DashboardSharing
 		if shareSettings, err = shareRestClient.Get(stub.ID); err != nil {
-			file.Close()
-			return err
+			if !strings.Contains(err.Error(), "Editing or deleting a non user specific dashboard preset is not allowed") {
+				file.Close()
+				return err
+			}
 		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard_sharing", escape(config.Metadata.Name+"_"+stub.ID))); err != nil {
-			file.Close()
-			return err
-		}
-		if err := hcl.Export(shareSettings, file); err != nil {
-			file.Close()
-			return err
-		}
-		if _, err := file.WriteString("}\n"); err != nil {
-			file.Close()
-			return err
+		if shareSettings != nil {
+			if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard_sharing", escape(config.Metadata.Name+"_"+stub.ID))); err != nil {
+				file.Close()
+				return err
+			}
+			if err := hcl.ExportOpt(shareSettings, file); err != nil {
+				file.Close()
+				return err
+			}
+			if _, err := file.WriteString("}\n"); err != nil {
+				file.Close()
+				return err
+			}
 		}
 		file.Close()
 	}
@@ -785,7 +790,7 @@ func importCustomServicesTech(targetFolder string, environmentURL string, apiTok
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1033,7 +1038,7 @@ func importCalculatedServiceMetrics(targetFolder string, environmentURL string, 
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1076,7 +1081,133 @@ func importMobileApps(targetFolder string, environmentURL string, apiToken strin
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importApplicationErrorRules(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := web.NewService(environmentURL+"/api/config/v1", apiToken)
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.GetErrorRules(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := stub.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(stub.Name, stub.ID) + ".application_error_rules.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_application_error_rules", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importApplicationDataPrivacy(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := web.NewService(environmentURL+"/api/config/v1", apiToken)
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.GetAppDataPrivacy(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := stub.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(stub.Name, stub.ID) + ".application_data_privacy.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_application_data_privacy", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importWebApps(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := web.NewService(environmentURL+"/api/config/v1", apiToken)
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		name := config.Name
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".web_application.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_web_application", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1119,7 +1250,7 @@ func importServiceNamings(targetFolder string, environmentURL string, apiToken s
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1162,7 +1293,7 @@ func importHostNamings(targetFolder string, environmentURL string, apiToken stri
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1205,7 +1336,7 @@ func importProcessGroupNamings(targetFolder string, environmentURL string, apiTo
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1245,7 +1376,7 @@ func importSLOs(targetFolder string, environmentURL string, apiToken string, arg
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1284,7 +1415,7 @@ func importSpanEntryPoints(targetFolder string, environmentURL string, apiToken 
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1323,7 +1454,7 @@ func importSpanCaptureRules(targetFolder string, environmentURL string, apiToken
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1362,7 +1493,7 @@ func importSpanContextPropagation(targetFolder string, environmentURL string, ap
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1401,7 +1532,7 @@ func importResourceAttributes(targetFolder string, environmentURL string, apiTok
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -1440,7 +1571,7 @@ func importSpanAttributes(targetFolder string, environmentURL string, apiToken s
 			file.Close()
 			return err
 		}
-		if err := hcl.Export(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
