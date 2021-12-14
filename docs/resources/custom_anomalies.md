@@ -26,7 +26,7 @@ description: |-
 
 - **aggregation_type** (String) How the metric data points are aggregated for the evaluation. The timeseries must support this aggregation
 - **dimensions** (Block List) Defines the dimensions of the metric to alert on. The filters are combined by conjunction (see [below for nested schema](#nestedblock--dimensions))
-- **disabled_reason** (String) The reason of automatic disabling.  The `NONE` means config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`, `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
+- **disabled_reason** (String, Deprecated) The reason of automatic disabling.  The `NONE` means config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`, `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
 - **id** (String) The ID of this resource.
 - **metric_id** (String) The ID of the metric evaluated by the metric event
 - **metric_selector** (String) The metric selector that should be executed
@@ -34,7 +34,7 @@ description: |-
 - **scopes** (Block List) Defines the scope of the metric event. Only one filter is allowed per filter type, except for tags, where up to 3 are allowed. The filters are combined by conjunction (see [below for nested schema](#nestedblock--scopes))
 - **severity** (String) The type of the event to trigger on the threshold violation.  The `CUSTOM_ALERT` type is not correlated with other alerts. The `INFO` type does not open a problem
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **warning_reason** (String) The reason of a warning set on the config. The `NONE` means config has no warnings. The other supported value is `TOO_MANY_DIMS`
+- **warning_reason** (String, Deprecated) The reason of a warning set on the config. The `NONE` means config has no warnings. The other supported value is `TOO_MANY_DIMS`
 
 <a id="nestedblock--strategy"></a>
 ### Nested Schema for `strategy`

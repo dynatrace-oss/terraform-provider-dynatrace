@@ -24,6 +24,7 @@ description: |-
 ### Optional
 
 - **description** (String) A short description of the maintenance purpose
+- **enabled** (Boolean) The Maintenance Window is enabled or disabled
 - **id** (String) The ID of this resource.
 - **metadata** (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
 - **schedule** (Block List, Max: 1) The schedule of the maintenance window (see [below for nested schema](#nestedblock--schedule))

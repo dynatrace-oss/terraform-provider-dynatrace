@@ -50,6 +50,7 @@ import (
 	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/attributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/capture"
@@ -143,6 +144,8 @@ func Provider() *schema.Provider {
 			"dynatrace_web_application":           web.Resource(),
 			"dynatrace_application_data_privacy":  privacy.Resource(),
 			"dynatrace_application_error_rules":   errorrules.Resource(),
+			"dynatrace_request_naming":            requestnaming.Resource(),
+			"dynatrace_request_namings":           requestnaming.OrderResource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

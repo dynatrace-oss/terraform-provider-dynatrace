@@ -29,12 +29,12 @@ description: |-
 Required:
 
 - **name** (String) the name of the dashboard
+- **owner** (String) the owner of the dashboard
 
 Optional:
 
 - **dynamic_filters** (Block List, Max: 1) Dashboard filter configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters))
 - **filter** (Block List, Max: 1) Global filter Settings for the Dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--filter))
-- **owner** (String) the owner of the dashboard
 - **shared** (Boolean) the dashboard is shared (`true`) or private (`false`)
 - **sharing_details** (Block List, Max: 1) represents sharing configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--sharing_details))
 - **tags** (Set of String) a set of tags assigned to the dashboard
