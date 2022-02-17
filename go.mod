@@ -30,7 +30,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/naming/processgroups v1.0.3
 	github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3
 	github.com/dtcookie/dynatrace/api/config/notifications v1.0.12
-	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.9
+	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.10
 	github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0
 	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.5
