@@ -59,6 +59,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/resattr"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/locations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/monitors"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -146,6 +148,8 @@ func Provider() *schema.Provider {
 			"dynatrace_application_error_rules":   errorrules.Resource(),
 			"dynatrace_request_naming":            requestnaming.Resource(),
 			"dynatrace_request_namings":           requestnaming.OrderResource(),
+			"dynatrace_user_group":                usergroups.Resource(),
+			"dynatrace_user":                      users.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
