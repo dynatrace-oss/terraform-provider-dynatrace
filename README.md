@@ -65,7 +65,12 @@ The utility then reaches out to the Dynatrace Environment specified by the comma
 ### Command Line Syntax
 Invoking the export functionality requires
 * The environment varibale `DYNATRACE_ENV_URL` as the URL of your Dynatrace Environment
-* The environment variable `DYNATRACE_API_TOKEN` as the API Token with the permissions `Read configuration` and `Capture request data`
+* The environment variable `DYNATRACE_API_TOKEN` as the API Token with the following permissions:
+    -  `Read configuration`
+    -  `Capture request data`
+    -  `Read SLO`
+    -  `Read settings`
+    -  `Read synthetic monitors, locations, and nodes`
 * Optinonally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
 #### Windows
 `terraform-provider-dynatrace.exe export *[<resourcename>[=<id>]]`
