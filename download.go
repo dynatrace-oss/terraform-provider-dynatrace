@@ -91,7 +91,7 @@ func escape(s string) string {
   * (asterisk)
 */
 
-var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*"}
+var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*", "	", "\r", "\n", "\f", "\v"}
 
 func escf(s string) string {
 	for _, ch := range forbiddenFileNameChars {
