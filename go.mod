@@ -15,7 +15,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.0
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.3
-	github.com/dtcookie/dynatrace/api/config/autotags v1.0.21
+	github.com/dtcookie/dynatrace/api/config/autotags v1.0.22
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.11
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13
