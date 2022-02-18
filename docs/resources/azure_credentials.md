@@ -29,7 +29,7 @@ description: |-
 - **key** (String) The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
 - **label** (String) The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed
 - **monitor_only_tag_pairs** (Block List, Max: 10) A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--monitor_only_tag_pairs))
-- **supporting_services** (Block List, Max: 10) A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server. (see [below for nested schema](#nestedblock--supporting_services))
+- **supporting_services** (Block List) A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server. (see [below for nested schema](#nestedblock--supporting_services))
 - **unknowns** (String) Any attributes that aren't yet supported by this provider
 
 <a id="nestedblock--monitor_only_tag_pairs"></a>
@@ -47,7 +47,7 @@ Optional:
 
 Optional:
 
-- **monitored_metrics** (Block List, Max: 10) A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--supporting_services--monitored_metrics))
+- **monitored_metrics** (Block List) A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--supporting_services--monitored_metrics))
 - **name** (String) The name of the supporting service.
 - **unknowns** (String) Any attributes that aren't yet supported by this provider
 

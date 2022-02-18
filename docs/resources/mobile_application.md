@@ -83,9 +83,6 @@ resource "dynatrace_mobile_application" "SIXTH_ASDFGHIJK" {
 
 - **apdex** (Block List, Min: 1, Max: 1) Apdex configuration of a mobile application. A duration less than the **tolerable** threshold is considered satisfied (see [below for nested schema](#nestedblock--apdex))
 - **beacon_endpoint_type** (String) The type of the beacon endpoint. Possible values are `CLUSTER_ACTIVE_GATE`, `ENVIRONMENT_ACTIVE_GATE` and `INSTRUMENTED_WEB_SERVER`.
-- **beacon_endpoint_url** (String) The URL of the beacon endpoint.
-
-Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
 - **name** (String) The name of the application
 
 ### Optional
@@ -93,6 +90,9 @@ Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_
 - **application_id** (String) The UUID of the application.
 
 It is used only by OneAgent to send data to Dynatrace. If not specified it will get generated.
+- **beacon_endpoint_url** (String) The URL of the beacon endpoint.
+
+Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
 - **id** (String) The ID of this resource.
 - **key_user_actions** (Set of String) User Action names to be flagged as Key User Actions
 - **opt_in_mode** (Boolean) The opt-in mode is enabled (`true`) or disabled (`false`)
