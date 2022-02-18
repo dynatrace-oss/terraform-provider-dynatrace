@@ -42,6 +42,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/mgmz"
@@ -105,7 +106,8 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"dynatrace_alerting_profiles":   alerting.DataSource(),
+			"dynatrace_alerting_profiles": alerting.DataSource(),
+			// "dynatrace_service":             dsservices.DataSource(),
 			"dynatrace_credentials":         vault.DataSource(),
 			"dynatrace_synthetic_locations": locations.DataSource(),
 			"dynatrace_synthetic_location":  locations.UniqueDataSource(),
@@ -150,6 +152,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_namings":           requestnaming.OrderResource(),
 			"dynatrace_user_group":                usergroups.Resource(),
 			"dynatrace_user":                      users.Resource(),
+			"dynatrace_key_requests":              keyrequests.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
