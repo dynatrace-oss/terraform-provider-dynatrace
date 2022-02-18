@@ -17,7 +17,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.2
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.21
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12
-	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.10
+	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.11
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13
 	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
