@@ -67,9 +67,10 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 		locs = append(locs, &Location{
-			ID:   location.ID,
-			Name: location.Name,
-			Type: LocationType(string(location.Type)),
+			ID:            location.ID,
+			Name:          location.Name,
+			CloudPlatform: location.CloudPlatform,
+			Type:          LocationType(string(location.Type)),
 		})
 	}
 	marshalled, err := locs.MarshalHCL()
