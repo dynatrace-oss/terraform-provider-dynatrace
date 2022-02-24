@@ -20,6 +20,7 @@ package config
 import (
 	"context"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -51,6 +52,9 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (interface{}, diag.
 	apiToken := d.Get("dt_api_token").(string)
 	clusterAPIToken := d.Get("dt_cluster_api_token").(string)
 	clusterURL := d.Get("dt_cluster_url").(string)
+
+	dtEnvURL = strings.TrimSuffix(strings.TrimSuffix(dtEnvURL, " "), "/")
+	clusterURL = strings.TrimSuffix(strings.TrimSuffix(clusterURL, " "), "/")
 
 	fullURL := dtEnvURL + "/api/config/v1"
 	fullNonConfigURL := dtEnvURL + "/api/v1"
