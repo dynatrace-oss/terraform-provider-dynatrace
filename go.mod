@@ -17,7 +17,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.3
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.22
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12
-	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.11
+	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13
 	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
@@ -25,7 +25,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.9
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.17
-	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.4
+	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.5
 	github.com/dtcookie/dynatrace/api/config/naming/hosts v1.0.3
 	github.com/dtcookie/dynatrace/api/config/naming/processgroups v1.0.3
 	github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3
