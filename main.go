@@ -119,6 +119,10 @@ func clusterExport(args []string) bool {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"
 	}
+	// debug := os.Getenv("DYNATRACE_DEBUG")
+	// if debug == "true" {
+	// 	rest.Verbose = true
+	// }
 	if len(args) == 2 {
 		return clusterDownloadWith(clusterURL, apiToken, targetFolder, nil)
 	}
@@ -163,6 +167,7 @@ func export(args []string) bool {
 		fmt.Println("The environment variable DYNATRACE_ENV_URL needs to be set")
 		os.Exit(0)
 	}
+	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
 	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
 	if apiToken == "" {
 		fmt.Println("The environment variable DYNATRACE_API_TOKEN needs to be set")
@@ -319,6 +324,7 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
+
 	if rids, ok := m["dynatrace_maintenance_window"]; ok {
 		if err := importMaintenance(targetFolder+"/maintenance", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
