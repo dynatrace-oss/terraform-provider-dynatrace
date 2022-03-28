@@ -131,8 +131,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1 h1:o+bFfgsDURc
 github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1/go.mod h1:yU7GFfFce3lDLPJPQxHN4cfgBixe/0Rn5CAZ1sroPSo=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15 h1:sBY7noTpYIBmcv3xTIV9XipmPOk1vSelpFZ+Vvcf9/g=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.15/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
-github.com/dtcookie/dynatrace/api/config/dashboards v1.0.15 h1:wD5hxIa7Lv9ekmwnTnUO4pltDvmR1Gy46UK9IcRQuHU=
-github.com/dtcookie/dynatrace/api/config/dashboards v1.0.15/go.mod h1:KKLiLNR/rA6fCkb8y4rAaLVhLCx/RiI0Pqp/uz/OIdQ=
+github.com/dtcookie/dynatrace/api/config/dashboards v1.0.16 h1:fjnhMKufKLjZApueV1fRJ+YWdYai1TaqHYFQVj4DRF4=
+github.com/dtcookie/dynatrace/api/config/dashboards v1.0.16/go.mod h1:KKLiLNR/rA6fCkb8y4rAaLVhLCx/RiI0Pqp/uz/OIdQ=
 github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1 h1:xOPe+Y2+dGIIlapvuRk9FZgS0Efv84lRfXdl2y0Ymtk=
 github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1/go.mod h1:FZBVG6swJhqkJd63t1gsWMK53vJOiXl32zH5oOqYGlk=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.10/go.mod h1:4RUGKPBNwzaB7iYC4k/+uCm/wk7twuZt1EerpVpYAWs=
