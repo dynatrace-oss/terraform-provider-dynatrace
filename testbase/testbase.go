@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -143,6 +144,26 @@ func LoadLocal(file string) (map[string]interface{}, error) {
 	return m, nil
 }
 
+func LoadLocalN(file string, n string) (map[string]interface{}, error) {
+	var err error
+	var data []byte
+	if data, err = ioutil.ReadFile(file); err != nil {
+		return nil, err
+	}
+	sData := string(data)
+	idx := strings.Index(n, ".")
+	if idx != -1 && idx < len(n)-1 {
+		n = n[idx+1:]
+		sData = strings.ReplaceAll(sData, "#name#", n)
+		data = []byte(sData)
+	}
+	m := map[string]interface{}{}
+	if err = json.Unmarshal(data, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func CompareLocalRemote(test ResourceTest, n string, localJSONFile string, t *testing.T) resource.TestCheckFunc {
 	return CompareLocalRemoteExt(test, n, localJSONFile, t, false)
 }
@@ -160,7 +181,7 @@ func CompareLocalRemoteExt(test ResourceTest, n string, localJSONFile string, t 
 				return err
 			}
 			if !loadHTTPOnly {
-				if localMap, err = LoadLocal(localJSONFile); err != nil {
+				if localMap, err = LoadLocalN(localJSONFile, n); err != nil {
 					return err
 				}
 				test.Anonymize(localMap)
