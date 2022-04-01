@@ -115,8 +115,8 @@ github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11 h1:ET7Kr0nLf
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.11/go.mod h1:dVxE7rtXV6KedBy9poMNHxl7X3c8Ve6yaIt1cLyvwmQ=
 github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.1 h1:mQzfo3iAvow+3m7cGKROndhSPUUj3KkS7lkFEbjcA6U=
 github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.1/go.mod h1:fFfTGzZMvQhiGm6DS8Dwqygk4VccA67SuMOxHd5W7nY=
-github.com/dtcookie/dynatrace/api/config/applications/web v1.0.4 h1:kRHJGJs6UnNjaEIso1MYQTP8XeIqs+yzHBc9nv9Rs64=
-github.com/dtcookie/dynatrace/api/config/applications/web v1.0.4/go.mod h1:X1rCU4k9xYqq1ivwmophkV+nRGigP7vntgd2xWsbIck=
+github.com/dtcookie/dynatrace/api/config/applications/web v1.0.6 h1:KvSCk391NFA2dX3ChVPj3d6tyQE0HvQORYiSMjySiik=
+github.com/dtcookie/dynatrace/api/config/applications/web v1.0.6/go.mod h1:X1rCU4k9xYqq1ivwmophkV+nRGigP7vntgd2xWsbIck=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.22 h1:cX+tsY1Um54ldcyxM9yaWPGeTNsSQbn1J4Xt5gYysyU=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.22/go.mod h1:JiSf94RIJkqhUH0zuX/1yubM5+G8NEOJMeW4ulqrnwU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4 h1:FzP47UtNGHiH4DqOQbQOFZ/9lM9cwe2UitLfymy2YPU=

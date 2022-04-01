@@ -19,7 +19,7 @@ resource "dynatrace_web_application" "#name#" {
   }
   meta_data_capture_settings {
     capture {
-      name = "VisitTag0" 
+      name = "VisitTag1" 
       type = "JAVA_SCRIPT_VARIABLE" 
       capturing_name = "PTC.navigation.GLOBAL_USER" 
       # public_metadata = false 
@@ -32,6 +32,30 @@ resource "dynatrace_web_application" "#name#" {
       capturing_name = "#infoPageIdentityObjectIdentifier" 
       # public_metadata = false 
       unique_id = 2 
+      # use_last_value = false 
+    }
+    capture {
+      name = "GCLID - Google Click Identifier" 
+      type = "QUERY_STRING" 
+      capturing_name = "gclid" 
+      # public_metadata = false 
+      unique_id = 3 
+      # use_last_value = false 
+    }
+    capture {
+      name = "Session ID" 
+      type = "COOKIE" 
+      capturing_name = "RES_SESSIONID" 
+      # public_metadata = false 
+      unique_id = 4 
+      # use_last_value = false 
+    }
+    capture {
+      name = "Tracking ID" 
+      type = "COOKIE" 
+      capturing_name = "RES_TRACKINGID" 
+      # public_metadata = false 
+      unique_id = 5 
       # use_last_value = false 
     }
   }
@@ -81,16 +105,14 @@ resource "dynatrace_web_application" "#name#" {
       javascript_errors = true 
       visually_complete_and_speed_index = true 
       resource_timing_settings {
-        instrumentation_delay = 50 
-        # non_w3c_resource_timings = false 
-        resource_timing_capture_type = "CAPTURE_FULL_DETAILS" 
-        resource_timings_domain_limit = 10 
+        instrumentation_delay = 53 
+        non_w3c_resource_timings = true 
         w3c_resource_timings = true 
       }
       timeout_settings {
-        temporary_action_limit = 0 
+        temporary_action_limit = 3 
         temporary_action_total_timeout = 100 
-        # timed_action_support = false 
+        timed_action_support = true 
       }
       visually_complete_settings {
         # exclude_url_regex = "" 
@@ -112,9 +134,47 @@ resource "dynatrace_web_application" "#name#" {
     }
   }
   session_replay_config {
-    enabled = true 
+    enabled = false 
     cost_control_percentage = 100 
     enable_css_resource_capturing = true 
+  }
+  user_action_and_session_properties {
+    property {
+      type = "STRING" 
+      aggregation = "LAST" 
+      display_name = "GCLID - Google Click Identifier" 
+      id = 2 
+      # ignore_case = false 
+      key = "google_gclid" 
+      metadata_id = 3 
+      origin = "META_DATA" 
+      store_as_session_property = true 
+      # store_as_user_action_property = false 
+    }
+    property {
+      type = "STRING" 
+      aggregation = "LAST" 
+      display_name = "Session ID" 
+      id = 3 
+      # ignore_case = false 
+      key = "certona_session_id" 
+      metadata_id = 4 
+      origin = "META_DATA" 
+      store_as_session_property = true 
+      # store_as_user_action_property = false 
+    }
+    property {
+      type = "STRING" 
+      aggregation = "LAST" 
+      display_name = "Tracking ID" 
+      id = 4 
+      # ignore_case = false 
+      key = "certona_tracking_id" 
+      metadata_id = 5 
+      origin = "META_DATA" 
+      store_as_session_property = true 
+      # store_as_user_action_property = false 
+    }
   }
   user_action_naming_settings {
     ignore_case = true 
@@ -137,7 +197,6 @@ resource "dynatrace_web_application" "#name#" {
           step {
             type = "SUBSTRING" 
             # fallback_to_input = false 
-            # pattern_after = "" 
             pattern_after_search_type = "LAST" 
             pattern_before = "/Windchill/app/#ptc1" 
             pattern_before_search_type = "FIRST" 
