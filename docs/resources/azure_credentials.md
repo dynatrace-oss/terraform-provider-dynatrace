@@ -28,9 +28,20 @@ description: |-
 - **id** (String) The ID of this resource.
 - **key** (String) The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
 - **label** (String) The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed
-- **monitor_only_tag_pairs** (Block List, Max: 10) A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--monitor_only_tag_pairs))
+- **monitor_only_excluding_tag_pairs** (Block List, Max: 20) A list of Azure tags to be excluded from monitoring.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`. (see [below for nested schema](#nestedblock--monitor_only_excluding_tag_pairs))
+- **monitor_only_tag_pairs** (Block List, Max: 20) A list of Azure tags to be monitored.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--monitor_only_tag_pairs))
 - **supporting_services** (Block List) A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server. (see [below for nested schema](#nestedblock--supporting_services))
 - **unknowns** (String) Any attributes that aren't yet supported by this provider
+
+<a id="nestedblock--monitor_only_excluding_tag_pairs"></a>
+### Nested Schema for `monitor_only_excluding_tag_pairs`
+
+Optional:
+
+- **name** (String) The name of the tag.
+- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- **value** (String) The value of the tag.   If set to `null`, then resources with any value of the tag are monitored.
+
 
 <a id="nestedblock--monitor_only_tag_pairs"></a>
 ### Nested Schema for `monitor_only_tag_pairs`

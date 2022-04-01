@@ -137,6 +137,7 @@ Optional:
 - **limit** (Number) The limit of the results, if not set will use the default value of the system
 - **markdown** (String) The markdown-formatted content of the tile
 - **metric** (String) The metric assigned to the tile
+- **name_size** (String) The size of the tile name. Possible values are `small`, `medium` and `large`.
 - **query** (String) A [user session query](https://www.dynatrace.com/support/help/shortlink/usql-info) executed by the tile
 - **time_frame_shift** (String) The comparison timeframe of the query. If specified, you additionally get the results of the same query with the specified time shift
 - **type** (String) The attribute `type` exists for backwards compatibilty. Usage is discouraged. You should use `visualization` instead.

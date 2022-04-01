@@ -24,6 +24,7 @@ description: |-
 ### Optional
 
 - **conditions** (Block List) The set of conditions for the metric usage. **All** the specified conditions must be fulfilled to use the metric (see [below for nested schema](#nestedblock--conditions))
+- **description** (String) The displayed description of the metric
 - **dimension_definition** (Block List, Max: 1) Parameters of a definition of a calculated service metric (see [below for nested schema](#nestedblock--dimension_definition))
 - **enabled** (Boolean) The metric is enabled (`true`) or disabled (`false`)
 - **entity_id** (String) Restricts the metric usage to the specified service. This field is mutually exclusive with the `management_zones` field

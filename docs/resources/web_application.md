@@ -134,16 +134,16 @@ Required:
 Valid values range from 0 to 9999.
 
 Only effective if `nonW3cResourceTimings` is enabled
+
+Optional:
+
+- **non_w3c_resource_timings** (Boolean) Timing for JavaScript files and images on non-W3C supported browsers enabled/disabled
 - **resource_timing_capture_type** (String) Defines how detailed resource timings are captured.
 
 Only effective if **w3cResourceTimings** or **nonW3cResourceTimings** is enabled. Possible values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS` and `CAPTURE_LIMITED_SUMMARIES`
 - **resource_timings_domain_limit** (Number) Limits the number of domains for which W3C resource timings are captured.
 
 Only effective if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`. Valid values range from 0 to 50.
-
-Optional:
-
-- **non_w3c_resource_timings** (Boolean) Timing for JavaScript files and images on non-W3C supported browsers enabled/disabled
 - **w3c_resource_timings** (Boolean) W3C resource timings for third party/CDN enabled/disabled
 
 
@@ -508,7 +508,7 @@ Optional:
 
 Optional:
 
-- **property** (Block List, Max: 1) User action and session properties settings (see [below for nested schema](#nestedblock--user_action_and_session_properties--property))
+- **property** (Block List) User action and session properties settings (see [below for nested schema](#nestedblock--user_action_and_session_properties--property))
 
 <a id="nestedblock--user_action_and_session_properties--property"></a>
 ### Nested Schema for `user_action_and_session_properties.property`

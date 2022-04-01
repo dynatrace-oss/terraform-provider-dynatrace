@@ -27,7 +27,7 @@ description: |-
 - **davis_events_integration_enabled** (Boolean) Inclusion of all Davis relevant events is enabled (`true`) or disabled (`false`) for the Kubernetes cluster. If the field is omitted during an update, the old value remains unaffected
 - **endpoint_url** (String) The URL of the Kubernetes API server.  It must be unique within a Dynatrace environment.  The URL must valid according to RFC 2396. Leading or trailing whitespaces are not allowed.
 - **event_analysis_and_alerting_enabled** (Boolean) Event analysis and alerting is (`true`) or disabled (`false`) for the Kubernetes cluster. If the field is omitted during an update, the old value remains unaffected.
-- **events_field_selectors** (Block List) Up to 20 Kubernetes field selector filters. If the field is omitted during an update, the old value remains unaffected. (see [below for nested schema](#nestedblock--events_field_selectors))
+- **events_field_selectors** (Block List) Kubernetes event filters based on field-selectors. If set to `null` on creation, no events field selectors are subscribed. If set to `null` on update, no change of stored events field selectors is applied. Set an empty list to clear all events field selectors. (see [below for nested schema](#nestedblock--events_field_selectors))
 - **events_integration_enabled** (Boolean) Monitoring of events is enabled (`true`) or disabled (`false`) for the Kubernetes cluster. Event monitoring depends on the active state of this configuration to be true.  If not set on creation, the `false` value is used.  If the field is omitted during an update, the old value remains unaffected.
 - **hostname_verification** (Boolean) Verify hostname in certificate against Kubernetes API URL
 - **id** (String) The ID of this resource.
