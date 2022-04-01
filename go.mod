@@ -34,7 +34,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0
 	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7
 	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.0
-	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.5
+	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6
 	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop v1.0.0

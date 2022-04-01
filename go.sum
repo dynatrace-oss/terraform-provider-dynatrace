@@ -161,8 +161,8 @@ github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7 h1:gIOu0g7zgs
 github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7/go.mod h1:ww3HFnLtN6Xj/pM1IG6gtSk4owf0QjzILHZIYXmynI4=
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.0 h1:lyzAOA6ieYqvt6pPrAztMDTuPlZMaCSJdXep6tdBiqY=
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.0/go.mod h1:x7KkQinfB8hSFKxB5nHQZyuytkdSxo9joGl3p6nSOms=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.5 h1:8+cTmD2XY1NKZ4qG+giW2FXWSQVSYipATeR7ZucWhnc=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.5/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6 h1:ybg8NBi7lOjso7BOD5zYM3oSJgewBCv8y2GaT47f81U=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0 h1:aYyVLB2crHzTcTM9yTYv8KEWS2yJ7cSnEluj4j/EVg8=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0/go.mod h1:vLeWSxnFfzIDy+YHBSBSkveZIDjqQ8Z061XzJFBGY0M=
 github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.0 h1:Khb1xn2cMAH3E3lIWteN6+jliqxeBwbTXXm7SvZMCBk=
