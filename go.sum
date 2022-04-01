@@ -97,8 +97,8 @@ github.com/dtcookie/dynatrace/api/config v1.0.0/go.mod h1:Xs0giyHjICPbjFEYJgNMU1
 github.com/dtcookie/dynatrace/api/config v1.0.9/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
 github.com/dtcookie/dynatrace/api/config v1.0.10 h1:FrNTPz2PYeCFQ4d+zGWtgepF4x5EwME6zO1zMk12AN0=
 github.com/dtcookie/dynatrace/api/config v1.0.10/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
-github.com/dtcookie/dynatrace/api/config/alerting v1.0.20 h1:HKyE6s4CPWy5oNCe4N2XD2KFTBaM5KKU2OJsTAVJnpU=
-github.com/dtcookie/dynatrace/api/config/alerting v1.0.20/go.mod h1:+MPUKwqWMDBf9zZ6YkDQsw5DrDEZcLUUZe+jML1N75E=
+github.com/dtcookie/dynatrace/api/config/alerting v1.0.21 h1:KObZmWlFbgmhcOMjji1sfRP8wBXQ54l2W0/uFxjg4kU=
+github.com/dtcookie/dynatrace/api/config/alerting v1.0.21/go.mod h1:+MPUKwqWMDBf9zZ6YkDQsw5DrDEZcLUUZe+jML1N75E=
 github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.5 h1:QWhKqO0HFq/ctkzWWyfZarc+1qoCUc12v6yzCgKecQI=
 github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.5/go.mod h1:LmVf82SVh31z7KOTtd2QiUYvkhxHixSiQb7mqxk+nII=
 github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.7 h1:oupPBdJBerNPOxRE93nyh2z490rUnesOmNBake8IYvI=

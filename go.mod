@@ -6,7 +6,7 @@ require (
 	github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0
 	github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.0
 	github.com/dtcookie/dynatrace/api/cluster/v2/envs v1.0.3
-	github.com/dtcookie/dynatrace/api/config/alerting v1.0.20
+	github.com/dtcookie/dynatrace/api/config/alerting v1.0.21
 	github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.5
 	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.5
 	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.10
