@@ -22,6 +22,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
@@ -43,6 +44,7 @@ var resArr = []string{
 	"dynatrace_aws_credentials",
 	"dynatrace_azure_credentials",
 	"dynatrace_k8s_credentials",
+	"dynatrace_cloudfoundry_credentials",
 	"dynatrace_service_anomalies",
 	"dynatrace_application_anomalies",
 	"dynatrace_host_anomalies",
@@ -119,10 +121,10 @@ func clusterExport(args []string) bool {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"
 	}
-	// debug := os.Getenv("DYNATRACE_DEBUG")
-	// if debug == "true" {
-	// 	rest.Verbose = true
-	// }
+	debug := os.Getenv("DYNATRACE_DEBUG")
+	if debug == "true" {
+		rest.Verbose = true
+	}
 	if len(args) == 2 {
 		return clusterDownloadWith(clusterURL, apiToken, targetFolder, nil)
 	}
@@ -320,6 +322,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_k8s_credentials"]; ok {
 		if err := importK8sCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_cloudfoundry_credentials"]; ok {
+		if err := importCloudFoundryCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

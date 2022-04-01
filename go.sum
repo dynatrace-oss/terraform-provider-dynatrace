@@ -125,6 +125,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12 h1:9T0QRnCOLL4a
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12/go.mod h1:X/+5yqLZ5yhBjJVj1fVFi/Udvn9TPGE96ErOS0OPMqY=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12 h1:zIdSZ6pin6kikBhcPuFbHeiQBUqIMF1d6QRQs9Pn970=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12/go.mod h1:Y3Ae0HzFsC0+38d58uDao5DmxlPMGxrEwdIhMLKTfao=
+github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1 h1:cKUvx3tkExiBoY0HTvjjdkLa8Rh+2wkBUlR0bOekPck=
+github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1/go.mod h1:uKScx7FCNx3m7n3zOLvB3SwbfoTsaGpEproVDQuj4kQ=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13 h1:RfVXAZddmIEYLeR2gp0AqwGG0TNfzZ8domXeP5A/QAs=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
 github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1 h1:o+bFfgsDURcMBa31Sx6fOIqQ/LnVG1DIUci0eY5RLNw=

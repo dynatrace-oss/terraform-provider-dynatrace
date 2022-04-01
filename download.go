@@ -37,6 +37,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
+	"github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry"
 	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
@@ -57,6 +58,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/resattr"
+	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
 )
@@ -382,6 +384,50 @@ func importAzureCredentials(targetFolder string, environmentURL string, apiToken
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_azure_credentials", escape(config.Label))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importCloudFoundryCredentials(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := cloudfoundry.NewService(environmentURL+"/api/config/v1", apiToken)
+
+	if os.Getenv("DYNATRACE_DEBUG") == "true" {
+		rest.Verbose = true
+	}
+
+	stubList, err := restClient.ListAll()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, stub.ID) + ".credentials.cloudfoundry.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_cloudfoundry_credentials", escape(config.Name))); err != nil {
 			file.Close()
 			return err
 		}

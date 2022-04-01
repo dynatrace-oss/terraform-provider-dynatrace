@@ -36,6 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/cloudfoundry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices"
@@ -124,6 +125,7 @@ func Provider() *schema.Provider {
 			"dynatrace_aws_credentials":           aws.Resource(),
 			"dynatrace_azure_credentials":         azure.Resource(),
 			"dynatrace_k8s_credentials":           k8s.Resource(),
+			"dynatrace_cloudfoundry_credentials":  cloudfoundry.Resource(),
 			"dynatrace_service_anomalies":         services.Resource(),
 			"dynatrace_application_anomalies":     applications.Resource(),
 			"dynatrace_host_anomalies":            hosts.Resource(),
