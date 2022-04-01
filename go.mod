@@ -19,7 +19,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1
-	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.13
+	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.14
 	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
 	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.16
