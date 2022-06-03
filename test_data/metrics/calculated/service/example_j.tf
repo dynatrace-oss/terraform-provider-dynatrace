@@ -34,7 +34,7 @@ resource "dynatrace_calculated_service_metric" "#name#" {
         request_attribute    = "Accept-Ranges"
         use_from_child_calls = true
         source {
-          management_zone = "aikeyan"
+          management_zone = "AAAA"
         }
       }
     }

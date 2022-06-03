@@ -137,6 +137,7 @@ resource "dynatrace_web_application" "#name#" {
     enabled = false 
     cost_control_percentage = 100 
     enable_css_resource_capturing = true 
+    css_resource_capturing_exclusion_rules = []
   }
   user_action_and_session_properties {
     property {

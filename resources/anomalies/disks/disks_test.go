@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/dtcookie/dynatrace/api/config/anomalies/diskevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
@@ -108,13 +109,18 @@ func (test *TestStruct) CheckDestroy(s *terraform.State) error {
 
 		id := rs.Primary.ID
 
-		if _, err := restClient.Get(id); err != nil {
-			// HTTP Response "404 Not Found" signals a success
-			if strings.Contains(err.Error(), `"code": 404`) {
-				return nil
+		n := 0
+		for n < 5 {
+			if _, err := restClient.Get(id); err != nil {
+				// HTTP Response "404 Not Found" signals a success
+				if strings.Contains(err.Error(), `"code": 404`) {
+					return nil
+				}
+				// any other error should fail the test
+				return err
 			}
-			// any other error should fail the test
-			return err
+			time.Sleep(time.Second * 3)
+			n++
 		}
 		return fmt.Errorf("Configuration still exists: %s", rs.Primary.ID)
 	}

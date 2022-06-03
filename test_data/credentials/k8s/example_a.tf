@@ -8,6 +8,7 @@ resource "dynatrace_k8s_credentials" "#name#" {
   hostname_verification        = false
   prometheus_exporters         = false
   workload_integration_enabled = true
+  event_analysis_and_alerting_enabled = true
 
   events_field_selectors {
     active         = true
