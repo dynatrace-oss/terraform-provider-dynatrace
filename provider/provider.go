@@ -21,6 +21,12 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
+	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
+	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/applications"
@@ -107,11 +113,16 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"dynatrace_alerting_profiles": alerting.DataSource(),
-			// "dynatrace_service":             dsservices.DataSource(),
+			"dynatrace_alerting_profiles":   alerting.DataSource(),
 			"dynatrace_credentials":         vault.DataSource(),
 			"dynatrace_synthetic_locations": locations.DataSource(),
 			"dynatrace_synthetic_location":  locations.UniqueDataSource(),
+			"dynatrace_service":             serviceds.DataSource(),
+			"dynatrace_management_zone":     mgmzds.DataSource(),
+			"dynatrace_application":         application.DataSource(),
+			"dynatrace_host":                host.DataSource(),
+			"dynatrace_process":             process.DataSource(),
+			"dynatrace_process_group":       processgroup.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":            customservices.Resource(),

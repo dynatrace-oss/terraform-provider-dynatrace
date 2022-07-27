@@ -34,6 +34,11 @@ require (
 	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.10
 	github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0
 	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7
+	github.com/dtcookie/dynatrace/api/config/topology/application v1.0.0
+	github.com/dtcookie/dynatrace/api/config/topology/host v1.0.0
+	github.com/dtcookie/dynatrace/api/config/topology/process v1.0.0
+	github.com/dtcookie/dynatrace/api/config/topology/processgroup v1.0.0
+	github.com/dtcookie/dynatrace/api/config/topology/service v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6
 	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.0
