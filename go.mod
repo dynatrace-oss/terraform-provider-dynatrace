@@ -21,9 +21,10 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.14
 	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
-	github.com/dtcookie/dynatrace/api/config/customservices v1.0.15
+	github.com/dtcookie/dynatrace/api/config/customservices v1.0.16
 	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.16
 	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1
+	github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.11
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.9
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.17
 	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.5
@@ -36,7 +37,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.7
 	github.com/dtcookie/dynatrace/api/config/topology/application v1.0.0
 	github.com/dtcookie/dynatrace/api/config/topology/host v1.0.0
-	github.com/dtcookie/dynatrace/api/config/topology/process v1.0.0
+	github.com/dtcookie/dynatrace/api/config/topology/process v1.0.1
 	github.com/dtcookie/dynatrace/api/config/topology/processgroup v1.0.0
 	github.com/dtcookie/dynatrace/api/config/topology/service v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.1
