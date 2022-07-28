@@ -24,6 +24,21 @@
 			  },
 			  "negate": true
 			}
+		  },
+		  {
+			"key": {
+			  "attribute": "HOST_TAGS",
+			  "type": "STATIC"
+			},
+			"comparisonInfo": {
+			  "type": "TAG",
+			  "operator": "TAG_KEY_EQUALS",
+			  "value": {
+				"context": "CONTEXTLESS",
+				"key": "Asddf"
+			  },
+			  "negate": false
+			}
 		  }
 		]
 	  }
