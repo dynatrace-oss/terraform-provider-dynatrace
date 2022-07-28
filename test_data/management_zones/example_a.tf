@@ -2,19 +2,6 @@ resource "dynatrace_management_zone" "#name#" {
   name = "#name#"
   rules {
     conditions {
-      host_tech {
-        negate = true
-        value {
-          type = "APPARMOR"
-        }
-        operator = "EQUALS"
-      }
-      key {
-        attribute = "HOST_TECHNOLOGY"
-        type      = "STATIC"
-      }
-    }
-    conditions {
       tag {
         #        negate = false
         value {
@@ -25,6 +12,19 @@ resource "dynatrace_management_zone" "#name#" {
       }
       key {
         attribute = "HOST_TAGS"
+        type      = "STATIC"
+      }
+    }    
+    conditions {
+      host_tech {
+        negate = true
+        value {
+          type = "APPARMOR"
+        }
+        operator = "EQUALS"
+      }
+      key {
+        attribute = "HOST_TECHNOLOGY"
         type      = "STATIC"
       }
     }
