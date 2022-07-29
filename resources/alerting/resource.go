@@ -21,6 +21,7 @@ import (
 	"context"
 
 	alertingapi "github.com/dtcookie/dynatrace/api/config/alerting"
+	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
@@ -46,6 +47,7 @@ func Resource() *schema.Resource {
 func NewService(m interface{}) *alertingapi.Service {
 	conf := m.(*config.ProviderConfiguration)
 	apiService := alertingapi.NewService(conf.DTenvURL, conf.APIToken)
+	rest.Verbose = config.HTTPVerbose
 	return apiService
 }
 

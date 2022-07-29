@@ -1,64 +1,128 @@
 {
-    "metadata": {
-      "currentConfigurationVersions": [
-        "0"
-      ],
-      "configurationVersions": [],
-      "clusterVersion": "1.206.95.20201116-094826"
-    },
-    "id": "0afadfcb-1f89-4aac-aa48-4ed97c180aca",
-    "displayName": "Example A",
-    "rules": [
-      {
-        "severityLevel": "AVAILABILITY",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
-      },
-      {
-        "severityLevel": "ERROR",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
-      },
-      {
-        "severityLevel": "PERFORMANCE",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
-      },
-      {
-        "severityLevel": "RESOURCE_CONTENTION",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
-      },
-      {
-        "severityLevel": "CUSTOM_ALERT",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
-      },
-      {
-        "severityLevel": "MONITORING_UNAVAILABLE",
-        "tagFilter": {
-          "includeMode": "NONE",
-          "tagFilters": []
-        },
-        "delayInMinutes": 0
+  "displayName": "reini_test_001",
+  "eventTypeFilters": [],
+  "id": "c98cedf6-fdda-3ff1-9973-e4d374dd17ca",
+  "metadata": {
+    "clusterVersion": "1.246.166.20220725-121102",
+    "configurationVersions": [],
+    "currentConfigurationVersions": [
+      "7.0.6"
+    ]
+  },
+  "rules": [
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "PERFORMANCE",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentE",
+            "value": "production"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          }
+        ]
       }
-    ],
-    "managementZoneId": null,
-    "mzId": null,
-    "eventTypeFilters": []
-  }
+    },
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "CUSTOM_ALERT",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentB",
+            "value": "production"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          }
+        ]
+      }
+    },
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "AVAILABILITY",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentA",
+            "value": "production"
+          }
+        ]
+      }
+    },
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "MONITORING_UNAVAILABLE",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentD",
+            "value": "production"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          }
+        ]
+      }
+    },
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "ERROR",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentC",
+            "value": "production"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          }
+        ]
+      }
+    },
+    {
+      "delayInMinutes": 0,
+      "severityLevel": "RESOURCE_CONTENTION",
+      "tagFilter": {
+        "includeMode": "INCLUDE_ALL",
+        "tagFilters": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "Team",
+            "value": "test"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "EnvironmentF",
+            "value": "production"
+          }
+        ]
+      }
+    }
+  ]
+}
