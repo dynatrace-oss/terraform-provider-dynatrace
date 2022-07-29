@@ -1,38 +1,69 @@
 resource "dynatrace_management_zone" "#name#" {
-  name = "#name#"
+  name = "#name#" 
   rules {
+    type = "PROCESS_GROUP" 
+    enabled = true 
+    propagation_types = ["PROCESS_GROUP_TO_HOST","PROCESS_GROUP_TO_SERVICE"] 
     conditions {
-      host_tech {
-        negate = true
-        value {
-          type = "APPARMOR"
-        }
-        operator = "EQUALS"
-      }
       key {
-        attribute = "HOST_TECHNOLOGY"
-        type      = "STATIC"
+        type = "STATIC" 
+        attribute = "PROCESS_GROUP_TAGS" 
       }
-    }    
-/*
-    conditions {
       tag {
-        #        negate = false
+        # negate = false 
+        operator = "TAG_KEY_EQUALS" 
         value {
-          context = "CONTEXTLESS"
-          key     = "Asddf"
+          context = "CONTEXTLESS" 
+          key = "Environment" 
         }
-        operator = "TAG_KEY_EQUALS"
-      }
-      key {
-        attribute = "HOST_TAGS"
-        type      = "STATIC"
       }
     }
-*/
-    enabled           = true
-    propagation_types = ["PROCESS_GROUP_TO_SERVICE", "PROCESS_GROUP_TO_HOST"]
-    type              = "PROCESS_GROUP"
+    conditions {
+      key {
+        type = "STATIC" 
+        attribute = "PROCESS_GROUP_TAGS" 
+      }
+      tag {
+        # negate = false 
+        operator = "TAG_KEY_EQUALS" 
+        value {
+          context = "CONTEXTLESS" 
+          key = "Team" 
+        }
+      }
+    }
+  }
+  rules {
+    type = "PROCESS_GROUP" 
+    enabled = true 
+    propagation_types = ["PROCESS_GROUP_TO_HOST","PROCESS_GROUP_TO_SERVICE"] 
+    conditions {
+      key {
+        type = "STATIC" 
+        attribute = "PROCESS_GROUP_TAGS" 
+      }
+      tag {
+        # negate = false 
+        operator = "TAG_KEY_EQUALS" 
+        value {
+          context = "CONTEXTLESS" 
+          key = "EnvironmentX" 
+        }
+      }
+    }
+    conditions {
+      key {
+        type = "STATIC" 
+        attribute = "PROCESS_GROUP_TAGS" 
+      }
+      tag {
+        # negate = false 
+        operator = "TAG_KEY_EQUALS" 
+        value {
+          context = "CONTEXTLESS" 
+          key = "TeamX" 
+        }
+      }
+    }
   }
 }
-

@@ -1,33 +1,95 @@
 {
-	"id": "6734823652592292763",
-	"name": "AAAA",
-	"description": null,
-	"rules": [
-	  {
-		"type": "PROCESS_GROUP",
-		"enabled": true,
-		"propagationTypes": [
-		  "PROCESS_GROUP_TO_SERVICE",
-		  "PROCESS_GROUP_TO_HOST"
-		],
-		"conditions": [
-		  {
-			"key": {
-			  "attribute": "HOST_TECHNOLOGY",
-			  "type": "STATIC"
-			},
-			"comparisonInfo": {
-			  "type": "SIMPLE_HOST_TECH",
-			  "operator": "EQUALS",
-			  "value": {
-				"type": "APPARMOR"
-			  },
-			  "negate": true
-			}
-		  }
-		]
-	  }
-	],
 	"dimensionalRules": [],
-	"entitySelectorBasedRules": []
-  }
+	"entitySelectorBasedRules": [],
+	"id": "-5250437906909152056",
+	"metadata": {
+		"clusterVersion": "1.246.166.20220725-121102",
+		"configurationVersions": [],
+		"currentConfigurationVersions": [
+			"1"
+		]
+	},
+	"name": "reini_test_000",
+	"rules": [
+		{
+			"conditions": [
+				{
+					"comparisonInfo": {
+						"negate": false,
+						"operator": "TAG_KEY_EQUALS",
+						"type": "TAG",
+						"value": {
+							"context": "CONTEXTLESS",
+							"key": "TeamX"
+						}
+					},
+					"key": {
+						"attribute": "PROCESS_GROUP_TAGS",
+						"type": "STATIC"
+					}
+				},
+				{
+					"comparisonInfo": {
+						"negate": false,
+						"operator": "TAG_KEY_EQUALS",
+						"type": "TAG",
+						"value": {
+							"context": "CONTEXTLESS",
+							"key": "EnvironmentX"
+						}
+					},
+					"key": {
+						"attribute": "PROCESS_GROUP_TAGS",
+						"type": "STATIC"
+					}
+				}
+			],
+			"enabled": true,
+			"propagationTypes": [
+				"PROCESS_GROUP_TO_HOST",
+				"PROCESS_GROUP_TO_SERVICE"
+			],
+			"type": "PROCESS_GROUP"
+		},
+		{
+			"conditions": [
+				{
+					"comparisonInfo": {
+						"negate": false,
+						"operator": "TAG_KEY_EQUALS",
+						"type": "TAG",
+						"value": {
+							"context": "CONTEXTLESS",
+							"key": "Environment"
+						}
+					},
+					"key": {
+						"attribute": "PROCESS_GROUP_TAGS",
+						"type": "STATIC"
+					}
+				},
+				{
+					"comparisonInfo": {
+						"negate": false,
+						"operator": "TAG_KEY_EQUALS",
+						"type": "TAG",
+						"value": {
+							"context": "CONTEXTLESS",
+							"key": "Team"
+						}
+					},
+					"key": {
+						"attribute": "PROCESS_GROUP_TAGS",
+						"type": "STATIC"
+					}
+				}
+			],
+			"enabled": true,
+			"propagationTypes": [
+				"PROCESS_GROUP_TO_HOST",
+				"PROCESS_GROUP_TO_SERVICE"
+			],
+			"type": "PROCESS_GROUP"
+		}
+	]
+}
