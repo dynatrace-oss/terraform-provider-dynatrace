@@ -33,6 +33,7 @@ Required:
 
 Optional:
 
+- **consistent_colors** (Boolean) The tile uses consistent colors when rendering its content
 - **dynamic_filters** (Block List, Max: 1) Dashboard filter configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters))
 - **filter** (Block List, Max: 1) Global filter Settings for the Dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--filter))
 - **shared** (Boolean) the dashboard is shared (`true`) or private (`false`)

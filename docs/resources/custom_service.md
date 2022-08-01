@@ -59,8 +59,10 @@ Required:
 Optional:
 
 - **arguments** (List of String) Fully qualified types of argument the method expects
+- **modifiers** (List of String) The modifiers of the method rule. Possible values are `ABSTRACT`, `EXTERN`, `FINAL`, `NATIVE` and `STATIC`
 - **returns** (String) Fully qualified type the method returns
 - **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- **visibility** (String) The visibility of the method rule. Possible values are `INTERNAL`, `PACKAGE_PROTECTED`, `PRIVATE`, `PROTECTED` and `PUBLIC`
 
 Read-Only:
 

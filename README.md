@@ -11,7 +11,7 @@ If you want to run Terraform with the dynatrace provider plugin on your system, 
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.11.1"
+            version = "1.12.0"
             source = "dynatrace-oss/dynatrace"
         }
     }

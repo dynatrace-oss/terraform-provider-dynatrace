@@ -95,6 +95,38 @@ func TestAlerting(t *testing.T) {
 	resource.Test(t, *testCase)
 }
 
+func TestAlerting2(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting3(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting4(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting5(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting6(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting7(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting8(t *testing.T) {
+	TestAlerting(t)
+}
+
+func TestAlerting9(t *testing.T) {
+	TestAlerting(t)
+}
+
 func (test *TestStruct) URL(id string) string {
 	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
 	reqPath := RequestPath

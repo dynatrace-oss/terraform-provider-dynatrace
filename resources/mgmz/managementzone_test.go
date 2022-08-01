@@ -77,6 +77,28 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 	}, nil
 }
 
+func TestManagementZones2(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones3(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones4(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones5(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones6(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones7(t *testing.T) {
+	TestManagementZones(t)
+}
+func TestManagementZones8(t *testing.T) {
+	TestManagementZones(t)
+}
+
 func TestManagementZones(t *testing.T) {
 	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
