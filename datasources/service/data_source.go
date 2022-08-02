@@ -2,11 +2,12 @@ package service
 
 import (
 	"fmt"
-	"strings"
 
 	serviceapi "github.com/dtcookie/dynatrace/api/config/topology/service"
+	tagapi "github.com/dtcookie/dynatrace/api/config/topology/tag"
 	"github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -30,48 +31,18 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func isSubSetOf(restSource []serviceapi.Tag, input []serviceapi.Tag) bool {
-	for _, inputTag := range input {
-		found := false
-		for _, restTag := range restSource {
-			if restTag.Key == inputTag.Key {
-				if restTag.Value == nil && inputTag.Value == nil {
-					found = true
-					break
-				} else if restTag.Value != nil && inputTag.Value != nil && *restTag.Value == *inputTag.Value {
-					found = true
-					break
-				}
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-	return true
-}
-
 func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	var tags []serviceapi.Tag
+	var tagList []interface{}
+	var tags []tagapi.Tag
 	if v, ok := d.GetOk("tags"); ok {
 		sTags := v.(*schema.Set)
-		tagList := sTags.List()
-		for _, iTag := range tagList {
-			var tag serviceapi.Tag
-			if strings.Contains(iTag.(string), "=") {
-				tagSplit := strings.Split(iTag.(string), "=")
-				tag.Key = tagSplit[0]
-				tag.Value = &tagSplit[1]
-			} else {
-				tag.Key = iTag.(string)
-			}
-			tags = append(tags, tag)
-		}
+		tagList = sTags.List()
+		dscommon.StringsToTags(tagList, &tags)
 	}
 
 	conf := m.(*config.ProviderConfiguration)
@@ -83,7 +54,7 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	if len(serviceList) > 0 {
 		for _, service := range serviceList {
 			if name == service.DisplayName {
-				if isSubSetOf(service.Tags, tags) {
+				if dscommon.TagSubsetCheck(service.Tags, tags) {
 					d.SetId(service.EntityId)
 					return nil
 				}
@@ -91,5 +62,5 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return fmt.Errorf("no service with name '%s' found", name)
+	return fmt.Errorf("no service with name '%s' with tag(s) %v found", name, tagList)
 }
