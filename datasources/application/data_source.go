@@ -4,8 +4,10 @@ import (
 	"fmt"
 
 	applicationapi "github.com/dtcookie/dynatrace/api/config/topology/application"
+	tagapi "github.com/dtcookie/dynatrace/api/config/topology/tag"
 	"github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -29,35 +31,18 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func isSubSetOf(source []string, input []string) bool {
-	for _, i := range input {
-		found := false
-		for _, s := range source {
-			if s == i {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-	return true
-}
-
 func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	var tags []string
+	var tagList []interface{}
+	var tags []tagapi.Tag
 	if v, ok := d.GetOk("tags"); ok {
 		sTags := v.(*schema.Set)
-		tagList := sTags.List()
-		for _, iTag := range tagList {
-			tags = append(tags, iTag.(string))
-		}
+		tagList = sTags.List()
+		dscommon.StringsToTags(tagList, &tags)
 	}
 
 	conf := m.(*config.ProviderConfiguration)
@@ -69,11 +54,7 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	if len(applicationList) > 0 {
 		for _, application := range applicationList {
 			if name == application.DisplayName {
-				keys := []string{}
-				for _, tag := range application.Tags {
-					keys = append(keys, tag.Key)
-				}
-				if isSubSetOf(keys, tags) {
+				if dscommon.TagSubsetCheck(application.Tags, tags) {
 					d.SetId(application.EntityId)
 					return nil
 				}
@@ -81,5 +62,5 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return fmt.Errorf("no application with name '%s' and tag(s) %v found", name, tags)
+	return fmt.Errorf("no application with name '%s' and tag(s) %v found", name, tagList)
 }
