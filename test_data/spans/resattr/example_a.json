@@ -1,45 +1,30 @@
 {
-  "metadata": {
-    "configurationVersions": [
-      3
-    ],
-    "clusterVersion": "1.206.95.20201116-094826"
-  },
-  "id": "95b6d68b-51d8-42ae-af78-2c80e7b4cbea",
-  "name": "idler",
-  "enabled": true,
-  "dataType": "STRING",
-  "dataSources": [
-    {
-      "enabled": true,
-      "source": "METHOD_PARAM",
-      "technology": "JAVA",
-      "methods": [
-        {
-          "method": {
-            "visibility": "PUBLIC",
-            "modifiers": [
-              "STATIC"
-            ],
-            "className": "idler.Idler",
-            "methodName": "main",
-            "argumentTypes": [
-              "java.lang.String[]"
-            ],
-            "returnType": "void"
-          },
-          "capture": "THIS",
-          "deepObjectAccess": ".getClass().getName()"
-        }
-      ],
-      "scope": {
-        "serviceTechnology": "JAVA",
-        "tagOfProcessGroup": "Mail"
+  "author": "dt0c01.52SLB56BZWWRFK25TUIHE7PT",
+  "created": 1660208634588,
+  "modified": 1660208634588,
+  "objectId": "vu9U3hXa3q0AAAABABpidWlsdGluOnJlc291cmNlLWF0dHJpYnV0ZQAGdGVuYW50AAZ0ZW5hbnQAJDg0OWU5NWJhLTJkNjEtMzZlMi04MzgyLTkxOTIyMzE3NTdmOb7vVN4V2t6t",
+  "schemaId": "builtin:resource-attribute",
+  "schemaVersion": "1.0.23",
+  "scope": "environment",
+  "summary": "",
+  "updateToken": "vu9U3hXY3q0ATAAkODQ5ZTk1YmEtMmQ2MS0zNmUyLTgzODItOTE5MjIzMTc1N2Y5ACQ4NmFlNzFjMC0xOTU0LTExZWQtODAwMS0wMTAwMDAwMDAwMDe-71TeFdjerQ",
+  "value": {
+    "attributeKeys": [
+      {
+        "attributeKey": "gffgf",
+        "enabled": true,
+        "masking": "NOT_MASKED"
+      },
+      {
+        "attributeKey": "cdefgh",
+        "enabled": true,
+        "masking": "NOT_MASKED"
+      },
+      {
+        "attributeKey": "jjhhj",
+        "enabled": false,
+        "masking": "NOT_MASKED"
       }
-    }
-  ],
-  "normalization": "ORIGINAL",
-  "aggregation": "FIRST",
-  "confidential": true,
-  "skipPersonalDataMasking": true
+    ]
+  }
 }

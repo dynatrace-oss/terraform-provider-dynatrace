@@ -33,16 +33,22 @@ import (
 
 const ResourceName = "dynatrace_resource_attributes"
 const TestDataFolder = "../../../test_data/spans/resattr"
-const RequestPath = "%s//settings/objects/%s"
+const RequestPath = "%s/settings/objects/%s"
 
 type TestStruct struct {
 	resourceKey string
 }
 
 func (test *TestStruct) Anonymize(m map[string]interface{}) {
-	delete(m, "id")
-	delete(m, "displayName")
-	delete(m, "metadata")
+	delete(m, "author")
+	delete(m, "created")
+	delete(m, "modified")
+	delete(m, "objectId")
+	delete(m, "schemaId")
+	delete(m, "schemaVersion")
+	delete(m, "scope")
+	delete(m, "summary")
+	delete(m, "updateToken")
 }
 
 func (test *TestStruct) ResourceKey() string {
@@ -63,13 +69,13 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 		PreCheck:          func() { testbase.TestAccPreCheck(t) },
 		IDRefreshName:     resourceName,
 		ProviderFactories: testbase.TestAccProviderFactories,
-		// CheckDestroy:      test.CheckDestroy,
+		CheckDestroy:      test.CheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: config,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					CheckExists(resourceName, t),
-					testbase.CompareLocalRemoteExt(test, resourceName, localJSONFile, t, true),
+					testbase.CompareLocalRemoteExt(test, resourceName, localJSONFile, t, false),
 				),
 			},
 		},
