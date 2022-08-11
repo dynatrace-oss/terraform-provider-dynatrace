@@ -69,6 +69,7 @@ var resArr = []string{
 	"dynatrace_application_data_privacy",
 	"dynatrace_application_error_rules",
 	"dynatrace_request_naming",
+	"dynatrace_key_requests",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -479,6 +480,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_request_naming"]; ok {
 		if err := importRequestNamings(targetFolder+"/requestnaming", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_key_requests"]; ok {
+		if err := importKeyRequests(targetFolder+"/keyrequests", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

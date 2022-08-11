@@ -52,6 +52,8 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
+	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
+	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/capture"
@@ -1129,6 +1131,54 @@ func importMobileApps(targetFolder string, environmentURL string, apiToken strin
 			return err
 		}
 		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importKeyRequests(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+
+	topRestClient := servicetopology.NewService(environmentURL+"/api/v1", apiToken)
+	services, err := topRestClient.List()
+	if err != nil {
+		return err
+	}
+	restClient := keyrequests.NewService(environmentURL+"/api/v2", apiToken)
+
+	for _, service := range services {
+		keyRequestID, keyRequest, err := restClient.List(service.EntityId)
+		if err != nil {
+			return err
+		}
+		if keyRequest == nil {
+			continue
+		}
+		if !ctns(argids, keyRequestID) {
+			continue
+		}
+		var file *os.File
+		name := "for " + service.DisplayName
+		if name == "" {
+			name = uuid.New().String()
+		}
+		fileName := targetFolder + "/" + escFileName(service.DisplayName, service.EntityId) + ".key_requests.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_key_requests", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(keyRequest, file); err != nil {
 			file.Close()
 			return err
 		}
