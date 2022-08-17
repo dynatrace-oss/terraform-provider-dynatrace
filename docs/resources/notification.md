@@ -17,39 +17,42 @@ description: |-
 
 ### Optional
 
-- **ansible_tower** (Block List, Max: 1) Configuration for Ansible Tower Notification (see [below for nested schema](#nestedblock--ansible_tower))
-- **config** (Block List, Max: 1) Configuration for Generic Notification (see [below for nested schema](#nestedblock--config))
-- **email** (Block List, Max: 1) Configuration for Email Notification (see [below for nested schema](#nestedblock--email))
-- **hipchat** (Block List, Max: 1) Configuration for HipChat Notification (see [below for nested schema](#nestedblock--hipchat))
-- **id** (String) The ID of this resource.
-- **jira** (Block List, Max: 1) Configuration for Jira Notification (see [below for nested schema](#nestedblock--jira))
-- **ops_genie** (Block List, Max: 1) Configuration for OpsGenie Notification (see [below for nested schema](#nestedblock--ops_genie))
-- **pager_duty** (Block List, Max: 1) Configuration for PagerDuty Notification (see [below for nested schema](#nestedblock--pager_duty))
-- **service_now** (Block List, Max: 1) Configuration for ServiceNow Notification (see [below for nested schema](#nestedblock--service_now))
-- **slack** (Block List, Max: 1) Configuration for Slack Notification (see [below for nested schema](#nestedblock--slack))
-- **trello** (Block List, Max: 1) Configuration for Trello Notification (see [below for nested schema](#nestedblock--trello))
-- **victor_ops** (Block List, Max: 1) Configuration for VictorOps Notification (see [below for nested schema](#nestedblock--victor_ops))
-- **web_hook** (Block List, Max: 1) Configuration for WebHook Notification (see [below for nested schema](#nestedblock--web_hook))
-- **xmatters** (Block List, Max: 1) Configuration for XMatters Notification (see [below for nested schema](#nestedblock--xmatters))
+- `ansible_tower` (Block List, Max: 1) Configuration for Ansible Tower Notification (see [below for nested schema](#nestedblock--ansible_tower))
+- `config` (Block List, Max: 1) Configuration for Generic Notification (see [below for nested schema](#nestedblock--config))
+- `email` (Block List, Max: 1) Configuration for Email Notification (see [below for nested schema](#nestedblock--email))
+- `hipchat` (Block List, Max: 1) Configuration for HipChat Notification (see [below for nested schema](#nestedblock--hipchat))
+- `jira` (Block List, Max: 1) Configuration for Jira Notification (see [below for nested schema](#nestedblock--jira))
+- `ops_genie` (Block List, Max: 1) Configuration for OpsGenie Notification (see [below for nested schema](#nestedblock--ops_genie))
+- `pager_duty` (Block List, Max: 1) Configuration for PagerDuty Notification (see [below for nested schema](#nestedblock--pager_duty))
+- `service_now` (Block List, Max: 1) Configuration for ServiceNow Notification (see [below for nested schema](#nestedblock--service_now))
+- `slack` (Block List, Max: 1) Configuration for Slack Notification (see [below for nested schema](#nestedblock--slack))
+- `trello` (Block List, Max: 1) Configuration for Trello Notification (see [below for nested schema](#nestedblock--trello))
+- `victor_ops` (Block List, Max: 1) Configuration for VictorOps Notification (see [below for nested schema](#nestedblock--victor_ops))
+- `web_hook` (Block List, Max: 1) Configuration for WebHook Notification (see [below for nested schema](#nestedblock--web_hook))
+- `xmatters` (Block List, Max: 1) Configuration for XMatters Notification (see [below for nested schema](#nestedblock--xmatters))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--ansible_tower"></a>
 ### Nested Schema for `ansible_tower`
 
 Required:
 
-- **accept_any_certificate** (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **custom_message** (String) The custom message of the notification.   This message will be displayed in the extra variables **Message** field of your job template.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **job_template_id** (Number) The ID of the target Ansible Tower job template
-- **job_template_url** (String) The URL of the target Ansible Tower job template
-- **name** (String) The name of the notification configuration
-- **username** (String) The username of the Ansible Tower account
+- `accept_any_certificate` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `custom_message` (String) The custom message of the notification.   This message will be displayed in the extra variables **Message** field of your job template.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `job_template_id` (Number) The ID of the target Ansible Tower job template
+- `job_template_url` (String) The URL of the target Ansible Tower job template
+- `name` (String) The name of the notification configuration
+- `username` (String) The username of the Ansible Tower account
 
 Optional:
 
-- **password** (String) The password for the Ansible Tower account
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `password` (String) The password for the Ansible Tower account
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--config"></a>
@@ -57,14 +60,14 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **name** (String) The name of the notification configuration
-- **type** (String) Defines the actual set of fields depending on the value. See one of the following objects:  * `EMAIL` -> EmailNotificationConfig  * `PAGER_DUTY` -> PagerDutyNotificationConfig  * `WEBHOOK` -> WebHookNotificationConfig  * `SLACK` -> SlackNotificationConfig  * `HIPCHAT` -> HipChatNotificationConfig  * `VICTOROPS` -> VictorOpsNotificationConfig  * `SERVICE_NOW` -> ServiceNowNotificationConfig  * `XMATTERS` -> XMattersNotificationConfig  * `ANSIBLETOWER` -> AnsibleTowerNotificationConfig  * `OPS_GENIE` -> OpsGenieNotificationConfig  * `JIRA` -> JiraNotificationConfig  * `TRELLO` -> TrelloNotificationConfig
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `name` (String) The name of the notification configuration
+- `type` (String) Defines the actual set of fields depending on the value. See one of the following objects:  * `EMAIL` -> EmailNotificationConfig  * `PAGER_DUTY` -> PagerDutyNotificationConfig  * `WEBHOOK` -> WebHookNotificationConfig  * `SLACK` -> SlackNotificationConfig  * `HIPCHAT` -> HipChatNotificationConfig  * `VICTOROPS` -> VictorOpsNotificationConfig  * `SERVICE_NOW` -> ServiceNowNotificationConfig  * `XMATTERS` -> XMattersNotificationConfig  * `ANSIBLETOWER` -> AnsibleTowerNotificationConfig  * `OPS_GENIE` -> OpsGenieNotificationConfig  * `JIRA` -> JiraNotificationConfig  * `TRELLO` -> TrelloNotificationConfig
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--email"></a>
@@ -72,18 +75,18 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **body** (String) The template of the email notification.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **name** (String) The name of the notification configuration
-- **subject** (String) The subject of the email notifications
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `body` (String) The template of the email notification.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `name` (String) The name of the notification configuration
+- `subject` (String) The subject of the email notifications
 
 Optional:
 
-- **bcc_receivers** (Set of String) The list of the email BCC-recipients
-- **cc_receivers** (Set of String) The list of the email CC-recipients
-- **receivers** (Set of String) The list of the email recipients
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `bcc_receivers` (Set of String) The list of the email BCC-recipients
+- `cc_receivers` (Set of String) The list of the email CC-recipients
+- `receivers` (Set of String) The list of the email recipients
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--hipchat"></a>
@@ -91,15 +94,15 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **message** (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **name** (String) The name of the notification configuration
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `message` (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `name` (String) The name of the notification configuration
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **url** (String) The URL of the HipChat WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `url` (String) The URL of the HipChat WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
 
 
 <a id="nestedblock--jira"></a>
@@ -107,20 +110,20 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **description** (String) The description of the Jira issue to be created by this notification.   You can use same placeholders as in issue summary
-- **issue_type** (String) The type of the Jira issue to be created by this notification
-- **name** (String) The name of the notification configuration
-- **project_key** (String) The project key of the Jira issue to be created by this notification
-- **summary** (String) The summary of the Jira issue to be created by this notification.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **url** (String) The URL of the Jira API endpoint
-- **username** (String) The username of the Jira profile
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `description` (String) The description of the Jira issue to be created by this notification.   You can use same placeholders as in issue summary
+- `issue_type` (String) The type of the Jira issue to be created by this notification
+- `name` (String) The name of the notification configuration
+- `project_key` (String) The project key of the Jira issue to be created by this notification
+- `summary` (String) The summary of the Jira issue to be created by this notification.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `url` (String) The URL of the Jira API endpoint
+- `username` (String) The username of the Jira profile
 
 Optional:
 
-- **password** (String) The password for the Jira profile
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `password` (String) The password for the Jira profile
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--ops_genie"></a>
@@ -128,16 +131,16 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **domain** (String) The region domain of the OpsGenie
-- **message** (String) The content of the message.  You can use the following placeholders:  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem
-- **name** (String) The name of the notification configuration
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `domain` (String) The region domain of the OpsGenie
+- `message` (String) The content of the message.  You can use the following placeholders:  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem
+- `name` (String) The name of the notification configuration
 
 Optional:
 
-- **api_key** (String) The API key to access OpsGenie
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `api_key` (String) The API key to access OpsGenie
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--pager_duty"></a>
@@ -145,16 +148,16 @@ Optional:
 
 Required:
 
-- **account** (String) The name of the PagerDuty account
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **name** (String) The name of the notification configuration
-- **service_name** (String) The name of the service
+- `account` (String) The name of the PagerDuty account
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `name` (String) The name of the notification configuration
+- `service_name` (String) The name of the service
 
 Optional:
 
-- **service_api_key** (String) The API key to access PagerDuty
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `service_api_key` (String) The API key to access PagerDuty
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--service_now"></a>
@@ -162,20 +165,20 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **message** (String) The content of the ServiceNow description.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **name** (String) The name of the notification configuration
-- **send_events** (Boolean) Send events into ServiceNow ITOM (`true`)
-- **send_incidents** (Boolean) Send incidents into ServiceNow ITSM (`true`)
-- **username** (String) The username of the ServiceNow account.   Make sure that your user account has the `rest_service`, `web_request_admin`, and `x_dynat_ruxit.Integration` roles
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `message` (String) The content of the ServiceNow description.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `name` (String) The name of the notification configuration
+- `send_events` (Boolean) Send events into ServiceNow ITOM (`true`)
+- `send_incidents` (Boolean) Send incidents into ServiceNow ITSM (`true`)
+- `username` (String) The username of the ServiceNow account.   Make sure that your user account has the `rest_service`, `web_request_admin`, and `x_dynat_ruxit.Integration` roles
 
 Optional:
 
-- **instance_name** (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL.   This field is mutually exclusive with the **url** field. You can only use one of them
-- **password** (String) The username to the ServiceNow account
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **url** (String) The URL of the on-premise ServiceNow installation.   This field is mutually exclusive with the **instanceName** field. You can only use one of them
+- `instance_name` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL.   This field is mutually exclusive with the **url** field. You can only use one of them
+- `password` (String) The username to the ServiceNow account
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `url` (String) The URL of the on-premise ServiceNow installation.   This field is mutually exclusive with the **instanceName** field. You can only use one of them
 
 
 <a id="nestedblock--slack"></a>
@@ -183,16 +186,16 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **channel** (String) The channel (for example, `#general`) or the user (for example, `@john.smith`) to send the message to
-- **name** (String) The name of the notification configuration
-- **title** (String) The content of the message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `channel` (String) The channel (for example, `#general`) or the user (for example, `@john.smith`) to send the message to
+- `name` (String) The name of the notification configuration
+- `title` (String) The content of the message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **url** (String) The URL of the Slack WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `url` (String) The URL of the Slack WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
 
 
 <a id="nestedblock--trello"></a>
@@ -200,20 +203,20 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **application_key** (String) The application key for the Trello account
-- **board_id** (String) The Trello board to which the card should be assigned
-- **description** (String) The description of the Trello card.   You can use same placeholders as in card text
-- **list_id** (String) The Trello list to which the card should be assigned
-- **name** (String) The name of the notification configuration
-- **resolved_list_id** (String) The Trello list to which the card of the resolved problem should be assigned
-- **text** (String) The text of the generated Trello card.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `application_key` (String) The application key for the Trello account
+- `board_id` (String) The Trello board to which the card should be assigned
+- `description` (String) The description of the Trello card.   You can use same placeholders as in card text
+- `list_id` (String) The Trello list to which the card should be assigned
+- `name` (String) The name of the notification configuration
+- `resolved_list_id` (String) The Trello list to which the card of the resolved problem should be assigned
+- `text` (String) The text of the generated Trello card.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
 
 Optional:
 
-- **authorization_token** (String) The application token for the Trello account
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `authorization_token` (String) The application token for the Trello account
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--victor_ops"></a>
@@ -221,16 +224,16 @@ Optional:
 
 Required:
 
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **message** (String) The content of the message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`
-- **name** (String) The name of the notification configuration
-- **routing_key** (String) The routing key, defining the group to be notified
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `message` (String) The content of the message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`
+- `name` (String) The name of the notification configuration
+- `routing_key` (String) The routing key, defining the group to be notified
 
 Optional:
 
-- **api_key** (String) The API key for the target VictorOps account
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `api_key` (String) The API key for the target VictorOps account
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--web_hook"></a>
@@ -238,29 +241,29 @@ Optional:
 
 Required:
 
-- **accept_any_certificate** (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **name** (String) The name of the notification configuration
-- **payload** (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **url** (String) The URL of the WebHook endpoint
+- `accept_any_certificate` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `name` (String) The name of the notification configuration
+- `payload` (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `url` (String) The URL of the WebHook endpoint
 
 Optional:
 
-- **header** (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--web_hook--header))
-- **notify_event_merges** (Boolean) Call webhook if new events merge into existing problems
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `header` (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--web_hook--header))
+- `notify_event_merges` (Boolean) Call webhook if new events merge into existing problems
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--web_hook--header"></a>
 ### Nested Schema for `web_hook.header`
 
 Required:
 
-- **name** (String) The name of the HTTP header
+- `name` (String) The name of the HTTP header
 
 Optional:
 
-- **value** (String) The value of the HTTP header. May contain an empty value.   Required when creating a new notification.  For the **Authorization** header, GET requests return the `null` value.  If you want update a notification configuration with an **Authorization** header which you want to remain intact, set the **Authorization** header with the `null` value
+- `value` (String) The value of the HTTP header. May contain an empty value.   Required when creating a new notification.  For the **Authorization** header, GET requests return the `null` value.  If you want update a notification configuration with an **Authorization** header which you want to remain intact, set the **Authorization** header with the `null` value
 
 
 
@@ -269,27 +272,27 @@ Optional:
 
 Required:
 
-- **accept_any_certificate** (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
-- **active** (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- **alerting_profile** (String) The ID of the associated alerting profile
-- **name** (String) The name of the notification configuration
-- **payload** (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- **url** (String) The URL of the xMatters WebHook
+- `accept_any_certificate` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `alerting_profile` (String) The ID of the associated alerting profile
+- `name` (String) The name of the notification configuration
+- `payload` (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `url` (String) The URL of the xMatters WebHook
 
 Optional:
 
-- **header** (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--xmatters--header))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `header` (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--xmatters--header))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--xmatters--header"></a>
 ### Nested Schema for `xmatters.header`
 
 Required:
 
-- **name** (String) The name of the HTTP header
+- `name` (String) The name of the HTTP header
 
 Optional:
 
-- **value** (String) The value of the HTTP header. May contain an empty value.   Required when creating a new notification.  For the **Authorization** header, GET requests return the `null` value.  If you want update a notification configuration with an **Authorization** header which you want to remain intact, set the **Authorization** header with the `null` value
+- `value` (String) The value of the HTTP header. May contain an empty value.   Required when creating a new notification.  For the **Authorization** header, GET requests return the `null` value.  If you want update a notification configuration with an **Authorization** header which you want to remain intact, set the **Authorization** header with the `null` value
 
 

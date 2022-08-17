@@ -17,33 +17,36 @@ description: |-
 
 ### Required
 
-- **dashboard_id** (String) The Dynatrace entity ID of the dashboard
+- `dashboard_id` (String) The Dynatrace entity ID of the dashboard
 
 ### Optional
 
-- **enabled** (Boolean) The dashboard is shared (`true`) or private (`false`)
-- **id** (String) The ID of this resource.
-- **permissions** (Block List, Max: 1) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions))
-- **preset** (Boolean) If `true` the dashboard will be marked as preset
-- **public** (Block List, Max: 1) Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard (see [below for nested schema](#nestedblock--public))
+- `enabled` (Boolean) The dashboard is shared (`true`) or private (`false`)
+- `permissions` (Block List, Max: 1) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions))
+- `preset` (Boolean) If `true` the dashboard will be marked as preset
+- `public` (Block List, Max: 1) Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard (see [below for nested schema](#nestedblock--public))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--permissions"></a>
 ### Nested Schema for `permissions`
 
 Optional:
 
-- **permission** (Block List) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions--permission))
+- `permission` (Block List) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions--permission))
 
 <a id="nestedblock--permissions--permission"></a>
 ### Nested Schema for `permissions.permission`
 
 Required:
 
-- **level** (String) The level of the permission: 
+- `level` (String) The level of the permission: 
  
 * `VIEW`: The dashboard is shared with read permission. 
 * `EDIT`: The dashboard is shared with edit permission
-- **type** (String) The type of the permission: 
+- `type` (String) The type of the permission: 
 
 * `USER`: The dashboard is shared with the specified user. 
 * `GROUP`: The dashboard is shared with all users of the specified group. 
@@ -51,7 +54,7 @@ Required:
 
 Optional:
 
-- **id** (String) The ID of the user or group to whom the permission is granted.
+- `id` (String) The ID of the user or group to whom the permission is granted.
 
 Not applicable if the **type** is set to `ALL`
 
@@ -62,7 +65,7 @@ Not applicable if the **type** is set to `ALL`
 
 Required:
 
-- **management_zones** (Set of String) A list of management zones that can display data on the publicly shared dashboard. 
+- `management_zones` (Set of String) A list of management zones that can display data on the publicly shared dashboard. 
 
 Specify management zone IDs here. For each management zone you specify Dynatrace generates an access link. To share the dashboard with its default management zone, use the `default` value
 

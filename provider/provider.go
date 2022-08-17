@@ -49,6 +49,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
@@ -166,6 +167,7 @@ func Provider() *schema.Provider {
 			"dynatrace_user_group":                usergroups.Resource(),
 			"dynatrace_user":                      users.Resource(),
 			"dynatrace_key_requests":              keyrequests.Resource(),
+			"dynatrace_queue_manager":             queuemanagers.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

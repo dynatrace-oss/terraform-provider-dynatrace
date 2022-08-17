@@ -17,8 +17,11 @@ description: |-
 
 ### Optional
 
-- **disabled** (Set of String) configured attributes that currently shouldn't be taken into consideration
-- **enabled** (Set of String) attributes that should get captured
-- **id** (String) The ID of this resource.
+- `disabled` (Set of String) configured attributes that currently shouldn't be taken into consideration
+- `enabled` (Set of String) attributes that should get captured
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

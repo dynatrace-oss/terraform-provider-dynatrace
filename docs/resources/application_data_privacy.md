@@ -17,48 +17,51 @@ description: |-
 
 ### Required
 
-- **do_not_track_behaviour** (String) How to handle the "Do Not Track" header: 
+- `do_not_track_behaviour` (String) How to handle the "Do Not Track" header: 
 
 * `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. 
 * `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. 
 * `DO_NOT_CAPTURE`: respect the header and do not capture.
-- **session_replay_data_privacy** (Block List, Min: 1, Max: 1) Data privacy settings for Session Replay (see [below for nested schema](#nestedblock--session_replay_data_privacy))
-- **web_application_id** (String) Dynatrace entity ID of the web application
+- `session_replay_data_privacy` (Block List, Min: 1, Max: 1) Data privacy settings for Session Replay (see [below for nested schema](#nestedblock--session_replay_data_privacy))
+- `web_application_id` (String) Dynatrace entity ID of the web application
 
 ### Optional
 
-- **data_capture_opt_in** (Boolean) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
-- **id** (String) The ID of this resource.
-- **persistent_cookie_for_user_tracking** (Boolean) Set to `true` to set persistent cookie in order to recognize returning devices
+- `data_capture_opt_in` (Boolean) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
+- `persistent_cookie_for_user_tracking` (Boolean) Set to `true` to set persistent cookie in order to recognize returning devices
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--session_replay_data_privacy"></a>
 ### Nested Schema for `session_replay_data_privacy`
 
 Required:
 
-- **content_masking_settings** (Block List, Min: 1, Max: 1) Content masking settings for Session Replay. 
+- `content_masking_settings` (Block List, Min: 1, Max: 1) Content masking settings for Session Replay. 
 
 For more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings))
 
 Optional:
 
-- **opt_in** (Boolean) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
-- **url_exclusion_rules** (List of String) A list of URLs to be excluded from recording
+- `opt_in` (Boolean) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
+- `url_exclusion_rules` (List of String) A list of URLs to be excluded from recording
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings`
 
 Required:
 
-- **playback** (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Playback (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback))
-- **recording** (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Recording (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording))
+- `playback` (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Playback (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback))
+- `recording` (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Recording (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--playback"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.playback`
 
 Required:
 
-- **preset** (String) The type of the masking: 
+- `preset` (String) The type of the masking: 
 
 * `MASK_ALL`: Mask all texts, user input, and images. 
 * `MASK_USER_INPUT`: Mask all data that is provided through user input 
@@ -67,28 +70,28 @@ Required:
 
 Optional:
 
-- **rules** (Block List, Max: 1) A list of masking rules (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules))
+- `rules` (Block List, Max: 1) A list of masking rules (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.playback.rules`
 
 Required:
 
-- **rule** (Block List, Min: 1) The masking rule defining how data is hidden (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules--rule))
+- `rule` (Block List, Min: 1) The masking rule defining how data is hidden (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules--rule))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--playback--rules--rule"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.playback.rules.rule`
 
 Required:
 
-- **selector** (String) The selector for the element or the attribute to be masked. 
+- `selector` (String) The selector for the element or the attribute to be masked. 
 
 Specify a CSS expression for an element or a [regular expression](https://dt-url.net/k9e0iaq) for an attribute
-- **type** (String) The type of the masking rule
+- `type` (String) The type of the masking rule
 
 Optional:
 
-- **user_interaction_hidden** (Boolean) Interactions with the element are (`true`) or are not (`false) masked
+- `user_interaction_hidden` (Boolean) Interactions with the element are (`true`) or are not (`false) masked
 
 
 
@@ -98,7 +101,7 @@ Optional:
 
 Required:
 
-- **preset** (String) The type of the masking: 
+- `preset` (String) The type of the masking: 
 
 * `MASK_ALL`: Mask all texts, user input, and images. 
 * `MASK_USER_INPUT`: Mask all data that is provided through user input 
@@ -107,27 +110,27 @@ Required:
 
 Optional:
 
-- **rules** (Block List, Max: 1) A list of masking rules (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules))
+- `rules` (Block List, Max: 1) A list of masking rules (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.recording.rules`
 
 Required:
 
-- **rule** (Block List, Min: 1) The masking rule defining how data is hidden (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules--rule))
+- `rule` (Block List, Min: 1) The masking rule defining how data is hidden (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules--rule))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--recording--rules--rule"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.recording.rules.rule`
 
 Required:
 
-- **selector** (String) The selector for the element or the attribute to be masked. 
+- `selector` (String) The selector for the element or the attribute to be masked. 
 
 Specify a CSS expression for an element or a [regular expression](https://dt-url.net/k9e0iaq) for an attribute
-- **type** (String) The type of the masking rule
+- `type` (String) The type of the masking rule
 
 Optional:
 
-- **user_interaction_hidden** (Boolean) Interactions with the element are (`true`) or are not (`false) masked
+- `user_interaction_hidden` (Boolean) Interactions with the element are (`true`) or are not (`false) masked
 
 

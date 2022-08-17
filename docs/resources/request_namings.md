@@ -17,10 +17,10 @@ description: |-
 
 ### Required
 
-- **ids** (List of String) The IDs of the request namings in the order they should be taken into consideration
+- `ids` (List of String) The IDs of the request namings in the order they should be taken into consideration
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 

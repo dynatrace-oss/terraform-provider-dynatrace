@@ -17,59 +17,62 @@ description: |-
 
 ### Required
 
-- **aggregation** (String) Aggregation type for the request values
-- **data_type** (String) The data type of the request attribute
-- **name** (String) The name of the request attribute
-- **normalization** (String) String values transformation.   If the **dataType** is not `string`, set the `Original` here
+- `aggregation` (String) Aggregation type for the request values
+- `data_type` (String) The data type of the request attribute
+- `name` (String) The name of the request attribute
+- `normalization` (String) String values transformation.   If the **dataType** is not `string`, set the `Original` here
 
 ### Optional
 
-- **confidential** (Boolean) Confidential data flag. Set `true` to treat the captured data as confidential
-- **data_sources** (Block List) The list of data sources (see [below for nested schema](#nestedblock--data_sources))
-- **enabled** (Boolean) The request attribute is enabled (`true`) or disabled (`false`)
-- **id** (String) The ID of this resource.
-- **skip_personal_data_masking** (Boolean) Personal data masking flag. Set `true` to skip masking.   Warning: This will potentially access personalized data
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `confidential` (Boolean) Confidential data flag. Set `true` to treat the captured data as confidential
+- `data_sources` (Block List) The list of data sources (see [below for nested schema](#nestedblock--data_sources))
+- `enabled` (Boolean) The request attribute is enabled (`true`) or disabled (`false`)
+- `skip_personal_data_masking` (Boolean) Personal data masking flag. Set `true` to skip masking.   Warning: This will potentially access personalized data
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--data_sources"></a>
 ### Nested Schema for `data_sources`
 
 Required:
 
-- **enabled** (Boolean) The data source is enabled (`true`) or disabled (`false`)
-- **source** (String) The source of the attribute to capture. Works in conjunction with **parameterName** or **methods** and **technology**
+- `enabled` (Boolean) The data source is enabled (`true`) or disabled (`false`)
+- `source` (String) The source of the attribute to capture. Works in conjunction with **parameterName** or **methods** and **technology**
 
 Optional:
 
-- **capturing_and_storage_location** (String) Specifies the location where the values are captured and stored.  Required if the **source** is one of the following: `GET_PARAMETER`, `URI`, `REQUEST_HEADER`, `RESPONSE_HEADER`.   Not applicable in other cases.   If the **source** value is `REQUEST_HEADER` or `RESPONSE_HEADER`, the `CAPTURE_AND_STORE_ON_BOTH` location is not allowed
-- **cics_sdk_method_node_condition** (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--cics_sdk_method_node_condition))
-- **iib_label_method_node_condition** (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_label_method_node_condition))
-- **iib_method_node_condition** (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_method_node_condition))
-- **iib_node_type** (String) The IBM integration bus node type for which the value is captured.  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.  Not applicable in other cases
-- **methods** (Block List) The method specification if the **source** value is `METHOD_PARAM`.   Not applicable in other cases (see [below for nested schema](#nestedblock--data_sources--methods))
-- **parameter_name** (String) The name of the web request parameter to capture.  Required if the **source** is one of the following: `POST_PARAMETER`, `GET_PARAMETER`, `REQUEST_HEADER`, `RESPONSE_HEADER`, `CUSTOM_ATTRIBUTE`.  Not applicable in other cases
-- **scope** (Block List, Max: 1) Conditions for data capturing (see [below for nested schema](#nestedblock--data_sources--scope))
-- **session_attribute_technology** (String) The technology of the session attribute to capture if the **source** value is `SESSION_ATTRIBUTE`. 
+- `capturing_and_storage_location` (String) Specifies the location where the values are captured and stored.  Required if the **source** is one of the following: `GET_PARAMETER`, `URI`, `REQUEST_HEADER`, `RESPONSE_HEADER`.   Not applicable in other cases.   If the **source** value is `REQUEST_HEADER` or `RESPONSE_HEADER`, the `CAPTURE_AND_STORE_ON_BOTH` location is not allowed
+- `cics_sdk_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--cics_sdk_method_node_condition))
+- `iib_label_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_label_method_node_condition))
+- `iib_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_method_node_condition))
+- `iib_node_type` (String) The IBM integration bus node type for which the value is captured.  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.  Not applicable in other cases
+- `methods` (Block List) The method specification if the **source** value is `METHOD_PARAM`.   Not applicable in other cases (see [below for nested schema](#nestedblock--data_sources--methods))
+- `parameter_name` (String) The name of the web request parameter to capture.  Required if the **source** is one of the following: `POST_PARAMETER`, `GET_PARAMETER`, `REQUEST_HEADER`, `RESPONSE_HEADER`, `CUSTOM_ATTRIBUTE`.  Not applicable in other cases
+- `scope` (Block List, Max: 1) Conditions for data capturing (see [below for nested schema](#nestedblock--data_sources--scope))
+- `session_attribute_technology` (String) The technology of the session attribute to capture if the **source** value is `SESSION_ATTRIBUTE`. 
 
  Not applicable in other cases
-- **technology** (String) The technology of the method to capture if the **source** value is `METHOD_PARAM`. 
+- `technology` (String) The technology of the method to capture if the **source** value is `METHOD_PARAM`. 
 
  Not applicable in other cases
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **value_processing** (Block List, Max: 1) Process values as specified (see [below for nested schema](#nestedblock--data_sources--value_processing))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `value_processing` (Block List, Max: 1) Process values as specified (see [below for nested schema](#nestedblock--data_sources--value_processing))
 
 <a id="nestedblock--data_sources--cics_sdk_method_node_condition"></a>
 ### Nested Schema for `data_sources.cics_sdk_method_node_condition`
 
 Required:
 
-- **operator** (String) Operator comparing the extracted value to the comparison value
-- **value** (String) The value to compare to
+- `operator` (String) Operator comparing the extracted value to the comparison value
+- `value` (String) The value to compare to
 
 Optional:
 
-- **negate** (Boolean) Negate the comparison
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `negate` (Boolean) Negate the comparison
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--data_sources--iib_label_method_node_condition"></a>
@@ -77,13 +80,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator comparing the extracted value to the comparison value
-- **value** (String) The value to compare to
+- `operator` (String) Operator comparing the extracted value to the comparison value
+- `value` (String) The value to compare to
 
 Optional:
 
-- **negate** (Boolean) Negate the comparison
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `negate` (Boolean) Negate the comparison
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--data_sources--iib_method_node_condition"></a>
@@ -91,13 +94,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator comparing the extracted value to the comparison value
-- **value** (String) The value to compare to
+- `operator` (String) Operator comparing the extracted value to the comparison value
+- `value` (String) The value to compare to
 
 Optional:
 
-- **negate** (Boolean) Negate the comparison
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `negate` (Boolean) Negate the comparison
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--data_sources--methods"></a>
@@ -105,32 +108,32 @@ Optional:
 
 Required:
 
-- **capture** (String) What to capture from the method
+- `capture` (String) What to capture from the method
 
 Optional:
 
-- **argument_index** (Number) The index of the argument to capture. Set `0` to capture the return value, `1` or higher to capture a mehtod argument.   Required if the **capture** is set to `ARGUMENT`.  Not applicable in other cases
-- **deep_object_access** (String) The getter chain to apply to the captured object. It is required in one of the following cases:  The **capture** is set to `THIS`.    The **capture** is set to `ARGUMENT`, and the argument is not a primitive, a primitive wrapper class, a string, or an array.   Not applicable in other cases
-- **method** (Block List, Max: 1) Configuration of a method to be captured (see [below for nested schema](#nestedblock--data_sources--methods--method))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `argument_index` (Number) The index of the argument to capture. Set `0` to capture the return value, `1` or higher to capture a mehtod argument.   Required if the **capture** is set to `ARGUMENT`.  Not applicable in other cases
+- `deep_object_access` (String) The getter chain to apply to the captured object. It is required in one of the following cases:  The **capture** is set to `THIS`.    The **capture** is set to `ARGUMENT`, and the argument is not a primitive, a primitive wrapper class, a string, or an array.   Not applicable in other cases
+- `method` (Block List, Max: 1) Configuration of a method to be captured (see [below for nested schema](#nestedblock--data_sources--methods--method))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--data_sources--methods--method"></a>
 ### Nested Schema for `data_sources.methods.method`
 
 Required:
 
-- **method_name** (String) The name of the method to capture
-- **return_type** (String) The return type
-- **visibility** (String) The visibility of the method to capture
+- `method_name` (String) The name of the method to capture
+- `return_type` (String) The return type
+- `visibility` (String) The visibility of the method to capture
 
 Optional:
 
-- **argument_types** (List of String) Configuration of a method to be captured
-- **class_name** (String) The class name where the method to capture resides.   Either this or the **fileName** must be set
-- **file_name** (String) The file name where the method to capture resides.   Either this or **className** must be set
-- **file_name_matcher** (String) The operator of the comparison. If not set, `EQUALS` is used
-- **modifiers** (Set of String) The modifiers of the method to capture
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `argument_types` (List of String) Configuration of a method to be captured
+- `class_name` (String) The class name where the method to capture resides.   Either this or the **fileName** must be set
+- `file_name` (String) The file name where the method to capture resides.   Either this or **className** must be set
+- `file_name_matcher` (String) The operator of the comparison. If not set, `EQUALS` is used
+- `modifiers` (Set of String) The modifiers of the method to capture
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -139,11 +142,11 @@ Optional:
 
 Optional:
 
-- **host_group** (String) Only applies to this host group
-- **process_group** (String) Only applies to this process group. Note that this can't be transferred between different clusters or environments
-- **service_technology** (String) Only applies to this service technology
-- **tag_of_process_group** (String) Only apply to process groups matching this tag
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `host_group` (String) Only applies to this host group
+- `process_group` (String) Only applies to this process group. Note that this can't be transferred between different clusters or environments
+- `service_technology` (String) Only applies to this service technology
+- `tag_of_process_group` (String) Only apply to process groups matching this tag
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--data_sources--value_processing"></a>
@@ -151,25 +154,25 @@ Optional:
 
 Optional:
 
-- **extract_substring** (Block List, Max: 1) Preprocess by extracting a substring from the original value (see [below for nested schema](#nestedblock--data_sources--value_processing--extract_substring))
-- **split_at** (String) Split (preprocessed) string values at this separator
-- **trim** (Boolean) Prune Whitespaces. Defaults to false
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **value_condition** (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--value_processing--value_condition))
-- **value_extractor_regex** (String) Extract value from captured data per regex
+- `extract_substring` (Block List, Max: 1) Preprocess by extracting a substring from the original value (see [below for nested schema](#nestedblock--data_sources--value_processing--extract_substring))
+- `split_at` (String) Split (preprocessed) string values at this separator
+- `trim` (Boolean) Prune Whitespaces. Defaults to false
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `value_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--value_processing--value_condition))
+- `value_extractor_regex` (String) Extract value from captured data per regex
 
 <a id="nestedblock--data_sources--value_processing--extract_substring"></a>
 ### Nested Schema for `data_sources.value_processing.extract_substring`
 
 Required:
 
-- **delimiter** (String) The delimiter string
-- **position** (String) The position of the extracted string relative to delimiters
+- `delimiter` (String) The delimiter string
+- `position` (String) The position of the extracted string relative to delimiters
 
 Optional:
 
-- **end_delimiter** (String) The end-delimiter string.   Required if the **position** value is `BETWEEN`. Otherwise not allowed
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `end_delimiter` (String) The end-delimiter string.   Required if the **position** value is `BETWEEN`. Otherwise not allowed
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--data_sources--value_processing--value_condition"></a>
@@ -177,12 +180,12 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator comparing the extracted value to the comparison value
-- **value** (String) The value to compare to
+- `operator` (String) Operator comparing the extracted value to the comparison value
+- `value` (String) The value to compare to
 
 Optional:
 
-- **negate** (Boolean) Negate the comparison
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `negate` (Boolean) Negate the comparison
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 

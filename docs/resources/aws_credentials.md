@@ -17,29 +17,32 @@ description: |-
 
 ### Required
 
-- **authentication_data** (Block List, Min: 1, Max: 1) credentials for the AWS authentication (see [below for nested schema](#nestedblock--authentication_data))
-- **partition_type** (String) The type of the AWS partition
-- **tagged_only** (Boolean) Monitor only resources which have specified AWS tags (`true`) or all resources (`false`)
+- `authentication_data` (Block List, Min: 1, Max: 1) credentials for the AWS authentication (see [below for nested schema](#nestedblock--authentication_data))
+- `partition_type` (String) The type of the AWS partition
+- `tagged_only` (Boolean) Monitor only resources which have specified AWS tags (`true`) or all resources (`false`)
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **label** (String) The name of the credentials
-- **supporting_services_to_monitor** (Block List) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
-- **tags_to_monitor** (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `label` (String) The name of the credentials
+- `supporting_services_to_monitor` (Block List) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
+- `tags_to_monitor` (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--authentication_data"></a>
 ### Nested Schema for `authentication_data`
 
 Optional:
 
-- **access_key** (String) the access key
-- **account_id** (String) the ID of the Amazon account
-- **external_id** (String) the external ID token for setting an IAM role. You can obtain it with the `GET /aws/iamExternalId` request
-- **iam_role** (String) the IAM role to be used by Dynatrace to get monitoring data
-- **secret_key** (String) the secret access key
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `access_key` (String) the access key
+- `account_id` (String) the ID of the Amazon account
+- `external_id` (String) the external ID token for setting an IAM role. You can obtain it with the `GET /aws/iamExternalId` request
+- `iam_role` (String) the IAM role to be used by Dynatrace to get monitoring data
+- `secret_key` (String) the secret access key
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 
 <a id="nestedblock--supporting_services_to_monitor"></a>
@@ -47,19 +50,19 @@ Optional:
 
 Optional:
 
-- **monitored_metrics** (Block List) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
-- **name** (String) the name of the supporting service
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `monitored_metrics` (Block List) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
+- `name` (String) the name of the supporting service
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 <a id="nestedblock--supporting_services_to_monitor--monitored_metrics"></a>
 ### Nested Schema for `supporting_services_to_monitor.monitored_metrics`
 
 Optional:
 
-- **dimensions** (List of String) a list of metric's dimensions names
-- **name** (String) the name of the metric of the supporting service
-- **statistic** (String) the statistic (aggregation) to be used for the metric. AVG_MIN_MAX value is 3 statistics at once: AVERAGE, MINIMUM and MAXIMUM
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `dimensions` (List of String) a list of metric's dimensions names
+- `name` (String) the name of the metric of the supporting service
+- `statistic` (String) the statistic (aggregation) to be used for the metric. AVG_MIN_MAX value is 3 statistics at once: AVERAGE, MINIMUM and MAXIMUM
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 
 
@@ -68,8 +71,8 @@ Optional:
 
 Optional:
 
-- **name** (String) the key of the AWS tag.
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) the value of the AWS tag
+- `name` (String) the key of the AWS tag.
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) the value of the AWS tag
 
 

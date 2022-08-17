@@ -1,0 +1,84 @@
+{
+    "objectId": "vu9U3hXa3q0AAAABABxidWlsdGluOmlibW1xLnF1ZXVlLW1hbmFnZXJzAAZ0ZW5hbnQABnRlbmFudAAkYWM3MDMxYWQtZjZlNC0zMTg3LWE0YzQtZjM1MTRjNzBiY2Y2vu9U3hXa3q0",
+    "summary": "",
+    "created": 1660151522234,
+    "modified": 1660151522234,
+    "author": "dt0c01.5CWCZBUUH3BX23PKYIKA6EXT",
+    "updateToken": "vu9U3hXY3q0ATAAkYWM3MDMxYWQtZjZlNC0zMTg3LWE0YzQtZjM1MTRjNzBiY2Y2ACQ4ZDEwZDFhMC0xOGNmLTExZWQtODAwMS0wMTAwMDAwMDAwMGG-71TeFdjerQ",
+    "scope": "environment",
+    "schemaId": "builtin:ibmmq.queue-managers",
+    "schemaVersion": "0.0.12",
+    "value": {
+      "name": "#name#",
+      "clusters": [
+        "Cluster 2",
+        "Cluster 1"
+      ],
+      "aliasQueues": [
+        {
+          "aliasQueue": "Alias Queue A",
+          "baseQueue": "Base Queue A",
+          "clusterVisibility": []
+        },
+        {
+            "aliasQueue": "Alias Queue B",
+            "baseQueue": "Base Queue B",
+            "clusterVisibility": [
+              "Cluster 1"
+            ]
+          },
+        {
+          "aliasQueue": "Alias Queue C",
+          "baseQueue": "Base Queue C",
+          "clusterVisibility": [
+            "Cluster 2",
+            "Cluster 1"
+          ]
+        }
+      ],
+      "remoteQueues": [
+        {
+          "localQueue": "Local Queue A",
+          "remoteQueue": "Remote Queue A",
+          "remoteQueueManager": "Remote Queue Manager A",
+          "clusterVisibility": []
+        },
+        {
+          "localQueue": "Local Queue B",
+          "remoteQueue": "Remote Queue B",
+          "remoteQueueManager": "Remote Queue Manager B",
+          "clusterVisibility": [
+            "Cluster 1"
+          ]
+        },
+        {
+          "localQueue": "Local Queue C",
+          "remoteQueue": "Remote Queue C",
+          "remoteQueueManager": "Remote Queue Manager C",
+          "clusterVisibility": [
+            "Cluster 2",
+            "Cluster 1"
+          ]
+        }
+      ],
+      "clusterQueues": [
+        {
+          "localQueue": "Local Queue A",
+          "clusterVisibility": []
+        },
+        {
+          "localQueue": "Local Queue B",
+          "clusterVisibility": [
+            "Cluster 1"
+          ]
+        },
+        {
+            "localQueue": "Local Queue C",
+            "clusterVisibility": [
+              "Cluster 2",
+              "Cluster 1"
+            ]
+          }
+      ]
+    }
+  }

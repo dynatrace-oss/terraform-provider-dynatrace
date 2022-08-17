@@ -17,11 +17,14 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- `name` (String)
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **tags** (Set of String) Required tags of the process group to find
+- `tags` (Set of String) Required tags of the process group to find
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

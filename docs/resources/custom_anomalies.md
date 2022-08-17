@@ -17,49 +17,52 @@ description: |-
 
 ### Required
 
-- **description** (String) The description of the metric event
-- **enabled** (Boolean) The metric event is enabled (`true`) or disabled (`false`)
-- **name** (String) The name of the metric event displayed in the UI
-- **strategy** (Block List, Min: 1, Max: 1) A monitoring strategy for a metric event config. This is the base version of the monitoring strategy, depending on the type,  the actual JSON may contain additional fields (see [below for nested schema](#nestedblock--strategy))
+- `description` (String) The description of the metric event
+- `enabled` (Boolean) The metric event is enabled (`true`) or disabled (`false`)
+- `name` (String) The name of the metric event displayed in the UI
+- `strategy` (Block List, Min: 1, Max: 1) A monitoring strategy for a metric event config. This is the base version of the monitoring strategy, depending on the type,  the actual JSON may contain additional fields (see [below for nested schema](#nestedblock--strategy))
 
 ### Optional
 
-- **aggregation_type** (String) How the metric data points are aggregated for the evaluation. The timeseries must support this aggregation
-- **dimensions** (Block List) Defines the dimensions of the metric to alert on. The filters are combined by conjunction (see [below for nested schema](#nestedblock--dimensions))
-- **disabled_reason** (String, Deprecated) The reason of automatic disabling.  The `NONE` means config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`, `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
-- **id** (String) The ID of this resource.
-- **metric_id** (String) The ID of the metric evaluated by the metric event
-- **metric_selector** (String) The metric selector that should be executed
-- **primary_dimension_key** (String) Defines which dimension key should be used for the **alertingScope**
-- **scopes** (Block List) Defines the scope of the metric event. Only one filter is allowed per filter type, except for tags, where up to 3 are allowed. The filters are combined by conjunction (see [below for nested schema](#nestedblock--scopes))
-- **severity** (String) The type of the event to trigger on the threshold violation.  The `CUSTOM_ALERT` type is not correlated with other alerts. The `INFO` type does not open a problem
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- **warning_reason** (String, Deprecated) The reason of a warning set on the config. The `NONE` means config has no warnings. The other supported value is `TOO_MANY_DIMS`
+- `aggregation_type` (String) How the metric data points are aggregated for the evaluation. The timeseries must support this aggregation
+- `dimensions` (Block List) Defines the dimensions of the metric to alert on. The filters are combined by conjunction (see [below for nested schema](#nestedblock--dimensions))
+- `disabled_reason` (String, Deprecated) The reason of automatic disabling.  The `NONE` means config was not disabled automatically. Possible values are `METRIC_DEFINITION_INCONSISTENCY`, `NONE`, `TOO_MANY_DIMS` and `TOPX_FORCIBLY_DEACTIVATED`
+- `metric_id` (String) The ID of the metric evaluated by the metric event
+- `metric_selector` (String) The metric selector that should be executed
+- `primary_dimension_key` (String) Defines which dimension key should be used for the **alertingScope**
+- `scopes` (Block List) Defines the scope of the metric event. Only one filter is allowed per filter type, except for tags, where up to 3 are allowed. The filters are combined by conjunction (see [below for nested schema](#nestedblock--scopes))
+- `severity` (String) The type of the event to trigger on the threshold violation.  The `CUSTOM_ALERT` type is not correlated with other alerts. The `INFO` type does not open a problem
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `warning_reason` (String, Deprecated) The reason of a warning set on the config. The `NONE` means config has no warnings. The other supported value is `TOO_MANY_DIMS`
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--strategy"></a>
 ### Nested Schema for `strategy`
 
 Optional:
 
-- **auto** (Block List, Max: 1) An auto-adaptive baseline strategy to detect anomalies within metrics that show a regular change over time, as the baseline is also updated automatically. An example is to detect an anomaly in the number of received network packets or within the number of user actions over time (see [below for nested schema](#nestedblock--strategy--auto))
-- **generic** (Block List) A generic monitoring strategy (see [below for nested schema](#nestedblock--strategy--generic))
-- **static** (Block List, Max: 1) A static threshold monitoring strategy to alert on hard limits within a given metric. An example is the violation of a critical memory limit (see [below for nested schema](#nestedblock--strategy--static))
+- `auto` (Block List, Max: 1) An auto-adaptive baseline strategy to detect anomalies within metrics that show a regular change over time, as the baseline is also updated automatically. An example is to detect an anomaly in the number of received network packets or within the number of user actions over time (see [below for nested schema](#nestedblock--strategy--auto))
+- `generic` (Block List) A generic monitoring strategy (see [below for nested schema](#nestedblock--strategy--generic))
+- `static` (Block List, Max: 1) A static threshold monitoring strategy to alert on hard limits within a given metric. An example is the violation of a critical memory limit (see [below for nested schema](#nestedblock--strategy--static))
 
 <a id="nestedblock--strategy--auto"></a>
 ### Nested Schema for `strategy.auto`
 
 Required:
 
-- **alert_condition** (String) The condition for the **threshold** value check: `ABOVE` or `BELOW`
-- **dealerting_samples** (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event
-- **samples** (Number) The number of one-minute samples that form the sliding evaluation window
-- **signal_fluctuations** (Number) Defines the factor of how many signal fluctuations are valid. Values above the baseline plus the signal fluctuation times the number of tolerated signal fluctuations are alerted
-- **violating_samples** (Number) The number of one-minute samples within the evaluation window that must violate the threshold to trigger an event
+- `alert_condition` (String) The condition for the **threshold** value check: `ABOVE` or `BELOW`
+- `dealerting_samples` (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event
+- `samples` (Number) The number of one-minute samples that form the sliding evaluation window
+- `signal_fluctuations` (Number) Defines the factor of how many signal fluctuations are valid. Values above the baseline plus the signal fluctuation times the number of tolerated signal fluctuations are alerted
+- `violating_samples` (Number) The number of one-minute samples within the evaluation window that must violate the threshold to trigger an event
 
 Optional:
 
-- **alerting_on_missing_data** (Boolean) If true, also one-minute samples without data are counted as violating samples
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `alerting_on_missing_data` (Boolean) If true, also one-minute samples without data are counted as violating samples
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--strategy--generic"></a>
@@ -67,11 +70,11 @@ Optional:
 
 Required:
 
-- **type** (String) Defines the actual set of fields depending on the value
+- `type` (String) Defines the actual set of fields depending on the value
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--strategy--static"></a>
@@ -79,17 +82,17 @@ Optional:
 
 Required:
 
-- **alert_condition** (String) The condition for the **threshold** value check: `ABOVE` or `BELOW`
-- **dealerting_samples** (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event
-- **samples** (Number) The number of one-minute samples that form the sliding evaluation window
-- **threshold** (Number) The value of the static threshold based on the specified unit
-- **unit** (String) The unit of the threshold, matching the metric definition
-- **violating_samples** (Number) The number of one-minute samples within the evaluation window that must violate the threshold to trigger an event
+- `alert_condition` (String) The condition for the **threshold** value check: `ABOVE` or `BELOW`
+- `dealerting_samples` (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event
+- `samples` (Number) The number of one-minute samples that form the sliding evaluation window
+- `threshold` (Number) The value of the static threshold based on the specified unit
+- `unit` (String) The unit of the threshold, matching the metric definition
+- `violating_samples` (Number) The number of one-minute samples within the evaluation window that must violate the threshold to trigger an event
 
 Optional:
 
-- **alerting_on_missing_data** (Boolean) If true, also one-minute samples without data are counted as violating samples
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `alerting_on_missing_data` (Boolean) If true, also one-minute samples without data are counted as violating samples
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -98,21 +101,21 @@ Optional:
 
 Optional:
 
-- **dimension** (Block List) A generic definition for a filter (see [below for nested schema](#nestedblock--dimensions--dimension))
-- **entity** (Block List) A filter for the metrics entity dimensions (see [below for nested schema](#nestedblock--dimensions--entity))
-- **string** (Block List) A filter for the metrics string dimensions (see [below for nested schema](#nestedblock--dimensions--string))
+- `dimension` (Block List) A generic definition for a filter (see [below for nested schema](#nestedblock--dimensions--dimension))
+- `entity` (Block List) A filter for the metrics entity dimensions (see [below for nested schema](#nestedblock--dimensions--entity))
+- `string` (Block List) A filter for the metrics string dimensions (see [below for nested schema](#nestedblock--dimensions--string))
 
 <a id="nestedblock--dimensions--dimension"></a>
 ### Nested Schema for `dimensions.dimension`
 
 Required:
 
-- **type** (String) Defines the actual set of fields depending on the value
+- `type` (String) Defines the actual set of fields depending on the value
 
 Optional:
 
-- **key** (String) The dimensions key on the metric
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `key` (String) The dimensions key on the metric
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--dimensions--entity"></a>
@@ -120,20 +123,20 @@ Optional:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--dimensions--entity--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--dimensions--entity--filter))
 
 Optional:
 
-- **key** (String) The dimensions key on the metric
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `key` (String) The dimensions key on the metric
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--dimensions--entity--filter"></a>
 ### Nested Schema for `dimensions.entity.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -142,20 +145,20 @@ Required:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--dimensions--string--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--dimensions--string--filter))
 
 Optional:
 
-- **key** (String) The dimensions key on the metric
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `key` (String) The dimensions key on the metric
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--dimensions--string--filter"></a>
 ### Nested Schema for `dimensions.string.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -165,35 +168,35 @@ Required:
 
 Optional:
 
-- **custom_device_group_name** (Block List) A scope filter for the related custom device group name (see [below for nested schema](#nestedblock--scopes--custom_device_group_name))
-- **entity** (Block List) A scope filter for a monitored entity identifier (see [below for nested schema](#nestedblock--scopes--entity))
-- **host_group_name** (Block List) A scope filter for the related host group name (see [below for nested schema](#nestedblock--scopes--host_group_name))
-- **host_name** (Block List) A scope filter for the related host name (see [below for nested schema](#nestedblock--scopes--host_name))
-- **management_zone** (Block List) A scope filter for a management zone identifier (see [below for nested schema](#nestedblock--scopes--management_zone))
-- **name** (Block List) A scope filter for a monitored entity name (see [below for nested schema](#nestedblock--scopes--name))
-- **process_group_id** (Block List) A scope filter for a process group identifier (see [below for nested schema](#nestedblock--scopes--process_group_id))
-- **process_group_name** (Block List) A scope filter for the related process group name (see [below for nested schema](#nestedblock--scopes--process_group_name))
-- **scope** (Block List) A generic scope filter (see [below for nested schema](#nestedblock--scopes--scope))
-- **tag** (Block List) A scope filter for tags on entities (see [below for nested schema](#nestedblock--scopes--tag))
+- `custom_device_group_name` (Block List) A scope filter for the related custom device group name (see [below for nested schema](#nestedblock--scopes--custom_device_group_name))
+- `entity` (Block List) A scope filter for a monitored entity identifier (see [below for nested schema](#nestedblock--scopes--entity))
+- `host_group_name` (Block List) A scope filter for the related host group name (see [below for nested schema](#nestedblock--scopes--host_group_name))
+- `host_name` (Block List) A scope filter for the related host name (see [below for nested schema](#nestedblock--scopes--host_name))
+- `management_zone` (Block List) A scope filter for a management zone identifier (see [below for nested schema](#nestedblock--scopes--management_zone))
+- `name` (Block List) A scope filter for a monitored entity name (see [below for nested schema](#nestedblock--scopes--name))
+- `process_group_id` (Block List) A scope filter for a process group identifier (see [below for nested schema](#nestedblock--scopes--process_group_id))
+- `process_group_name` (Block List) A scope filter for the related process group name (see [below for nested schema](#nestedblock--scopes--process_group_name))
+- `scope` (Block List) A generic scope filter (see [below for nested schema](#nestedblock--scopes--scope))
+- `tag` (Block List) A scope filter for tags on entities (see [below for nested schema](#nestedblock--scopes--tag))
 
 <a id="nestedblock--scopes--custom_device_group_name"></a>
 ### Nested Schema for `scopes.custom_device_group_name`
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--custom_device_group_name--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--custom_device_group_name--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--custom_device_group_name--filter"></a>
 ### Nested Schema for `scopes.custom_device_group_name.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -202,11 +205,11 @@ Required:
 
 Required:
 
-- **id** (String) The monitored entities id to match on
+- `id` (String) The monitored entities id to match on
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--scopes--host_group_name"></a>
@@ -214,19 +217,19 @@ Optional:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--host_group_name--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--host_group_name--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--host_group_name--filter"></a>
 ### Nested Schema for `scopes.host_group_name.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -235,19 +238,19 @@ Required:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--host_name--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--host_name--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--host_name--filter"></a>
 ### Nested Schema for `scopes.host_name.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -256,8 +259,8 @@ Required:
 
 Optional:
 
-- **id** (String) The management zone id to match on
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `id` (String) The management zone id to match on
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--scopes--name"></a>
@@ -265,19 +268,19 @@ Optional:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--name--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--name--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--name--filter"></a>
 ### Nested Schema for `scopes.name.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -286,11 +289,11 @@ Required:
 
 Required:
 
-- **id** (String) The process groups id to match on
+- `id` (String) The process groups id to match on
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--scopes--process_group_name"></a>
@@ -298,19 +301,19 @@ Optional:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--process_group_name--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--process_group_name--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--process_group_name--filter"></a>
 ### Nested Schema for `scopes.process_group_name.filter`
 
 Required:
 
-- **operator** (String) The operator to match on
-- **value** (String) The value to match on
+- `operator` (String) The operator to match on
+- `value` (String) The value to match on
 
 
 
@@ -319,11 +322,11 @@ Required:
 
 Required:
 
-- **type** (String) Defines the actual set of fields depending on the value
+- `type` (String) Defines the actual set of fields depending on the value
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--scopes--tag"></a>
@@ -331,22 +334,22 @@ Optional:
 
 Required:
 
-- **filter** (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--tag--filter))
+- `filter` (Block List, Min: 1, Max: 1) A filter for a string value based on the given operator (see [below for nested schema](#nestedblock--scopes--tag--filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--scopes--tag--filter"></a>
 ### Nested Schema for `scopes.tag.filter`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 

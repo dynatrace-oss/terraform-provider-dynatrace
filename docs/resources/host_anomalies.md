@@ -17,22 +17,25 @@ description: |-
 
 ### Optional
 
-- **connections** (Block List, Max: 1) Configuration of lost connection detection (see [below for nested schema](#nestedblock--connections))
-- **cpu** (Block List, Max: 1) Configuration of high CPU saturation detection (see [below for nested schema](#nestedblock--cpu))
-- **disks** (Block List, Max: 1) Configuration of disk related anomalies (see [below for nested schema](#nestedblock--disks))
-- **gc** (Block List, Max: 1) Configuration of high Garbage Collector activity detection (see [below for nested schema](#nestedblock--gc))
-- **id** (String) The ID of this resource.
-- **java** (Block List, Max: 1) Configuration of Java related anomalies (see [below for nested schema](#nestedblock--java))
-- **memory** (Block List, Max: 1) Configuration of high memory usage detection (see [below for nested schema](#nestedblock--memory))
-- **network** (Block List, Max: 1) Configuration of network related anomalies (see [below for nested schema](#nestedblock--network))
+- `connections` (Block List, Max: 1) Configuration of lost connection detection (see [below for nested schema](#nestedblock--connections))
+- `cpu` (Block List, Max: 1) Configuration of high CPU saturation detection (see [below for nested schema](#nestedblock--cpu))
+- `disks` (Block List, Max: 1) Configuration of disk related anomalies (see [below for nested schema](#nestedblock--disks))
+- `gc` (Block List, Max: 1) Configuration of high Garbage Collector activity detection (see [below for nested schema](#nestedblock--gc))
+- `java` (Block List, Max: 1) Configuration of Java related anomalies (see [below for nested schema](#nestedblock--java))
+- `memory` (Block List, Max: 1) Configuration of high memory usage detection (see [below for nested schema](#nestedblock--memory))
+- `network` (Block List, Max: 1) Configuration of network related anomalies (see [below for nested schema](#nestedblock--network))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--connections"></a>
 ### Nested Schema for `connections`
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
-- **enabled_on_graceful_shutdowns** (Boolean) Alert (`true`) on graceful host shutdowns
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled_on_graceful_shutdowns` (Boolean) Alert (`true`) on graceful host shutdowns
 
 
 <a id="nestedblock--cpu"></a>
@@ -40,18 +43,18 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for high CPU saturation. If not set then the automatic mode is used (see [below for nested schema](#nestedblock--cpu--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for high CPU saturation. If not set then the automatic mode is used (see [below for nested schema](#nestedblock--cpu--thresholds))
 
 <a id="nestedblock--cpu--thresholds"></a>
 ### Nested Schema for `cpu.thresholds`
 
 Required:
 
-- **saturation** (Number) Alert if CPU usage is higher than *X*% in 3 out of 5 samples
+- `saturation` (Number) Alert if CPU usage is higher than *X*% in 3 out of 5 samples
 
 
 
@@ -60,27 +63,27 @@ Required:
 
 Optional:
 
-- **inodes** (Block List, Max: 1) Configuration of low disk inodes number detection (see [below for nested schema](#nestedblock--disks--inodes))
-- **space** (Block List, Max: 1) Configuration of low disk space detection (see [below for nested schema](#nestedblock--disks--space))
-- **speed** (Block List, Max: 1) Configuration of slow running disks detection (see [below for nested schema](#nestedblock--disks--speed))
+- `inodes` (Block List, Max: 1) Configuration of low disk inodes number detection (see [below for nested schema](#nestedblock--disks--inodes))
+- `space` (Block List, Max: 1) Configuration of low disk space detection (see [below for nested schema](#nestedblock--disks--space))
+- `speed` (Block List, Max: 1) Configuration of slow running disks detection (see [below for nested schema](#nestedblock--disks--speed))
 
 <a id="nestedblock--disks--inodes"></a>
 ### Nested Schema for `disks.inodes`
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for low disk inodes number. If not set, automatic mode is used (see [below for nested schema](#nestedblock--disks--inodes--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for low disk inodes number. If not set, automatic mode is used (see [below for nested schema](#nestedblock--disks--inodes--thresholds))
 
 <a id="nestedblock--disks--inodes--thresholds"></a>
 ### Nested Schema for `disks.inodes.thresholds`
 
 Required:
 
-- **percentage** (Number) Alert if percentage of available inodes is lower than *X*% in 3 out of 5 samples
+- `percentage` (Number) Alert if percentage of available inodes is lower than *X*% in 3 out of 5 samples
 
 
 
@@ -89,18 +92,18 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for low disk space. If not set, automatic mode is used (see [below for nested schema](#nestedblock--disks--space--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for low disk space. If not set, automatic mode is used (see [below for nested schema](#nestedblock--disks--space--thresholds))
 
 <a id="nestedblock--disks--space--thresholds"></a>
 ### Nested Schema for `disks.space.thresholds`
 
 Required:
 
-- **percentage** (Number) Alert if free disk space is lower than *X*% in 3 out of 5 samples
+- `percentage` (Number) Alert if free disk space is lower than *X*% in 3 out of 5 samples
 
 
 
@@ -109,18 +112,18 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for slow running disks. If not set, the automatic mode is used (see [below for nested schema](#nestedblock--disks--speed--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for slow running disks. If not set, the automatic mode is used (see [below for nested schema](#nestedblock--disks--speed--thresholds))
 
 <a id="nestedblock--disks--speed--thresholds"></a>
 ### Nested Schema for `disks.speed.thresholds`
 
 Required:
 
-- **write_and_read_time** (Number) Alert if disk read/write time is higher than *X* milliseconds in 3 out of 5 samples
+- `write_and_read_time` (Number) Alert if disk read/write time is higher than *X* milliseconds in 3 out of 5 samples
 
 
 
@@ -130,19 +133,19 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for high GC activity. If not set, automatic mode is used.   Meeting **any** of these conditions triggers an alert (see [below for nested schema](#nestedblock--gc--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for high GC activity. If not set, automatic mode is used.   Meeting **any** of these conditions triggers an alert (see [below for nested schema](#nestedblock--gc--thresholds))
 
 <a id="nestedblock--gc--thresholds"></a>
 ### Nested Schema for `gc.thresholds`
 
 Required:
 
-- **suspension_percentage** (Number) GC suspension is higher than *X*% in 3 out of 5 samples
-- **time_percentage** (Number) GC time is higher than *X*% in 3 out of 5 samples
+- `suspension_percentage` (Number) GC suspension is higher than *X*% in 3 out of 5 samples
+- `time_percentage` (Number) GC time is higher than *X*% in 3 out of 5 samples
 
 
 
@@ -151,26 +154,26 @@ Required:
 
 Optional:
 
-- **out_of_memory** (Block List, Max: 1) Configuration of Java out of memory problems detection (see [below for nested schema](#nestedblock--java--out_of_memory))
-- **out_of_threads** (Block List, Max: 1) Configuration of Java out of threads problems detection (see [below for nested schema](#nestedblock--java--out_of_threads))
+- `out_of_memory` (Block List, Max: 1) Configuration of Java out of memory problems detection (see [below for nested schema](#nestedblock--java--out_of_memory))
+- `out_of_threads` (Block List, Max: 1) Configuration of Java out of threads problems detection (see [below for nested schema](#nestedblock--java--out_of_threads))
 
 <a id="nestedblock--java--out_of_memory"></a>
 ### Nested Schema for `java.out_of_memory`
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for Java out of memory. If not set, automatic mode is used (see [below for nested schema](#nestedblock--java--out_of_memory--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for Java out of memory. If not set, automatic mode is used (see [below for nested schema](#nestedblock--java--out_of_memory--thresholds))
 
 <a id="nestedblock--java--out_of_memory--thresholds"></a>
 ### Nested Schema for `java.out_of_memory.thresholds`
 
 Required:
 
-- **exception_count** (Number) Alert if the number of Java out of memory exceptions is *X* per minute or higher
+- `exception_count` (Number) Alert if the number of Java out of memory exceptions is *X* per minute or higher
 
 
 
@@ -179,18 +182,18 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for Java out of threads detection. If not set, automatic mode is used (see [below for nested schema](#nestedblock--java--out_of_threads--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for Java out of threads detection. If not set, automatic mode is used (see [below for nested schema](#nestedblock--java--out_of_threads--thresholds))
 
 <a id="nestedblock--java--out_of_threads--thresholds"></a>
 ### Nested Schema for `java.out_of_threads.thresholds`
 
 Required:
 
-- **exception_count** (Number) Alert if the number of Java out of threads exceptions is *X* per minute or higher
+- `exception_count` (Number) Alert if the number of Java out of threads exceptions is *X* per minute or higher
 
 
 
@@ -200,27 +203,27 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for high memory usage. If not set then the automatic mode is used. **Both** conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--memory--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for high memory usage. If not set then the automatic mode is used. **Both** conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--memory--thresholds))
 
 <a id="nestedblock--memory--thresholds"></a>
 ### Nested Schema for `memory.thresholds`
 
 Required:
 
-- **linux** (Block List, Min: 1, Max: 1) Custom thresholds for Linux (see [below for nested schema](#nestedblock--memory--thresholds--linux))
-- **windows** (Block List, Min: 1, Max: 1) Custom thresholds for Windows (see [below for nested schema](#nestedblock--memory--thresholds--windows))
+- `linux` (Block List, Min: 1, Max: 1) Custom thresholds for Linux (see [below for nested schema](#nestedblock--memory--thresholds--linux))
+- `windows` (Block List, Min: 1, Max: 1) Custom thresholds for Windows (see [below for nested schema](#nestedblock--memory--thresholds--windows))
 
 <a id="nestedblock--memory--thresholds--linux"></a>
 ### Nested Schema for `memory.thresholds.linux`
 
 Required:
 
-- **page_faults** (Number) Memory page fault rate is higher than *X* faults per second
-- **usage** (Number) Memory usage is higher than *X*%
+- `page_faults` (Number) Memory page fault rate is higher than *X* faults per second
+- `usage` (Number) Memory usage is higher than *X*%
 
 
 <a id="nestedblock--memory--thresholds--windows"></a>
@@ -228,8 +231,8 @@ Required:
 
 Required:
 
-- **page_faults** (Number) Memory page fault rate is higher than *X* faults per second
-- **usage** (Number) Memory usage is higher than *X*%
+- `page_faults` (Number) Memory page fault rate is higher than *X* faults per second
+- `usage` (Number) Memory usage is higher than *X*%
 
 
 
@@ -239,30 +242,30 @@ Required:
 
 Optional:
 
-- **connectivity** (Block List, Max: 1) Configuration of TCP connectivity problems detection (see [below for nested schema](#nestedblock--network--connectivity))
-- **dropped_packets** (Block List, Max: 1) Configuration of high number of dropped packets detection (see [below for nested schema](#nestedblock--network--dropped_packets))
-- **errors** (Block List, Max: 1) Configuration of high number of network errors detection (see [below for nested schema](#nestedblock--network--errors))
-- **retransmission** (Block List, Max: 1) Configuration of high retransmission rate detection (see [below for nested schema](#nestedblock--network--retransmission))
-- **utilization** (Block List, Max: 1) Configuration of high network utilization detection (see [below for nested schema](#nestedblock--network--utilization))
+- `connectivity` (Block List, Max: 1) Configuration of TCP connectivity problems detection (see [below for nested schema](#nestedblock--network--connectivity))
+- `dropped_packets` (Block List, Max: 1) Configuration of high number of dropped packets detection (see [below for nested schema](#nestedblock--network--dropped_packets))
+- `errors` (Block List, Max: 1) Configuration of high number of network errors detection (see [below for nested schema](#nestedblock--network--errors))
+- `retransmission` (Block List, Max: 1) Configuration of high retransmission rate detection (see [below for nested schema](#nestedblock--network--retransmission))
+- `utilization` (Block List, Max: 1) Configuration of high network utilization detection (see [below for nested schema](#nestedblock--network--utilization))
 
 <a id="nestedblock--network--connectivity"></a>
 ### Nested Schema for `network.connectivity`
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for TCP connection problems. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--connectivity--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for TCP connection problems. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--connectivity--thresholds))
 
 <a id="nestedblock--network--connectivity--thresholds"></a>
 ### Nested Schema for `network.connectivity.thresholds`
 
 Required:
 
-- **failed_connections** (Number) Number of failed connections is higher than *X* connections per minute in 3 out of 5 samples
-- **new_connection_failures** (Number) Percentage of new connection failures is higher than *X*% in 3 out of 5 samples
+- `failed_connections` (Number) Number of failed connections is higher than *X* connections per minute in 3 out of 5 samples
+- `new_connection_failures` (Number) Percentage of new connection failures is higher than *X*% in 3 out of 5 samples
 
 
 
@@ -271,19 +274,19 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for dropped packets. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--dropped_packets--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for dropped packets. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--dropped_packets--thresholds))
 
 <a id="nestedblock--network--dropped_packets--thresholds"></a>
 ### Nested Schema for `network.dropped_packets.thresholds`
 
 Required:
 
-- **dropped_packets** (Number) Receive/transmit dropped packet percentage is higher than *X*% in 3 out of 5 samples
-- **total_packets_rate** (Number) Total receive/transmit packets rate is higher than *X* packets per second in 3 out of 5 samples
+- `dropped_packets` (Number) Receive/transmit dropped packet percentage is higher than *X*% in 3 out of 5 samples
+- `total_packets_rate` (Number) Total receive/transmit packets rate is higher than *X* packets per second in 3 out of 5 samples
 
 
 
@@ -292,19 +295,19 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for network errors. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--errors--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for network errors. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--errors--thresholds))
 
 <a id="nestedblock--network--errors--thresholds"></a>
 ### Nested Schema for `network.errors.thresholds`
 
 Required:
 
-- **errors_percentage** (Number) Receive/transmit error packet percentage is higher than *X*% in 3 out of 5 samples
-- **total_packets_rate** (Number) Total receive/transmit packets rate is higher than *X* packets per second in 3 out of 5 samples
+- `errors_percentage` (Number) Receive/transmit error packet percentage is higher than *X*% in 3 out of 5 samples
+- `total_packets_rate` (Number) Total receive/transmit packets rate is higher than *X* packets per second in 3 out of 5 samples
 
 
 
@@ -313,19 +316,19 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for high retransmission rate. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--retransmission--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for high retransmission rate. If not set, automatic mode is used.   **All** of these conditions must be met to trigger an alert (see [below for nested schema](#nestedblock--network--retransmission--thresholds))
 
 <a id="nestedblock--network--retransmission--thresholds"></a>
 ### Nested Schema for `network.retransmission.thresholds`
 
 Required:
 
-- **retransmission_rate** (Number) Retransmission rate is higher than *X*% in 3 out of 5 samples
-- **retransmitted_packets** (Number) Number of retransmitted packets is higher than *X* packets per minute in 3 out of 5 samples
+- `retransmission_rate` (Number) Retransmission rate is higher than *X*% in 3 out of 5 samples
+- `retransmitted_packets` (Number) Number of retransmitted packets is higher than *X* packets per minute in 3 out of 5 samples
 
 
 
@@ -334,17 +337,17 @@ Required:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **thresholds** (Block List, Max: 1) Custom thresholds for high network utilization. If not set, automatic mode is used (see [below for nested schema](#nestedblock--network--utilization--thresholds))
+- `thresholds` (Block List, Max: 1) Custom thresholds for high network utilization. If not set, automatic mode is used (see [below for nested schema](#nestedblock--network--utilization--thresholds))
 
 <a id="nestedblock--network--utilization--thresholds"></a>
 ### Nested Schema for `network.utilization.thresholds`
 
 Required:
 
-- **utilization** (Number) Alert if sent/received traffic utilization is higher than *X*% in 3 out of 5 samples
+- `utilization` (Number) Alert if sent/received traffic utilization is higher than *X*% in 3 out of 5 samples
 
 

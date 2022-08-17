@@ -17,10 +17,10 @@ description: |-
 
 ### Required
 
-- **key** (String) the key of the attribute to capture
+- `key` (String) the key of the attribute to capture
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 

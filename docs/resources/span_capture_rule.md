@@ -17,33 +17,33 @@ description: |-
 
 ### Required
 
-- **action** (String) Whether to create an entry point or not
-- **matches** (Block List, Min: 1, Max: 1) Matching strategies for the Span (see [below for nested schema](#nestedblock--matches))
-- **name** (String) The name of the rule
+- `action` (String) Whether to create an entry point or not
+- `matches` (Block List, Min: 1, Max: 1) Matching strategies for the Span (see [below for nested schema](#nestedblock--matches))
+- `name` (String) The name of the rule
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--matches"></a>
 ### Nested Schema for `matches`
 
 Required:
 
-- **match** (Block List, Min: 1) Matching strategies for the Span (see [below for nested schema](#nestedblock--matches--match))
+- `match` (Block List, Min: 1) Matching strategies for the Span (see [below for nested schema](#nestedblock--matches--match))
 
 <a id="nestedblock--matches--match"></a>
 ### Nested Schema for `matches.match`
 
 Required:
 
-- **comparison** (String) Possible values are `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `DOES_NOT_EQUAL`, `DOES_NOT_CONTAIN`, `DOES_NOT_START_WITH` and `DOES_NOT_END_WITH`.
-- **source** (String) What to match against. Possible values are `SPAN_NAME`, `SPAN_KIND`, `ATTRIBUTE`, `INSTRUMENTATION_LIBRARY_NAME` and `INSTRUMENTATION_LIBRARY_VERSION`
+- `comparison` (String) Possible values are `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `DOES_NOT_EQUAL`, `DOES_NOT_CONTAIN`, `DOES_NOT_START_WITH` and `DOES_NOT_END_WITH`.
+- `source` (String) What to match against. Possible values are `SPAN_NAME`, `SPAN_KIND`, `ATTRIBUTE`, `INSTRUMENTATION_LIBRARY_NAME` and `INSTRUMENTATION_LIBRARY_VERSION`
 
 Optional:
 
-- **case_sensitive** (Boolean) Whether to match strings case sensitively or not
-- **key** (String) The name of the attribute if `source` is `ATTRIBUTE`
-- **value** (String) The value to compare against. When `source` is `SPAN_KIND` the only allowed values are `INTERNAL`, `SERVER`, `CLIENT`, `PRODUCER` and `CONSUMER`
+- `case_sensitive` (Boolean) Whether to match strings case sensitively or not
+- `key` (String) The name of the attribute if `source` is `ATTRIBUTE`
+- `value` (String) The value to compare against. When `source` is `SPAN_KIND` the only allowed values are `INTERNAL`, `SERVER`, `CLIENT`, `PRODUCER` and `CONSUMER`
 
 

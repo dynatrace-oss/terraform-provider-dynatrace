@@ -17,11 +17,14 @@ description: |-
 
 ### Required
 
-- **service** (String) Whether to create an entry point or not
+- `service` (String) Whether to create an entry point or not
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **names** (Set of String) The names of the key requests
+- `names` (Set of String) The names of the key requests
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

@@ -17,27 +17,30 @@ description: |-
 
 ### Required
 
-- **enabled** (Boolean) Disk event rule enabled/disabled
-- **metric** (String) The metric to monitor. Possible values are: `LOW_DISK_SPACE`, `LOW_INODES`, `READ_TIME_EXCEEDING` and `WRITE_TIME_EXCEEDING`
-- **name** (String) The name of the disk event rule
-- **samples** (Number) The number of samples to evaluate
-- **threshold** (Number) The threshold to trigger disk event.   * A percentage for `LowDiskSpace` or `LowInodes` metrics.   * In milliseconds for `ReadTimeExceeding` or `WriteTimeExceeding` metrics
-- **violating_samples** (Number) The number of samples that must violate the threshold to trigger an event. Must not exceed the number of evaluated samples
+- `enabled` (Boolean) Disk event rule enabled/disabled
+- `metric` (String) The metric to monitor. Possible values are: `LOW_DISK_SPACE`, `LOW_INODES`, `READ_TIME_EXCEEDING` and `WRITE_TIME_EXCEEDING`
+- `name` (String) The name of the disk event rule
+- `samples` (Number) The number of samples to evaluate
+- `threshold` (Number) The threshold to trigger disk event.   * A percentage for `LowDiskSpace` or `LowInodes` metrics.   * In milliseconds for `ReadTimeExceeding` or `WriteTimeExceeding` metrics
+- `violating_samples` (Number) The number of samples that must violate the threshold to trigger an event. Must not exceed the number of evaluated samples
 
 ### Optional
 
-- **disk_name** (Block List, Max: 1) Narrows the rule usage down to disks, matching the specified criteria (see [below for nested schema](#nestedblock--disk_name))
-- **host_group_id** (String) Narrows the rule usage down to disks that run on hosts that themselves run on the specified host group
-- **id** (String) The ID of this resource.
-- **tags** (Block List, Max: 1) Narrows the rule usage down to the hosts matching the specified tags (see [below for nested schema](#nestedblock--tags))
+- `disk_name` (Block List, Max: 1) Narrows the rule usage down to disks, matching the specified criteria (see [below for nested schema](#nestedblock--disk_name))
+- `host_group_id` (String) Narrows the rule usage down to disks that run on hosts that themselves run on the specified host group
+- `tags` (Block List, Max: 1) Narrows the rule usage down to the hosts matching the specified tags (see [below for nested schema](#nestedblock--tags))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--disk_name"></a>
 ### Nested Schema for `disk_name`
 
 Required:
 
-- **operator** (String) Possible values are: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS` and `STARTS_WITH`
-- **value** (String) Value to compare to
+- `operator` (String) Possible values are: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS` and `STARTS_WITH`
+- `value` (String) Value to compare to
 
 
 <a id="nestedblock--tags"></a>
@@ -45,18 +48,18 @@ Required:
 
 Optional:
 
-- **filter** (Block List) A Tag Filter (see [below for nested schema](#nestedblock--tags--filter))
+- `filter` (Block List) A Tag Filter (see [below for nested schema](#nestedblock--tags--filter))
 
 <a id="nestedblock--tags--filter"></a>
 ### Nested Schema for `tags.filter`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 

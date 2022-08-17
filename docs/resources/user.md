@@ -17,14 +17,17 @@ description: |-
 
 ### Required
 
-- **email** (String) User's email address
-- **first_name** (String) User's first name
-- **last_name** (String) User's last name
-- **user_name** (String) The User Name
+- `email` (String) User's email address
+- `first_name` (String) User's first name
+- `last_name` (String) User's last name
+- `user_name` (String) The User Name
 
 ### Optional
 
-- **groups** (Set of String) List of user's user group IDs
-- **id** (String) The ID of this resource.
+- `groups` (Set of String) List of user's user group IDs
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

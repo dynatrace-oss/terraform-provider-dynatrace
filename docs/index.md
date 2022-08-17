@@ -38,7 +38,7 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 
 ### Optional
 
-- **dt_api_token** (String, Sensitive)
-- **dt_cluster_api_token** (String, Sensitive)
-- **dt_cluster_url** (String, Sensitive)
-- **dt_env_url** (String)
+- `dt_api_token` (String, Sensitive)
+- `dt_cluster_api_token` (String, Sensitive)
+- `dt_cluster_url` (String, Sensitive)
+- `dt_env_url` (String)

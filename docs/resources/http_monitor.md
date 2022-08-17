@@ -17,60 +17,63 @@ description: |-
 
 ### Required
 
-- **frequency** (Number) The frequency of the monitor, in minutes.
+- `frequency` (Number) The frequency of the monitor, in minutes.
 
 You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
-- **name** (String) The name of the monitor.
+- `name` (String) The name of the monitor.
 
 ### Optional
 
-- **anomaly_detection** (Block List) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
-- **enabled** (Boolean) The monitor is enabled (`true`) or disabled (`false`).
-- **id** (String) The ID of this resource.
-- **locations** (Set of String) A list of locations from which the monitor is executed.
+- `anomaly_detection` (Block List) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
+- `enabled` (Boolean) The monitor is enabled (`true`) or disabled (`false`).
+- `locations` (Set of String) A list of locations from which the monitor is executed.
 
 To specify a location, use its entity ID.
-- **manually_assigned_apps** (Set of String) A set of manually assigned applications.
-- **script** (Block List, Max: 1) The HTTP Script (see [below for nested schema](#nestedblock--script))
-- **tags** (Block List) A set of tags assigned to the monitor.
+- `manually_assigned_apps` (Set of String) A set of manually assigned applications.
+- `script` (Block List, Max: 1) The HTTP Script (see [below for nested schema](#nestedblock--script))
+- `tags` (Block List) A set of tags assigned to the monitor.
 
 You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically. (see [below for nested schema](#nestedblock--tags))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--anomaly_detection"></a>
 ### Nested Schema for `anomaly_detection`
 
 Optional:
 
-- **loading_time_thresholds** (Block List) Thresholds for loading times (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds))
-- **outage_handling** (Block List) Outage handling configuration (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling))
+- `loading_time_thresholds` (Block List) Thresholds for loading times (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds))
+- `outage_handling` (Block List) Outage handling configuration (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds`
 
 Optional:
 
-- **enabled** (Boolean) Performance threshold is enabled (`true`) or disabled (`false`)
-- **thresholds** (Block List) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds))
+- `enabled` (Boolean) Performance threshold is enabled (`true`) or disabled (`false`)
+- `thresholds` (Block List) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds--thresholds"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds.thresholds`
 
 Required:
 
-- **threshold** (Block List, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
+- `threshold` (Block List, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds.thresholds.threshold`
 
 Required:
 
-- **value_ms** (Number) Notify if monitor takes longer than *X* milliseconds to load
+- `value_ms` (Number) Notify if monitor takes longer than *X* milliseconds to load
 
 Optional:
 
-- **event_index** (Number) Specify the event to which an ACTION threshold applies
-- **request_index** (Number) Specify the request to which an ACTION threshold applies
-- **type** (String) The type of the threshold: `TOTAL` (total loading time) or `ACTION` (action loading time)
+- `event_index` (Number) Specify the event to which an ACTION threshold applies
+- `request_index` (Number) Specify the request to which an ACTION threshold applies
+- `type` (String) The type of the threshold: `TOTAL` (total loading time) or `ACTION` (action loading time)
 
 
 
@@ -80,20 +83,20 @@ Optional:
 
 Optional:
 
-- **global_outage** (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
-- **local_outage** (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
-- **local_outage_policy** (Block List) Local outage handling configuration. 
+- `global_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
+- `local_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
+- `local_outage_policy` (Block List) Local outage handling configuration. 
 
  Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--local_outage_policy))
-- **retry_on_error** (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
+- `retry_on_error` (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
 
 <a id="nestedblock--anomaly_detection--outage_handling--local_outage_policy"></a>
 ### Nested Schema for `anomaly_detection.outage_handling.local_outage_policy`
 
 Required:
 
-- **affected_locations** (Number) The number of affected locations to trigger an alert
-- **consecutive_runs** (Number) The number of consecutive fails to trigger an alert
+- `affected_locations` (Number) The number of affected locations to trigger an alert
+- `consecutive_runs` (Number) The number of consecutive fails to trigger an alert
 
 
 
@@ -103,53 +106,53 @@ Required:
 
 Required:
 
-- **request** (Block List, Min: 1) A HTTP request to be performed by the monitor. (see [below for nested schema](#nestedblock--script--request))
+- `request` (Block List, Min: 1) A HTTP request to be performed by the monitor. (see [below for nested schema](#nestedblock--script--request))
 
 <a id="nestedblock--script--request"></a>
 ### Nested Schema for `script.request`
 
 Required:
 
-- **method** (String) The HTTP method of the request.
-- **url** (String) The URL to check.
+- `method` (String) The HTTP method of the request.
+- `url` (String) The URL to check.
 
 Optional:
 
-- **body** (String) The body of the HTTP request.
-- **configuration** (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration))
-- **description** (String) A short description of the event to appear in the web UI.
-- **post_processing** (String) Javascript code to execute after sending the request.
-- **pre_processing** (String) Javascript code to execute before sending the request.
-- **validation** (Block List, Max: 1) Validation helps you verify that your HTTP monitor loads the expected content (see [below for nested schema](#nestedblock--script--request--validation))
+- `body` (String) The body of the HTTP request.
+- `configuration` (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration))
+- `description` (String) A short description of the event to appear in the web UI.
+- `post_processing` (String) Javascript code to execute after sending the request.
+- `pre_processing` (String) Javascript code to execute before sending the request.
+- `validation` (Block List, Max: 1) Validation helps you verify that your HTTP monitor loads the expected content (see [below for nested schema](#nestedblock--script--request--validation))
 
 <a id="nestedblock--script--request--configuration"></a>
 ### Nested Schema for `script.request.configuration`
 
 Optional:
 
-- **accept_any_certificate** (Boolean) If set to `false`, then the monitor fails with invalid SSL certificates.
+- `accept_any_certificate` (Boolean) If set to `false`, then the monitor fails with invalid SSL certificates.
 
 If not set, the `false` option is used
-- **follow_redirects** (Boolean) If set to `false`, redirects are reported as successful requests with response code 3xx.
+- `follow_redirects` (Boolean) If set to `false`, redirects are reported as successful requests with response code 3xx.
 
 If not set, the `false` option is used.
-- **headers** (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration--headers))
-- **user_agent** (String) The User agent of the request
+- `headers` (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration--headers))
+- `user_agent` (String) The User agent of the request
 
 <a id="nestedblock--script--request--configuration--headers"></a>
-### Nested Schema for `script.request.configuration.user_agent`
+### Nested Schema for `script.request.configuration.headers`
 
 Required:
 
-- **header** (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--request--configuration--user_agent--header))
+- `header` (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--request--configuration--headers--header))
 
-<a id="nestedblock--script--request--configuration--user_agent--header"></a>
-### Nested Schema for `script.request.configuration.user_agent.header`
+<a id="nestedblock--script--request--configuration--headers--header"></a>
+### Nested Schema for `script.request.configuration.headers.header`
 
 Required:
 
-- **name** (String) The key of the header
-- **value** (String) The value of the header
+- `name` (String) The key of the header
+- `value` (String) The value of the header
 
 
 
@@ -159,19 +162,19 @@ Required:
 
 Required:
 
-- **rule** (Block List, Min: 1) A list of validation rules (see [below for nested schema](#nestedblock--script--request--validation--rule))
+- `rule` (Block List, Min: 1) A list of validation rules (see [below for nested schema](#nestedblock--script--request--validation--rule))
 
 <a id="nestedblock--script--request--validation--rule"></a>
 ### Nested Schema for `script.request.validation.rule`
 
 Required:
 
-- **type** (String) The type of the rule. Possible values are `patternConstraint`, `regexConstraint`, `httpStatusesList` and `certificateExpiryDateConstraint`
-- **value** (String) The content to look for
+- `type` (String) The type of the rule. Possible values are `patternConstraint`, `regexConstraint`, `httpStatusesList` and `certificateExpiryDateConstraint`
+- `value` (String) The content to look for
 
 Optional:
 
-- **pass_if_found** (Boolean) The validation condition. `true` means validation succeeds if the specified content/element is found. `false` means validation fails if the specified content/element is found. Always specify `false` for `certificateExpiryDateConstraint` to fail the monitor if SSL certificate expiry is within the specified number of days
+- `pass_if_found` (Boolean) The validation condition. `true` means validation succeeds if the specified content/element is found. `false` means validation fails if the specified content/element is found. Always specify `false` for `certificateExpiryDateConstraint` to fail the monitor if SSL certificate expiry is within the specified number of days
 
 
 
@@ -182,24 +185,24 @@ Optional:
 
 Optional:
 
-- **tag** (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
+- `tag` (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
 
 <a id="nestedblock--tags--tag"></a>
 ### Nested Schema for `tags.tag`
 
 Required:
 
-- **context** (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
+- `context` (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
 
 Custom tags use the `CONTEXTLESS` value.
-- **key** (String) The key of the tag.
+- `key` (String) The key of the tag.
 
 Custom tags have the tag value here.
 
 Optional:
 
-- **source** (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
-- **value** (String) The value of the tag.
+- `source` (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
+- `value` (String) The value of the tag.
 
 Not applicable to custom tags.
 

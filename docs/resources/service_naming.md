@@ -17,106 +17,109 @@ description: |-
 
 ### Required
 
-- **enabled** (Boolean) The rule is enabled (`true`) or disabled (`false`)
-- **format** (String) The name to be assigned to matching entities. You can use the following placeholders here:  * `{AwsAutoScalingGroup:Name}`  * `{AwsAvailabilityZone:Name}`  * `{AwsElasticLoadBalancer:Name}`  * `{AwsRelationalDatabaseService:DBName}`  * `{AwsRelationalDatabaseService:Endpoint}`  * `{AwsRelationalDatabaseService:Engine}`  * `{AwsRelationalDatabaseService:InstanceClass}`  * `{AwsRelationalDatabaseService:Name}`  * `{AwsRelationalDatabaseService:Port}`  * `{AzureRegion:Name}`  * `{AzureScaleSet:Name}`  * `{AzureVm:Name}`  * `{CloudFoundryOrganization:Name}`  * `{CustomDevice:DetectedName}`  * `{CustomDevice:DnsName}`  * `{CustomDevice:IpAddress}`  * `{CustomDevice:Port}`  * `{DockerContainerGroupInstance:ContainerName}`  * `{DockerContainerGroupInstance:FullImageName}`  * `{DockerContainerGroupInstance:ImageVersion}`  * `{DockerContainerGroupInstance:StrippedImageName}`  * `{ESXIHost:HardwareModel}`  * `{ESXIHost:HardwareVendor}`  * `{ESXIHost:Name}`  * `{ESXIHost:ProductName}`  * `{ESXIHost:ProductVersion}`  * `{Ec2Instance:AmiId}`  * `{Ec2Instance:BeanstalkEnvironmentName}`  * `{Ec2Instance:InstanceId}`  * `{Ec2Instance:InstanceType}`  * `{Ec2Instance:LocalHostName}`  * `{Ec2Instance:Name}`  * `{Ec2Instance:PublicHostName}`  * `{Ec2Instance:SecurityGroup}`  * `{GoogleComputeInstance:Id}`  * `{GoogleComputeInstance:IpAddresses}`  * `{GoogleComputeInstance:MachineType}`  * `{GoogleComputeInstance:Name}`  * `{GoogleComputeInstance:ProjectId}`  * `{GoogleComputeInstance:Project}`  * `{Host:AWSNameTag}`  * `{Host:AixLogicalCpuCount}`  * `{Host:AzureHostName}`  * `{Host:AzureSiteName}`  * `{Host:BoshDeploymentId}`  * `{Host:BoshInstanceId}`  * `{Host:BoshInstanceName}`  * `{Host:BoshName}`  * `{Host:BoshStemcellVersion}`  * `{Host:CpuCores}`  * `{Host:DetectedName}`  * `{Host:Environment:AppName}`  * `{Host:Environment:BoshReleaseVersion}`  * `{Host:Environment:Environment}`  * `{Host:Environment:Link}`  * `{Host:Environment:Organization}`  * `{Host:Environment:Owner}`  * `{Host:Environment:Support}`  * `{Host:IpAddress}`  * `{Host:LogicalCpuCores}`  * `{Host:OneAgentCustomHostName}`  * `{Host:OperatingSystemVersion}`  * `{Host:PaasMemoryLimit}`  * `{HostGroup:Name}`  * `{KubernetesCluster:Name}`  * `{KubernetesNode:DetectedName}`  * `{OpenstackAvailabilityZone:Name}`  * `{OpenstackZone:Name}`  * `{OpenstackComputeNode:Name}`  * `{OpenstackProject:Name}`  * `{OpenstackVm:InstanceType}`  * `{OpenstackVm:Name}`  * `{OpenstackVm:SecurityGroup}`  * `{ProcessGroup:AmazonECRImageAccountId}`  * `{ProcessGroup:AmazonECRImageRegion}`  * `{ProcessGroup:AmazonECSCluster}`  * `{ProcessGroup:AmazonECSContainerName}`  * `{ProcessGroup:AmazonECSFamily}`  * `{ProcessGroup:AmazonECSRevision}`  * `{ProcessGroup:AmazonLambdaFunctionName}`  * `{ProcessGroup:AmazonRegion}`  * `{ProcessGroup:ApacheConfigPath}`  * `{ProcessGroup:ApacheSparkMasterIpAddress}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AzureHostName}`  * `{ProcessGroup:AzureSiteName}`  * `{ProcessGroup:CassandraClusterName}`  * `{ProcessGroup:CatalinaBase}`  * `{ProcessGroup:CatalinaHome}`  * `{ProcessGroup:CloudFoundryAppId}`  * `{ProcessGroup:CloudFoundryAppName}`  * `{ProcessGroup:CloudFoundryInstanceIndex}`  * `{ProcessGroup:CloudFoundrySpaceId}`  * `{ProcessGroup:CloudFoundrySpaceName}`  * `{ProcessGroup:ColdFusionJvmConfigFile}`  * `{ProcessGroup:ColdFusionServiceName}`  * `{ProcessGroup:CommandLineArgs}`  * `{ProcessGroup:DetectedName}`  * `{ProcessGroup:DotNetCommandPath}`  * `{ProcessGroup:DotNetCommand}`  * `{ProcessGroup:DotNetClusterId}`  * `{ProcessGroup:DotNetNodeId}`  * `{ProcessGroup:ElasticsearchClusterName}`  * `{ProcessGroup:ElasticsearchNodeName}`  * `{ProcessGroup:EquinoxConfigPath}`  * `{ProcessGroup:ExeName}`  * `{ProcessGroup:ExePath}`  * `{ProcessGroup:GlassFishDomainName}`  * `{ProcessGroup:GlassFishInstanceName}`  * `{ProcessGroup:GoogleAppEngineInstance}`  * `{ProcessGroup:GoogleAppEngineService}`  * `{ProcessGroup:GoogleCloudProject}`  * `{ProcessGroup:HybrisBinDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisDataDirectory}`  * `{ProcessGroup:IBMCicsRegion}`  * `{ProcessGroup:IBMCtgName}`  * `{ProcessGroup:IBMImsConnectRegion}`  * `{ProcessGroup:IBMImsControlRegion}`  * `{ProcessGroup:IBMImsMessageProcessingRegion}`  * `{ProcessGroup:IBMImsSoapGwName}`  * `{ProcessGroup:IBMIntegrationNodeName}`  * `{ProcessGroup:IBMIntegrationServerName}`  * `{ProcessGroup:IISAppPool}`  * `{ProcessGroup:IISRoleName}`  * `{ProcessGroup:JbossHome}`  * `{ProcessGroup:JbossMode}`  * `{ProcessGroup:JbossServerName}`  * `{ProcessGroup:JavaJarFile}`  * `{ProcessGroup:JavaJarPath}`  * `{ProcessGroup:JavaMainCLass}`  * `{ProcessGroup:KubernetesBasePodName}`  * `{ProcessGroup:KubernetesContainerName}`  * `{ProcessGroup:KubernetesFullPodName}`  * `{ProcessGroup:KubernetesNamespace}`  * `{ProcessGroup:KubernetesPodUid}`  * `{ProcessGroup:MssqlInstanceName}`  * `{ProcessGroup:NodeJsAppBaseDirectory}`  * `{ProcessGroup:NodeJsAppName}`  * `{ProcessGroup:NodeJsScriptName}`  * `{ProcessGroup:OracleSid}`  * `{ProcessGroup:PHPScriptPath}`  * `{ProcessGroup:PHPWorkingDirectory}`  * `{ProcessGroup:Ports}`  * `{ProcessGroup:RubyAppRootPath}`  * `{ProcessGroup:RubyScriptPath}`  * `{ProcessGroup:SoftwareAGInstallRoot}`  * `{ProcessGroup:SoftwareAGProductPropertyName}`  * `{ProcessGroup:SpringBootAppName}`  * `{ProcessGroup:SpringBootProfileName}`  * `{ProcessGroup:SpringBootStartupClass}`  * `{ProcessGroup:TIBCOBusinessWorksAppNodeName}`  * `{ProcessGroup:TIBCOBusinessWorksAppSpaceName}`  * `{ProcessGroup:TIBCOBusinessWorksCeAppName}`  * `{ProcessGroup:TIBCOBusinessWorksCeVersion}`  * `{ProcessGroup:TIBCOBusinessWorksDomainName}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFilePath}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFile}`  * `{ProcessGroup:TIBCOBusinessWorksHome}`  * `{ProcessGroup:VarnishInstanceName}`  * `{ProcessGroup:WebLogicClusterName}`  * `{ProcessGroup:WebLogicDomainName}`  * `{ProcessGroup:WebLogicHome}`  * `{ProcessGroup:WebLogicName}`  * `{ProcessGroup:WebSphereCellName}`  * `{ProcessGroup:WebSphereClusterName}`  * `{ProcessGroup:WebSphereNodeName}`  * `{ProcessGroup:WebSphereServerName}`  * `{ProcessGroup:ActorSystem}`  * `{Service:STGServerName}`  * `{Service:DatabaseHostName}`  * `{Service:DatabaseName}`  * `{Service:DatabaseVendor}`  * `{Service:DetectedName}`  * `{Service:EndpointPath}`  * `{Service:EndpointPathGatewayUrl}`  * `{Service:IIBApplicationName}`  * `{Service:MessageListenerClassName}`  * `{Service:Port}`  * `{Service:PublicDomainName}`  * `{Service:RemoteEndpoint}`  * `{Service:RemoteName}`  * `{Service:WebApplicationId}`  * `{Service:WebContextRoot}`  * `{Service:WebServerName}`  * `{Service:WebServiceNamespace}`  * `{Service:WebServiceName}`  * `{VmwareDatacenter:Name}`  * `{VmwareVm:Name}
-- **name** (String) The name of the rule
+- `enabled` (Boolean) The rule is enabled (`true`) or disabled (`false`)
+- `format` (String) The name to be assigned to matching entities. You can use the following placeholders here:  * `{AwsAutoScalingGroup:Name}`  * `{AwsAvailabilityZone:Name}`  * `{AwsElasticLoadBalancer:Name}`  * `{AwsRelationalDatabaseService:DBName}`  * `{AwsRelationalDatabaseService:Endpoint}`  * `{AwsRelationalDatabaseService:Engine}`  * `{AwsRelationalDatabaseService:InstanceClass}`  * `{AwsRelationalDatabaseService:Name}`  * `{AwsRelationalDatabaseService:Port}`  * `{AzureRegion:Name}`  * `{AzureScaleSet:Name}`  * `{AzureVm:Name}`  * `{CloudFoundryOrganization:Name}`  * `{CustomDevice:DetectedName}`  * `{CustomDevice:DnsName}`  * `{CustomDevice:IpAddress}`  * `{CustomDevice:Port}`  * `{DockerContainerGroupInstance:ContainerName}`  * `{DockerContainerGroupInstance:FullImageName}`  * `{DockerContainerGroupInstance:ImageVersion}`  * `{DockerContainerGroupInstance:StrippedImageName}`  * `{ESXIHost:HardwareModel}`  * `{ESXIHost:HardwareVendor}`  * `{ESXIHost:Name}`  * `{ESXIHost:ProductName}`  * `{ESXIHost:ProductVersion}`  * `{Ec2Instance:AmiId}`  * `{Ec2Instance:BeanstalkEnvironmentName}`  * `{Ec2Instance:InstanceId}`  * `{Ec2Instance:InstanceType}`  * `{Ec2Instance:LocalHostName}`  * `{Ec2Instance:Name}`  * `{Ec2Instance:PublicHostName}`  * `{Ec2Instance:SecurityGroup}`  * `{GoogleComputeInstance:Id}`  * `{GoogleComputeInstance:IpAddresses}`  * `{GoogleComputeInstance:MachineType}`  * `{GoogleComputeInstance:Name}`  * `{GoogleComputeInstance:ProjectId}`  * `{GoogleComputeInstance:Project}`  * `{Host:AWSNameTag}`  * `{Host:AixLogicalCpuCount}`  * `{Host:AzureHostName}`  * `{Host:AzureSiteName}`  * `{Host:BoshDeploymentId}`  * `{Host:BoshInstanceId}`  * `{Host:BoshInstanceName}`  * `{Host:BoshName}`  * `{Host:BoshStemcellVersion}`  * `{Host:CpuCores}`  * `{Host:DetectedName}`  * `{Host:Environment:AppName}`  * `{Host:Environment:BoshReleaseVersion}`  * `{Host:Environment:Environment}`  * `{Host:Environment:Link}`  * `{Host:Environment:Organization}`  * `{Host:Environment:Owner}`  * `{Host:Environment:Support}`  * `{Host:IpAddress}`  * `{Host:LogicalCpuCores}`  * `{Host:OneAgentCustomHostName}`  * `{Host:OperatingSystemVersion}`  * `{Host:PaasMemoryLimit}`  * `{HostGroup:Name}`  * `{KubernetesCluster:Name}`  * `{KubernetesNode:DetectedName}`  * `{OpenstackAvailabilityZone:Name}`  * `{OpenstackZone:Name}`  * `{OpenstackComputeNode:Name}`  * `{OpenstackProject:Name}`  * `{OpenstackVm:InstanceType}`  * `{OpenstackVm:Name}`  * `{OpenstackVm:SecurityGroup}`  * `{ProcessGroup:AmazonECRImageAccountId}`  * `{ProcessGroup:AmazonECRImageRegion}`  * `{ProcessGroup:AmazonECSCluster}`  * `{ProcessGroup:AmazonECSContainerName}`  * `{ProcessGroup:AmazonECSFamily}`  * `{ProcessGroup:AmazonECSRevision}`  * `{ProcessGroup:AmazonLambdaFunctionName}`  * `{ProcessGroup:AmazonRegion}`  * `{ProcessGroup:ApacheConfigPath}`  * `{ProcessGroup:ApacheSparkMasterIpAddress}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AzureHostName}`  * `{ProcessGroup:AzureSiteName}`  * `{ProcessGroup:CassandraClusterName}`  * `{ProcessGroup:CatalinaBase}`  * `{ProcessGroup:CatalinaHome}`  * `{ProcessGroup:CloudFoundryAppId}`  * `{ProcessGroup:CloudFoundryAppName}`  * `{ProcessGroup:CloudFoundryInstanceIndex}`  * `{ProcessGroup:CloudFoundrySpaceId}`  * `{ProcessGroup:CloudFoundrySpaceName}`  * `{ProcessGroup:ColdFusionJvmConfigFile}`  * `{ProcessGroup:ColdFusionServiceName}`  * `{ProcessGroup:CommandLineArgs}`  * `{ProcessGroup:DetectedName}`  * `{ProcessGroup:DotNetCommandPath}`  * `{ProcessGroup:DotNetCommand}`  * `{ProcessGroup:DotNetClusterId}`  * `{ProcessGroup:DotNetNodeId}`  * `{ProcessGroup:ElasticsearchClusterName}`  * `{ProcessGroup:ElasticsearchNodeName}`  * `{ProcessGroup:EquinoxConfigPath}`  * `{ProcessGroup:ExeName}`  * `{ProcessGroup:ExePath}`  * `{ProcessGroup:GlassFishDomainName}`  * `{ProcessGroup:GlassFishInstanceName}`  * `{ProcessGroup:GoogleAppEngineInstance}`  * `{ProcessGroup:GoogleAppEngineService}`  * `{ProcessGroup:GoogleCloudProject}`  * `{ProcessGroup:HybrisBinDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisDataDirectory}`  * `{ProcessGroup:IBMCicsRegion}`  * `{ProcessGroup:IBMCtgName}`  * `{ProcessGroup:IBMImsConnectRegion}`  * `{ProcessGroup:IBMImsControlRegion}`  * `{ProcessGroup:IBMImsMessageProcessingRegion}`  * `{ProcessGroup:IBMImsSoapGwName}`  * `{ProcessGroup:IBMIntegrationNodeName}`  * `{ProcessGroup:IBMIntegrationServerName}`  * `{ProcessGroup:IISAppPool}`  * `{ProcessGroup:IISRoleName}`  * `{ProcessGroup:JbossHome}`  * `{ProcessGroup:JbossMode}`  * `{ProcessGroup:JbossServerName}`  * `{ProcessGroup:JavaJarFile}`  * `{ProcessGroup:JavaJarPath}`  * `{ProcessGroup:JavaMainCLass}`  * `{ProcessGroup:KubernetesBasePodName}`  * `{ProcessGroup:KubernetesContainerName}`  * `{ProcessGroup:KubernetesFullPodName}`  * `{ProcessGroup:KubernetesNamespace}`  * `{ProcessGroup:KubernetesPodUid}`  * `{ProcessGroup:MssqlInstanceName}`  * `{ProcessGroup:NodeJsAppBaseDirectory}`  * `{ProcessGroup:NodeJsAppName}`  * `{ProcessGroup:NodeJsScriptName}`  * `{ProcessGroup:OracleSid}`  * `{ProcessGroup:PHPScriptPath}`  * `{ProcessGroup:PHPWorkingDirectory}`  * `{ProcessGroup:Ports}`  * `{ProcessGroup:RubyAppRootPath}`  * `{ProcessGroup:RubyScriptPath}`  * `{ProcessGroup:SoftwareAGInstallRoot}`  * `{ProcessGroup:SoftwareAGProductPropertyName}`  * `{ProcessGroup:SpringBootAppName}`  * `{ProcessGroup:SpringBootProfileName}`  * `{ProcessGroup:SpringBootStartupClass}`  * `{ProcessGroup:TIBCOBusinessWorksAppNodeName}`  * `{ProcessGroup:TIBCOBusinessWorksAppSpaceName}`  * `{ProcessGroup:TIBCOBusinessWorksCeAppName}`  * `{ProcessGroup:TIBCOBusinessWorksCeVersion}`  * `{ProcessGroup:TIBCOBusinessWorksDomainName}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFilePath}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFile}`  * `{ProcessGroup:TIBCOBusinessWorksHome}`  * `{ProcessGroup:VarnishInstanceName}`  * `{ProcessGroup:WebLogicClusterName}`  * `{ProcessGroup:WebLogicDomainName}`  * `{ProcessGroup:WebLogicHome}`  * `{ProcessGroup:WebLogicName}`  * `{ProcessGroup:WebSphereCellName}`  * `{ProcessGroup:WebSphereClusterName}`  * `{ProcessGroup:WebSphereNodeName}`  * `{ProcessGroup:WebSphereServerName}`  * `{ProcessGroup:ActorSystem}`  * `{Service:STGServerName}`  * `{Service:DatabaseHostName}`  * `{Service:DatabaseName}`  * `{Service:DatabaseVendor}`  * `{Service:DetectedName}`  * `{Service:EndpointPath}`  * `{Service:EndpointPathGatewayUrl}`  * `{Service:IIBApplicationName}`  * `{Service:MessageListenerClassName}`  * `{Service:Port}`  * `{Service:PublicDomainName}`  * `{Service:RemoteEndpoint}`  * `{Service:RemoteName}`  * `{Service:WebApplicationId}`  * `{Service:WebContextRoot}`  * `{Service:WebServerName}`  * `{Service:WebServiceNamespace}`  * `{Service:WebServiceName}`  * `{VmwareDatacenter:Name}`  * `{VmwareVm:Name}
+- `name` (String) The name of the rule
 
 ### Optional
 
-- **conditions** (Block List) A list of matching conditions of the rule.  The rule applies only if **all** conditions are fulfilled (see [below for nested schema](#nestedblock--conditions))
-- **id** (String) The ID of this resource.
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `conditions` (Block List) A list of matching conditions of the rule.  The rule applies only if **all** conditions are fulfilled (see [below for nested schema](#nestedblock--conditions))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--conditions"></a>
 ### Nested Schema for `conditions`
 
 Optional:
 
-- **condition** (Block List) A conditions for the metric usage (see [below for nested schema](#nestedblock--conditions--condition))
+- `condition` (Block List) A conditions for the metric usage (see [below for nested schema](#nestedblock--conditions--condition))
 
 <a id="nestedblock--conditions--condition"></a>
 ### Nested Schema for `conditions.condition`
 
 Optional:
 
-- **application_type** (Block List) Comparison for `APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--application_type))
-- **application_type_comparison** (Block List, Deprecated) Comparison for `APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--application_type_comparison))
-- **azure_compute_mode** (Block List, Deprecated) Comparison for `AZURE_COMPUTE_MODE` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_compute_mode))
-- **azure_compute_mode_comparison** (Block List) Comparison for `AZURE_COMPUTE_MODE` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_compute_mode_comparison))
-- **azure_sku** (Block List) Comparison for `AZURE_SKU` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_sku))
-- **azure_sku_comparision** (Block List, Deprecated) Comparison for `AZURE_SKU` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_sku_comparision))
-- **base_comparison_basic** (Block List, Deprecated) A comparison that's yet unknown to the provider. Operator and Value need to be encoded using the 'unknowns' property. (see [below for nested schema](#nestedblock--conditions--condition--base_comparison_basic))
-- **base_condition_key** (Block List, Deprecated) Fallback for not yet known type (see [below for nested schema](#nestedblock--conditions--condition--base_condition_key))
-- **bitness** (Block List) Comparison for `BITNESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--bitness))
-- **bitness_comparision** (Block List, Deprecated) Comparison for `BITNESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--bitness_comparision))
-- **cloud_type** (Block List) Comparison for `CLOUD_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--cloud_type))
-- **cloud_type_comparison** (Block List, Deprecated) Comparison for `CLOUD_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--cloud_type_comparison))
-- **comparison** (Block List) A comparison that's yet unknown to the provider. Operator and Value need to be encoded using the 'unknowns' property. (see [below for nested schema](#nestedblock--conditions--condition--comparison))
-- **custom_application_type** (Block List) Comparison for `CUSTOM_APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--custom_application_type))
-- **custom_application_type_comparison** (Block List, Deprecated) Comparison for `CUSTOM_APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--custom_application_type_comparison))
-- **custom_host_metadata** (Block List) Key for Custom Host Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata))
-- **custom_host_metadata_condition_key** (Block List, Deprecated) Key for Custom Host Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata_condition_key))
-- **custom_process_metadata** (Block List) Key for Custom Process Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata))
-- **custom_process_metadata_condition_key** (Block List, Deprecated) Key for Custom Process Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata_condition_key))
-- **database_topology** (Block List) Comparison for `DATABASE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--database_topology))
-- **database_topology_comparison** (Block List, Deprecated) Comparison for `DATABASE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--database_topology_comparison))
-- **dcrum_decoder** (Block List) Comparison for `DCRUM_DECODER_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--dcrum_decoder))
-- **dcrum_decoder_comparison** (Block List, Deprecated) Comparison for `DCRUM_DECODER_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--dcrum_decoder_comparison))
-- **entity** (Block List) Comparison for `ENTITY_ID` attributes (see [below for nested schema](#nestedblock--conditions--condition--entity))
-- **entity_id_comparison** (Block List, Deprecated) Comparison for `ENTITY_ID` attributes (see [below for nested schema](#nestedblock--conditions--condition--entity_id_comparison))
-- **host_tech** (Block List) Comparison for `SIMPLE_HOST_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--host_tech))
-- **hypervisor** (Block List) Comparison for `HYPERVISOR_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--hypervisor))
-- **hypervisor_type_comparision** (Block List, Deprecated) `hypervisor_type_comparision` is deprecated. Use `hypervisor` instead (see [below for nested schema](#nestedblock--conditions--condition--hypervisor_type_comparision))
-- **indexed_name** (Block List) Comparison for `INDEXED_NAME` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_name))
-- **indexed_name_comparison** (Block List, Deprecated) Comparison for `INDEXED_NAME` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_name_comparison))
-- **indexed_string** (Block List) Comparison for `INDEXED_STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_string))
-- **indexed_string_comparison** (Block List, Deprecated) Comparison for `INDEXED_STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_string_comparison))
-- **indexed_tag** (Block List) Comparison for `INDEXED_TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag))
-- **indexed_tag_comparison** (Block List, Deprecated) Comparison for `INDEXED_TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag_comparison))
-- **integer** (Block List) Comparison for `INTEGER` attributes (see [below for nested schema](#nestedblock--conditions--condition--integer))
-- **integer_comparison** (Block List, Deprecated) Comparison for `INTEGER` attributes (see [below for nested schema](#nestedblock--conditions--condition--integer_comparison))
-- **ipaddress** (Block List) Comparison for `IP_ADDRESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--ipaddress))
-- **ipaddress_comparison** (Block List, Deprecated) Comparison for `IP_ADDRESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--ipaddress_comparison))
-- **key** (Block List) Fallback for not yet known type (see [below for nested schema](#nestedblock--conditions--condition--key))
-- **mobile_platform** (Block List) Comparison for `MOBILE_PLATFORM` attributes (see [below for nested schema](#nestedblock--conditions--condition--mobile_platform))
-- **mobile_platform_comparison** (Block List, Deprecated) Comparison for `MOBILE_PLATFORM` attributes (see [below for nested schema](#nestedblock--conditions--condition--mobile_platform_comparison))
-- **os_arch** (Block List) Comparison for `OS_ARCHITECTURE` attributes (see [below for nested schema](#nestedblock--conditions--condition--os_arch))
-- **os_type** (Block List) Comparison for `OS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--os_type))
-- **osarchitecture_comparison** (Block List, Deprecated) Comparison for `OS_ARCHITECTURE` attributes (see [below for nested schema](#nestedblock--conditions--condition--osarchitecture_comparison))
-- **ostype_comparison** (Block List, Deprecated) Comparison for `OS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--ostype_comparison))
-- **paas_type** (Block List) Comparison for `PAAS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--paas_type))
-- **paas_type_comparison** (Block List, Deprecated) Comparison for `PAAS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--paas_type_comparison))
-- **process_metadata** (Block List) The key for dynamic attributes of the `PROCESS_PREDEFINED_METADATA_KEY` type (see [below for nested schema](#nestedblock--conditions--condition--process_metadata))
-- **process_metadata_condition_key** (Block List, Deprecated) The key for dynamic attributes of the `PROCESS_PREDEFINED_METADATA_KEY` type (see [below for nested schema](#nestedblock--conditions--condition--process_metadata_condition_key))
-- **service_topology** (Block List) Comparison for `SERVICE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_topology))
-- **service_topology_comparison** (Block List, Deprecated) Comparison for `SERVICE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_topology_comparison))
-- **service_type** (Block List) Comparison for `SERVICE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_type))
-- **service_type_comparison** (Block List, Deprecated) Comparison for `SERVICE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_type_comparison))
-- **simple_host_tech_comparison** (Block List, Deprecated) Comparison for `SIMPLE_HOST_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--simple_host_tech_comparison))
-- **simple_tech_comparison** (Block List, Deprecated) Comparison for `SIMPLE_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--simple_tech_comparison))
-- **string** (Block List) Comparison for `STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--string))
-- **string_comparison** (Block List, Deprecated) Comparison for `STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--string_comparison))
-- **string_condition_key** (Block List, Deprecated) The key for dynamic attributes of the `STRING` type (see [below for nested schema](#nestedblock--conditions--condition--string_condition_key))
-- **string_key** (Block List) The key for dynamic attributes of the `STRING` type (see [below for nested schema](#nestedblock--conditions--condition--string_key))
-- **synthetic_engine** (Block List) Comparison for `SYNTHETIC_ENGINE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--synthetic_engine))
-- **synthetic_engine_type_comparison** (Block List, Deprecated) Comparison for `SYNTHETIC_ENGINE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--synthetic_engine_type_comparison))
-- **tag** (Block List) Comparison for `TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--tag))
-- **tag_comparison** (Block List, Deprecated) Comparison for `TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--tag_comparison))
-- **tech** (Block List) Comparison for `SIMPLE_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--tech))
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `application_type` (Block List) Comparison for `APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--application_type))
+- `application_type_comparison` (Block List, Deprecated) Comparison for `APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--application_type_comparison))
+- `azure_compute_mode` (Block List, Deprecated) Comparison for `AZURE_COMPUTE_MODE` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_compute_mode))
+- `azure_compute_mode_comparison` (Block List) Comparison for `AZURE_COMPUTE_MODE` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_compute_mode_comparison))
+- `azure_sku` (Block List) Comparison for `AZURE_SKU` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_sku))
+- `azure_sku_comparision` (Block List, Deprecated) Comparison for `AZURE_SKU` attributes (see [below for nested schema](#nestedblock--conditions--condition--azure_sku_comparision))
+- `base_comparison_basic` (Block List, Deprecated) A comparison that's yet unknown to the provider. Operator and Value need to be encoded using the 'unknowns' property. (see [below for nested schema](#nestedblock--conditions--condition--base_comparison_basic))
+- `base_condition_key` (Block List, Deprecated) Fallback for not yet known type (see [below for nested schema](#nestedblock--conditions--condition--base_condition_key))
+- `bitness` (Block List) Comparison for `BITNESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--bitness))
+- `bitness_comparision` (Block List, Deprecated) Comparison for `BITNESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--bitness_comparision))
+- `cloud_type` (Block List) Comparison for `CLOUD_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--cloud_type))
+- `cloud_type_comparison` (Block List, Deprecated) Comparison for `CLOUD_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--cloud_type_comparison))
+- `comparison` (Block List) A comparison that's yet unknown to the provider. Operator and Value need to be encoded using the 'unknowns' property. (see [below for nested schema](#nestedblock--conditions--condition--comparison))
+- `custom_application_type` (Block List) Comparison for `CUSTOM_APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--custom_application_type))
+- `custom_application_type_comparison` (Block List, Deprecated) Comparison for `CUSTOM_APPLICATION_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--custom_application_type_comparison))
+- `custom_host_metadata` (Block List) Key for Custom Host Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata))
+- `custom_host_metadata_condition_key` (Block List, Deprecated) Key for Custom Host Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata_condition_key))
+- `custom_process_metadata` (Block List) Key for Custom Process Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata))
+- `custom_process_metadata_condition_key` (Block List, Deprecated) Key for Custom Process Metadata (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata_condition_key))
+- `database_topology` (Block List) Comparison for `DATABASE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--database_topology))
+- `database_topology_comparison` (Block List, Deprecated) Comparison for `DATABASE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--database_topology_comparison))
+- `dcrum_decoder` (Block List) Comparison for `DCRUM_DECODER_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--dcrum_decoder))
+- `dcrum_decoder_comparison` (Block List, Deprecated) Comparison for `DCRUM_DECODER_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--dcrum_decoder_comparison))
+- `entity` (Block List) Comparison for `ENTITY_ID` attributes (see [below for nested schema](#nestedblock--conditions--condition--entity))
+- `entity_id_comparison` (Block List, Deprecated) Comparison for `ENTITY_ID` attributes (see [below for nested schema](#nestedblock--conditions--condition--entity_id_comparison))
+- `host_tech` (Block List) Comparison for `SIMPLE_HOST_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--host_tech))
+- `hypervisor` (Block List) Comparison for `HYPERVISOR_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--hypervisor))
+- `hypervisor_type_comparision` (Block List, Deprecated) `hypervisor_type_comparision` is deprecated. Use `hypervisor` instead (see [below for nested schema](#nestedblock--conditions--condition--hypervisor_type_comparision))
+- `indexed_name` (Block List) Comparison for `INDEXED_NAME` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_name))
+- `indexed_name_comparison` (Block List, Deprecated) Comparison for `INDEXED_NAME` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_name_comparison))
+- `indexed_string` (Block List) Comparison for `INDEXED_STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_string))
+- `indexed_string_comparison` (Block List, Deprecated) Comparison for `INDEXED_STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_string_comparison))
+- `indexed_tag` (Block List) Comparison for `INDEXED_TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag))
+- `indexed_tag_comparison` (Block List, Deprecated) Comparison for `INDEXED_TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag_comparison))
+- `integer` (Block List) Comparison for `INTEGER` attributes (see [below for nested schema](#nestedblock--conditions--condition--integer))
+- `integer_comparison` (Block List, Deprecated) Comparison for `INTEGER` attributes (see [below for nested schema](#nestedblock--conditions--condition--integer_comparison))
+- `ipaddress` (Block List) Comparison for `IP_ADDRESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--ipaddress))
+- `ipaddress_comparison` (Block List, Deprecated) Comparison for `IP_ADDRESS` attributes (see [below for nested schema](#nestedblock--conditions--condition--ipaddress_comparison))
+- `key` (Block List) Fallback for not yet known type (see [below for nested schema](#nestedblock--conditions--condition--key))
+- `mobile_platform` (Block List) Comparison for `MOBILE_PLATFORM` attributes (see [below for nested schema](#nestedblock--conditions--condition--mobile_platform))
+- `mobile_platform_comparison` (Block List, Deprecated) Comparison for `MOBILE_PLATFORM` attributes (see [below for nested schema](#nestedblock--conditions--condition--mobile_platform_comparison))
+- `os_arch` (Block List) Comparison for `OS_ARCHITECTURE` attributes (see [below for nested schema](#nestedblock--conditions--condition--os_arch))
+- `os_type` (Block List) Comparison for `OS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--os_type))
+- `osarchitecture_comparison` (Block List, Deprecated) Comparison for `OS_ARCHITECTURE` attributes (see [below for nested schema](#nestedblock--conditions--condition--osarchitecture_comparison))
+- `ostype_comparison` (Block List, Deprecated) Comparison for `OS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--ostype_comparison))
+- `paas_type` (Block List) Comparison for `PAAS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--paas_type))
+- `paas_type_comparison` (Block List, Deprecated) Comparison for `PAAS_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--paas_type_comparison))
+- `process_metadata` (Block List) The key for dynamic attributes of the `PROCESS_PREDEFINED_METADATA_KEY` type (see [below for nested schema](#nestedblock--conditions--condition--process_metadata))
+- `process_metadata_condition_key` (Block List, Deprecated) The key for dynamic attributes of the `PROCESS_PREDEFINED_METADATA_KEY` type (see [below for nested schema](#nestedblock--conditions--condition--process_metadata_condition_key))
+- `service_topology` (Block List) Comparison for `SERVICE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_topology))
+- `service_topology_comparison` (Block List, Deprecated) Comparison for `SERVICE_TOPOLOGY` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_topology_comparison))
+- `service_type` (Block List) Comparison for `SERVICE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_type))
+- `service_type_comparison` (Block List, Deprecated) Comparison for `SERVICE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--service_type_comparison))
+- `simple_host_tech_comparison` (Block List, Deprecated) Comparison for `SIMPLE_HOST_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--simple_host_tech_comparison))
+- `simple_tech_comparison` (Block List, Deprecated) Comparison for `SIMPLE_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--simple_tech_comparison))
+- `string` (Block List) Comparison for `STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--string))
+- `string_comparison` (Block List, Deprecated) Comparison for `STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--string_comparison))
+- `string_condition_key` (Block List, Deprecated) The key for dynamic attributes of the `STRING` type (see [below for nested schema](#nestedblock--conditions--condition--string_condition_key))
+- `string_key` (Block List) The key for dynamic attributes of the `STRING` type (see [below for nested schema](#nestedblock--conditions--condition--string_key))
+- `synthetic_engine` (Block List) Comparison for `SYNTHETIC_ENGINE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--synthetic_engine))
+- `synthetic_engine_type_comparison` (Block List, Deprecated) Comparison for `SYNTHETIC_ENGINE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--synthetic_engine_type_comparison))
+- `tag` (Block List) Comparison for `TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--tag))
+- `tag_comparison` (Block List, Deprecated) Comparison for `TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--tag_comparison))
+- `tech` (Block List) Comparison for `SIMPLE_TECH` attributes (see [below for nested schema](#nestedblock--conditions--condition--tech))
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 <a id="nestedblock--conditions--condition--application_type"></a>
 ### Nested Schema for `conditions.condition.application_type`
 
 Required:
 
-- **operator** (String) Operator of the comparison. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--application_type_comparison"></a>
@@ -124,14 +127,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be APPLICATION_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be APPLICATION_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--azure_compute_mode"></a>
@@ -139,13 +142,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are DEDICATED or SHARED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are DEDICATED or SHARED.
 
 
 <a id="nestedblock--conditions--condition--azure_compute_mode_comparison"></a>
@@ -153,13 +156,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are DEDICATED or SHARED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are DEDICATED or SHARED.
 
 
 <a id="nestedblock--conditions--condition--azure_sku"></a>
@@ -167,13 +170,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are BASIC, DYNAMIC, FREE, PREMIUM, SHARED and STANDARD.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are BASIC, DYNAMIC, FREE, PREMIUM, SHARED and STANDARD.
 
 
 <a id="nestedblock--conditions--condition--azure_sku_comparision"></a>
@@ -181,14 +184,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be AZURE_SKU
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are BASIC, DYNAMIC, FREE, PREMIUM, SHARED and STANDARD.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be AZURE_SKU
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are BASIC, DYNAMIC, FREE, PREMIUM, SHARED and STANDARD.
 
 
 <a id="nestedblock--conditions--condition--base_comparison_basic"></a>
@@ -196,12 +199,12 @@ Optional:
 
 Required:
 
-- **type** (String) The type of comparison
+- `type` (String) The type of comparison
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--base_condition_key"></a>
@@ -209,12 +212,12 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
+- `attribute` (String) The attribute to be used for comparision
 
 Optional:
 
-- **type** (String) Defines the actual set of fields depending on the value
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String) Defines the actual set of fields depending on the value
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--bitness"></a>
@@ -222,13 +225,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are 32 and 64.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are 32 and 64.
 
 
 <a id="nestedblock--conditions--condition--bitness_comparision"></a>
@@ -236,14 +239,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be BITNESS
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are 32 and 64.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be BITNESS
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are 32 and 64.
 
 
 <a id="nestedblock--conditions--condition--cloud_type"></a>
@@ -251,13 +254,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AZURE, EC2, GOOGLE_CLOUD_PLATFORM, OPENSTACK, ORACLE and UNRECOGNIZED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AZURE, EC2, GOOGLE_CLOUD_PLATFORM, OPENSTACK, ORACLE and UNRECOGNIZED.
 
 
 <a id="nestedblock--conditions--condition--cloud_type_comparison"></a>
@@ -265,14 +268,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be CLOUD_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AZURE, EC2, GOOGLE_CLOUD_PLATFORM, OPENSTACK, ORACLE and UNRECOGNIZED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be CLOUD_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AZURE, EC2, GOOGLE_CLOUD_PLATFORM, OPENSTACK, ORACLE and UNRECOGNIZED.
 
 
 <a id="nestedblock--conditions--condition--comparison"></a>
@@ -280,12 +283,12 @@ Optional:
 
 Required:
 
-- **type** (String) The type of comparison
+- `type` (String) The type of comparison
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--custom_application_type"></a>
@@ -293,13 +296,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AMAZON_ECHO, DESKTOP, EMBEDDED, IOT, MICROSOFT_HOLOLENS and UFO.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AMAZON_ECHO, DESKTOP, EMBEDDED, IOT, MICROSOFT_HOLOLENS and UFO.
 
 
 <a id="nestedblock--conditions--condition--custom_application_type_comparison"></a>
@@ -307,14 +310,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be CUSTOM_APPLICATION_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AMAZON_ECHO, DESKTOP, EMBEDDED, IOT, MICROSOFT_HOLOLENS and UFO.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be CUSTOM_APPLICATION_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AMAZON_ECHO, DESKTOP, EMBEDDED, IOT, MICROSOFT_HOLOLENS and UFO.
 
 
 <a id="nestedblock--conditions--condition--custom_host_metadata"></a>
@@ -322,24 +325,24 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata--dynamic_key))
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata--dynamic_key))
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 <a id="nestedblock--conditions--condition--custom_host_metadata--dynamic_key"></a>
-### Nested Schema for `conditions.condition.custom_host_metadata.unknowns`
+### Nested Schema for `conditions.condition.custom_host_metadata.dynamic_key`
 
 Required:
 
-- **key** (String) The actual key of the custom metadata
-- **source** (String) The source of the custom metadata. Possible values are ENVIRONMENT, GOOGLE_COMPUTE_ENGINE and PLUGIN
+- `key` (String) The actual key of the custom metadata
+- `source` (String) The source of the custom metadata. Possible values are ENVIRONMENT, GOOGLE_COMPUTE_ENGINE and PLUGIN
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 
@@ -348,25 +351,25 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata_condition_key--dynamic_key))
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_host_metadata_condition_key--dynamic_key))
 
 Optional:
 
-- **type** (String, Deprecated) if specified, needs to be HOST_CUSTOM_METADATA_KEY
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String, Deprecated) if specified, needs to be HOST_CUSTOM_METADATA_KEY
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 <a id="nestedblock--conditions--condition--custom_host_metadata_condition_key--dynamic_key"></a>
-### Nested Schema for `conditions.condition.custom_host_metadata_condition_key.unknowns`
+### Nested Schema for `conditions.condition.custom_host_metadata_condition_key.dynamic_key`
 
 Required:
 
-- **key** (String) The actual key of the custom metadata
-- **source** (String) The source of the custom metadata. Possible values are ENVIRONMENT, GOOGLE_COMPUTE_ENGINE and PLUGIN
+- `key` (String) The actual key of the custom metadata
+- `source` (String) The source of the custom metadata. Possible values are ENVIRONMENT, GOOGLE_COMPUTE_ENGINE and PLUGIN
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 
@@ -375,24 +378,24 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata--dynamic_key))
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata--dynamic_key))
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 <a id="nestedblock--conditions--condition--custom_process_metadata--dynamic_key"></a>
-### Nested Schema for `conditions.condition.custom_process_metadata.unknowns`
+### Nested Schema for `conditions.condition.custom_process_metadata.dynamic_key`
 
 Required:
 
-- **key** (String) The actual key of the custom metadata
-- **source** (String) The source of the custom metadata. Possible values are CLOUD_FOUNDRY, ENVIRONMENT, GOOGLE_CLOUD, KUBERNETES and PLUGIN
+- `key` (String) The actual key of the custom metadata
+- `source` (String) The source of the custom metadata. Possible values are CLOUD_FOUNDRY, ENVIRONMENT, GOOGLE_CLOUD, KUBERNETES and PLUGIN
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 
@@ -401,25 +404,25 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata_condition_key--dynamic_key))
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (Block List, Min: 1, Max: 1) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key (see [below for nested schema](#nestedblock--conditions--condition--custom_process_metadata_condition_key--dynamic_key))
 
 Optional:
 
-- **type** (String, Deprecated) if specified, needs to be PROCESS_CUSTOM_METADATA_KEY
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String, Deprecated) if specified, needs to be PROCESS_CUSTOM_METADATA_KEY
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 <a id="nestedblock--conditions--condition--custom_process_metadata_condition_key--dynamic_key"></a>
-### Nested Schema for `conditions.condition.custom_process_metadata_condition_key.unknowns`
+### Nested Schema for `conditions.condition.custom_process_metadata_condition_key.dynamic_key`
 
 Required:
 
-- **key** (String) The actual key of the custom metadata
-- **source** (String) The source of the custom metadata. Possible values are CLOUD_FOUNDRY, ENVIRONMENT, GOOGLE_CLOUD, KUBERNETES and PLUGIN
+- `key` (String) The actual key of the custom metadata
+- `source` (String) The source of the custom metadata. Possible values are CLOUD_FOUNDRY, ENVIRONMENT, GOOGLE_CLOUD, KUBERNETES and PLUGIN
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 
@@ -428,13 +431,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are CLUSTER, EMBEDDED, FAILOVER, IPC, LOAD_BALANCING, SINGLE_SERVER and UNSPECIFIED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are CLUSTER, EMBEDDED, FAILOVER, IPC, LOAD_BALANCING, SINGLE_SERVER and UNSPECIFIED.
 
 
 <a id="nestedblock--conditions--condition--database_topology_comparison"></a>
@@ -442,14 +445,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be DATABASE_TOPOLOGY
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are CLUSTER, EMBEDDED, FAILOVER, IPC, LOAD_BALANCING, SINGLE_SERVER and UNSPECIFIED.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be DATABASE_TOPOLOGY
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are CLUSTER, EMBEDDED, FAILOVER, IPC, LOAD_BALANCING, SINGLE_SERVER and UNSPECIFIED.
 
 
 <a id="nestedblock--conditions--condition--dcrum_decoder"></a>
@@ -457,13 +460,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are ALL_OTHER, CITRIX_APPFLOW, CITRIX_ICA, CITRIX_ICA_OVER_SSL, DB2_DRDA, HTTP, HTTPS, HTTP_EXPRESS, INFORMIX, MYSQL, ORACLE, SAP_GUI, SAP_GUI_OVER_HTTP, SAP_GUI_OVER_HTTPS, SAP_HANA_DB, SAP_RFC, SSL and TDS.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are ALL_OTHER, CITRIX_APPFLOW, CITRIX_ICA, CITRIX_ICA_OVER_SSL, DB2_DRDA, HTTP, HTTPS, HTTP_EXPRESS, INFORMIX, MYSQL, ORACLE, SAP_GUI, SAP_GUI_OVER_HTTP, SAP_GUI_OVER_HTTPS, SAP_HANA_DB, SAP_RFC, SSL and TDS.
 
 
 <a id="nestedblock--conditions--condition--dcrum_decoder_comparison"></a>
@@ -471,14 +474,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be DCRUM_DECODER_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are ALL_OTHER, CITRIX_APPFLOW, CITRIX_ICA, CITRIX_ICA_OVER_SSL, DB2_DRDA, HTTP, HTTPS, HTTP_EXPRESS, INFORMIX, MYSQL, ORACLE, SAP_GUI, SAP_GUI_OVER_HTTP, SAP_GUI_OVER_HTTPS, SAP_HANA_DB, SAP_RFC, SSL and TDS.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be DCRUM_DECODER_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are ALL_OTHER, CITRIX_APPFLOW, CITRIX_ICA, CITRIX_ICA_OVER_SSL, DB2_DRDA, HTTP, HTTPS, HTTP_EXPRESS, INFORMIX, MYSQL, ORACLE, SAP_GUI, SAP_GUI_OVER_HTTP, SAP_GUI_OVER_HTTPS, SAP_HANA_DB, SAP_RFC, SSL and TDS.
 
 
 <a id="nestedblock--conditions--condition--entity"></a>
@@ -486,13 +489,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Currently only EQUALS is supported. You can reverse it by setting **negate** to `true`
+- `operator` (String) Currently only EQUALS is supported. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--entity_id_comparison"></a>
@@ -500,14 +503,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Currently only EQUALS is supported. You can reverse it by setting **negate** to `true`
+- `operator` (String) Currently only EQUALS is supported. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be ENTITY_ID
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be ENTITY_ID
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--host_tech"></a>
@@ -515,22 +518,22 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--host_tech--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--host_tech--value))
 
 <a id="nestedblock--conditions--condition--host_tech--value"></a>
 ### Nested Schema for `conditions.condition.host_tech.value`
 
 Optional:
 
-- **type** (String) Predefined technology, if technology is not predefined, then the verbatim type must be set. Possible values are APPARMOR, BOSH, BOSHBPM, CLOUDFOUNDRY, CONTAINERD, CRIO, DIEGO_CELL, DOCKER, GARDEN, GRSECURITY, KUBERNETES, OPENSHIFT, OPENSTACK_COMPUTE, OPENSTACK_CONTROLLER and SELINUX
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **verbatim_type** (String) Non-predefined technology, use for custom technologies
+- `type` (String) Predefined technology, if technology is not predefined, then the verbatim type must be set. Possible values are APPARMOR, BOSH, BOSHBPM, CLOUDFOUNDRY, CONTAINERD, CRIO, DIEGO_CELL, DOCKER, GARDEN, GRSECURITY, KUBERNETES, OPENSHIFT, OPENSTACK_COMPUTE, OPENSTACK_CONTROLLER and SELINUX
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `verbatim_type` (String) Non-predefined technology, use for custom technologies
 
 
 
@@ -539,13 +542,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AHV, HYPER_V, KVM, LPAR, QEMU, VIRTUAL_BOX, VMWARE, WPAR and XEN.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AHV, HYPER_V, KVM, LPAR, QEMU, VIRTUAL_BOX, VMWARE, WPAR and XEN.
 
 
 <a id="nestedblock--conditions--condition--hypervisor_type_comparision"></a>
@@ -553,14 +556,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be HYPERVISOR_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to. Possible values are AHV, HYPER_V, KVM, LPAR, QEMU, VIRTUAL_BOX, VMWARE, WPAR and XEN.
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be HYPERVISOR_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to. Possible values are AHV, HYPER_V, KVM, LPAR, QEMU, VIRTUAL_BOX, VMWARE, WPAR and XEN.
 
 
 <a id="nestedblock--conditions--condition--indexed_name"></a>
@@ -568,13 +571,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS, CONTAINS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS, CONTAINS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--indexed_name_comparison"></a>
@@ -582,14 +585,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS, CONTAINS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS, CONTAINS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be INDEXED_NAME
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be INDEXED_NAME
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--indexed_string"></a>
@@ -597,13 +600,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--indexed_string_comparison"></a>
@@ -611,14 +614,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be INDEXED_STRING
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be INDEXED_STRING
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--indexed_tag"></a>
@@ -626,26 +629,26 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag--value))
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag--value))
 
 <a id="nestedblock--conditions--condition--indexed_tag--value"></a>
 ### Nested Schema for `conditions.condition.indexed_tag.value`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 
 
@@ -654,27 +657,27 @@ Optional:
 
 Required:
 
-- **operator** (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Either EQUALS or EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
-- **type** (String, Deprecated) if specified, needs to be INDEXED_TAG
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag_comparison--value))
+- `negate` (Boolean) Reverses the operator. For example it turns EQUALS into DOES NOT EQUAL
+- `type` (String, Deprecated) if specified, needs to be INDEXED_TAG
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--indexed_tag_comparison--value))
 
 <a id="nestedblock--conditions--condition--indexed_tag_comparison--value"></a>
 ### Nested Schema for `conditions.condition.indexed_tag_comparison.value`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 
 
@@ -683,13 +686,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS, EXISTS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LOWER_THAN and LOWER_THAN_OR_EQUAL. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS, EXISTS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LOWER_THAN and LOWER_THAN_OR_EQUAL. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Number) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Number) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--integer_comparison"></a>
@@ -697,14 +700,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS, EXISTS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LOWER_THAN and LOWER_THAN_OR_EQUAL. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS, EXISTS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LOWER_THAN and LOWER_THAN_OR_EQUAL. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be INTEGER
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Number) The value to compare to
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be INTEGER
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Number) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--ipaddress"></a>
@@ -712,14 +715,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS, IS_IP_IN_RANGE and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS, IS_IP_IN_RANGE and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **case_sensitive** (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--ipaddress_comparison"></a>
@@ -727,15 +730,15 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS, IS_IP_IN_RANGE and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS, IS_IP_IN_RANGE and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **case_sensitive** (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be IP_ADDRESS
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be IP_ADDRESS
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--key"></a>
@@ -743,12 +746,12 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
+- `attribute` (String) The attribute to be used for comparision
 
 Optional:
 
-- **type** (String) Defines the actual set of fields depending on the value
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String) Defines the actual set of fields depending on the value
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--mobile_platform"></a>
@@ -756,13 +759,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are ANDROID, IOS, LINUX, MAC_OS, OTHER, TVOS and WINDOWS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are ANDROID, IOS, LINUX, MAC_OS, OTHER, TVOS and WINDOWS.
 
 
 <a id="nestedblock--conditions--condition--mobile_platform_comparison"></a>
@@ -770,14 +773,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be MOBILE_PLATFORM
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are ANDROID, IOS, LINUX, MAC_OS, OTHER, TVOS and WINDOWS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be MOBILE_PLATFORM
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are ANDROID, IOS, LINUX, MAC_OS, OTHER, TVOS and WINDOWS.
 
 
 <a id="nestedblock--conditions--condition--os_arch"></a>
@@ -785,13 +788,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are ARM, IA64, PARISC, PPC, PPCLE, S390, SPARC, X86 and ZOS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are ARM, IA64, PARISC, PPC, PPCLE, S390, SPARC, X86 and ZOS.
 
 
 <a id="nestedblock--conditions--condition--os_type"></a>
@@ -799,13 +802,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are AIX, DARWIN, HPUX, LINUX, SOLARIS, WINDOWS and ZOS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are AIX, DARWIN, HPUX, LINUX, SOLARIS, WINDOWS and ZOS.
 
 
 <a id="nestedblock--conditions--condition--osarchitecture_comparison"></a>
@@ -813,14 +816,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be OS_ARCHITECTURE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are ARM, IA64, PARISC, PPC, PPCLE, S390, SPARC, X86 and ZOS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be OS_ARCHITECTURE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are ARM, IA64, PARISC, PPC, PPCLE, S390, SPARC, X86 and ZOS.
 
 
 <a id="nestedblock--conditions--condition--ostype_comparison"></a>
@@ -828,14 +831,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be OS_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are AIX, DARWIN, HPUX, LINUX, SOLARIS, WINDOWS and ZOS.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be OS_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are AIX, DARWIN, HPUX, LINUX, SOLARIS, WINDOWS and ZOS.
 
 
 <a id="nestedblock--conditions--condition--paas_type"></a>
@@ -843,13 +846,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are AWS_ECS_EC2, AWS_ECS_FARGATE, AWS_LAMBDA, AZURE_FUNCTIONS, AZURE_WEBSITES, CLOUD_FOUNDRY, GOOGLE_APP_ENGINE, HEROKU, KUBERNETES and OPENSHIFT.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are AWS_ECS_EC2, AWS_ECS_FARGATE, AWS_LAMBDA, AZURE_FUNCTIONS, AZURE_WEBSITES, CLOUD_FOUNDRY, GOOGLE_APP_ENGINE, HEROKU, KUBERNETES and OPENSHIFT.
 
 
 <a id="nestedblock--conditions--condition--paas_type_comparison"></a>
@@ -857,14 +860,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be PAAS_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are AWS_ECS_EC2, AWS_ECS_FARGATE, AWS_LAMBDA, AZURE_FUNCTIONS, AZURE_WEBSITES, CLOUD_FOUNDRY, GOOGLE_APP_ENGINE, HEROKU, KUBERNETES and OPENSHIFT.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be PAAS_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are AWS_ECS_EC2, AWS_ECS_FARGATE, AWS_LAMBDA, AZURE_FUNCTIONS, AZURE_WEBSITES, CLOUD_FOUNDRY, GOOGLE_APP_ENGINE, HEROKU, KUBERNETES and OPENSHIFT.
 
 
 <a id="nestedblock--conditions--condition--process_metadata"></a>
@@ -872,12 +875,12 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are AMAZON_ECR_IMAGE_ACCOUNT_ID,AMAZON_ECR_IMAGE_REGION, AMAZON_LAMBDA_FUNCTION_NAME, AMAZON_REGION, APACHE_CONFIG_PATH, APACHE_SPARK_MASTER_IP_ADDRESS, ASP_DOT_NET_CORE_APPLICATION_PATH, AWS_ECS_CLUSTER, AWS_ECS_CONTAINERNAME, AWS_ECS_FAMILY, AWS_ECS_REVISION, CASSANDRA_CLUSTER_NAME, CATALINA_BASE, CATALINA_HOME, CLOUD_FOUNDRY_APP_ID, CLOUD_FOUNDRY_APP_NAME, CLOUD_FOUNDRY_INSTANCE_INDEX, CLOUD_FOUNDRY_SPACE_ID, CLOUD_FOUNDRY_SPACE_NAME, COLDFUSION_JVM_CONFIG_FILE, COLDFUSION_SERVICE_NAME, COMMAND_LINE_ARGS, DOTNET_COMMAND, DOTNET_COMMAND_PATH, DYNATRACE_CLUSTER_ID, DYNATRACE_NODE_ID, ELASTICSEARCH_CLUSTER_NAME, ELASTICSEARCH_NODE_NAME, EQUINOX_CONFIG_PATH, EXE_NAME, EXE_PATH, GLASS_FISH_DOMAIN_NAME, GLASS_FISH_INSTANCE_NAME, GOOGLE_APP_ENGINE_INSTANCE, GOOGLE_APP_ENGINE_SERVICE, GOOGLE_CLOUD_PROJECT, HYBRIS_BIN_DIRECTORY, HYBRIS_CONFIG_DIRECTORY, HYBRIS_DATA_DIRECTORY, IBM_CICS_REGION, IBM_CTG_NAME, IBM_IMS_CONNECT_REGION, IBM_IMS_CONTROL_REGION, IBM_IMS_MESSAGE_PROCESSING_REGION, IBM_IMS_SOAP_GW_NAME, IBM_INTEGRATION_NODE_NAME, IBM_INTEGRATION_SERVER_NAME, IIS_APP_POOL, IIS_ROLE_NAME, JAVA_JAR_FILE, JAVA_JAR_PATH, JAVA_MAIN_CLASS, JAVA_MAIN_MODULE, JBOSS_HOME, JBOSS_MODE, JBOSS_SERVER_NAME, KUBERNETES_BASE_POD_NAME, KUBERNETES_CONTAINER_NAME, KUBERNETES_FULL_POD_NAME, KUBERNETES_NAMESPACE, KUBERNETES_POD_UID, MSSQL_INSTANCE_NAME, NODE_JS_APP_BASE_DIRECTORY, NODE_JS_APP_NAME, NODE_JS_SCRIPT_NAME, ORACLE_SID, PG_ID_CALC_INPUT_KEY_LINKAGE, PHP_SCRIPT_PATH, PHP_WORKING_DIRECTORY, RUBY_APP_ROOT_PATH, RUBY_SCRIPT_PATH, RULE_RESULT, SOFTWAREAG_INSTALL_ROOT, SOFTWAREAG_PRODUCTPROPNAME, SPRINGBOOT_APP_NAME, SPRINGBOOT_PROFILE_NAME, SPRINGBOOT_STARTUP_CLASS, TIBCO_BUSINESSWORKS_CE_APP_NAME, TIBCO_BUSINESSWORKS_CE_VERSION, TIBCO_BUSINESS_WORKS_APP_NODE_NAME, TIBCO_BUSINESS_WORKS_APP_SPACE_NAME, TIBCO_BUSINESS_WORKS_DOMAIN_NAME, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE_PATH, TIBCO_BUSINESS_WORKS_HOME, VARNISH_INSTANCE_NAME, WEB_LOGIC_CLUSTER_NAME, WEB_LOGIC_DOMAIN_NAME, WEB_LOGIC_HOME, WEB_LOGIC_NAME, WEB_SPHERE_CELL_NAME, WEB_SPHERE_CLUSTER_NAME, WEB_SPHERE_NODE_NAME and WEB_SPHERE_SERVER_NAME
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are AMAZON_ECR_IMAGE_ACCOUNT_ID,AMAZON_ECR_IMAGE_REGION, AMAZON_LAMBDA_FUNCTION_NAME, AMAZON_REGION, APACHE_CONFIG_PATH, APACHE_SPARK_MASTER_IP_ADDRESS, ASP_DOT_NET_CORE_APPLICATION_PATH, AWS_ECS_CLUSTER, AWS_ECS_CONTAINERNAME, AWS_ECS_FAMILY, AWS_ECS_REVISION, CASSANDRA_CLUSTER_NAME, CATALINA_BASE, CATALINA_HOME, CLOUD_FOUNDRY_APP_ID, CLOUD_FOUNDRY_APP_NAME, CLOUD_FOUNDRY_INSTANCE_INDEX, CLOUD_FOUNDRY_SPACE_ID, CLOUD_FOUNDRY_SPACE_NAME, COLDFUSION_JVM_CONFIG_FILE, COLDFUSION_SERVICE_NAME, COMMAND_LINE_ARGS, DOTNET_COMMAND, DOTNET_COMMAND_PATH, DYNATRACE_CLUSTER_ID, DYNATRACE_NODE_ID, ELASTICSEARCH_CLUSTER_NAME, ELASTICSEARCH_NODE_NAME, EQUINOX_CONFIG_PATH, EXE_NAME, EXE_PATH, GLASS_FISH_DOMAIN_NAME, GLASS_FISH_INSTANCE_NAME, GOOGLE_APP_ENGINE_INSTANCE, GOOGLE_APP_ENGINE_SERVICE, GOOGLE_CLOUD_PROJECT, HYBRIS_BIN_DIRECTORY, HYBRIS_CONFIG_DIRECTORY, HYBRIS_DATA_DIRECTORY, IBM_CICS_REGION, IBM_CTG_NAME, IBM_IMS_CONNECT_REGION, IBM_IMS_CONTROL_REGION, IBM_IMS_MESSAGE_PROCESSING_REGION, IBM_IMS_SOAP_GW_NAME, IBM_INTEGRATION_NODE_NAME, IBM_INTEGRATION_SERVER_NAME, IIS_APP_POOL, IIS_ROLE_NAME, JAVA_JAR_FILE, JAVA_JAR_PATH, JAVA_MAIN_CLASS, JAVA_MAIN_MODULE, JBOSS_HOME, JBOSS_MODE, JBOSS_SERVER_NAME, KUBERNETES_BASE_POD_NAME, KUBERNETES_CONTAINER_NAME, KUBERNETES_FULL_POD_NAME, KUBERNETES_NAMESPACE, KUBERNETES_POD_UID, MSSQL_INSTANCE_NAME, NODE_JS_APP_BASE_DIRECTORY, NODE_JS_APP_NAME, NODE_JS_SCRIPT_NAME, ORACLE_SID, PG_ID_CALC_INPUT_KEY_LINKAGE, PHP_SCRIPT_PATH, PHP_WORKING_DIRECTORY, RUBY_APP_ROOT_PATH, RUBY_SCRIPT_PATH, RULE_RESULT, SOFTWAREAG_INSTALL_ROOT, SOFTWAREAG_PRODUCTPROPNAME, SPRINGBOOT_APP_NAME, SPRINGBOOT_PROFILE_NAME, SPRINGBOOT_STARTUP_CLASS, TIBCO_BUSINESSWORKS_CE_APP_NAME, TIBCO_BUSINESSWORKS_CE_VERSION, TIBCO_BUSINESS_WORKS_APP_NODE_NAME, TIBCO_BUSINESS_WORKS_APP_SPACE_NAME, TIBCO_BUSINESS_WORKS_DOMAIN_NAME, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE_PATH, TIBCO_BUSINESS_WORKS_HOME, VARNISH_INSTANCE_NAME, WEB_LOGIC_CLUSTER_NAME, WEB_LOGIC_DOMAIN_NAME, WEB_LOGIC_HOME, WEB_LOGIC_NAME, WEB_SPHERE_CELL_NAME, WEB_SPHERE_CLUSTER_NAME, WEB_SPHERE_NODE_NAME and WEB_SPHERE_SERVER_NAME
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--process_metadata_condition_key"></a>
@@ -885,13 +888,13 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are AMAZON_ECR_IMAGE_ACCOUNT_ID,AMAZON_ECR_IMAGE_REGION, AMAZON_LAMBDA_FUNCTION_NAME, AMAZON_REGION, APACHE_CONFIG_PATH, APACHE_SPARK_MASTER_IP_ADDRESS, ASP_DOT_NET_CORE_APPLICATION_PATH, AWS_ECS_CLUSTER, AWS_ECS_CONTAINERNAME, AWS_ECS_FAMILY, AWS_ECS_REVISION, CASSANDRA_CLUSTER_NAME, CATALINA_BASE, CATALINA_HOME, CLOUD_FOUNDRY_APP_ID, CLOUD_FOUNDRY_APP_NAME, CLOUD_FOUNDRY_INSTANCE_INDEX, CLOUD_FOUNDRY_SPACE_ID, CLOUD_FOUNDRY_SPACE_NAME, COLDFUSION_JVM_CONFIG_FILE, COLDFUSION_SERVICE_NAME, COMMAND_LINE_ARGS, DOTNET_COMMAND, DOTNET_COMMAND_PATH, DYNATRACE_CLUSTER_ID, DYNATRACE_NODE_ID, ELASTICSEARCH_CLUSTER_NAME, ELASTICSEARCH_NODE_NAME, EQUINOX_CONFIG_PATH, EXE_NAME, EXE_PATH, GLASS_FISH_DOMAIN_NAME, GLASS_FISH_INSTANCE_NAME, GOOGLE_APP_ENGINE_INSTANCE, GOOGLE_APP_ENGINE_SERVICE, GOOGLE_CLOUD_PROJECT, HYBRIS_BIN_DIRECTORY, HYBRIS_CONFIG_DIRECTORY, HYBRIS_DATA_DIRECTORY, IBM_CICS_REGION, IBM_CTG_NAME, IBM_IMS_CONNECT_REGION, IBM_IMS_CONTROL_REGION, IBM_IMS_MESSAGE_PROCESSING_REGION, IBM_IMS_SOAP_GW_NAME, IBM_INTEGRATION_NODE_NAME, IBM_INTEGRATION_SERVER_NAME, IIS_APP_POOL, IIS_ROLE_NAME, JAVA_JAR_FILE, JAVA_JAR_PATH, JAVA_MAIN_CLASS, JAVA_MAIN_MODULE, JBOSS_HOME, JBOSS_MODE, JBOSS_SERVER_NAME, KUBERNETES_BASE_POD_NAME, KUBERNETES_CONTAINER_NAME, KUBERNETES_FULL_POD_NAME, KUBERNETES_NAMESPACE, KUBERNETES_POD_UID, MSSQL_INSTANCE_NAME, NODE_JS_APP_BASE_DIRECTORY, NODE_JS_APP_NAME, NODE_JS_SCRIPT_NAME, ORACLE_SID, PG_ID_CALC_INPUT_KEY_LINKAGE, PHP_SCRIPT_PATH, PHP_WORKING_DIRECTORY, RUBY_APP_ROOT_PATH, RUBY_SCRIPT_PATH, RULE_RESULT, SOFTWAREAG_INSTALL_ROOT, SOFTWAREAG_PRODUCTPROPNAME, SPRINGBOOT_APP_NAME, SPRINGBOOT_PROFILE_NAME, SPRINGBOOT_STARTUP_CLASS, TIBCO_BUSINESSWORKS_CE_APP_NAME, TIBCO_BUSINESSWORKS_CE_VERSION, TIBCO_BUSINESS_WORKS_APP_NODE_NAME, TIBCO_BUSINESS_WORKS_APP_SPACE_NAME, TIBCO_BUSINESS_WORKS_DOMAIN_NAME, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE_PATH, TIBCO_BUSINESS_WORKS_HOME, VARNISH_INSTANCE_NAME, WEB_LOGIC_CLUSTER_NAME, WEB_LOGIC_DOMAIN_NAME, WEB_LOGIC_HOME, WEB_LOGIC_NAME, WEB_SPHERE_CELL_NAME, WEB_SPHERE_CLUSTER_NAME, WEB_SPHERE_NODE_NAME and WEB_SPHERE_SERVER_NAME
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are AMAZON_ECR_IMAGE_ACCOUNT_ID,AMAZON_ECR_IMAGE_REGION, AMAZON_LAMBDA_FUNCTION_NAME, AMAZON_REGION, APACHE_CONFIG_PATH, APACHE_SPARK_MASTER_IP_ADDRESS, ASP_DOT_NET_CORE_APPLICATION_PATH, AWS_ECS_CLUSTER, AWS_ECS_CONTAINERNAME, AWS_ECS_FAMILY, AWS_ECS_REVISION, CASSANDRA_CLUSTER_NAME, CATALINA_BASE, CATALINA_HOME, CLOUD_FOUNDRY_APP_ID, CLOUD_FOUNDRY_APP_NAME, CLOUD_FOUNDRY_INSTANCE_INDEX, CLOUD_FOUNDRY_SPACE_ID, CLOUD_FOUNDRY_SPACE_NAME, COLDFUSION_JVM_CONFIG_FILE, COLDFUSION_SERVICE_NAME, COMMAND_LINE_ARGS, DOTNET_COMMAND, DOTNET_COMMAND_PATH, DYNATRACE_CLUSTER_ID, DYNATRACE_NODE_ID, ELASTICSEARCH_CLUSTER_NAME, ELASTICSEARCH_NODE_NAME, EQUINOX_CONFIG_PATH, EXE_NAME, EXE_PATH, GLASS_FISH_DOMAIN_NAME, GLASS_FISH_INSTANCE_NAME, GOOGLE_APP_ENGINE_INSTANCE, GOOGLE_APP_ENGINE_SERVICE, GOOGLE_CLOUD_PROJECT, HYBRIS_BIN_DIRECTORY, HYBRIS_CONFIG_DIRECTORY, HYBRIS_DATA_DIRECTORY, IBM_CICS_REGION, IBM_CTG_NAME, IBM_IMS_CONNECT_REGION, IBM_IMS_CONTROL_REGION, IBM_IMS_MESSAGE_PROCESSING_REGION, IBM_IMS_SOAP_GW_NAME, IBM_INTEGRATION_NODE_NAME, IBM_INTEGRATION_SERVER_NAME, IIS_APP_POOL, IIS_ROLE_NAME, JAVA_JAR_FILE, JAVA_JAR_PATH, JAVA_MAIN_CLASS, JAVA_MAIN_MODULE, JBOSS_HOME, JBOSS_MODE, JBOSS_SERVER_NAME, KUBERNETES_BASE_POD_NAME, KUBERNETES_CONTAINER_NAME, KUBERNETES_FULL_POD_NAME, KUBERNETES_NAMESPACE, KUBERNETES_POD_UID, MSSQL_INSTANCE_NAME, NODE_JS_APP_BASE_DIRECTORY, NODE_JS_APP_NAME, NODE_JS_SCRIPT_NAME, ORACLE_SID, PG_ID_CALC_INPUT_KEY_LINKAGE, PHP_SCRIPT_PATH, PHP_WORKING_DIRECTORY, RUBY_APP_ROOT_PATH, RUBY_SCRIPT_PATH, RULE_RESULT, SOFTWAREAG_INSTALL_ROOT, SOFTWAREAG_PRODUCTPROPNAME, SPRINGBOOT_APP_NAME, SPRINGBOOT_PROFILE_NAME, SPRINGBOOT_STARTUP_CLASS, TIBCO_BUSINESSWORKS_CE_APP_NAME, TIBCO_BUSINESSWORKS_CE_VERSION, TIBCO_BUSINESS_WORKS_APP_NODE_NAME, TIBCO_BUSINESS_WORKS_APP_SPACE_NAME, TIBCO_BUSINESS_WORKS_DOMAIN_NAME, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE, TIBCO_BUSINESS_WORKS_ENGINE_PROPERTY_FILE_PATH, TIBCO_BUSINESS_WORKS_HOME, VARNISH_INSTANCE_NAME, WEB_LOGIC_CLUSTER_NAME, WEB_LOGIC_DOMAIN_NAME, WEB_LOGIC_HOME, WEB_LOGIC_NAME, WEB_SPHERE_CELL_NAME, WEB_SPHERE_CLUSTER_NAME, WEB_SPHERE_NODE_NAME and WEB_SPHERE_SERVER_NAME
 
 Optional:
 
-- **type** (String, Deprecated) if specified, needs to be PROCESS_PREDEFINED_METADATA_KEY
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String, Deprecated) if specified, needs to be PROCESS_PREDEFINED_METADATA_KEY
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--service_topology"></a>
@@ -899,13 +902,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are EXTERNAL_SERVICE, FULLY_MONITORED and OPAQUE_SERVICE.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are EXTERNAL_SERVICE, FULLY_MONITORED and OPAQUE_SERVICE.
 
 
 <a id="nestedblock--conditions--condition--service_topology_comparison"></a>
@@ -913,14 +916,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be SERVICE_TOPOLOGY
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are EXTERNAL_SERVICE, FULLY_MONITORED and OPAQUE_SERVICE.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be SERVICE_TOPOLOGY
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are EXTERNAL_SERVICE, FULLY_MONITORED and OPAQUE_SERVICE.
 
 
 <a id="nestedblock--conditions--condition--service_type"></a>
@@ -928,13 +931,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are BACKGROUND_ACTIVITY, CICS_SERVICE, CUSTOM_SERVICE, DATABASE_SERVICE, ENTERPRISE_SERVICE_BUS_SERVICE, EXTERNAL, IBM_INTEGRATION_BUS_SERVICE, IMS_SERVICE, MESSAGING_SERVICE, QUEUE_LISTENER_SERVICE, RMI_SERVICE, RPC_SERVICE, WEB_REQUEST_SERVICE and WEB_SERVICE.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are BACKGROUND_ACTIVITY, CICS_SERVICE, CUSTOM_SERVICE, DATABASE_SERVICE, ENTERPRISE_SERVICE_BUS_SERVICE, EXTERNAL, IBM_INTEGRATION_BUS_SERVICE, IMS_SERVICE, MESSAGING_SERVICE, QUEUE_LISTENER_SERVICE, RMI_SERVICE, RPC_SERVICE, WEB_REQUEST_SERVICE and WEB_SERVICE.
 
 
 <a id="nestedblock--conditions--condition--service_type_comparison"></a>
@@ -942,14 +945,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be SERVICE_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are BACKGROUND_ACTIVITY, CICS_SERVICE, CUSTOM_SERVICE, DATABASE_SERVICE, ENTERPRISE_SERVICE_BUS_SERVICE, EXTERNAL, IBM_INTEGRATION_BUS_SERVICE, IMS_SERVICE, MESSAGING_SERVICE, QUEUE_LISTENER_SERVICE, RMI_SERVICE, RPC_SERVICE, WEB_REQUEST_SERVICE and WEB_SERVICE.
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be SERVICE_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are BACKGROUND_ACTIVITY, CICS_SERVICE, CUSTOM_SERVICE, DATABASE_SERVICE, ENTERPRISE_SERVICE_BUS_SERVICE, EXTERNAL, IBM_INTEGRATION_BUS_SERVICE, IMS_SERVICE, MESSAGING_SERVICE, QUEUE_LISTENER_SERVICE, RMI_SERVICE, RPC_SERVICE, WEB_REQUEST_SERVICE and WEB_SERVICE.
 
 
 <a id="nestedblock--conditions--condition--simple_host_tech_comparison"></a>
@@ -957,23 +960,23 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be SIMPLE_HOST_TECH
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--simple_host_tech_comparison--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be SIMPLE_HOST_TECH
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--simple_host_tech_comparison--value))
 
 <a id="nestedblock--conditions--condition--simple_host_tech_comparison--value"></a>
 ### Nested Schema for `conditions.condition.simple_host_tech_comparison.value`
 
 Optional:
 
-- **type** (String) Predefined technology, if technology is not predefined, then the verbatim type must be set. Possible values are APPARMOR, BOSH, BOSHBPM, CLOUDFOUNDRY, CONTAINERD, CRIO, DIEGO_CELL, DOCKER, GARDEN, GRSECURITY, KUBERNETES, OPENSHIFT, OPENSTACK_COMPUTE, OPENSTACK_CONTROLLER and SELINUX
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **verbatim_type** (String) Non-predefined technology, use for custom technologies
+- `type` (String) Predefined technology, if technology is not predefined, then the verbatim type must be set. Possible values are APPARMOR, BOSH, BOSHBPM, CLOUDFOUNDRY, CONTAINERD, CRIO, DIEGO_CELL, DOCKER, GARDEN, GRSECURITY, KUBERNETES, OPENSHIFT, OPENSTACK_COMPUTE, OPENSTACK_CONTROLLER and SELINUX
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `verbatim_type` (String) Non-predefined technology, use for custom technologies
 
 
 
@@ -982,23 +985,23 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be SIMPLE_TECH
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--simple_tech_comparison--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be SIMPLE_TECH
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--simple_tech_comparison--value))
 
 <a id="nestedblock--conditions--condition--simple_tech_comparison--value"></a>
 ### Nested Schema for `conditions.condition.simple_tech_comparison.value`
 
 Optional:
 
-- **type** (String) Predefined technology, if technology is not predefined, then the verbatim type must be set.
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **verbatim_type** (String) Non-predefined technology, use for custom technologies
+- `type` (String) Predefined technology, if technology is not predefined, then the verbatim type must be set.
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `verbatim_type` (String) Non-predefined technology, use for custom technologies
 
 
 
@@ -1007,14 +1010,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **case_sensitive** (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--string_comparison"></a>
@@ -1022,15 +1025,15 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are BEGINS_WITH, CONTAINS, ENDS_WITH, EQUALS, EXISTS and REGEX_MATCHES. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **case_sensitive** (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be STRING
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to
+- `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or insensitive (`false`)
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be STRING
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to
 
 
 <a id="nestedblock--conditions--condition--string_condition_key"></a>
@@ -1038,8 +1041,8 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are
    - `AMAZON_ECR_IMAGE_ACCOUNT_ID`
    - `AMAZON_ECR_IMAGE_REGION`
    - `AMAZON_LAMBDA_FUNCTION_NAME`
@@ -1136,8 +1139,8 @@ Required:
 
 Optional:
 
-- **type** (String, Deprecated) if specified, needs to be `STRING`
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `type` (String, Deprecated) if specified, needs to be `STRING`
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--string_key"></a>
@@ -1145,8 +1148,8 @@ Optional:
 
 Required:
 
-- **attribute** (String) The attribute to be used for comparision
-- **dynamic_key** (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are
+- `attribute` (String) The attribute to be used for comparision
+- `dynamic_key` (String) The key of the attribute, which need dynamic keys. Not applicable otherwise, as the attibute itself acts as a key. Possible values are
    - `AMAZON_ECR_IMAGE_ACCOUNT_ID`
    - `AMAZON_ECR_IMAGE_REGION`
    - `AMAZON_LAMBDA_FUNCTION_NAME`
@@ -1243,7 +1246,7 @@ Required:
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
 
 
 <a id="nestedblock--conditions--condition--synthetic_engine"></a>
@@ -1251,13 +1254,13 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are  EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are  EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are CLASSIC and CUSTOM
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are CLASSIC and CUSTOM
 
 
 <a id="nestedblock--conditions--condition--synthetic_engine_type_comparison"></a>
@@ -1265,14 +1268,14 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are  EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are  EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be SYNTHETIC_ENGINE_TYPE
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (String) The value to compare to. Possible values are CLASSIC and CUSTOM
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be SYNTHETIC_ENGINE_TYPE
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (String) The value to compare to. Possible values are CLASSIC and CUSTOM
 
 
 <a id="nestedblock--conditions--condition--tag"></a>
@@ -1280,26 +1283,26 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and TAG_KEY_EQUALS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and TAG_KEY_EQUALS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--tag--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--tag--value))
 
 <a id="nestedblock--conditions--condition--tag--value"></a>
 ### Nested Schema for `conditions.condition.tag.value`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 
 
@@ -1308,27 +1311,27 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and TAG_KEY_EQUALS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and TAG_KEY_EQUALS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **type** (String, Deprecated) if specified, needs to be TAG
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--tag_comparison--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `type` (String, Deprecated) if specified, needs to be TAG
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) Tag of a Dynatrace entity (see [below for nested schema](#nestedblock--conditions--condition--tag_comparison--value))
 
 <a id="nestedblock--conditions--condition--tag_comparison--value"></a>
 ### Nested Schema for `conditions.condition.tag_comparison.value`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Possible values are AWS, AWS_GENERIC, AZURE, CLOUD_FOUNDRY, CONTEXTLESS, ENVIRONMENT, GOOGLE_CLOUD and KUBERNETES. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **unknowns** (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `unknowns` (String) Any attributes that aren't yet supported by this provider but have meanwhile gotten introduced by a newer version of the Dynatrace REST API
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 
 
@@ -1337,21 +1340,21 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
+- `operator` (String) Operator of the comparison. Possible values are EQUALS and EXISTS. You can reverse it by setting **negate** to `true`
 
 Optional:
 
-- **negate** (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **value** (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--tech--value))
+- `negate` (Boolean) Reverses the operator. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `value` (Block List, Max: 1) The value to compare to (see [below for nested schema](#nestedblock--conditions--condition--tech--value))
 
 <a id="nestedblock--conditions--condition--tech--value"></a>
 ### Nested Schema for `conditions.condition.tech.value`
 
 Optional:
 
-- **type** (String) Predefined technology, if technology is not predefined, then the verbatim type must be set.
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
-- **verbatim_type** (String) Non-predefined technology, use for custom technologies
+- `type` (String) Predefined technology, if technology is not predefined, then the verbatim type must be set.
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+- `verbatim_type` (String) Non-predefined technology, use for custom technologies
 
 

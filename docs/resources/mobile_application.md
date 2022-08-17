@@ -81,39 +81,42 @@ resource "dynatrace_mobile_application" "SIXTH_ASDFGHIJK" {
 
 ### Required
 
-- **apdex** (Block List, Min: 1, Max: 1) Apdex configuration of a mobile application. A duration less than the **tolerable** threshold is considered satisfied (see [below for nested schema](#nestedblock--apdex))
-- **beacon_endpoint_type** (String) The type of the beacon endpoint. Possible values are `CLUSTER_ACTIVE_GATE`, `ENVIRONMENT_ACTIVE_GATE` and `INSTRUMENTED_WEB_SERVER`.
-- **name** (String) The name of the application
+- `apdex` (Block List, Min: 1, Max: 1) Apdex configuration of a mobile application. A duration less than the **tolerable** threshold is considered satisfied (see [below for nested schema](#nestedblock--apdex))
+- `beacon_endpoint_type` (String) The type of the beacon endpoint. Possible values are `CLUSTER_ACTIVE_GATE`, `ENVIRONMENT_ACTIVE_GATE` and `INSTRUMENTED_WEB_SERVER`.
+- `name` (String) The name of the application
 
 ### Optional
 
-- **application_id** (String) The UUID of the application.
+- `application_id` (String) The UUID of the application.
 
 It is used only by OneAgent to send data to Dynatrace. If not specified it will get generated.
-- **beacon_endpoint_url** (String) The URL of the beacon endpoint.
+- `beacon_endpoint_url` (String) The URL of the beacon endpoint.
 
 Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
-- **id** (String) The ID of this resource.
-- **key_user_actions** (Set of String) User Action names to be flagged as Key User Actions
-- **opt_in_mode** (Boolean) The opt-in mode is enabled (`true`) or disabled (`false`)
-- **properties** (Block List, Max: 1) User Action and Session Properties (see [below for nested schema](#nestedblock--properties))
-- **session_replay** (Boolean) The session replay is enabled (`true`) or disabled (`false`).
-- **session_replay_on_crash** (Boolean) The session replay on crash is enabled (`true`) or disabled (`false`). 
+- `key_user_actions` (Set of String) User Action names to be flagged as Key User Actions
+- `opt_in_mode` (Boolean) The opt-in mode is enabled (`true`) or disabled (`false`)
+- `properties` (Block List, Max: 1) User Action and Session Properties (see [below for nested schema](#nestedblock--properties))
+- `session_replay` (Boolean) The session replay is enabled (`true`) or disabled (`false`).
+- `session_replay_on_crash` (Boolean) The session replay on crash is enabled (`true`) or disabled (`false`). 
 
 Enabling requires both **sessionReplayEnabled** and **optInModeEnabled** values set to `true`.
-- **user_session_percentage** (Number) The percentage of user sessions to be analyzed
+- `user_session_percentage` (Number) The percentage of user sessions to be analyzed
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--apdex"></a>
 ### Nested Schema for `apdex`
 
 Required:
 
-- **frustrated** (Number) Apdex **frustrated** threshold, in milliseconds: a duration greater than or equal to this value is considered frustrated
-- **tolerable** (Number) Apdex **tolerable** threshold, in milliseconds: a duration greater than or equal to this value is considered tolerable
+- `frustrated` (Number) Apdex **frustrated** threshold, in milliseconds: a duration greater than or equal to this value is considered frustrated
+- `tolerable` (Number) Apdex **tolerable** threshold, in milliseconds: a duration greater than or equal to this value is considered tolerable
 
 Optional:
 
-- **frustrated_on_error** (Boolean) Apdex error condition: if `true` the user session is considered frustrated when an error is reported
+- `frustrated_on_error` (Boolean) Apdex error condition: if `true` the user session is considered frustrated when an error is reported
 
 
 <a id="nestedblock--properties"></a>
@@ -121,25 +124,25 @@ Optional:
 
 Optional:
 
-- **api_value** (Block List) A User Action / Session Property based on a value reported by the API (see [below for nested schema](#nestedblock--properties--api_value))
-- **request_attribute** (Block List) A User Action / Session Property based on a Server Side Request Attribute (see [below for nested schema](#nestedblock--properties--request_attribute))
+- `api_value` (Block List) A User Action / Session Property based on a value reported by the API (see [below for nested schema](#nestedblock--properties--api_value))
+- `request_attribute` (Block List) A User Action / Session Property based on a Server Side Request Attribute (see [below for nested schema](#nestedblock--properties--request_attribute))
 
 <a id="nestedblock--properties--api_value"></a>
 ### Nested Schema for `properties.api_value`
 
 Required:
 
-- **key** (String) The unique key of the mobile session or user action property
-- **type** (String) The data type of the property. Possible values are `DOUBLE`, `LONG` and `STRING`
+- `key` (String) The unique key of the mobile session or user action property
+- `type` (String) The data type of the property. Possible values are `DOUBLE`, `LONG` and `STRING`
 
 Optional:
 
-- **aggregation** (String) The aggregation type of the property. It defines how multiple values of the property are aggregated. Possible values are `SUM`, `MIN`, `MAX`, `FIRST` and `LAST`
-- **cleanup_rule** (String) The cleanup rule of the property. Defines how to extract the data you need from a string value. Specify the [regular expression](https://dt-url.net/k9e0iaq) for the data you need there
-- **display_name** (String) The display name of the property
-- **name** (String) The name of the reported value
-- **store_as_session_property** (Boolean) If `true`, the property is stored as a session property
-- **store_as_user_action_property** (Boolean) If `true`, the property is stored as a user action property
+- `aggregation` (String) The aggregation type of the property. It defines how multiple values of the property are aggregated. Possible values are `SUM`, `MIN`, `MAX`, `FIRST` and `LAST`
+- `cleanup_rule` (String) The cleanup rule of the property. Defines how to extract the data you need from a string value. Specify the [regular expression](https://dt-url.net/k9e0iaq) for the data you need there
+- `display_name` (String) The display name of the property
+- `name` (String) The name of the reported value
+- `store_as_session_property` (Boolean) If `true`, the property is stored as a session property
+- `store_as_user_action_property` (Boolean) If `true`, the property is stored as a user action property
 
 
 <a id="nestedblock--properties--request_attribute"></a>
@@ -147,14 +150,14 @@ Optional:
 
 Required:
 
-- **id** (String) The ID of the request attribute
-- **key** (String) The unique key of the mobile session or user action property
-- **type** (String) The data type of the property. Possible values are `DOUBLE`, `LONG` and `STRING`. The value MUST match the data type of the Request Attribute.
+- `id` (String) The ID of the request attribute
+- `key` (String) The unique key of the mobile session or user action property
+- `type` (String) The data type of the property. Possible values are `DOUBLE`, `LONG` and `STRING`. The value MUST match the data type of the Request Attribute.
 
 Optional:
 
-- **aggregation** (String) The aggregation type of the property. It defines how multiple values of the property are aggregated. Possible values are `SUM`, `MIN`, `MAX`, `FIRST` and `LAST`
-- **cleanup_rule** (String) The cleanup rule of the property. Defines how to extract the data you need from a string value. Specify the [regular expression](https://dt-url.net/k9e0iaq) for the data you need there
-- **display_name** (String) The display name of the property
-- **store_as_session_property** (Boolean) If `true`, the property is stored as a session property
-- **store_as_user_action_property** (Boolean) If `true`, the property is stored as a user action property
+- `aggregation` (String) The aggregation type of the property. It defines how multiple values of the property are aggregated. Possible values are `SUM`, `MIN`, `MAX`, `FIRST` and `LAST`
+- `cleanup_rule` (String) The cleanup rule of the property. Defines how to extract the data you need from a string value. Specify the [regular expression](https://dt-url.net/k9e0iaq) for the data you need there
+- `display_name` (String) The display name of the property
+- `store_as_session_property` (Boolean) If `true`, the property is stored as a session property
+- `store_as_user_action_property` (Boolean) If `true`, the property is stored as a user action property

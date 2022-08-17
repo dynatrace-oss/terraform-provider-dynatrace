@@ -17,49 +17,52 @@ description: |-
 
 ### Required
 
-- **display_name** (String) The name of the alerting profile, displayed in the UI
+- `display_name` (String) The name of the alerting profile, displayed in the UI
 
 ### Optional
 
-- **event_type_filters** (Block List) The list of event filters.  For all filters that are *negated* inside of these event filters, that is all `Predefined` as well as `Custom` (Title and/or Description) ones the AND logic applies. For all *non-negated* ones the OR logic applies. Between these two groups, negated and non-negated, the AND logic applies.  If you specify both severity rule and event filter, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters))
-- **id** (String) The ID of this resource.
-- **metadata** (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
-- **mz_id** (String) The ID of the management zone to which the alerting profile applies
-- **rules** (Block List) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `event_type_filters` (Block List) The list of event filters.  For all filters that are *negated* inside of these event filters, that is all `Predefined` as well as `Custom` (Title and/or Description) ones the AND logic applies. For all *non-negated* ones the OR logic applies. Between these two groups, negated and non-negated, the AND logic applies.  If you specify both severity rule and event filter, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters))
+- `metadata` (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
+- `mz_id` (String) The ID of the management zone to which the alerting profile applies
+- `rules` (Block List) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--event_type_filters"></a>
 ### Nested Schema for `event_type_filters`
 
 Optional:
 
-- **custom_event_filter** (Block List) Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter))
-- **predefined_event_filter** (Block List) Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters--predefined_event_filter))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `custom_event_filter` (Block List) Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter))
+- `predefined_event_filter` (Block List) Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies (see [below for nested schema](#nestedblock--event_type_filters--predefined_event_filter))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--event_type_filters--custom_event_filter"></a>
 ### Nested Schema for `event_type_filters.custom_event_filter`
 
 Optional:
 
-- **custom_description_filter** (Block List) Configuration of a matching filter (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter--custom_description_filter))
-- **custom_title_filter** (Block List) Configuration of a matching filter (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter--custom_title_filter))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `custom_description_filter` (Block List) Configuration of a matching filter (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter--custom_description_filter))
+- `custom_title_filter` (Block List) Configuration of a matching filter (see [below for nested schema](#nestedblock--event_type_filters--custom_event_filter--custom_title_filter))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--event_type_filters--custom_event_filter--custom_description_filter"></a>
 ### Nested Schema for `event_type_filters.custom_event_filter.custom_description_filter`
 
 Required:
 
-- **operator** (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
-- **value** (String) The value to compare to
+- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
+- `value` (String) The value to compare to
 
 Optional:
 
-- **case_insensitive** (Boolean) The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive
-- **enabled** (Boolean) The filter is enabled (`true`) or disabled (`false`)
-- **negate** (Boolean) Reverses the comparison **operator**. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `case_insensitive` (Boolean) The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive
+- `enabled` (Boolean) The filter is enabled (`true`) or disabled (`false`)
+- `negate` (Boolean) Reverses the comparison **operator**. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--event_type_filters--custom_event_filter--custom_title_filter"></a>
@@ -67,15 +70,15 @@ Optional:
 
 Required:
 
-- **operator** (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
-- **value** (String) The value to compare to
+- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
+- `value` (String) The value to compare to
 
 Optional:
 
-- **case_insensitive** (Boolean) The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive
-- **enabled** (Boolean) The filter is enabled (`true`) or disabled (`false`)
-- **negate** (Boolean) Reverses the comparison **operator**. For example it turns the **begins with** into **does not begin with**
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `case_insensitive` (Boolean) The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive
+- `enabled` (Boolean) The filter is enabled (`true`) or disabled (`false`)
+- `negate` (Boolean) Reverses the comparison **operator**. For example it turns the **begins with** into **does not begin with**
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -84,12 +87,12 @@ Optional:
 
 Required:
 
-- **event_type** (String) The type of the predefined event. Possible values are `APPLICATION_ERROR_RATE_INCREASED`, `APPLICATION_SLOWDOWN`, `APPLICATION_UNEXPECTED_HIGH_LOAD`, `APPLICATION_UNEXPECTED_LOW_LOAD`, `AWS_LAMBDA_HIGH_ERROR_RATE`, `CUSTOM_APPLICATION_ERROR_RATE_INCREASED`, `CUSTOM_APPLICATION_SLOWDOWN`, `CUSTOM_APPLICATION_UNEXPECTED_HIGH_LOAD`, `CUSTOM_APPLICATION_UNEXPECTED_LOW_LOAD`, `CUSTOM_APP_CRASH_RATE_INCREASED`, `DATABASE_CONNECTION_FAILURE`, `DATA_CENTER_SERVICE_PERFORMANCE_DEGRADATION`, `DATA_CENTER_SERVICE_UNAVAILABLE`, `EBS_VOLUME_HIGH_LATENCY`, `EC2_HIGH_CPU`, `ELB_HIGH_BACKEND_ERROR_RATE`, `ENTERPRICE_APPLICATION_PERFORMANCE_DEGRADATION`, `ENTERPRISE_APPLICATION_UNAVAILABLE`, `ESXI_GUEST_ACTIVE_SWAP_WAIT`, `ESXI_GUEST_CPU_LIMIT_REACHED`, `ESXI_HOST_CPU_SATURATION`, `ESXI_HOST_DATASTORE_LOW_DISK_SPACE`, `ESXI_HOST_DISK_QUEUE_SLOW`, `ESXI_HOST_DISK_SLOW`, `ESXI_HOST_MEMORY_SATURATION`, `ESXI_HOST_NETWORK_PROBLEMS`, `ESXI_HOST_OVERLOADED_STORAGE`, `ESXI_VM_IMPACT_HOST_CPU_SATURATION`, `ESXI_VM_IMPACT_HOST_MEMORY_SATURATION`, `EXTERNAL_SYNTHETIC_TEST_OUTAGE`, `EXTERNAL_SYNTHETIC_TEST_SLOWDOWN`, `HOST_OF_SERVICE_UNAVAILABLE`, `HTTP_CHECK_GLOBAL_OUTAGE`, `HTTP_CHECK_LOCAL_OUTAGE`, `HTTP_CHECK_TEST_LOCATION_SLOWDOWN`, `MOBILE_APPLICATION_ERROR_RATE_INCREASED`, `MOBILE_APPLICATION_SLOWDOWN`, `MOBILE_APPLICATION_UNEXPECTED_HIGH_LOAD`, `MOBILE_APPLICATION_UNEXPECTED_LOW_LOAD`, `MOBILE_APP_CRASH_RATE_INCREASED`, `MONITORING_UNAVAILABLE`, `OSI_DISK_LOW_INODES`, `OSI_GRACEFULLY_SHUTDOWN`, `OSI_HIGH_CPU`, `OSI_HIGH_MEMORY`, `OSI_LOW_DISK_SPACE`, `OSI_NIC_DROPPED_PACKETS_HIGH`, `OSI_NIC_ERRORS_HIGH`, `OSI_NIC_UTILIZATION_HIGH`, `OSI_SLOW_DISK`, `OSI_UNEXPECTEDLY_UNAVAILABLE`, `PGI_OF_SERVICE_UNAVAILABLE`, `PGI_UNAVAILABLE`, `PG_LOW_INSTANCE_COUNT`, `PROCESS_CRASHED`, `PROCESS_HIGH_GC_ACTIVITY`, `PROCESS_MEMORY_RESOURCE_EXHAUSTED`, `PROCESS_NA_HIGH_CONN_FAIL_RATE`, `PROCESS_NA_HIGH_LOSS_RATE`, `PROCESS_THREADS_RESOURCE_EXHAUSTED`, `RDS_HIGH_CPU`, `RDS_HIGH_LATENCY`, `RDS_LOW_MEMORY`, `RDS_LOW_STORAGE_SPACE`, `RDS_OF_SERVICE_UNAVAILABLE`, `RDS_RESTART_SEQUENCE`, `SERVICE_ERROR_RATE_INCREASED`, `SERVICE_SLOWDOWN`, `SERVICE_UNEXPECTED_HIGH_LOAD`, `SERVICE_UNEXPECTED_LOW_LOAD`, `SYNTHETIC_GLOBAL_OUTAGE`, `SYNTHETIC_LOCAL_OUTAGE`, `SYNTHETIC_NODE_OUTAGE`, `SYNTHETIC_PRIVATE_LOCATION_OUTAGE` and `SYNTHETIC_TEST_LOCATION_SLOWDOWN`
+- `event_type` (String) The type of the predefined event. Possible values are `APPLICATION_ERROR_RATE_INCREASED`, `APPLICATION_SLOWDOWN`, `APPLICATION_UNEXPECTED_HIGH_LOAD`, `APPLICATION_UNEXPECTED_LOW_LOAD`, `AWS_LAMBDA_HIGH_ERROR_RATE`, `CUSTOM_APPLICATION_ERROR_RATE_INCREASED`, `CUSTOM_APPLICATION_SLOWDOWN`, `CUSTOM_APPLICATION_UNEXPECTED_HIGH_LOAD`, `CUSTOM_APPLICATION_UNEXPECTED_LOW_LOAD`, `CUSTOM_APP_CRASH_RATE_INCREASED`, `DATABASE_CONNECTION_FAILURE`, `DATA_CENTER_SERVICE_PERFORMANCE_DEGRADATION`, `DATA_CENTER_SERVICE_UNAVAILABLE`, `EBS_VOLUME_HIGH_LATENCY`, `EC2_HIGH_CPU`, `ELB_HIGH_BACKEND_ERROR_RATE`, `ENTERPRICE_APPLICATION_PERFORMANCE_DEGRADATION`, `ENTERPRISE_APPLICATION_UNAVAILABLE`, `ESXI_GUEST_ACTIVE_SWAP_WAIT`, `ESXI_GUEST_CPU_LIMIT_REACHED`, `ESXI_HOST_CPU_SATURATION`, `ESXI_HOST_DATASTORE_LOW_DISK_SPACE`, `ESXI_HOST_DISK_QUEUE_SLOW`, `ESXI_HOST_DISK_SLOW`, `ESXI_HOST_MEMORY_SATURATION`, `ESXI_HOST_NETWORK_PROBLEMS`, `ESXI_HOST_OVERLOADED_STORAGE`, `ESXI_VM_IMPACT_HOST_CPU_SATURATION`, `ESXI_VM_IMPACT_HOST_MEMORY_SATURATION`, `EXTERNAL_SYNTHETIC_TEST_OUTAGE`, `EXTERNAL_SYNTHETIC_TEST_SLOWDOWN`, `HOST_OF_SERVICE_UNAVAILABLE`, `HTTP_CHECK_GLOBAL_OUTAGE`, `HTTP_CHECK_LOCAL_OUTAGE`, `HTTP_CHECK_TEST_LOCATION_SLOWDOWN`, `MOBILE_APPLICATION_ERROR_RATE_INCREASED`, `MOBILE_APPLICATION_SLOWDOWN`, `MOBILE_APPLICATION_UNEXPECTED_HIGH_LOAD`, `MOBILE_APPLICATION_UNEXPECTED_LOW_LOAD`, `MOBILE_APP_CRASH_RATE_INCREASED`, `MONITORING_UNAVAILABLE`, `OSI_DISK_LOW_INODES`, `OSI_GRACEFULLY_SHUTDOWN`, `OSI_HIGH_CPU`, `OSI_HIGH_MEMORY`, `OSI_LOW_DISK_SPACE`, `OSI_NIC_DROPPED_PACKETS_HIGH`, `OSI_NIC_ERRORS_HIGH`, `OSI_NIC_UTILIZATION_HIGH`, `OSI_SLOW_DISK`, `OSI_UNEXPECTEDLY_UNAVAILABLE`, `PGI_OF_SERVICE_UNAVAILABLE`, `PGI_UNAVAILABLE`, `PG_LOW_INSTANCE_COUNT`, `PROCESS_CRASHED`, `PROCESS_HIGH_GC_ACTIVITY`, `PROCESS_MEMORY_RESOURCE_EXHAUSTED`, `PROCESS_NA_HIGH_CONN_FAIL_RATE`, `PROCESS_NA_HIGH_LOSS_RATE`, `PROCESS_THREADS_RESOURCE_EXHAUSTED`, `RDS_HIGH_CPU`, `RDS_HIGH_LATENCY`, `RDS_LOW_MEMORY`, `RDS_LOW_STORAGE_SPACE`, `RDS_OF_SERVICE_UNAVAILABLE`, `RDS_RESTART_SEQUENCE`, `SERVICE_ERROR_RATE_INCREASED`, `SERVICE_SLOWDOWN`, `SERVICE_UNEXPECTED_HIGH_LOAD`, `SERVICE_UNEXPECTED_LOW_LOAD`, `SYNTHETIC_GLOBAL_OUTAGE`, `SYNTHETIC_LOCAL_OUTAGE`, `SYNTHETIC_NODE_OUTAGE`, `SYNTHETIC_PRIVATE_LOCATION_OUTAGE` and `SYNTHETIC_TEST_LOCATION_SLOWDOWN`
 
 Optional:
 
-- **negate** (Boolean) The alert triggers when the problem of specified severity arises while the specified event **is** happening (`false`) or while the specified event is **not** happening (`true`).   For example, if you chose the Slowdown (`PERFORMANCE`) severity and Unexpected high traffic (`APPLICATION_UNEXPECTED_HIGH_LOAD`) event with **negate** set to `true`, the alerting profile will trigger only when the slowdown problem is raised while there is no unexpected high traffic event.  Consider the following use case as an example. The Slowdown (`PERFORMANCE`) severity rule is set. Depending on the configuration of the event filter (Unexpected high traffic (`APPLICATION_UNEXPECTED_HIGH_LOAD`) event is used as an example), the behavior of the alerting profile is one of the following:* **negate** is set to `false`: The alert triggers when the slowdown problem is raised while unexpected high traffic event is happening.  * **negate** is set to `true`: The alert triggers when the slowdown problem is raised while there is no unexpected high traffic event.  * no event rule is set: The alert triggers when the slowdown problem is raised, regardless of any events
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `negate` (Boolean) The alert triggers when the problem of specified severity arises while the specified event **is** happening (`false`) or while the specified event is **not** happening (`true`).   For example, if you chose the Slowdown (`PERFORMANCE`) severity and Unexpected high traffic (`APPLICATION_UNEXPECTED_HIGH_LOAD`) event with **negate** set to `true`, the alerting profile will trigger only when the slowdown problem is raised while there is no unexpected high traffic event.  Consider the following use case as an example. The Slowdown (`PERFORMANCE`) severity rule is set. Depending on the configuration of the event filter (Unexpected high traffic (`APPLICATION_UNEXPECTED_HIGH_LOAD`) event is used as an example), the behavior of the alerting profile is one of the following:* **negate** is set to `false`: The alert triggers when the slowdown problem is raised while unexpected high traffic event is happening.  * **negate** is set to `true`: The alert triggers when the slowdown problem is raised while there is no unexpected high traffic event.  * no event rule is set: The alert triggers when the slowdown problem is raised, regardless of any events
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -98,9 +101,9 @@ Optional:
 
 Optional:
 
-- **cluster_version** (String) Dynatrace server version
-- **configuration_versions** (List of Number) A Sorted list of the version numbers of the configuration
-- **current_configuration_versions** (List of String) A Sorted list of the version numbers of the configuration
+- `cluster_version` (String) Dynatrace server version
+- `configuration_versions` (List of Number) A Sorted list of the version numbers of the configuration
+- `current_configuration_versions` (List of String) A Sorted list of the version numbers of the configuration
 
 
 <a id="nestedblock--rules"></a>
@@ -108,36 +111,36 @@ Optional:
 
 Required:
 
-- **delay_in_minutes** (Number) Send a notification if a problem remains open longer than *X* minutes
-- **severity_level** (String) The severity level to trigger the alert. Possible values are `AVAILABILITY`,	`CUSTOM_ALERT`,	`ERROR`,`MONITORING_UNAVAILABLE`,`PERFORMANCE` and `RESOURCE_CONTENTION`.
-- **tag_filter** (Block List, Min: 1) Configuration of the tag filtering of the alerting profile (see [below for nested schema](#nestedblock--rules--tag_filter))
+- `delay_in_minutes` (Number) Send a notification if a problem remains open longer than *X* minutes
+- `severity_level` (String) The severity level to trigger the alert. Possible values are `AVAILABILITY`,	`CUSTOM_ALERT`,	`ERROR`,`MONITORING_UNAVAILABLE`,`PERFORMANCE` and `RESOURCE_CONTENTION`.
+- `tag_filter` (Block List, Min: 1) Configuration of the tag filtering of the alerting profile (see [below for nested schema](#nestedblock--rules--tag_filter))
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--rules--tag_filter"></a>
 ### Nested Schema for `rules.tag_filter`
 
 Required:
 
-- **include_mode** (String) The filtering mode:  * `INCLUDE_ANY`: The rule applies to monitored entities that have at least one of the specified tags. You can specify up to 100 tags.  * `INCLUDE_ALL`: The rule applies to monitored entities that have **all** of the specified tags. You can specify up to 10 tags.  * `NONE`: The rule applies to all monitored entities
+- `include_mode` (String) The filtering mode:  * `INCLUDE_ANY`: The rule applies to monitored entities that have at least one of the specified tags. You can specify up to 100 tags.  * `INCLUDE_ALL`: The rule applies to monitored entities that have **all** of the specified tags. You can specify up to 10 tags.  * `NONE`: The rule applies to all monitored entities
 
 Optional:
 
-- **tag_filters** (Block List) A list of required tags (see [below for nested schema](#nestedblock--rules--tag_filter--tag_filters))
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `tag_filters` (Block List) A list of required tags (see [below for nested schema](#nestedblock--rules--tag_filter--tag_filters))
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--rules--tag_filter--tag_filters"></a>
 ### Nested Schema for `rules.tag_filter.tag_filters`
 
 Required:
 
-- **context** (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
-- **key** (String) The key of the tag. Custom tags have the tag value here
+- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
+- `key` (String) The key of the tag. Custom tags have the tag value here
 
 Optional:
 
-- **value** (String) The value of the tag. Not applicable to custom tags
+- `value` (String) The value of the tag. Not applicable to custom tags
 
 

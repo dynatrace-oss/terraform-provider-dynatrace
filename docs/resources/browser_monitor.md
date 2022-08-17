@@ -17,61 +17,64 @@ description: |-
 
 ### Required
 
-- **frequency** (Number) The frequency of the monitor, in minutes.
+- `frequency` (Number) The frequency of the monitor, in minutes.
 
 You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
-- **name** (String) The name of the monitor.
+- `name` (String) The name of the monitor.
 
 ### Optional
 
-- **anomaly_detection** (Block List, Max: 1) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
-- **enabled** (Boolean) The monitor is enabled (`true`) or disabled (`false`).
-- **id** (String) The ID of this resource.
-- **key_performance_metrics** (Block List, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
-- **locations** (Set of String) A list of locations from which the monitor is executed.
+- `anomaly_detection` (Block List, Max: 1) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
+- `enabled` (Boolean) The monitor is enabled (`true`) or disabled (`false`).
+- `key_performance_metrics` (Block List, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
+- `locations` (Set of String) A list of locations from which the monitor is executed.
 
 To specify a location, use its entity ID.
-- **manually_assigned_apps** (Set of String) A set of manually assigned applications.
-- **script** (Block List, Max: 1) The Browser Script (see [below for nested schema](#nestedblock--script))
-- **tags** (Block List) A set of tags assigned to the monitor.
+- `manually_assigned_apps` (Set of String) A set of manually assigned applications.
+- `script` (Block List, Max: 1) The Browser Script (see [below for nested schema](#nestedblock--script))
+- `tags` (Block List) A set of tags assigned to the monitor.
 
 You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically. (see [below for nested schema](#nestedblock--tags))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--anomaly_detection"></a>
 ### Nested Schema for `anomaly_detection`
 
 Optional:
 
-- **loading_time_thresholds** (Block List) Thresholds for loading times (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds))
-- **outage_handling** (Block List) Outage handling configuration (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling))
+- `loading_time_thresholds` (Block List) Thresholds for loading times (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds))
+- `outage_handling` (Block List) Outage handling configuration (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds`
 
 Optional:
 
-- **enabled** (Boolean) Performance threshold is enabled (`true`) or disabled (`false`)
-- **thresholds** (Block List) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds))
+- `enabled` (Boolean) Performance threshold is enabled (`true`) or disabled (`false`)
+- `thresholds` (Block List) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds--thresholds"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds.thresholds`
 
 Required:
 
-- **threshold** (Block List, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
+- `threshold` (Block List, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds.thresholds.threshold`
 
 Required:
 
-- **value_ms** (Number) Notify if monitor takes longer than *X* milliseconds to load
+- `value_ms` (Number) Notify if monitor takes longer than *X* milliseconds to load
 
 Optional:
 
-- **event_index** (Number) Specify the event to which an ACTION threshold applies
-- **request_index** (Number) Specify the request to which an ACTION threshold applies
-- **type** (String) The type of the threshold: `TOTAL` (total loading time) or `ACTION` (action loading time)
+- `event_index` (Number) Specify the event to which an ACTION threshold applies
+- `request_index` (Number) Specify the request to which an ACTION threshold applies
+- `type` (String) The type of the threshold: `TOTAL` (total loading time) or `ACTION` (action loading time)
 
 
 
@@ -81,20 +84,20 @@ Optional:
 
 Optional:
 
-- **global_outage** (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
-- **local_outage** (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
-- **local_outage_policy** (Block List) Local outage handling configuration. 
+- `global_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
+- `local_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
+- `local_outage_policy` (Block List) Local outage handling configuration. 
 
  Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--local_outage_policy))
-- **retry_on_error** (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
+- `retry_on_error` (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
 
 <a id="nestedblock--anomaly_detection--outage_handling--local_outage_policy"></a>
 ### Nested Schema for `anomaly_detection.outage_handling.local_outage_policy`
 
 Required:
 
-- **affected_locations** (Number) The number of affected locations to trigger an alert
-- **consecutive_runs** (Number) The number of consecutive fails to trigger an alert
+- `affected_locations` (Number) The number of affected locations to trigger an alert
+- `consecutive_runs` (Number) The number of consecutive fails to trigger an alert
 
 
 
@@ -104,8 +107,8 @@ Required:
 
 Required:
 
-- **load_action_kpm** (String) Defines the key performance metric for load actions. Supported values are `VISUALLY_COMPLETE`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE`, `HTML_DOWNLOADED`, `DOM_INTERACTIVE`, `LOAD_EVENT_START` and `LOAD_EVENT_END`.
-- **xhr_action_kpm** (String) Defines the key performance metric for XHR actions. Supported values are `VISUALLY_COMPLETE`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE` and `RESPONSE_END`.
+- `load_action_kpm` (String) Defines the key performance metric for load actions. Supported values are `VISUALLY_COMPLETE`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE`, `HTML_DOWNLOADED`, `DOM_INTERACTIVE`, `LOAD_EVENT_START` and `LOAD_EVENT_END`.
+- `xhr_action_kpm` (String) Defines the key performance metric for XHR actions. Supported values are `VISUALLY_COMPLETE`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE` and `RESPONSE_END`.
 
 
 <a id="nestedblock--script"></a>
@@ -113,43 +116,43 @@ Required:
 
 Required:
 
-- **type** (String) The type of monitor. Possible values are `clickpath` for clickpath monitors and `availability` for single-URL browser monitors. These monitors are only allowed to have one event of the `navigate` type
+- `type` (String) The type of monitor. Possible values are `clickpath` for clickpath monitors and `availability` for single-URL browser monitors. These monitors are only allowed to have one event of the `navigate` type
 
 Optional:
 
-- **configuration** (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--configuration))
-- **events** (Block List, Max: 1) Steps of the clickpath—the first step must always be of the `navigate` type (see [below for nested schema](#nestedblock--script--events))
+- `configuration` (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--configuration))
+- `events` (Block List, Max: 1) Steps of the clickpath—the first step must always be of the `navigate` type (see [below for nested schema](#nestedblock--script--events))
 
 <a id="nestedblock--script--configuration"></a>
 ### Nested Schema for `script.configuration`
 
 Optional:
 
-- **bandwidth** (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
+- `bandwidth` (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
 
 If not set, then the Desktop preconfigured device is used (see [below for nested schema](#nestedblock--script--configuration--bandwidth))
-- **block** (Set of String) Block these URLs
-- **bypass_csp** (Boolean) Bypass Content Security Policy of monitored pages
-- **cookies** (Block List, Max: 1) These cookies are added before execution of the first step (see [below for nested schema](#nestedblock--script--configuration--cookies))
-- **device** (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
+- `block` (Set of String) Block these URLs
+- `bypass_csp` (Boolean) Bypass Content Security Policy of monitored pages
+- `cookies` (Block List, Max: 1) These cookies are added before execution of the first step (see [below for nested schema](#nestedblock--script--configuration--cookies))
+- `device` (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
 
 If not set, then the Desktop preconfigured device is used (see [below for nested schema](#nestedblock--script--configuration--device))
-- **disable_web_security** (Boolean) No documentation available
-- **headers** (Block List, Max: 1) The list of HTTP headers to be sent with requests of the monitor (see [below for nested schema](#nestedblock--script--configuration--headers))
-- **ignored_error_codes** (Block List, Max: 1) Ignore specific status codes (see [below for nested schema](#nestedblock--script--configuration--ignored_error_codes))
-- **javascript_setttings** (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings))
-- **monitor_frames** (Boolean) Capture performance metrics for pages loaded in frames
-- **user_agent** (String) The user agent of the request
+- `disable_web_security` (Boolean) No documentation available
+- `headers` (Block List, Max: 1) The list of HTTP headers to be sent with requests of the monitor (see [below for nested schema](#nestedblock--script--configuration--headers))
+- `ignored_error_codes` (Block List, Max: 1) Ignore specific status codes (see [below for nested schema](#nestedblock--script--configuration--ignored_error_codes))
+- `javascript_setttings` (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings))
+- `monitor_frames` (Boolean) Capture performance metrics for pages loaded in frames
+- `user_agent` (String) The user agent of the request
 
 <a id="nestedblock--script--configuration--bandwidth"></a>
 ### Nested Schema for `script.configuration.bandwidth`
 
 Optional:
 
-- **download** (Number) The download speed of the network, in bytes per second
-- **latency** (Number) The latency of the network, in milliseconds
-- **network_type** (String) The type of the preconfigured network—when editing in the browser, press `Crtl+Spacebar` to see the list of available networks
-- **upload** (Number) The upload speed of the network, in bytes per second
+- `download` (Number) The download speed of the network, in bytes per second
+- `latency` (Number) The latency of the network, in milliseconds
+- `network_type` (String) The type of the preconfigured network—when editing in the browser, press `Crtl+Spacebar` to see the list of available networks
+- `upload` (Number) The upload speed of the network, in bytes per second
 
 
 <a id="nestedblock--script--configuration--cookies"></a>
@@ -157,20 +160,20 @@ Optional:
 
 Required:
 
-- **cookie** (Block List, Min: 1) A request cookie (see [below for nested schema](#nestedblock--script--configuration--cookies--cookie))
+- `cookie` (Block List, Min: 1) A request cookie (see [below for nested schema](#nestedblock--script--configuration--cookies--cookie))
 
 <a id="nestedblock--script--configuration--cookies--cookie"></a>
 ### Nested Schema for `script.configuration.cookies.cookie`
 
 Required:
 
-- **domain** (String) The domain of the cookie.
-- **name** (String) The name of the cookie. The following cookie names are now allowed: `dtCookie`, `dtLatC`, `dtPC`, `rxVisitor`, `rxlatency`, `rxpc`, `rxsession` and `rxvt`
-- **value** (String) The value of the cookie. The following symbols are not allowed: `;`, `,`, `\` and `"`.
+- `domain` (String) The domain of the cookie.
+- `name` (String) The name of the cookie. The following cookie names are now allowed: `dtCookie`, `dtLatC`, `dtPC`, `rxVisitor`, `rxlatency`, `rxpc`, `rxsession` and `rxvt`
+- `value` (String) The value of the cookie. The following symbols are not allowed: `;`, `,`, `\` and `"`.
 
 Optional:
 
-- **path** (String) The path of the cookie.
+- `path` (String) The path of the cookie.
 
 
 
@@ -179,16 +182,16 @@ Optional:
 
 Optional:
 
-- **height** (Number) The height of the screen in pixels.
+- `height` (Number) The height of the screen in pixels.
 The maximum allowed width is `1080`.
-- **mobile** (Boolean) The flag of the mobile device.
+- `mobile` (Boolean) The flag of the mobile device.
 Set to `true` for mobile devices or `false` for a desktop or laptop.
-- **name** (String) The name of the preconfigured device—when editing in the browser, press `Crtl+Spacebar` to see the list of available devices
-- **orientation** (String) The orientation of the device. Possible values are `portrait` or `landscape`. Desktop and laptop devices are not allowed to use the `portrait` orientation
-- **scale_factor** (Number) The pixel ratio of the device.
-- **touch_enabled** (Boolean) The flag of the touchscreen.
+- `name` (String) The name of the preconfigured device—when editing in the browser, press `Crtl+Spacebar` to see the list of available devices
+- `orientation` (String) The orientation of the device. Possible values are `portrait` or `landscape`. Desktop and laptop devices are not allowed to use the `portrait` orientation
+- `scale_factor` (Number) The pixel ratio of the device.
+- `touch_enabled` (Boolean) The flag of the touchscreen.
 Set to `true` if the device uses touchscreen. In that case, use can set interaction event as `tap`.
-- **width** (Number) The width of the screen in pixels.
+- `width` (Number) The width of the screen in pixels.
 The maximum allowed width is `1920`.
 
 
@@ -197,19 +200,19 @@ The maximum allowed width is `1920`.
 
 Required:
 
-- **header** (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--configuration--headers--header))
+- `header` (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--configuration--headers--header))
 
 Optional:
 
-- **restrictions** (Set of String) Restrict applying headers to a set of URLs
+- `restrictions` (Set of String) Restrict applying headers to a set of URLs
 
 <a id="nestedblock--script--configuration--headers--header"></a>
-### Nested Schema for `script.configuration.headers.restrictions`
+### Nested Schema for `script.configuration.headers.header`
 
 Required:
 
-- **name** (String) The key of the header
-- **value** (String) The value of the header
+- `name` (String) The key of the header
+- `value` (String) The value of the header
 
 
 
@@ -218,11 +221,11 @@ Required:
 
 Required:
 
-- **status_codes** (String) You can use exact number, range or status class mask. Multiple values can be separated by comma, i.e. 404, 405-410, 5xx
+- `status_codes` (String) You can use exact number, range or status class mask. Multiple values can be separated by comma, i.e. 404, 405-410, 5xx
 
 Optional:
 
-- **matching_document_requests** (String) Only apply to document request matching this regex
+- `matching_document_requests` (String) Only apply to document request matching this regex
 
 
 <a id="nestedblock--script--configuration--javascript_setttings"></a>
@@ -230,17 +233,17 @@ Optional:
 
 Optional:
 
-- **custom_properties** (String) Additional Javascript Agent Properties
-- **timeout_settings** (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--timeout_settings))
-- **visually_complete_options** (Block List, Max: 1) Parameters for Visually complete and Speed index calculation (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--visually_complete_options))
+- `custom_properties` (String) Additional Javascript Agent Properties
+- `timeout_settings` (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--timeout_settings))
+- `visually_complete_options` (Block List, Max: 1) Parameters for Visually complete and Speed index calculation (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--visually_complete_options))
 
 <a id="nestedblock--script--configuration--javascript_setttings--timeout_settings"></a>
-### Nested Schema for `script.configuration.javascript_setttings.visually_complete_options`
+### Nested Schema for `script.configuration.javascript_setttings.timeout_settings`
 
 Required:
 
-- **action_limit** (Number) Track up to n cascading setTimeout calls
-- **total_timeout** (Number) Limit cascading timeouts cumulatively to n ms
+- `action_limit` (Number) Track up to n cascading setTimeout calls
+- `total_timeout` (Number) Limit cascading timeouts cumulatively to n ms
 
 
 <a id="nestedblock--script--configuration--javascript_setttings--visually_complete_options"></a>
@@ -248,14 +251,14 @@ Required:
 
 Required:
 
-- **image_size_threshold** (Number) Use this setting to define the minimum visible area per element (in pixels) for an element to be counted towards Visually complete and Speed index
-- **inactivity_timeout** (Number) The time the Visually complete module waits for inactivity and no further mutations on the page after the load action
-- **mutation_timeout** (Number) The time the Visually complete module waits after an XHR or custom action closes to start the calculation
+- `image_size_threshold` (Number) Use this setting to define the minimum visible area per element (in pixels) for an element to be counted towards Visually complete and Speed index
+- `inactivity_timeout` (Number) The time the Visually complete module waits for inactivity and no further mutations on the page after the load action
+- `mutation_timeout` (Number) The time the Visually complete module waits after an XHR or custom action closes to start the calculation
 
 Optional:
 
-- **excluded_elements** (List of String) Query CSS selectors to specify mutation nodes (elements that change) to ignore in Visually complete and Speed index calculation
-- **excluded_urls** (List of String) Parameters for Visually complete and Speed index calculation
+- `excluded_elements` (List of String) Query CSS selectors to specify mutation nodes (elements that change) to ignore in Visually complete and Speed index calculation
+- `excluded_urls` (List of String) Parameters for Visually complete and Speed index calculation
 
 
 
@@ -265,165 +268,165 @@ Optional:
 
 Optional:
 
-- **event** (Block List) An event (see [below for nested schema](#nestedblock--script--events--event))
+- `event` (Block List) An event (see [below for nested schema](#nestedblock--script--events--event))
 
 <a id="nestedblock--script--events--event"></a>
 ### Nested Schema for `script.events.event`
 
 Required:
 
-- **description** (String) A short description of the event to appear in the UI
+- `description` (String) A short description of the event to appear in the UI
 
 Optional:
 
-- **click** (Block List, Max: 1) Properties specified for a click event (see [below for nested schema](#nestedblock--script--events--event--click))
-- **cookie** (Block List, Max: 1) Properties specified for a cookie event (see [below for nested schema](#nestedblock--script--events--event--cookie))
-- **javascript** (Block List, Max: 1) Properties specified for a javascript event (see [below for nested schema](#nestedblock--script--events--event--javascript))
-- **keystrokes** (Block List, Max: 1) Properties specified for a key strokes event (see [below for nested schema](#nestedblock--script--events--event--keystrokes))
-- **navigate** (Block List, Max: 1) Properties specified for a navigation event (see [below for nested schema](#nestedblock--script--events--event--navigate))
-- **select** (Block List, Max: 1) Properties specified for a key strokes event. (see [below for nested schema](#nestedblock--script--events--event--select))
-- **tap** (Block List, Max: 1) Properties specified for a tap event (see [below for nested schema](#nestedblock--script--events--event--tap))
+- `click` (Block List, Max: 1) Properties specified for a click event (see [below for nested schema](#nestedblock--script--events--event--click))
+- `cookie` (Block List, Max: 1) Properties specified for a cookie event (see [below for nested schema](#nestedblock--script--events--event--cookie))
+- `javascript` (Block List, Max: 1) Properties specified for a javascript event (see [below for nested schema](#nestedblock--script--events--event--javascript))
+- `keystrokes` (Block List, Max: 1) Properties specified for a key strokes event (see [below for nested schema](#nestedblock--script--events--event--keystrokes))
+- `navigate` (Block List, Max: 1) Properties specified for a navigation event (see [below for nested schema](#nestedblock--script--events--event--navigate))
+- `select` (Block List, Max: 1) Properties specified for a key strokes event. (see [below for nested schema](#nestedblock--script--events--event--select))
+- `tap` (Block List, Max: 1) Properties specified for a tap event (see [below for nested schema](#nestedblock--script--events--event--tap))
 
 <a id="nestedblock--script--events--event--click"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.click`
 
 Required:
 
-- **button** (Number) the mouse button to be used for the click
+- `button` (Number) the mouse button to be used for the click
 
 Optional:
 
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **validate** (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--click--target))
+- `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--click--validate))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--click--wait))
 
-<a id="nestedblock--script--events--event--tap--target"></a>
-### Nested Schema for `script.events.event.tap.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-<a id="nestedblock--script--events--event--tap--validate"></a>
-### Nested Schema for `script.events.event.tap.validate`
-
-Required:
-
-- **validation** (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
-
-<a id="nestedblock--script--events--event--tap--validate--validation"></a>
-### Nested Schema for `script.events.event.tap.validate.validation`
-
-Required:
-
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+<a id="nestedblock--script--events--event--click--target"></a>
+### Nested Schema for `script.events.event.click.target`
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--click--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--click--target--locators"></a>
+### Nested Schema for `script.events.event.click.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--click--target--locators--locator))
+
+<a id="nestedblock--script--events--event--click--target--locators--locator"></a>
+### Nested Schema for `script.events.event.click.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+<a id="nestedblock--script--events--event--click--validate"></a>
+### Nested Schema for `script.events.event.click.validate`
+
+Required:
+
+- `validation` (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--click--validate--validation))
+
+<a id="nestedblock--script--events--event--click--validate--validation"></a>
+### Nested Schema for `script.events.event.click.validate.validation`
+
+Required:
+
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+
+Optional:
+
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--click--validate--validation--target))
 
-<a id="nestedblock--script--events--event--tap--validate--validation--target"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-
-
-<a id="nestedblock--script--events--event--tap--wait"></a>
-### Nested Schema for `script.events.event.tap.wait`
-
-Required:
-
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+<a id="nestedblock--script--events--event--click--validate--validation--target"></a>
+### Nested Schema for `script.events.event.click.validate.validation.target`
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--click--validate--validation--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--click--validate--validation--target--locators"></a>
+### Nested Schema for `script.events.event.click.validate.validation.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--click--validate--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--click--validate--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.click.validate.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+
+
+<a id="nestedblock--script--events--event--click--wait"></a>
+### Nested Schema for `script.events.event.click.wait`
+
+Required:
+
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+
+Optional:
+
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--click--wait--validation))
 
-<a id="nestedblock--script--events--event--tap--wait--validation"></a>
-### Nested Schema for `script.events.event.tap.wait.validation`
+<a id="nestedblock--script--events--event--click--wait--validation"></a>
+### Nested Schema for `script.events.event.click.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--click--wait--validation--target))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target`
+<a id="nestedblock--script--events--event--click--wait--validation--target"></a>
+### Nested Schema for `script.events.event.click.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--click--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--click--wait--validation--target--locators"></a>
+### Nested Schema for `script.events.event.click.wait.validation.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--click--wait--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--click--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.click.wait.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -432,124 +435,124 @@ Required:
 
 
 <a id="nestedblock--script--events--event--cookie"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.cookie`
 
 Required:
 
-- **cookies** (Block List, Min: 1, Max: 1) Every cookie must be unique within the list. However, you can use the same cookie again in other event (see [below for nested schema](#nestedblock--script--events--event--tap--cookies))
+- `cookies` (Block List, Min: 1, Max: 1) Every cookie must be unique within the list. However, you can use the same cookie again in other event (see [below for nested schema](#nestedblock--script--events--event--cookie--cookies))
 
-<a id="nestedblock--script--events--event--tap--cookies"></a>
-### Nested Schema for `script.events.event.tap.cookies`
-
-Required:
-
-- **cookie** (Block List, Min: 1) A request cookie (see [below for nested schema](#nestedblock--script--events--event--tap--cookies--cookie))
-
-<a id="nestedblock--script--events--event--tap--cookies--cookie"></a>
-### Nested Schema for `script.events.event.tap.cookies.cookie`
+<a id="nestedblock--script--events--event--cookie--cookies"></a>
+### Nested Schema for `script.events.event.cookie.cookies`
 
 Required:
 
-- **domain** (String) The domain of the cookie.
-- **name** (String) The name of the cookie. The following cookie names are now allowed: `dtCookie`, `dtLatC`, `dtPC`, `rxVisitor`, `rxlatency`, `rxpc`, `rxsession` and `rxvt`
-- **value** (String) The value of the cookie. The following symbols are not allowed: `;`, `,`, `\` and `"`.
+- `cookie` (Block List, Min: 1) A request cookie (see [below for nested schema](#nestedblock--script--events--event--cookie--cookies--cookie))
+
+<a id="nestedblock--script--events--event--cookie--cookies--cookie"></a>
+### Nested Schema for `script.events.event.cookie.cookies.cookie`
+
+Required:
+
+- `domain` (String) The domain of the cookie.
+- `name` (String) The name of the cookie. The following cookie names are now allowed: `dtCookie`, `dtLatC`, `dtPC`, `rxVisitor`, `rxlatency`, `rxpc`, `rxsession` and `rxvt`
+- `value` (String) The value of the cookie. The following symbols are not allowed: `;`, `,`, `\` and `"`.
 
 Optional:
 
-- **path** (String) The path of the cookie.
+- `path` (String) The path of the cookie.
 
 
 
 
 <a id="nestedblock--script--events--event--javascript"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.javascript`
 
 Required:
 
-- **code** (String) The JavaScript code to be executed in this event
+- `code` (String) The JavaScript code to be executed in this event
 
 Optional:
 
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--javascript--target))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--javascript--wait))
 
-<a id="nestedblock--script--events--event--tap--target"></a>
-### Nested Schema for `script.events.event.tap.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-<a id="nestedblock--script--events--event--tap--wait"></a>
-### Nested Schema for `script.events.event.tap.wait`
-
-Required:
-
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+<a id="nestedblock--script--events--event--javascript--target"></a>
+### Nested Schema for `script.events.event.javascript.target`
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--javascript--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--javascript--target--locators"></a>
+### Nested Schema for `script.events.event.javascript.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--javascript--target--locators--locator))
+
+<a id="nestedblock--script--events--event--javascript--target--locators--locator"></a>
+### Nested Schema for `script.events.event.javascript.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+<a id="nestedblock--script--events--event--javascript--wait"></a>
+### Nested Schema for `script.events.event.javascript.wait`
+
+Required:
+
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+
+Optional:
+
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--javascript--wait--validation))
 
-<a id="nestedblock--script--events--event--tap--wait--validation"></a>
-### Nested Schema for `script.events.event.tap.wait.validation`
+<a id="nestedblock--script--events--event--javascript--wait--validation"></a>
+### Nested Schema for `script.events.event.javascript.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--javascript--wait--validation--target))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target`
+<a id="nestedblock--script--events--event--javascript--wait--validation--target"></a>
+### Nested Schema for `script.events.event.javascript.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--javascript--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--javascript--wait--validation--target--locators"></a>
+### Nested Schema for `script.events.event.javascript.wait.validation.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--javascript--wait--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--javascript--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.javascript.wait.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -558,148 +561,148 @@ Required:
 
 
 <a id="nestedblock--script--events--event--keystrokes"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.keystrokes`
 
 Required:
 
-- **text** (String) The text to enter
+- `text` (String) The text to enter
 
 Optional:
 
-- **masked** (Boolean) Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
-- **simulate_blur_event** (Boolean) Defines whether to blur the text field when it loses focus.
+- `masked` (Boolean) Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+- `simulate_blur_event` (Boolean) Defines whether to blur the text field when it loses focus.
 Set to `true` to trigger the blur the `textValue`
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **validate** (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--keystrokes--target))
+- `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait))
 
-<a id="nestedblock--script--events--event--tap--target"></a>
-### Nested Schema for `script.events.event.tap.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-<a id="nestedblock--script--events--event--tap--validate"></a>
-### Nested Schema for `script.events.event.tap.validate`
-
-Required:
-
-- **validation** (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
-
-<a id="nestedblock--script--events--event--tap--validate--validation"></a>
-### Nested Schema for `script.events.event.tap.validate.validation`
-
-Required:
-
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+<a id="nestedblock--script--events--event--keystrokes--target"></a>
+### Nested Schema for `script.events.event.keystrokes.target`
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--keystrokes--target--locators"></a>
+### Nested Schema for `script.events.event.keystrokes.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--target--locators--locator))
+
+<a id="nestedblock--script--events--event--keystrokes--target--locators--locator"></a>
+### Nested Schema for `script.events.event.keystrokes.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+<a id="nestedblock--script--events--event--keystrokes--validate"></a>
+### Nested Schema for `script.events.event.keystrokes.validate`
+
+Required:
+
+- `validation` (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate--validation))
+
+<a id="nestedblock--script--events--event--keystrokes--validate--validation"></a>
+### Nested Schema for `script.events.event.keystrokes.validate.validation`
+
+Required:
+
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+
+Optional:
+
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate--validation--target))
 
-<a id="nestedblock--script--events--event--tap--validate--validation--target"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-
-
-<a id="nestedblock--script--events--event--tap--wait"></a>
-### Nested Schema for `script.events.event.tap.wait`
-
-Required:
-
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+<a id="nestedblock--script--events--event--keystrokes--validate--validation--target"></a>
+### Nested Schema for `script.events.event.keystrokes.validate.validation.target`
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate--validation--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--keystrokes--validate--validation--target--locators"></a>
+### Nested Schema for `script.events.event.keystrokes.validate.validation.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--keystrokes--validate--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.keystrokes.validate.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+
+
+<a id="nestedblock--script--events--event--keystrokes--wait"></a>
+### Nested Schema for `script.events.event.keystrokes.wait`
+
+Required:
+
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+
+Optional:
+
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait--validation))
 
-<a id="nestedblock--script--events--event--tap--wait--validation"></a>
-### Nested Schema for `script.events.event.tap.wait.validation`
+<a id="nestedblock--script--events--event--keystrokes--wait--validation"></a>
+### Nested Schema for `script.events.event.keystrokes.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait--validation--target))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target`
+<a id="nestedblock--script--events--event--keystrokes--wait--validation--target"></a>
+### Nested Schema for `script.events.event.keystrokes.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--keystrokes--wait--validation--target--locators"></a>
+### Nested Schema for `script.events.event.keystrokes.wait.validation.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--keystrokes--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.keystrokes.wait.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -708,155 +711,155 @@ Required:
 
 
 <a id="nestedblock--script--events--event--navigate"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.navigate`
 
 Required:
 
-- **url** (String) The URL to navigate to
+- `url` (String) The URL to navigate to
 
 Optional:
 
-- **authentication** (Block List, Max: 1) The login credentials to bypass the browser login mask (see [below for nested schema](#nestedblock--script--events--event--tap--authentication))
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **validate** (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `authentication` (Block List, Max: 1) The login credentials to bypass the browser login mask (see [below for nested schema](#nestedblock--script--events--event--navigate--authentication))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--navigate--target))
+- `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--navigate--validate))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--navigate--wait))
 
-<a id="nestedblock--script--events--event--tap--authentication"></a>
-### Nested Schema for `script.events.event.tap.authentication`
+<a id="nestedblock--script--events--event--navigate--authentication"></a>
+### Nested Schema for `script.events.event.navigate.authentication`
 
 Required:
 
-- **creds** (String) A reference to the entry within the credential vault
-- **type** (String) The type of authentication
+- `creds` (String) A reference to the entry within the credential vault
+- `type` (String) The type of authentication
 
 
-<a id="nestedblock--script--events--event--tap--target"></a>
-### Nested Schema for `script.events.event.tap.target`
+<a id="nestedblock--script--events--event--navigate--target"></a>
+### Nested Schema for `script.events.event.navigate.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
+<a id="nestedblock--script--events--event--navigate--target--locators"></a>
+### Nested Schema for `script.events.event.navigate.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--target--locators--locator))
 
-
-
-
-<a id="nestedblock--script--events--event--tap--validate"></a>
-### Nested Schema for `script.events.event.tap.validate`
+<a id="nestedblock--script--events--event--navigate--target--locators--locator"></a>
+### Nested Schema for `script.events.event.navigate.target.locators.locator`
 
 Required:
 
-- **validation** (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
-<a id="nestedblock--script--events--event--tap--validate--validation"></a>
-### Nested Schema for `script.events.event.tap.validate.validation`
+
+
+
+<a id="nestedblock--script--events--event--navigate--validate"></a>
+### Nested Schema for `script.events.event.navigate.validate`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `validation` (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--navigate--validate--validation))
+
+<a id="nestedblock--script--events--event--navigate--validate--validation"></a>
+### Nested Schema for `script.events.event.navigate.validate.validation`
+
+Required:
+
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--navigate--validate--validation--target))
 
-<a id="nestedblock--script--events--event--tap--validate--validation--target"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-
-
-<a id="nestedblock--script--events--event--tap--wait"></a>
-### Nested Schema for `script.events.event.tap.wait`
-
-Required:
-
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+<a id="nestedblock--script--events--event--navigate--validate--validation--target"></a>
+### Nested Schema for `script.events.event.navigate.validate.validation.target`
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--validate--validation--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--navigate--validate--validation--target--locators"></a>
+### Nested Schema for `script.events.event.navigate.validate.validation.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--validate--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--navigate--validate--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.navigate.validate.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+
+
+<a id="nestedblock--script--events--event--navigate--wait"></a>
+### Nested Schema for `script.events.event.navigate.wait`
+
+Required:
+
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+
+Optional:
+
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--navigate--wait--validation))
 
-<a id="nestedblock--script--events--event--tap--wait--validation"></a>
-### Nested Schema for `script.events.event.tap.wait.validation`
+<a id="nestedblock--script--events--event--navigate--wait--validation"></a>
+### Nested Schema for `script.events.event.navigate.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--navigate--wait--validation--target))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target`
+<a id="nestedblock--script--events--event--navigate--wait--validation--target"></a>
+### Nested Schema for `script.events.event.navigate.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--navigate--wait--validation--target--locators"></a>
+### Nested Schema for `script.events.event.navigate.wait.validation.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--navigate--wait--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--navigate--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.navigate.wait.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -865,162 +868,162 @@ Required:
 
 
 <a id="nestedblock--script--events--event--select"></a>
-### Nested Schema for `script.events.event.tap`
+### Nested Schema for `script.events.event.select`
 
 Required:
 
-- **selections** (Block List, Min: 1, Max: 1) The options to be selected (see [below for nested schema](#nestedblock--script--events--event--tap--selections))
+- `selections` (Block List, Min: 1, Max: 1) The options to be selected (see [below for nested schema](#nestedblock--script--events--event--select--selections))
 
 Optional:
 
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **validate** (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--select--target))
+- `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--select--validate))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--select--wait))
 
-<a id="nestedblock--script--events--event--tap--selections"></a>
-### Nested Schema for `script.events.event.tap.selections`
-
-Required:
-
-- **option** (Block List, Min: 1) The option to be selected (see [below for nested schema](#nestedblock--script--events--event--tap--selections--option))
-
-<a id="nestedblock--script--events--event--tap--selections--option"></a>
-### Nested Schema for `script.events.event.tap.selections.option`
+<a id="nestedblock--script--events--event--select--selections"></a>
+### Nested Schema for `script.events.event.select.selections`
 
 Required:
 
-- **index** (Number) The index of the option to be selected
-- **value** (String) The value of the option to be selected
+- `option` (Block List, Min: 1) The option to be selected (see [below for nested schema](#nestedblock--script--events--event--select--selections--option))
+
+<a id="nestedblock--script--events--event--select--selections--option"></a>
+### Nested Schema for `script.events.event.select.selections.option`
+
+Required:
+
+- `index` (Number) The index of the option to be selected
+- `value` (String) The value of the option to be selected
 
 
 
-<a id="nestedblock--script--events--event--tap--target"></a>
-### Nested Schema for `script.events.event.tap.target`
+<a id="nestedblock--script--events--event--select--target"></a>
+### Nested Schema for `script.events.event.select.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--select--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
+<a id="nestedblock--script--events--event--select--target--locators"></a>
+### Nested Schema for `script.events.event.select.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--select--target--locators--locator))
 
-
-
-
-<a id="nestedblock--script--events--event--tap--validate"></a>
-### Nested Schema for `script.events.event.tap.validate`
+<a id="nestedblock--script--events--event--select--target--locators--locator"></a>
+### Nested Schema for `script.events.event.select.target.locators.locator`
 
 Required:
 
-- **validation** (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
-<a id="nestedblock--script--events--event--tap--validate--validation"></a>
-### Nested Schema for `script.events.event.tap.validate.validation`
+
+
+
+<a id="nestedblock--script--events--event--select--validate"></a>
+### Nested Schema for `script.events.event.select.validate`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `validation` (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--select--validate--validation))
+
+<a id="nestedblock--script--events--event--select--validate--validation"></a>
+### Nested Schema for `script.events.event.select.validate.validation`
+
+Required:
+
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--select--validate--validation--target))
 
-<a id="nestedblock--script--events--event--tap--validate--validation--target"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target`
-
-Optional:
-
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
-- **window** (String) The tab of the target
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--validate--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window.locator`
-
-Required:
-
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
-
-
-
-
-
-
-<a id="nestedblock--script--events--event--tap--wait"></a>
-### Nested Schema for `script.events.event.tap.wait`
-
-Required:
-
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+<a id="nestedblock--script--events--event--select--validate--validation--target"></a>
+### Nested Schema for `script.events.event.select.validate.validation.target`
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--select--validate--validation--target--locators))
+- `window` (String) The tab of the target
+
+<a id="nestedblock--script--events--event--select--validate--validation--target--locators"></a>
+### Nested Schema for `script.events.event.select.validate.validation.target.locators`
+
+Required:
+
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--select--validate--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--select--validate--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.select.validate.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
+
+
+
+
+
+
+<a id="nestedblock--script--events--event--select--wait"></a>
+### Nested Schema for `script.events.event.select.wait`
+
+Required:
+
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+
+Optional:
+
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--select--wait--validation))
 
-<a id="nestedblock--script--events--event--tap--wait--validation"></a>
-### Nested Schema for `script.events.event.tap.wait.validation`
+<a id="nestedblock--script--events--event--select--wait--validation"></a>
+### Nested Schema for `script.events.event.select.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--select--wait--validation--target))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target`
+<a id="nestedblock--script--events--event--select--wait--validation--target"></a>
+### Nested Schema for `script.events.event.select.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--select--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
-
-Required:
-
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
-
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--select--wait--validation--target--locators"></a>
+### Nested Schema for `script.events.event.select.wait.validation.target.locators`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--select--wait--validation--target--locators--locator))
+
+<a id="nestedblock--script--events--event--select--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.select.wait.validation.target.locators.locator`
+
+Required:
+
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -1033,36 +1036,36 @@ Required:
 
 Required:
 
-- **button** (Number) the mouse button to be used for the click
+- `button` (Number) the mouse button to be used for the click
 
 Optional:
 
-- **target** (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
-- **validate** (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
-- **wait** (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
+- `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--tap--target))
+- `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--tap--validate))
+- `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--tap--wait))
 
 <a id="nestedblock--script--events--event--tap--target"></a>
 ### Nested Schema for `script.events.event.tap.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators))
+- `window` (String) The tab of the target
 
 <a id="nestedblock--script--events--event--tap--target--locators"></a>
-### Nested Schema for `script.events.event.tap.target.window`
+### Nested Schema for `script.events.event.tap.target.locators`
 
 Required:
 
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--window--locator))
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--target--locators--locator))
 
-<a id="nestedblock--script--events--event--tap--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.target.window.locator`
+<a id="nestedblock--script--events--event--tap--target--locators--locator"></a>
+### Nested Schema for `script.events.event.tap.target.locators.locator`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -1072,45 +1075,45 @@ Required:
 
 Required:
 
-- **validation** (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
+- `validation` (Block List, Min: 1) The element to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation))
 
 <a id="nestedblock--script--events--event--tap--validate--validation"></a>
 ### Nested Schema for `script.events.event.tap.validate.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
 
 <a id="nestedblock--script--events--event--tap--validate--validation--target"></a>
 ### Nested Schema for `script.events.event.tap.validate.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators))
+- `window` (String) The tab of the target
 
 <a id="nestedblock--script--events--event--tap--validate--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window`
+### Nested Schema for `script.events.event.tap.validate.validation.target.locators`
 
 Required:
 
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--window--locator))
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target--locators--locator))
 
-<a id="nestedblock--script--events--event--tap--validate--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.validate.validation.target.window.locator`
+<a id="nestedblock--script--events--event--tap--validate--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.tap.validate.validation.target.locators.locator`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -1122,52 +1125,52 @@ Required:
 
 Required:
 
-- **wait_for** (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
+- `wait_for` (String) The time to wait before the next event is triggered. Possible values are `page_complete` (wait for the page to load completely), `network` (wait for background network activity to complete), `next_action` (wait for the next action), `time` (wait for a specified periodof time) and `validation` (wait for a specific element to appear)
 
 Optional:
 
-- **milliseconds** (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
-- **timeout** (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
+- `milliseconds` (Number) The time to wait, in millisencods. The maximum allowed value is `60000`. Required for the type `time`, not applicable otherwise.
+- `timeout` (Number) he maximum amount of time to wait for a certain element to appear, in milliseconds—if exceeded, the action is marked as failed.
 The maximum allowed value is 60000. Required for the type `validation`, not applicable otherwise..
-- **validation** (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
+- `validation` (Block List, Max: 1) The elements to wait for. Required for the `validation` type, not applicable otherwise. (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation))
 
 <a id="nestedblock--script--events--event--tap--wait--validation"></a>
 ### Nested Schema for `script.events.event.tap.wait.validation`
 
 Required:
 
-- **type** (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
 
 Optional:
 
-- **fail_if_found** (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- **match** (String) The content to look for on the page.
+- `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
+- `match` (String) The content to look for on the page.
 Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
-- **regex** (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
-- **target** (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
+- `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
+- `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
 
 <a id="nestedblock--script--events--event--tap--wait--validation--target"></a>
 ### Nested Schema for `script.events.event.tap.wait.validation.target`
 
 Optional:
 
-- **locators** (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
-- **window** (String) The tab of the target
+- `locators` (Block List) The list of locators identifying the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators))
+- `window` (String) The tab of the target
 
 <a id="nestedblock--script--events--event--tap--wait--validation--target--locators"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window`
+### Nested Schema for `script.events.event.tap.wait.validation.target.locators`
 
 Required:
 
-- **locator** (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--window--locator))
+- `locator` (Block List, Min: 1) A locator dentifyies the desired element (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target--locators--locator))
 
-<a id="nestedblock--script--events--event--tap--wait--validation--target--window--locator"></a>
-### Nested Schema for `script.events.event.tap.wait.validation.target.window.locator`
+<a id="nestedblock--script--events--event--tap--wait--validation--target--locators--locator"></a>
+### Nested Schema for `script.events.event.tap.wait.validation.target.locators.locator`
 
 Required:
 
-- **type** (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
-- **value** (String) The name of the element to be found
+- `type` (String) Defines where to look for an element. `css` (CSS Selector) or `dom` (Javascript code)
+- `value` (String) The name of the element to be found
 
 
 
@@ -1183,24 +1186,24 @@ Required:
 
 Optional:
 
-- **tag** (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
+- `tag` (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
 
 <a id="nestedblock--tags--tag"></a>
 ### Nested Schema for `tags.tag`
 
 Required:
 
-- **context** (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
+- `context` (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
 
 Custom tags use the `CONTEXTLESS` value.
-- **key** (String) The key of the tag.
+- `key` (String) The key of the tag.
 
 Custom tags have the tag value here.
 
 Optional:
 
-- **source** (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
-- **value** (String) The value of the tag.
+- `source` (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
+- `value` (String) The value of the tag.
 
 Not applicable to custom tags.
 

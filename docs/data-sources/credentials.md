@@ -17,7 +17,10 @@ description: |-
 
 ### Optional
 
-- **credentials** (Map of String)
-- **id** (String) The ID of this resource.
+- `credentials` (Map of String)
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

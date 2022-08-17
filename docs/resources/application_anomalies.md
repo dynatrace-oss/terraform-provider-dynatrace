@@ -17,30 +17,33 @@ description: |-
 
 ### Optional
 
-- **failure_rate** (Block List, Max: 1) Configuration of failure rate increase detection (see [below for nested schema](#nestedblock--failure_rate))
-- **id** (String) The ID of this resource.
-- **response_time** (Block List, Max: 1) Configuration of response time degradation detection (see [below for nested schema](#nestedblock--response_time))
-- **traffic** (Block List, Max: 1) Configuration for anomalies regarding traffic (see [below for nested schema](#nestedblock--traffic))
+- `failure_rate` (Block List, Max: 1) Configuration of failure rate increase detection (see [below for nested schema](#nestedblock--failure_rate))
+- `response_time` (Block List, Max: 1) Configuration of response time degradation detection (see [below for nested schema](#nestedblock--response_time))
+- `traffic` (Block List, Max: 1) Configuration for anomalies regarding traffic (see [below for nested schema](#nestedblock--traffic))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--failure_rate"></a>
 ### Nested Schema for `failure_rate`
 
 Optional:
 
-- **auto** (Block List, Max: 1) Parameters of failure rate increase auto-detection. Example: If the expected error rate is 1.5%, and you set an absolute increase of 1%, and a relative increase of 50%, the thresholds will be:  Absolute: 1.5% + **1%** = 2.5%  Relative: 1.5% + 1.5% * **50%** = 2.25% (see [below for nested schema](#nestedblock--failure_rate--auto))
-- **thresholds** (Block List, Max: 1) Fixed thresholds for failure rate increase detection (see [below for nested schema](#nestedblock--failure_rate--thresholds))
+- `auto` (Block List, Max: 1) Parameters of failure rate increase auto-detection. Example: If the expected error rate is 1.5%, and you set an absolute increase of 1%, and a relative increase of 50%, the thresholds will be:  Absolute: 1.5% + **1%** = 2.5%  Relative: 1.5% + 1.5% * **50%** = 2.25% (see [below for nested schema](#nestedblock--failure_rate--auto))
+- `thresholds` (Block List, Max: 1) Fixed thresholds for failure rate increase detection (see [below for nested schema](#nestedblock--failure_rate--thresholds))
 
 <a id="nestedblock--failure_rate--auto"></a>
 ### Nested Schema for `failure_rate.auto`
 
 Required:
 
-- **absolute** (Number) Absolute increase of failing service calls to trigger an alert, %
-- **relative** (Number) Relative increase of failing service calls to trigger an alert, %
+- `absolute` (Number) Absolute increase of failing service calls to trigger an alert, %
+- `relative` (Number) Relative increase of failing service calls to trigger an alert, %
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--failure_rate--thresholds"></a>
@@ -48,12 +51,12 @@ Optional:
 
 Required:
 
-- **sensitivity** (String) Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers alert
-- **threshold** (Number) Failure rate during any 5-minute period to trigger an alert, %
+- `sensitivity` (String) Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers alert
+- `threshold` (Number) Failure rate during any 5-minute period to trigger an alert, %
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -62,23 +65,23 @@ Optional:
 
 Optional:
 
-- **auto** (Block List, Max: 1) Parameters of the response time degradation auto-detection. Violation of **any** criterion triggers an alert (see [below for nested schema](#nestedblock--response_time--auto))
-- **thresholds** (Block List, Max: 1) Fixed thresholds for response time degradation detection (see [below for nested schema](#nestedblock--response_time--thresholds))
+- `auto` (Block List, Max: 1) Parameters of the response time degradation auto-detection. Violation of **any** criterion triggers an alert (see [below for nested schema](#nestedblock--response_time--auto))
+- `thresholds` (Block List, Max: 1) Fixed thresholds for response time degradation detection (see [below for nested schema](#nestedblock--response_time--thresholds))
 
 <a id="nestedblock--response_time--auto"></a>
 ### Nested Schema for `response_time.auto`
 
 Required:
 
-- **load** (String) Minimal service load to detect response time degradation. Response time degradation of services with smaller load won't trigger alerts. Possible values are `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`, `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
-- **milliseconds** (Number) Alert if the response time degrades by more than *X* milliseconds
-- **percent** (Number) Alert if the response time degrades by more than *X* %
-- **slowest_milliseconds** (Number) Alert if the response time of the slowest 10% degrades by more than *X* milliseconds
-- **slowest_percent** (Number) Alert if the response time of the slowest 10% degrades by more than *X* milliseconds
+- `load` (String) Minimal service load to detect response time degradation. Response time degradation of services with smaller load won't trigger alerts. Possible values are `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`, `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+- `milliseconds` (Number) Alert if the response time degrades by more than *X* milliseconds
+- `percent` (Number) Alert if the response time degrades by more than *X* %
+- `slowest_milliseconds` (Number) Alert if the response time of the slowest 10% degrades by more than *X* milliseconds
+- `slowest_percent` (Number) Alert if the response time of the slowest 10% degrades by more than *X* milliseconds
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 <a id="nestedblock--response_time--thresholds"></a>
@@ -86,14 +89,14 @@ Optional:
 
 Required:
 
-- **load** (String) Minimal service load to detect response time degradation. Response time degradation of services with smaller load won't trigger alerts. Possible values are `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`, `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
-- **milliseconds** (Number) Response time during any 5-minute period to trigger an alert, in milliseconds
-- **sensitivity** (String) Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers an alert
-- **slowest_milliseconds** (Number) Response time of the 10% slowest during any 5-minute period to trigger an alert, in milliseconds
+- `load` (String) Minimal service load to detect response time degradation. Response time degradation of services with smaller load won't trigger alerts. Possible values are `FIFTEEN_REQUESTS_PER_MINUTE`, `FIVE_REQUESTS_PER_MINUTE`, `ONE_REQUEST_PER_MINUTE` and `TEN_REQUESTS_PER_MINUTE`
+- `milliseconds` (Number) Response time during any 5-minute period to trigger an alert, in milliseconds
+- `sensitivity` (String) Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers an alert
+- `slowest_milliseconds` (Number) Response time of the 10% slowest during any 5-minute period to trigger an alert, in milliseconds
 
 Optional:
 
-- **unknowns** (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
 
@@ -102,19 +105,19 @@ Optional:
 
 Optional:
 
-- **drops** (Block List, Max: 1) The configuration of traffic drops detection (see [below for nested schema](#nestedblock--traffic--drops))
-- **spikes** (Block List, Max: 1) The configuration of traffic spikes detection (see [below for nested schema](#nestedblock--traffic--spikes))
+- `drops` (Block List, Max: 1) The configuration of traffic drops detection (see [below for nested schema](#nestedblock--traffic--drops))
+- `spikes` (Block List, Max: 1) The configuration of traffic spikes detection (see [below for nested schema](#nestedblock--traffic--spikes))
 
 <a id="nestedblock--traffic--drops"></a>
 ### Nested Schema for `traffic.drops`
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **percent** (Number) Alert if the observed traffic is less than *X* % of the expected value
+- `percent` (Number) Alert if the observed traffic is less than *X* % of the expected value
 
 
 <a id="nestedblock--traffic--spikes"></a>
@@ -122,10 +125,10 @@ Optional:
 
 Required:
 
-- **enabled** (Boolean) The detection is enabled (`true`) or disabled (`false`)
+- `enabled` (Boolean) The detection is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- **percent** (Number) Alert if the observed traffic is less than *X* % of the expected value
+- `percent` (Number) Alert if the observed traffic is less than *X* % of the expected value
 
 

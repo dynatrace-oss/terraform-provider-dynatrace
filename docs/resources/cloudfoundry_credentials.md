@@ -17,16 +17,19 @@ description: |-
 
 ### Required
 
-- **api_url** (String) The URL of the Cloud Foundry foundation credentials.  The URL must be valid according to RFC 2396.  Leading or trailing whitespaces are not allowed.
-- **login_url** (String) The login URL of the Cloud Foundry foundation credentials. The URL must be valid according to RFC 2396.  Leading or trailing whitespaces are not allowed.
-- **name** (String) The name of the Cloud Foundry foundation credentials.  Allowed characters are letters, numbers, whitespaces, and the following characters: `.+-_`. Leading or trailing whitespace is not allowed.
-- **username** (String) The username of the Cloud Foundry foundation credentials.  Leading and trailing whitespaces are not allowed.
+- `api_url` (String) The URL of the Cloud Foundry foundation credentials.  The URL must be valid according to RFC 2396.  Leading or trailing whitespaces are not allowed.
+- `login_url` (String) The login URL of the Cloud Foundry foundation credentials. The URL must be valid according to RFC 2396.  Leading or trailing whitespaces are not allowed.
+- `name` (String) The name of the Cloud Foundry foundation credentials.  Allowed characters are letters, numbers, whitespaces, and the following characters: `.+-_`. Leading or trailing whitespace is not allowed.
+- `username` (String) The username of the Cloud Foundry foundation credentials.  Leading and trailing whitespaces are not allowed.
 
 ### Optional
 
-- **active** (Boolean) The monitoring is enabled (`true`) or disabled (`false`) for given credentials configuration.  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
-- **id** (String) The ID of this resource.
-- **password** (String, Sensitive) The password of the Cloud Foundry foundation credentials.
-- **unknowns** (String) Any attributes that aren't yet supported by this provider
+- `active` (Boolean) The monitoring is enabled (`true`) or disabled (`false`) for given credentials configuration.  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
+- `password` (String, Sensitive) The password of the Cloud Foundry foundation credentials.
+- `unknowns` (String) Any attributes that aren't yet supported by this provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

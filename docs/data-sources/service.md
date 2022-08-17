@@ -32,9 +32,12 @@ resource "dynatrace_key_requests" "TerraformTest" {
 
 ### Required
 
-- **name** (String)
+- `name` (String)
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **tags** (Set of String) Required tags of the service to find
+- `tags` (Set of String) Required tags of the service to find
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
