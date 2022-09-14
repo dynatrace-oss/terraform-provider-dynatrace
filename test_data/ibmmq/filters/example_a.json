@@ -1,0 +1,35 @@
+{
+    "objectId": "vu9U3hXa3q0AAAABABtidWlsdGluOm1haW5mcmFtZS5tcWZpbHRlcnMABnRlbmFudAAGdGVuYW50ACQ1YmE2MDZlNC1kOWZhLTNjZTQtYjI4NC1mYjIwOWUyNDcxZTm-71TeFdrerQ",
+    "summary": "",
+    "created": 1661268067454,
+    "modified": 1661268067454,
+    "author": "dt0c01.5CWCZBUUH3BX23PKYIKA6EXT",
+    "updateToken": "vu9U3hXY3q0ATAAkNWJhNjA2ZTQtZDlmYS0zY2U0LWIyODQtZmIyMDllMjQ3MWU5ACQzNWUwYjllMC0yMmY3LTExZWQtODAwMS0wMTAwMDAwMDAwMDe-71TeFdjerQ",
+    "scope": "environment",
+    "schemaId": "builtin:mainframe.mqfilters",
+    "schemaVersion": "1.0.3",
+    "value": {
+      "cicsMqQueueIdIncludes": [
+        "StringB1",
+        "StringA1",
+        "StringC1"
+      ],
+      "cicsMqQueueIdExcludes": [
+        "StringC2",
+        "StringB2",
+        "StringA2"
+      ],
+      "imsMqQueueIdIncludes": [],
+      "imsMqQueueIdExcludes": [
+        "StringA4",
+        "StringC4",
+        "StringB4"
+      ],
+      "imsCrTrnIdIncludes": [
+        "StringB5",
+        "StringA5",
+        "StringC5"
+      ],
+      "imsCrTrnIdExcludes": []
+    }
+  }

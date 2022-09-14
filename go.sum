@@ -181,6 +181,8 @@ github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0 h1:XLxBZJwfenHqQ2WK
 github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0/go.mod h1:Wty4r/AkYsJJFl7mj1w+Ma70Irfh/jQOmehhnVk4ylI=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 h1:dSWSlgwjvNVr3vQ4HerYce2k1O2f/heBzkKJgFaqu2Y=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0/go.mod h1:zKZFqz1pXn1Q8nEcCZTi2b3Rc5YKscCCVDmR7mS+z88=
+github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1 h1:2yfcMlyeieffRAbIX2/smhncFGqtldzy0AMcjiWt6aM=
+github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1/go.mod h1:21WyI3L61A3/8uF/o8BDns0x+U9PHcHo7F5I61HQZYo=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1 h1:QmUGx2mYz8EHNcFSbHE54g32mfE+n8EZJAXfEaKCFOQ=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1/go.mod h1:QQY1vcZV9eVnCUhl9xryTcfyTy+oZA80XKTYRgYgg9k=
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.2 h1:e/94wXXaXG+R0vcYltG4c7pg+MDcbq0AOwyQ3t/WHL8=
