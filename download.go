@@ -53,6 +53,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
+	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
@@ -1707,6 +1708,45 @@ func importSpanAttributes(targetFolder string, environmentURL string, apiToken s
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_span_attribute", escape(config.Key))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importMQQueueManagers(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := queuemanagers.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, "") + ".queue_manager.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_queue_manager", escape(config.Name))); err != nil {
 			file.Close()
 			return err
 		}

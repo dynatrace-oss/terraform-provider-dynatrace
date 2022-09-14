@@ -70,6 +70,7 @@ var resArr = []string{
 	"dynatrace_application_error_rules",
 	"dynatrace_request_naming",
 	"dynatrace_key_requests",
+	"dynatrace_queue_manager",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -486,6 +487,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_key_requests"]; ok {
 		if err := importKeyRequests(targetFolder+"/keyrequests", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_queue_manager"]; ok {
+		if err := importMQQueueManagers(targetFolder+"/ibmmq/queuemanagers", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}
