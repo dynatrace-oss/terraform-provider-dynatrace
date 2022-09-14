@@ -50,6 +50,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/filters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuesharinggroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
@@ -172,6 +173,7 @@ func Provider() *schema.Provider {
 			"dynatrace_queue_manager":             queuemanagers.Resource(),
 			"dynatrace_ibm_mq_filters":            filters.Resource(),
 			"dynatrace_queue_sharing_groups":      queuesharinggroups.Resource(),
+			"dynatrace_ims_bridges":               imsbridges.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

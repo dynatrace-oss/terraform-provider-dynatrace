@@ -183,6 +183,8 @@ github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 h1:dSWSlgwjvNVr3vQ4Her
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0/go.mod h1:zKZFqz1pXn1Q8nEcCZTi2b3Rc5YKscCCVDmR7mS+z88=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1 h1:2yfcMlyeieffRAbIX2/smhncFGqtldzy0AMcjiWt6aM=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1/go.mod h1:21WyI3L61A3/8uF/o8BDns0x+U9PHcHo7F5I61HQZYo=
+github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.1 h1:os9dKxcMqm/dlrL/9d1ZRcOYvBdy+zoeLFc+krb8xGE=
+github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.1/go.mod h1:j079BZyn3Iz5gjo4K8Flr0tIprw+W4LJOOiFom2cVIA=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1 h1:QmUGx2mYz8EHNcFSbHE54g32mfE+n8EZJAXfEaKCFOQ=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1/go.mod h1:QQY1vcZV9eVnCUhl9xryTcfyTy+oZA80XKTYRgYgg9k=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.1 h1:8ZBEdTz9vFiby/CuaKB2gDDU9ra8DQWE9VfC0ZqKjGE=
