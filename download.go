@@ -34,6 +34,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/anomalies/services"
 	"github.com/dtcookie/dynatrace/api/config/applications/mobile"
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
+	"github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules"
 	"github.com/dtcookie/dynatrace/api/config/autotags"
 	"github.com/dtcookie/dynatrace/api/config/credentials/aws"
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
@@ -1907,6 +1908,64 @@ func importNetworkZones(targetFolder string, environmentURL string, apiToken str
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_network_zones", "NetworkZones")); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importApplicationDetectionRules(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := applicationdetectionrules.NewService(environmentURL+"/api/config/v1", apiToken)
+	stubList, err := restClient.List()
+	if err != nil {
+		return err
+	}
+
+	//Create a map of app ID and name pairs and initialize app counter to be used for name format
+	restClientApp := web.NewService(environmentURL+"/api/config/v1", apiToken)
+	stubListApp, err := restClientApp.List()
+	if err != nil {
+		return err
+	}
+	appIdName := make(map[string]string)
+	appCounter := make(map[string]int)
+	for _, app := range stubListApp.Values {
+		appIdName[app.ID] = app.Name
+		appCounter[app.Name] = 0
+	}
+
+	for _, stub := range stubList.Values {
+		if !ctns(argids, stub.ID) {
+			continue
+		}
+		config, err := restClient.Get(stub.ID)
+		if err != nil {
+			return err
+		}
+
+		//Retrieve application name and append counter value
+		name := appIdName[config.ApplicationIdentifier]
+		appCounter[name] = appCounter[name] + 1
+		name = fmt.Sprint(name, appCounter[name])
+
+		var file *os.File
+		fileName := targetFolder + "/" + name + ".application_detection_rule.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_application_detection_rule", escape(name))); err != nil {
 			file.Close()
 			return err
 		}

@@ -75,6 +75,7 @@ var resArr = []string{
 	"dynatrace_queue_sharing_groups",
 	"dynatrace_ims_bridges",
 	"dynatrace_network_zones",
+	"dynatrace_application_detection_rule",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -521,6 +522,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_network_zones"]; ok {
 		if err := importNetworkZones(targetFolder+"/networkzones", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_application_detection_rule"]; ok {
+		if err := importApplicationDetectionRules(targetFolder+"/applications/web/applicationdetectionrules", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}
