@@ -72,6 +72,7 @@ var resArr = []string{
 	"dynatrace_key_requests",
 	"dynatrace_queue_manager",
 	"dynatrace_ibm_mq_filters",
+	"dynatrace_queue_sharing_groups",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -500,6 +501,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_ibm_mq_filters"]; ok {
 		if err := importMQFilters(targetFolder+"/ibmmq/filters", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_queue_sharing_groups"]; ok {
+		if err := importMQQueueSharingGroups(targetFolder+"/ibmmq/queuesharinggroups", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

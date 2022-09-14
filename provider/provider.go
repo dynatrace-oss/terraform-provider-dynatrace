@@ -51,6 +51,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/filters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuesharinggroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
@@ -170,6 +171,7 @@ func Provider() *schema.Provider {
 			"dynatrace_key_requests":              keyrequests.Resource(),
 			"dynatrace_queue_manager":             queuemanagers.Resource(),
 			"dynatrace_ibm_mq_filters":            filters.Resource(),
+			"dynatrace_queue_sharing_groups":      queuesharinggroups.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
