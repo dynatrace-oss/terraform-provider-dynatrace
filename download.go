@@ -58,6 +58,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
+	"github.com/dtcookie/dynatrace/api/config/v2/networkzones"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/capture"
@@ -1867,6 +1868,45 @@ func importMQIMSBridges(targetFolder string, environmentURL string, apiToken str
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_ims_bridges", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importNetworkZones(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := networkzones.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + "NetworkZones" + ".network_zones.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_network_zones", "NetworkZones")); err != nil {
 			file.Close()
 			return err
 		}

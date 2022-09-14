@@ -60,6 +60,7 @@ import (
 	hostnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/hosts"
 	processgroupnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/processgroups"
 	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestnaming"
@@ -174,6 +175,7 @@ func Provider() *schema.Provider {
 			"dynatrace_ibm_mq_filters":            filters.Resource(),
 			"dynatrace_queue_sharing_groups":      queuesharinggroups.Resource(),
 			"dynatrace_ims_bridges":               imsbridges.Resource(),
+			"dynatrace_network_zones":             networkzones.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
