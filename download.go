@@ -25,7 +25,6 @@ import (
 	"unicode"
 
 	"github.com/dtcookie/dynatrace/api/cluster/v2/envs"
-	"github.com/dtcookie/dynatrace/api/config/alerting"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/applications"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/diskevents"
@@ -54,6 +53,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
+	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
@@ -577,28 +577,27 @@ func importManagementZones(targetFolder string, environmentURL string, apiToken 
 func importAlertingProfiles(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
-	restClient := alerting.NewService(environmentURL+"/api/config/v1", apiToken)
+	restClient := alerting.NewService(environmentURL+"/api/v2", apiToken)
 
-	stubList, err := restClient.List()
+	ids, err := restClient.List()
 	if err != nil {
 		return err
 	}
-	for _, stub := range stubList.Values {
-		if !ctns(argids, stub.ID) {
+	for _, id := range ids {
+		if !ctns(argids, id) {
 			continue
 		}
-		config, err := restClient.Get(stub.ID)
+		config, err := restClient.Get(id)
 		if err != nil {
 			return err
 		}
-		config.Metadata = nil
 		var file *os.File
-		fileName := targetFolder + "/" + escFileName(config.DisplayName, stub.ID) + ".alerting_profile.tf"
+		fileName := targetFolder + "/" + escFileName(config.Name, id) + ".alerting_profile.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting_profile", escape(config.DisplayName))); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_alerting", escape(config.Name))); err != nil {
 			file.Close()
 			return err
 		}

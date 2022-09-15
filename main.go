@@ -38,7 +38,7 @@ var resArr = []string{
 	"dynatrace_management_zone",
 	"dynatrace_maintenance_window",
 	"dynatrace_request_attribute",
-	"dynatrace_alerting_profile",
+	"dynatrace_alerting",
 	"dynatrace_notification",
 	"dynatrace_autotag",
 	"dynatrace_aws_credentials",
@@ -297,7 +297,7 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-	if rids, ok := m["dynatrace_alerting_profile"]; ok {
+	if rids, ok := m["dynatrace_alerting"]; ok {
 		if err := importAlertingProfiles(targetFolder+"/alerting_profiles", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)

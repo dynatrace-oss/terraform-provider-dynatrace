@@ -1,0 +1,71 @@
+{
+  "objectId": "vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRmMjdlNjQwYS03MzkyLTM4ZGItOGEwYy1kNzk5M2MxNjE4YzW-71TeFdrerQ",
+  "summary": "rp_test_002",
+  "created": 1663150168315,
+  "modified": 1663150168315,
+  "author": "dt0c01.52SLB56BZWWRFK25TUIHE7PT",
+  "updateToken": "vu9U3hXY3q0ATAAkZjI3ZTY0MGEtNzM5Mi0zOGRiLThhMGMtZDc5OTNjMTYxOGM1ACQ1MTY5MGNiMC0zNDE1LTExZWQtODAwMS0wMTAwMDAwMDAwMDW-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:alerting.profile",
+  "schemaVersion": "7.0.6",
+  "value": {
+    "name": "rp_test_002",
+    "severityRules": [
+      {
+        "severityLevel": "AVAILABILITY",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentA:production"
+        ]
+      },
+      {
+        "severityLevel": "MONITORING_UNAVAILABLE",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentD:production"
+        ]
+      },
+      {
+        "severityLevel": "RESOURCE_CONTENTION",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentF:production"
+        ]
+      },
+      {
+        "severityLevel": "CUSTOM_ALERT",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentB:production"
+        ]
+      },
+      {
+        "severityLevel": "PERFORMANCE",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentE:production"
+        ]
+      },
+      {
+        "severityLevel": "ERRORS",
+        "delayInMinutes": 0,
+        "tagFilterIncludeMode": "INCLUDE_ALL",
+        "tagFilter": [
+          "Team:test",
+          "EnvironmentC:production"
+        ]
+      }
+    ],
+    "eventFilters": []
+  }
+}

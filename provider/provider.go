@@ -75,6 +75,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/monitors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
+	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2alerting"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -137,6 +138,7 @@ func Provider() *schema.Provider {
 			"dynatrace_maintenance_window":         maintenance.Resource(),
 			"dynatrace_request_attribute":          requestattributes.Resource(),
 			"dynatrace_alerting_profile":           alerting.Resource(),
+			"dynatrace_alerting":                   v2alerting.Resource(),
 			"dynatrace_notification":               notifications.Resource(),
 			"dynatrace_autotag":                    autotags.Resource(),
 			"dynatrace_aws_credentials":            aws.Resource(),
