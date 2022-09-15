@@ -93,6 +93,8 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dtcookie/assert v1.0.0 h1:hO6soKmcUmIBRfx7xMavD+FIoT5P5/YbwPSTcvve3zQ=
+github.com/dtcookie/assert v1.0.0/go.mod h1:jstJ5I2nwiemSNjyDSEucqN3LprvdtrbzkWGe/nRS90=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0 h1:YN34I4X0d1hmI2/jgQbvMuwmoMPoJBZquKGCOtNpj0Y=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0/go.mod h1:iPNJZktGm4K2GPkU3Lc2cTOeWFG2rVEyfeGWLGlZ6hY=
 github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.0 h1:JAqhaIEVoKVqu2DFcx0xlbvblM2slczb7Z5nwZNKzR8=
@@ -129,8 +131,8 @@ github.com/dtcookie/dynatrace/api/config/autotags v1.0.23 h1:s1hpbtAjhx90kILgGak
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.23/go.mod h1:JiSf94RIJkqhUH0zuX/1yubM5+G8NEOJMeW4ulqrnwU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4 h1:FzP47UtNGHiH4DqOQbQOFZ/9lM9cwe2UitLfymy2YPU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4/go.mod h1:XbqktXHBJFINafYP6DbQ0HCZRlQOApcAFxhWA+UuzLg=
-github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12 h1:9T0QRnCOLL4a6X2tEdo8wqLuet7Wu26DbgIJNR8xmbU=
-github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.12/go.mod h1:X/+5yqLZ5yhBjJVj1fVFi/Udvn9TPGE96ErOS0OPMqY=
+github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.13 h1:aBkf43zxlhW7jKapAW44XGwm69F271GWXGWE57Rv41s=
+github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.13/go.mod h1:G3xwdsI3cb+mefIqM9eGfFNxNbHwd+Q/pF5l2qbRdW4=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12 h1:zIdSZ6pin6kikBhcPuFbHeiQBUqIMF1d6QRQs9Pn970=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12/go.mod h1:Y3Ae0HzFsC0+38d58uDao5DmxlPMGxrEwdIhMLKTfao=
 github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1 h1:cKUvx3tkExiBoY0HTvjjdkLa8Rh+2wkBUlR0bOekPck=

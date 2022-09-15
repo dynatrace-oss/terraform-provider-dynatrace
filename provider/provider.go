@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
+	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
@@ -130,6 +131,7 @@ func Provider() *schema.Provider {
 			"dynatrace_host":                host.DataSource(),
 			"dynatrace_process":             process.DataSource(),
 			"dynatrace_process_group":       processgroup.DataSource(),
+			"dynatrace_aws_iam_external":    dsaws.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),
