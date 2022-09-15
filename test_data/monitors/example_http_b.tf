@@ -17,6 +17,12 @@ resource "dynatrace_http_monitor" "#name#" {
       configuration {
         accept_any_certificate = true
       }
+      authentication {
+        type = "KERBEROS"
+        credentials = "CREDENTIALS_VAULT-4DFB50E5F50A21A4"
+        realm_name = "ABCDE"
+        kdc_ip = "10.0.0.1"
+      }
     }
   }
   tags {
