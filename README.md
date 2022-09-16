@@ -5,59 +5,7 @@
 
 ## Using the provider
 
-If you want to run Terraform with the dynatrace provider plugin on your system, add the plug-in provider to the Terraform configuration file.
-
-```hcl
-terraform {
-    required_providers {
-        dynatrace = {
-            version = "1.12.0"
-            source = "dynatrace-oss/dynatrace"
-        }
-    }
-}   
-```
-
-In order to configure the provider, add a code section like this into your Terraform configuration file
-
-```hcl
-    provider "dynatrace" {
-        dt_env_url   = "https://#######.live.dynatrace.com"
-        dt_api_token = "##########################################"
-    }    
-```
-
-where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_token` needs to be an API Token with the permissions `Read configuration` and `Capture request data`.
-
-## Currently supported configuration settings
-* Dashboards
-* Management Zones
-* Custom Services
-* Request Attributes
-* Alerting Profiles
-* Problem Notifiations
-* Auto Tag Configuration
-* Kubernetes Credentials
-* AWS Credentials
-* Azure Credentials
-* Maintenance Windows
-* Service Level Objectives
-* Service Naming
-* Host Naming
-* Process Group Naming
-* Calculated Service Metrics
-
-## Using API Parameters not supported by this module
-
-By default, this terraform provider also includes an 'unknowns' operator for configuring properties that are not yet explicitly supported by this provider
-
-To use this, simply pass a [jsonencoded](https://www.terraform.io/docs/language/functions/jsonencode.html) list of key-value parameters you want the provider to also manage via API call
-
-```hcl
-    resource "dynatrace_k8s_credentials" "k8s_integration" {
-        unkowns = jsonencode("activeGateGroup"="myactivegategroup.nonp")
-    }
-```
+Please check the documentation within the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) for how to use and configure this Provider as well as for currrently supported resources and data sources.
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
