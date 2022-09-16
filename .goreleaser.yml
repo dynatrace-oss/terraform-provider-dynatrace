@@ -25,13 +25,6 @@ builds:
     - '386'
     - arm
     - arm64
-  ignore:
-    - goos: darwin
-      goarch: '386'
-    - goos: windows
-      goarch: arm64
-    - goos: darwin
-      goarch: arm
   binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
 - format: zip
