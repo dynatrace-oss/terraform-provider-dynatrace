@@ -118,12 +118,27 @@ Required:
 
 Optional:
 
+- `authentication` (Block List, Max: 1) Authentication options for this request (see [below for nested schema](#nestedblock--script--request--authentication))
 - `body` (String) The body of the HTTP request.
 - `configuration` (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration))
 - `description` (String) A short description of the event to appear in the web UI.
 - `post_processing` (String) Javascript code to execute after sending the request.
 - `pre_processing` (String) Javascript code to execute before sending the request.
 - `validation` (Block List, Max: 1) Validation helps you verify that your HTTP monitor loads the expected content (see [below for nested schema](#nestedblock--script--request--validation))
+
+<a id="nestedblock--script--request--authentication"></a>
+### Nested Schema for `script.request.authentication`
+
+Required:
+
+- `credentials` (String) The ID of the credentials within the Dynatrace Credentials Vault.
+- `type` (String) The type of authentication. Possible values are `BASIC_AUTHENTICATION`, `NTLM` and `KERBEROS`.
+
+Optional:
+
+- `kdc_ip` (String) The KDC IP. Valid and required only if the type of authentication is `KERBEROS`.
+- `realm_name` (String) The Realm Name. Valid and required only if the type of authentication is `KERBEROS`.
+
 
 <a id="nestedblock--script--request--configuration"></a>
 ### Nested Schema for `script.request.configuration`
