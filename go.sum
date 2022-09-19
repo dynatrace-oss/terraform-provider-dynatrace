@@ -150,8 +150,8 @@ github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1/go.mod h1:FZB
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.10/go.mod h1:4RUGKPBNwzaB7iYC4k/+uCm/wk7twuZt1EerpVpYAWs=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.11 h1:x43Oa96kKl/6it5zDDLhToihz+LjrHpTOqbp586uLsI=
 github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.11/go.mod h1:4RUGKPBNwzaB7iYC4k/+uCm/wk7twuZt1EerpVpYAWs=
-github.com/dtcookie/dynatrace/api/config/maintenance v1.0.9 h1:D+x1wKQQKjiM1kB/1UkPhCyuY+pYV+HPA27K5MdlnLk=
-github.com/dtcookie/dynatrace/api/config/maintenance v1.0.9/go.mod h1:+UUOxoL2CjjZNhct79TOBdFFdAutqB5x/cmFp2fJTfo=
+github.com/dtcookie/dynatrace/api/config/maintenance v1.0.10 h1:ftjeDZSqUNeZS8O60obOYVRFhA2pKDL8uz6O0G66a74=
+github.com/dtcookie/dynatrace/api/config/maintenance v1.0.10/go.mod h1:+UUOxoL2CjjZNhct79TOBdFFdAutqB5x/cmFp2fJTfo=
 github.com/dtcookie/dynatrace/api/config/managementzones v1.0.18 h1:1Go69s6ODza7v4QdZ4AWI3IZooTvMjIiiqbWWft1c1w=
 github.com/dtcookie/dynatrace/api/config/managementzones v1.0.18/go.mod h1:zQKTQyyxgYOngksrkGnEPEbBEkwmu/dVSCOU3VIq3tU=
 github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.3/go.mod h1:WOWBtEohyekJ5V6nwWD5tFIDLZeHoyjedd5i9E+wZMc=
