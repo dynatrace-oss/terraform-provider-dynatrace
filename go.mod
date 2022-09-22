@@ -17,7 +17,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.11
 	github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.1
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.23
-	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.13
+	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.16
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1
 	github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.14
@@ -34,14 +34,14 @@ require (
 	github.com/dtcookie/dynatrace/api/config/notifications v1.0.12
 	github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.10
 	github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0
-	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.10
+	github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.11
 	github.com/dtcookie/dynatrace/api/config/topology/application v1.0.1
 	github.com/dtcookie/dynatrace/api/config/topology/host v1.0.1
 	github.com/dtcookie/dynatrace/api/config/topology/process v1.0.2
 	github.com/dtcookie/dynatrace/api/config/topology/processgroup v1.0.1
 	github.com/dtcookie/dynatrace/api/config/topology/service v1.0.2
 	github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0
-	github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.1
+	github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.3
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1
@@ -53,7 +53,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.2
-	github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.2
+	github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.4
 	github.com/dtcookie/dynatrace/rest v1.0.15
 	github.com/dtcookie/dynatrace/terraform v1.0.5
 	github.com/dtcookie/hcl v0.0.16
