@@ -780,6 +780,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 			}
 		}
 		if shareSettings != nil {
+			shareSettings.DashboardID = fmt.Sprintf("dynatrace_dashboard.%s.id", escape(config.Metadata.Name+"_"+stub.ID))
 			if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard_sharing", escape(config.Metadata.Name+"_"+stub.ID))); err != nil {
 				file.Close()
 				return err
