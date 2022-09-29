@@ -1,0 +1,58 @@
+---
+layout: ""
+page_title: "dynatrace_synthetic_location Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_synthetic_location` covers queries for the ID of a synthetic location based off of provided parameters
+---
+
+# dynatrace_synthetic_location (Data Source)
+
+The synthetic location data source allows the location ID to be retrieved based off of provided parameters.
+
+## Example Usage
+
+```
+data "dynatrace_synthetic_location" "Test" {
+  cloud_platform = "AMAZON_EC2"
+  type           = "PUBLIC"
+  name           = "Sydney"
+}
+
+resource "dynatrace_http_monitor" "#name#" {
+  name = "#name#" 
+  enabled = true 
+  frequency = 60 
+  locations = ["${data.dynatrace_synthetic_location.Test.id}"] 
+  anomaly_detection {
+    loading_time_thresholds {
+      enabled = true 
+    }
+    outage_handling {
+      global_outage = true 
+      local_outage = false 
+      retry_on_error = false 
+    }
+  }
+  script {
+    request {
+      description = "google.com" 
+      method = "GET" 
+      url = "https://www.google.com" 
+      configuration {
+        accept_any_certificate = true 
+        follow_redirects = true 
+      }
+      validation {
+        rule {
+          type = "httpStatusesList" 
+          pass_if_found = false 
+          value = "\u003e=400" 
+        }
+      }
+    }
+  }
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}

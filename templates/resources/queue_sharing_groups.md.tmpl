@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_queue_sharing_groups Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_queue_sharing_groups` covers configuration for IBM MQ queue sharing groups
+---
+
+# dynatrace_queue_sharing_groups (Resource)
+
+## Dynatrace Documentation
+
+- IBM MQ tracing - https://www.dynatrace.com/support/help/how-to-use-dynatrace/queues/configuration/ibm-mq-tracing
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:ibmmq.queue-sharing-group`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_queue_sharing_groups` downloads all existing IBM MQ queue sharing group configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/ibmmq/queuesharinggroups/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_calculated_service_metric Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_calculated_service_metric` covers configuration for calculated service metrics
+---
+
+# dynatrace_calculated_service_metric (Resource)
+
+## Dynatrace Documentation
+
+- Calculated metrics for services - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/service-monitoring-settings/calculated-service-metric
+
+- Service metrics API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/calculated-metrics/service-metrics
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_calculated_service_metric` downloads all existing calculated service metric configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/metrics/calculated/service/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

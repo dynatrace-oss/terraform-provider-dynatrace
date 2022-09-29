@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_service_naming Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_service_naming` covers configuration for service naming
+---
+
+# dynatrace_service_naming (Resource)
+
+## Dynatrace Documentation
+
+- Service naming rules - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/service-detection-and-naming/customize-service-naming
+
+- Conditional naming API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/conditional-naming
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_service_naming` downloads all existing service naming configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/naming/services/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

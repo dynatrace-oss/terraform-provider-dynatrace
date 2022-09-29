@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_http_monitor Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_http_monitor` covers configuration for HTTP monitors
+---
+
+# dynatrace_http_monitor (Resource)
+
+## Dynatrace Documentation
+
+- Synthetic Monitoring - HTTP monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#http-monitors
+
+- Synthetic Monitors API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/synthetic/synthetic-monitors
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_http_monitor` downloads all existing HTTP monitor configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/monitors/example_http_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

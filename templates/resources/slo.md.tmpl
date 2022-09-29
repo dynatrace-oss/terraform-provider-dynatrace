@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_slo Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_slo` covers configuration for service-level objectives
+---
+
+# dynatrace_slo (Resource)
+
+## Dynatrace Documentation
+
+- Service-level objectives - https://www.dynatrace.com/support/help/how-to-use-dynatrace/cloud-automation/service-level-objectives
+
+- Service-level objectives API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/service-level-objectives
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_slo` downloads all existing service-level objectives configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/slo/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

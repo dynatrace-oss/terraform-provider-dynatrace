@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_request_attribute Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_request_attribute` covers configuration for request attributes
+---
+
+# dynatrace_request_attribute (Resource)
+
+## Dynatrace Documentation
+
+- Request attributes - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/request-attributes
+
+- Request attributes API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/service-api/request-attributes-api
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_request_attribute` downloads all existing request attribute configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/request_attributes/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

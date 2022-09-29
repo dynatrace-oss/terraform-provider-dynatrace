@@ -2,27 +2,27 @@
 layout: ""
 page_title: "dynatrace_service Data Source - terraform-provider-dynatrace"
 description: |-
-  The resource `dynatrace_service` covers queries for the ID of Topology Services based on name and tags / tag-value pairs
+  The data source `dynatrace_service` covers queries for the ID of a service based on name and tags / tag-value pairs
 ---
 
 # dynatrace_service (Data Source)
 
-This is an example for how to utilize the Data Source `dynatrace_service`.
-If the property `name` queries for all services with the given name.
-If the property `tags` refers to the tags that need to be defined for the Service to find. In this example the Service needs to have a tag with name `TerraformKeyTest` applied AND a tag `TerraformKeyValueTest` with the value `TestValue`. BOTH tags need to be present.
-In case multiple Services are matching the given criteria, the first one found will be chosen.
+The service data source allows the service ID to be retrieved by its name and optionally tags / tag-value pairs.
+
+- `name` queries for all services with the specified name
+- `tags` (optional) refers to the tags that need to be present for the service (inclusive)
+
+If multiple services match the given criteria, the first result will be retrieved.
+
+## Example Usage
 
 ```
 data "dynatrace_service" "Test" {
-  name = "Requests executed in background threads of Code*Service.exe"
+  name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]
 }
-```
 
-The ID of the resolved Toplogy Service can now be referred to within any resource.
-
-```
-resource "dynatrace_key_requests" "TerraformTest" {
+resource "dynatrace_key_requests" "#name#" {
   service = data.dynatrace_service.Test.id
 }
 ```

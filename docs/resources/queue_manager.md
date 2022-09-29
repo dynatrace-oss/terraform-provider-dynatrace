@@ -9,13 +9,15 @@ description: |-
 
 ## Dynatrace Documentation
 
-IBM MQ tracing - https://www.dynatrace.com/support/help/how-to-use-dynatrace/queues/configuration/ibm-mq-tracing
+- IBM MQ tracing - https://www.dynatrace.com/support/help/how-to-use-dynatrace/queues/configuration/ibm-mq-tracing
 
-Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:ibmmq.queue-managers`)
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:ibmmq.queue-managers`)
 
 ## Export Example Usage
 
-`terraform-provider-dynatrace export dynatrace_queue_manager` downloads all existing queue manager configuration
+- `terraform-provider-dynatrace export dynatrace_queue_manager` downloads all existing queue manager configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
 
 ## Resource Example Usage
 

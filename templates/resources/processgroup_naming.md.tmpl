@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_processgroup_naming Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_processgroup_naming` covers configuration for process group naming
+---
+
+# dynatrace_processgroup_naming (Resource)
+
+## Dynatrace Documentation
+
+- Process group naming - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups/configuration/pg-naming
+
+- Conditional naming API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/conditional-naming
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_processgroup_naming` downloads all existing process group naming configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/naming/processgroups/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

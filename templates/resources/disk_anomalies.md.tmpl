@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_disk_anomalies Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_disk_anomalies` covers configuration for disk anomaly detection
+---
+
+# dynatrace_disk_anomalies (Resource)
+
+## Dynatrace Documentation
+
+- Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure
+
+- Anomaly detection API - Disk events - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/anomaly-detection-api/anomaly-detection-api-disk-events
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_disk_anomalies` downloads all existing disk anomaly detection configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/anomalies/disk_events/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

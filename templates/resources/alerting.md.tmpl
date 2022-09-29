@@ -1,0 +1,26 @@
+---
+layout: ""
+page_title: "dynatrace_alerting Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_alerting` covers configuration for alerting profiles
+---
+
+# dynatrace_alerting (Resource)
+
+## Dynatrace Documentation
+
+- Alerting profiles - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/notifications-and-alerting/alerting-profiles
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:alerting.profile`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_alerting` downloads all existing alerting profiles configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/alerting/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

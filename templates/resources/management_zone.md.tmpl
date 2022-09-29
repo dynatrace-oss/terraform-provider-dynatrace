@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_management_zone Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_management_zone` covers configuration for management zones
+---
+
+# dynatrace_management_zone (Resource)
+
+## Dynatrace Documentation
+
+- Management zones - https://www.dynatrace.com/support/help/how-to-use-dynatrace/management-zones
+
+- Management zones API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/management-zones-api
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_management_zone` downloads all existing management zone configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/management_zones/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
