@@ -707,18 +707,25 @@ Required:
 <a id="nestedblock--script--events--event--keystrokes"></a>
 ### Nested Schema for `script.events.event.keystrokes`
 
-Required:
-
-- `text` (String) The text to enter
-
 Optional:
 
-- `masked` (Boolean) Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+- `credential` (Block List, Max: 1) Credentials for this event (see [below for nested schema](#nestedblock--script--events--event--keystrokes--credential))
+- `masked` (Boolean) Indicates whether the `textValue` is encrypted (`true`) or not (`false`). Must not be specified if `credentials` from the vault are being used
 - `simulate_blur_event` (Boolean) Defines whether to blur the text field when it loses focus.
 Set to `true` to trigger the blur the `textValue`
 - `target` (Block List, Max: 1) The tab on which the page should open (see [below for nested schema](#nestedblock--script--events--event--keystrokes--target))
+- `text` (String) The text to enter. Must not be specified if `credentials` from the vault are being used
 - `validate` (Block List, Max: 1) The validation rules for the event—helps you verify that your browser monitor loads the expected page content or page element (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate))
 - `wait` (Block List, Max: 1) The wait condition for the event—defines how long Dynatrace should wait before the next action is executed (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait))
+
+<a id="nestedblock--script--events--event--keystrokes--credential"></a>
+### Nested Schema for `script.events.event.keystrokes.credential`
+
+Required:
+
+- `field` (String) Either `username` or `password`
+- `vault_id` (String) The ID of the credential within the Credentials Vault
+
 
 <a id="nestedblock--script--events--event--keystrokes--target"></a>
 ### Nested Schema for `script.events.event.keystrokes.target`
