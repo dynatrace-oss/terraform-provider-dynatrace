@@ -7,17 +7,13 @@ description: |-
 
 # dynatrace_maintenance_window (Resource)
 
+The API utilized for this resource is deprecated, please use [dynatrace_maintenance](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance) instead.
+
 ## Dynatrace Documentation
 
 - Maintenance windows - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/notifications-and-alerting/maintenance-windows
 
 - Maintenance windows API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/maintenance-windows-api
-
-## Export Example Usage
-
-- `terraform-provider-dynatrace export dynatrace_maintenance_window` downloads all existing maintenance window configuration
-
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
 
 ## Resource Example Usage
 

@@ -36,7 +36,7 @@ var resArr = []string{
 	"dynatrace_custom_service",
 	"dynatrace_dashboard",
 	"dynatrace_management_zone",
-	"dynatrace_maintenance_window",
+	// "dynatrace_maintenance_window",
 	"dynatrace_request_attribute",
 	"dynatrace_alerting",
 	"dynatrace_notification",
@@ -76,6 +76,7 @@ var resArr = []string{
 	"dynatrace_ims_bridges",
 	"dynatrace_network_zones",
 	"dynatrace_application_detection_rule",
+	"dynatrace_maintenance",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -339,13 +340,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-
-	if rids, ok := m["dynatrace_maintenance_window"]; ok {
+	/* if rids, ok := m["dynatrace_maintenance_window"]; ok {
 		if err := importMaintenance(targetFolder+"/maintenance", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}
-	}
+	} */
 	if rids, ok := m["dynatrace_disk_anomalies"]; ok {
 		if err := importDiskAnomalies(targetFolder+"/anomalies/disks", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
@@ -528,6 +528,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_application_detection_rule"]; ok {
 		if err := importApplicationDetectionRules(targetFolder+"/applications/web/applicationdetectionrules", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_maintenance"]; ok {
+		if err := importMaintenanceV2(targetFolder+"/maintenance", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

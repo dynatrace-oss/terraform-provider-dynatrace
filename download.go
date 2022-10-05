@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -59,6 +60,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
+	v2maintenance "github.com/dtcookie/dynatrace/api/config/v2/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/v2/networkzones"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
@@ -1966,6 +1968,55 @@ func importApplicationDetectionRules(targetFolder string, environmentURL string,
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_application_detection_rule", escape(name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importMaintenanceV2(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := v2maintenance.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+
+	appCounter := make(map[string]int)
+
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+
+		if val, ok := appCounter[config.GeneralProperties.Name]; ok {
+			appCounter[config.GeneralProperties.Name] = val + 1
+		} else {
+			appCounter[config.GeneralProperties.Name] = 1
+		}
+
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.GeneralProperties.Name+strconv.Itoa(appCounter[config.GeneralProperties.Name]), "") + ".maintenance.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window_v2", escape(config.GeneralProperties.Name))); err != nil {
 			file.Close()
 			return err
 		}
