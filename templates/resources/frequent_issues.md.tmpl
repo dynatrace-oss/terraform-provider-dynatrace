@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_frequent_issues Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_frequent_issues` covers configuration for frequent issue detection
+---
+
+# dynatrace_frequent_issues (Resource)
+
+## Dynatrace Documentation
+
+- Detection of frequent issues - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/detection-of-frequent-issues
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:anomaly-detection.frequent-issues`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_frequent_issues` downloads the existing frequent issue detection configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/anomalies/frequent_issues/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

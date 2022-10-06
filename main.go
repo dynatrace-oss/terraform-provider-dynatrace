@@ -77,6 +77,7 @@ var resArr = []string{
 	"dynatrace_network_zones",
 	"dynatrace_application_detection_rule",
 	"dynatrace_maintenance",
+	"dynatrace_frequent_issues",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -534,6 +535,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_maintenance"]; ok {
 		if err := importMaintenanceV2(targetFolder+"/maintenance", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_frequent_issues"]; ok {
+		if err := importFrequentIssues(targetFolder+"/anomalies", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

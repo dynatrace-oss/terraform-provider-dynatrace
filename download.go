@@ -43,7 +43,6 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
-	"github.com/dtcookie/dynatrace/api/config/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
 	hostnaming "github.com/dtcookie/dynatrace/api/config/naming/hosts"
@@ -55,6 +54,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
+	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
@@ -656,7 +656,7 @@ func importAutoTags(targetFolder string, environmentURL string, apiToken string,
 	return nil
 }
 
-func importMaintenance(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+/* func importMaintenance(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := maintenance.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -695,7 +695,7 @@ func importMaintenance(targetFolder string, environmentURL string, apiToken stri
 		file.Close()
 	}
 	return nil
-}
+} */
 
 func importRequestAttributes(targetFolder string, environmentURL string, apiToken string, argids []string) error {
 
@@ -1787,7 +1787,7 @@ func importMQFilters(targetFolder string, environmentURL string, apiToken string
 			return err
 		}
 		var file *os.File
-		fileName := targetFolder + "/" + "Filters" + ".ibm_mq_filters.tf"
+		fileName := targetFolder + "/" + "Config" + ".ibm_mq_filters.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -1904,7 +1904,7 @@ func importNetworkZones(targetFolder string, environmentURL string, apiToken str
 			return err
 		}
 		var file *os.File
-		fileName := targetFolder + "/" + "NetworkZones" + ".network_zones.tf"
+		fileName := targetFolder + "/" + "Config" + ".network_zones.tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
@@ -2017,6 +2017,45 @@ func importMaintenanceV2(targetFolder string, environmentURL string, apiToken st
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window_v2", escape(config.GeneralProperties.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importFrequentIssues(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := frequentissues.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + "Config" + ".frequent_issues.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_frequent_issues", "FrequentIssues")); err != nil {
 			file.Close()
 			return err
 		}

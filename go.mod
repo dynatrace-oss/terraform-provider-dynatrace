@@ -42,6 +42,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/topology/service v1.0.2
 	github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.3
+	github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.1

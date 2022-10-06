@@ -33,6 +33,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/applications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/databases"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/disks"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
@@ -184,6 +185,7 @@ func Provider() *schema.Provider {
 			"dynatrace_ims_bridges":                imsbridges.Resource(),
 			"dynatrace_network_zones":              networkzones.Resource(),
 			"dynatrace_application_detection_rule": applicationdetectionrules.Resource(),
+			"dynatrace_frequent_issues":            frequentissues.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
