@@ -16,7 +16,7 @@ If multiple processes match the given criteria, the first result will be retriev
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_process" "Test" {
   name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]

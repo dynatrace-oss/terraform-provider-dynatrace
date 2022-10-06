@@ -14,7 +14,7 @@ The application data source allows the application ID to be retrieved by its nam
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_application" "Test" {
   name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]

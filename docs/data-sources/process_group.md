@@ -16,7 +16,7 @@ If multiple process groups match the given criteria, the first result will be re
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_process_group" "Test" {
   name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]

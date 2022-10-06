@@ -11,7 +11,7 @@ The synthetic location data source allows the location ID to be retrieved based 
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_synthetic_location" "Test" {
   cloud_platform = "AMAZON_EC2"
   type           = "PUBLIC"

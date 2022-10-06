@@ -11,7 +11,7 @@ The AWS IAM external data source allows the AWS IAM external ID to be retrieved.
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_aws_iam_external" "Test" {
 }
 

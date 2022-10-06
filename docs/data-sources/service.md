@@ -16,7 +16,7 @@ If multiple services match the given criteria, the first result will be retrieve
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_service" "Test" {
   name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]

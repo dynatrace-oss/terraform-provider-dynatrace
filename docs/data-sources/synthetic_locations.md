@@ -11,7 +11,7 @@ The synthetic locations data source allows the location IDs to be retrieved base
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_synthetic_locations" "Test" {
   name           = "Sydney"
 }

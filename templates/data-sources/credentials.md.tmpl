@@ -11,7 +11,7 @@ The credentials data source allows retrieval of all credentials.
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_credentials" "Test" {
 }
 

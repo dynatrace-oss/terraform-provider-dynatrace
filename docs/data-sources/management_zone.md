@@ -13,7 +13,7 @@ The management zone data source allows the management zone ID to be retrieved by
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_management_zone" "Test" {
   name = "Example"
 }

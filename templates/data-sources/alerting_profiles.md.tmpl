@@ -11,7 +11,7 @@ The alerting profiles data source allows retrieval of all alerting profiles.
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_alerting_profiles" "Test" {
 }
 

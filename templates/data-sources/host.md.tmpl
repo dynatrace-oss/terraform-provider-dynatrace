@@ -16,7 +16,7 @@ If multiple hosts match the given criteria, the first result will be retrieved.
 
 ## Example Usage
 
-```
+```terraform
 data "dynatrace_host" "Test" {
   name = "Example"
   tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]
