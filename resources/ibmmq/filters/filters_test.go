@@ -82,7 +82,7 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 	}, nil
 }
 
-func TestResourceAttributesA(t *testing.T) {
+func TestFilters(t *testing.T) {
 	test := &TestStruct{resourceKey: ResourceName}
 	var err error
 	var testCase *resource.TestCase
