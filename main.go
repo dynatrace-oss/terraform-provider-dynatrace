@@ -22,6 +22,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,7 +40,7 @@ var resArr = []string{
 	// "dynatrace_maintenance_window",
 	"dynatrace_request_attribute",
 	"dynatrace_alerting",
-	"dynatrace_notification",
+	// "dynatrace_notification", // removed in favor of Settings 2.0 Notifications
 	"dynatrace_autotag",
 	"dynatrace_aws_credentials",
 	"dynatrace_azure_credentials",
@@ -78,6 +79,17 @@ var resArr = []string{
 	"dynatrace_application_detection_rule",
 	"dynatrace_maintenance",
 	"dynatrace_frequent_issues",
+	"dynatrace_ansible_tower_notification",
+	"dynatrace_email_notification",
+	"dynatrace_jira_notification",
+	"dynatrace_ops_genie_notification",
+	"dynatrace_pager_duty_notification",
+	"dynatrace_service_now_notification",
+	"dynatrace_slack_notification",
+	"dynatrace_trello_notification",
+	"dynatrace_victor_ops_notification",
+	"dynatrace_webhook_notification",
+	"dynatrace_xmatters_notification",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -311,12 +323,6 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-	if rids, ok := m["dynatrace_notification"]; ok {
-		if err := importNotificationConfigs(targetFolder+"/notifications", environmentURL, apiToken, rids); err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
-		}
-	}
 	if rids, ok := m["dynatrace_aws_credentials"]; ok {
 		if err := importAWSCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
@@ -545,7 +551,72 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-
+	if rids, ok := m["dynatrace_ansible_tower_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.AnsibleTower, "ansible", "dynatrace_ansible_tower_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_email_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.Email, "email", "dynatrace_email_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_jira_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.Jira, "jira", "dynatrace_jira_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_ops_genie_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.OpsGenie, "opsgenie", "dynatrace_ops_genie_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_pager_duty_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.PagerDuty, "pagerduty", "dynatrace_pager_duty_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_service_now_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.ServiceNow, "servicenow", "dynatrace_service_now_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_slack_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.Slack, "slack", "dynatrace_slack_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_trello_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.Slack, "trello", "dynatrace_trello_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_victor_ops_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.VictorOps, "victorops", "dynatrace_victor_ops_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_webhook_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.WebHook, "webhook", "dynatrace_webhook_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_xmatters_notification"]; ok {
+		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.XMatters, "xmatters", "dynatrace_xmatters_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 	return true
 }
 

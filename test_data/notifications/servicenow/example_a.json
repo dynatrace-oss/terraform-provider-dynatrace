@@ -1,0 +1,25 @@
+{
+  "objectId": "vu9U3hXa3q0AAAABAB1idWlsdGluOnByb2JsZW0ubm90aWZpY2F0aW9ucwAGdGVuYW50AAZ0ZW5hbnQAJGMxZWQ5MDU5LThiMDAtMzk3MC1hOTZiLWZjMmJiZjhlM2U4Nb7vVN4V2t6t",
+  "summary": "dynatrace_service_now_notification (ServiceNow - service-now-instance-name, Alerting Profile: vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRmNzVlNjhlZi1hY2E3LTNhMDctOWMyMS05NGViMDBlY2ZjNTa-71TeFdrerQ)",
+  "created": 1665144459323,
+  "modified": 1665144459323,
+  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
+  "updateToken": "vu9U3hXY3q0ATAAkYzFlZDkwNTktOGIwMC0zOTcwLWE5NmItZmMyYmJmOGUzZTg1ACRhMzdiNDBiMC00NjM4LTExZWQtODAwMS0wMTAwMDAwMDAwMDG-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:problem.notifications",
+  "schemaVersion": "1.2",
+  "value": {
+    "enabled": false,
+    "type": "SERVICE_NOW",
+    "displayName": "dynatrace_service_now_notification",
+    "serviceNowNotification": {
+      "instanceName": "service-now-instance-name",
+      "username": "service-now-username",
+      "password": "***215***",
+      "message": "service-now-message",
+      "sendIncidents": true,
+      "sendEvents": true
+    },
+    "alertingProfile": "vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRjMjFmOTY5Yi01ZjAzLTMzM2QtODNlMC00ZjhmMTM2ZTc2ODK-71TeFdrerQ"
+  }
+}

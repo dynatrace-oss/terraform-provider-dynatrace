@@ -65,6 +65,17 @@ import (
 	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/ansible"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/email"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/jira"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/opsgenie"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/pagerduty"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/servicenow"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/slack"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/trello"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/victorops"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/webhook"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/xmatters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
@@ -124,6 +135,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"dynatrace_alerting_profiles":   alerting.DataSource(),
+			"dynatrace_alerting_profile":    v2alerting.DataSource(),
 			"dynatrace_credentials":         vault.DataSource(),
 			"dynatrace_synthetic_locations": locations.DataSource(),
 			"dynatrace_synthetic_location":  locations.UniqueDataSource(),
@@ -186,6 +198,17 @@ func Provider() *schema.Provider {
 			"dynatrace_network_zones":              networkzones.Resource(),
 			"dynatrace_application_detection_rule": applicationdetectionrules.Resource(),
 			"dynatrace_frequent_issues":            frequentissues.Resource(),
+			"dynatrace_ansible_tower_notification": ansible.Resource(),
+			"dynatrace_email_notification":         email.Resource(),
+			"dynatrace_jira_notification":          jira.Resource(),
+			"dynatrace_ops_genie_notification":     opsgenie.Resource(),
+			"dynatrace_pager_duty_notification":    pagerduty.Resource(),
+			"dynatrace_service_now_notification":   servicenow.Resource(),
+			"dynatrace_slack_notification":         slack.Resource(),
+			"dynatrace_trello_notification":        trello.Resource(),
+			"dynatrace_victor_ops_notification":    victorops.Resource(),
+			"dynatrace_webhook_notification":       webhook.Resource(),
+			"dynatrace_xmatters_notification":      xmatters.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -1,0 +1,34 @@
+{
+  "objectId": "vu9U3hXa3q0AAAABAB1idWlsdGluOnByb2JsZW0ubm90aWZpY2F0aW9ucwAGdGVuYW50AAZ0ZW5hbnQAJGY5NzE1ODE0LTVhODUtMzIzNS1iYWNmLTQ0OTJkOGZmOTQzZr7vVN4V2t6t",
+  "summary": "dynatrace_xmatters_notification (xMatters - https://webhook.site/40bf4d43-1a50-4ebd-913d-bf50ce7c3a1e, Alerting Profile: vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRmNzVlNjhlZi1hY2E3LTNhMDctOWMyMS05NGViMDBlY2ZjNTa-71TeFdrerQ)",
+  "created": 1665149470296,
+  "modified": 1665149470296,
+  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
+  "updateToken": "vu9U3hXY3q0ATAAkZjk3MTU4MTQtNWE4NS0zMjM1LWJhY2YtNDQ5MmQ4ZmY5NDNmACQ0ZTQxMGQ4MC00NjQ0LTExZWQtODAwMS0wMTAwMDAwMDAwMDa-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:problem.notifications",
+  "schemaVersion": "1.2",
+  "value": {
+    "enabled": false,
+    "type": "XMATTERS",
+    "displayName": "dynatrace_xmatters_notification",
+    "xMattersNotification": {
+      "url": "https://webhook.site/40bf4d43-1a50-4ebd-913d-bf50ce7c3a1e",
+      "acceptAnyCertificate": true,
+      "headers": [
+        {
+          "name": "http-header-name-02",
+          "secret": true,
+          "secretValue": "***745***"
+        },
+        {
+          "name": "http-header-name-01",
+          "secret": false,
+          "value": "http-header-value-01"
+        }
+      ],
+      "payload": "x-matters-payload"
+    },
+    "alertingProfile": "vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRjMjFmOTY5Yi01ZjAzLTMzM2QtODNlMC00ZjhmMTM2ZTc2ODK-71TeFdrerQ"
+  }
+}

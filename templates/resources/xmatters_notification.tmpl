@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_xmatters_notification Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_xmatters_notification` covers configuration problem notifications sent via xMatters
+---
+
+# dynatrace_webhook_notification (Resource)
+
+## Dynatrace Documentation
+
+- xMatters integration - https://www.dynatrace.com/support/help/setup-and-configuration/integrations/problem-notifications/xmatters-integration
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:problem.notifications`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_xmatters_notification` downloads the existing Problem Notifications for xMatters
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/notifications/xmatters/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

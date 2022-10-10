@@ -93,6 +93,8 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dtcookie/assert v1.2.0 h1:hIvkPGBWCdPs+4XTfzZHoJjoNkpDmpZDv0N8X0zh6Pk=
+github.com/dtcookie/assert v1.2.0/go.mod h1:06O/8B/CcX9Gmle1625gltKzxtBS6I/ZdCSyszs9nbA=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0 h1:YN34I4X0d1hmI2/jgQbvMuwmoMPoJBZquKGCOtNpj0Y=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0/go.mod h1:iPNJZktGm4K2GPkU3Lc2cTOeWFG2rVEyfeGWLGlZ6hY=
 github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.0 h1:JAqhaIEVoKVqu2DFcx0xlbvblM2slczb7Z5nwZNKzR8=
@@ -201,6 +203,8 @@ github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.0 h1:FdB7mlOpq4IvLL
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.0/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.1 h1:rYA1H8AkxbgrN4xjY+uaq70Cn4kfT5nHsuh4h7MkD3U=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.1/go.mod h1:MQkYbvci1MGaHfHUT5VI60QmqnwBK9s5d1yXY0erVmo=
+github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.4 h1:0/EVjzj93Dp6LAsiba4NyF2qZal3RbfwDLNV6vRPVbA=
+github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.4/go.mod h1:N6ft2ZVFZgoK8ATx3OQaC0Oo+2G0M7pGQyeEOUTQP6k=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6 h1:ybg8NBi7lOjso7BOD5zYM3oSJgewBCv8y2GaT47f81U=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.6/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.1 h1:mhFALe/V4XpAZqxK19widI5+xsEWK+Ni9BUyHfyQy6U=
@@ -307,8 +311,9 @@ github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.6/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.7/go.mod h1:n+brtR0CgQNWTVd5ZUFpTBC8YFBDLK/h/bpaJ8/DtOE=
-github.com/google/go-cmp v0.5.8 h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=
 github.com/google/go-cmp v0.5.8/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
+github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/google/martian v2.1.0+incompatible/go.mod h1:9I4somxYTbIHy5NJKHRl3wXiIaQGbYVAs8BPL6v8lEs=
 github.com/google/martian/v3 v3.0.0/go.mod h1:y5Zk1BBys9G+gd6Jrk0W3cC1+ELVxBWuIGO+w/tUAp0=
 github.com/google/pprof v0.0.0-20181206194817-3ea8567a2e57/go.mod h1:zfwlbNMJ+OItoe0UupaVj+oy1omPYYDuagoSzA8v9mc=

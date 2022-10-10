@@ -48,7 +48,6 @@ import (
 	hostnaming "github.com/dtcookie/dynatrace/api/config/naming/hosts"
 	processgroupnaming "github.com/dtcookie/dynatrace/api/config/naming/processgroups"
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
-	"github.com/dtcookie/dynatrace/api/config/notifications"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
@@ -62,13 +61,13 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	v2maintenance "github.com/dtcookie/dynatrace/api/config/v2/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/v2/networkzones"
+	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/capture"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints"
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/resattr"
-	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
 )
@@ -415,10 +414,6 @@ func importCloudFoundryCredentials(targetFolder string, environmentURL string, a
 	os.MkdirAll(targetFolder, os.ModePerm)
 	restClient := cloudfoundry.NewService(environmentURL+"/api/config/v1", apiToken)
 
-	if os.Getenv("DYNATRACE_DEBUG") == "true" {
-		rest.Verbose = true
-	}
-
 	stubList, err := restClient.ListAll()
 	if err != nil {
 		return err
@@ -483,46 +478,6 @@ func importK8sCredentials(targetFolder string, environmentURL string, apiToken s
 			return err
 		}
 		if err := hcl.ExportOpt(config, file); err != nil {
-			file.Close()
-			return err
-		}
-		if _, err := file.WriteString("}\n"); err != nil {
-			file.Close()
-			return err
-		}
-		file.Close()
-	}
-	return nil
-}
-
-func importNotificationConfigs(targetFolder string, environmentURL string, apiToken string, argids []string) error {
-
-	os.MkdirAll(targetFolder, os.ModePerm)
-	restClient := notifications.NewService(environmentURL+"/api/config/v1", apiToken)
-
-	stubList, err := restClient.ListAll()
-	if err != nil {
-		return err
-	}
-	for _, stub := range stubList.Values {
-		if !ctns(argids, stub.ID) {
-			continue
-		}
-		config, err := restClient.Get(stub.ID)
-		if err != nil {
-			return err
-		}
-		var file *os.File
-		fileName := targetFolder + "/" + escFileName(config.NotificationConfig.GetName(), stub.ID) + ".notification.tf"
-		os.Remove(fileName)
-		if file, err = os.Create(fileName); err != nil {
-			return err
-		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_notification", escape(config.NotificationConfig.GetName()))); err != nil {
-			file.Close()
-			return err
-		}
-		if err := hcl.ExtExport(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -2021,6 +1976,48 @@ func importMaintenanceV2(targetFolder string, environmentURL string, apiToken st
 			return err
 		}
 		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importNotifications(targetFolder string, environmentURL string, apiToken string, argids []string, nType notifications.Type, fileSuffix string, resource string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := notifications.NewService(environmentURL+"/api/v2", apiToken)
+
+	ids, err := restClient.List()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		var config notifications.Notification
+		if err := restClient.Get(id, &config); err != nil {
+			return err
+		}
+		if config.Type != nType {
+			continue
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + config.Name + "." + fileSuffix + ".notification.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", resource, escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(&config, file); err != nil {
 			file.Close()
 			return err
 		}
