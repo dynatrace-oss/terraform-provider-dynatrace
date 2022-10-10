@@ -7,12 +7,13 @@ description: |-
 
 # dynatrace_credentials (Data Source)
 
-The credentials data source allows retrieval of all credentials.
+The `dynatrace_credentials` data source queries for Credentials stored within the Credentials Vault using the properties `name`, `scope` and `type`. At least one of `name`, `scope` or `type` needs to be specified as a non empty value. Combinations of the three properties are also possible.
 
 ## Example Usage
 
 ```terraform
-data "dynatrace_credentials" "Test" {
+data "dynatrace_credentials" "creds" {
+  name = "Office365 Access Token"
 }
 
 resource "dynatrace_http_monitor" "#name#" {
@@ -37,7 +38,7 @@ resource "dynatrace_http_monitor" "#name#" {
       url = "https://www.google.com" 
       authentication {
         type = "BASIC_AUTHENTICATION" 
-        credentials = data.dynatrace_credentials.Test[0].id
+        credentials = data.dynatrace_credentials.creds.id
       }
       configuration {
         accept_any_certificate = true 
@@ -61,7 +62,9 @@ resource "dynatrace_http_monitor" "#name#" {
 
 ### Optional
 
-- `credentials` (Map of String)
+- `name` (String) The name of the credential as shown within the Dynatrace WebUI. If not specified all names will match
+- `scope` (String) The scope of the credential. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`. If not specified all scopes will match.
+- `type` (String) The type of the credential. Possible values are `CERTIFICATE`, `PUBLIC_CERTIFICATE`, `TOKEN`, `USERNAME_PASSWORD` and `UNKNOWN`. If not specified all credential types will match
 
 ### Read-Only
 
