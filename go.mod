@@ -16,7 +16,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.1
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.12
 	github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.1
-	github.com/dtcookie/dynatrace/api/config/autotags v1.0.23
+	github.com/dtcookie/dynatrace/api/config/autotags v1.0.24
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.16
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.12
 	github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.1

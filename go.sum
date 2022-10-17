@@ -127,8 +127,8 @@ github.com/dtcookie/dynatrace/api/config/applications/web v1.0.12 h1:uU4sZ7YEqnH
 github.com/dtcookie/dynatrace/api/config/applications/web v1.0.12/go.mod h1:X1rCU4k9xYqq1ivwmophkV+nRGigP7vntgd2xWsbIck=
 github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.1 h1:2zuYZwolQmBqCeM/zho8fpUnwgAnOU/0ORO+6EvljSU=
 github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.1/go.mod h1:M1xkHTSOkHVfJUcTqthjje8oES3R7BqaJgjDynsUcAc=
-github.com/dtcookie/dynatrace/api/config/autotags v1.0.23 h1:s1hpbtAjhx90kILgGakMUEz2kIw6wFkDH5M395YPuCc=
-github.com/dtcookie/dynatrace/api/config/autotags v1.0.23/go.mod h1:JiSf94RIJkqhUH0zuX/1yubM5+G8NEOJMeW4ulqrnwU=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.24 h1:r7Z8iaIwqnd40Z2nYNugEB0lGYJ1V78/BnMWMWtk9q4=
+github.com/dtcookie/dynatrace/api/config/autotags v1.0.24/go.mod h1:JiSf94RIJkqhUH0zuX/1yubM5+G8NEOJMeW4ulqrnwU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4 h1:FzP47UtNGHiH4DqOQbQOFZ/9lM9cwe2UitLfymy2YPU=
 github.com/dtcookie/dynatrace/api/config/common v1.0.4/go.mod h1:XbqktXHBJFINafYP6DbQ0HCZRlQOApcAFxhWA+UuzLg=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.16 h1:PNokIDd1K+hMoM5Lvx78wgirP7SKUt3N8Ak+EtbAms0=
