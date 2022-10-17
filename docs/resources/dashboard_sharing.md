@@ -36,7 +36,7 @@ description: |-
 
 Optional:
 
-- `permission` (Block List) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions--permission))
+- `permission` (Block Set) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions--permission))
 
 <a id="nestedblock--permissions--permission"></a>
 ### Nested Schema for `permissions.permission`
