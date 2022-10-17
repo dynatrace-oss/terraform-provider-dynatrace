@@ -24,7 +24,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1
 	github.com/dtcookie/dynatrace/api/config/customservices v1.0.16
 	github.com/dtcookie/dynatrace/api/config/dashboards v1.0.17
-	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.1
+	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.2
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.10
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.18
 	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.5
@@ -63,5 +63,5 @@ require (
 	github.com/dtcookie/opt v1.0.0
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.0
 )

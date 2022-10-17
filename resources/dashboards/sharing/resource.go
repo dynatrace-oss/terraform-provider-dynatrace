@@ -56,7 +56,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	settingsID, err := NewService(m).Create(config)
+	settingsID, err := NewService(m).Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -70,7 +70,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Update(config); err != nil {
+	if err := NewService(m).Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -78,7 +78,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config, err := NewService(m).Get(d.Id())
+	config, err := NewService(m).Get(ctx, d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -94,7 +94,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if err := NewService(m).Delete(d.Id()); err != nil {
+	if err := NewService(m).Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}

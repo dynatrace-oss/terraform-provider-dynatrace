@@ -18,6 +18,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"regexp"
@@ -730,7 +731,7 @@ func importDashboards(targetFolder string, environmentURL string, apiToken strin
 		}
 		shareRestClient := sharing.NewService(environmentURL+"/api/config/v1", apiToken)
 		var shareSettings *sharing.DashboardSharing
-		if shareSettings, err = shareRestClient.Get(stub.ID); err != nil {
+		if shareSettings, err = shareRestClient.Get(context.Background(), stub.ID); err != nil {
 			if !strings.Contains(err.Error(), "Editing or deleting a non user specific dashboard preset is not allowed") {
 				file.Close()
 				return err
