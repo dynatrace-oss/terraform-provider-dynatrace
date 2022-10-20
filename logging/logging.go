@@ -80,6 +80,13 @@ func Enable(fn func(context.Context, *schema.ResourceData, interface{}) diag.Dia
 	}
 }
 
+func EnableSchemaSetFunc(fn func(v interface{}) int) func(v interface{}) int {
+	return func(v interface{}) int {
+		log.SetOutput(odl)
+		return fn(v)
+	}
+}
+
 // Enable redirects logging into a an output file
 func SetOutput() {
 	log.SetOutput(odl)

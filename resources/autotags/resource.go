@@ -34,7 +34,7 @@ import (
 
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
-	return &schema.Resource{
+	res := &schema.Resource{
 		Schema:        hcl2sdk.Convert(new(atags.AutoTag).Schema()),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
@@ -42,6 +42,10 @@ func Resource() *schema.Resource {
 		DeleteContext: logging.Enable(Delete),
 		Importer:      &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
 	}
+	res.Schema["rules"].Set = logging.EnableSchemaSetFunc(atags.HashRule)
+	res.Schema["entity_selector_based_rule"].Set = logging.EnableSchemaSetFunc(atags.HashEntitySelectorBasedRule)
+	res.Schema["rules"].Elem.(*schema.Resource).Schema["conditions"].Set = logging.EnableSchemaSetFunc(atags.HashCondition)
+	return res
 }
 
 func NewService(m interface{}) *atags.ServiceClient {
