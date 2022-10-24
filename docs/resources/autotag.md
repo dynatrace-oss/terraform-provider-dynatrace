@@ -65,9 +65,9 @@ resource "dynatrace_autotag" "#name#" {
 
 ### Optional
 
-- `entity_selector_based_rule` (Block List) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
+- `entity_selector_based_rule` (Block Set) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
 - `metadata` (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
-- `rules` (Block List) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
+- `rules` (Block Set) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 ### Read-Only
@@ -80,6 +80,7 @@ resource "dynatrace_autotag" "#name#" {
 Optional:
 
 - `enabled` (Boolean) The rule is enabled (`true`) or disabled (`false`)
+- `normalization` (String) Changes applied to the value after applying the value format. Possible values are `LEAVE_TEXT_AS_IS`, `TO_LOWER_CASE` and `TO_UPPER_CASE`. Default is `LEAVE_TEXT_AS_IS`
 - `selector` (String) The entity selector string, by which the entities are selected
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 - `value_format` (String) The value of the entity-selector-based auto-tag. If specified, the tag is used in the `name:valueFormat` format. 
@@ -106,7 +107,7 @@ Required:
 
 Optional:
 
-- `conditions` (Block List) A list of matching rules for the management zone. The management zone applies only if **all** conditions are fulfilled (see [below for nested schema](#nestedblock--rules--conditions))
+- `conditions` (Block Set) A list of matching rules for the management zone. The management zone applies only if **all** conditions are fulfilled (see [below for nested schema](#nestedblock--rules--conditions))
 - `enabled` (Boolean) The rule is enabled (`true`) or disabled (`false`)
 - `normalization` (String) Changes applied to the value after applying the value format. Possible values are `LEAVE_TEXT_AS_IS`, `TO_LOWER_CASE` and `TO_UPPER_CASE`. Default is `LEAVE_TEXT_AS_IS`
 - `propagation_types` (List of String) How to apply the management zone to underlying entities:
