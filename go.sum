@@ -165,8 +165,8 @@ github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3 h1:3NEyCPVm5jgGr
 github.com/dtcookie/dynatrace/api/config/naming/services v1.0.3/go.mod h1:R/KyaDHCkZb1JxEQ2Iam8+ZBsiO1TsBJ5Ci2LPztBqQ=
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.12 h1:XoAeK3wVjk35XIUxGJ1g46xMPubjpjCs4nNAYp3YpHw=
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.12/go.mod h1:2xcTh8M75o69x7gPQbu0NCVN+4oTX27/HF4kWCHDaqs=
-github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.10 h1:wQBs75GxEU++u+kZwkp+gDgqYRDYF5R1mvSQED9CGTY=
-github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.10/go.mod h1:uMdIxTv0jQEJ+y85V2SaHYSouFiah0g1QvzXfwvALi4=
+github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.11 h1:n+xNwNtjanL3rPvOQRqpZbjPyc+41CShl3eYHFB7I40=
+github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.11/go.mod h1:uMdIxTv0jQEJ+y85V2SaHYSouFiah0g1QvzXfwvALi4=
 github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0 h1:GALeryKUATlJKnptbnf2OFtSremd/f5U9WnoHkCUiKw=
 github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.0/go.mod h1:HRcKBJjiCZGU5sr4tAtbWaa8HEHmBOuf+FqbfGYizaY=
 github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.15 h1:/VkquTmTloyk/Yhc2A1tciFgE8PVH/xofMqWb6Uvt2g=
