@@ -1,35 +1,27 @@
 {
-    "metadata": {
-      "configurationVersions": [
-        5
-      ],
-      "clusterVersion": "1.217.139.20210521-170114"
-    },
-    "id": "ce81b970-16e5-4209-a7d6-1ca76186d850",
-    "metricId": "ghputoutgoing",
-    "name": "asdf",
-    "description": "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}.",
-    "aggregationType": "AVG",
-    "severity": "PERFORMANCE",
-    "enabled": true,
-    "disabledReason": "NONE",
-    "warningReason": "NONE",
-    "alertingScope": [
-      {
-        "filterType": "MANAGEMENT_ZONE",
-        "managementZoneId": 6734823652592293000,
-        "mzId": "6734823652592292763"
-      }
+  "metadata": {
+    "configurationVersions": [
+      6
     ],
-    "monitoringStrategy": {
-      "type": "AUTO_ADAPTIVE_BASELINE",
-      "samples": 5,
-      "violatingSamples": 3,
-      "dealertingSamples": 5,
-      "alertCondition": "ABOVE",
-      "alertingOnMissingData": false,
-      "numberOfSignalFluctuations": 1
-    },
-    "primaryDimensionKey": "dt.entity.service",
-    "eventType": "PERFORMANCE"
-  }
+    "clusterVersion": "1.253.206.20221104-095518"
+  },
+  "id": "49f000b1-cfa1-4d97-bcd6-b88453fcd9bd",
+  "metricSelector": "ghputoutgoing:filter(existsKey(\"dt.entity.service\"),in(\"dt.entity.service\",entitySelector(\"type(SERVICE),mzId(6734823652592292763)\"))):avg",
+  "name": "Test",
+  "description": "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}.",
+  "severity": "PERFORMANCE",
+  "enabled": true,
+  "disabledReason": "NONE",
+  "warningReason": "NONE",
+  "monitoringStrategy": {
+    "type": "AUTO_ADAPTIVE_BASELINE",
+    "samples": 5,
+    "violatingSamples": 3,
+    "dealertingSamples": 5,
+    "alertCondition": "ABOVE",
+    "alertingOnMissingData": false,
+    "numberOfSignalFluctuations": 1
+  },
+  "primaryDimensionKey": "dt.entity.service",
+  "eventType": "PERFORMANCE"
+}
