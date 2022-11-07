@@ -91,29 +91,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 	var customService *customservices.CustomService
 
 	technology := customservices.Technology(d.Get("technology").(string))
-	if technology == "" {
-		err = nil
-		for _, technology = range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP, customservices.Technologies.Go} {
-			if customService, err = srvc.Get(d.Id(), technology, true); err != nil {
-				if restErr, ok := err.(*rest.Error); ok {
-					if restErr.Code != 404 {
-						return diag.FromErr(err)
-					}
-				} else {
-					return diag.FromErr(err)
-				}
-			}
-			if customService != nil {
-				break
-			}
-		}
-		if customService == nil {
-			return diag.FromErr(err)
-		}
-	} else {
-		if customService, err = srvc.Get(d.Id(), technology, true); err != nil {
-			return diag.FromErr(err)
-		}
+	if customService, err = srvc.Get(d.Id(), technology, true); err != nil {
+		return diag.FromErr(err)
 	}
 
 	marshalled, err := customService.MarshalHCL()
