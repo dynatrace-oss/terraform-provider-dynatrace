@@ -1972,7 +1972,7 @@ func importMaintenanceV2(targetFolder string, environmentURL string, apiToken st
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance_window_v2", escape(config.GeneralProperties.Name))); err != nil {
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_maintenance", escape(config.GeneralProperties.Name))); err != nil {
 			file.Close()
 			return err
 		}

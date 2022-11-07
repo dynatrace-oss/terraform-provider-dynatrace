@@ -24,10 +24,13 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
 	"github.com/dtcookie/dynatrace/rest"
+	downloadv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/download"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
+
+var Version = "1.14.1"
 
 var clusterResArr = []string{
 	"dynatrace_environment",
@@ -176,6 +179,68 @@ func clusterExport(args []string) bool {
 		}
 	}
 	return clusterDownloadWith(clusterURL, apiToken, targetFolder, m)
+}
+
+func exportv2(args []string) bool {
+	var singleFile bool
+
+	if len(args) == 1 {
+		return false
+	}
+	if strings.TrimSpace(args[1]) == "exportv2" {
+		singleFile = false
+	} else if strings.TrimSpace(args[1]) == "exportv2s" {
+		singleFile = true
+	} else {
+		return false
+	}
+	environmentURL := os.Getenv("DYNATRACE_ENV_URL")
+	if environmentURL == "" {
+		fmt.Println("The environment variable DYNATRACE_ENV_URL needs to be set")
+		os.Exit(0)
+	}
+	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
+	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
+	if apiToken == "" {
+		fmt.Println("The environment variable DYNATRACE_API_TOKEN needs to be set")
+		os.Exit(0)
+	}
+	targetFolder := os.Getenv("DYNATRACE_TARGET_FOLDER")
+	if targetFolder == "" {
+		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
+		targetFolder = "configuration"
+	}
+	if len(args) == 2 {
+		return downloadv2.Download(environmentURL, apiToken, targetFolder, nil, singleFile)
+	}
+
+	m := map[string][]string{}
+	for idx := 2; idx < len(args); idx++ {
+		key, id := matchRes(args[idx])
+		if key == "" {
+			fmt.Println("Unknown resource `" + args[idx] + "`")
+			os.Exit(0)
+		}
+		stored, ok := m[key]
+		if ok {
+			if stored != nil {
+				if id == "" {
+					m[key] = nil
+				} else {
+					stored = append(stored, id)
+					m[key] = stored
+				}
+			}
+		} else {
+			if id == "" {
+				m[key] = nil
+			} else {
+				stored = []string{id}
+				m[key] = stored
+			}
+		}
+	}
+	return downloadv2.Download(environmentURL, apiToken, targetFolder, m, singleFile)
 }
 
 func export(args []string) bool {
@@ -622,6 +687,9 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 
 func main() {
 	if export(os.Args) {
+		return
+	}
+	if exportv2(os.Args) {
 		return
 	}
 	if clusterExport(os.Args) {
