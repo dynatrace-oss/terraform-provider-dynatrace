@@ -1,18 +1,11 @@
 resource "dynatrace_custom_anomalies" "#name#" {
   name                  = "#name#"
   description           = "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}."
+  metric_selector       = "ghputoutgoing:filter(existsKey(\"dt.entity.service\"),in(\"dt.entity.service\",entitySelector(\"type(SERVICE),mzId(6734823652592292763)\"))):avg"
   enabled               = true
-  aggregation_type      = "AVG"
-  disabled_reason       = "NONE"
-  metric_id             = "ghputoutgoing"
   primary_dimension_key = "dt.entity.service"
   severity              = "PERFORMANCE"
   warning_reason        = "NONE"
-  scopes {
-    management_zone {
-      id = "6734823652592292763"
-    }
-  }
   strategy {
     auto {
       alert_condition          = "ABOVE"
