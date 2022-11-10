@@ -1,46 +1,49 @@
 {
-    "metadata": {
-      "configurationVersions": [
-        7
-      ],
-      "clusterVersion": "1.211.90.20210216-141629"
-    },
-    "id": "458c2eaf-c7c2-4317-8cdd-8d227e6b4419",
-    "name": "outgoing-uri",
-    "rules": [
-      {
-        "type": "SERVICE",
-        "enabled": true,
-        "valueFormat": "{Service:EndpointPath}",
-        "propagationTypes": [],
-        "conditions": [
-          {
-            "key": {
-              "attribute": "SERVICE_TOPOLOGY",
-              "type": "STATIC"
-
-            },
-            "comparisonInfo": {
-              "type": "SERVICE_TOPOLOGY",
-              "operator": "EQUALS",
-              "value": "EXTERNAL_SERVICE",
-              "negate": false
-            }
+  "metadata": {
+    "currentConfigurationVersions": [
+      "1.0.9"
+    ],
+    "configurationVersions": [],
+    "clusterVersion": "1.253.206.20221104-095518"
+  },
+  "id": "a775b027-8d92-3b35-8eaa-6d9c8a0833e6",
+  "name": "a00xx00",
+  "description": null,
+  "rules": [
+    {
+      "type": "SERVICE",
+      "enabled": true,
+      "valueFormat": "{Service:EndpointPath}",
+      "normalization": "LEAVE_TEXT_AS_IS",
+      "propagationTypes": [],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "SERVICE_DETECTED_NAME",
+            "type": "STATIC"
           },
-          {
-            "key": {
-              "attribute": "SERVICE_DETECTED_NAME",
-              "type": "STATIC"
-            },
-            "comparisonInfo": {
-              "type": "STRING",
-              "operator": "EQUALS",
-              "value": "Requests to public networks",
-              "negate": false,
-              "caseSensitive": true
-            }
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "EQUALS",
+            "value": "Requests to public networks",
+            "negate": false,
+            "caseSensitive": true
           }
-        ]
-      }
-    ]
-  }
+        },
+        {
+          "key": {
+            "attribute": "SERVICE_TOPOLOGY",
+            "type": "STATIC"
+          },
+          "comparisonInfo": {
+            "type": "SERVICE_TOPOLOGY",
+            "operator": "EQUALS",
+            "value": "EXTERNAL_SERVICE",
+            "negate": false
+          }
+        }
+      ]
+    }
+  ],
+  "entitySelectorBasedRules": []
+}
