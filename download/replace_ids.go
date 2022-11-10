@@ -19,7 +19,9 @@ func ProcessResourceIDs(resourceData ResourceData) error {
 		if ResourceInfoMap[resName].HardcodedIds == nil {
 			continue
 		}
-		ResourceInfoMap[resName].ResReplaceIds(resName, resourceData)
+		if ResourceInfoMap[resName].ResReplaceIds != nil {
+			ResourceInfoMap[resName].ResReplaceIds(resName, resourceData)
+		}
 	}
 
 	return nil
