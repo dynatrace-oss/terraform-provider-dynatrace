@@ -59,7 +59,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := NewService(m).Update(config); err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId("dynatrace_host_anomalies")	
+	d.SetId("dynatrace_host_anomalies")
 	return Read(ctx, d, m)
 }
 
@@ -81,7 +81,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	marshalled, err := config.MarshalHCL(hcl.DecoderFrom(d))
+	marshalled, err := config.MarshalHCL()
 	if err != nil {
 		return diag.FromErr(err)
 	}

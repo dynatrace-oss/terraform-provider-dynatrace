@@ -842,7 +842,7 @@ func importDiskAnomalies(targetFolder string, environmentURL string, apiToken st
 			file.Close()
 			return err
 		}
-		if err := hcl.ExtExport(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -885,7 +885,7 @@ func importMetricAnomalies(targetFolder string, environmentURL string, apiToken 
 			file.Close()
 			return err
 		}
-		if err := hcl.ExtExport(config, file); err != nil {
+		if err := hcl.ExportOpt(config, file); err != nil {
 			file.Close()
 			return err
 		}
@@ -916,7 +916,7 @@ func importDatabaseAnomalies(targetFolder string, environmentURL string, apiToke
 		file.Close()
 		return err
 	}
-	if err := hcl.ExtExport(config, file); err != nil {
+	if err := hcl.ExportOpt(config, file); err != nil {
 		file.Close()
 		return err
 	}
@@ -946,7 +946,7 @@ func importHostAnomalies(targetFolder string, environmentURL string, apiToken st
 		file.Close()
 		return err
 	}
-	if err := hcl.ExtExport(config, file); err != nil {
+	if err := hcl.ExportOpt(config, file); err != nil {
 		file.Close()
 		return err
 	}
@@ -977,7 +977,7 @@ func importApplicationAnomalies(targetFolder string, environmentURL string, apiT
 		file.Close()
 		return err
 	}
-	if err := hcl.ExtExport(config, file); err != nil {
+	if err := hcl.ExportOpt(config, file); err != nil {
 		file.Close()
 		return err
 	}
@@ -1008,7 +1008,7 @@ func importServiceAnomalies(targetFolder string, environmentURL string, apiToken
 		file.Close()
 		return err
 	}
-	if err := hcl.ExtExport(config, file); err != nil {
+	if err := hcl.ExportOpt(config, file); err != nil {
 		file.Close()
 		return err
 	}

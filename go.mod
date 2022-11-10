@@ -8,12 +8,12 @@ require (
 	github.com/dtcookie/dynatrace/api/cluster/v2/envs v1.0.3
 	github.com/dtcookie/dynatrace/api/config v1.0.10
 	github.com/dtcookie/dynatrace/api/config/alerting v1.0.22
-	github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.6
-	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.6
-	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.11
-	github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.7
-	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.11
-	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.12
+	github.com/dtcookie/dynatrace/api/config/anomalies/applications v1.0.7
+	github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices v1.0.7
+	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.12
+	github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.8
+	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.13
+	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.13
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.2
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.13
 	github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.2
@@ -78,7 +78,7 @@ require (
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.7 // indirect
+	github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.11 // indirect
 	github.com/dtcookie/dynatrace/api/config/common v1.0.4 // indirect
 	github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.11 // indirect
 	github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 // indirect
