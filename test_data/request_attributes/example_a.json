@@ -3,43 +3,102 @@
     "configurationVersions": [
       3
     ],
-    "clusterVersion": "1.206.95.20201116-094826"
+    "clusterVersion": "1.253.206.20221104-095518"
   },
-  "id": "95b6d68b-51d8-42ae-af78-2c80e7b4cbea",
-  "name": "idler",
+  "id": "3a70b967-0dda-4a9a-affa-9324cfd5c682",
+  "name": "tf_test_0001",
   "enabled": true,
   "dataType": "STRING",
   "dataSources": [
     {
       "enabled": true,
       "source": "METHOD_PARAM",
-      "technology": "JAVA",
+      "valueProcessing": {
+        "valueCondition": {
+          "operator": "ENDS_WITH",
+          "value": "gh"
+        },
+        "valueExtractorRegex": "s(.*+)",
+        "splitAt": "t",
+        "trim": true,
+        "extractSubstring": {
+          "position": "BEFORE",
+          "delimiter": "h"
+        }
+      },
+      "technology": "DOTNET",
       "methods": [
         {
           "method": {
             "visibility": "PUBLIC",
-            "modifiers": [
-              "STATIC"
-            ],
-            "className": "idler.Idler",
-            "methodName": "main",
+            "modifiers": [],
+            "className": "NServiceBus.Pipeline.Behavior`1",
+            "methodName": "Invoke",
             "argumentTypes": [
-              "java.lang.String[]"
+              "!0",
+              "System.Func`2<!0,System.Threading.Tasks.Task>"
             ],
-            "returnType": "void"
+            "returnType": "System.Threading.Tasks.Task"
           },
-          "capture": "THIS",
-          "deepObjectAccess": ".getClass().getName()"
+          "capture": "CLASS_NAME"
         }
-      ],
-      "scope": {
-        "serviceTechnology": "JAVA",
-        "tagOfProcessGroup": "Mail"
-      }
+      ]
+    },
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "valueCondition": {
+          "operator": "ENDS_WITH",
+          "negate": false,
+          "value": "gh"
+        },
+        "valueExtractorRegex": "s(.*+)",
+        "splitAt": "t",
+        "trim": true
+      },
+      "technology": "DOTNET",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [],
+            "className": "NServiceBus.Pipeline.Behavior`1",
+            "methodName": "Invoke",
+            "argumentTypes": [
+              "!0",
+              "System.Func`1<System.Threading.Tasks.Task>"
+            ],
+            "returnType": "System.Threading.Tasks.Task"
+          },
+          "capture": "CLASS_NAME"
+        }
+      ]
+    },
+    {
+      "enabled": false,
+      "source": "METHOD_PARAM",
+      "technology": "DOTNET",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [],
+            "className": "NServiceBus.Pipeline.Behavior`1",
+            "methodName": "Invoke",
+            "argumentTypes": [
+              "!0",
+              "System.Func`1<System.Threading.Tasks.Task>"
+            ],
+            "returnType": "System.Threading.Tasks.Task"
+          },
+          "capture": "CLASS_NAME"
+        }
+      ]
     }
   ],
   "normalization": "ORIGINAL",
   "aggregation": "FIRST",
-  "confidential": true,
-  "skipPersonalDataMasking": true
+  "confidential": false,
+  "skipPersonalDataMasking": false
 }
