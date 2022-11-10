@@ -1,10 +1,10 @@
 package download
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/dtcookie/hcl"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/hclgen"
 )
 
 func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName string, resFolder string, resources Resources) error {
@@ -16,15 +16,7 @@ func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName st
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", resName, Escape(resource.Name))); err != nil {
-			file.Close()
-			return err
-		}
-		if err := hcl.ExportOpt(resource.RESTObject, file); err != nil {
-			file.Close()
-			return err
-		}
-		if _, err := file.WriteString("}\n\n"); err != nil {
+		if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
 			file.Close()
 			return err
 		}
@@ -50,15 +42,7 @@ func (me ResourceData) WriteResourceSingle(dlConfig DownloadConfig, resName stri
 		return err
 	}
 	for _, resource := range resources {
-		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", resName, Escape(resource.Name))); err != nil {
-			file.Close()
-			return err
-		}
-		if err := hcl.ExportOpt(resource.RESTObject, file); err != nil {
-			file.Close()
-			return err
-		}
-		if _, err := file.WriteString("}\n\n"); err != nil {
+		if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
 			file.Close()
 			return err
 		}
@@ -85,15 +69,7 @@ func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
 		file.Close()
 		return nil
 	}
-	if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_dashboard_sharing", Escape(name))); err != nil {
-		file.Close()
-		return err
-	}
-	if err := hcl.ExportOpt(restObject, file); err != nil {
-		file.Close()
-		return err
-	}
-	if _, err := file.WriteString("}\n\n"); err != nil {
+	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", Escape(name)); err != nil {
 		file.Close()
 		return err
 	}
