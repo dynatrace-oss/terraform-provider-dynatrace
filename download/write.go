@@ -23,9 +23,24 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	// if mainFile, err = os.Create(fileName); err != nil {
 	// 	return err
 	// }
-	if len(replacedIDs) != 0 {
 
+	var dsFile *os.File
+	dsFileName := dlConfig.TargetFolder + "/" + ".data_source.tf"
+	os.Remove(dsFileName)
+	if len(replacedIDs) != 0 {
+		if dsFile, err = os.Create(dsFileName); err != nil {
+			return err
+		}
 	}
+
+	var mainFile *os.File
+	mainFileName := dlConfig.TargetFolder + "/" + "main.tf"
+	if dlConfig.SingleFile {
+		if mainFile, err = os.Create(mainFileName); err != nil {
+			return err
+		}
+	}
+
 	for resName, resources := range resourceDataMap {
 		if len(resources) == 0 {
 			continue
@@ -40,7 +55,10 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 				return err
 			}
 		} else {
-			if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
+			// if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
+			// 	return err
+			// }
+			if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources); err != nil {
 				return err
 			}
 		}
@@ -50,7 +68,8 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 		// }
 
 		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.ReplaceIDs == "datasource" {
-			dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
+			// dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
+			dataSourceDataMap.WriteDataSource(dsFile, dlConfig, resName, resFolder, replacedIDs)
 		}
 
 		// if _, err := mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resFolder)); err != nil {
@@ -67,7 +86,8 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 		// }
 
 	}
-	// mainFile.Close()
+	dsFile.Close()
+	mainFile.Close()
 
 	if err := writeProviderFile(dlConfig.TargetFolder); err != nil {
 		return err

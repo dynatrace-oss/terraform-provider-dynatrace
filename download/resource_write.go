@@ -47,24 +47,25 @@ func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName st
 	return nil
 }
 
-func (me ResourceData) WriteResourceSingle(dlConfig DownloadConfig, resName string, resFolder string, resources Resources) error {
-	var err error
-	var file *os.File
-	fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + "main.tf"
-	os.Remove(fileName)
-	if file, err = os.Create(fileName); err != nil {
-		return err
-	}
+func (me ResourceData) WriteResourceSingle(mainFile *os.File, dlConfig DownloadConfig, resName string, resFolder string, resources Resources) error {
+	// var err error
+	// var file *os.File
+	// fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + "main.tf"
+	// os.Remove(fileName)
+	// if file, err = os.Create(fileName); err != nil {
+	// 	return err
+	// }
+
 	for _, resource := range resources {
-		if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
-			file.Close()
+		if err := hclgen.Export(resource.RESTObject, mainFile, resName, Escape(resource.Name)); err != nil {
+			mainFile.Close()
 			return err
 		}
 		if resName == "dynatrace_dashboard" {
-			me.writeDashboardSharing(file, resource.Name)
+			me.writeDashboardSharing(mainFile, resource.Name)
 		}
 	}
-	file.Close()
+	// file.Close()
 
 	return nil
 }

@@ -264,7 +264,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*aws.AWSCredentialsConfig).Label
+			return counter.Numbering(v.(*aws.AWSCredentialsConfig).Label)
 		},
 	},
 	"dynatrace_azure_credentials": {
@@ -273,7 +273,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*azure.AzureCredentials).Label
+			return counter.Numbering(v.(*azure.AzureCredentials).Label)
 		},
 	},
 	"dynatrace_browser_monitor": {
@@ -524,7 +524,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*kubernetes.KubernetesCredentials).Label
+			return counter.Numbering(v.(*kubernetes.KubernetesCredentials).Label)
 		},
 	},
 	"dynatrace_maintenance": {
@@ -761,7 +761,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*attributes.SpanAttribute).Key
+			return counter.Numbering(v.(*attributes.SpanAttribute).Key)
 		},
 	},
 	"dynatrace_span_capture_rule": {
@@ -770,7 +770,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*capture.SpanCaptureSetting).SpanCaptureRule.Name
+			return counter.Numbering(v.(*capture.SpanCaptureSetting).SpanCaptureRule.Name)
 		},
 	},
 	"dynatrace_span_context_propagation": {
@@ -779,7 +779,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*ctxprop.PropagationSetting).PropagationRule.Name
+			return counter.Numbering(v.(*ctxprop.PropagationSetting).PropagationRule.Name)
 		},
 	},
 	"dynatrace_span_entry_point": {
@@ -788,7 +788,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
-			return v.(*entrypoints.SpanEntryPoint).EntryPointRule.Name
+			return counter.Numbering(v.(*entrypoints.SpanEntryPoint).EntryPointRule.Name)
 		},
 	},
 	"dynatrace_trello_notification": {
@@ -962,10 +962,10 @@ func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v in
 	case reflect.Struct:
 		field := rv.FieldByName("Name")
 		if field.Type().Kind() == reflect.String {
-			return field.Interface().(string)
+			return counter.Numbering(field.Interface().(string))
 		}
 	case reflect.Ptr:
-		return me.Name(dlConfig, resourceName, rv.Elem().Interface(), nil)
+		return me.Name(dlConfig, resourceName, rv.Elem().Interface(), counter)
 	}
 	return ""
 }

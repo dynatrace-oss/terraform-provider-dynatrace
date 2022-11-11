@@ -5,14 +5,14 @@ import (
 	"os"
 )
 
-func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string, resFolder string, replacedIDs ReplacedIDs) error {
-	var err error
-	var file *os.File
-	fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + ".data_source.tf"
-	os.Remove(fileName)
-	if file, err = os.Create(fileName); err != nil {
-		return err
-	}
+func (me DataSourceData) WriteDataSource(dsFile *os.File, dlConfig DownloadConfig, resName string, resFolder string, replacedIDs ReplacedIDs) error {
+	// var err error
+	// var file *os.File
+	// fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + ".data_source.tf"
+	// os.Remove(fileName)
+	// if file, err = os.Create(fileName); err != nil {
+	// 	return err
+	// }
 
 	for dsName, dataSource := range me {
 		if contains(ResourceInfoMap[resName].HardcodedIds, dsName) {
@@ -20,7 +20,7 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 			for id, values := range dataSource.RESTMap {
 				for _, replacedID := range replacedIDs[resName] {
 					if id == replacedID && !contains(writtenIDs, id) {
-						if err := me.writer(file, dsName, values); err != nil {
+						if err := me.writer(dsFile, dsName, values); err != nil {
 							return err
 						}
 						writtenIDs = append(writtenIDs, id)
@@ -29,7 +29,7 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 			}
 		}
 	}
-	file.Close()
+	// file.close()
 
 	return nil
 }
