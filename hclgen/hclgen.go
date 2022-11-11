@@ -261,7 +261,7 @@ func (e *exportEntries) handle(m map[string]interface{}, breadCrumbs string, sch
 }
 
 func Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
-	return New().Export(marshaler, w, resourceType, resourceName)
+	return New().Export(marshaler, w, resourceType, resourceName, comments...)
 }
 
 func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
@@ -274,7 +274,7 @@ func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType stri
 	if schemer, ok := marshaler.(hcl.Schemer); ok {
 		schema = schemer.Schema()
 	}
-	return me.export(m, schema, w, resourceType, resourceName)
+	return me.export(m, schema, w, resourceType, resourceName, comments...)
 }
 
 func (me *HCLGen) export(m map[string]interface{}, schema map[string]*hcl.Schema, w io.Writer, resourceType string, resourceName string, comments ...string) error {
