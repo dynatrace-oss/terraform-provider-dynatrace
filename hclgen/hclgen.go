@@ -260,11 +260,11 @@ func (e *exportEntries) handle(m map[string]interface{}, breadCrumbs string, sch
 	}
 }
 
-func Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string) error {
+func Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
 	return New().Export(marshaler, w, resourceType, resourceName)
 }
 
-func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string) error {
+func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
 	var m map[string]interface{}
 	var err error
 	if m, err = marshaler.MarshalHCL(); err != nil {
@@ -277,15 +277,24 @@ func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType stri
 	return me.export(m, schema, w, resourceType, resourceName)
 }
 
-func (me *HCLGen) export(m map[string]interface{}, schema map[string]*hcl.Schema, w io.Writer, resourceType string, resourceName string) error {
+func (me *HCLGen) export(m map[string]interface{}, schema map[string]*hcl.Schema, w io.Writer, resourceType string, resourceName string, comments ...string) error {
 	var err error
 	ents := exportEntries{}
 	ents.handle(m, "", schema)
 	sort.SliceStable(ents, ents.Less)
 	rootBody := me.file.Body()
-	rootBody.AppendUnstructuredTokens(hclwrite.Tokens{
-		&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("# Exported by HCLGEN\n")},
-	})
+	tokens := hclwrite.Tokens{}
+	if len(comments) > 0 {
+		for _, comment := range comments {
+			comment = strings.TrimSpace(comment)
+			if len(comment) == 0 {
+				tokens = append(tokens, &hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("# Exported by HCLGEN\n")})
+			}
+		}
+	}
+	if len(tokens) > 0 {
+		rootBody.AppendUnstructuredTokens(tokens)
+	}
 	bs := rootBody.AppendNewBlock(
 		"resource",
 		[]string{
