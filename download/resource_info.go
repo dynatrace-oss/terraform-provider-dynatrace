@@ -66,18 +66,57 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			}
 			return ids
 		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*alerting.Profile)
+				for _, resource := range resourceData["dynatrace_management_zone"] {
+					resourceObj := resource.RESTObject.(*managementzones.ManagementZone)
+					if dataObj.ManagementZone != nil && *dataObj.ManagementZone == *resourceObj.ID {
+						dataObj.ManagementZone = opt.NewString("HCL-UNQUOTE-dynatrace_management_zone." + Escape(resourceObj.Name) + ".id")
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_ansible_tower_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewAnsibleTowerService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_application_anomalies": {
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return applications.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -86,7 +125,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{web.NewAppDataPrivacyService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -130,7 +169,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{applicationdetectionrules.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -138,7 +177,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			}
 			for _, stub := range stubList.Values {
 				if stub.ID == v.(*applicationdetectionrules.ApplicationDetectionRule).ApplicationIdentifier {
-					return counter.Numbering(stub.Name, counter)
+					return counter.Numbering(stub.Name)
 				}
 			}
 			return ""
@@ -157,13 +196,24 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			}
 			return ids
 		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*applicationdetectionrules.ApplicationDetectionRule)
+				for _, resource := range resourceData["dynatrace_web_application"] {
+					resourceObj := resource.RESTObject.(*web.ApplicationConfig)
+					if dataObj.ApplicationIdentifier != "" && dataObj.ApplicationIdentifier == *resourceObj.ID {
+						dataObj.ApplicationIdentifier = "HCL-UNQUOTE-dynatrace_web_application." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_application_error_rules": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{web.NewErrorRulesService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -190,6 +240,17 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			}
 			return ids
 		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*web.ApplicationErrorRules)
+				for _, resource := range resourceData["dynatrace_web_application"] {
+					resourceObj := resource.RESTObject.(*web.ApplicationConfig)
+					if dataObj.WebApplicationID != "" && dataObj.WebApplicationID == *resourceObj.ID {
+						dataObj.WebApplicationID = "HCL-UNQUOTE-dynatrace_web_application." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_autotag": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
@@ -202,7 +263,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{aws.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*aws.AWSCredentialsConfig).Label
 		},
 	},
@@ -211,7 +272,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{azure.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*azure.AzureCredentials).Label
 		},
 	},
@@ -220,8 +281,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{monitors.NewBrowserService(environmentURL+"/api/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
-			return counter.Numbering(v.(*monitors.BrowserSyntheticMonitorUpdate).Name, counter)
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*monitors.BrowserSyntheticMonitorUpdate).Name)
 		},
 	},
 	"dynatrace_calculated_service_metric": {
@@ -258,8 +319,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{dashboards.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
-			return counter.Numbering(v.(*dashboards.Dashboard).Metadata.Name, counter)
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*dashboards.Dashboard).Metadata.Name)
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
@@ -293,12 +354,41 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			}
 			return ids
 		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*dashboards.Dashboard)
+				if dataObj.Metadata != nil && dataObj.Metadata.Filter != nil && dataObj.Metadata.Filter.ManagementZone != nil {
+					for _, resource := range resourceData["dynatrace_management_zone"] {
+						resourceObj := resource.RESTObject.(*managementzones.ManagementZone)
+						if dataObj.Metadata.Filter.ManagementZone.ID == *resourceObj.ID {
+							dataObj.Metadata.Filter.ManagementZone.ID = "HCL-UNQUOTE-dynatrace_management_zone." + Escape(resourceObj.Name) + ".id"
+							dataObj.Metadata.Filter.ManagementZone.Name = nil
+							dataObj.Metadata.Filter.ManagementZone.Description = nil
+						}
+					}
+				}
+				if dataObj.Tiles != nil {
+					for _, tile := range dataObj.Tiles {
+						if tile.Filter != nil && tile.Filter.ManagementZone != nil {
+							for _, resource := range resourceData["dynatrace_management_zone"] {
+								resourceObj := resource.RESTObject.(*managementzones.ManagementZone)
+								if tile.Filter.ManagementZone.ID == *resourceObj.ID {
+									tile.Filter.ManagementZone.ID = "HCL-UNQUOTE-dynatrace_management_zone." + Escape(resourceObj.Name) + ".id"
+									tile.Filter.ManagementZone.Name = nil
+									tile.Filter.ManagementZone.Description = nil
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_database_anomalies": {
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return databaseservices.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -313,13 +403,41 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewEmailService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_frequent_issues": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{frequentissues.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -327,7 +445,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return hosts.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -336,8 +454,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{monitors.NewHTTPService(environmentURL+"/api/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
-			return counter.Numbering(v.(*monitors.HTTPSyntheticMonitorUpdate).Name, counter)
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*monitors.HTTPSyntheticMonitorUpdate).Name)
 		},
 	},
 	"dynatrace_host_naming": {
@@ -351,7 +469,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{filters.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -366,9 +484,37 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewJiraService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_key_requests": {
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return "for " + v.(servicetopology.Service).DisplayName
 		},
 	},
@@ -377,7 +523,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{kubernetes.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*kubernetes.KubernetesCredentials).Label
 		},
 	},
@@ -386,8 +532,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{v2maintenance.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
-			return counter.Numbering(v.(*v2maintenance.MaintenanceWindow).GeneralProperties.Name, counter)
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*v2maintenance.MaintenanceWindow).GeneralProperties.Name)
 		},
 	},
 	"dynatrace_management_zone": {
@@ -407,7 +553,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{networkzones.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -416,11 +562,67 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewOpsgenieService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_pager_duty_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewPagerDutyService(environmentURL+"/api/v2", apiToken)}
 			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
 		},
 	},
 	"dynatrace_processgroup_naming": {
@@ -452,8 +654,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{requestnaming.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
-			return counter.Numbering(v.(*requestnaming.RequestNaming).NamingPattern, counter)
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*requestnaming.RequestNaming).NamingPattern)
 		},
 	},
 	"dynatrace_resource_attributes": {
@@ -461,7 +663,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{resattr.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -469,7 +671,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return services.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return resourceName
 		},
 	},
@@ -484,11 +686,67 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewServiceNowService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_slack_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewSlackService(environmentURL+"/api/v2", apiToken)}
 			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
 		},
 	},
 	"dynatrace_slo": {
@@ -502,7 +760,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{attributes.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*attributes.SpanAttribute).Key
 		},
 	},
@@ -511,7 +769,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{capture.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*capture.SpanCaptureSetting).SpanCaptureRule.Name
 		},
 	},
@@ -520,7 +778,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{ctxprop.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*ctxprop.PropagationSetting).PropagationRule.Name
 		},
 	},
@@ -529,7 +787,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{entrypoints.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 			return v.(*entrypoints.SpanEntryPoint).EntryPointRule.Name
 		},
 	},
@@ -538,11 +796,67 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewTrelloService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_victor_ops_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewVictorOpsService(environmentURL+"/api/v2", apiToken)}
 			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
 		},
 	},
 	"dynatrace_web_application": {
@@ -556,11 +870,67 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewWebHookService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_xmatters_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewXMattersService(environmentURL+"/api/v2", apiToken)}
 			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+			return counter.Numbering(v.(*notifications.Notification).Name)
+		},
+		HardcodedIds: []string{"dynatrace_alerting"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for id, dsObj := range dsData["dynatrace_alerting"].RESTMap {
+					if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+						dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+						ids = append(ids, id)
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*notifications.Notification)
+				for _, resource := range resourceData["dynatrace_alerting"] {
+					resourceObj := resource.RESTObject.(*alerting.Profile)
+					if dataObj.ProfileID != "" && dataObj.ProfileID == resourceObj.ID {
+						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
+					}
+				}
+			}
 		},
 	},
 }
@@ -574,13 +944,13 @@ type ResourceStruct struct {
 	ResReplaceIds ResourceReplaceFunc
 }
 
-type NameFunc func(DownloadConfig, string, interface{}, NameCounter) string
+type NameFunc func(DownloadConfig, string, interface{}, *NameCounter) string
 
 type DataSourceReplaceFunc func(Resources, DataSourceData) []string
 
 type ResourceReplaceFunc func(string, ResourceData)
 
-func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
 	if v == nil {
 		return ""
 	}

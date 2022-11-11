@@ -287,8 +287,9 @@ func (me *HCLGen) export(m map[string]interface{}, schema map[string]*hcl.Schema
 	if len(comments) > 0 {
 		for _, comment := range comments {
 			comment = strings.TrimSpace(comment)
-			if len(comment) == 0 {
-				tokens = append(tokens, &hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("# Exported by HCLGEN\n")})
+			if len(comment) != 0 {
+				comment = fmt.Sprintf("# %s\n", comment)
+				tokens = append(tokens, &hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte(comment)})
 			}
 		}
 	}

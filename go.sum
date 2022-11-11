@@ -138,8 +138,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.15 h1:ubcAa
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.15/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
 github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1 h1:o+bFfgsDURcMBa31Sx6fOIqQ/LnVG1DIUci0eY5RLNw=
 github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.1/go.mod h1:yU7GFfFce3lDLPJPQxHN4cfgBixe/0Rn5CAZ1sroPSo=
-github.com/dtcookie/dynatrace/api/config/customservices v1.0.18 h1:U/bZhiuvVc+NupQKgkj+bS4QQ9ZfP4S0Yybideal1Sg=
-github.com/dtcookie/dynatrace/api/config/customservices v1.0.18/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
+github.com/dtcookie/dynatrace/api/config/customservices v1.0.19 h1:RvGQHzdUf0HoTM6JJNhdwwfz3Ypgs/rEwU08gbD8d8U=
+github.com/dtcookie/dynatrace/api/config/customservices v1.0.19/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.19 h1:dXD42O3tQIMioWA73dDKHJ0IfLfMO1sdibzOjCIAAUc=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.19/go.mod h1:KKLiLNR/rA6fCkb8y4rAaLVhLCx/RiI0Pqp/uz/OIdQ=
 github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.3 h1:IJE6OJPG6h3lmdMgccNxbnOHCqvyPyP3ZAuUCgRm5IM=
@@ -178,8 +178,8 @@ github.com/dtcookie/dynatrace/api/config/topology/service v1.0.3 h1:zxb3EK9dUXYF
 github.com/dtcookie/dynatrace/api/config/topology/service v1.0.3/go.mod h1:Y2OVgz4xG1vr5gOGZiWDZRUgiAdIe/sFRIqe8LFfxkM=
 github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0 h1:XLxBZJwfenHqQ2WKakSKKt3iBt+DGAHzPTJt2LZC7ZQ=
 github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0/go.mod h1:Wty4r/AkYsJJFl7mj1w+Ma70Irfh/jQOmehhnVk4ylI=
-github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.4 h1:SR992M0fw+4nmc7XpPjsvOMA3FoeDa1WTVaGXAvF9GU=
-github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.4/go.mod h1:ozwqCpiIugLBSB+lHO6BwhrHCM1YRo9PSFJ0nnrzP+Y=
+github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.6 h1:0/Uj1MsrTN/pFYVxFVlAQxBpS7jXp4OoFyCwE0qytEg=
+github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.6/go.mod h1:ozwqCpiIugLBSB+lHO6BwhrHCM1YRo9PSFJ0nnrzP+Y=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.1 h1:Sq0KBmv7tAIA1wpHfSUMj72RbRkLibEHDMa31onW2aw=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.1/go.mod h1:FvR5B0I2HrqpohQzwBM0BEAUc0ID7xApJQtLDS5x2g0=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 h1:dSWSlgwjvNVr3vQ4HerYce2k1O2f/heBzkKJgFaqu2Y=
@@ -198,8 +198,8 @@ github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1 h1:nCaG4V/GFuINM7
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4 h1:ZhpdFZQW2wskXJCIRMHZO9o0cMjBCUiTmOTXZnUkq6c=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4/go.mod h1:MQkYbvci1MGaHfHUT5VI60QmqnwBK9s5d1yXY0erVmo=
-github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.5 h1:oIWqqnYVWszDNjiymsgi8uQlMF2sd0gl6uPsxrk6zSc=
-github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.5/go.mod h1:N6ft2ZVFZgoK8ATx3OQaC0Oo+2G0M7pGQyeEOUTQP6k=
+github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.6 h1:0NNwoKXHWAoBC9NgfqetQGdFy8QGj31t/ryGv7pLKPM=
+github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.6/go.mod h1:N6ft2ZVFZgoK8ATx3OQaC0Oo+2G0M7pGQyeEOUTQP6k=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.7 h1:iBKL/ofMuuH/yEpFIjMRgrt+z960l+eb/FXCBxV5wIw=
 github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.7/go.mod h1:4/qJ7WJNM0sUzFcQLjS0l5DbCTdxGDzIKOs4u2sQDxk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.2 h1:rAAtt4PhFVI5qONwfdZgia/JqB9WjqLQKXzgrcqak0U=

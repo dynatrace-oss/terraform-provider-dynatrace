@@ -5,9 +5,24 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/topology/service"
+	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 )
 
 var DataSourceInfoMap = map[string]DataSourceStruct{
+	"dynatrace_alerting": {
+		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
+			return alerting.NewService(environmentURL+"/api/v2", apiToken)
+		},
+		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+			stubs := restObject.([]*alerting.Profile)
+			var restMap = map[string]map[string]interface{}{}
+			for _, stub := range stubs {
+				restMap[stub.ID] = map[string]interface{}{}
+				restMap[stub.ID]["name"] = stub.Name
+			}
+			return restMap
+		},
+	},
 	"dynatrace_application": {
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return web.NewService(environmentURL+"/api/config/v1", apiToken)

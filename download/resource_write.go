@@ -10,16 +10,30 @@ import (
 func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName string, resFolder string, resources Resources) error {
 	var err error
 	for _, resource := range resources {
+		// var nameCounter NameCounter
+		// nameCounter.Replace = func(s string, cnt int) string {
+		// 	return fmt.Sprintf("%s_%d", s, cnt)
+		// }
+		// nameCounter.Numbering()
 		var file *os.File
-		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + escf(resource.Name) + "." + resFolder + ".tf"
+		// fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + escf(resource.Name) + "." + resFolder + ".tf"
+		fileName := dlConfig.TargetFolder + "/" + resFolder + "." + escf(resource.Name) + ".tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
-		if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
-			file.Close()
-			return err
+		if dlConfig.CommentedID {
+			if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name), "id = "+resource.ID); err != nil {
+				file.Close()
+				return err
+			}
+		} else {
+			if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
+				file.Close()
+				return err
+			}
 		}
+
 		if resName == "dynatrace_dashboard" {
 			if err := me.writeDashboardSharing(file, resource.Name); err != nil {
 				file.Close()

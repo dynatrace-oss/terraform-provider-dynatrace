@@ -19,8 +19,10 @@ package download
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
+	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
@@ -29,9 +31,10 @@ import (
 
 func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 	for resName, resStruct := range ResourceInfoMap {
-		if !dlConfig.MatchResource(resName) && dlConfig.ResourceNames != nil {
+		if !dlConfig.MatchResource(resName) && len(dlConfig.ResourceNames) != 0 {
 			continue
 		}
+		fmt.Println("Processing read: ", resName)
 		if ResourceInfoMap[resName].NoListClient != nil {
 			client := resStruct.NoListClient(
 				dlConfig.EnvironmentURL,
@@ -84,8 +87,9 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 		}
 		if marshaller, ok := config.(hcl.Marshaler); ok {
 			resource := Resource{
+				ID:         id,
+				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, &nameCounter),
 				RESTObject: marshaller,
-				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter),
 			}
 			resources = append(resources, resource)
 		}
@@ -138,7 +142,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		}
 		var name string
 		if marshaller, ok := config.(hcl.Marshaler); ok {
-			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter)
+			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, &nameCounter)
 			resource := Resource{
 				RESTObject: marshaller,
 				Name:       name,
@@ -159,6 +163,8 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 				RESTObject: marshaller,
 				Name:       name,
 			}
+			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
+			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + Escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
 			dashboardSharing = append(dashboardSharing, resource)
 		}
 	}

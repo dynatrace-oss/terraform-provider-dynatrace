@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 	"unicode"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/version"
 )
 
 func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSourceDataMap DataSourceData, replacedIDs ReplacedIDs) error {
@@ -16,10 +18,13 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	}
 
 	os.MkdirAll(dlConfig.TargetFolder, os.ModePerm)
-	var mainFile *os.File
-	fileName := dlConfig.TargetFolder + "/main.tf"
-	if mainFile, err = os.Create(fileName); err != nil {
-		return err
+	// var mainFile *os.File
+	// fileName := dlConfig.TargetFolder + "/main.tf"
+	// if mainFile, err = os.Create(fileName); err != nil {
+	// 	return err
+	// }
+	if len(replacedIDs) != 0 {
+
 	}
 	for resName, resources := range resourceDataMap {
 		if len(resources) == 0 {
@@ -29,7 +34,7 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			continue
 		}
 		resFolder := strings.TrimPrefix(resName, "dynatrace_")
-		os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
+		// os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
 		if !dlConfig.SingleFile {
 			if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources); err != nil {
 				return err
@@ -40,24 +45,33 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			}
 		}
 
-		if ResourceInfoMap[resName].HardcodedIds != nil {
+		// if err := writeNestedProviderFile(dlConfig.TargetFolder, resFolder); err != nil {
+		// 	return err
+		// }
+
+		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.ReplaceIDs == "datasource" {
 			dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
 		}
 
-		if _, err := mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resFolder)); err != nil {
-			mainFile.Close()
-			return err
-		}
-		if _, err := mainFile.WriteString(fmt.Sprintf("\tsource = \"./%s\"\n", resFolder)); err != nil {
-			mainFile.Close()
-			return err
-		}
-		if _, err := mainFile.WriteString("}\n\n"); err != nil {
-			mainFile.Close()
-			return err
-		}
+		// if _, err := mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resFolder)); err != nil {
+		// 	mainFile.Close()
+		// 	return err
+		// }
+		// if _, err := mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", resFolder)); err != nil {
+		// 	mainFile.Close()
+		// 	return err
+		// }
+		// if _, err := mainFile.WriteString("  providers = {\n    dynatrace = dynatrace.default\n  }\n}\n\n"); err != nil {
+		// 	mainFile.Close()
+		// 	return err
+		// }
+
 	}
-	mainFile.Close()
+	// mainFile.Close()
+
+	if err := writeProviderFile(dlConfig.TargetFolder); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -87,4 +101,35 @@ func Escape(s string) string {
 		}
 	}
 	return result
+}
+
+func writeProviderFile(targetFolder string) error {
+	var err error
+	var providerFile *os.File
+	fileName := targetFolder + "/providers.tf"
+	if providerFile, err = os.Create(fileName); err != nil {
+		return err
+	}
+	content := `terraform {
+	required_providers {
+		dynatrace = {
+		version = "${version}"
+		source = "dynatrace-oss/dynatrace"
+		}
+	}
+}
+	
+# provider "dynatrace" {
+#   alias        = "default"
+#   dt_env_url   = "https://########.live.dynatrace.com/"
+#   dt_api_token = "dt0c01.#########################################################################################"
+# }
+	`
+	content = strings.Replace(content, "${version}", version.Current, 1)
+	if _, err := providerFile.WriteString(content); err != nil {
+		providerFile.Close()
+		return err
+	}
+
+	return nil
 }

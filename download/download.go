@@ -3,14 +3,34 @@ package download
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 type DownloadConfig struct {
 	EnvironmentURL string
 	APIToken       string
 	TargetFolder   string
-	ResourceNames  map[string][]string
 	SingleFile     bool
+	CommentedID    bool
+	ReplaceIDs     string
+	ResourceNames  map[string][]string
+}
+
+// ReplaceIDType has no documentation
+type ReplaceIDType string
+
+func ValidateResource(keyVal string) (string, string) {
+	res1 := ""
+	res2 := ""
+	for resName := range ResourceInfoMap {
+		if strings.HasPrefix(keyVal, resName) {
+			res1 = resName
+			if strings.HasPrefix(keyVal, resName+"=") {
+				res2 = keyVal[len(resName)+1:]
+			}
+		}
+	}
+	return res1, res2
 }
 
 func (me DownloadConfig) MatchResource(name string) bool {
@@ -43,7 +63,7 @@ func (me DownloadConfig) MatchID(resName string, id string) bool {
 	return false
 }
 
-func Download(environmentURL string, apiToken string, targetFolder string, m map[string][]string, singleFile bool) bool {
+func Download(environmentURL string, apiToken string, targetFolder string, fileArg bool, comIdArg bool, repIdArg string, resArgs map[string][]string) bool {
 	var err error
 	var ResourceDataMap = ResourceData{}
 	var DataSourceDataMap = DataSourceData{}
@@ -52,8 +72,10 @@ func Download(environmentURL string, apiToken string, targetFolder string, m map
 		EnvironmentURL: environmentURL,
 		APIToken:       apiToken,
 		TargetFolder:   targetFolder,
-		ResourceNames:  m,
-		SingleFile:     singleFile,
+		SingleFile:     fileArg,
+		CommentedID:    comIdArg,
+		ReplaceIDs:     repIdArg,
+		ResourceNames:  resArgs,
 	}
 
 	if err = ResourceDataMap.ProcessRead(dlConfig); err != nil {
@@ -61,21 +83,24 @@ func Download(environmentURL string, apiToken string, targetFolder string, m map
 		os.Exit(0)
 	}
 
-	if err = ProcessResourceIDs(ResourceDataMap); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
+	if dlConfig.ReplaceIDs == "resource" {
+		if err = ProcessResourceIDs(ResourceDataMap); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
 	}
 
-	// Option 2
-	// if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
-	// 	fmt.Println(err.Error())
-	// 	os.Exit(0)
-	// }
+	if dlConfig.ReplaceIDs == "datasource" {
+		if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
 
-	// if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
-	// 	fmt.Println(err.Error())
-	// 	os.Exit(0)
-	// }
+		if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 
 	if err = ProcessWrite(dlConfig, ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
 		fmt.Println(err.Error())

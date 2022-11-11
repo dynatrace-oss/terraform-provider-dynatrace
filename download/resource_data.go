@@ -12,8 +12,9 @@ type NoListClient interface {
 }
 
 type Resource struct {
-	RESTObject hcl.Marshaler
+	ID         string
 	Name       string
+	RESTObject hcl.Marshaler
 }
 
 type Resources []Resource

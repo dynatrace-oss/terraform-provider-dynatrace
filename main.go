@@ -18,6 +18,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -29,8 +30,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
-
-var Version = "1.14.1"
 
 var clusterResArr = []string{
 	"dynatrace_environment",
@@ -182,16 +181,10 @@ func clusterExport(args []string) bool {
 }
 
 func exportv2(args []string) bool {
-	var singleFile bool
-
 	if len(args) == 1 {
 		return false
 	}
-	if strings.TrimSpace(args[1]) == "exportv2" {
-		singleFile = false
-	} else if strings.TrimSpace(args[1]) == "exportv2s" {
-		singleFile = true
-	} else {
+	if strings.TrimSpace(args[1]) != "-exportv2" {
 		return false
 	}
 	environmentURL := os.Getenv("DYNATRACE_ENV_URL")
@@ -210,37 +203,48 @@ func exportv2(args []string) bool {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"
 	}
-	if len(args) == 2 {
-		return downloadv2.Download(environmentURL, apiToken, targetFolder, nil, singleFile)
+
+	flag.Bool("exportv2", true, "")
+	fileArg := flag.Bool("single", false, "single file resource output `true` or `false` (default \"false\")")
+	comIdArg := flag.Bool("id", false, "include commented id `true` or `false` (default \"false\")")
+	repIdArg := flag.String("ref", "hardcoded", "references option `hardcoded`, `resource` or `datasource`")
+	flag.Parse()
+	tailArgs := flag.Args()
+
+	if *repIdArg != "hardcoded" && *repIdArg != "resource" && *repIdArg != "datasource" {
+		fmt.Println("Unknown replace id option `" + *repIdArg + "`")
+		flag.CommandLine.Usage()
+		os.Exit(0)
 	}
 
-	m := map[string][]string{}
-	for idx := 2; idx < len(args); idx++ {
-		key, id := matchRes(args[idx])
+	resArgs := map[string][]string{}
+	for _, idx := range tailArgs {
+		key, id := downloadv2.ValidateResource(idx)
 		if key == "" {
-			fmt.Println("Unknown resource `" + args[idx] + "`")
+			fmt.Println("Unknown resource `" + idx + "`")
 			os.Exit(0)
 		}
-		stored, ok := m[key]
+		stored, ok := resArgs[key]
 		if ok {
 			if stored != nil {
 				if id == "" {
-					m[key] = nil
+					resArgs[key] = nil
 				} else {
 					stored = append(stored, id)
-					m[key] = stored
+					resArgs[key] = stored
 				}
 			}
 		} else {
 			if id == "" {
-				m[key] = nil
+				resArgs[key] = nil
 			} else {
 				stored = []string{id}
-				m[key] = stored
+				resArgs[key] = stored
 			}
 		}
 	}
-	return downloadv2.Download(environmentURL, apiToken, targetFolder, m, singleFile)
+
+	return downloadv2.Download(environmentURL, apiToken, targetFolder, *fileArg, *comIdArg, *repIdArg, resArgs)
 }
 
 func export(args []string) bool {
