@@ -1,45 +1,25 @@
 {
-  "metadata": {
-    "configurationVersions": [
-      3
-    ],
-    "clusterVersion": "1.206.95.20201116-094826"
-  },
-  "id": "95b6d68b-51d8-42ae-af78-2c80e7b4cbea",
-  "name": "idler",
-  "enabled": true,
-  "dataType": "STRING",
-  "dataSources": [
-    {
-      "enabled": true,
-      "source": "METHOD_PARAM",
-      "technology": "JAVA",
-      "methods": [
+  "objectId": "vu9U3hXa3q0AAAABABlidWlsdGluOnNwYW4tZW50cnktcG9pbnRzAAZ0ZW5hbnQABnRlbmFudAAkMzU2NzVmZTYtOWIyZi0zYjU3LThkZDEtNTQyNGFiYjYxYjBhvu9U3hXa3q0",
+  "summary": "TF_SEP_001",
+  "created": 1668168253931,
+  "modified": 1668168253931,
+  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
+  "updateToken": "vu9U3hXY3q0ATAAkMzU2NzVmZTYtOWIyZi0zYjU3LThkZDEtNTQyNGFiYjYxYjBhACRmNTg0MmJiMC02MWI4LTExZWQtODAwMS0wMTAwMDAwMDAwMDa-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:span-entry-points",
+  "schemaVersion": "0.1.16",
+  "value": {
+    "entryPointRule": {
+      "ruleName": "#name#",
+      "ruleAction": "DONT_CREATE_ENTRYPOINT",
+      "matchers": [
         {
-          "method": {
-            "visibility": "PUBLIC",
-            "modifiers": [
-              "STATIC"
-            ],
-            "className": "idler.Idler",
-            "methodName": "main",
-            "argumentTypes": [
-              "java.lang.String[]"
-            ],
-            "returnType": "void"
-          },
-          "capture": "THIS",
-          "deepObjectAccess": ".getClass().getName()"
+          "source": "SPAN_NAME",
+          "type": "DOES_NOT_CONTAIN",
+          "value": "foo",
+          "caseSensitive": true
         }
-      ],
-      "scope": {
-        "serviceTechnology": "JAVA",
-        "tagOfProcessGroup": "Mail"
-      }
+      ]
     }
-  ],
-  "normalization": "ORIGINAL",
-  "aggregation": "FIRST",
-  "confidential": true,
-  "skipPersonalDataMasking": true
+  }
 }

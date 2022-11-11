@@ -91,6 +91,7 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dtcookie/assert v1.2.0 h1:hIvkPGBWCdPs+4XTfzZHoJjoNkpDmpZDv0N8X0zh6Pk=
+github.com/dtcookie/assert v1.2.0/go.mod h1:06O/8B/CcX9Gmle1625gltKzxtBS6I/ZdCSyszs9nbA=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0 h1:YN34I4X0d1hmI2/jgQbvMuwmoMPoJBZquKGCOtNpj0Y=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0/go.mod h1:iPNJZktGm4K2GPkU3Lc2cTOeWFG2rVEyfeGWLGlZ6hY=
 github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.0 h1:JAqhaIEVoKVqu2DFcx0xlbvblM2slczb7Z5nwZNKzR8=

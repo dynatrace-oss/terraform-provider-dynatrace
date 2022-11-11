@@ -1,45 +1,25 @@
 {
-  "metadata": {
-    "configurationVersions": [
-      3
-    ],
-    "clusterVersion": "1.206.95.20201116-094826"
-  },
-  "id": "95b6d68b-51d8-42ae-af78-2c80e7b4cbea",
-  "name": "idler",
-  "enabled": true,
-  "dataType": "STRING",
-  "dataSources": [
-    {
-      "enabled": true,
-      "source": "METHOD_PARAM",
-      "technology": "JAVA",
-      "methods": [
+  "objectId": "vu9U3hXa3q0AAAABACBidWlsdGluOnNwYW4tY29udGV4dC1wcm9wYWdhdGlvbgAGdGVuYW50AAZ0ZW5hbnQAJDMyMzg0NjA2LTljNzItM2MxOC1iYTRiLWUxMjVmN2Y2ZDcwOL7vVN4V2t6t",
+  "summary": "TF_SCP_001",
+  "created": 1668168903817,
+  "modified": 1668168903817,
+  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
+  "updateToken": "vu9U3hXY3q0ATAAkMzIzODQ2MDYtOWM3Mi0zYzE4LWJhNGItZTEyNWY3ZjZkNzA4ACQ3OGUwZTc5MC02MWJhLTExZWQtODAwMS0wMTAwMDAwMDAwMDa-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:span-context-propagation",
+  "schemaVersion": "0.1.18",
+  "value": {
+    "contextPropagationRule": {
+      "ruleName": "#name#",
+      "ruleAction": "PROPAGATE",
+      "matchers": [
         {
-          "method": {
-            "visibility": "PUBLIC",
-            "modifiers": [
-              "STATIC"
-            ],
-            "className": "idler.Idler",
-            "methodName": "main",
-            "argumentTypes": [
-              "java.lang.String[]"
-            ],
-            "returnType": "void"
-          },
-          "capture": "THIS",
-          "deepObjectAccess": ".getClass().getName()"
+          "source": "SPAN_NAME",
+          "type": "EQUALS",
+          "value": "asdf",
+          "caseSensitive": false
         }
-      ],
-      "scope": {
-        "serviceTechnology": "JAVA",
-        "tagOfProcessGroup": "Mail"
-      }
+      ]
     }
-  ],
-  "normalization": "ORIGINAL",
-  "aggregation": "FIRST",
-  "confidential": true,
-  "skipPersonalDataMasking": true
+  }
 }

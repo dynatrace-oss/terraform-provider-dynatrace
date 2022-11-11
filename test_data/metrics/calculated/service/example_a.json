@@ -1,0 +1,38 @@
+{
+    "metadata": {
+      "configurationVersions": [
+        0
+      ],
+      "clusterVersion": "1.254.92.20221109-192319"
+    },
+    "tsmMetricKey": "calc:service.TF_CSM_A",
+    "name": "TF_CSM_A",
+    "enabled": true,
+    "ignoreMutedRequests": false,
+    "metricDefinition": {
+      "metric": "REQUEST_ATTRIBUTE",
+      "requestAttribute": "foo"
+    },
+    "unit": "MILLI_SECOND_PER_MINUTE",
+    "unitDisplayName": null,
+    "entityId": null,
+    "managementZones": [
+      "AAAA"
+    ],
+    "conditions": [
+      {
+        "attribute": "HTTP_REQUEST_METHOD",
+        "comparisonInfo": {
+          "type": "HTTP_METHOD",
+          "comparison": "EQUALS_ANY_OF",
+          "value": null,
+          "values": [
+            "POST",
+            "GET"
+          ],
+          "negate": false
+        }
+      }
+    ],
+    "dimensionDefinition": null
+  }

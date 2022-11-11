@@ -3,6 +3,7 @@ module github.com/dynatrace-oss/terraform-provider-dynatrace
 go 1.19
 
 require (
+	github.com/dtcookie/assert v1.2.0
 	github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.0
 	github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.0
 	github.com/dtcookie/dynatrace/api/cluster/v2/envs v1.0.3

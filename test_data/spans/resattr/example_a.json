@@ -1,28 +1,28 @@
 {
-  "author": "dt0c01.52SLB56BZWWRFK25TUIHE7PT",
-  "created": 1660208634588,
-  "modified": 1660208634588,
   "objectId": "vu9U3hXa3q0AAAABABpidWlsdGluOnJlc291cmNlLWF0dHJpYnV0ZQAGdGVuYW50AAZ0ZW5hbnQAJDg0OWU5NWJhLTJkNjEtMzZlMi04MzgyLTkxOTIyMzE3NTdmOb7vVN4V2t6t",
-  "schemaId": "builtin:resource-attribute",
-  "schemaVersion": "1.0.23",
-  "scope": "environment",
   "summary": "",
-  "updateToken": "vu9U3hXY3q0ATAAkODQ5ZTk1YmEtMmQ2MS0zNmUyLTgzODItOTE5MjIzMTc1N2Y5ACQ4NmFlNzFjMC0xOTU0LTExZWQtODAwMS0wMTAwMDAwMDAwMDe-71TeFdjerQ",
+  "created": 1668169067616,
+  "modified": 1668169067616,
+  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
+  "updateToken": "vu9U3hXY3q0ATAAkODQ5ZTk1YmEtMmQ2MS0zNmUyLTgzODItOTE5MjIzMTc1N2Y5ACRkYTgyYTYwMC02MWJhLTExZWQtODAwMS0wMTAwMDAwMDAwMDK-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:resource-attribute",
+  "schemaVersion": "1.0.24",
   "value": {
     "attributeKeys": [
       {
+        "enabled": true,
         "attributeKey": "gffgf",
-        "enabled": true,
         "masking": "NOT_MASKED"
       },
       {
+        "enabled": true,
         "attributeKey": "cdefgh",
-        "enabled": true,
         "masking": "NOT_MASKED"
       },
       {
-        "attributeKey": "jjhhj",
         "enabled": false,
+        "attributeKey": "jjhhj",
         "masking": "NOT_MASKED"
       }
     ]
