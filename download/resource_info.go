@@ -83,7 +83,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewAnsibleTowerService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -116,7 +116,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return applications.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -125,7 +125,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{web.NewAppDataPrivacyService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -169,7 +169,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{applicationdetectionrules.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -213,7 +213,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{web.NewErrorRulesService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			client := web.NewService(dlConfig.EnvironmentURL+"/api/config/v1", dlConfig.APIToken)
 			stubList, err := client.List()
 			if err != nil {
@@ -263,7 +263,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{aws.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*aws.AWSCredentialsConfig).Label)
 		},
 	},
@@ -272,7 +272,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{azure.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*azure.AzureCredentials).Label)
 		},
 	},
@@ -281,7 +281,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{monitors.NewBrowserService(environmentURL+"/api/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*monitors.BrowserSyntheticMonitorUpdate).Name)
 		},
 	},
@@ -319,7 +319,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{dashboards.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*dashboards.Dashboard).Metadata.Name)
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
@@ -388,7 +388,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return databaseservices.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -403,7 +403,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewEmailService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -437,7 +437,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{frequentissues.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -445,7 +445,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return hosts.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -454,7 +454,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{monitors.NewHTTPService(environmentURL+"/api/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*monitors.HTTPSyntheticMonitorUpdate).Name)
 		},
 	},
@@ -469,7 +469,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{filters.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -484,7 +484,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewJiraService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -514,7 +514,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 	},
 	"dynatrace_key_requests": {
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return "for " + v.(servicetopology.Service).DisplayName
 		},
 	},
@@ -523,7 +523,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{kubernetes.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*kubernetes.KubernetesCredentials).Label)
 		},
 	},
@@ -532,7 +532,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{v2maintenance.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*v2maintenance.MaintenanceWindow).GeneralProperties.Name)
 		},
 	},
@@ -553,7 +553,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{networkzones.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -562,7 +562,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewOpsgenieService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -576,6 +576,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 						ids = append(ids, id)
 					}
 				}
+				dataObj.OpsGenie.APIKey = opt.NewString("######")
 			}
 			return ids
 		},
@@ -596,7 +597,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewPagerDutyService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -654,7 +655,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{requestnaming.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*requestnaming.RequestNaming).NamingPattern)
 		},
 	},
@@ -663,7 +664,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{resattr.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -671,7 +672,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return services.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
 		},
 	},
@@ -686,7 +687,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewServiceNowService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -720,7 +721,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewSlackService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -746,6 +747,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 						dataObj.ProfileID = "HCL-UNQUOTE-dynatrace_alerting." + Escape(resourceObj.Name) + ".id"
 					}
 				}
+				dataObj.Slack.URL = "######"
 			}
 		},
 	},
@@ -760,7 +762,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{attributes.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*attributes.SpanAttribute).Key)
 		},
 	},
@@ -769,7 +771,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{capture.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*capture.SpanCaptureSetting).SpanCaptureRule.Name)
 		},
 	},
@@ -778,7 +780,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{ctxprop.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*ctxprop.PropagationSetting).PropagationRule.Name)
 		},
 	},
@@ -787,7 +789,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{entrypoints.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*entrypoints.SpanEntryPoint).EntryPointRule.Name)
 		},
 	},
@@ -796,7 +798,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewTrelloService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -830,7 +832,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewVictorOpsService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -870,7 +872,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewWebHookService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -904,7 +906,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{notifications.NewXMattersService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
-		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
 		HardcodedIds: []string{"dynatrace_alerting"},
@@ -944,13 +946,13 @@ type ResourceStruct struct {
 	ResReplaceIds ResourceReplaceFunc
 }
 
-type NameFunc func(DownloadConfig, string, interface{}, *NameCounter) string
+type NameFunc func(DownloadConfig, string, interface{}, NameCounter) string
 
 type DataSourceReplaceFunc func(Resources, DataSourceData) []string
 
 type ResourceReplaceFunc func(string, ResourceData)
 
-func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v interface{}, counter *NameCounter) string {
+func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 	if v == nil {
 		return ""
 	}

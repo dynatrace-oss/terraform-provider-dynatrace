@@ -76,7 +76,7 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 	if err != nil {
 		return err
 	}
-	nameCounter := NameCounter{}
+	nameCounter := NewNameCounter()
 	for _, id := range ids {
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
@@ -88,7 +88,7 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 		if marshaller, ok := config.(hcl.Marshaler); ok {
 			resource := Resource{
 				ID:         id,
-				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, &nameCounter),
+				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter),
 				RESTObject: marshaller,
 			}
 			resources = append(resources, resource)
@@ -131,7 +131,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		return err
 	}
 
-	nameCounter := NameCounter{}
+	nameCounter := NewNameCounter()
 	for _, id := range ids {
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
@@ -142,7 +142,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		}
 		var name string
 		if marshaller, ok := config.(hcl.Marshaler); ok {
-			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, &nameCounter)
+			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter)
 			resource := Resource{
 				RESTObject: marshaller,
 				Name:       name,

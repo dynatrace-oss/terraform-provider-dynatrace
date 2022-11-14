@@ -49,16 +49,20 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			continue
 		}
 		resFolder := strings.TrimPrefix(resName, "dynatrace_")
+		resNameCnt := NewNameCounter()
+		resNameCnt.Replace(func(s string, cnt int) string {
+			return fmt.Sprintf("%s_%d", s, cnt)
+		})
 		// os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
 		if !dlConfig.SingleFile {
-			if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources); err != nil {
+			if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
 				return err
 			}
 		} else {
 			// if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
 			// 	return err
 			// }
-			if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources); err != nil {
+			if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
 				return err
 			}
 		}
