@@ -1,6 +1,11 @@
 package download
 
-type ReplacedIDs map[string][]string
+type ReplacedIDs map[string][]ReplacedID
+
+type ReplacedID struct {
+	ID         string
+	IdResource string
+}
 
 func ProcessDataSourceIDs(resourceData ResourceData, dsData DataSourceData) (ReplacedIDs, error) {
 	var replacedIDs = ReplacedIDs{}
@@ -14,15 +19,15 @@ func ProcessDataSourceIDs(resourceData ResourceData, dsData DataSourceData) (Rep
 	return replacedIDs, nil
 }
 
-func ProcessResourceIDs(resourceData ResourceData) error {
-	for resName := range resourceData {
-		if ResourceInfoMap[resName].HardcodedIds == nil {
-			continue
-		}
-		if ResourceInfoMap[resName].ResReplaceIds != nil {
-			ResourceInfoMap[resName].ResReplaceIds(resName, resourceData)
-		}
-	}
+// func ProcessResourceIDs(resourceData ResourceData) error {
+// 	for resName := range resourceData {
+// 		if ResourceInfoMap[resName].HardcodedIds == nil {
+// 			continue
+// 		}
+// 		if ResourceInfoMap[resName].ResReplaceIds != nil {
+// 			ResourceInfoMap[resName].ResReplaceIds(resName, resourceData)
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }

@@ -16,20 +16,20 @@ func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName st
 		// }
 		// nameCounter.Numbering()
 		var file *os.File
-		// fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + escf(resource.Name) + "." + resFolder + ".tf"
-		fileName := dlConfig.TargetFolder + "/" + resFolder + "." + escf(resource.Name) + ".tf"
+		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + resFolder + "." + escf(resource.Name) + ".tf"
+		// fileName := dlConfig.TargetFolder + "/" + resFolder + "." + escf(resource.Name) + ".tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 
 		if dlConfig.CommentedID {
-			if err := hclgen.Export(resource.RESTObject, file, resName, resNameCnt.Numbering(Escape(resource.Name)), "id = "+resource.ID); err != nil {
+			if err := hclgen.Export(resource.RESTObject, file, resName, resNameCnt.Numbering(escape(resource.Name)), "id = "+resource.ID); err != nil {
 				file.Close()
 				return err
 			}
 		} else {
-			if err := hclgen.Export(resource.RESTObject, file, resName, Escape(resource.Name)); err != nil {
+			if err := hclgen.Export(resource.RESTObject, file, resName, escape(resource.Name)); err != nil {
 				file.Close()
 				return err
 			}
@@ -58,7 +58,7 @@ func (me ResourceData) WriteResourceSingle(mainFile *os.File, dlConfig DownloadC
 	// }
 
 	for _, resource := range resources {
-		if err := hclgen.Export(resource.RESTObject, mainFile, resName, resNameCnt.Numbering(Escape(resource.Name))); err != nil {
+		if err := hclgen.Export(resource.RESTObject, mainFile, resName, resNameCnt.Numbering(escape(resource.Name))); err != nil {
 			mainFile.Close()
 			return err
 		}
@@ -85,7 +85,7 @@ func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
 		file.Close()
 		return nil
 	}
-	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", Escape(name)); err != nil {
+	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", escape(name)); err != nil {
 		file.Close()
 		return err
 	}

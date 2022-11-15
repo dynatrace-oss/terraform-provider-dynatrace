@@ -6,18 +6,76 @@ import (
 	"strings"
 )
 
+func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, resArgs map[string][]string) bool {
+	os.Setenv("dynatrace.secrets", "true")
+	var err error
+	var ResourceDataMap = ResourceData{}
+	var DataSourceDataMap = DataSourceData{}
+	var replacedIDs = ReplacedIDs{}
+	dlConfig := DownloadConfig{
+		EnvironmentURL: environmentURL,
+		APIToken:       apiToken,
+		TargetFolder:   targetFolder,
+		// SingleFile:     fileArg,
+		References:    refArg,
+		CommentedID:   comIdArg,
+		ResourceNames: resArgs,
+	}
+
+	if err = ResourceDataMap.ProcessRead(dlConfig); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
+	if dlConfig.References {
+		if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+
+		if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+
+	// if dlConfig.ReplaceIDs == "resource" {
+	// 	if err = ProcessResourceIDs(ResourceDataMap); err != nil {
+	// 		fmt.Println(err.Error())
+	// 		os.Exit(0)
+	// 	}
+	// }
+
+	// if dlConfig.ReplaceIDs == "datasource" {
+	// 	if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
+	// 		fmt.Println(err.Error())
+	// 		os.Exit(0)
+	// 	}
+
+	// 	if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
+	// 		fmt.Println(err.Error())
+	// 		os.Exit(0)
+	// 	}
+	// }
+
+	if err = ProcessWrite(dlConfig, ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
+	return true
+}
+
 type DownloadConfig struct {
 	EnvironmentURL string
 	APIToken       string
 	TargetFolder   string
-	SingleFile     bool
-	CommentedID    bool
-	ReplaceIDs     string
-	ResourceNames  map[string][]string
+	// SingleFile     bool
+	References  bool
+	CommentedID bool
+	// ReplaceIDs     string
+	ResourceNames map[string][]string
 }
-
-// ReplaceIDType has no documentation
-type ReplaceIDType string
 
 func ValidateResource(keyVal string) (string, string) {
 	res1 := ""
@@ -61,52 +119,4 @@ func (me DownloadConfig) MatchID(resName string, id string) bool {
 		}
 	}
 	return false
-}
-
-func Download(environmentURL string, apiToken string, targetFolder string, fileArg bool, comIdArg bool, repIdArg string, resArgs map[string][]string) bool {
-	os.Setenv("dynatrace.secrets", "true")
-	var err error
-	var ResourceDataMap = ResourceData{}
-	var DataSourceDataMap = DataSourceData{}
-	var replacedIDs = ReplacedIDs{}
-	dlConfig := DownloadConfig{
-		EnvironmentURL: environmentURL,
-		APIToken:       apiToken,
-		TargetFolder:   targetFolder,
-		SingleFile:     fileArg,
-		CommentedID:    comIdArg,
-		ReplaceIDs:     repIdArg,
-		ResourceNames:  resArgs,
-	}
-
-	if err = ResourceDataMap.ProcessRead(dlConfig); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-
-	if dlConfig.ReplaceIDs == "resource" {
-		if err = ProcessResourceIDs(ResourceDataMap); err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
-		}
-	}
-
-	if dlConfig.ReplaceIDs == "datasource" {
-		if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
-		}
-
-		if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
-		}
-	}
-
-	if err = ProcessWrite(dlConfig, ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-
-	return true
 }

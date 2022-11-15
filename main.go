@@ -205,17 +205,18 @@ func exportv2(args []string) bool {
 	}
 
 	flag.Bool("exportv2", true, "")
-	fileArg := flag.Bool("single", false, "single file resource output `true` or `false` (default \"false\")")
-	comIdArg := flag.Bool("id", false, "include commented id `true` or `false` (default \"false\")")
-	repIdArg := flag.String("ref", "hardcoded", "references option `hardcoded`, `resource` or `datasource`")
+	// fileArg := flag.Bool("single", false, "single file resource output `true` or `false` (default \"false\")")
+	refArg := flag.Bool("ref", false, "enable data sources and dependencies")
+	comIdArg := flag.Bool("id", false, "enable commented ids")
+	// repIdArg := flag.String("ref", "hardcoded", "references option `hardcoded`, `resource` or `datasource`")
 	flag.Parse()
 	tailArgs := flag.Args()
 
-	if *repIdArg != "hardcoded" && *repIdArg != "resource" && *repIdArg != "datasource" {
-		fmt.Println("Unknown replace id option `" + *repIdArg + "`")
-		flag.CommandLine.Usage()
-		os.Exit(0)
-	}
+	// if *repIdArg != "hardcoded" && *repIdArg != "resource" && *repIdArg != "datasource" {
+	// 	fmt.Println("Unknown replace id option `" + *repIdArg + "`")
+	// 	flag.CommandLine.Usage()
+	// 	os.Exit(0)
+	// }
 
 	resArgs := map[string][]string{}
 	for _, idx := range tailArgs {
@@ -244,7 +245,8 @@ func exportv2(args []string) bool {
 		}
 	}
 
-	return downloadv2.Download(environmentURL, apiToken, targetFolder, *fileArg, *comIdArg, *repIdArg, resArgs)
+	// return downloadv2.Download(environmentURL, apiToken, targetFolder, *fileArg, *comIdArg, *repIdArg, resArgs)
+	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, resArgs)
 }
 
 func export(args []string) bool {

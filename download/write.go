@@ -24,21 +24,19 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	// 	return err
 	// }
 
-	var dsFile *os.File
-	dsFileName := dlConfig.TargetFolder + "/" + ".data_source.tf"
-	os.Remove(dsFileName)
-	if len(replacedIDs) != 0 {
-		if dsFile, err = os.Create(dsFileName); err != nil {
-			return err
-		}
-	}
+	// var dsFile *os.File
+	// dsFileName := dlConfig.TargetFolder + "/" + "data_source.tf"
+	// os.Remove(dsFileName)
+	// if len(replacedIDs) != 0 {
+	// 	if dsFile, err = os.Create(dsFileName); err != nil {
+	// 		return err
+	// 	}
+	// }
 
 	var mainFile *os.File
 	mainFileName := dlConfig.TargetFolder + "/" + "main.tf"
-	if dlConfig.SingleFile {
-		if mainFile, err = os.Create(mainFileName); err != nil {
-			return err
-		}
+	if mainFile, err = os.Create(mainFileName); err != nil {
+		return err
 	}
 
 	for resName, resources := range resourceDataMap {
@@ -53,27 +51,32 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 		resNameCnt.Replace(func(s string, cnt int) string {
 			return fmt.Sprintf("%s_%d", s, cnt)
 		})
-		// os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
-		if !dlConfig.SingleFile {
-			if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
-				return err
-			}
-		} else {
-			// if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
-			// 	return err
-			// }
-			if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
-				return err
-			}
+		os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
+		// if !dlConfig.SingleFile {
+		if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
+			return err
 		}
-
-		// if err := writeNestedProviderFile(dlConfig.TargetFolder, resFolder); err != nil {
-		// 	return err
+		// } else {
+		// 	// if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
+		// 	// 	return err
+		// 	// }
+		// 	if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
+		// 		return err
+		// 	}
 		// }
 
-		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.ReplaceIDs == "datasource" {
-			// dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
-			dataSourceDataMap.WriteDataSource(dsFile, dlConfig, resName, resFolder, replacedIDs)
+		// if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.ReplaceIDs == "datasource" {
+		// dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
+		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.References {
+			dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
+		}
+
+		if err := writeNestedProviderFile(dlConfig.TargetFolder, resFolder); err != nil {
+			return err
+		}
+
+		if err := writeMainFile(mainFile, resName, resFolder, replacedIDs, dlConfig.References); err != nil {
+			return err
 		}
 
 		// if _, err := mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resFolder)); err != nil {
@@ -88,9 +91,8 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 		// 	mainFile.Close()
 		// 	return err
 		// }
-
 	}
-	dsFile.Close()
+	// dsFile.Close()
 	mainFile.Close()
 
 	if err := writeProviderFile(dlConfig.TargetFolder); err != nil {
@@ -109,7 +111,7 @@ func escf(s string) string {
 	return s
 }
 
-func Escape(s string) string {
+func escape(s string) string {
 	result := ""
 	for _, c := range s {
 		if unicode.IsLetter(c) {
@@ -130,17 +132,17 @@ func Escape(s string) string {
 func writeProviderFile(targetFolder string) error {
 	var err error
 	var providerFile *os.File
-	fileName := targetFolder + "/providers.tf"
+	fileName := targetFolder + "/" + "providers.tf"
 	if providerFile, err = os.Create(fileName); err != nil {
 		return err
 	}
 	content := `terraform {
-	required_providers {
-		dynatrace = {
-		version = "${version}"
-		source = "dynatrace-oss/dynatrace"
-		}
-	}
+  required_providers {
+    dynatrace = {
+    version = "${version}"
+    source = "dynatrace-oss/dynatrace"
+    }
+  }
 }
 	
 # provider "dynatrace" {
@@ -152,6 +154,82 @@ func writeProviderFile(targetFolder string) error {
 	content = strings.Replace(content, "${version}", version.Current, 1)
 	if _, err := providerFile.WriteString(content); err != nil {
 		providerFile.Close()
+		return err
+	}
+
+	return nil
+}
+
+func writeNestedProviderFile(targetFolder string, resFolder string) error {
+	var err error
+	var providerFile *os.File
+	fileName := targetFolder + "/" + resFolder + "/" + "providers.tf"
+	if providerFile, err = os.Create(fileName); err != nil {
+		return err
+	}
+	content := `terraform {
+  required_providers {
+    dynatrace = {
+    version = "${version}"
+    source = "dynatrace-oss/dynatrace"
+    }
+  }
+}
+	`
+	content = strings.Replace(content, "${version}", version.Current, 1)
+	if _, err := providerFile.WriteString(content); err != nil {
+		providerFile.Close()
+		return err
+	}
+
+	return nil
+}
+
+func writeMainFile(file *os.File, resName string, resFolder string, replacedIDs ReplacedIDs, dependsOn bool) error {
+	var content string
+	modules := map[string]bool{}
+	if dependsOn && ResourceInfoMap[resName].HardcodedIds != nil {
+		for _, hcName := range ResourceInfoMap[resName].HardcodedIds {
+			for _, ids := range replacedIDs[resName] {
+				if hcName == ids.IdResource {
+					module := "module." + strings.TrimPrefix(ids.IdResource, "dynatrace_")
+					if !modules[module] {
+						modules[module] = true
+					}
+				}
+			}
+		}
+		if len(modules) > 0 {
+			content = `module "${resource_folder}" {
+  source = "./${resource_folder}"
+  depends_on = [${modules}]
+  providers = {
+    dynatrace = dynatrace.default
+  }
+}
+
+`
+			var modulesStr string
+			for str := range modules {
+				modulesStr = modulesStr + str + ", "
+			}
+			content = strings.Replace(content, "${modules}", strings.TrimSuffix(modulesStr, ", "), 1)
+		}
+	}
+	if !dependsOn || len(modules) == 0 {
+		content = `module "${resource_folder}" {
+  source = "./${resource_folder}"
+  providers = {
+    dynatrace = dynatrace.default
+  }
+}
+
+`
+	}
+	content = strings.Replace(content, "${resource_folder}", resFolder, 2)
+
+	if _, err := file.WriteString(content); err != nil {
+		file.Close()
 		return err
 	}
 

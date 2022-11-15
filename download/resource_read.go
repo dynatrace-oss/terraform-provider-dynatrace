@@ -164,7 +164,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 				Name:       name,
 			}
 			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
-			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + Escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
+			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
 			dashboardSharing = append(dashboardSharing, resource)
 		}
 	}
