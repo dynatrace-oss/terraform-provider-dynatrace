@@ -64,6 +64,7 @@ func (me DownloadConfig) MatchID(resName string, id string) bool {
 }
 
 func Download(environmentURL string, apiToken string, targetFolder string, fileArg bool, comIdArg bool, repIdArg string, resArgs map[string][]string) bool {
+	os.Setenv("dynatrace.secrets", "true")
 	var err error
 	var ResourceDataMap = ResourceData{}
 	var DataSourceDataMap = DataSourceData{}
