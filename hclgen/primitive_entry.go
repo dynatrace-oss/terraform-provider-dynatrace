@@ -28,6 +28,20 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && strings.HasPrefix(*strValP, "HCL-UNQUOTE-") {
 		strVal = strings.TrimPrefix(*strValP, "HCL-UNQUOTE-")
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(" " + strVal)}})
+	} else if strSliceVal, ok := me.Value.([]string); ok {
+		rawVal := "[ "
+		sep := ""
+		for _, strVal := range strSliceVal {
+			if strings.HasPrefix(strVal, "HCL-UNQUOTE-") {
+				rawVal = rawVal + sep + strings.TrimPrefix(strVal, "HCL-UNQUOTE-")
+			} else {
+				rawVal = rawVal + sep + "\"" + strVal + "\""
+			}
+			sep = ", "
+		}
+		rawVal = rawVal + " ]"
+		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(" " + rawVal)}})
+
 	} else {
 		w.SetAttributeValue(me.Key, cv)
 	}

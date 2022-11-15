@@ -284,11 +284,67 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*monitors.BrowserSyntheticMonitorUpdate).Name)
 		},
+		HardcodedIds: []string{"dynatrace_application"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+			var ids = []string{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*monitors.BrowserSyntheticMonitorUpdate)
+				for idx, assignedApp := range dataObj.ManuallyAssignedApps {
+					for id, appInfo := range dsData["dynatrace_application"].RESTMap {
+						if assignedApp == id {
+							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-" + "data.dynatrace_application." + Escape(appInfo["name"].(string)) + ".id"
+							ids = append(ids, id)
+							break
+						}
+					}
+				}
+			}
+			return ids
+		},
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*monitors.BrowserSyntheticMonitorUpdate)
+				for idx, assignedApp := range dataObj.ManuallyAssignedApps {
+					for _, resource := range resourceData["dynatrace_web_application"] {
+						if assignedApp == resource.ID {
+							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-" + "dynatrace_web_application." + Escape(resource.Name) + ".id"
+						}
+					}
+				}
+			}
+		},
 	},
 	"dynatrace_calculated_service_metric": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{service.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
+		},
+		HardcodedIds: []string{"dynatrace_request_attribute"},
+		// DsReplaceIds: func(resources Resources, dsData DataSourceData) []string {
+		// 	var ids = []string{}
+		// 	for _, resource := range resources {
+		// 		dataObj := resource.RESTObject.(*notifications.Notification)
+		// 		for id, dsObj := range dsData["dynatrace_request_attribute"].RESTMap {
+		// 			if dataObj.ProfileID != "" && dataObj.ProfileID == id {
+		// 				dataObj.ProfileID = "HCL-UNQUOTE-data.dynatrace_alerting." + Escape(dsObj["name"].(string)) + ".id"
+		// 				ids = append(ids, id)
+		// 			}
+		// 		}
+		// 	}
+		// 	return ids
+		// },
+		ResReplaceIds: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*service.CalculatedServiceMetric)
+				if dataObj.MetricDefinition != nil && dataObj.MetricDefinition.RequestAttribute != nil {
+					for _, resource := range resourceData["dynatrace_request_attribute"] {
+						resourceObj := resource.RESTObject.(*requestattributes.RequestAttribute)
+						if *dataObj.MetricDefinition.RequestAttribute == resourceObj.Name {
+							dataObj.MetricDefinition.RequestAttribute = opt.NewString("HCL-UNQUOTE-dynatrace_request_attribute." + Escape(resourceObj.Name) + ".name")
+						}
+					}
+				}
+			}
 		},
 	},
 	"dynatrace_cloudfoundry_credentials": {
