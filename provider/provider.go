@@ -28,6 +28,7 @@ import (
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
+	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/alerting"
@@ -146,6 +147,7 @@ func Provider() *schema.Provider {
 			"dynatrace_process":             process.DataSource(),
 			"dynatrace_process_group":       processgroup.DataSource(),
 			"dynatrace_aws_iam_external":    dsaws.DataSource(),
+			"dynatrace_request_attribute":   reqattrds.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),

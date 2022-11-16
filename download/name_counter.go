@@ -2,19 +2,6 @@ package download
 
 import "fmt"
 
-// type NameCounter map[string]int
-
-// func (me NameCounter) Numbering(name string) string {
-// 	cnt, found := me[name]
-// 	if !found {
-// 		me[name] = 0
-// 		return name
-// 	} else {
-// 		me[name] = cnt + 1
-// 	}
-// 	return fmt.Sprintf("%s(%d)", name, me[name])
-// }
-
 type ReplaceFunc func(s string, cnt int) string
 
 func DefaultReplace(s string, cnt int) string {

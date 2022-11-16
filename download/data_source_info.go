@@ -4,8 +4,10 @@ import (
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
+	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/locations"
 )
 
 var DataSourceInfoMap = map[string]DataSourceStruct{
@@ -37,6 +39,20 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 			return restMap
 		},
 	},
+	"dynatrace_request_attribute": {
+		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
+			return requestattributes.NewService(environmentURL+"/api/config/v1", apiToken)
+		},
+		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+			stubs := restObject.(*api.StubList)
+			var restMap = map[string]map[string]interface{}{}
+			for _, stub := range stubs.Values {
+				restMap[stub.ID] = map[string]interface{}{}
+				restMap[stub.ID]["name"] = stub.Name
+			}
+			return restMap
+		},
+	},
 	"dynatrace_management_zone": {
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return managementzones.NewService(environmentURL+"/api/config/v1", apiToken)
@@ -56,9 +72,41 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 			return service.NewService(environmentURL+"/api/v1", apiToken)
 		},
 	},
+	"dynatrace_synthetic_location": {
+		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
+			return locations.NewService(environmentURL+"/api/v1", apiToken)
+		},
+		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+			locations := restObject.(*locations.SyntheticLocations)
+			var restMap = map[string]map[string]interface{}{}
+			for _, location := range locations.Locations {
+				restMap[location.ID] = map[string]interface{}{}
+				restMap[location.ID]["name"] = location.Name
+				restMap[location.ID]["type"] = location.Type
+				if location.CloudPlatform != nil {
+					restMap[location.ID]["cloudPlatform"] = *location.CloudPlatform
+				}
+			}
+			return restMap
+		},
+		UniqueName: func(values map[string]interface{}) string {
+			if values["cloudPlatform"] != nil {
+				return values["name"].(string) + "_" + string(values["cloudPlatform"].(locations.CloudPlatform))
+			}
+			return values["name"].(string)
+		},
+	},
 }
 
 type DataSourceStruct struct {
 	RESTClient  func(string, string) DataSourceClient
 	MarshallHCL func(interface{}) map[string]map[string]interface{}
+	UniqueName  func(map[string]interface{}) string
+}
+
+func UniqueDSName(dsName string, values map[string]interface{}) string {
+	if DataSourceInfoMap[dsName].UniqueName != nil {
+		return DataSourceInfoMap[dsName].UniqueName(values)
+	}
+	return values["name"].(string)
 }

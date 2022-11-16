@@ -16,10 +16,9 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		EnvironmentURL: environmentURL,
 		APIToken:       apiToken,
 		TargetFolder:   targetFolder,
-		// SingleFile:     fileArg,
-		References:    refArg,
-		CommentedID:   comIdArg,
-		ResourceNames: resArgs,
+		References:     refArg,
+		CommentedID:    comIdArg,
+		ResourceNames:  resArgs,
 	}
 
 	if err = ResourceDataMap.ProcessRead(dlConfig); err != nil {
@@ -39,25 +38,6 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		}
 	}
 
-	// if dlConfig.ReplaceIDs == "resource" {
-	// 	if err = ProcessResourceIDs(ResourceDataMap); err != nil {
-	// 		fmt.Println(err.Error())
-	// 		os.Exit(0)
-	// 	}
-	// }
-
-	// if dlConfig.ReplaceIDs == "datasource" {
-	// 	if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
-	// 		fmt.Println(err.Error())
-	// 		os.Exit(0)
-	// 	}
-
-	// 	if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
-	// 		fmt.Println(err.Error())
-	// 		os.Exit(0)
-	// 	}
-	// }
-
 	if err = ProcessWrite(dlConfig, ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
@@ -70,11 +50,9 @@ type DownloadConfig struct {
 	EnvironmentURL string
 	APIToken       string
 	TargetFolder   string
-	// SingleFile     bool
-	References  bool
-	CommentedID bool
-	// ReplaceIDs     string
-	ResourceNames map[string][]string
+	References     bool
+	CommentedID    bool
+	ResourceNames  map[string][]string
 }
 
 func ValidateResource(keyVal string) (string, string) {

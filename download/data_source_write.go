@@ -3,6 +3,7 @@ package download
 import (
 	"fmt"
 	"os"
+	"reflect"
 )
 
 func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string, resFolder string, replacedIDs ReplacedIDs) error {
@@ -35,7 +36,7 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 }
 
 func (me DataSourceData) writer(file *os.File, dsName string, values map[string]interface{}) error {
-	if _, err := file.WriteString(fmt.Sprintf("data \"%s\" \"%s\" {\n", dsName, escape(values["name"].(string)))); err != nil {
+	if _, err := file.WriteString(fmt.Sprintf("data \"%s\" \"%s\" {\n", dsName, escape(UniqueDSName(dsName, values)))); err != nil {
 		file.Close()
 		return err
 	}
@@ -45,6 +46,17 @@ func (me DataSourceData) writer(file *os.File, dsName string, values map[string]
 			if _, err := file.WriteString(fmt.Sprintf("\t%s = \"%s\"\n", key, t)); err != nil {
 				file.Close()
 				return err
+			}
+		default:
+			rv := reflect.ValueOf(value)
+			switch rv.Kind() {
+			case reflect.String:
+				if _, err := file.WriteString(fmt.Sprintf("\t%s = \"%s\"\n", key, t)); err != nil {
+					file.Close()
+					return err
+				}
+			default:
+				panic(fmt.Sprintf(">>>>> type %T not supported yet\n", t))
 			}
 		}
 	}

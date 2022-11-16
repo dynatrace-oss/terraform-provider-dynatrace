@@ -47,7 +47,7 @@ func (cs *ServiceClient) List() (*SyntheticLocations, error) {
 	var err error
 	var bytes []byte
 
-	rest.Verbose = true
+	// rest.Verbose = true
 
 	if bytes, err = cs.client.GET("/synthetic/locations", 200); err != nil {
 		return nil, err
@@ -57,4 +57,8 @@ func (cs *ServiceClient) List() (*SyntheticLocations, error) {
 		return nil, err
 	}
 	return &stubList, nil
+}
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	return cs.List()
 }

@@ -18,20 +18,6 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	}
 
 	os.MkdirAll(dlConfig.TargetFolder, os.ModePerm)
-	// var mainFile *os.File
-	// fileName := dlConfig.TargetFolder + "/main.tf"
-	// if mainFile, err = os.Create(fileName); err != nil {
-	// 	return err
-	// }
-
-	// var dsFile *os.File
-	// dsFileName := dlConfig.TargetFolder + "/" + "data_source.tf"
-	// os.Remove(dsFileName)
-	// if len(replacedIDs) != 0 {
-	// 	if dsFile, err = os.Create(dsFileName); err != nil {
-	// 		return err
-	// 	}
-	// }
 
 	var mainFile *os.File
 	mainFileName := dlConfig.TargetFolder + "/" + "main.tf"
@@ -52,21 +38,9 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			return fmt.Sprintf("%s_%d", s, cnt)
 		})
 		os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
-		// if !dlConfig.SingleFile {
 		if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
 			return err
 		}
-		// } else {
-		// 	// if err = resourceDataMap.WriteResourceSingle(dlConfig, resName, resFolder, resources); err != nil {
-		// 	// 	return err
-		// 	// }
-		// 	if err = resourceDataMap.WriteResourceSingle(mainFile, dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
-		// 		return err
-		// 	}
-		// }
-
-		// if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.ReplaceIDs == "datasource" {
-		// dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
 		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.References {
 			dataSourceDataMap.WriteDataSource(dlConfig, resName, resFolder, replacedIDs)
 		}
@@ -75,24 +49,10 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			return err
 		}
 
-		if err := writeMainFile(mainFile, resName, resFolder, replacedIDs, dlConfig.References); err != nil {
+		if err := writeMainFile(mainFile, resourceDataMap, resName, resFolder, replacedIDs, dlConfig.References); err != nil {
 			return err
 		}
-
-		// if _, err := mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resFolder)); err != nil {
-		// 	mainFile.Close()
-		// 	return err
-		// }
-		// if _, err := mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", resFolder)); err != nil {
-		// 	mainFile.Close()
-		// 	return err
-		// }
-		// if _, err := mainFile.WriteString("  providers = {\n    dynatrace = dynatrace.default\n  }\n}\n\n"); err != nil {
-		// 	mainFile.Close()
-		// 	return err
-		// }
 	}
-	// dsFile.Close()
 	mainFile.Close()
 
 	if err := writeProviderFile(dlConfig.TargetFolder); err != nil {
@@ -185,20 +145,25 @@ func writeNestedProviderFile(targetFolder string, resFolder string) error {
 	return nil
 }
 
-func writeMainFile(file *os.File, resName string, resFolder string, replacedIDs ReplacedIDs, dependsOn bool) error {
+func writeMainFile(file *os.File, resourceDataMap ResourceData, resName string, resFolder string, replacedIDs ReplacedIDs, dependsOn bool) error {
 	var content string
 	modules := map[string]bool{}
 	if dependsOn && ResourceInfoMap[resName].HardcodedIds != nil {
 		for _, hcName := range ResourceInfoMap[resName].HardcodedIds {
 			for _, ids := range replacedIDs[resName] {
-				if hcName == ids.IdResource {
-					module := "module." + strings.TrimPrefix(ids.IdResource, "dynatrace_")
-					if !modules[module] {
-						modules[module] = true
+				if hcName == ids.RefDS && ids.RefRes != "" {
+					if _, ok := modules[ids.RefRes]; !ok {
+						modules[ids.RefRes] = true
 					}
 				}
 			}
 		}
+		for module := range modules {
+			if _, ok := resourceDataMap[module]; !ok {
+				delete(modules, module)
+			}
+		}
+
 		if len(modules) > 0 {
 			content = `module "${resource_folder}" {
   source = "./${resource_folder}"
@@ -211,7 +176,8 @@ func writeMainFile(file *os.File, resName string, resFolder string, replacedIDs 
 `
 			var modulesStr string
 			for str := range modules {
-				modulesStr = modulesStr + str + ", "
+				modulesStr = modulesStr + "module." + strings.TrimPrefix(str, "dynatrace_") + ", "
+
 			}
 			content = strings.Replace(content, "${modules}", strings.TrimSuffix(modulesStr, ", "), 1)
 		}
