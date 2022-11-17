@@ -27,6 +27,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
+	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors/browser"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
@@ -223,7 +224,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*monitors.BrowserSyntheticMonitorUpdate).Name)
 		},
-		HardcodedIds: []string{"dynatrace_application", "dynatrace_synthetic_location"},
+		HardcodedIds: []string{"dynatrace_application", "dynatrace_synthetic_location", "dynatrace_credentials"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			var ids = []ReplacedID{}
 			for _, resource := range resources {
@@ -245,6 +246,27 @@ var ResourceInfoMap = map[string]ResourceStruct{
 							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, locInfo)) + ".id"
 							ids = append(ids, ReplacedID{id, dsName, ""})
 							break
+						}
+					}
+				}
+				if dataObj.Script != nil && len(dataObj.Script.Events) > 0 {
+					for _, event := range dataObj.Script.Events {
+						if event == nil {
+							continue
+						}
+						switch evt := event.(type) {
+						case *browser.NavigateEvent:
+							if evt.Authentication != nil && len(evt.Authentication.Credential.ID) > 0 {
+								dsName := "dynatrace_credentials"
+								for id, credInfo := range dsData[dsName].RESTMap {
+									if evt.Authentication.Credential.ID == id {
+										evt.Authentication.Credential.ID = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, credInfo)) + ".id"
+										ids = append(ids, ReplacedID{id, dsName, ""})
+										break
+									}
+								}
+							}
+
 						}
 					}
 				}
@@ -365,7 +387,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -510,7 +532,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -523,7 +545,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -592,7 +614,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -605,7 +627,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -660,7 +682,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -673,7 +695,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -692,7 +714,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -748,11 +770,12 @@ func replaceIdsNotif(resources Resources, dsData DataSourceData) []ReplacedID {
 	var ids = []ReplacedID{}
 	for _, resource := range resources {
 		dataObj := resource.RESTObject.(*notifications.Notification)
-		dsName := "dynatrace_alerting"
+		dsName := "dynatrace_alerting_profile"
+		rsName := "dynatrace_alerting"
 		for id, dsObj := range dsData[dsName].RESTMap {
 			if dataObj.ProfileID != "" && dataObj.ProfileID == id {
 				dataObj.ProfileID = "HCL-UNQUOTE-data." + dsName + "." + escape(dsObj["name"].(string)) + ".id"
-				ids = append(ids, ReplacedID{id, dsName, dsName})
+				ids = append(ids, ReplacedID{id, dsName, rsName})
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package download
 import (
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
+	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/topology/service"
@@ -11,7 +12,7 @@ import (
 )
 
 var DataSourceInfoMap = map[string]DataSourceStruct{
-	"dynatrace_alerting": {
+	"dynatrace_alerting_profile": {
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return alerting.NewService(environmentURL+"/api/v2", apiToken)
 		},
@@ -84,15 +85,34 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 				restMap[location.ID]["name"] = location.Name
 				restMap[location.ID]["type"] = location.Type
 				if location.CloudPlatform != nil {
-					restMap[location.ID]["cloudPlatform"] = *location.CloudPlatform
+					restMap[location.ID]["cloud_platform"] = *location.CloudPlatform
 				}
 			}
 			return restMap
 		},
 		UniqueName: func(values map[string]interface{}) string {
-			if values["cloudPlatform"] != nil {
-				return values["name"].(string) + "_" + string(values["cloudPlatform"].(locations.CloudPlatform))
+			if values["cloud_platform"] != nil {
+				return values["name"].(string) + "_" + string(values["cloud_platform"].(locations.CloudPlatform))
 			}
+			return values["name"].(string)
+		},
+	},
+	"dynatrace_credentials": {
+		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
+			return vault.NewService(environmentURL+"/api/v2", apiToken)
+		},
+		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+			credentialList := restObject.(*vault.CredentialsList)
+			var restMap = map[string]map[string]interface{}{}
+			for _, credential := range credentialList.Credentials {
+				restMap[*credential.ID] = map[string]interface{}{}
+				restMap[*credential.ID]["type"] = string(credential.Type)
+				restMap[*credential.ID]["name"] = credential.Name
+				restMap[*credential.ID]["scope"] = string(credential.Scope)
+			}
+			return restMap
+		},
+		UniqueName: func(values map[string]interface{}) string {
 			return values["name"].(string)
 		},
 	},
