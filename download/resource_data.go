@@ -15,6 +15,7 @@ type Resource struct {
 	ID         string
 	Name       string
 	RESTObject hcl.Marshaler
+	ReqInter   bool
 }
 
 type Resources []Resource

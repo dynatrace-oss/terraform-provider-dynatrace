@@ -55,6 +55,10 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	}
 	mainFile.Close()
 
+	if err := resourceDataMap.WriteResReqAttn(dlConfig); err != nil {
+		return err
+	}
+
 	if err := writeProviderFile(dlConfig.TargetFolder); err != nil {
 		return err
 	}

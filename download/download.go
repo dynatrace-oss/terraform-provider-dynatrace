@@ -26,6 +26,11 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		os.Exit(0)
 	}
 
+	if err = ResourceDataMap.RequiresIntervention(); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
 	if dlConfig.References {
 		if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
 			fmt.Println(err.Error())
