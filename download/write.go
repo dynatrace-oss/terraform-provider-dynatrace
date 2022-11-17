@@ -64,11 +64,18 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 
 var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*", "	", "\r", "\n", "\f", "\v"}
 
+func removeDuplicateUnderscores(s string) string {
+	for strings.Contains(s, "__") {
+		s = strings.ReplaceAll(s, "__", "_")
+	}
+	return s
+}
+
 func escf(s string) string {
 	for _, ch := range forbiddenFileNameChars {
 		s = strings.ReplaceAll(s, ch, "_")
 	}
-	return s
+	return removeDuplicateUnderscores(s)
 }
 
 func escape(s string) string {
@@ -86,7 +93,7 @@ func escape(s string) string {
 			result = result + "_"
 		}
 	}
-	return result
+	return removeDuplicateUnderscores(result)
 }
 
 func writeProviderFile(targetFolder string) error {
@@ -96,22 +103,41 @@ func writeProviderFile(targetFolder string) error {
 	if providerFile, err = os.Create(fileName); err != nil {
 		return err
 	}
+	providerSource := "dynatrace-oss/dynatrace"
+	providerVersion := version.Current
+
 	content := `terraform {
   required_providers {
     dynatrace = {
-    version = "${version}"
-    source = "dynatrace-oss/dynatrace"
+      version = "${version}"
+      source = "${provider.source}"
     }
   }
-}
-	
-# provider "dynatrace" {
-#   alias        = "default"
-#   dt_env_url   = "https://########.live.dynatrace.com/"
-#   dt_api_token = "dt0c01.#########################################################################################"
-# }
-	`
-	content = strings.Replace(content, "${version}", version.Current, 1)
+}`
+	if envVal := os.Getenv("DYNATRACE_PROVIDER_SOURCE"); len(envVal) > 0 {
+		providerSource = envVal
+	}
+
+	if envVal := os.Getenv("DYNATRACE_PROVIDER_VERSION"); len(envVal) > 0 {
+		providerVersion = envVal
+	}
+	content = strings.Replace(content, "${version}", providerVersion, 1)
+	content = strings.Replace(content, "${provider.source}", providerSource, 1)
+
+	targetEnvURL := os.Getenv("DYNATRACE_TARGET_ENV_URL")
+	targetAPIToken := os.Getenv("DYNATRACE_TARGET_API_TOKEN")
+
+	if len(targetAPIToken) > 0 && len(targetEnvURL) > 0 {
+		content = content + `
+provider "dynatrace" {
+  dt_env_url   = "${target.env.url}"
+  dt_api_token = "${target.api.token}"
+}`
+		content = strings.Replace(content, "${target.env.url}", targetEnvURL, 1)
+		content = strings.Replace(content, "${target.api.token}", targetAPIToken, 1)
+
+	}
+
 	if _, err := providerFile.WriteString(content); err != nil {
 		providerFile.Close()
 		return err
@@ -127,16 +153,29 @@ func writeNestedProviderFile(targetFolder string, resFolder string) error {
 	if providerFile, err = os.Create(fileName); err != nil {
 		return err
 	}
+	providerSource := "dynatrace-oss/dynatrace"
+	providerVersion := version.Current
 	content := `terraform {
   required_providers {
     dynatrace = {
-    version = "${version}"
-    source = "dynatrace-oss/dynatrace"
+      version = "${version}"
+      source = "${provider.source}"
     }
   }
 }
 	`
-	content = strings.Replace(content, "${version}", version.Current, 1)
+
+	if envVal := os.Getenv("DYNATRACE_PROVIDER_SOURCE"); len(envVal) > 0 {
+		providerSource = envVal
+	}
+
+	if envVal := os.Getenv("DYNATRACE_PROVIDER_VERSION"); len(envVal) > 0 {
+		providerVersion = envVal
+	}
+
+	content = strings.Replace(content, "${version}", providerVersion, 1)
+	content = strings.Replace(content, "${provider.source}", providerSource, 1)
+
 	if _, err := providerFile.WriteString(content); err != nil {
 		providerFile.Close()
 		return err
@@ -168,11 +207,7 @@ func writeMainFile(file *os.File, resourceDataMap ResourceData, resName string, 
 			content = `module "${resource_folder}" {
   source = "./${resource_folder}"
   depends_on = [${modules}]
-  providers = {
-    dynatrace = dynatrace.default
-  }
 }
-
 `
 			var modulesStr string
 			for str := range modules {
@@ -185,9 +220,6 @@ func writeMainFile(file *os.File, resourceDataMap ResourceData, resName string, 
 	if !dependsOn || len(modules) == 0 {
 		content = `module "${resource_folder}" {
   source = "./${resource_folder}"
-  providers = {
-    dynatrace = dynatrace.default
-  }
 }
 
 `
