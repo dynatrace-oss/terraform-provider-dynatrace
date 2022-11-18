@@ -97,7 +97,11 @@ func escape(s string) string {
 			result = result + "_"
 		}
 	}
-	return removeDuplicateUnderscores(result)
+	result = strings.TrimSuffix(strings.TrimPrefix(removeDuplicateUnderscores(result), "_"), "_")
+	if !unicode.IsLetter([]rune(result)[0]) {
+		result = "res_" + result
+	}
+	return result
 }
 
 func writeProviderFile(targetFolder string) error {
