@@ -92,6 +92,7 @@ var resArr = []string{
 	"dynatrace_victor_ops_notification",
 	"dynatrace_webhook_notification",
 	"dynatrace_xmatters_notification",
+	"dynatrace_credentials",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -526,12 +527,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 			os.Exit(0)
 		}
 	}
-	// if rids, ok := m["dynatrace_credentials"]; ok {
-	// 	if err := importVaultCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
-	// 		fmt.Println(err.Error())
-	// 		os.Exit(0)
-	// 	}
-	// }
+	if rids, ok := m["dynatrace_credentials"]; ok {
+		if err := importVaultCredentials(targetFolder+"/credentials", environmentURL, apiToken, rids); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
 	if rids, ok := m["dynatrace_browser_monitor"]; ok {
 		if err := importBrowserMonitors(targetFolder+"/synthetic/browser", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())

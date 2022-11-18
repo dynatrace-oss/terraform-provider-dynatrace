@@ -49,6 +49,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/cloudfoundry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s"
+	vaultres "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
@@ -211,6 +212,7 @@ func Provider() *schema.Provider {
 			"dynatrace_victor_ops_notification":    victorops.Resource(),
 			"dynatrace_webhook_notification":       webhook.Resource(),
 			"dynatrace_xmatters_notification":      xmatters.Resource(),
+			"dynatrace_credentials":                vaultres.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
