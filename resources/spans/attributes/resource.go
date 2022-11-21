@@ -19,6 +19,7 @@ package attributes
 
 import (
 	"context"
+	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/v2/spans/attributes"
 	"github.com/dtcookie/dynatrace/rest"
@@ -61,6 +62,16 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	abc := NewService(m)
 	id, err := abc.Create(config)
 	if err != nil {
+		if strings.Contains(err.Error(), "Attribute keys must be unique.") {
+			if objs, err := abc.ListAll(); err == nil {
+				for _, obj := range objs.Items {
+					if obj.Value.Key == config.Key {
+						d.SetId(obj.ObjectID)
+						return Read(ctx, d, m)
+					}
+				}
+			}
+		}
 		return diag.FromErr(err)
 	}
 	d.SetId(id)
