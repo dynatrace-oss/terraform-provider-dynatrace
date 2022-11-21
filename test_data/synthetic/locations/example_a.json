@@ -1,0 +1,21 @@
+{
+  "entityId": "SYNTHETIC_LOCATION-813475E9C7E52811",
+  "type": "PRIVATE",
+  "name": "Test-02",
+  "countryCode": "VE",
+  "regionCode": "04",
+  "city": "San Francisco de Asis",
+  "latitude": 10.0758,
+  "longitude": -67.5442,
+  "status": "ENABLED",
+  "nodes": [],
+  "availabilityLocationOutage": true,
+  "availabilityNodeOutage": true,
+  "locationNodeOutageDelayInMinutes": 3,
+  "availabilityNotificationsEnabled": true,
+  "deploymentType": "STANDARD",
+  "minActiveGateCount": null,
+  "maxActiveGateCount": null,
+  "nodeSize": "UNSUPPORTED",
+  "autoUpdateChromium": true
+}

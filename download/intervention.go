@@ -2,6 +2,7 @@ package download
 
 import (
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
+	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 )
 
 var InterventionInfoMap = map[string]InterventionStruct{
@@ -24,6 +25,15 @@ var InterventionInfoMap = map[string]InterventionStruct{
 					}
 				}
 
+			}
+		},
+	},
+	"dynatrace_synthetic_location": {
+		Move: func(resName string, resourceData ResourceData) {
+			for idx, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*privlocations.PrivateSyntheticLocation)
+
+				resourceData[resName][idx].ReqInter = ((dataObj.Type == privlocations.LocationTypes.Private) && (len(dataObj.Nodes) > 0))
 			}
 		},
 	},

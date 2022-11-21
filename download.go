@@ -52,6 +52,7 @@ import (
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
+	"github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
@@ -226,6 +227,45 @@ func importBrowserMonitors(targetFolder string, environmentURL string, apiToken 
 			return err
 		}
 		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_browser_monitor", escape(config.Name))); err != nil {
+			file.Close()
+			return err
+		}
+		if err := hcl.ExportOpt(config, file); err != nil {
+			file.Close()
+			return err
+		}
+		if _, err := file.WriteString("}\n"); err != nil {
+			file.Close()
+			return err
+		}
+		file.Close()
+	}
+	return nil
+}
+
+func importSyntheticLocations(targetFolder string, environmentURL string, apiToken string, argids []string) error {
+	os.MkdirAll(targetFolder, os.ModePerm)
+	restClient := locations.NewService(environmentURL+"/api/v1", apiToken)
+
+	ids, err := restClient.LIST()
+	if err != nil {
+		return err
+	}
+	for _, id := range ids {
+		if !ctns(argids, id) {
+			continue
+		}
+		config, err := restClient.Get(id)
+		if err != nil {
+			return err
+		}
+		var file *os.File
+		fileName := targetFolder + "/" + escFileName(config.Name, id) + ".synthetic_location.tf"
+		os.Remove(fileName)
+		if file, err = os.Create(fileName); err != nil {
+			return err
+		}
+		if _, err := file.WriteString(fmt.Sprintf("resource \"%s\" \"%s\" {\n", "dynatrace_synthetic_location", escape(config.Name))); err != nil {
 			file.Close()
 			return err
 		}

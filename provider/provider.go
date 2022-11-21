@@ -213,6 +213,7 @@ func Provider() *schema.Provider {
 			"dynatrace_webhook_notification":       webhook.Resource(),
 			"dynatrace_xmatters_notification":      xmatters.Resource(),
 			"dynatrace_credentials":                vaultres.Resource(),
+			"dynatrace_synthetic_location":         locations.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

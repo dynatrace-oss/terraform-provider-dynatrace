@@ -93,6 +93,7 @@ var resArr = []string{
 	"dynatrace_webhook_notification",
 	"dynatrace_xmatters_notification",
 	"dynatrace_credentials",
+	"dynatrace_synthetic_location",
 }
 
 func matchClusterRes(keyVal string) (string, string) {
@@ -685,6 +686,12 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 	}
 	if rids, ok := m["dynatrace_xmatters_notification"]; ok {
 		if err := importNotifications(targetFolder+"/notifications", environmentURL, apiToken, rids, notifications.Types.XMatters, "xmatters", "dynatrace_xmatters_notification"); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+	}
+	if rids, ok := m["dynatrace_synthetic_location"]; ok {
+		if err := importSyntheticLocations(targetFolder+"/synthetic/locations", environmentURL, apiToken, rids); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}

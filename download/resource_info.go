@@ -28,6 +28,7 @@ import (
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
+	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors/browser"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
@@ -252,7 +253,15 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return ids
 		},
 	},
-
+	"dynatrace_synthetic_location": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{privlocations.NewService(environmentURL+"/api/v1", apiToken)}
+			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			return counter.Numbering(v.(*privlocations.PrivateSyntheticLocation).Name)
+		},
+	},
 	"dynatrace_aws_credentials": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{aws.NewService(environmentURL+"/api/config/v1", apiToken)}
@@ -299,7 +308,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					for id, locInfo := range dsData[dsName].RESTMap {
 						if assignedLoc == id {
 							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, locInfo)) + ".id"
-							ids = append(ids, ReplacedID{id, dsName, ""})
+							ids = append(ids, ReplacedID{id, dsName, "dynatrace_synthetic_location"})
 							break
 						}
 					}

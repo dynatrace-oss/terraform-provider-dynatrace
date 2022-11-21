@@ -37,6 +37,14 @@ jobs:
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
         run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/resattr
+      - name: TestSyntheticLocations
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+        run: go test -v github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/locations
       - name: TestSpanContextPropagation
         env:
           GOPROXY: "https://proxy.golang.org"
