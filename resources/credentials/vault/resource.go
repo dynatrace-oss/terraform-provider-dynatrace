@@ -20,6 +20,7 @@ package vault
 import (
 	"context"
 	"reflect"
+	"time"
 
 	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
 	"github.com/dtcookie/dynatrace/rest"
@@ -29,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/monitors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -112,8 +114,48 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	if ext, ok := d.GetOk("external"); ok {
+		if cred, ok := d.GetOk("credential_usage_summary"); ok {
+			credentialUsageSummary := []*vault.CredentialUsageObj{}
+			for _, value := range cred.([]interface{}) {
+				credObj := vault.CredentialUsageObj{
+					MonitorType: vault.MonitorType(value.(map[string]interface{})["type"].(string)),
+					Count:       int32(value.(map[string]interface{})["count"].(int)),
+				}
+				credentialUsageSummary = append(credentialUsageSummary, &credObj)
+			}
+			if len(credentialUsageSummary) == 1 && credentialUsageSummary[0].MonitorType == vault.MonitorTypes.HTTPMonitor && credentialUsageSummary[0].Count == 1 {
+				apiService := monitors.NewService(m)
+				if monitors, err := apiService.ListHTTP(); err == nil {
+					externalVaultConfig := ext.([]interface{})[0].(map[string]interface{})
+					var compare string
+					if externalVaultConfig["client_secret"] != "" || externalVaultConfig["clientid"] != "" || externalVaultConfig["tenantid"] != "" {
+						compare = "Monitor synchronizing credentials with Azure Key Vault (" + d.Id() + ")"
+					} else if externalVaultConfig["roleid"] != "" || externalVaultConfig["certificate"] != "" {
+						compare = "Monitor synchronizing credentials with HashiCorp Vault (" + d.Id() + ")"
+					}
+					for _, monitor := range monitors.Monitors {
+						if monitor.Name == compare {
+							// log.Println("Deleting: ", monitor.Name)
+							apiService.Delete(monitor.EntityID)
+							for i := 0; i < 40; i++ {
+								if err := NewService(m).Delete(d.Id()); err == nil {
+									return diag.Diagnostics{}
+								}
+								time.Sleep(time.Second * 2)
+							}
+							return diag.FromErr(err)
+						}
+					}
+				}
+
+			}
+		}
+	}
+
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
+
 	return diag.Diagnostics{}
 }

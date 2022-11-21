@@ -136,8 +136,8 @@ github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.2 h1:ofgc
 github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.2/go.mod h1:uKScx7FCNx3m7n3zOLvB3SwbfoTsaGpEproVDQuj4kQ=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.15 h1:ubcAapdkt7YS3lstDl+aXzX9h3KPj/mgoTffgM5wLaE=
 github.com/dtcookie/dynatrace/api/config/credentials/kubernetes v1.0.15/go.mod h1:sTgf6PiQSJwfQ1bQDwdhZBYhFttIlvCx+L8tNB3vo1E=
-github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.5 h1:znid4yYM8EvSi1rwALgqMVW9PCruAaGCTDsOKEQgFEA=
-github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.5/go.mod h1:yU7GFfFce3lDLPJPQxHN4cfgBixe/0Rn5CAZ1sroPSo=
+github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.6 h1:okUrknbKZ/gULv6Un7D1MkdBWPnFGc2bkK4GyMOtO3g=
+github.com/dtcookie/dynatrace/api/config/credentials/vault v1.0.6/go.mod h1:yU7GFfFce3lDLPJPQxHN4cfgBixe/0Rn5CAZ1sroPSo=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.20 h1:U8Lrcjx8gfxh0t0+1tHcOUwqH8EFohek2uj+q5LgZK8=
 github.com/dtcookie/dynatrace/api/config/customservices v1.0.20/go.mod h1:vcP6hFmh9uv6vagJEOew8p2b7wckhJhq4VoFjEkm6mM=
 github.com/dtcookie/dynatrace/api/config/dashboards v1.0.19 h1:dXD42O3tQIMioWA73dDKHJ0IfLfMO1sdibzOjCIAAUc=
