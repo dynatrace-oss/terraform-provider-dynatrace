@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
+	monitorsApi "github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/terraform"
 	"github.com/dtcookie/hcl"
@@ -114,43 +115,41 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if ext, ok := d.GetOk("external"); ok {
-		if cred, ok := d.GetOk("credential_usage_summary"); ok {
-			credentialUsageSummary := []*vault.CredentialUsageObj{}
-			for _, value := range cred.([]interface{}) {
-				credObj := vault.CredentialUsageObj{
-					MonitorType: vault.MonitorType(value.(map[string]interface{})["type"].(string)),
-					Count:       int32(value.(map[string]interface{})["count"].(int)),
-				}
-				credentialUsageSummary = append(credentialUsageSummary, &credObj)
-			}
-			if len(credentialUsageSummary) == 1 && credentialUsageSummary[0].MonitorType == vault.MonitorTypes.HTTPMonitor && credentialUsageSummary[0].Count == 1 {
-				apiService := monitors.NewService(m)
-				if monitors, err := apiService.ListHTTP(); err == nil {
-					externalVaultConfig := ext.([]interface{})[0].(map[string]interface{})
-					var compare string
-					if externalVaultConfig["client_secret"] != "" || externalVaultConfig["clientid"] != "" || externalVaultConfig["tenantid"] != "" {
-						compare = "Monitor synchronizing credentials with Azure Key Vault (" + d.Id() + ")"
-					} else if externalVaultConfig["roleid"] != "" || externalVaultConfig["certificate"] != "" {
-						compare = "Monitor synchronizing credentials with HashiCorp Vault (" + d.Id() + ")"
-					}
-					for _, monitor := range monitors.Monitors {
-						if monitor.Name == compare {
-							// log.Println("Deleting: ", monitor.Name)
-							apiService.Delete(monitor.EntityID)
-							for i := 0; i < 40; i++ {
-								if err := NewService(m).Delete(d.Id()); err == nil {
-									return diag.Diagnostics{}
-								}
-								time.Sleep(time.Second * 2)
-							}
-							return diag.FromErr(err)
-						}
-					}
-				}
+	var err error
+	credService := NewService(m)
+	var config *vault.Credentials
+	if config, err = credService.Get(d.Id()); err != nil {
+		return diag.FromErr(err)
+	}
 
+	if config.ExternalVault != nil && len(config.CredentialUsageSummary) == 1 && config.CredentialUsageSummary[0].MonitorType == vault.MonitorTypes.HTTPMonitor && config.CredentialUsageSummary[0].Count == 1 {
+		synService := monitors.NewService(m)
+		var monitors *monitorsApi.Monitors
+		if monitors, err = synService.ListHTTP(); err != nil {
+			return diag.FromErr(err)
+		}
+
+		var compare string
+		if config.ExternalVault.ClientSecret != nil || config.ExternalVault.ClientID != nil || config.ExternalVault.TenantID != nil {
+			compare = "Monitor synchronizing credentials with Azure Key Vault (" + d.Id() + ")"
+		} else if config.ExternalVault.RoleID != nil || config.ExternalVault.Certificate != nil {
+			compare = "Monitor synchronizing credentials with HashiCorp Vault (" + d.Id() + ")"
+		}
+
+		for _, monitor := range monitors.Monitors {
+			if monitor.Name == compare {
+				// log.Println("Deleting: ", monitor.Name)
+				synService.Delete(monitor.EntityID)
+				for i := 0; i < 40; i++ {
+					if err := NewService(m).Delete(d.Id()); err == nil {
+						return diag.Diagnostics{}
+					}
+					time.Sleep(time.Second * 2)
+				}
+				return diag.FromErr(err)
 			}
 		}
+
 	}
 
 	if err := NewService(m).Delete(d.Id()); err != nil {
