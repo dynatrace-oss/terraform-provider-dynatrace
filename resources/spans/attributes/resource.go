@@ -66,6 +66,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 			if objs, err := abc.ListAll(); err == nil {
 				for _, obj := range objs.Items {
 					if obj.Value.Key == config.Key {
+						d.Set("persistent", true)
 						d.SetId(obj.ObjectID)
 						return Read(ctx, d, m)
 					}
@@ -95,6 +96,9 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	if config.HTTPVerbose {
+		rest.Verbose = true
+	}
 	config, err := NewService(m).Get(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
@@ -111,6 +115,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	if config.HTTPVerbose {
+		rest.Verbose = true
+	}
+	if value, ok := d.GetOk("persistent"); ok && value.(bool) {
+		return diag.Diagnostics{}
+	}
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}

@@ -54,7 +54,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.7
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.7
-	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.3
+	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.3
