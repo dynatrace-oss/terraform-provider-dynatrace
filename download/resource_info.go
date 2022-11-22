@@ -80,7 +80,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -577,7 +577,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
@@ -829,7 +829,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*notifications.Notification).Name)
 		},
-		HardcodedIds: []string{"dynatrace_alerting"},
+		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
 			return replaceIdsNotif(resources, dsData)
 		},
