@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, resArgs map[string][]string) bool {
+func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, resArgs map[string][]string) bool {
 	os.Setenv("dynatrace.secrets", "true")
 	var err error
 	var ResourceDataMap = ResourceData{}
@@ -18,6 +18,7 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		TargetFolder:   targetFolder,
 		References:     refArg,
 		CommentedID:    comIdArg,
+		Migrate:        migrateArg,
 		ResourceNames:  resArgs,
 	}
 
@@ -26,7 +27,7 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		os.Exit(0)
 	}
 
-	if err = ResourceDataMap.RequiresIntervention(); err != nil {
+	if err = ResourceDataMap.RequiresIntervention(dlConfig); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
@@ -57,6 +58,7 @@ type DownloadConfig struct {
 	TargetFolder   string
 	References     bool
 	CommentedID    bool
+	Migrate        bool
 	ResourceNames  map[string][]string
 }
 

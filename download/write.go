@@ -29,7 +29,7 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 		if len(resources) == 0 {
 			continue
 		}
-		if resName == "dynatrace_dashboard_sharing" {
+		if resName == "dynatrace_dashboard_sharing" || resName == "dynatrace_cloudfoundry_credentials" {
 			continue
 		}
 		resFolder := strings.TrimPrefix(resName, "dynatrace_")

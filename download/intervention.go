@@ -28,25 +28,39 @@ var InterventionInfoMap = map[string]InterventionStruct{
 			}
 		},
 	},
-	"dynatrace_synthetic_location": {
+	"dynatrace_cloudfoundry_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
-			for idx, resource := range resourceData[resName] {
+			for idx := range resourceData[resName] {
+				resourceData[resName][idx].ReqInter = true
+			}
+		},
+	},
+	"dynatrace_synthetic_location": {
+		StripIDs: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
 				dataObj := resource.RESTObject.(*privlocations.PrivateSyntheticLocation)
-
-				resourceData[resName][idx].ReqInter = ((dataObj.Type == privlocations.LocationTypes.Private) && (len(dataObj.Nodes) > 0))
+				if len(dataObj.Nodes) > 0 {
+					dataObj.Nodes = []string{}
+				}
 			}
 		},
 	},
 }
 
 type InterventionStruct struct {
-	Move func(string, ResourceData)
+	Move     func(string, ResourceData)
+	StripIDs func(string, ResourceData)
 }
 
-func (me ResourceData) RequiresIntervention() error {
+func (me ResourceData) RequiresIntervention(dlConfig DownloadConfig) error {
 	for resName := range me {
 		if _, exists := InterventionInfoMap[resName]; exists {
-			InterventionInfoMap[resName].Move(resName, me)
+			if InterventionInfoMap[resName].Move != nil {
+				InterventionInfoMap[resName].Move(resName, me)
+			}
+			if dlConfig.Migrate && InterventionInfoMap[resName].StripIDs != nil {
+				InterventionInfoMap[resName].StripIDs(resName, me)
+			}
 		}
 	}
 	return nil
