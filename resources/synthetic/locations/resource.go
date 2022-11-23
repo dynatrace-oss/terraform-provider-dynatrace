@@ -19,7 +19,6 @@ package locations
 
 import (
 	"context"
-	"log"
 
 	api "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 	"github.com/dtcookie/dynatrace/rest"
@@ -54,7 +53,6 @@ func NewResourceService(m interface{}) *api.ServiceClient {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Create")
 	config := new(api.PrivateSyntheticLocation)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -83,7 +81,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Println("Read")
 	config, err := NewResourceService(m).Get(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
