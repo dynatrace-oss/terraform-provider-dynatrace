@@ -19,6 +19,6 @@ type Resource struct {
 	UniqueName string
 }
 
-type Resources map[string]Resource
+type Resources map[string]*Resource
 
 type ResourceData map[string]Resources

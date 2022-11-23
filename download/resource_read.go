@@ -94,14 +94,11 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 				RESTObject: marshaller,
 				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources[resource.UniqueName] = resource
+			resources[resource.UniqueName] = &resource
 		}
 	}
 	if _, found := me[resourceName]; found {
 		for k, v := range resources {
-			if _, kk := me[resourceName][k]; kk {
-				panic(resourceName + " .. " + k)
-			}
 			me[resourceName][k] = v
 		}
 	} else {
@@ -125,7 +122,7 @@ func (me ResourceData) readNoList(resourceName string, client NoListClient) erro
 			Name:       name,
 			UniqueName: resNameCounter.Numbering(escape(name)),
 		}
-		resources[resource.UniqueName] = resource
+		resources[resource.UniqueName] = &resource
 	}
 	me[resourceName] = resources
 
@@ -160,7 +157,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 				Name:       name,
 				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources[resource.UniqueName] = resource
+			resources[resource.UniqueName] = &resource
 		}
 
 		shareSettings, err := shareRestClient.GET(context.Background(), id)
@@ -179,7 +176,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			}
 			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
 			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
-			dashboardSharing[resource.UniqueName] = resource
+			dashboardSharing[resource.UniqueName] = &resource
 		}
 	}
 	me[resourceName] = resources
@@ -223,7 +220,7 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 				Name:       name,
 				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources[resource.UniqueName] = resource
+			resources[resource.UniqueName] = &resource
 		}
 	}
 	me[resourceName] = resources

@@ -76,7 +76,6 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 				if !resource.ReqInter {
 					continue
 				}
-
 				folderName := dlConfig.TargetFolder + "/" + ".requires_attention"
 				if _, err := os.Stat(folderName); errors.Is(err, os.ErrNotExist) {
 					err := os.Mkdir(folderName, os.ModePerm)
@@ -86,19 +85,19 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 				}
 
 				var file *os.File
-				fileName := folderName + "/" + strings.TrimPrefix(resName, "dynatrace_") + "." + escf(resource.Name) + ".tf"
+				fileName := folderName + "/" + strings.TrimPrefix(resName, "dynatrace_") + "." + resource.UniqueName + ".tf"
 				os.Remove(fileName)
 				if file, err = os.Create(fileName); err != nil {
 					return err
 				}
 
 				if dlConfig.CommentedID {
-					if err := hclgen.Export(resource.RESTObject, file, resName, escape(resource.Name), "id = "+resource.ID); err != nil {
+					if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, "id = "+resource.ID); err != nil {
 						file.Close()
 						return err
 					}
 				} else {
-					if err := hclgen.Export(resource.RESTObject, file, resName, escape(resource.Name)); err != nil {
+					if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName); err != nil {
 						file.Close()
 						return err
 					}
