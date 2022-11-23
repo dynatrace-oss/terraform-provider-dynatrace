@@ -12,7 +12,7 @@ import (
 func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName string, resFolder string, resources Resources, resNameCnt NameCounter) error {
 	var err error
 	for _, resource := range resources {
-		if resource.ReqInter {
+		if len(resource.ReqInter) > 0 {
 			continue
 		}
 
@@ -73,7 +73,7 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 	for resName := range InterventionInfoMap {
 		if resources, exists := me[resName]; exists {
 			for _, resource := range resources {
-				if !resource.ReqInter {
+				if len(resource.ReqInter) == 0 {
 					continue
 				}
 				folderName := dlConfig.TargetFolder + "/" + ".requires_attention"
@@ -91,16 +91,14 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 					return err
 				}
 
+				comments := resource.ReqInter
+
 				if dlConfig.CommentedID {
-					if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, "id = "+resource.ID); err != nil {
-						file.Close()
-						return err
-					}
-				} else {
-					if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName); err != nil {
-						file.Close()
-						return err
-					}
+					comments = append(comments, "id = "+resource.ID)
+				}
+				if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, comments...); err != nil {
+					file.Close()
+					return err
 				}
 
 				file.Close()
