@@ -66,7 +66,7 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 	return nil
 }
 
-var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*", "	", "\r", "\n", "\f", "\v"}
+// var forbiddenFileNameChars = []string{"<", ">", ":", "\"", "/", "|", "?", "*", "	", "\r", "\n", "\f", "\v"}
 
 func removeDuplicateUnderscores(s string) string {
 	for strings.Contains(s, "__") {
@@ -75,12 +75,12 @@ func removeDuplicateUnderscores(s string) string {
 	return s
 }
 
-func escf(s string) string {
-	for _, ch := range forbiddenFileNameChars {
-		s = strings.ReplaceAll(s, ch, "_")
-	}
-	return removeDuplicateUnderscores(s)
-}
+// func escf(s string) string {
+// 	for _, ch := range forbiddenFileNameChars {
+// 		s = strings.ReplaceAll(s, ch, "_")
+// 	}
+// 	return removeDuplicateUnderscores(s)
+// }
 
 func escape(s string) string {
 	result := ""
