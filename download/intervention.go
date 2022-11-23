@@ -22,7 +22,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 				client := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
 				errors := client.Validate(dashboard)
 				dashboard.ID = dbId
-				resource.ReqInter = errors
+				if len(errors) > 0 {
+					resource.ReqInter.Type = InterventionTypes.Flawed
+					resource.ReqInter.Message = errors
+				}
 			}
 		},
 	},
@@ -41,17 +44,27 @@ var InterventionInfoMap = map[string]InterventionStruct{
 						}
 					}
 					if !found {
-						resource.ReqInter = []string{"The metric needs to either get limited by specifying a Management Zone or by specifying one or more conditions related to SERVICE_DISPLAY_NAME, SERVICE_PUBLIC_DOMAIN_NAME, SERVICE_WEB_APPLICATION_ID, SERVICE_WEB_CONTEXT_ROOT, SERVICE_WEB_SERVER_NAME, SERVICE_WEB_SERVICE_NAME, SERVICE_WEB_SERVICE_NAMESPACE, REMOTE_SERVICE_NAME, REMOTE_ENDPOINT, AZURE_FUNCTIONS_SITE_NAME, AZURE_FUNCTIONS_FUNCTION_NAME, CTG_GATEWAY_URL, CTG_SERVER_NAME, ACTOR_SYSTEM, ESB_APPLICATION_NAME, SERVICE_TAG, SERVICE_TYPE, PROCESS_GROUP_TAG or PROCESS_GROUP_NAME"}
+						resource.ReqInter.Type = InterventionTypes.Flawed
+						resource.ReqInter.Message = []string{"The metric needs to either get limited by specifying a Management Zone or by specifying one or more conditions related to SERVICE_DISPLAY_NAME, SERVICE_PUBLIC_DOMAIN_NAME, SERVICE_WEB_APPLICATION_ID, SERVICE_WEB_CONTEXT_ROOT, SERVICE_WEB_SERVER_NAME, SERVICE_WEB_SERVICE_NAME, SERVICE_WEB_SERVICE_NAMESPACE, REMOTE_SERVICE_NAME, REMOTE_ENDPOINT, AZURE_FUNCTIONS_SITE_NAME, AZURE_FUNCTIONS_FUNCTION_NAME, CTG_GATEWAY_URL, CTG_SERVER_NAME, ACTOR_SYSTEM, ESB_APPLICATION_NAME, SERVICE_TAG, SERVICE_TYPE, PROCESS_GROUP_TAG or PROCESS_GROUP_NAME"}
 					}
 				}
 
 			}
 		},
 	},
+	"dynatrace_credentials": {
+		Move: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				resource.ReqInter.Type = InterventionTypes.ReqAttn
+				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
+			}
+		},
+	},
 	"dynatrace_cloudfoundry_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
-				resource.ReqInter = []string{"REST API didn't provide credentials"}
+				resource.ReqInter.Type = InterventionTypes.ReqAttn
+				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
 			}
 		},
 	},

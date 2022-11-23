@@ -15,8 +15,23 @@ type Resource struct {
 	ID         string
 	Name       string
 	RESTObject hcl.Marshaler
-	ReqInter   []string
+	ReqInter   ReqInter
 	UniqueName string
+}
+
+type ReqInter struct {
+	Type    Type
+	Message []string
+}
+
+type Type string
+
+var InterventionTypes = struct {
+	Flawed  Type
+	ReqAttn Type
+}{
+	".flawed",
+	".requires_attention",
 }
 
 type Resources map[string]*Resource

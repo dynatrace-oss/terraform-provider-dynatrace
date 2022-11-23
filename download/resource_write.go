@@ -12,7 +12,7 @@ import (
 func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName string, resFolder string, resources Resources, resNameCnt NameCounter) error {
 	var err error
 	for _, resource := range resources {
-		if len(resource.ReqInter) > 0 {
+		if len(resource.ReqInter.Type) > 0 {
 			continue
 		}
 
@@ -73,12 +73,12 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 	for resName := range InterventionInfoMap {
 		if resources, exists := me[resName]; exists {
 			for _, resource := range resources {
-				if len(resource.ReqInter) == 0 {
+				if resource.ReqInter.Type == "" {
 					continue
 				}
-				folderName := dlConfig.TargetFolder + "/" + ".requires_attention"
+				folderName := dlConfig.TargetFolder + "/" + string(resource.ReqInter.Type) + "/" + strings.TrimPrefix(resName, "dynatrace_")
 				if _, err := os.Stat(folderName); errors.Is(err, os.ErrNotExist) {
-					err := os.Mkdir(folderName, os.ModePerm)
+					err := os.MkdirAll(folderName, os.ModePerm)
 					if err != nil {
 						return err
 					}
@@ -91,7 +91,7 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 					return err
 				}
 
-				comments := resource.ReqInter
+				comments := resource.ReqInter.Message
 
 				if dlConfig.CommentedID {
 					comments = append(comments, "id = "+resource.ID)
