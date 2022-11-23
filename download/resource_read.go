@@ -153,6 +153,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		if marshaller, ok := config.(hcl.Marshaler); ok {
 			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter)
 			resource := Resource{
+				ID:         id,
 				RESTObject: marshaller,
 				Name:       name,
 				UniqueName: resNameCounter.Numbering(escape(name)),
