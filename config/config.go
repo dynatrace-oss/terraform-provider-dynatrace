@@ -27,7 +27,7 @@ import (
 )
 
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
-var HTTPVerbose = (os.Getenv("DYNATRACE_DEBUG") == "true")
+var HTTPVerbose = (strings.TrimSpace(os.Getenv("DYNATRACE_DEBUG")) == "true")
 
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
