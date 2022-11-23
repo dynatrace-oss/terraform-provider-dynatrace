@@ -17,26 +17,26 @@ func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName st
 		}
 
 		var file *os.File
-		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + resFolder + "." + escf(resource.Name) + ".tf"
+		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + resFolder + "." + resource.UniqueName + ".tf"
 		os.Remove(fileName)
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
 
 		if dlConfig.CommentedID {
-			if err := hclgen.Export(resource.RESTObject, file, resName, resNameCnt.Numbering(escape(resource.Name)), "id = "+resource.ID); err != nil {
+			if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, "id = "+resource.ID); err != nil {
 				file.Close()
 				return err
 			}
 		} else {
-			if err := hclgen.Export(resource.RESTObject, file, resName, escape(resource.Name)); err != nil {
+			if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName); err != nil {
 				file.Close()
 				return err
 			}
 		}
 
 		if resName == "dynatrace_dashboard" {
-			if err := me.writeDashboardSharing(file, resource.Name); err != nil {
+			if err := me.writeDashboardSharing(file, resource.UniqueName); err != nil {
 				file.Close()
 				return err
 			}
@@ -61,7 +61,7 @@ func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
 		file.Close()
 		return nil
 	}
-	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", escape(name)); err != nil {
+	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", name); err != nil {
 		file.Close()
 		return err
 	}

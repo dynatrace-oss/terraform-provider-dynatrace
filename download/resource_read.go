@@ -77,6 +77,7 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 		return err
 	}
 	nameCounter := NewNameCounter()
+	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, id := range ids {
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
@@ -86,16 +87,23 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 			return err
 		}
 		if marshaller, ok := config.(hcl.Marshaler); ok {
+			name := ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter)
 			resource := Resource{
 				ID:         id,
-				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter),
+				Name:       name,
 				RESTObject: marshaller,
+				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources = append(resources, resource)
+			resources[resource.UniqueName] = resource
 		}
 	}
 	if _, found := me[resourceName]; found {
-		me[resourceName] = append(me[resourceName], resources...)
+		for k, v := range resources {
+			if _, kk := me[resourceName][k]; kk {
+				panic(resourceName + " .. " + k)
+			}
+			me[resourceName][k] = v
+		}
 	} else {
 		me[resourceName] = resources
 	}
@@ -104,17 +112,20 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 }
 
 func (me ResourceData) readNoList(resourceName string, client NoListClient) error {
+	resNameCounter := NewNameCounter().Replace(ResourceName)
 	resources := Resources{}
 	config, err := client.GET()
 	if err != nil {
 		return err
 	}
 	if marshaller, ok := config.(hcl.Marshaler); ok {
+		name := ResourceInfoMap[resourceName].Name(DownloadConfig{}, resourceName, config, nil)
 		resource := Resource{
 			RESTObject: marshaller,
-			Name:       ResourceInfoMap[resourceName].Name(DownloadConfig{}, resourceName, config, nil),
+			Name:       name,
+			UniqueName: resNameCounter.Numbering(escape(name)),
 		}
-		resources = append(resources, resource)
+		resources[resource.UniqueName] = resource
 	}
 	me[resourceName] = resources
 
@@ -132,6 +143,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 	}
 
 	nameCounter := NewNameCounter()
+	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, id := range ids {
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
@@ -146,8 +158,9 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			resource := Resource{
 				RESTObject: marshaller,
 				Name:       name,
+				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources = append(resources, resource)
+			resources[resource.UniqueName] = resource
 		}
 
 		shareSettings, err := shareRestClient.GET(context.Background(), id)
@@ -162,10 +175,11 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			resource := Resource{
 				RESTObject: marshaller,
 				Name:       name,
+				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
 			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
 			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
-			dashboardSharing = append(dashboardSharing, resource)
+			dashboardSharing[resource.UniqueName] = resource
 		}
 	}
 	me[resourceName] = resources
@@ -188,7 +202,7 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 		return err
 	}
 	restClient := keyrequests.NewService(dlConfig.EnvironmentURL+"/api/v2", dlConfig.APIToken)
-
+	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, service := range services.(servicetopology.Services) {
 		keyRequestID, keyRequest, err := restClient.LIST(service.EntityId)
 
@@ -203,11 +217,13 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 			continue
 		}
 		if marshaller, ok := keyRequest.(hcl.Marshaler); ok {
+			name := ResourceInfoMap[resourceName].Name(dlConfig, resourceName, service, nil)
 			resource := Resource{
 				RESTObject: marshaller,
-				Name:       ResourceInfoMap[resourceName].Name(dlConfig, resourceName, service, nil),
+				Name:       name,
+				UniqueName: resNameCounter.Numbering(escape(name)),
 			}
-			resources = append(resources, resource)
+			resources[resource.UniqueName] = resource
 		}
 	}
 	me[resourceName] = resources

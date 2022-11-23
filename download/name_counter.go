@@ -8,9 +8,13 @@ func DefaultReplace(s string, cnt int) string {
 	return fmt.Sprintf("%s(%d)", s, cnt)
 }
 
+func ResourceName(s string, cnt int) string {
+	return fmt.Sprintf("%s_%d", s, cnt)
+}
+
 type NameCounter interface {
 	Numbering(string) string
-	Replace(ReplaceFunc)
+	Replace(ReplaceFunc) NameCounter
 }
 
 func NewNameCounter() NameCounter {
@@ -22,8 +26,9 @@ type nameCounter struct {
 	replace ReplaceFunc
 }
 
-func (me *nameCounter) Replace(replace ReplaceFunc) {
+func (me *nameCounter) Replace(replace ReplaceFunc) NameCounter {
 	me.replace = replace
+	return me
 }
 
 func (me *nameCounter) Numbering(name string) string {

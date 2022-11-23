@@ -9,7 +9,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_calculated_service_metric": {
 		Move: func(resName string, resourceData ResourceData) {
 			reqConditions := []string{"SERVICE_DISPLAY_NAME", "SERVICE_PUBLIC_DOMAIN_NAME", "SERVICE_WEB_APPLICATION_ID", "SERVICE_WEB_CONTEXT_ROOT", "SERVICE_WEB_SERVER_NAME", "SERVICE_WEB_SERVICE_NAME", "SERVICE_WEB_SERVICE_NAMESPACE", "REMOTE_SERVICE_NAME", "REMOTE_ENDPOINT", "AZURE_FUNCTIONS_SITE_NAME", "AZURE_FUNCTIONS_FUNCTION_NAME", "CTG_GATEWAY_URL", "CTG_SERVER_NAME", "ACTOR_SYSTEM", "ESB_APPLICATION_NAME", "SERVICE_TAG", "SERVICE_TYPE", "PROCESS_GROUP_TAG", "PROCESS_GROUP_NAME"}
-			for idx, resource := range resourceData[resName] {
+			for _, resource := range resourceData[resName] {
 				dataObj := resource.RESTObject.(*service.CalculatedServiceMetric)
 				if len(dataObj.ManagementZones) == 0 && dataObj.Conditions != nil {
 					var found bool
@@ -21,7 +21,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 						}
 					}
 					if !found {
-						resourceData[resName][idx].ReqInter = true
+						resource.ReqInter = true
 					}
 				}
 
@@ -30,8 +30,8 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	},
 	"dynatrace_cloudfoundry_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
-			for idx := range resourceData[resName] {
-				resourceData[resName][idx].ReqInter = true
+			for _, resource := range resourceData[resName] {
+				resource.ReqInter = true
 			}
 		},
 	},

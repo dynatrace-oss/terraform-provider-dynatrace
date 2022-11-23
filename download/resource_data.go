@@ -16,8 +16,9 @@ type Resource struct {
 	Name       string
 	RESTObject hcl.Marshaler
 	ReqInter   bool
+	UniqueName string
 }
 
-type Resources []Resource
+type Resources map[string]Resource
 
 type ResourceData map[string]Resources
