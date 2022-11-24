@@ -3,6 +3,7 @@ package locations
 import (
 	"fmt"
 
+	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
@@ -25,7 +26,7 @@ func UniqueDataSourceRead(d *schema.ResourceData, m interface{}) error {
 	var cloudPlatform *string
 	var ips []string
 
-	if v, ok := d.GetOk("id"); ok {
+	if v, ok := d.GetOk("entity_id"); ok {
 		d.SetId(v.(string))
 		id = opt.NewString(v.(string))
 	}
@@ -52,6 +53,7 @@ func UniqueDataSourceRead(d *schema.ResourceData, m interface{}) error {
 
 	conf := m.(*config.ProviderConfiguration)
 	apiService := NewService(conf.DTNonConfigEnvURL, conf.APIToken)
+	rest.Verbose = false
 	locationList, err := apiService.List()
 	if err != nil {
 		return err
@@ -107,15 +109,19 @@ func UniqueDataSourceRead(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 		for k, v := range marshalled {
-			if k != "id" {
-				d.Set(k, v)
-			} else {
+			if k == "entity_id" {
 				d.SetId(v.(string))
-				return nil
 			}
+			d.Set(k, v)
+			// if k != "id" {
+			// 	d.Set(k, v)
+			// } else {
+			// 	d.SetId(v.(string))
+			// 	return nil
+			// }
 		}
 
-		break
+		return nil
 	}
 
 	return fmt.Errorf("no matching synthetic location found")

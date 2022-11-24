@@ -41,7 +41,7 @@ type Location struct {
 
 func (me *Location) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"id": {
+		"entity_id": {
 			Type:        hcl.TypeString,
 			Description: "The unique ID of the location",
 			Optional:    true,
@@ -86,7 +86,7 @@ func (me *Location) Schema() map[string]*hcl.Schema {
 
 func (me *Location) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
-	result["id"] = me.ID
+	result["entity_id"] = me.ID
 	result["name"] = me.Name
 	result["type"] = string(me.Type)
 	if me.Stage != nil {
