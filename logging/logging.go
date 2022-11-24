@@ -36,14 +36,6 @@ type onDemandLogger struct {
 
 var odl = &onDemandLogger{name: "terraform-provider-dynatrace.log"}
 
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
 func (odl *onDemandLogger) f() (*os.File, error) {
 	odl.mu.Lock()
 	defer odl.mu.Unlock()
