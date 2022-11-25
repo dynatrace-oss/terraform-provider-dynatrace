@@ -114,8 +114,8 @@ github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.12 h1:sp34M6y
 github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.12/go.mod h1:O4akvOgblq/i4jEmTrtc3G2uo67Y8Trse97s3MCV//Q=
 github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.8 h1:5JdLmcg7Zn3ob14Fc1nyQ8YS4DMFY4VUBOD/bL1IeVY=
 github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.8/go.mod h1:0Ng19xKu79QfwGlIBu1RSY2nczwiO4HjAQFMndoPOE4=
-github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.13 h1:XdI6dT426DJGbSDiVEx0LWx63cRBPeR35OwcLlltfEs=
-github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.13/go.mod h1:gxEf0Q4QSSIDXAD3AiAoBNkaZxUCDoSCoK6pzZkBxWc=
+github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.14 h1:u9lpziv808JVdwPJbI1D0+afCdLD7p3ei7Lxtnc+u3E=
+github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.14/go.mod h1:gxEf0Q4QSSIDXAD3AiAoBNkaZxUCDoSCoK6pzZkBxWc=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.13 h1:8ZRTk92cu1iXqizG2yEuX72+Jt4r8wcByL9MsWvK8Qw=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.13/go.mod h1:lvUV8j84MvqfS5GJMWPdJNsuCExFI16OqlvUI/XjtfA=
 github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.2 h1:sZYkvqjfm1n9ayzp5yAyhavFekN+4zHOA+F2zlynBas=
