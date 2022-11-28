@@ -650,6 +650,27 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{mobile.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
+		HardcodedIds: []string{"dynatrace_request_attribute"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
+			var ids = []ReplacedID{}
+			dsName := "dynatrace_request_attribute"
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*mobile.NewAppConfig)
+				if dataObj.Properties != nil {
+					for _, property := range dataObj.Properties {
+						if property.ServerSideRequestAttribute != nil {
+							for id, details := range dsData[dsName].RESTMap {
+								if *property.ServerSideRequestAttribute == id {
+									property.ServerSideRequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + details.UniqueName + ".id")
+									ids = append(ids, ReplacedID{id, dsName, dsName})
+								}
+							}
+						}
+					}
+				}
+			}
+			return ids
+		},
 	},
 	"dynatrace_network_zones": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
