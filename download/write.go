@@ -97,7 +97,9 @@ func escape(s string) string {
 			result = result + "_"
 		}
 	}
-	result = strings.TrimSuffix(strings.TrimPrefix(removeDuplicateUnderscores(result), "_"), "_")
+	if result != "_" {
+		result = strings.TrimSuffix(strings.TrimPrefix(removeDuplicateUnderscores(result), "_"), "_")
+	}
 	if !unicode.IsLetter([]rune(result)[0]) {
 		result = "res_" + result
 	}
