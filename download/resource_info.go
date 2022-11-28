@@ -615,6 +615,29 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*v2maintenance.MaintenanceWindow).GeneralProperties.Name)
 		},
+		HardcodedIds: []string{"dynatrace_management_zone"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
+			var ids = []ReplacedID{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*v2maintenance.MaintenanceWindow)
+				dsName := "dynatrace_management_zone"
+				for id, appInfo := range dsData[dsName].RESTMap {
+					if len(dataObj.Filters) > 0 {
+						for idx, filter := range dataObj.Filters {
+							if len(filter.ManagementZones) > 0 {
+								for midx, mgmzid := range filter.ManagementZones {
+									if mgmzid == id {
+										dataObj.Filters[idx].ManagementZones[midx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".settings_20_id"
+										ids = append(ids, ReplacedID{id, dsName, dsName})
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return ids
+		},
 	},
 	"dynatrace_management_zone": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
