@@ -51,7 +51,7 @@ func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
 	var restObject hcl.Marshaler
 	var found bool
 	for _, resource := range me["dynatrace_dashboard_sharing"] {
-		if resource.Name == name {
+		if resource.UniqueName == name {
 			restObject = resource.RESTObject
 			found = true
 			break

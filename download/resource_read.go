@@ -67,6 +67,7 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 			}
 		}
 	}
+
 	return nil
 }
 
@@ -150,13 +151,15 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			return err
 		}
 		var name string
+		var uniqueName string
 		if marshaller, ok := config.(hcl.Marshaler); ok {
 			name = ResourceInfoMap[resourceName].Name(dlConfig, resourceName, config, nameCounter)
+			uniqueName = resNameCounter.Numbering(escape(name))
 			resource := Resource{
 				ID:         id,
 				RESTObject: marshaller,
 				Name:       name,
-				UniqueName: resNameCounter.Numbering(escape(name)),
+				UniqueName: uniqueName,
 			}
 			resources[resource.UniqueName] = &resource
 		}
@@ -173,7 +176,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			resource := Resource{
 				RESTObject: marshaller,
 				Name:       name,
-				UniqueName: resNameCounter.Numbering(escape(name)),
+				UniqueName: uniqueName,
 			}
 			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
 			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
