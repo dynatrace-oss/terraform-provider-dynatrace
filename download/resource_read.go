@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
@@ -179,7 +178,10 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 				UniqueName: uniqueName,
 			}
 			dataObj := resource.RESTObject.(*sharing.DashboardSharing)
-			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + escape(config.(*dashboards.Dashboard).Metadata.Name) + ".id"
+			if dataObj.Preset {
+				continue
+			}
+			dataObj.DashboardID = "HCL-UNQUOTE-dynatrace_dashboard." + uniqueName + ".id"
 			dashboardSharing[resource.UniqueName] = &resource
 		}
 	}
