@@ -196,8 +196,8 @@ github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2 h1:O
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2/go.mod h1:3pOHqS+abmm2M0KRv5ulOU/gQX8APl3PYvPxBkFmlFI=
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.3 h1:VcGZNJeaagsSbzU0cbl/UGFDh7YI3Z4V57gMjxdQVYg=
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.3/go.mod h1:s+1ATeRp5xGImhYRmfrnovEVo6T4AtCBIgiWi4/MwBA=
-github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1 h1:nCaG4V/GFuINM7TF0W0QbSJjDy6P/qdaBbVUc/tv3sI=
-github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
+github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2 h1:rGiuB6D+24bNNVE14p5QM56WdbdjfqEX6U7JRlrczAM=
+github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
 github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1 h1:1n3LkGMA0WiiIYvPqGDFC3VsbTkfssQC/YvyprFfOJI=
 github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1/go.mod h1:LTzdeziZmWsQN0v1IBNdye26dxkxKFhXflkYiogHqTw=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4 h1:ZhpdFZQW2wskXJCIRMHZO9o0cMjBCUiTmOTXZnUkq6c=
