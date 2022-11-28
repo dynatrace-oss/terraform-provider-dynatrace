@@ -198,6 +198,8 @@ github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.3 h1:VcGZNJeaagsSbz
 github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.3/go.mod h1:s+1ATeRp5xGImhYRmfrnovEVo6T4AtCBIgiWi4/MwBA=
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1 h1:nCaG4V/GFuINM7TF0W0QbSJjDy6P/qdaBbVUc/tv3sI=
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.1/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
+github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1 h1:1n3LkGMA0WiiIYvPqGDFC3VsbTkfssQC/YvyprFfOJI=
+github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1/go.mod h1:LTzdeziZmWsQN0v1IBNdye26dxkxKFhXflkYiogHqTw=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4 h1:ZhpdFZQW2wskXJCIRMHZO9o0cMjBCUiTmOTXZnUkq6c=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4/go.mod h1:MQkYbvci1MGaHfHUT5VI60QmqnwBK9s5d1yXY0erVmo=
 github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.7 h1:2mGmPO7BKPtz+vCW/diMtIBHY/1cKEIk8pog5UfQops=

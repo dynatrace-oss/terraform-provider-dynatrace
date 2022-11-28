@@ -1,12 +1,12 @@
 package mgmz
 
 import (
-	"fmt"
-
 	mgmzapi "github.com/dtcookie/dynatrace/api/config/managementzones"
+	api20 "github.com/dtcookie/dynatrace/api/config/v2/managementzones"
 	"github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -17,6 +17,10 @@ func DataSource() *schema.Resource {
 			"name": {
 				Type:     hcl.TypeString,
 				Required: true,
+			},
+			"settings_20_id": {
+				Type:     hcl.TypeString,
+				Computed: true,
 			},
 		}),
 	}
@@ -34,14 +38,36 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	found := false
 	if len(mgmzList) > 0 {
 		for _, mgmz := range mgmzList {
 			if name == mgmz.Name {
 				d.SetId(mgmz.ID)
-				return nil
+				found = true
+				break
+			}
+		}
+	}
+	if !found {
+		id := "not-found-" + uuid.New().String()
+		d.SetId(id)
+		d.Set("settings_20_id", id)
+		return nil
+	}
+
+	client20 := api20.NewService(conf.DTApiV2URL, conf.APIToken)
+	stubs, err := client20.List()
+	if err != nil {
+		return err
+	}
+	if len(stubs) > 0 {
+		for _, stub := range stubs {
+			if name == stub.Name {
+				d.Set("settings_20_id", stub.ID)
 			}
 		}
 	}
 
-	return fmt.Errorf("no management zone with name '%s' found", name)
+	return nil
+	// return fmt.Errorf("no management zone with name '%s' found", name)
 }
