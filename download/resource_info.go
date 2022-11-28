@@ -64,7 +64,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				dsName := "dynatrace_management_zone"
 				for id, appInfo := range dsData[dsName].RESTMap {
 					if dataObj.ManagementZone != nil && *dataObj.ManagementZone == id {
-						dataObj.ManagementZone = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id")
+						dataObj.ManagementZone = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id")
 						ids = append(ids, ReplacedID{id, dsName, dsName})
 					}
 				}
@@ -119,7 +119,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				dsName := "dynatrace_application"
 				for id, appInfo := range dsData[dsName].RESTMap {
 					if dataObj.WebApplicationID != nil && *dataObj.WebApplicationID == id {
-						dataObj.WebApplicationID = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id")
+						dataObj.WebApplicationID = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id")
 						ids = append(ids, ReplacedID{id, dsName, "dynatrace_web_application"})
 					}
 				}
@@ -153,7 +153,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				dsName := "dynatrace_application"
 				for id, appInfo := range dsData[dsName].RESTMap {
 					if dataObj.ApplicationIdentifier != "" && dataObj.ApplicationIdentifier == id {
-						dataObj.ApplicationIdentifier = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+						dataObj.ApplicationIdentifier = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 						ids = append(ids, ReplacedID{id, dsName, "dynatrace_web_application"})
 					}
 				}
@@ -187,7 +187,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				dsName := "dynatrace_application"
 				for id, appInfo := range dsData[dsName].RESTMap {
 					if dataObj.WebApplicationID != "" && dataObj.WebApplicationID == id {
-						dataObj.WebApplicationID = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+						dataObj.WebApplicationID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 						ids = append(ids, ReplacedID{id, dsName, "dynatrace_web_application"})
 					}
 				}
@@ -229,21 +229,21 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				for id, credInfo := range dsData[dsName].RESTMap {
 					if dataObj.ExternalVault != nil {
 						if dataObj.ExternalVault.Certificate != nil && *dataObj.ExternalVault.Certificate == id {
-							dataObj.ExternalVault.Certificate = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo["name"].(string)) + ".id")
+							dataObj.ExternalVault.Certificate = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
 						}
 						if dataObj.ExternalVault.ClientSecret != nil && *dataObj.ExternalVault.ClientSecret == id {
-							dataObj.ExternalVault.ClientSecret = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo["name"].(string)) + ".id")
+							dataObj.ExternalVault.ClientSecret = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
 						}
 						if dataObj.ExternalVault.ClientID != nil && *dataObj.ExternalVault.ClientID == id {
-							dataObj.ExternalVault.ClientID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo["name"].(string)) + ".id")
+							dataObj.ExternalVault.ClientID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
 						}
 						if dataObj.ExternalVault.SecretID != nil && *dataObj.ExternalVault.SecretID == id {
-							dataObj.ExternalVault.SecretID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo["name"].(string)) + ".id")
+							dataObj.ExternalVault.SecretID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
 						}
 						if len(dataObj.ExternalVault.CredentialsUsedForExternalSynchronization) > 0 {
 							for idx, elem := range dataObj.ExternalVault.CredentialsUsedForExternalSynchronization {
 								if elem == id {
-									dataObj.ExternalVault.CredentialsUsedForExternalSynchronization[idx] = "HCL-UNQUOTE-" + dsName + "." + escape(credInfo["name"].(string)) + ".id"
+									dataObj.ExternalVault.CredentialsUsedForExternalSynchronization[idx] = "HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id"
 								}
 							}
 						}
@@ -269,6 +269,17 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return counter.Numbering(v.(*aws.AWSCredentialsConfig).Label)
+		},
+		HardcodedIds: []string{"dynatrace_aws_credentials"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
+			var ids = []ReplacedID{}
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*aws.AWSCredentialsConfig)
+				if dataObj.AuthenticationData != nil && dataObj.AuthenticationData.KeyBasedAuthentication != nil {
+					dataObj.AuthenticationData.KeyBasedAuthentication.SecretKey = opt.NewString("redacted")
+				}
+			}
+			return ids
 		},
 	},
 	"dynatrace_azure_credentials": {
@@ -297,7 +308,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dsName := "dynatrace_application"
 					for id, appInfo := range dsData[dsName].RESTMap {
 						if assignedApp == id {
-							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 							ids = append(ids, ReplacedID{id, dsName, "dynatrace_web_application"})
 							break
 						}
@@ -307,7 +318,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dsName := "dynatrace_synthetic_location"
 					for id, locInfo := range dsData[dsName].RESTMap {
 						if assignedLoc == id {
-							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, locInfo)) + ".id"
+							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + locInfo.UniqueName + ".id"
 							ids = append(ids, ReplacedID{id, dsName, "dynatrace_synthetic_location"})
 							break
 						}
@@ -324,7 +335,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 								dsName := "dynatrace_credentials"
 								for id, credInfo := range dsData[dsName].RESTMap {
 									if evt.Authentication.Credential.ID == id {
-										evt.Authentication.Credential.ID = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, credInfo)) + ".id"
+										evt.Authentication.Credential.ID = "HCL-UNQUOTE-data." + dsName + "." + credInfo.UniqueName + ".id"
 										ids = append(ids, ReplacedID{id, dsName, "dynatrace_credentials"})
 										break
 									}
@@ -351,9 +362,9 @@ var ResourceInfoMap = map[string]ResourceStruct{
 				if dataObj.MetricDefinition != nil && dataObj.MetricDefinition.RequestAttribute != nil {
 					dsName := "dynatrace_request_attribute"
 					for id, dsObj := range dsData[dsName].RESTMap {
-						for key, value := range dsObj {
+						for key, value := range dsObj.Values {
 							if key == "name" && *dataObj.MetricDefinition.RequestAttribute == value.(string) {
-								dataObj.MetricDefinition.RequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + escape(value.(string)) + ".name")
+								dataObj.MetricDefinition.RequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + dsObj.UniqueName + ".name")
 								ids = append(ids, ReplacedID{id, dsName, dsName})
 							}
 						}
@@ -403,7 +414,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dsName := "dynatrace_management_zone"
 					for id, appInfo := range dsData[dsName].RESTMap {
 						if dataObj.Metadata.Filter.ManagementZone.ID == id {
-							dataObj.Metadata.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+							dataObj.Metadata.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 							dataObj.Metadata.Filter.ManagementZone.Name = nil
 							dataObj.Metadata.Filter.ManagementZone.Description = nil
 							ids = append(ids, ReplacedID{id, dsName, dsName})
@@ -416,7 +427,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 							dsName := "dynatrace_management_zone"
 							for id, appInfo := range dsData[dsName].RESTMap {
 								if tile.Filter.ManagementZone.ID == id {
-									tile.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+									tile.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 									tile.Filter.ManagementZone.Name = nil
 									tile.Filter.ManagementZone.Description = nil
 									ids = append(ids, ReplacedID{id, dsName, dsName})
@@ -493,24 +504,24 @@ var ResourceInfoMap = map[string]ResourceStruct{
 						if len(dataObj.Script.Requests) > 0 {
 							for _, request := range dataObj.Script.Requests {
 								if request.RequestBody != nil && strings.Contains(*request.RequestBody, id) {
-									replacedStr := strings.ReplaceAll(*request.RequestBody, id, "${data.dynatrace_credentials."+escape(credInfo["name"].(string))+".id}")
+									replacedStr := strings.ReplaceAll(*request.RequestBody, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
 									request.RequestBody = &replacedStr
 									replaced = true
 								}
 								if request.PostProcessing != nil && strings.Contains(*request.PostProcessing, id) {
-									replacedStr := strings.ReplaceAll(*request.PostProcessing, id, "${data.dynatrace_credentials."+escape(credInfo["name"].(string))+".id}")
+									replacedStr := strings.ReplaceAll(*request.PostProcessing, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
 									request.PostProcessing = &replacedStr
 									replaced = true
 								}
 								if strings.Contains(request.URL, id) {
-									request.URL = strings.ReplaceAll(request.URL, id, "${data.dynatrace_credentials."+escape(credInfo["name"].(string))+".id}")
+									request.URL = strings.ReplaceAll(request.URL, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
 									replaced = true
 								}
 								if request.Configuration != nil {
 									if len(request.Configuration.RequestHeaders) > 0 {
 										for _, header := range request.Configuration.RequestHeaders {
 											if strings.Contains(header.Value, id) {
-												header.Value = strings.ReplaceAll(header.Value, id, "${data.dynatrace_credentials."+escape(credInfo["name"].(string))+".id}")
+												header.Value = strings.ReplaceAll(header.Value, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
 												replaced = true
 											}
 										}
@@ -528,7 +539,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dsName := "dynatrace_application"
 					for id, appInfo := range dsData[dsName].RESTMap {
 						if assignedApp == id {
-							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(appInfo["name"].(string)) + ".id"
+							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
 							ids = append(ids, ReplacedID{id, dsName, "dynatrace_web_application"})
 							break
 						}
@@ -538,7 +549,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dsName := "dynatrace_synthetic_location"
 					for id, locInfo := range dsData[dsName].RESTMap {
 						if assignedLoc == id {
-							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + escape(UniqueDSName(dsName, locInfo)) + ".id"
+							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + locInfo.UniqueName + ".id"
 							ids = append(ids, ReplacedID{id, dsName, ""})
 							break
 						}
@@ -807,7 +818,27 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{web.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-	},
+		HardcodedIds: []string{"dynatrace_request_attribute"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) []ReplacedID {
+			var ids = []ReplacedID{}
+			dsName := "dynatrace_request_attribute"
+			for _, resource := range resources {
+				dataObj := resource.RESTObject.(*web.ApplicationConfig)
+				if len(dataObj.UserActionAndSessionProperties) > 0 {
+					for _, property := range dataObj.UserActionAndSessionProperties {
+						if property.ServerSideRequestAttribute != nil {
+							for id, details := range dsData[dsName].RESTMap {
+								if *property.ServerSideRequestAttribute == id {
+									property.ServerSideRequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + details.UniqueName + ".id")
+									ids = append(ids, ReplacedID{id, dsName, dsName})
+								}
+							}
+						}
+					}
+				}
+			}
+			return ids
+		}},
 	"dynatrace_webhook_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{notifications.NewWebHookService(environmentURL+"/api/v2", apiToken)}
@@ -876,7 +907,7 @@ func replaceIdsNotif(resources Resources, dsData DataSourceData) []ReplacedID {
 		rsName := "dynatrace_alerting"
 		for id, dsObj := range dsData[dsName].RESTMap {
 			if dataObj.ProfileID != "" && dataObj.ProfileID == id {
-				dataObj.ProfileID = "HCL-UNQUOTE-data." + dsName + "." + escape(dsObj["name"].(string)) + ".id"
+				dataObj.ProfileID = "HCL-UNQUOTE-data." + dsName + "." + dsObj.UniqueName + ".id"
 				ids = append(ids, ReplacedID{id, dsName, rsName})
 			}
 		}

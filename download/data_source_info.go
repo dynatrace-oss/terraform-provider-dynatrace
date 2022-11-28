@@ -16,12 +16,12 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return alerting.NewService(environmentURL+"/api/v2", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			stubs := restObject.([]*alerting.Profile)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, stub := range stubs {
-				restMap[stub.ID] = map[string]interface{}{}
-				restMap[stub.ID]["name"] = stub.Name
+				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.ID].Values["name"] = stub.Name
 			}
 			return restMap
 		},
@@ -30,12 +30,12 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return web.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			stubs := restObject.(*api.StubList)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, stub := range stubs.Values {
-				restMap[stub.ID] = map[string]interface{}{}
-				restMap[stub.ID]["name"] = stub.Name
+				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.ID].Values["name"] = stub.Name
 			}
 			return restMap
 		},
@@ -44,12 +44,12 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return requestattributes.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			stubs := restObject.(*api.StubList)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, stub := range stubs.Values {
-				restMap[stub.ID] = map[string]interface{}{}
-				restMap[stub.ID]["name"] = stub.Name
+				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.ID].Values["name"] = stub.Name
 			}
 			return restMap
 		},
@@ -58,12 +58,12 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return managementzones.NewService(environmentURL+"/api/config/v1", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			stubs := restObject.([]*api.EntityShortRepresentation)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, stub := range stubs {
-				restMap[stub.ID] = map[string]interface{}{}
-				restMap[stub.ID]["name"] = stub.Name
+				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.ID].Values["name"] = stub.Name
 			}
 			return restMap
 		},
@@ -77,15 +77,15 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return locations.NewService(environmentURL+"/api/v1", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			locations := restObject.(*locations.SyntheticLocations)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, location := range locations.Locations {
-				restMap[location.ID] = map[string]interface{}{}
-				restMap[location.ID]["name"] = location.Name
-				restMap[location.ID]["type"] = location.Type
+				restMap[location.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[location.ID].Values["name"] = location.Name
+				restMap[location.ID].Values["type"] = location.Type
 				if location.CloudPlatform != nil {
-					restMap[location.ID]["cloud_platform"] = *location.CloudPlatform
+					restMap[location.ID].Values["cloud_platform"] = *location.CloudPlatform
 				}
 			}
 			return restMap
@@ -101,14 +101,14 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return vault.NewService(environmentURL+"/api/v2", apiToken)
 		},
-		MarshallHCL: func(restObject interface{}) map[string]map[string]interface{} {
+		MarshallHCL: func(restObject interface{}) map[string]*DataSourceDetails {
 			credentialList := restObject.(*vault.CredentialsList)
-			var restMap = map[string]map[string]interface{}{}
+			var restMap = map[string]*DataSourceDetails{}
 			for _, credential := range credentialList.Credentials {
-				restMap[*credential.ID] = map[string]interface{}{}
-				restMap[*credential.ID]["type"] = string(credential.Type)
-				restMap[*credential.ID]["name"] = credential.Name
-				restMap[*credential.ID]["scope"] = string(credential.Scope)
+				restMap[*credential.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[*credential.ID].Values["type"] = string(credential.Type)
+				restMap[*credential.ID].Values["name"] = credential.Name
+				restMap[*credential.ID].Values["scope"] = string(credential.Scope)
 			}
 			return restMap
 		},
@@ -120,7 +120,7 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 
 type DataSourceStruct struct {
 	RESTClient  func(string, string) DataSourceClient
-	MarshallHCL func(interface{}) map[string]map[string]interface{}
+	MarshallHCL func(interface{}) map[string]*DataSourceDetails
 	UniqueName  func(map[string]interface{}) string
 }
 

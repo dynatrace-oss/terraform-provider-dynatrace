@@ -18,10 +18,10 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 	for dsName, dataSource := range me {
 		if contains(ResourceInfoMap[resName].HardcodedIds, dsName) {
 			var writtenIDs []string
-			for id, values := range dataSource.RESTMap {
+			for id, details := range dataSource.RESTMap {
 				for _, replacedID := range replacedIDs[resName] {
 					if id == replacedID.ID && !contains(writtenIDs, id) {
-						if err := me.writer(file, dsName, values); err != nil {
+						if err := me.writer(file, dsName, details); err != nil {
 							return err
 						}
 						writtenIDs = append(writtenIDs, id)
@@ -35,12 +35,12 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 	return nil
 }
 
-func (me DataSourceData) writer(file *os.File, dsName string, values map[string]interface{}) error {
-	if _, err := file.WriteString(fmt.Sprintf("data \"%s\" \"%s\" {\n", dsName, escape(UniqueDSName(dsName, values)))); err != nil {
+func (me DataSourceData) writer(file *os.File, dsName string, detail *DataSourceDetails) error {
+	if _, err := file.WriteString(fmt.Sprintf("data \"%s\" \"%s\" {\n", dsName, detail.UniqueName)); err != nil {
 		file.Close()
 		return err
 	}
-	for key, value := range values {
+	for key, value := range detail.Values {
 		switch t := value.(type) {
 		case string:
 			if _, err := file.WriteString(fmt.Sprintf("\t%s = \"%s\"\n", key, t)); err != nil {

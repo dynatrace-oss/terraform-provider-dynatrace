@@ -24,7 +24,11 @@ func (me DataSourceData) read(dlConfig DownloadConfig, dsName string, client Dat
 	}
 
 	if DataSourceInfoMap[dsName].MarshallHCL != nil {
-		me[dsName] = DataSource{RESTMap: DataSourceInfoMap[dsName].MarshallHCL(config)}
+		dataSource := &DataSource{RESTMap: DataSourceInfoMap[dsName].MarshallHCL(config)}
+		for _, v := range dataSource.RESTMap {
+			v.UniqueName = escape(UniqueDSName(dsName, v.Values))
+		}
+		me[dsName] = dataSource
 	}
 
 	return nil
