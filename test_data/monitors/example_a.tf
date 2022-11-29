@@ -2,7 +2,7 @@ resource "dynatrace_browser_monitor" "#name#" {
   name = "#name#"
   frequency = 15
   locations = ["GEOLOCATION-B4B9167CAAA88F6A","GEOLOCATION-03E96F97A389F96A"]
-  manually_assigned_apps = ["APPLICATION-62B3F4F16786DE50"]
+  manually_assigned_apps = ["APPLICATION-EA7C4B59F27D43EB"]
   anomaly_detection {
     loading_time_thresholds {
       enabled = true
