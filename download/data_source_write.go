@@ -19,12 +19,14 @@ func (me DataSourceData) WriteDataSource(dlConfig DownloadConfig, resName string
 		if contains(ResourceInfoMap[resName].HardcodedIds, dsName) {
 			var writtenIDs []string
 			for id, details := range dataSource.RESTMap {
-				for _, replacedID := range replacedIDs[resName] {
-					if id == replacedID.ID && !contains(writtenIDs, id) {
-						if err := me.writer(file, dsName, details); err != nil {
-							return err
+				for _, repIdRes := range replacedIDs[resName] {
+					for _, repId := range repIdRes {
+						if id == repId.ID && !contains(writtenIDs, id) {
+							if err := me.writer(file, dsName, details); err != nil {
+								return err
+							}
+							writtenIDs = append(writtenIDs, id)
 						}
-						writtenIDs = append(writtenIDs, id)
 					}
 				}
 			}

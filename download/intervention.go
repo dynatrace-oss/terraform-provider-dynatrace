@@ -22,8 +22,9 @@ var InterventionInfoMap = map[string]InterventionStruct{
 				client := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
 				errors := client.Validate(dashboard)
 				dashboard.ID = dbId
-				if len(errors) > 0 {
+				if len(errors) > 0 && !strings.Contains(errors[0], "Token is missing required scope. Use one of: WriteConfig (Write configuration)") {
 					resource.ReqInter.Type = InterventionTypes.Flawed
+					errors[0] = strings.ReplaceAll(errors[0], "\n", "")
 					resource.ReqInter.Message = errors
 				}
 			}

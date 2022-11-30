@@ -12,6 +12,7 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 	var ResourceDataMap = ResourceData{}
 	var DataSourceDataMap = DataSourceData{}
 	var replacedIDs = ReplacedIDs{}
+
 	dlConfig := DownloadConfig{
 		EnvironmentURL: environmentURL,
 		APIToken:       apiToken,
@@ -26,21 +27,42 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		fmt.Println(err.Error())
 		os.Exit(0)
 	}
-
-	if err = ResourceDataMap.RequiresIntervention(dlConfig); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
-
-	if dlConfig.References {
-		if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
+	run := true
+	for run {
+		run = false
+		if err = ResourceDataMap.RequiresIntervention(dlConfig); err != nil {
 			fmt.Println(err.Error())
 			os.Exit(0)
 		}
 
-		if replacedIDs, err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap); err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
+		if dlConfig.References {
+			if err = DataSourceDataMap.ProcessRead(dlConfig, ResourceDataMap); err != nil {
+				fmt.Println(err.Error())
+				os.Exit(0)
+			}
+
+			if err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
+				fmt.Println(err.Error())
+				os.Exit(0)
+			}
+		}
+
+		if len(resArgs) > 0 && replacedIDs != nil {
+			for _, replacedId := range replacedIDs {
+				for _, repIdRes := range replacedId {
+					for _, repId := range repIdRes {
+						if !repId.Processed {
+							run = true
+						}
+					}
+				}
+			}
+			if run {
+				if err = ResourceDataMap.ProcessRepIdRead(dlConfig, replacedIDs); err != nil {
+					fmt.Println(err.Error())
+					os.Exit(0)
+				}
+			}
 		}
 	}
 
@@ -60,6 +82,7 @@ type DownloadConfig struct {
 	CommentedID    bool
 	Migrate        bool
 	ResourceNames  map[string][]string
+	// DependencyRes  []DependencyResource
 }
 
 func ValidateResource(keyVal string) (string, string) {
@@ -105,3 +128,31 @@ func (me DownloadConfig) MatchID(resName string, id string) bool {
 	}
 	return false
 }
+
+// func FindDependencies(resArgs map[string][]string) ([]DependencyResource, int) {
+// 	var newResources []DependencyResource
+// 	nestedLevel := 0
+// 	found := true
+// 	for found {
+// 		nestedLevel++
+// 		found = false
+// 		for resName := range resArgs {
+// 			if ResourceInfoMap[resName].HardcodedIds != nil {
+// 				for _, hcId := range ResourceInfoMap[resName].HardcodedIds {
+// 					if _, exists := resArgs[hcId.ResName]; !exists {
+// 						resArgs[hcId.ResName] = nil
+// 						newResources = append(newResources, DependencyResource{hcId.ResName, nestedLevel})
+// 						found = true
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	return newResources, nestedLevel
+// }
+
+// type DependencyResource struct {
+// 	Name  string
+// 	Level int
+// }

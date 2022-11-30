@@ -38,7 +38,7 @@ func ProcessWrite(dlConfig DownloadConfig, resourceDataMap ResourceData, dataSou
 			return fmt.Sprintf("%s_%d", s, cnt)
 		})
 		os.MkdirAll(dlConfig.TargetFolder+"/"+resFolder, os.ModePerm)
-		if err = resourceDataMap.WriteResourceSeparate(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
+		if err = resourceDataMap.WriteResource(dlConfig, resName, resFolder, resources, resNameCnt); err != nil {
 			return err
 		}
 		if ResourceInfoMap[resName].HardcodedIds != nil && dlConfig.References {
@@ -199,12 +199,15 @@ func writeMainFile(file *os.File, resourceDataMap ResourceData, resName string, 
 	modules := map[string]bool{}
 	if dependsOn && ResourceInfoMap[resName].HardcodedIds != nil {
 		for _, hcName := range ResourceInfoMap[resName].HardcodedIds {
-			for _, ids := range replacedIDs[resName] {
-				if hcName == ids.RefDS && ids.RefRes != "" {
-					if _, ok := modules[ids.RefRes]; !ok {
-						modules[ids.RefRes] = true
+			for _, repIdRes := range replacedIDs[resName] {
+				for _, repId := range repIdRes {
+					if hcName == repId.RefDS && repId.RefRes != "" {
+						if _, ok := modules[repId.RefRes]; !ok {
+							modules[repId.RefRes] = true
+						}
 					}
 				}
+
 			}
 		}
 		for module := range modules {

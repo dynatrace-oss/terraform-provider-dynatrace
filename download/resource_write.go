@@ -9,7 +9,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hclgen"
 )
 
-func (me ResourceData) WriteResourceSeparate(dlConfig DownloadConfig, resName string, resFolder string, resources Resources, resNameCnt NameCounter) error {
+func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, resFolder string, resources Resources, resNameCnt NameCounter) error {
 	var err error
 	for _, resource := range resources {
 		if len(resource.ReqInter.Type) > 0 {

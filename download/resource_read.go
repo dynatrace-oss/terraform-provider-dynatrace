@@ -47,11 +47,11 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 				dlConfig.EnvironmentURL,
 				dlConfig.APIToken,
 			)
-			if err := me.readDashboards(dlConfig, resName, clients[0]); err != nil {
+			if err := me.readDashboards(dlConfig, resName, clients[0], nil); err != nil {
 				return err
 			}
 		} else if resName == "dynatrace_key_requests" {
-			if err := me.readKeyRequests(dlConfig, resName); err != nil {
+			if err := me.readKeyRequests(dlConfig, resName, nil); err != nil {
 				return err
 			}
 		} else {
@@ -60,7 +60,7 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 				dlConfig.APIToken,
 			)
 			for _, client := range clients {
-				if err := me.read(dlConfig, resName, client); err != nil {
+				if err := me.read(dlConfig, resName, client, nil); err != nil {
 					return err
 				}
 			}
@@ -70,7 +70,50 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 	return nil
 }
 
-func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client StandardClient) error {
+func (me ResourceData) ProcessRepIdRead(dlConfig DownloadConfig, replacedIds ReplacedIDs) error {
+	for _, replacedId := range replacedIds {
+		for resName, repId := range replacedId {
+			if !containsProcessedRepId(repId) {
+				fmt.Println("Processing read: ", resName)
+				if ResourceInfoMap[resName].NoListClient != nil {
+					client := ResourceInfoMap[resName].NoListClient(
+						dlConfig.EnvironmentURL,
+						dlConfig.APIToken,
+					)
+					if err := me.readNoList(resName, client); err != nil {
+						return err
+					}
+				} else if resName == "dynatrace_dashboard" {
+					clients := ResourceInfoMap[resName].RESTClient(
+						dlConfig.EnvironmentURL,
+						dlConfig.APIToken,
+					)
+					if err := me.readDashboards(dlConfig, resName, clients[0], repId); err != nil {
+						return err
+					}
+				} else if resName == "dynatrace_key_requests" {
+					if err := me.readKeyRequests(dlConfig, resName, repId); err != nil {
+						return err
+					}
+				} else {
+					clients := ResourceInfoMap[resName].RESTClient(
+						dlConfig.EnvironmentURL,
+						dlConfig.APIToken,
+					)
+					for _, client := range clients {
+						if err := me.read(dlConfig, resName, client, repId); err != nil {
+							return err
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client StandardClient, replacedIds []*ReplacedID) error {
 	resources := Resources{}
 	ids, err := client.LIST()
 	if err != nil {
@@ -82,6 +125,10 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
 		}
+		if replacedIds != nil && !containsRepId(replacedIds, id) {
+			continue
+		}
+
 		config, err := client.GET(id)
 		if err != nil {
 			return err
@@ -129,7 +176,7 @@ func (me ResourceData) readNoList(resourceName string, client NoListClient) erro
 	return nil
 }
 
-func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName string, client StandardClient) error {
+func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName string, client StandardClient, replacedIds []*ReplacedID) error {
 	resources := Resources{}
 	ids, err := client.LIST()
 
@@ -145,6 +192,10 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
 		}
+		if replacedIds != nil && !containsRepId(replacedIds, id) {
+			continue
+		}
+
 		config, err := client.GET(id)
 		if err != nil {
 			return err
@@ -194,7 +245,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 	return nil
 }
 
-func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName string) error {
+func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName string, replacedIds []*ReplacedID) error {
 	resources := Resources{}
 	topRestClient := DataSourceInfoMap["dynatrace_service"].RESTClient(
 		dlConfig.EnvironmentURL,
@@ -219,6 +270,9 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 		if !dlConfig.MatchID(resourceName, keyRequestID) && dlConfig.ResourceNames[resourceName] != nil {
 			continue
 		}
+		if replacedIds != nil && !containsRepId(replacedIds, keyRequestID) {
+			continue
+		}
 		if marshaller, ok := keyRequest.(hcl.Marshaler); ok {
 			name := ResourceInfoMap[resourceName].Name(dlConfig, resourceName, service, nil)
 			resource := Resource{
@@ -232,4 +286,23 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 	me[resourceName] = resources
 
 	return nil
+}
+
+func containsRepId(replacedId []*ReplacedID, id string) bool {
+	for _, repId := range replacedId {
+		if id == repId.ID {
+			repId.Processed = true
+			return true
+		}
+	}
+	return false
+}
+
+func containsProcessedRepId(replacedId []*ReplacedID) bool {
+	for _, repId := range replacedId {
+		if !repId.Processed {
+			return false
+		}
+	}
+	return true
 }
