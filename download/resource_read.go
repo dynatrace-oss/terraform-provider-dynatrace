@@ -30,8 +30,10 @@ import (
 
 func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 	for resName, resStruct := range ResourceInfoMap {
-		if !dlConfig.MatchResource(resName) && len(dlConfig.ResourceNames) != 0 {
-			continue
+		if len(dlConfig.ResourceNames) != 0 {
+			if (!dlConfig.Exclude && !dlConfig.MatchResource(resName)) || (dlConfig.Exclude && dlConfig.MatchResource(resName)) {
+				continue
+			}
 		}
 		fmt.Println("Processing read: ", resName)
 		if ResourceInfoMap[resName].NoListClient != nil {
@@ -122,11 +124,13 @@ func (me ResourceData) read(dlConfig DownloadConfig, resourceName string, client
 	nameCounter := NewNameCounter()
 	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, id := range ids {
-		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
-			continue
-		}
 		if replacedIds != nil && !containsRepId(replacedIds, id) {
 			continue
+		}
+		if dlConfig.ResourceNames[resourceName] != nil {
+			if (!dlConfig.Exclude && !dlConfig.MatchID(resourceName, id)) || (dlConfig.Exclude && dlConfig.MatchID(resourceName, id)) {
+				continue
+			}
 		}
 
 		config, err := client.GET(id)
@@ -189,11 +193,13 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 	nameCounter := NewNameCounter()
 	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, id := range ids {
-		if !dlConfig.MatchID(resourceName, id) && dlConfig.ResourceNames[resourceName] != nil {
-			continue
-		}
 		if replacedIds != nil && !containsRepId(replacedIds, id) {
 			continue
+		}
+		if dlConfig.ResourceNames[resourceName] != nil {
+			if (!dlConfig.Exclude && !dlConfig.MatchID(resourceName, id)) || (dlConfig.Exclude && dlConfig.MatchID(resourceName, id)) {
+				continue
+			}
 		}
 
 		config, err := client.GET(id)
@@ -267,11 +273,13 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 		if kr == nil {
 			continue
 		}
-		if !dlConfig.MatchID(resourceName, keyRequestID) && dlConfig.ResourceNames[resourceName] != nil {
-			continue
-		}
 		if replacedIds != nil && !containsRepId(replacedIds, keyRequestID) {
 			continue
+		}
+		if dlConfig.ResourceNames[resourceName] != nil {
+			if (!dlConfig.Exclude && !dlConfig.MatchID(resourceName, keyRequestID)) || (dlConfig.Exclude && dlConfig.MatchID(resourceName, keyRequestID)) {
+				continue
+			}
 		}
 		if marshaller, ok := keyRequest.(hcl.Marshaler); ok {
 			name := ResourceInfoMap[resourceName].Name(dlConfig, resourceName, service, nil)

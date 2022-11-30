@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, resArgs map[string][]string) bool {
+func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, resArgs map[string][]string) bool {
 	os.Setenv("dynatrace.secrets", "true")
 	var err error
 	var ResourceDataMap = ResourceData{}
@@ -20,6 +20,7 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		References:     refArg,
 		CommentedID:    comIdArg,
 		Migrate:        migrateArg,
+		Exclude:        excludeArg,
 		ResourceNames:  resArgs,
 	}
 
@@ -40,13 +41,11 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 				fmt.Println(err.Error())
 				os.Exit(0)
 			}
-
 			if err = ProcessDataSourceIDs(ResourceDataMap, DataSourceDataMap, replacedIDs); err != nil {
 				fmt.Println(err.Error())
 				os.Exit(0)
 			}
 		}
-
 		if len(resArgs) > 0 && replacedIDs != nil {
 			for _, replacedId := range replacedIDs {
 				for _, repIdRes := range replacedId {
@@ -81,8 +80,8 @@ type DownloadConfig struct {
 	References     bool
 	CommentedID    bool
 	Migrate        bool
+	Exclude        bool
 	ResourceNames  map[string][]string
-	// DependencyRes  []DependencyResource
 }
 
 func ValidateResource(keyVal string) (string, string) {
@@ -128,31 +127,3 @@ func (me DownloadConfig) MatchID(resName string, id string) bool {
 	}
 	return false
 }
-
-// func FindDependencies(resArgs map[string][]string) ([]DependencyResource, int) {
-// 	var newResources []DependencyResource
-// 	nestedLevel := 0
-// 	found := true
-// 	for found {
-// 		nestedLevel++
-// 		found = false
-// 		for resName := range resArgs {
-// 			if ResourceInfoMap[resName].HardcodedIds != nil {
-// 				for _, hcId := range ResourceInfoMap[resName].HardcodedIds {
-// 					if _, exists := resArgs[hcId.ResName]; !exists {
-// 						resArgs[hcId.ResName] = nil
-// 						newResources = append(newResources, DependencyResource{hcId.ResName, nestedLevel})
-// 						found = true
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	return newResources, nestedLevel
-// }
-
-// type DependencyResource struct {
-// 	Name  string
-// 	Level int
-// }

@@ -210,6 +210,7 @@ func exportv2(args []string) bool {
 	refArg := flag.Bool("ref", false, "enable data sources and dependencies")
 	comIdArg := flag.Bool("id", false, "enable commented ids")
 	migrateArg := flag.Bool("migrate", false, "enable migration output")
+	excludeArg := flag.Bool("exclude", false, "exclude specified resources")
 	flag.Parse()
 	tailArgs := flag.Args()
 
@@ -240,7 +241,7 @@ func exportv2(args []string) bool {
 		}
 	}
 
-	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, *migrateArg, resArgs)
+	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, *migrateArg, *excludeArg, resArgs)
 }
 
 func export(args []string) bool {

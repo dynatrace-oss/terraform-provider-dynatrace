@@ -6,6 +6,7 @@ type ReplacedID struct {
 	ID        string
 	RefDS     string
 	RefRes    string
+	NoRes     bool
 	Processed bool
 }
 
@@ -14,11 +15,8 @@ func ProcessDataSourceIDs(resourceData ResourceData, dsData DataSourceData, repl
 		if ResourceInfoMap[resName].HardcodedIds == nil {
 			continue
 		}
-		repIds := ResourceInfoMap[resName].DsReplaceIds(resources, dsData)
-		if len(repIds) > 0 {
-			replacedIDs[resName] = make(map[string][]*ReplacedID)
-			replacedIDs[resName][repIds[0].RefRes] = repIds
-		}
+
+		replacedIDs[resName] = ResourceInfoMap[resName].DsReplaceIds(resources, dsData)
 	}
 
 	return nil
