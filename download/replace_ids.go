@@ -16,7 +16,15 @@ func ProcessDataSourceIDs(resourceData ResourceData, dsData DataSourceData, repl
 			continue
 		}
 
-		replacedIDs[resName] = ResourceInfoMap[resName].DsReplaceIds(resources, dsData)
+		repIds := ResourceInfoMap[resName].DsReplaceIds(resources, dsData)
+		if replacedIDs[resName] == nil {
+			replacedIDs[resName] = repIds
+		} else {
+			for repIdRes, repIdStruct := range repIds {
+				replacedIDs[resName][repIdRes] = repIdStruct
+			}
+		}
+
 	}
 
 	return nil
