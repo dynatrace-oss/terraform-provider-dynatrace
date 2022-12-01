@@ -18,21 +18,24 @@ func DefaultIDReplace(dsName string, appInfo *DataSourceDetails) string {
 
 func Replace(resources Resources, dsName string, dataSourceData DataSourceData, replaceIdTemplate ReplacedID, idReplaceFn ...IDReplaceFunc) map[string][]*ReplacedID {
 	ids := map[string][]*ReplacedID{}
+	idSet := map[string]string{}
 	for _, resource := range resources {
 		for _, id := range ReplaceResource(resource, dsName, dataSourceData, idReplaceFn...) {
-			replacedId := ReplacedID{ID: id, RefDS: replaceIdTemplate.RefDS, RefRes: replaceIdTemplate.RefRes, Processed: replaceIdTemplate.Processed}
-			if len(replaceIdTemplate.RefRes) > 0 {
-				ids[replaceIdTemplate.RefRes] = append(ids[replaceIdTemplate.RefRes], &replacedId)
-			} else {
-				ids[dsName] = append(ids[dsName], &replacedId)
-			}
-
+			idSet[id] = id
+		}
+	}
+	for id := range idSet {
+		replacedId := ReplacedID{ID: id, RefDS: replaceIdTemplate.RefDS, RefRes: replaceIdTemplate.RefRes, Processed: replaceIdTemplate.Processed}
+		if len(replaceIdTemplate.RefRes) > 0 {
+			ids[replaceIdTemplate.RefRes] = append(ids[replaceIdTemplate.RefRes], &replacedId)
+		} else {
+			ids[dsName] = append(ids[dsName], &replacedId)
 		}
 	}
 	return ids
 }
 
-func ReplaceResource(resource *Resource, dsName string, dataSourceData DataSourceData, idReplaceFn ...IDReplaceFunc) []string {
+func ReplaceResource(resource *Resource, dsName string, dataSourceData DataSourceData, idReplaceFn ...IDReplaceFunc) map[string]string {
 	fn := DefaultIDReplace
 	if len(idReplaceFn) > 0 {
 		fn = idReplaceFn[0]
@@ -45,11 +48,11 @@ func ReplaceResource(resource *Resource, dsName string, dataSourceData DataSourc
 		replaceIDs:     map[string]string{},
 	}
 	rep.replace(reflect.ValueOf(resource.RESTObject))
-	res := []string{}
-	for k := range rep.replaceIDs {
-		res = append(res, k)
-	}
-	return res
+	// res := []string{}
+	// for k := range rep.replaceIDs {
+	// 	res = append(res, k)
+	// }
+	return rep.replaceIDs
 }
 
 type replacer struct {
@@ -71,11 +74,13 @@ func (me *replacer) replace(rv reflect.Value) {
 	case reflect.String:
 		s := rv.String()
 		for id, appInfo := range me.dataSourceData[me.dsName].RESTMap {
-			if settings_20_id, ok := appInfo.Values["settings_20_id"]; ok {
-				if me.idReplaceFn != nil {
-					testresult := me.idReplaceFn(me.dsName, &DataSourceDetails{Values: map[string]interface{}{}, UniqueName: "unique"})
-					if strings.HasSuffix(testresult, "settings_20_id") {
-						id = settings_20_id.(string)
+			if appInfo.ComputedValues != nil {
+				if settings_20_id, ok := appInfo.ComputedValues["settings_20_id"]; ok {
+					if me.idReplaceFn != nil {
+						testresult := me.idReplaceFn(me.dsName, &DataSourceDetails{Values: map[string]interface{}{}, UniqueName: "unique"})
+						if strings.HasSuffix(testresult, "settings_20_id") {
+							id = settings_20_id.(string)
+						}
 					}
 				}
 			}

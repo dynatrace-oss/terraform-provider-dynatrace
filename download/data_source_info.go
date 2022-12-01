@@ -74,7 +74,10 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 			for _, stub := range v2Stubs {
 				for _, restMapEntry := range restMap {
 					if stub.Name == restMapEntry.Values["name"] {
-						restMapEntry.Values["settings_20_id"] = stub.ID
+						if restMapEntry.ComputedValues == nil {
+							restMapEntry.ComputedValues = map[string]any{}
+						}
+						restMapEntry.ComputedValues["settings_20_id"] = stub.ID
 					}
 				}
 			}

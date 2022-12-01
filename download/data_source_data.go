@@ -5,8 +5,9 @@ type DataSourceClient interface {
 }
 
 type DataSourceDetails struct {
-	Values     map[string]interface{}
-	UniqueName string
+	Values         map[string]interface{}
+	UniqueName     string
+	ComputedValues map[string]interface{}
 }
 
 type DataSource struct {

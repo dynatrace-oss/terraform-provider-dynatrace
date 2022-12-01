@@ -690,5 +690,5 @@ func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v in
 }
 
 func replaceIdsNotif(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-	return Replace(resources, "dynatrace_alerting_profile", dsData, ReplacedID{RefDS: "dynatrace_alerting"})
+	return Replace(resources, "dynatrace_alerting_profile", dsData, ReplacedID{RefDS: "dynatrace_alerting_profile", RefRes: "dynatrace_alerting"})
 }
