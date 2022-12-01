@@ -76,11 +76,20 @@ func (me ResourceData) ProcessRepIdRead(dlConfig DownloadConfig, replacedIds Rep
 	for _, replacedId := range replacedIds {
 		for resName, repId := range replacedId {
 			if !containsProcessedRepId(repId) {
-				if _, exists := dlConfig.ResourceNames[resName]; exists {
-					for _, repIdStruct := range repId {
-						repIdStruct.Processed = true
+				if !dlConfig.Exclude {
+					if _, exists := dlConfig.ResourceNames[resName]; exists {
+						for _, repIdStruct := range repId {
+							repIdStruct.Processed = true
+						}
+						continue
 					}
-					continue
+				} else {
+					if _, exists := dlConfig.ResourceNames[resName]; !exists {
+						for _, repIdStruct := range repId {
+							repIdStruct.Processed = true
+						}
+						continue
+					}
 				}
 				fmt.Println("Processing read: ", resName)
 				if ResourceInfoMap[resName].NoListClient != nil {
