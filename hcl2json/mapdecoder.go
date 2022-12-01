@@ -135,7 +135,7 @@ func (me *mapdecoder) MarshalAll(items map[string]interface{}) (hcl.Properties, 
 }
 
 func (me *mapdecoder) Decode(key string, v interface{}) error {
-	panic("mapdecoder.Decode not implemented")
+	return hcl.NewDecoder(me).Decode(key, v)
 }
 
 func (me *mapdecoder) DecodeAll(m map[string]interface{}) error {
