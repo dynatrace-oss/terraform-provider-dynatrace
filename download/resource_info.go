@@ -2,7 +2,6 @@ package download
 
 import (
 	"reflect"
-	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/anomalies/applications"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices"
@@ -30,7 +29,6 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
-	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors/browser"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
@@ -58,23 +56,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*alerting.Profile)
-				dsName := "dynatrace_management_zone"
-				for id, appInfo := range dsData[dsName].RESTMap {
-					if dataObj.ManagementZone != nil && *dataObj.ManagementZone == id {
-						dataObj.ManagementZone = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id")
-						replacedId := ReplacedID{
-							ID:     id,
-							RefDS:  dsName,
-							RefRes: dsName,
-						}
-						ids[dsName] = append(ids[dsName], &replacedId)
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"})
 		},
 	},
 	"dynatrace_ansible_tower_notification": {
@@ -118,24 +100,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_application"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*web.ApplicationDataPrivacy)
-				dsName := "dynatrace_application"
-				rsName := "dynatrace_web_application"
-				for id, appInfo := range dsData[dsName].RESTMap {
-					if dataObj.WebApplicationID != nil && *dataObj.WebApplicationID == id {
-						dataObj.WebApplicationID = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id")
-						replacedId := ReplacedID{
-							ID:     id,
-							RefDS:  dsName,
-							RefRes: rsName,
-						}
-						ids[rsName] = append(ids[rsName], &replacedId)
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"})
 		},
 	},
 	"dynatrace_application_detection_rule": {
@@ -158,24 +123,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_application"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*applicationdetectionrules.ApplicationDetectionRule)
-				dsName := "dynatrace_application"
-				rsName := "dynatrace_web_application"
-				for id, appInfo := range dsData[dsName].RESTMap {
-					if dataObj.ApplicationIdentifier != "" && dataObj.ApplicationIdentifier == id {
-						dataObj.ApplicationIdentifier = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-						replacedId := ReplacedID{
-							ID:     id,
-							RefDS:  dsName,
-							RefRes: rsName,
-						}
-						ids[rsName] = append(ids[rsName], &replacedId)
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"})
 		},
 	},
 	"dynatrace_application_error_rules": {
@@ -198,24 +146,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_application"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*web.ApplicationErrorRules)
-				dsName := "dynatrace_application"
-				rsName := "dynatrace_web_application"
-				for id, appInfo := range dsData[dsName].RESTMap {
-					if dataObj.WebApplicationID != "" && dataObj.WebApplicationID == id {
-						dataObj.WebApplicationID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-						replacedId := ReplacedID{
-							ID:     id,
-							RefDS:  dsName,
-							RefRes: rsName,
-						}
-						ids[rsName] = append(ids[rsName], &replacedId)
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"})
 		},
 	},
 	"dynatrace_autotag": {
@@ -248,30 +179,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dataObj.Username = opt.NewString("redacted")
 					dataObj.Password = opt.NewString("redacted")
 				}
-				dsName := "dynatrace_credentials"
-				for id, credInfo := range dsData[dsName].RESTMap {
-					if dataObj.ExternalVault != nil {
-						if dataObj.ExternalVault.Certificate != nil && *dataObj.ExternalVault.Certificate == id {
-							dataObj.ExternalVault.Certificate = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
-						}
-						if dataObj.ExternalVault.ClientSecret != nil && *dataObj.ExternalVault.ClientSecret == id {
-							dataObj.ExternalVault.ClientSecret = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
-						}
-						if dataObj.ExternalVault.ClientID != nil && *dataObj.ExternalVault.ClientID == id {
-							dataObj.ExternalVault.ClientID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
-						}
-						if dataObj.ExternalVault.SecretID != nil && *dataObj.ExternalVault.SecretID == id {
-							dataObj.ExternalVault.SecretID = opt.NewString("HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id")
-						}
-						if len(dataObj.ExternalVault.CredentialsUsedForExternalSynchronization) > 0 {
-							for idx, elem := range dataObj.ExternalVault.CredentialsUsedForExternalSynchronization {
-								if elem == id {
-									dataObj.ExternalVault.CredentialsUsedForExternalSynchronization[idx] = "HCL-UNQUOTE-" + dsName + "." + escape(credInfo.Values["name"].(string)) + ".id"
-								}
-							}
-						}
-					}
-				}
+				ids = Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials", RefRes: "dynatrace_credentials"})
 			}
 			return ids
 		},
@@ -325,66 +233,14 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		HardcodedIds: []string{"dynatrace_application", "dynatrace_synthetic_location", "dynatrace_credentials"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
 			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*monitors.BrowserSyntheticMonitorUpdate)
-				for idx, assignedApp := range dataObj.ManuallyAssignedApps {
-					dsName := "dynatrace_application"
-					rsName := "dynatrace_web_application"
-					for id, appInfo := range dsData[dsName].RESTMap {
-						if assignedApp == id {
-							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-							replacedId := ReplacedID{
-								ID:     id,
-								RefDS:  dsName,
-								RefRes: rsName,
-							}
-							ids[rsName] = append(ids[rsName], &replacedId)
-							break
-						}
-					}
-				}
-				for idx, assignedLoc := range dataObj.Locations {
-					dsName := "dynatrace_synthetic_location"
-					for id, locInfo := range dsData[dsName].RESTMap {
-						if assignedLoc == id {
-							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + locInfo.UniqueName + ".id"
-							replacedId := ReplacedID{
-								ID:        id,
-								RefDS:     dsName,
-								RefRes:    dsName,
-								Processed: true,
-							}
-							ids[dsName] = append(ids[dsName], &replacedId)
-							break
-						}
-					}
-				}
-				if dataObj.Script != nil && len(dataObj.Script.Events) > 0 {
-					for _, event := range dataObj.Script.Events {
-						if event == nil {
-							continue
-						}
-						switch evt := event.(type) {
-						case *browser.NavigateEvent:
-							if evt.Authentication != nil && len(evt.Authentication.Credential.ID) > 0 {
-								dsName := "dynatrace_credentials"
-								for id, credInfo := range dsData[dsName].RESTMap {
-									if evt.Authentication.Credential.ID == id {
-										evt.Authentication.Credential.ID = "HCL-UNQUOTE-data." + dsName + "." + credInfo.UniqueName + ".id"
-										replacedId := ReplacedID{
-											ID:     id,
-											RefDS:  dsName,
-											RefRes: dsName,
-										}
-										ids[dsName] = append(ids[dsName], &replacedId)
-										break
-									}
-								}
-							}
-
-						}
-					}
-				}
+			for k, v := range Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", RefRes: "dynatrace_synthetic_location", Processed: true}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials", RefRes: "dynatrace_credentials"}) {
+				ids[k] = v
 			}
 			return ids
 		},
@@ -396,27 +252,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_request_attribute"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*service.CalculatedServiceMetric)
-				if dataObj.MetricDefinition != nil && dataObj.MetricDefinition.RequestAttribute != nil {
-					dsName := "dynatrace_request_attribute"
-					for id, dsObj := range dsData[dsName].RESTMap {
-						for key, value := range dsObj.Values {
-							if key == "name" && *dataObj.MetricDefinition.RequestAttribute == value.(string) {
-								dataObj.MetricDefinition.RequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + dsObj.UniqueName + ".name")
-								replacedId := ReplacedID{
-									ID:     id,
-									RefDS:  dsName,
-									RefRes: dsName,
-								}
-								ids[dsName] = append(ids[dsName], &replacedId)
-							}
-						}
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"})
 		},
 	},
 	"dynatrace_cloudfoundry_credentials": {
@@ -452,47 +288,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*dashboards.Dashboard)
-				if dataObj.Metadata != nil && dataObj.Metadata.Filter != nil && dataObj.Metadata.Filter.ManagementZone != nil {
-					dsName := "dynatrace_management_zone"
-					for id, appInfo := range dsData[dsName].RESTMap {
-						if dataObj.Metadata.Filter.ManagementZone.ID == id {
-							dataObj.Metadata.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-							dataObj.Metadata.Filter.ManagementZone.Name = nil
-							dataObj.Metadata.Filter.ManagementZone.Description = nil
-							replacedId := ReplacedID{
-								ID:     id,
-								RefDS:  dsName,
-								RefRes: dsName,
-							}
-							ids[dsName] = append(ids[dsName], &replacedId)
-						}
-					}
-				}
-				if dataObj.Tiles != nil {
-					for _, tile := range dataObj.Tiles {
-						if tile.Filter != nil && tile.Filter.ManagementZone != nil {
-							dsName := "dynatrace_management_zone"
-							for id, appInfo := range dsData[dsName].RESTMap {
-								if tile.Filter.ManagementZone.ID == id {
-									tile.Filter.ManagementZone.ID = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-									tile.Filter.ManagementZone.Name = nil
-									tile.Filter.ManagementZone.Description = nil
-									replacedId := ReplacedID{
-										ID:     id,
-										RefDS:  dsName,
-										RefRes: dsName,
-									}
-									ids[dsName] = append(ids[dsName], &replacedId)
-								}
-							}
-						}
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"})
 		},
 	},
 	"dynatrace_database_anomalies": {
@@ -550,84 +346,14 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		HardcodedIds: []string{"dynatrace_application", "dynatrace_synthetic_location", "dynatrace_credentials"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
 			ids := map[string][]*ReplacedID{}
-
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*monitors.HTTPSyntheticMonitorUpdate)
-				dsName := "dynatrace_credentials"
-				for id, credInfo := range dsData[dsName].RESTMap {
-					replaced := false
-					if dataObj.Script != nil {
-						if len(dataObj.Script.Requests) > 0 {
-							for _, request := range dataObj.Script.Requests {
-								if request.RequestBody != nil && strings.Contains(*request.RequestBody, id) {
-									replacedStr := strings.ReplaceAll(*request.RequestBody, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
-									request.RequestBody = &replacedStr
-									replaced = true
-								}
-								if request.PostProcessing != nil && strings.Contains(*request.PostProcessing, id) {
-									replacedStr := strings.ReplaceAll(*request.PostProcessing, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
-									request.PostProcessing = &replacedStr
-									replaced = true
-								}
-								if strings.Contains(request.URL, id) {
-									request.URL = strings.ReplaceAll(request.URL, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
-									replaced = true
-								}
-								if request.Configuration != nil {
-									if len(request.Configuration.RequestHeaders) > 0 {
-										for _, header := range request.Configuration.RequestHeaders {
-											if strings.Contains(header.Value, id) {
-												header.Value = strings.ReplaceAll(header.Value, id, "${data.dynatrace_credentials."+escape(credInfo.Values["name"].(string))+".id}")
-												replaced = true
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					if replaced {
-						replacedId := ReplacedID{
-							ID:     id,
-							RefDS:  dsName,
-							RefRes: dsName,
-						}
-						ids[dsName] = append(ids[dsName], &replacedId)
-					}
-
-				}
-				for idx, assignedApp := range dataObj.ManuallyAssignedApps {
-					dsName := "dynatrace_application"
-					rsName := "dynatrace_web_application"
-					for id, appInfo := range dsData[dsName].RESTMap {
-						if assignedApp == id {
-							dataObj.ManuallyAssignedApps[idx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".id"
-							replacedId := ReplacedID{
-								ID:     id,
-								RefDS:  dsName,
-								RefRes: rsName,
-							}
-							ids[rsName] = append(ids[rsName], &replacedId)
-							break
-						}
-					}
-				}
-				for idx, assignedLoc := range dataObj.Locations {
-					dsName := "dynatrace_synthetic_location"
-					for id, locInfo := range dsData[dsName].RESTMap {
-						if assignedLoc == id {
-							dataObj.Locations[idx] = "HCL-UNQUOTE-data." + dsName + "." + locInfo.UniqueName + ".id"
-							replacedId := ReplacedID{
-								ID:        id,
-								RefDS:     dsName,
-								RefRes:    "",
-								Processed: true,
-							}
-							ids[dsName] = append(ids[dsName], &replacedId)
-							break
-						}
-					}
-				}
+			for k, v := range Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials"}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", Processed: true}) {
+				ids[k] = v
 			}
 			return ids
 		},
@@ -690,31 +416,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*v2maintenance.MaintenanceWindow)
-				dsName := "dynatrace_management_zone"
-				for id, appInfo := range dsData[dsName].RESTMap {
-					if len(dataObj.Filters) > 0 {
-						for idx, filter := range dataObj.Filters {
-							if len(filter.ManagementZones) > 0 {
-								for midx, mgmzid := range filter.ManagementZones {
-									if mgmzid == id {
-										dataObj.Filters[idx].ManagementZones[midx] = "HCL-UNQUOTE-data." + dsName + "." + appInfo.UniqueName + ".settings_20_id"
-										replacedId := ReplacedID{
-											ID:     id,
-											RefDS:  dsName,
-											RefRes: dsName,
-										}
-										ids[dsName] = append(ids[dsName], &replacedId)
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}, Settings20IDReplace)
 		},
 	},
 	"dynatrace_management_zone": {
@@ -730,29 +432,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_request_attribute"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			dsName := "dynatrace_request_attribute"
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*mobile.NewAppConfig)
-				if dataObj.Properties != nil {
-					for _, property := range dataObj.Properties {
-						if property.ServerSideRequestAttribute != nil {
-							for id, details := range dsData[dsName].RESTMap {
-								if *property.ServerSideRequestAttribute == id {
-									property.ServerSideRequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + details.UniqueName + ".id")
-									replacedId := ReplacedID{
-										ID:     id,
-										RefDS:  dsName,
-										RefRes: dsName,
-									}
-									ids[dsName] = append(ids[dsName], &replacedId)
-								}
-							}
-						}
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute"})
 		},
 	},
 	"dynatrace_network_zones": {
@@ -947,29 +627,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_request_attribute"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
-			dsName := "dynatrace_request_attribute"
-			for _, resource := range resources {
-				dataObj := resource.RESTObject.(*web.ApplicationConfig)
-				if len(dataObj.UserActionAndSessionProperties) > 0 {
-					for _, property := range dataObj.UserActionAndSessionProperties {
-						if property.ServerSideRequestAttribute != nil {
-							for id, details := range dsData[dsName].RESTMap {
-								if *property.ServerSideRequestAttribute == id {
-									property.ServerSideRequestAttribute = opt.NewString("HCL-UNQUOTE-data." + dsName + "." + details.UniqueName + ".id")
-									replacedId := ReplacedID{
-										ID:     id,
-										RefDS:  dsName,
-										RefRes: dsName,
-									}
-									ids[dsName] = append(ids[dsName], &replacedId)
-								}
-							}
-						}
-					}
-				}
-			}
-			return ids
+			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute"})
 		}},
 	"dynatrace_webhook_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
@@ -1032,22 +690,5 @@ func (me ResourceStruct) Name(dlConfig DownloadConfig, resourceName string, v in
 }
 
 func replaceIdsNotif(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-	ids := map[string][]*ReplacedID{}
-	for _, resource := range resources {
-		dataObj := resource.RESTObject.(*notifications.Notification)
-		dsName := "dynatrace_alerting_profile"
-		rsName := "dynatrace_alerting"
-		for id, dsObj := range dsData[dsName].RESTMap {
-			if dataObj.ProfileID != "" && dataObj.ProfileID == id {
-				dataObj.ProfileID = "HCL-UNQUOTE-data." + dsName + "." + dsObj.UniqueName + ".id"
-				replacedId := ReplacedID{
-					ID:     id,
-					RefDS:  dsName,
-					RefRes: rsName,
-				}
-				ids[rsName] = append(ids[rsName], &replacedId)
-			}
-		}
-	}
-	return ids
+	return Replace(resources, "dynatrace_alerting_profile", dsData, ReplacedID{RefDS: "dynatrace_alerting"})
 }

@@ -297,13 +297,14 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 }
 
 func containsRepId(replacedId []*ReplacedID, id string) bool {
+	found := false
 	for _, repId := range replacedId {
 		if id == repId.ID {
 			repId.Processed = true
-			return true
+			found = true
 		}
 	}
-	return false
+	return found
 }
 
 func containsProcessedRepId(replacedId []*ReplacedID) bool {

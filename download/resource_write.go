@@ -24,7 +24,16 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 		}
 
 		if dlConfig.CommentedID {
-			if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, "id = "+resource.ID); err != nil {
+			comments := []string{
+				"id = " + resource.ID,
+			}
+			if len(resource.Variables) > 0 {
+				for k, v := range resource.Variables {
+					comments = append(comments, k+" = "+v)
+				}
+
+			}
+			if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, comments...); err != nil {
 				file.Close()
 				return err
 			}
