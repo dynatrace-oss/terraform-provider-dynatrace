@@ -18,14 +18,18 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
 	"github.com/dtcookie/dynatrace/rest"
 	downloadv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/download"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2json"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
@@ -298,6 +302,77 @@ func export(args []string) bool {
 		}
 	}
 	return downloadWith(environmentURL, apiToken, targetFolder, m)
+}
+
+type ConfigWrapper struct {
+	ID    string
+	Value any
+}
+
+func tf2json(args []string) bool {
+	if len(args) == 1 {
+		return false
+	}
+	if strings.TrimSpace(args[1]) != "-tf2json" {
+		return false
+	}
+
+	flag.Bool("tf2json", true, "")
+	flag.Parse()
+	tailArgs := flag.Args()
+
+	if len(tailArgs) == 0 {
+		fmt.Println("Usage: terraform-provider-dynatrace -tf2json <folder>")
+		return true
+	}
+
+	for _, filePath := range tailArgs {
+		filepath.Walk(filePath, func(childPath string, info os.FileInfo, err error) error {
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if !strings.HasSuffix(info.Name(), ".tf") {
+				return nil
+			}
+			if info.Name() == "data_source.tf" {
+				return nil
+			}
+			if info.Name() == "providers.tf" {
+				return nil
+			}
+			if info.Name() == "main.tf" {
+				return nil
+			}
+			if strings.Contains(childPath, ".flawed") {
+				return nil
+			}
+			jsonPath := strings.TrimSuffix(childPath, info.Name()) + info.Name() + ".json"
+			// fmt.Println(jsonPath)
+			var configs []interface{}
+			if configs, err = hcl2json.HCL2Config(childPath); err != nil {
+				fmt.Println(err)
+				return nil
+			}
+			wrappers := []ConfigWrapper{}
+			for _, cfg := range configs {
+				wrappers = append(wrappers, ConfigWrapper{ID: "some-id", Value: cfg})
+			}
+			var data []byte
+			if data, err = json.MarshalIndent(wrappers, "", "  "); err != nil {
+				return err
+			}
+			os.Remove(jsonPath)
+			if err = os.WriteFile(jsonPath, data, 0644); err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
+	return true
 }
 
 func download(args []string) bool {
@@ -693,6 +768,9 @@ func downloadWith(environmentURL string, apiToken string, targetFolder string, m
 }
 
 func main() {
+	if tf2json(os.Args) {
+		return
+	}
 	if export(os.Args) {
 		return
 	}
