@@ -15,6 +15,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/credentials/azure"
 	"github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry"
 	"github.com/dtcookie/dynatrace/api/config/credentials/kubernetes"
+	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
 	"github.com/dtcookie/dynatrace/api/config/customservices"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
@@ -25,6 +26,7 @@ import (
 	serviceNaming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
+	"github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
@@ -100,4 +102,6 @@ var protoTypes = map[string]interface{}{
 	"dynatrace_victor_ops_notification":    new(notifications.VictorOps),
 	"dynatrace_webhook_notification":       new(notifications.WebHook),
 	"dynatrace_xmatters_notification":      new(notifications.XMatters),
+	"dynatrace_credentials":                new(vault.Credentials),
+	"dynatrace_synthetic_location":         new(locations.PrivateSyntheticLocation),
 }
