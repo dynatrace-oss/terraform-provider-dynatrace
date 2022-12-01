@@ -17,6 +17,7 @@ type Resource struct {
 	RESTObject hcl.Marshaler
 	ReqInter   ReqInter
 	UniqueName string
+	Variables  map[string]string
 }
 
 type ReqInter struct {
