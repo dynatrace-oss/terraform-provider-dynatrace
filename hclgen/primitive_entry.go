@@ -75,24 +75,6 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 	return nil
 }
 
-/*
-	toks = append(toks, &Token{
-		Type:  hclsyntax.TokenOQuote,
-		Bytes: []byte{'"'},
-	})
-
-	if len(src) > 0 {
-		toks = append(toks, &Token{
-			Type:  hclsyntax.TokenQuotedLit,
-			Bytes: src,
-		})
-	}
-
-	toks = append(toks, &Token{
-		Type:  hclsyntax.TokenCQuote,
-		Bytes: []byte{'"'},
-	})
-*/
 func appendRune(b []byte, r rune) []byte {
 	l := utf8.RuneLen(r)
 	for i := 0; i < l; i++ {
@@ -103,11 +85,18 @@ func appendRune(b []byte, r rune) []byte {
 	return b
 }
 func escapeQuotedStringLit(s string) []byte {
+	res := string(escapeQuotedStringLit0(s))
+	res = strings.ReplaceAll(res, "$${data.", "${data.")
+	res = strings.ReplaceAll(res, "$${dynatrace_.", "${dynatrace_.")
+	return []byte(res)
+}
+
+func escapeQuotedStringLit0(s string) []byte {
 	if len(s) == 0 {
 		return nil
 	}
 	buf := make([]byte, 0, len(s))
-	for _, r := range s {
+	for i, r := range s {
 		switch r {
 		case '\n':
 			buf = append(buf, '\\', 'n')
@@ -119,6 +108,13 @@ func escapeQuotedStringLit(s string) []byte {
 			buf = append(buf, '\\', '"')
 		case '\\':
 			buf = append(buf, '\\', '\\')
+		case '$', '%':
+			buf = appendRune(buf, r)
+			remain := s[i+1:]
+			if len(remain) > 0 && remain[0] == '{' {
+				// Double up our template introducer symbol to escape it.
+				buf = appendRune(buf, r)
+			}
 		default:
 			if !unicode.IsPrint(r) {
 				var fmted string
