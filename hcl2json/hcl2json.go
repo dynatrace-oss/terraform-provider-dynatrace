@@ -147,24 +147,46 @@ func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string
 	}
 
 	for _, attribute := range bodyContent.Attributes {
-		val, diag := attribute.Expr.Value(nil)
+
+		val, diag := attribute.Expr.Value(&hcl.EvalContext{Variables: map[string]cty.Value{
+			"data":                  cty.DynamicVal,
+			"dynatrace_dashboard":   cty.DynamicVal,
+			"dynatrace_credentials": cty.DynamicVal,
+		}})
 		if diag.HasErrors() {
+			fmt.Println("error in attribute.Expr.Value", diag)
 			return &diag
 		}
 		value := sch.Prototypes[attribute.Name]
 		switch typedValue := value.(type) {
 		case stringSet:
 			if val.Type().IsTupleType() {
-				val = cty.ListVal(val.AsValueSlice())
+				vals := val.AsValueSlice()
+				if len(vals) > 0 && !vals[0].IsKnown() {
+					val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
+				} else {
+					val = cty.ListVal(vals)
+				}
 			}
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = typedValue
 		case []string:
-			if val.Type().IsTupleType() {
-				val = cty.ListVal(val.AsValueSlice())
+			vals := val.AsValueSlice()
+			if len(vals) > 0 && !vals[0].IsKnown() {
+				val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
+			} else {
+				val = cty.ListVal(vals)
 			}
+			// val = cty.ListVal(vals)
+
+			// if !val.IsKnown() {
+			// 	val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
+			// }
+			// if val.Type().IsTupleType() {
+			// 	val = cty.ListVal(val.AsValueSlice())
+			// }
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
@@ -174,23 +196,26 @@ func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string
 			}
 			target[attribute.Name] = is
 		case string:
+			if !val.IsKnown() {
+				val = cty.StringVal("UNKNOWN")
+			}
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = typedValue
 		case bool:
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
-				panic(fmt.Sprintf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString()))
+				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = typedValue
 		case int64:
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
-				panic(fmt.Sprintf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString()))
+				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = int(typedValue)
 		case float64:
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
-				panic(fmt.Sprintf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString()))
+				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = typedValue
 		default:
