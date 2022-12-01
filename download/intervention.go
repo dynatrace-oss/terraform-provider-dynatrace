@@ -26,6 +26,11 @@ var InterventionInfoMap = map[string]InterventionStruct{
 					resource.ReqInter.Type = InterventionTypes.Flawed
 					errors[0] = strings.ReplaceAll(errors[0], "\n", "")
 					resource.ReqInter.Message = errors
+					continue
+				}
+				if dashboard.Metadata.Owner != nil && *dashboard.Metadata.Owner == "Dynatrace" {
+					resource.ReqInter.Type = InterventionTypes.ReqAttn
+					resource.ReqInter.Message = []string{"Dashboards owned by Dynatrace are automatically excluded to prevent duplicates of OOTB dashboards. Please return to the dashboards folder if this is a custom dashboard."}
 				}
 			}
 		},
