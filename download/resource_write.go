@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hclgen"
 )
 
@@ -25,11 +24,11 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 
 		if dlConfig.CommentedID {
 			comments := []string{
-				"id = " + resource.ID,
+				"DEFINE " + resName + "." + resource.UniqueName + "." + "id = " + resource.ID,
 			}
 			if len(resource.Variables) > 0 {
 				for k, v := range resource.Variables {
-					comments = append(comments, k+" = "+v)
+					comments = append(comments, "DEFINE "+k+" = "+v)
 				}
 
 			}
@@ -57,11 +56,11 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 }
 
 func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
-	var restObject hcl.Marshaler
 	var found bool
-	for _, resource := range me["dynatrace_dashboard_sharing"] {
-		if resource.UniqueName == name {
-			restObject = resource.RESTObject
+	var resource *Resource
+	for _, res := range me["dynatrace_dashboard_sharing"] {
+		if res.UniqueName == name {
+			resource = res
 			found = true
 			break
 		}
@@ -70,7 +69,15 @@ func (me ResourceData) writeDashboardSharing(file *os.File, name string) error {
 		file.Close()
 		return nil
 	}
-	if err := hclgen.Export(restObject, file, "dynatrace_dashboard_sharing", name); err != nil {
+	comments := []string{
+		"DEFINE " + "dynatrace_dashboard_sharing" + "." + name + "." + "id = " + resource.ID,
+	}
+	if len(resource.Variables) > 0 {
+		for k, v := range resource.Variables {
+			comments = append(comments, "DEFINE "+k+" = "+v)
+		}
+	}
+	if err := hclgen.Export(resource.RESTObject, file, "dynatrace_dashboard_sharing", name, comments...); err != nil {
 		file.Close()
 		return err
 	}
@@ -103,7 +110,13 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 				comments := resource.ReqInter.Message
 
 				if dlConfig.CommentedID {
-					comments = append(comments, "id = "+resource.ID)
+					comments = append(comments, "DEFINE "+resName+"."+resource.UniqueName+"."+"id = "+resource.ID)
+					if len(resource.Variables) > 0 {
+						for k, v := range resource.Variables {
+							comments = append(comments, "DEFINE "+k+" = "+v)
+						}
+
+					}
 				}
 				if err := hclgen.Export(resource.RESTObject, file, resName, resource.UniqueName, comments...); err != nil {
 					file.Close()
