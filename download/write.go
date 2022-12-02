@@ -85,7 +85,27 @@ func removeDuplicateUnderscores(s string) string {
 func escape(s string) string {
 	result := ""
 	for _, c := range s {
-		if unicode.IsLetter(c) {
+		if c == '(' {
+			result = result + "_orp_"
+		} else if c == ')' {
+			result = result + "_crp_"
+		} else if c == '$' {
+			result = result + "_dollar_"
+		} else if c == '[' {
+			result = result + "_oep_"
+		} else if c == ']' {
+			result = result + "_cep_"
+		} else if c == '{' {
+			result = result + "_ocp_"
+		} else if c == '}' {
+			result = result + "_ccp_"
+		} else if c == '&' {
+			result = result + "_amp_"
+		} else if c == '%' {
+			result = result + "_percent_"
+		} else if c == '#' {
+			result = result + "_hash_"
+		} else if unicode.IsLetter(c) {
 			result = result + string(c)
 		} else if unicode.IsDigit(c) {
 			result = result + string(c)

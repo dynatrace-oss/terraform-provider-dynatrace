@@ -17,7 +17,15 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 
 		var file *os.File
 		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + resFolder + "." + resource.UniqueName + ".tf"
-		os.Remove(fileName)
+		fileName = strings.ToLower(fileName)
+		for {
+			if _, err := os.Stat(fileName); err == nil {
+				fileName = strings.TrimSuffix(fileName, ".tf") + "_1.tf"
+			} else {
+				break
+			}
+		}
+
 		if file, err = os.Create(fileName); err != nil {
 			return err
 		}
