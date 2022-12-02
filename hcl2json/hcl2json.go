@@ -17,9 +17,15 @@ import (
 	"github.com/zclconf/go-cty/cty/gocty"
 )
 
+type Module struct {
+	Variables map[string]string `json:"variables,omitempty"`
+	Records   []*Record         `json:"records"`
+}
+
 type Record struct {
 	ID         string      `json:"id"`
 	Schema     string      `json:"schema,omitempty"`
+	Resource   string      `json:"resource,omitempty"`
 	Scope      string      `json:"scope"`
 	ScopeClass string      `json:"-"`
 	IDV1       string      `json:"idv1,omitempty"`
@@ -264,12 +270,12 @@ func buildSchemata() map[string]*bodySchema {
 	return schemata
 }
 
-func readHCLVariables(fileName string) (map[string]cty.Value, error) {
+func readHCLVariables(fileName string) (map[string]cty.Value, map[string]string, error) {
 	properties := map[string]string{}
 
 	file, err := os.Open(fileName)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
@@ -295,14 +301,11 @@ func readHCLVariables(fileName string) (map[string]cty.Value, error) {
 		store(k, v, uvars)
 	}
 
-	// dou, _ := json.MarshalIndent(uvars, "", "  ")
-	// fmt.Println(string(dou))
-
 	ctyMapVal := any2cty(uvars)
 	if ctyMapVal == cty.NilVal {
-		return nil, nil
+		return nil, nil, nil
 	}
-	return ctyMapVal.AsValueMap(), nil
+	return ctyMapVal.AsValueMap(), properties, nil
 }
 
 func store(key string, value string, m map[string]any) {
@@ -340,8 +343,8 @@ func any2cty(v any) cty.Value {
 	}
 }
 
-func HCL2Config(fileName string) ([]*Record, error) {
-	variables, err := readHCLVariables(fileName)
+func HCL2Config(fileName string) (*Module, error) {
+	variables, properties, err := readHCLVariables(fileName)
 	if err != nil {
 		return nil, err
 	}
@@ -381,10 +384,11 @@ func HCL2Config(fileName string) ([]*Record, error) {
 				return nil, err
 			}
 			record := &Record{
-				ID:     variables[resource].AsValueMap()[resourceName].AsValueMap()["id"].AsString(),
-				Value:  config,
-				Schema: resource,
-				Scope:  "environment",
+				ID:       variables[resource].AsValueMap()[resourceName].AsValueMap()["id"].AsString(),
+				Value:    config,
+				Schema:   resource,
+				Resource: resource + "." + resourceName,
+				Scope:    "environment",
 			}
 			objID := &ObjectID{ID: record.ID}
 			if err := objID.Decode(); err == nil {
@@ -399,5 +403,8 @@ func HCL2Config(fileName string) ([]*Record, error) {
 		default:
 		}
 	}
-	return result, nil
+	return &Module{
+		Records:   result,
+		Variables: properties,
+	}, nil
 }

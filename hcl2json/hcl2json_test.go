@@ -169,13 +169,13 @@ func testConfig(t *testing.T, tfFile string, jsonFile string, anon ...func(me, m
 	t.Helper()
 	assert := assert.New(t)
 	var err error
-	var configs []*hcl2json.Record
+	var module *hcl2json.Module
 	var data []byte
-	if configs, err = hcl2json.HCL2Config(tfFile); err != nil {
+	if module, err = hcl2json.HCL2Config(tfFile); err != nil {
 		t.Error(err)
 		return
 	}
-	for _, config := range configs {
+	for _, config := range module.Records {
 		data, err = json.MarshalIndent(config, "", "  ")
 		if err != nil {
 			t.Error(err)

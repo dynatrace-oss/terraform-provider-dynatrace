@@ -363,13 +363,13 @@ func tf2jsonFile(childPath string, info os.FileInfo, err error) error {
 		return nil
 	}
 	jsonPath := strings.TrimSuffix(childPath, info.Name()) + info.Name() + ".json"
-	var configs []*hcl2json.Record
-	if configs, err = hcl2json.HCL2Config(childPath); err != nil {
+	var module *hcl2json.Module
+	if module, err = hcl2json.HCL2Config(childPath); err != nil {
 		fmt.Println(err)
 		return nil
 	}
 	var data []byte
-	if data, err = json.MarshalIndent(configs, "", "  "); err != nil {
+	if data, err = json.MarshalIndent(module, "", "  "); err != nil {
 		return err
 	}
 	os.Remove(jsonPath)
