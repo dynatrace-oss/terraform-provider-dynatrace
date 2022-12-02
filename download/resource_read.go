@@ -26,6 +26,7 @@ import (
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	"github.com/dtcookie/hcl"
+	"github.com/google/uuid"
 )
 
 func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
@@ -184,6 +185,7 @@ func (me ResourceData) readNoList(resourceName string, client NoListClient) erro
 	if marshaller, ok := config.(hcl.Marshaler); ok {
 		name := ResourceInfoMap[resourceName].Name(DownloadConfig{}, resourceName, config, nil)
 		resource := Resource{
+			ID:         uuid.New().String(),
 			RESTObject: marshaller,
 			Name:       name,
 			UniqueName: resNameCounter.Numbering(escape(name)),
@@ -245,6 +247,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 		}
 		if marshaller, ok := shareSettings.(hcl.Marshaler); ok {
 			resource := Resource{
+				ID:         id,
 				RESTObject: marshaller,
 				Name:       name,
 				UniqueName: uniqueName,
@@ -299,6 +302,7 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 		if marshaller, ok := keyRequest.(hcl.Marshaler); ok {
 			name := ResourceInfoMap[resourceName].Name(dlConfig, resourceName, service, nil)
 			resource := Resource{
+				ID:         keyRequestID,
 				RESTObject: marshaller,
 				Name:       name,
 				UniqueName: resNameCounter.Numbering(escape(name)),
