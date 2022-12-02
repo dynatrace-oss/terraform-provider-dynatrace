@@ -24,13 +24,13 @@ var InterventionInfoMap = map[string]InterventionStruct{
 				dashboard.ID = dbId
 				if len(errors) > 0 && !strings.Contains(errors[0], "Token is missing required scope. Use one of: WriteConfig (Write configuration)") {
 					resource.ReqInter.Type = InterventionTypes.Flawed
-					errors[0] = strings.ReplaceAll(errors[0], "\n", "")
+					errors[0] = "ATTENTION " + strings.ReplaceAll(errors[0], "\n", "")
 					resource.ReqInter.Message = errors
 					continue
 				}
 				if dashboard.Metadata.Owner != nil && *dashboard.Metadata.Owner == "Dynatrace" {
 					resource.ReqInter.Type = InterventionTypes.ReqAttn
-					resource.ReqInter.Message = []string{"Dashboards owned by Dynatrace are automatically excluded to prevent duplicates of OOTB dashboards. Please return to the dashboards folder if this is a custom dashboard."}
+					resource.ReqInter.Message = []string{"ATTENTION " + "Dashboards owned by Dynatrace are automatically excluded to prevent duplicates of OOTB dashboards. Please return to the dashboards folder if this is a custom dashboard."}
 				}
 			}
 		},
@@ -51,7 +51,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 					}
 					if !found {
 						resource.ReqInter.Type = InterventionTypes.Flawed
-						resource.ReqInter.Message = []string{"The metric needs to either get limited by specifying a Management Zone or by specifying one or more conditions related to SERVICE_DISPLAY_NAME, SERVICE_PUBLIC_DOMAIN_NAME, SERVICE_WEB_APPLICATION_ID, SERVICE_WEB_CONTEXT_ROOT, SERVICE_WEB_SERVER_NAME, SERVICE_WEB_SERVICE_NAME, SERVICE_WEB_SERVICE_NAMESPACE, REMOTE_SERVICE_NAME, REMOTE_ENDPOINT, AZURE_FUNCTIONS_SITE_NAME, AZURE_FUNCTIONS_FUNCTION_NAME, CTG_GATEWAY_URL, CTG_SERVER_NAME, ACTOR_SYSTEM, ESB_APPLICATION_NAME, SERVICE_TAG, SERVICE_TYPE, PROCESS_GROUP_TAG or PROCESS_GROUP_NAME"}
+						resource.ReqInter.Message = []string{"ATTENTION " + "The metric needs to either get limited by specifying a Management Zone or by specifying one or more conditions related to SERVICE_DISPLAY_NAME, SERVICE_PUBLIC_DOMAIN_NAME, SERVICE_WEB_APPLICATION_ID, SERVICE_WEB_CONTEXT_ROOT, SERVICE_WEB_SERVER_NAME, SERVICE_WEB_SERVICE_NAME, SERVICE_WEB_SERVICE_NAMESPACE, REMOTE_SERVICE_NAME, REMOTE_ENDPOINT, AZURE_FUNCTIONS_SITE_NAME, AZURE_FUNCTIONS_FUNCTION_NAME, CTG_GATEWAY_URL, CTG_SERVER_NAME, ACTOR_SYSTEM, ESB_APPLICATION_NAME, SERVICE_TAG, SERVICE_TYPE, PROCESS_GROUP_TAG or PROCESS_GROUP_NAME"}
 					}
 				}
 
@@ -62,7 +62,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
-				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
+				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
 		},
 	},
@@ -70,7 +70,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
-				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
+				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
 		},
 	},
@@ -78,7 +78,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
-				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
+				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
 		},
 	},
@@ -86,7 +86,7 @@ var InterventionInfoMap = map[string]InterventionStruct{
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
-				resource.ReqInter.Message = []string{"REST API didn't provide credentials"}
+				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
 		},
 	},
