@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -304,11 +303,6 @@ func export(args []string) bool {
 	return downloadWith(environmentURL, apiToken, targetFolder, m)
 }
 
-type ConfigWrapper struct {
-	ID    string
-	Value any
-}
-
 func tf2json(args []string) bool {
 	if len(args) == 1 {
 		return false
@@ -327,52 +321,62 @@ func tf2json(args []string) bool {
 	}
 
 	for _, filePath := range tailArgs {
-		filepath.Walk(filePath, func(childPath string, info os.FileInfo, err error) error {
-			if err != nil {
-				log.Fatalf(err.Error())
-			}
-			if info.IsDir() {
-				return nil
-			}
-			if !strings.HasSuffix(info.Name(), ".tf") {
-				return nil
-			}
-			if info.Name() == "data_source.tf" {
-				return nil
-			}
-			if info.Name() == "providers.tf" {
-				return nil
-			}
-			if info.Name() == "main.tf" {
-				return nil
-			}
-			if strings.Contains(childPath, ".flawed") {
-				return nil
-			}
-			jsonPath := strings.TrimSuffix(childPath, info.Name()) + info.Name() + ".json"
-			// fmt.Println(jsonPath)
-			var configs []interface{}
-			if configs, err = hcl2json.HCL2Config(childPath); err != nil {
+		fileInfo, err := os.Stat(filePath)
+		if err != nil {
+			fmt.Println(err)
+			return true
+		}
+		if !fileInfo.IsDir() {
+			if err := tf2jsonFile(filePath, fileInfo, nil); err != nil {
 				fmt.Println(err)
-				return nil
+				return true
 			}
-			wrappers := []ConfigWrapper{}
-			for _, cfg := range configs {
-				wrappers = append(wrappers, ConfigWrapper{ID: "some-id", Value: cfg})
-			}
-			var data []byte
-			if data, err = json.MarshalIndent(wrappers, "", "  "); err != nil {
-				return err
-			}
-			os.Remove(jsonPath)
-			if err = os.WriteFile(jsonPath, data, 0644); err != nil {
-				return err
-			}
-			return nil
-		})
+			continue
+		}
+
+		filepath.Walk(filePath, tf2jsonFile)
 	}
 
 	return true
+}
+
+func tf2jsonFile(childPath string, info os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
+	if info.IsDir() {
+		return nil
+	}
+	if !strings.HasSuffix(info.Name(), ".tf") {
+		return nil
+	}
+	if info.Name() == "data_source.tf" {
+		return nil
+	}
+	if info.Name() == "providers.tf" {
+		return nil
+	}
+	if info.Name() == "main.tf" {
+		return nil
+	}
+	if strings.Contains(childPath, ".flawed") {
+		return nil
+	}
+	jsonPath := strings.TrimSuffix(childPath, info.Name()) + info.Name() + ".json"
+	var configs []*hcl2json.Record
+	if configs, err = hcl2json.HCL2Config(childPath); err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	var data []byte
+	if data, err = json.MarshalIndent(configs, "", "  "); err != nil {
+		return err
+	}
+	os.Remove(jsonPath)
+	if err = os.WriteFile(jsonPath, data, 0644); err != nil {
+		return err
+	}
+	return nil
 }
 
 func download(args []string) bool {

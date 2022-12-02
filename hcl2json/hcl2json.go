@@ -1,9 +1,12 @@
 package hcl2json
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
+	"strings"
 
 	dtchcl "github.com/dtcookie/hcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -13,6 +16,15 @@ import (
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
 )
+
+type Record struct {
+	ID         string      `json:"id"`
+	Schema     string      `json:"schema,omitempty"`
+	Scope      string      `json:"scope"`
+	ScopeClass string      `json:"-"`
+	IDV1       string      `json:"idv1,omitempty"`
+	Value      interface{} `json:"value"`
+}
 
 func resource2Schema(res *schema.Resource, bc breadCrumbs) *bodySchema {
 	var result = bodySchema{Prototypes: map[string]interface{}{}, BlockSchemata: map[string]*bodySchema{}}
@@ -135,12 +147,23 @@ func (me HashSet) Len() int {
 func HashJSON(v interface{}) int {
 	data, _ := json.Marshal(v)
 	hash := schema.HashString(string(data))
-	// fmt.Println("hash", hash, string(data))
 	return hash
 
 }
 
-func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string]interface{}) error {
+func cty2str(m map[string]cty.Value) map[string]any {
+	res := map[string]any{}
+	for k, v := range m {
+		if v.Type() == cty.String {
+			res[k] = v.AsString()
+		} else {
+			res[k] = cty2str(v.AsValueMap())
+		}
+	}
+	return res
+}
+
+func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string]interface{}, variables map[string]cty.Value) error {
 	bodyContent, diag := body.Content(&sch.BodySchema)
 	if diag.HasErrors() {
 		return &diag
@@ -148,45 +171,26 @@ func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string
 
 	for _, attribute := range bodyContent.Attributes {
 
-		val, diag := attribute.Expr.Value(&hcl.EvalContext{Variables: map[string]cty.Value{
-			"data":                  cty.DynamicVal,
-			"dynatrace_dashboard":   cty.DynamicVal,
-			"dynatrace_credentials": cty.DynamicVal,
-		}})
+		val, diag := attribute.Expr.Value(&hcl.EvalContext{Variables: variables})
 		if diag.HasErrors() {
-			fmt.Println("error in attribute.Expr.Value", diag)
+			bo, _ := json.MarshalIndent(cty2str(variables), "", "  ")
+			fmt.Println(string(bo))
 			return &diag
 		}
 		value := sch.Prototypes[attribute.Name]
 		switch typedValue := value.(type) {
 		case stringSet:
 			if val.Type().IsTupleType() {
-				vals := val.AsValueSlice()
-				if len(vals) > 0 && !vals[0].IsKnown() {
-					val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
-				} else {
-					val = cty.ListVal(vals)
-				}
+				val = cty.ListVal(val.AsValueSlice())
 			}
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
 			target[attribute.Name] = typedValue
 		case []string:
-			vals := val.AsValueSlice()
-			if len(vals) > 0 && !vals[0].IsKnown() {
-				val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
-			} else {
-				val = cty.ListVal(vals)
+			if val.Type().IsTupleType() {
+				val = cty.ListVal(val.AsValueSlice())
 			}
-			// val = cty.ListVal(vals)
-
-			// if !val.IsKnown() {
-			// 	val = cty.ListVal([]cty.Value{cty.StringVal("UNKNOWN")})
-			// }
-			// if val.Type().IsTupleType() {
-			// 	val = cty.ListVal(val.AsValueSlice())
-			// }
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
@@ -196,9 +200,6 @@ func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string
 			}
 			target[attribute.Name] = is
 		case string:
-			if !val.IsKnown() {
-				val = cty.StringVal("UNKNOWN")
-			}
 			if err := gocty.FromCtyValue(val, &typedValue); err != nil {
 				return fmt.Errorf("%v[%s] - %s: %T, %v", bc, attribute.Name, err.Error(), value, val.GoString())
 			}
@@ -246,7 +247,7 @@ func translate(body hcl.Body, sch *bodySchema, bc breadCrumbs, target map[string
 			}
 		}
 		blockMap := map[string]interface{}{}
-		if err := translate(block.Body, blockSchema, bc.dot(block.Type), blockMap); err != nil {
+		if err := translate(block.Body, blockSchema, bc.dot(block.Type), blockMap, variables); err != nil {
 			return err
 		}
 		blockEntries = blockEntries.Append(blockMap)
@@ -263,7 +264,87 @@ func buildSchemata() map[string]*bodySchema {
 	return schemata
 }
 
-func HCL2Config(fileName string) ([]interface{}, error) {
+func readHCLVariables(fileName string) (map[string]cty.Value, error) {
+	properties := map[string]string{}
+
+	file, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if strings.HasPrefix(line, "# DEFINE ") {
+			line = strings.TrimSpace(strings.TrimPrefix(line, "# DEFINE "))
+			keyValuePair := strings.Split(line, " = ")
+			if len(keyValuePair) == 2 {
+				key := strings.TrimSpace(keyValuePair[0])
+				value := strings.TrimSpace(keyValuePair[1])
+				properties[key] = value
+			}
+		}
+	}
+
+	file.Close()
+
+	uvars := map[string]any{}
+
+	for k, v := range properties {
+		store(k, v, uvars)
+	}
+
+	// dou, _ := json.MarshalIndent(uvars, "", "  ")
+	// fmt.Println(string(dou))
+
+	ctyMapVal := any2cty(uvars)
+	if ctyMapVal == cty.NilVal {
+		return nil, nil
+	}
+	return ctyMapVal.AsValueMap(), nil
+}
+
+func store(key string, value string, m map[string]any) {
+	parts := strings.Split(key, ".")
+	if len(parts) == 1 {
+		m[key] = value
+		return
+	}
+	var valueMap map[string]any
+	valueMap, exists := m[parts[0]].(map[string]any)
+	if !exists {
+		valueMap = map[string]any{}
+	}
+
+	store(strings.TrimPrefix(key, parts[0]+"."), value, valueMap)
+	m[parts[0]] = valueMap
+
+}
+
+func any2cty(v any) cty.Value {
+	switch tv := v.(type) {
+	case string:
+		return cty.StringVal(tv)
+	case map[string]any:
+		m := map[string]cty.Value{}
+		for mk, mv := range tv {
+			m[mk] = any2cty(mv)
+		}
+		if len(m) == 0 {
+			m["pseudo"] = cty.StringVal("pseudo")
+		}
+		return cty.ObjectVal(m)
+	default:
+		panic(fmt.Sprintf("unexpected type %T", tv))
+	}
+}
+
+func HCL2Config(fileName string) ([]*Record, error) {
+	variables, err := readHCLVariables(fileName)
+	if err != nil {
+		return nil, err
+	}
 	schemata := buildSchemata()
 	parser := hclparse.NewParser()
 	hclFile, diag := parser.ParseHCLFile(fileName)
@@ -282,14 +363,16 @@ func HCL2Config(fileName string) ([]interface{}, error) {
 	if diag.HasErrors() {
 		return nil, diag
 	}
-	var result []interface{}
+	var result []*Record
 	for _, block := range bodyContent.Blocks {
 		switch block.Type {
 		case "resource":
 			m := map[string]interface{}{}
 			resource := block.Labels[0]
+			resourceName := block.Labels[1]
+
 			bs := schemata[resource]
-			if err := translate(block.Body, bs, breadCrumbs(block.Labels[0]), m); err != nil {
+			if err := translate(block.Body, bs, breadCrumbs(block.Labels[0]), m, variables); err != nil {
 				return nil, err
 			}
 			decoder := NewMapDecoder(m)
@@ -297,7 +380,22 @@ func HCL2Config(fileName string) ([]interface{}, error) {
 			if err := config.(dtchcl.Unmarshaler).UnmarshalHCL(decoder); err != nil {
 				return nil, err
 			}
-			result = append(result, config)
+			record := &Record{
+				ID:     variables[resource].AsValueMap()[resourceName].AsValueMap()["id"].AsString(),
+				Value:  config,
+				Schema: resource,
+				Scope:  "environment",
+			}
+			objID := &ObjectID{ID: record.ID}
+			if err := objID.Decode(); err == nil {
+				if len(objID.SchemaID) > 0 {
+					record.Schema = objID.SchemaID
+				}
+				record.ScopeClass = objID.Scope.Class
+			} else {
+				record.Schema = err.Error()
+			}
+			result = append(result, record)
 		default:
 		}
 	}

@@ -169,7 +169,7 @@ func testConfig(t *testing.T, tfFile string, jsonFile string, anon ...func(me, m
 	t.Helper()
 	assert := assert.New(t)
 	var err error
-	var configs []interface{}
+	var configs []*hcl2json.Record
 	var data []byte
 	if configs, err = hcl2json.HCL2Config(tfFile); err != nil {
 		t.Error(err)
