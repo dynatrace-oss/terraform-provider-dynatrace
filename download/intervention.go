@@ -9,6 +9,19 @@ import (
 	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 )
 
+func creds() (string, string) {
+	environmentURL := os.Getenv("DYNATRACE_TARGET_ENV_URL")
+	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
+	apiToken := os.Getenv("DYNATRACE_TARGET_API_TOKEN")
+
+	if len(environmentURL) == 0 || len(apiToken) == 0 {
+		environmentURL = os.Getenv("DYNATRACE_ENV_URL")
+		environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
+		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
+	}
+	return environmentURL, apiToken
+}
+
 var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_dashboard": {
 		Move: func(resName string, resourceData ResourceData) {
@@ -16,9 +29,9 @@ var InterventionInfoMap = map[string]InterventionStruct{
 				dashboard := resource.RESTObject.(*dashboards.Dashboard)
 				dbId := dashboard.ID
 				dashboard.ID = nil
-				environmentURL := os.Getenv("DYNATRACE_ENV_URL")
-				environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
-				apiToken := os.Getenv("DYNATRACE_API_TOKEN")
+
+				environmentURL, apiToken := creds()
+
 				client := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
 				errors := client.Validate(dashboard)
 				dashboard.ID = dbId
@@ -35,6 +48,43 @@ var InterventionInfoMap = map[string]InterventionStruct{
 			}
 		},
 	},
+	// "dynatrace_custom_anomalies": {
+	// 	Move: func(resName string, resourceData ResourceData) {
+	// 		for _, resource := range resourceData[resName] {
+	// 			config := resource.RESTObject.(*metricevents.MetricEvent)
+	// 			configID := config.ID
+	// 			config.ID = nil
+
+	// 			environmentURL, apiToken := creds()
+	// 			client := metricevents.NewService(environmentURL+"/api/config/v1", apiToken)
+	// 			var errors []string
+	// 			err := client.Validate(config)
+	// 			config.ID = configID
+
+	// 			if err != nil {
+	// 				if env, ok := err.(*rest.Error); ok {
+	// 					if len(env.ConstraintViolations) > 0 {
+	// 						errs := []string{}
+	// 						for _, violation := range env.ConstraintViolations {
+	// 							errs = append(errs, violation.Message)
+	// 						}
+	// 						errors = errs
+	// 					} else {
+	// 						errors = []string{err.Error()}
+	// 					}
+	// 				} else {
+	// 					errors = []string{err.Error()}
+	// 				}
+	// 				if len(errors) > 0 && !strings.Contains(errors[0], "Token is missing required scope. Use one of: WriteConfig (Write configuration)") {
+	// 					resource.ReqInter.Type = InterventionTypes.Flawed
+	// 					errors[0] = "ATTENTION " + strings.ReplaceAll(errors[0], "\n", "")
+	// 					resource.ReqInter.Message = errors
+	// 					continue
+	// 				}
+	// 			}
+	// 		}
+	// 	},
+	// },
 	"dynatrace_calculated_service_metric": {
 		Move: func(resName string, resourceData ResourceData) {
 			reqConditions := []string{"SERVICE_DISPLAY_NAME", "SERVICE_PUBLIC_DOMAIN_NAME", "SERVICE_WEB_APPLICATION_ID", "SERVICE_WEB_CONTEXT_ROOT", "SERVICE_WEB_SERVER_NAME", "SERVICE_WEB_SERVICE_NAME", "SERVICE_WEB_SERVICE_NAMESPACE", "REMOTE_SERVICE_NAME", "REMOTE_ENDPOINT", "AZURE_FUNCTIONS_SITE_NAME", "AZURE_FUNCTIONS_FUNCTION_NAME", "CTG_GATEWAY_URL", "CTG_SERVER_NAME", "ACTOR_SYSTEM", "ESB_APPLICATION_NAME", "SERVICE_TAG", "SERVICE_TYPE", "PROCESS_GROUP_TAG", "PROCESS_GROUP_NAME"}
