@@ -5,6 +5,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
 	"github.com/dtcookie/dynatrace/api/config/managementzones"
+	metrics "github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
@@ -37,6 +38,20 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 			for _, stub := range stubs.Values {
 				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
 				restMap[stub.ID].Values["name"] = stub.Name
+			}
+			return restMap
+		},
+	},
+	"dynatrace_calculated_service_metric": {
+		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
+			return metrics.NewService(environmentURL+"/api/config/v1", apiToken)
+		},
+		MarshallHCL: func(restObject interface{}, dlConfig DownloadConfig) map[string]*DataSourceDetails {
+			stubs := restObject.(*api.EntityRefs)
+			var restMap = map[string]*DataSourceDetails{}
+			for _, stub := range stubs.Values {
+				restMap[stub.ID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.ID].Values["name"] = *stub.Name
 			}
 			return restMap
 		},

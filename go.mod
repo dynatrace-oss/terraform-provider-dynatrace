@@ -29,7 +29,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/dashboards/sharing v1.0.4
 	github.com/dtcookie/dynatrace/api/config/maintenance v1.0.11
 	github.com/dtcookie/dynatrace/api/config/managementzones v1.0.19
-	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.8
+	github.com/dtcookie/dynatrace/api/config/metrics/calculated/service v1.0.9
 	github.com/dtcookie/dynatrace/api/config/naming/hosts v1.0.4
 	github.com/dtcookie/dynatrace/api/config/naming/processgroups v1.0.4
 	github.com/dtcookie/dynatrace/api/config/naming/services v1.0.4
@@ -54,7 +54,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.7
-	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.7
+	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.8
 	github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop v1.0.2

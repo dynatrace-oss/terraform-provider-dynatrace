@@ -25,6 +25,7 @@ import (
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
+	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
@@ -136,19 +137,20 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"dynatrace_alerting_profiles":   alerting.DataSource(),
-			"dynatrace_alerting_profile":    v2alerting.DataSource(),
-			"dynatrace_credentials":         vault.DataSource(),
-			"dynatrace_synthetic_locations": locations.DataSource(),
-			"dynatrace_synthetic_location":  locations.UniqueDataSource(),
-			"dynatrace_service":             serviceds.DataSource(),
-			"dynatrace_management_zone":     mgmzds.DataSource(),
-			"dynatrace_application":         application.DataSource(),
-			"dynatrace_host":                host.DataSource(),
-			"dynatrace_process":             process.DataSource(),
-			"dynatrace_process_group":       processgroup.DataSource(),
-			"dynatrace_aws_iam_external":    dsaws.DataSource(),
-			"dynatrace_request_attribute":   reqattrds.DataSource(),
+			"dynatrace_alerting_profiles":         alerting.DataSource(),
+			"dynatrace_alerting_profile":          v2alerting.DataSource(),
+			"dynatrace_credentials":               vault.DataSource(),
+			"dynatrace_synthetic_locations":       locations.DataSource(),
+			"dynatrace_synthetic_location":        locations.UniqueDataSource(),
+			"dynatrace_service":                   serviceds.DataSource(),
+			"dynatrace_management_zone":           mgmzds.DataSource(),
+			"dynatrace_application":               application.DataSource(),
+			"dynatrace_host":                      host.DataSource(),
+			"dynatrace_process":                   process.DataSource(),
+			"dynatrace_process_group":             processgroup.DataSource(),
+			"dynatrace_aws_iam_external":          dsaws.DataSource(),
+			"dynatrace_request_attribute":         reqattrds.DataSource(),
+			"dynatrace_calculated_service_metric": metricsds.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),

@@ -564,6 +564,17 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{slo.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
+		HardcodedIds: []string{"dynatrace_management_zone", "dynatrace_calculated_service_metric"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
+			ids := map[string][]*ReplacedID{}
+			for k, v := range Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_calculated_service_metric", dsData, ReplacedID{RefDS: "dynatrace_calculated_service_metric", RefRes: "dynatrace_calculated_service_metric"}) {
+				ids[k] = v
+			}
+			return ids
+		},
 	},
 	"dynatrace_span_attribute": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
