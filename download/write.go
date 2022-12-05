@@ -217,7 +217,7 @@ func writeNestedProviderFile(targetFolder string, resFolder string) error {
 func writeMainFile(file *os.File, resourceDataMap ResourceData, resName string, resFolder string, replacedIDs ReplacedIDs, dependsOn bool) error {
 	var content string
 	modules := map[string]bool{}
-	if dependsOn && ResourceInfoMap[resName].HardcodedIds != nil {
+	if dependsOn && ResourceInfoMap[resName].HardcodedIds != nil && resName != "dynatrace_credentials" {
 		for _, hcName := range ResourceInfoMap[resName].HardcodedIds {
 			for _, repIdRes := range replacedIDs[resName] {
 				for _, repId := range repIdRes {

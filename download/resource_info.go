@@ -179,8 +179,8 @@ var ResourceInfoMap = map[string]ResourceStruct{
 					dataObj.Username = opt.NewString("redacted")
 					dataObj.Password = opt.NewString("redacted")
 				}
-				ids = Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials", RefRes: "dynatrace_credentials"})
 			}
+			ids = Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials", RefRes: "dynatrace_credentials"})
 			return ids
 		},
 	},
