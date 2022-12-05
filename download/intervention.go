@@ -82,6 +82,14 @@ var InterventionInfoMap = map[string]InterventionStruct{
 			}
 		},
 	},
+	"dynatrace_azure_credentials": {
+		Move: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				resource.ReqInter.Type = InterventionTypes.ReqAttn
+				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
+			}
+		},
+	},
 	"dynatrace_k8s_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
