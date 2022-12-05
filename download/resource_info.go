@@ -250,9 +250,16 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			clients := []StandardClient{service.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
 		},
-		HardcodedIds: []string{"dynatrace_request_attribute"},
+		HardcodedIds: []string{"dynatrace_request_attribute", "dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"})
+			ids := map[string][]*ReplacedID{}
+			for k, v := range Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"}) {
+				ids[k] = v
+			}
+			for k, v := range Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}, NameReplace) {
+				ids[k] = v
+			}
+			return ids
 		},
 	},
 	"dynatrace_cloudfoundry_credentials": {
@@ -416,7 +423,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_management_zone"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}, Settings20IDReplace)
+			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}, Settings20MatchReplace)
 		},
 	},
 	"dynatrace_management_zone": {

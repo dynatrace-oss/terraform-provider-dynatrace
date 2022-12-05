@@ -6,6 +6,36 @@ import (
 	"strings"
 )
 
+type MatchFunc func(s string, appInfo *DataSourceDetails) bool
+
+func DefaultMatchFunc(s string, appInfo *DataSourceDetails) bool {
+	return s == appInfo.UniqueName
+}
+
+func NameMatchFunc(s string, appInfo *DataSourceDetails) bool {
+	return s == appInfo.Values["name"]
+}
+
+type MatchReplace struct {
+	IDReplaceFunc IDReplaceFunc
+	MatchFunc     MatchFunc
+}
+
+var DefaultMatchReplace = MatchReplace{
+	MatchFunc:     DefaultMatchFunc,
+	IDReplaceFunc: DefaultIDReplace,
+}
+
+var Settings20MatchReplace = MatchReplace{
+	MatchFunc:     DefaultMatchFunc,
+	IDReplaceFunc: Settings20IDReplace,
+}
+
+var NameReplace = MatchReplace{
+	MatchFunc:     NameMatchFunc,
+	IDReplaceFunc: NameIDReplace,
+}
+
 type IDReplaceFunc func(dsName string, appInfo *DataSourceDetails) string
 
 func Settings20IDReplace(dsName string, appInfo *DataSourceDetails) string {
@@ -16,11 +46,15 @@ func DefaultIDReplace(dsName string, appInfo *DataSourceDetails) string {
 	return "data." + dsName + "." + appInfo.UniqueName + ".id"
 }
 
-func Replace(resources Resources, dsName string, dataSourceData DataSourceData, replaceIdTemplate ReplacedID, idReplaceFn ...IDReplaceFunc) map[string][]*ReplacedID {
+func NameIDReplace(dsName string, appInfo *DataSourceDetails) string {
+	return "data." + dsName + "." + appInfo.UniqueName + ".name"
+}
+
+func Replace(resources Resources, dsName string, dataSourceData DataSourceData, replaceIdTemplate ReplacedID, matchReplace ...MatchReplace) map[string][]*ReplacedID {
 	ids := map[string][]*ReplacedID{}
 	idSet := map[string]string{}
 	for _, resource := range resources {
-		for _, id := range ReplaceResource(resource, dsName, dataSourceData, idReplaceFn...) {
+		for _, id := range ReplaceResource(resource, dsName, dataSourceData, matchReplace...) {
 			idSet[id] = id
 		}
 	}
@@ -35,16 +69,16 @@ func Replace(resources Resources, dsName string, dataSourceData DataSourceData, 
 	return ids
 }
 
-func ReplaceResource(resource *Resource, dsName string, dataSourceData DataSourceData, idReplaceFn ...IDReplaceFunc) map[string]string {
-	fn := DefaultIDReplace
-	if len(idReplaceFn) > 0 {
-		fn = idReplaceFn[0]
+func ReplaceResource(resource *Resource, dsName string, dataSourceData DataSourceData, matchReplace ...MatchReplace) map[string]string {
+	fn := DefaultMatchReplace
+	if len(matchReplace) > 0 {
+		fn = matchReplace[0]
 	}
 	rep := replacer{
 		resource:       resource,
 		dsName:         dsName,
 		dataSourceData: dataSourceData,
-		idReplaceFn:    fn,
+		MatchReplace:   &fn,
 		replaceIDs:     map[string]string{},
 	}
 	rep.replace(reflect.ValueOf(resource.RESTObject))
@@ -59,8 +93,9 @@ type replacer struct {
 	resource       *Resource
 	dsName         string
 	dataSourceData DataSourceData
-	idReplaceFn    IDReplaceFunc
-	replaceIDs     map[string]string
+	// idReplaceFn    IDReplaceFunc
+	MatchReplace *MatchReplace
+	replaceIDs   map[string]string
 }
 
 func (me *replacer) replace(rv reflect.Value) {
@@ -76,8 +111,8 @@ func (me *replacer) replace(rv reflect.Value) {
 		for id, appInfo := range me.dataSourceData[me.dsName].RESTMap {
 			if appInfo.ComputedValues != nil {
 				if settings_20_id, ok := appInfo.ComputedValues["settings_20_id"]; ok {
-					if me.idReplaceFn != nil {
-						testresult := me.idReplaceFn(me.dsName, &DataSourceDetails{Values: map[string]interface{}{}, UniqueName: "unique"})
+					if me.MatchReplace != nil && me.MatchReplace.IDReplaceFunc != nil {
+						testresult := me.MatchReplace.IDReplaceFunc(me.dsName, &DataSourceDetails{Values: map[string]interface{}{}, UniqueName: "unique"})
 						if strings.HasSuffix(testresult, "settings_20_id") {
 							id = settings_20_id.(string)
 						}
@@ -85,16 +120,22 @@ func (me *replacer) replace(rv reflect.Value) {
 				}
 			}
 
-			if s == id {
-				replacement := me.idReplaceFn(me.dsName, appInfo)
-				rv.Set(reflect.ValueOf("HCL-UNQUOTE-" + replacement).Convert(rv.Type()))
-				if me.resource.Variables == nil {
-					me.resource.Variables = map[string]string{}
+			if me.MatchReplace.MatchFunc(s, appInfo) {
+				if me.MatchReplace.IDReplaceFunc != nil {
+					replacement := me.MatchReplace.IDReplaceFunc(me.dsName, appInfo)
+					rv.Set(reflect.ValueOf("HCL-UNQUOTE-" + replacement).Convert(rv.Type()))
+					if me.resource.Variables == nil {
+						me.resource.Variables = map[string]string{}
+					}
+					if strings.HasSuffix(replacement, ".name") {
+						me.resource.Variables[replacement] = appInfo.Values["name"].(string)
+					} else {
+						me.resource.Variables[replacement] = id
+					}
 				}
-				me.resource.Variables[replacement] = id
 				me.replaceIDs[id] = id
-			} else {
-				searchStr := me.idReplaceFn(me.dsName, appInfo)
+			} else if me.MatchReplace.IDReplaceFunc != nil {
+				searchStr := me.MatchReplace.IDReplaceFunc(me.dsName, appInfo)
 				replacement := strings.ReplaceAll(s, id, "${"+searchStr+"}")
 				if replacement != s {
 					rv.Set(reflect.ValueOf(replacement).Convert(rv.Type()))
