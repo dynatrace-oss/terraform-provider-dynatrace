@@ -45,7 +45,7 @@ Invoking the export functionality requires
     -  `Read SLO`
     -  `Read settings`
     -  `Read synthetic monitors, locations, and nodes`
-* Optinonally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
+* Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
 #### Windows
 `terraform-provider-dynatrace.exe export *[<resourcename>[=<id>]]`
 #### Linux
