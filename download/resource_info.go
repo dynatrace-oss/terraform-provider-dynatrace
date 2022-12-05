@@ -627,7 +627,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_request_attribute"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute"})
+			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"})
 		}},
 	"dynatrace_webhook_notification": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
