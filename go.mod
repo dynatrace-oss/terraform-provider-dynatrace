@@ -16,7 +16,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.14
 	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.13
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.4
-	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.14
+	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.15
 	github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.2
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.26
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.17
