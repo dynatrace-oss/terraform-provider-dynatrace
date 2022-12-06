@@ -165,7 +165,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		HardcodedIds: []string{"dynatrace_credentials"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
-			ids := map[string][]*ReplacedID{}
+			var ids map[string][]*ReplacedID
 			for _, resource := range resources {
 				dataObj := resource.RESTObject.(*vault.Credentials)
 				switch dataObj.Type {
