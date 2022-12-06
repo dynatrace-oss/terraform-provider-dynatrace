@@ -256,6 +256,10 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			for k, v := range Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"}, NameReplace) {
 				ids[k] = v
 			}
+			for k, v := range Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute", RefRes: "dynatrace_request_attribute"}, ReqAttNameReplace) {
+				ids[k] = MergeReplacedIDs(ids[k], v)
+			}
+
 			for k, v := range Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"}, NameReplace) {
 				ids[k] = v
 			}

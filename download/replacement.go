@@ -16,6 +16,13 @@ func NameMatchFunc(s string, appInfo *DataSourceDetails) bool {
 	return s == appInfo.Values["name"]
 }
 
+func ReqAttNameMatchFunc(s string, appInfo *DataSourceDetails) bool {
+	if _, found := appInfo.Values["name"]; found {
+		return s == "{RequestAttribute:"+appInfo.Values["name"].(string)+"}"
+	}
+	return false
+}
+
 type MatchReplace struct {
 	IDReplaceFunc IDReplaceFunc
 	MatchFunc     MatchFunc
@@ -36,6 +43,11 @@ var NameReplace = MatchReplace{
 	IDReplaceFunc: NameIDReplace,
 }
 
+var ReqAttNameReplace = MatchReplace{
+	MatchFunc:     ReqAttNameMatchFunc,
+	IDReplaceFunc: ReqAttNameIDReplace,
+}
+
 type IDReplaceFunc func(dsName string, appInfo *DataSourceDetails) string
 
 func Settings20IDReplace(dsName string, appInfo *DataSourceDetails) string {
@@ -48,6 +60,10 @@ func DefaultIDReplace(dsName string, appInfo *DataSourceDetails) string {
 
 func NameIDReplace(dsName string, appInfo *DataSourceDetails) string {
 	return "data." + dsName + "." + appInfo.UniqueName + ".name"
+}
+
+func ReqAttNameIDReplace(dsName string, appInfo *DataSourceDetails) string {
+	return "{RequestAttribute:${data." + dsName + "." + appInfo.UniqueName + ".name}}"
 }
 
 func Replace(resources Resources, dsName string, dataSourceData DataSourceData, replaceIdTemplate ReplacedID, matchReplace ...MatchReplace) map[string][]*ReplacedID {
@@ -123,12 +139,18 @@ func (me *replacer) replace(rv reflect.Value) {
 			if me.MatchReplace.MatchFunc(s, appInfo) {
 				if me.MatchReplace.IDReplaceFunc != nil {
 					replacement := me.MatchReplace.IDReplaceFunc(me.dsName, appInfo)
-					rv.Set(reflect.ValueOf("HCL-UNQUOTE-" + replacement).Convert(rv.Type()))
+					if strings.HasPrefix(replacement, "{RequestAttribute:") {
+						rv.Set(reflect.ValueOf(replacement).Convert(rv.Type()))
+					} else {
+						rv.Set(reflect.ValueOf("HCL-UNQUOTE-" + replacement).Convert(rv.Type()))
+					}
 					if me.resource.Variables == nil {
 						me.resource.Variables = map[string]string{}
 					}
 					if strings.HasSuffix(replacement, ".name") {
 						me.resource.Variables[replacement] = appInfo.Values["name"].(string)
+					} else if strings.HasPrefix(replacement, "{RequestAttribute:") && strings.HasSuffix(replacement, ".name}}") {
+						me.resource.Variables[strings.TrimSuffix(strings.TrimPrefix(replacement, "{RequestAttribute:${"), "}}")] = appInfo.Values["name"].(string)
 					} else {
 						me.resource.Variables[replacement] = id
 					}
