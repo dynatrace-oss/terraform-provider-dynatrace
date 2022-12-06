@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
 	service_naming "github.com/dtcookie/dynatrace/api/config/naming/services"
@@ -195,6 +196,19 @@ var InterventionInfoMap = map[string]InterventionStruct{
 						formatSnippet = formatSnippet[:idx]
 						resource.ReqInter.Type = InterventionTypes.ReqAttn
 						resource.ReqInter.Message = []string{fmt.Sprintf("ATTENTION {ProcessGroup:Environment:%s} may not exist on the target environment", formatSnippet)}
+					}
+				}
+			}
+		},
+	},
+	"dynatrace_web_application": {
+		Move: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*web.ApplicationConfig)
+				if string(dataObj.Type) == "BROWSER_EXTENSION_INJECTED" {
+					if dataObj.URLInjectionPattern == nil {
+						resource.ReqInter.Type = InterventionTypes.ReqAttn
+						resource.ReqInter.Message = []string{"ATTENTION REST API didn't provide the URL Injection Pattern - which is required for type BROWSER_EXTENSION_INJECTED"}
 					}
 				}
 			}
