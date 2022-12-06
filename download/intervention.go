@@ -1,11 +1,13 @@
 package download
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
+	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 )
 
@@ -154,6 +156,29 @@ var InterventionInfoMap = map[string]InterventionStruct{
 				dataObj := resource.RESTObject.(*privlocations.PrivateSyntheticLocation)
 				if len(dataObj.Nodes) > 0 {
 					dataObj.Nodes = []string{}
+				}
+			}
+		},
+	},
+	"dynatrace_request_attribute": {
+		Move: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*requestattributes.RequestAttribute)
+				if len(dataObj.DataSources) > 0 {
+					for _, dataSource := range dataObj.DataSources {
+						if dataSource.Scope != nil {
+							if dataSource.Scope.HostGroup != nil {
+								resource.ReqInter.Type = InterventionTypes.ReqAttn
+								resource.ReqInter.Message = []string{fmt.Sprintf("ATTENTION Data Source refers to entity '%s' - which may not exist on the target environment", *dataSource.Scope.HostGroup)}
+								break
+							} else if dataSource.Scope.ProcessGroup != nil {
+								resource.ReqInter.Type = InterventionTypes.ReqAttn
+								resource.ReqInter.Message = []string{fmt.Sprintf("ATTENTION Data Source refers to entity '%s' - which may not exist on the target environment", *dataSource.Scope.ProcessGroup)}
+								break
+							}
+						}
+
+					}
 				}
 			}
 		},
