@@ -7,6 +7,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/dashboards"
 	"github.com/dtcookie/dynatrace/api/config/metrics/calculated/service"
+	service_naming "github.com/dtcookie/dynatrace/api/config/naming/services"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
 )
@@ -178,6 +179,22 @@ var InterventionInfoMap = map[string]InterventionStruct{
 							}
 						}
 
+					}
+				}
+			}
+		},
+	},
+	"dynatrace_service_naming": {
+		Move: func(resName string, resourceData ResourceData) {
+			for _, resource := range resourceData[resName] {
+				dataObj := resource.RESTObject.(*service_naming.NamingRule)
+				if strings.Contains(dataObj.Format, "ProcessGroup:Environment:") {
+					formatSnippet := dataObj.Format[strings.Index(dataObj.Format, "ProcessGroup:Environment:")+len("ProcessGroup:Environment:"):]
+					idx := strings.Index(formatSnippet, "}")
+					if idx >= 0 {
+						formatSnippet = formatSnippet[:idx]
+						resource.ReqInter.Type = InterventionTypes.ReqAttn
+						resource.ReqInter.Message = []string{fmt.Sprintf("ATTENTION {ProcessGroup:Environment:%s} may not exist on the target environment", formatSnippet)}
 					}
 				}
 			}
