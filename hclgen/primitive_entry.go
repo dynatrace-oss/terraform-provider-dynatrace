@@ -1,6 +1,7 @@
 package hclgen
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode"
@@ -22,6 +23,22 @@ type primitiveEntry struct {
 func unquote(w *hclwrite.Body, key string, val *string) {
 	strVal := strings.TrimPrefix(*val, "HCL-UNQUOTE-")
 	w.SetAttributeRaw(key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(" " + strVal)}})
+}
+
+func isJSON(s string) bool {
+	trimmed := strings.TrimSpace(s)
+	if !strings.HasPrefix(trimmed, "{") || !strings.HasSuffix(trimmed, "}") {
+		return false
+	}
+	m := map[string]any{}
+	return json.Unmarshal([]byte(s), &m) == nil
+}
+
+func toJSONencode(s string, indent string) string {
+	if strings.Contains(s, "\n") {
+		return " jsonencode(\n" + indent + "  " + strings.ReplaceAll(s, "\n", "\n"+indent+"  ") + ")"
+	}
+	return " jsonencode(" + s + ")"
 }
 
 /*
@@ -48,7 +65,10 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 		}
 		rawVal = rawVal + " ]"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(" " + rawVal)}})
-
+	} else if strVal, ok := me.Value.(string); ok && isJSON(strVal) {
+		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(strVal, indent))}})
+	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && isJSON(*strValP) {
+		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(*strValP, indent))}})
 	} else if strVal, ok := me.Value.(string); ok && strings.Contains(strVal, "\n") {
 		mlstr := "<<-EOT\n" + indent + "  " + strings.ReplaceAll(strVal, "\n", "\n"+indent+"  ") + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
