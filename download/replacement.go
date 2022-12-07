@@ -6,17 +6,17 @@ import (
 	"strings"
 )
 
-type MatchFunc func(s string, appInfo *DataSourceDetails) bool
+type MatchFunc func(s string, id string, appInfo *DataSourceDetails) bool
 
-func DefaultMatchFunc(s string, appInfo *DataSourceDetails) bool {
-	return s == appInfo.UniqueName
+func DefaultMatchFunc(s string, id string, appInfo *DataSourceDetails) bool {
+	return s == id
 }
 
-func NameMatchFunc(s string, appInfo *DataSourceDetails) bool {
+func NameMatchFunc(s string, id string, appInfo *DataSourceDetails) bool {
 	return s == appInfo.Values["name"]
 }
 
-func ReqAttNameMatchFunc(s string, appInfo *DataSourceDetails) bool {
+func ReqAttNameMatchFunc(s string, id string, appInfo *DataSourceDetails) bool {
 	if _, found := appInfo.Values["name"]; found {
 		return s == "{RequestAttribute:"+appInfo.Values["name"].(string)+"}"
 	}
@@ -136,7 +136,7 @@ func (me *replacer) replace(rv reflect.Value) {
 				}
 			}
 
-			if me.MatchReplace.MatchFunc(s, appInfo) {
+			if me.MatchReplace.MatchFunc(s, id, appInfo) {
 				if me.MatchReplace.IDReplaceFunc != nil {
 					replacement := me.MatchReplace.IDReplaceFunc(me.dsName, appInfo)
 					if strings.HasPrefix(replacement, "{RequestAttribute:") {
