@@ -36,6 +36,9 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 				continue
 			}
 		}
+		if resName == "dynatrace_dashboard" && !dlConfig.MatchResource(resName) {
+			continue
+		}
 		fmt.Println("Processing read: ", resName)
 		if ResourceInfoMap[resName].NoListClient != nil {
 			client := resStruct.NoListClient(
