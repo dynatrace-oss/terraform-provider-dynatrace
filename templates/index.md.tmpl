@@ -42,7 +42,7 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 In addition to acting as a Terraform Provider Plugin, the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can be directly invoked.
 The utility reaches out to the Dynatrace Environment specified by the command line arguments and fetches all currently supported configuration items. These results will then automatically get transformed into HCL (the configuration language to be used for `.tf` files) and places each configuration item into its own `.tf` file.
 
-With release 1.15.0, a new and improved version of the export utility `exportv2` is now available with various improvements (outlined below).
+With release 1.15.0, a new and improved version of the export utility is now available with various improvements (outlined below).
 * Data source references automatically generated in resources
 * Data source blocks created for dependencies in data_source.tf file(s)
 * Creation of all resources required based off of dependencies
@@ -52,7 +52,7 @@ With release 1.15.0, a new and improved version of the export utility `exportv2`
 * Option to include/exclude specific resource IDs from export
 * Ability to convert from HCL to JSON formatted files
  
-Please provide any feedback of the export utility via [GitHub Issues](https://github.com/dynatrace-oss/terraform-provider-dynatrace/issues). Details on the execution of both export utilities are provided below.
+Please provide any feedback of the export utility via [GitHub Issues](https://github.com/dynatrace-oss/terraform-provider-dynatrace/issues). Details on the execution of the export utility is provided below.
 
 ### Command Line Syntax
 Invoking the export functionality requires
@@ -60,32 +60,27 @@ Invoking the export functionality requires
 * The environment variable `DYNATRACE_API_TOKEN` as the API Token of your Dynatrace environment
 * Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
 
-## Exportv2 (New version)
-Windows: `terraform-provider-dynatrace.exe -exportv2 [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
+## Export Utility
+Windows: `terraform-provider-dynatrace.exe -exportv2 [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
 
-Linux: `./terraform-provider-dynatrace -exportv2 [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
+Linux: `./terraform-provider-dynatrace -exportv2 [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
 ### Options
-* `-ref` Enables resources with data sources and dependencies
-* `-id` Enables commented id output in resource files
-* `-migrate` Enables output specific to environment migration
+* `-v` Enable verbose logging
+* `-ref` Enable resources with data sources and dependencies
+* `-id` Enable commented id output in resource files
+* `-migrate` Enable output specific to environment migration
     -  Removes node IDs from private synthetic locations
-* `-exclude` Excludes specified resource(s) from export
+* `-exclude` Exclude specified resource(s) from export
 
-### HCL to JSON Converter
-Creates a JSON formatted file alongside every HCL file contained in the folder path.
-
-Windows: `terraform-provider-dynatrace.exe -tf2json <folderpath>`
-
-Linux: `./terraform-provider-dynatrace -tf2json <folderpath>`
+**NOTE:** Dashboards are currently excluded from the export unless the resource is directly specified in the command line arguments.
 
 ### Usage Examples
-* `./terraform-provider-dynatrace -exportv2` downloads all available configuration settings without data sources and dependency references (export similar to previous version)
-* `./terraform-provider-dynatrace -exportv2 -ref -id` downloads all available configuration settings with data sources / dependency references and adds commented ids in resource output
-* `./terraform-provider-dynatrace -exportv2 -ref dynatrace_alerting dynatrace_web_application` downloads all available alerting profiles, web applications and resource dependencies with references
-* `./terraform-provider-dynatrace -exportv2 -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads the alerting profiles with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`, includes all resource dependencies with references
-* `./terraform-provider-dynatrace -exportv2 -ref dynatrace_calculated_service_metric dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads all available calculated service metrics and also the alerting profile with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`, includes all resource dependencies with references
-* `./terraform-provider-dynatrace -exportv2 -ref -exclude dynatrace_calculated_service_metric dynatrace_dashboard` download all available configuration settings except `dynatrace_calculated_service_metric` and `dynatrace_dashboard`, includes all resource dependencies with references
-* `./terraform-provider-dynatrace -tf2json configuration` creates a JSON formatted file for every HCL file contained in the `configuration` folder
+* `./terraform-provider-dynatrace -export` downloads all available configuration settings without data sources and dependency references (export similar to previous version)
+* `./terraform-provider-dynatrace -export -ref -id` downloads all available configuration settings with data sources / dependency references and adds commented ids in resource output
+* `./terraform-provider-dynatrace -export -ref dynatrace_dashboard dynatrace_web_application` downloads all available dashboards, web applications and resource dependencies with references
+* `./terraform-provider-dynatrace -export -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads the alerting profiles with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`, includes all resource dependencies with references
+* `./terraform-provider-dynatrace -export -ref dynatrace_calculated_service_metric dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads all available calculated service metrics and also the alerting profile with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`, includes all resource dependencies with references
+* `./terraform-provider-dynatrace -export -ref -exclude dynatrace_calculated_service_metric dynatrace_alerting` download all available configuration settings except `dynatrace_calculated_service_metric` and `dynatrace_alerting`, includes all resource dependencies with references
 
 ### Additional Information
 * There may be instances where the exported configuration is deprecated and/or is unable to be used for a create/update. In these instances, the files will be moved into `.flawed` of the output folder and the explanation will be available as a commented output in the resource file. 
@@ -96,17 +91,17 @@ Linux: `./terraform-provider-dynatrace -tf2json <folderpath>`
 ### Known Issues
 * Due to the complexity of dashboards, there may be cases where the `terraform apply` fails after an export. Dashboard validation will be improved in a future release.
 
-## Export (Previous version)
+## Export Utility (Legacy method)
 Windows: `terraform-provider-dynatrace.exe export *[<resourcename>[=<id>]]`
 
 Linux: `./terraform-provider-dynatrace export *[<resourcename>[=<id>]]`
 
 ### Usage Examples
-* `./terraform-provider-dynatrace export` downloads all available configuration settings
-* `./terraform-provider-dynatrace export dynatrace_dashboard` downloads all available dashboards
-* `./terraform-provider-dynatrace export dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
-* `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
-* `./terraform-provider-dynatrace export dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
-* `./terraform-provider-dynatrace export dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5
+* `./terraform-provider-dynatrace exportv1` downloads all available configuration settings
+* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard` downloads all available dashboards
+* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
+* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
+* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
+* `./terraform-provider-dynatrace exportv1 dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5
 
 {{ .SchemaMarkdown | trimspace }}
