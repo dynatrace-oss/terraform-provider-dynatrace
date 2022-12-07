@@ -209,7 +209,7 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 
 	nameCounter := NewNameCounter()
 	resNameCounter := NewNameCounter().Replace(ResourceName)
-	for _, id := range ids {
+	for idx, id := range ids {
 		if replacedIds != nil && !containsRepId(replacedIds, id) {
 			continue
 		}
@@ -217,6 +217,10 @@ func (me ResourceData) readDashboards(dlConfig DownloadConfig, resourceName stri
 			if (!dlConfig.Exclude && !dlConfig.MatchID(resourceName, id)) || (dlConfig.Exclude && dlConfig.MatchID(resourceName, id)) {
 				continue
 			}
+		}
+
+		if dlConfig.Verbose {
+			fmt.Println("  ", id, "[", idx+1, "of", len(ids), "]")
 		}
 
 		config, err := client.GET(id)
