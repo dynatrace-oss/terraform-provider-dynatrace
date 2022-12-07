@@ -3,10 +3,73 @@ package download
 import (
 	"fmt"
 	"os"
+	"path"
+	"path/filepath"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
+var CanHardLink = true
+
+func DetermineCanHardLink(targetFolder string) {
+	var err error
+	data := []byte(uuid.New().String())
+	var linkedData []byte
+	var orig string
+	var link string
+
+	if orig, err = filepath.Abs(path.Join(targetFolder, ".hardlink.orig.lck")); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if link, err = filepath.Abs(path.Join(targetFolder, ".hardlink.link.lck")); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+
+	if err = os.MkdirAll(targetFolder, os.ModePerm); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+
+	if err = os.WriteFile(orig, data, 0644); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if err = os.Link(orig, link); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if err = os.Remove(orig); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if linkedData, err = os.ReadFile(link); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if err = os.Remove(link); err != nil {
+		fmt.Println("unable to determine hard link capabilities: " + err.Error())
+		CanHardLink = false
+		return
+	}
+	if string(data) != string(linkedData) {
+		fmt.Println("... hard link capabilities unstable in this environment")
+		CanHardLink = false
+	}
+	// fmt.Println(".. using hard link capabilities")
+}
+
 func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, resArgs map[string][]string) bool {
+	DetermineCanHardLink(targetFolder)
 	os.Setenv("dynatrace.secrets", "true")
 	var err error
 	var ResourceDataMap = ResourceData{}

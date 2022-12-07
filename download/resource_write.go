@@ -3,6 +3,7 @@ package download
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/hclgen"
@@ -11,7 +12,7 @@ import (
 func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, resFolder string, resources Resources, resNameCnt NameCounter) error {
 	var err error
 	for _, resource := range resources {
-		if len(resource.ReqInter.Type) > 0 {
+		if !CanHardLink && len(resource.ReqInter.Type) > 0 {
 			continue
 		}
 
@@ -31,8 +32,16 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 		}
 
 		if dlConfig.CommentedID {
-			comments := []string{
-				"DEFINE " + resName + "." + resource.UniqueName + "." + "id = " + resource.ID,
+			comments := resource.ReqInter.Message
+
+			if dlConfig.CommentedID {
+				comments = append(comments, "DEFINE "+resName+"."+resource.UniqueName+"."+"id = "+resource.ID)
+				if len(resource.Variables) > 0 {
+					for k, v := range resource.Variables {
+						comments = append(comments, "DEFINE "+k+" = "+v)
+					}
+
+				}
 			}
 			if len(resource.Variables) > 0 {
 				for k, v := range resource.Variables {
@@ -100,6 +109,7 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 				if resource.ReqInter.Type == "" {
 					continue
 				}
+
 				folderName := dlConfig.TargetFolder + "/" + string(resource.ReqInter.Type) + "/" + strings.TrimPrefix(resName, "dynatrace_")
 				if _, err := os.Stat(folderName); errors.Is(err, os.ErrNotExist) {
 					err := os.MkdirAll(folderName, os.ModePerm)
@@ -108,8 +118,16 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 					}
 				}
 
-				var file *os.File
 				fileName := folderName + "/" + strings.TrimPrefix(resName, "dynatrace_") + "." + resource.UniqueName + ".tf"
+
+				if CanHardLink {
+					orig, _ := filepath.Abs(dlConfig.TargetFolder + "/" + strings.TrimPrefix(resName, "dynatrace_") + "/" + strings.TrimPrefix(resName, "dynatrace_") + "." + resource.UniqueName + ".tf")
+					link, _ := filepath.Abs(fileName)
+					os.Link(orig, link)
+					continue
+				}
+
+				var file *os.File
 				os.Remove(fileName)
 				if file, err = os.Create(fileName); err != nil {
 					return err
