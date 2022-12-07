@@ -35,10 +35,28 @@ func isJSON(s string) bool {
 }
 
 func toJSONencode(s string, indent string) string {
-	if strings.Contains(s, "\n") {
-		return " jsonencode(\n" + indent + "  " + strings.ReplaceAll(s, "\n", "\n"+indent+"  ") + ")"
-	}
-	return " jsonencode(" + s + ")"
+	m := map[string]any{}
+	json.Unmarshal([]byte(s), &m)
+	out, _ := json.MarshalIndent(m, "", indent)
+	return " jsonencode(" + string(out) + ")"
+	// if strings.Contains(s, "\n") {
+	// 	return " jsonencode(\n" + indent + "  " + strings.ReplaceAll(s, "\n", "\n"+indent+"  ") + ")"
+	// }
+	// return " jsonencode(" + s + ")"
+}
+
+func finalizeString(s string, indent string) string {
+	finalString := strings.ReplaceAll(s, "\n", "\n"+indent+"  ")
+
+	finalString = strings.ReplaceAll(finalString, "${data.", "DOLLAR_DATA_DOT")
+	finalString = strings.ReplaceAll(finalString, "${dynatrace_", "DOLLAR_DYNATRACE")
+
+	finalString = strings.ReplaceAll(finalString, "${", "$${")
+
+	finalString = strings.ReplaceAll(finalString, "DOLLAR_DATA_DOT", "${data.")
+	finalString = strings.ReplaceAll(finalString, "DOLLAR_DYNATRACE", "${dynatrace_")
+
+	return finalString
 }
 
 /*
@@ -70,16 +88,16 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && isJSON(*strValP) {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(*strValP, indent))}})
 	} else if strVal, ok := me.Value.(string); ok && strings.Contains(strVal, "\n") {
-		mlstr := "<<-EOT\n" + indent + "  " + strings.ReplaceAll(strVal, "\n", "\n"+indent+"  ") + "\n" + indent + "EOT"
+		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strVal, ok := me.Value.(string); ok && strings.Count(strVal, "\"") > 3 {
-		mlstr := "<<-EOT\n" + indent + "  " + strVal + "\n" + indent + "EOT"
+		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && strings.Count(*strValP, "\"") > 3 {
-		mlstr := "<<-EOT\n" + indent + "  " + *strValP + "\n" + indent + "EOT"
+		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && strings.Contains(*strValP, "\n") {
-		mlstr := "<<-EOT\n" + indent + "  " + *strValP + "\n" + indent + "EOT"
+		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strVal, ok := me.Value.(string); ok {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{
@@ -113,7 +131,7 @@ func appendRune(b []byte, r rune) []byte {
 func escapeQuotedStringLit(s string) []byte {
 	res := string(escapeQuotedStringLit0(s))
 	res = strings.ReplaceAll(res, "$${data.", "${data.")
-	res = strings.ReplaceAll(res, "$${dynatrace_.", "${dynatrace_.")
+	res = strings.ReplaceAll(res, "$${dynatrace_", "${dynatrace_")
 	return []byte(res)
 }
 
