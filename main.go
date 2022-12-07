@@ -189,7 +189,7 @@ func exportv2(args []string) bool {
 	if len(args) == 1 {
 		return false
 	}
-	if strings.TrimSpace(args[1]) != "-exportv2" {
+	if strings.TrimSpace(args[1]) != "-export" {
 		return false
 	}
 	environmentURL := os.Getenv("DYNATRACE_ENV_URL")
@@ -209,7 +209,7 @@ func exportv2(args []string) bool {
 		targetFolder = "configuration"
 	}
 
-	flag.Bool("exportv2", true, "")
+	flag.Bool("export", true, "")
 	refArg := flag.Bool("ref", false, "enable data sources and dependencies")
 	comIdArg := flag.Bool("id", false, "enable commented ids")
 	migrateArg := flag.Bool("migrate", false, "enable migration output")
@@ -252,7 +252,7 @@ func export(args []string) bool {
 	if len(args) == 1 {
 		return false
 	}
-	if strings.TrimSpace(args[1]) != "export" {
+	if strings.TrimSpace(args[1]) != "exportv1" {
 		return false
 	}
 	environmentURL := os.Getenv("DYNATRACE_ENV_URL")
