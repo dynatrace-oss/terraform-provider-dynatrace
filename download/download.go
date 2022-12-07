@@ -68,8 +68,12 @@ func DetermineCanHardLink(targetFolder string) {
 	// fmt.Println(".. using hard link capabilities")
 }
 
-func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, resArgs map[string][]string, verbose bool) bool {
-	DetermineCanHardLink(targetFolder)
+func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, linkArg bool, verbose bool, resArgs map[string][]string) bool {
+	if linkArg {
+		DetermineCanHardLink(targetFolder)
+	} else {
+		CanHardLink = false
+	}
 	os.Setenv("dynatrace.secrets", "true")
 	var err error
 	var ResourceDataMap = ResourceData{}
