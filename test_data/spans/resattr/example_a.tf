@@ -1,13 +1,13 @@
-resource "dynatrace_resource_attributes" "dynatrace_resource_attributes" {
+resource "dynatrace_resource_attributes" "#name#" {
   keys {
     rule {
       enabled       = true
-      attribute_key = "gffgf"
+      attribute_key = "cdefgh"
       masking       = "NOT_MASKED"
     }
     rule {
       enabled       = true
-      attribute_key = "cdefgh"
+      attribute_key = "gffgf"
       masking       = "NOT_MASKED"
     }
     rule {
