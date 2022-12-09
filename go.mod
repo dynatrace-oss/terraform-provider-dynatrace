@@ -59,7 +59,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.3
 	github.com/dtcookie/dynatrace/api/config/v2/spans/ctxprop v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.3
-	github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.5
+	github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.6
 	github.com/dtcookie/dynatrace/rest v1.0.15
 	github.com/dtcookie/dynatrace/terraform v1.0.5
 	github.com/dtcookie/hcl v0.0.16

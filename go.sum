@@ -217,8 +217,8 @@ github.com/dtcookie/dynatrace/api/config/v2/spans/entrypoints v1.0.3/go.mod h1:y
 github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.1/go.mod h1:1aEY0ha/31rGlg6vE+YT2qr3CLrqpp9F0EF7V7Pky/Q=
 github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2 h1:1F6YYAIa1XcuZdna/wFamss8nArJFBLBqhBNhedCmzI=
 github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2/go.mod h1:1aEY0ha/31rGlg6vE+YT2qr3CLrqpp9F0EF7V7Pky/Q=
-github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.5 h1:5ZO7Zrete8tN8Z0msBUhvJuCMak9CEyJr7d/8GigzLw=
-github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.5/go.mod h1:U1f9P9dFv344ss+0wg9RZ0G9OwBrCtVpbBBLRmQDzRo=
+github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.6 h1:wEGZ+BYBO3TLm9r2WAazDgefCWqAJcSefTyJSdnBXwU=
+github.com/dtcookie/dynatrace/api/config/v2/spans/resattr v1.0.6/go.mod h1:U1f9P9dFv344ss+0wg9RZ0G9OwBrCtVpbBBLRmQDzRo=
 github.com/dtcookie/dynatrace/rest v1.0.13/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
