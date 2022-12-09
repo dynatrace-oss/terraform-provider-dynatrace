@@ -216,6 +216,7 @@ func exportv2(args []string) bool {
 	excludeArg := flag.Bool("exclude", false, "exclude specified resources")
 	verbose := flag.Bool("v", false, "enable verbose logging")
 	linkArg := flag.Bool("link", false, "enable hard links for .requires_attention and .flawed")
+	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
 	flag.Parse()
 	tailArgs := flag.Args()
 
@@ -246,7 +247,7 @@ func exportv2(args []string) bool {
 		}
 	}
 
-	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, *migrateArg, *excludeArg, *linkArg, *verbose, resArgs)
+	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, *migrateArg, *excludeArg, *linkArg, *verbose, *preview, resArgs)
 }
 
 func export(args []string) bool {

@@ -49,7 +49,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2
-	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.3
+	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1
 	github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4

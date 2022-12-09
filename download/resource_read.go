@@ -292,7 +292,7 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 	restClient := keyrequests.NewService(dlConfig.EnvironmentURL+"/api/v2", dlConfig.APIToken)
 	resNameCounter := NewNameCounter().Replace(ResourceName)
 	for _, service := range services.(servicetopology.Services) {
-		keyRequestID, keyRequest, err := restClient.LIST(service.EntityId)
+		keyRequestID, keyRequest, err := restClient.LISTSVC(service.EntityId)
 
 		kr := keyRequest.(*keyrequests.KeyRequest)
 		if err != nil {

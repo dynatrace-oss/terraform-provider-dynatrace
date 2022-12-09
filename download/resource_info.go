@@ -36,6 +36,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups"
+	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	v2maintenance "github.com/dtcookie/dynatrace/api/config/v2/maintenance"
 	"github.com/dtcookie/dynatrace/api/config/v2/networkzones"
 	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
@@ -405,6 +406,10 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 	},
 	"dynatrace_key_requests": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{keyrequests.NewService(environmentURL+"/api/v2", apiToken)}
+			return clients
+		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return "for " + v.(servicetopology.Service).DisplayName
 		},

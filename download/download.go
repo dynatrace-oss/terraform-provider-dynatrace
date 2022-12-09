@@ -68,7 +68,7 @@ func DetermineCanHardLink(targetFolder string) {
 	// fmt.Println(".. using hard link capabilities")
 }
 
-func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, linkArg bool, verbose bool, resArgs map[string][]string) bool {
+func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, linkArg bool, verbose bool, preview bool, resArgs map[string][]string) bool {
 	if linkArg {
 		DetermineCanHardLink(targetFolder)
 	} else {
@@ -90,6 +90,14 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 		Exclude:        excludeArg,
 		ResourceNames:  resArgs,
 		Verbose:        verbose,
+	}
+
+	if preview {
+		if err = PrintPreview(dlConfig); err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+		return true
 	}
 
 	if err = ResourceDataMap.ProcessRead(dlConfig); err != nil {
