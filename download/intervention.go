@@ -211,6 +211,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 						resource.ReqInter.Message = []string{"ATTENTION REST API didn't provide the URL Injection Pattern - which is required for type BROWSER_EXTENSION_INJECTED"}
 					}
 				}
+				if len(dataObj.UserActionAndSessionProperties) > 20 {
+					resource.ReqInter.Type = InterventionTypes.ReqAttn
+					resource.ReqInter.Message = append(resource.ReqInter.Message, "ATTENTION You cannot have more than 20 useraction/session properties")
+				}
 			}
 		},
 	},
