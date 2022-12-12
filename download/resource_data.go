@@ -1,6 +1,8 @@
 package download
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+)
 
 type StandardClient interface {
 	GET(id string) (interface{}, error)
@@ -23,6 +25,20 @@ type Resource struct {
 type ReqInter struct {
 	Type    Type
 	Message []string
+}
+
+func (resource *Resource) Dedup() {
+	m := map[string]string{}
+	if len(resource.ReqInter.Message) > 0 {
+		for _, msg := range resource.ReqInter.Message {
+			m[msg] = ""
+		}
+	}
+	res := []string{}
+	for k := range m {
+		res = append(res, k)
+	}
+	resource.ReqInter.Message = res
 }
 
 type Type string

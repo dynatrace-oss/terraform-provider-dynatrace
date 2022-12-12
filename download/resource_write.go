@@ -15,7 +15,6 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 		if !CanHardLink && len(resource.ReqInter.Type) > 0 {
 			continue
 		}
-
 		var file *os.File
 		fileName := dlConfig.TargetFolder + "/" + resFolder + "/" + resFolder + "." + resource.UniqueName + ".tf"
 		fileName = strings.ToLower(fileName)
@@ -32,6 +31,7 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 		}
 
 		if dlConfig.CommentedID {
+			resource.Dedup()
 			comments := resource.ReqInter.Message
 
 			if dlConfig.CommentedID {
@@ -132,6 +132,7 @@ func (me ResourceData) WriteResReqAttn(dlConfig DownloadConfig) error {
 				if file, err = os.Create(fileName); err != nil {
 					return err
 				}
+				resource.Dedup()
 
 				comments := resource.ReqInter.Message
 
