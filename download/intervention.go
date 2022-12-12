@@ -26,28 +26,43 @@ func creds() (string, string) {
 	return environmentURL, apiToken
 }
 
+var MissingRequiredScope = false
+
 var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_dashboard": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
-				dashboard := resource.RESTObject.(*dashboards.Dashboard)
-				dbId := dashboard.ID
-				dashboard.ID = nil
-
-				environmentURL, apiToken := creds()
-
-				client := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
-				errors := client.Validate(dashboard)
-				dashboard.ID = dbId
-				if len(errors) > 0 && !strings.Contains(errors[0], "Token is missing required scope. Use one of: WriteConfig (Write configuration)") {
-					resource.ReqInter.Type = InterventionTypes.Flawed
-					errors[0] = "ATTENTION " + strings.ReplaceAll(errors[0], "\n", "")
-					resource.ReqInter.Message = errors
-					continue
+				if resource.ReqInter.Evaluated {
+					return
 				}
+				resource.ReqInter.Evaluated = true
+				dashboard := resource.RESTObject.(*dashboards.Dashboard)
 				if dashboard.Metadata.Owner != nil && *dashboard.Metadata.Owner == "Dynatrace" {
 					resource.ReqInter.Type = InterventionTypes.ReqAttn
 					resource.ReqInter.Message = []string{"ATTENTION " + "Dashboards owned by Dynatrace are automatically excluded to prevent duplicates of OOTB dashboards. Please return to the dashboards folder if this is a custom dashboard."}
+					continue
+				}
+
+				if !MissingRequiredScope {
+					dbId := dashboard.ID
+					dashboard.ID = nil
+
+					environmentURL, apiToken := creds()
+
+					client := dashboards.NewService(environmentURL+"/api/config/v1", apiToken)
+					errors := client.Validate(dashboard)
+
+					dashboard.ID = dbId
+					if len(errors) > 0 {
+						if strings.Contains(errors[0], "Token is missing required scope. Use one of: WriteConfig (Write configuration)") {
+							MissingRequiredScope = true
+						} else {
+							resource.ReqInter.Type = InterventionTypes.Flawed
+							errors[0] = "ATTENTION " + strings.ReplaceAll(errors[0], "\n", "")
+							resource.ReqInter.Message = errors
+							continue
+						}
+					}
 				}
 			}
 		},
@@ -93,6 +108,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 		Move: func(resName string, resourceData ResourceData) {
 			reqConditions := []string{"SERVICE_DISPLAY_NAME", "SERVICE_PUBLIC_DOMAIN_NAME", "SERVICE_WEB_APPLICATION_ID", "SERVICE_WEB_CONTEXT_ROOT", "SERVICE_WEB_SERVER_NAME", "SERVICE_WEB_SERVICE_NAME", "SERVICE_WEB_SERVICE_NAMESPACE", "REMOTE_SERVICE_NAME", "REMOTE_ENDPOINT", "AZURE_FUNCTIONS_SITE_NAME", "AZURE_FUNCTIONS_FUNCTION_NAME", "CTG_GATEWAY_URL", "CTG_SERVER_NAME", "ACTOR_SYSTEM", "ESB_APPLICATION_NAME", "SERVICE_TAG", "SERVICE_TYPE", "PROCESS_GROUP_TAG", "PROCESS_GROUP_NAME"}
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				dataObj := resource.RESTObject.(*service.CalculatedServiceMetric)
 				if len(dataObj.ManagementZones) == 0 && dataObj.Conditions != nil {
 					var found bool
@@ -115,6 +134,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
 				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
@@ -123,6 +146,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_aws_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
 				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
@@ -131,6 +158,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_cloudfoundry_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
 				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
@@ -139,6 +170,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_azure_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
 				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
@@ -147,6 +182,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_k8s_credentials": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				resource.ReqInter.Type = InterventionTypes.ReqAttn
 				resource.ReqInter.Message = []string{"ATTENTION " + "REST API didn't provide credentials"}
 			}
@@ -155,6 +194,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_synthetic_location": {
 		StripIDs: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				dataObj := resource.RESTObject.(*privlocations.PrivateSyntheticLocation)
 				if len(dataObj.Nodes) > 0 {
 					dataObj.Nodes = []string{}
@@ -165,6 +208,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_request_attribute": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				dataObj := resource.RESTObject.(*requestattributes.RequestAttribute)
 				if len(dataObj.DataSources) > 0 {
 					for _, dataSource := range dataObj.DataSources {
@@ -188,6 +235,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_service_naming": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				dataObj := resource.RESTObject.(*service_naming.NamingRule)
 				if strings.Contains(dataObj.Format, "ProcessGroup:Environment:") {
 					formatSnippet := dataObj.Format[strings.Index(dataObj.Format, "ProcessGroup:Environment:")+len("ProcessGroup:Environment:"):]
@@ -204,6 +255,10 @@ var InterventionInfoMap = map[string]InterventionStruct{
 	"dynatrace_web_application": {
 		Move: func(resName string, resourceData ResourceData) {
 			for _, resource := range resourceData[resName] {
+				if resource.ReqInter.Evaluated {
+					return
+				}
+				resource.ReqInter.Evaluated = true
 				dataObj := resource.RESTObject.(*web.ApplicationConfig)
 				if string(dataObj.Type) == "BROWSER_EXTENSION_INJECTED" {
 					if dataObj.URLInjectionPattern == nil {

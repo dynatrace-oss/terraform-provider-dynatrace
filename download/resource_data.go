@@ -23,8 +23,9 @@ type Resource struct {
 }
 
 type ReqInter struct {
-	Type    Type
-	Message []string
+	Type      Type
+	Message   []string
+	Evaluated bool
 }
 
 func (resource *Resource) Dedup() {
