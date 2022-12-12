@@ -238,7 +238,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			for k, v := range Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"}) {
 				ids[k] = v
 			}
-			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", RefRes: "dynatrace_synthetic_location", Processed: true}) {
+			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", RefRes: "dynatrace_synthetic_location"}) {
 				ids[k] = v
 			}
 			for k, v := range Replace(resources, "dynatrace_credentials", dsData, ReplacedID{RefDS: "dynatrace_credentials", RefRes: "dynatrace_credentials"}) {
@@ -365,7 +365,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			for k, v := range Replace(resources, "dynatrace_application", dsData, ReplacedID{RefDS: "dynatrace_application", RefRes: "dynatrace_web_application"}) {
 				ids[k] = v
 			}
-			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", Processed: true}) {
+			for k, v := range Replace(resources, "dynatrace_synthetic_location", dsData, ReplacedID{RefDS: "dynatrace_synthetic_location", RefRes: "dynatrace_synthetic_location"}) {
 				ids[k] = v
 			}
 			return ids

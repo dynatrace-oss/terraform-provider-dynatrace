@@ -327,6 +327,12 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 
 func containsRepId(replacedId []*ReplacedID, id string) bool {
 	for _, repId := range replacedId {
+		if strings.HasPrefix(repId.ID, "GEOLOCATION-") {
+			repId.Processed = true
+		}
+	}
+
+	for _, repId := range replacedId {
 		if id == repId.ID {
 			repId.Processed = true
 			return true
