@@ -66,7 +66,7 @@ import (
 	hostnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/hosts"
 	processgroupnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/processgroups"
 	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
+	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/ansible"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/email"
@@ -93,6 +93,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2alerting"
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2maintenance"
+	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2networkzones"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -216,6 +217,7 @@ func Provider() *schema.Provider {
 			"dynatrace_xmatters_notification":      xmatters.Resource(),
 			"dynatrace_credentials":                vaultres.Resource(),
 			"dynatrace_synthetic_location":         locations.Resource(),
+			"dynatrace_network_zone":               networkzone.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

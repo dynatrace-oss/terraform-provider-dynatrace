@@ -25,6 +25,7 @@ import (
 	hostnaming "github.com/dtcookie/dynatrace/api/config/naming/hosts"
 	processgroupnaming "github.com/dtcookie/dynatrace/api/config/naming/processgroups"
 	servicenaming "github.com/dtcookie/dynatrace/api/config/naming/services"
+	networkzone "github.com/dtcookie/dynatrace/api/config/networkzones"
 	"github.com/dtcookie/dynatrace/api/config/requestattributes"
 	"github.com/dtcookie/dynatrace/api/config/requestnaming"
 	privlocations "github.com/dtcookie/dynatrace/api/config/synthetic/locations"
@@ -450,6 +451,15 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		HardcodedIds: []string{"dynatrace_request_attribute"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
 			return Replace(resources, "dynatrace_request_attribute", dsData, ReplacedID{RefDS: "dynatrace_request_attribute"})
+		},
+	},
+	"dynatrace_network_zone": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{networkzone.NewService(environmentURL+"/api/v2", apiToken)}
+			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			return counter.Numbering(*v.(*networkzone.NetworkZone).ID)
 		},
 	},
 	"dynatrace_network_zones": {
