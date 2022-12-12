@@ -39,10 +39,6 @@ func toJSONencode(s string, indent string) string {
 	json.Unmarshal([]byte(s), &m)
 	out, _ := json.MarshalIndent(m, "", indent)
 	return " jsonencode(" + string(out) + ")"
-	// if strings.Contains(s, "\n") {
-	// 	return " jsonencode(\n" + indent + "  " + strings.ReplaceAll(s, "\n", "\n"+indent+"  ") + ")"
-	// }
-	// return " jsonencode(" + s + ")"
 }
 
 func finalizeString(s string, indent string) string {
