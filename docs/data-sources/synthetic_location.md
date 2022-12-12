@@ -63,7 +63,7 @@ resource "dynatrace_http_monitor" "#name#" {
 - `cloud_platform` (String) The cloud provider where the location is hosted. 
 
  Only applicable to `PUBLIC` locations
-- `id` (String) The unique ID of the location
+- `entity_id` (String) The unique ID of the location
 - `ips` (List of String) The list of IP addresses assigned to the location. 
 
  Only applicable to `PUBLIC` locations
@@ -75,3 +75,7 @@ resource "dynatrace_http_monitor" "#name#" {
 * `DISABLED`: The location is displayed as inactive in the UI. You can't assign monitors to the location. Monitors already assigned to the location will stay there and will be executed from the location. 
 * `HIDDEN`: The location is not displayed in the UI. You can't assign monitors to the location. You can only set location as `HIDDEN` when no monitor is assigned to it
 - `type` (String) The type of the location. Supported values are `PUBLIC`, `PRIVATE` and `CLUSTER`
+
+### Read-Only
+
+- `id` (String) The ID of this resource.

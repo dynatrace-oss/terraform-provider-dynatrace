@@ -25,6 +25,11 @@ The full documentation of the export feature is available [here](https://registr
 ### Required
 
 - `key` (String) the key of the attribute to capture
+- `masking` (String) granular control over the visibility of attribute values
+
+### Optional
+
+- `persistent` (Boolean) Prevents the Span Attribute from getting deleted when running `terraform destroy` - to be used for Span Attributes that are defined by default on every Dynatrace environment.
 
 ### Read-Only
 

@@ -84,11 +84,14 @@ Optional:
 <a id="nestedblock--conditions--condition--comparison--boolean"></a>
 ### Nested Schema for `conditions.condition.comparison.boolean`
 
+Required:
+
+- `value` (Boolean) The value to compare to
+
 Optional:
 
 - `operator` (String) Operator of the comparison. You can reverse it by setting `negate` to `true`. Possible values are `EQUALS`, `EQUALS_ANY_OF` and `EXISTS`
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- `value` (Boolean) The value to compare to
 - `values` (Set of Boolean) The values to compare to
 
 

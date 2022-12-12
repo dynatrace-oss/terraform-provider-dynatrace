@@ -80,7 +80,7 @@ Optional:
 - `cloud_platform` (String) The cloud provider where the location is hosted. 
 
  Only applicable to `PUBLIC` locations
-- `id` (String) The unique ID of the location
+- `entity_id` (String) The unique ID of the location
 - `ips` (List of String) The list of IP addresses assigned to the location. 
 
  Only applicable to `PUBLIC` locations

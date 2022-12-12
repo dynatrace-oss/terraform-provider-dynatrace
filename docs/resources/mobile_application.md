@@ -104,6 +104,7 @@ resource "dynatrace_mobile_application" "SIXTH_ASDFGHIJK" {
 - `application_id` (String) The UUID of the application.
 
 It is used only by OneAgent to send data to Dynatrace. If not specified it will get generated.
+- `application_type` (String) The type of the application. Either `CUSTOM_APPLICATION` or `MOBILE_APPLICATION`.
 - `beacon_endpoint_url` (String) The URL of the beacon endpoint.
 
 Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
