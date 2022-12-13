@@ -33,6 +33,7 @@ import (
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
+	v2metrics "github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
@@ -441,6 +442,15 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{managementzones.NewService(environmentURL+"/api/config/v1", apiToken)}
 			return clients
+		},
+	},
+	"dynatrace_metric_events": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{v2metrics.NewService(environmentURL+"/api/v2", apiToken)}
+			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			return counter.Numbering(v.(*v2metrics.MetricEvents).Summary)
 		},
 	},
 	"dynatrace_mobile_application": {

@@ -40,6 +40,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/v2metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/applicationdetectionrules"
@@ -173,6 +174,7 @@ func Provider() *schema.Provider {
 			"dynatrace_host_anomalies":             hosts.Resource(),
 			"dynatrace_database_anomalies":         databases.Resource(),
 			"dynatrace_custom_anomalies":           metrics.Resource(),
+			"dynatrace_metric_events":              v2metrics.Resource(),
 			"dynatrace_disk_anomalies":             disks.Resource(),
 			"dynatrace_calculated_service_metric":  service.Resource(),
 			"dynatrace_service_naming":             servicenaming.Resource(),

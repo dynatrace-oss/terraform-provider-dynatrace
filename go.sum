@@ -186,6 +186,8 @@ github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.6 h1:0/Uj1MsrTN/pFYVxF
 github.com/dtcookie/dynatrace/api/config/v2/alerting v1.0.6/go.mod h1:ozwqCpiIugLBSB+lHO6BwhrHCM1YRo9PSFJ0nnrzP+Y=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.1 h1:Sq0KBmv7tAIA1wpHfSUMj72RbRkLibEHDMa31onW2aw=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.1/go.mod h1:FvR5B0I2HrqpohQzwBM0BEAUc0ID7xApJQtLDS5x2g0=
+github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents v1.0.0 h1:V13uAELjqmnmppDFTVo2KEaNvMCJi/Qu+tm8dEVSfok=
+github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents v1.0.0/go.mod h1:jk1sZBbKIiSx7kxdFTAZR7C3Z59BSujBSRmOlpmLCAA=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 h1:dSWSlgwjvNVr3vQ4HerYce2k1O2f/heBzkKJgFaqu2Y=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0/go.mod h1:zKZFqz1pXn1Q8nEcCZTi2b3Rc5YKscCCVDmR7mS+z88=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.2 h1:yQiwpa6wGATaeughv7NFn+9KG6DkKfYgBJQ0yFPfk6w=

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_metric_events Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_metric_events` covers configuration for custom metric events
+---
+
+# dynatrace_metric_events (Resource)
+
+## Dynatrace Documentation
+
+- Metric events for alerting - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/metric-events-for-alerting
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:anomaly-detection.metric-events`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace export dynatrace_metric_events` downloads all existing custom metric event configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/anomalies/metrics/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

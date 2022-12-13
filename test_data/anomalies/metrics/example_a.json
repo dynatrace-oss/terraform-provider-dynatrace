@@ -1,0 +1,48 @@
+{
+    "objectId": "vu9U3hXa3q0AAAABACdidWlsdGluOmFub21hbHktZGV0ZWN0aW9uLm1ldHJpYy1ldmVudHMABnRlbmFudAAGdGVuYW50ACQ0NDNiMWIzNS1iMzExLTNlZWQtYjA4Ni0zYWJjYmY5YmNlZDm-71TeFdrerQ",
+    "summary": "",
+    "created": 1670964882152,
+    "modified": 1670964882152,
+    "author": "dt0c01.EONSMAEBO6C77HAVCNPEEQG3",
+    "updateToken": "vu9U3hXY3q0ATAAkNDQzYjFiMzUtYjMxMS0zZWVkLWIwODYtM2FiY2JmOWJjZWQ5ACQ1ZGQ1NDY4MC03YjI4LTExZWQtODAwMS0wMTAwMDAwMDAwMDK-71TeFdjerQ",
+    "scope": "environment",
+    "schemaId": "builtin:anomaly-detection.metric-events",
+    "schemaVersion": "1.0.3",
+    "value": {
+      "enabled": true,
+      "summary": "Azure CPU",
+      "queryDefinition": {
+        "type": "METRIC_KEY",
+        "metricKey": "builtin:cloud.azure.vm.cpuUsage",
+        "aggregation": "MAX",
+        "entityFilter": {
+          "dimensionKey": "dt.entity.azure_vm",
+          "conditions": [
+            {
+              "type": "NAME",
+              "operator": "EQUALS",
+              "value": "easytraveldemo-backend1"
+            }
+          ]
+        },
+        "dimensionFilter": []
+      },
+      "modelProperties": {
+        "type": "STATIC_THRESHOLD",
+        "threshold": 40,
+        "alertOnNoData": false,
+        "alertCondition": "ABOVE",
+        "violatingSamples": 5,
+        "samples": 5,
+        "dealertingSamples": 5
+      },
+      "eventTemplate": {
+        "title": "Azure CPU",
+        "description": "The {metricname} value of {severity} was {alert_condition} your custom threshold of {threshold}.",
+        "eventType": "RESOURCE",
+        "davisMerge": true,
+        "metadata": []
+      },
+      "eventEntityDimensionKey": "dt.entity.azure_vm"
+    }
+  }
