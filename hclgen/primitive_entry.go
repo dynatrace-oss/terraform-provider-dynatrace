@@ -38,7 +38,7 @@ func toJSONencode(s string, indent string) string {
 	m := map[string]any{}
 	json.Unmarshal([]byte(s), &m)
 	out, _ := json.MarshalIndent(m, "", indent)
-	return " jsonencode(" + string(out) + ")"
+	return " jsonencode(" + finalizeString(string(out), indent) + ")"
 }
 
 func finalizeString(s string, indent string) string {
