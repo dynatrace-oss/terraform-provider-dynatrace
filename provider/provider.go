@@ -60,6 +60,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuesharinggroups"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/jsondashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
@@ -157,6 +158,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),
 			"dynatrace_dashboard":                  dashboards.Resource(),
+			"dynatrace_json_dashboard":             jsondashboards.Resource(),
 			"dynatrace_management_zone":            mgmz.Resource(),
 			"dynatrace_maintenance_window":         maintenance.Resource(),
 			"dynatrace_maintenance":                v2maintenance.Resource(),

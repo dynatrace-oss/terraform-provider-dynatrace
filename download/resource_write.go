@@ -60,7 +60,7 @@ func (me ResourceData) WriteResource(dlConfig DownloadConfig, resName string, re
 			}
 		}
 
-		if resName == "dynatrace_dashboard" {
+		if resName == "dynatrace_dashboard" || resName == "dynatrace_json_dashboard" {
 			if err := me.writeDashboardSharing(file, resource.UniqueName); err != nil {
 				file.Close()
 				return err

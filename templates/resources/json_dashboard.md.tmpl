@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_json_dashboard Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_json_dashboard` covers configuration for dashboards in JSON format
+---
+
+# dynatrace_json_dashboard (Resource)
+
+## Dynatrace Documentation
+
+- Dashboards and reports - https://www.dynatrace.com/support/help/how-to-use-dynatrace/dashboards-and-charts
+
+- Dashboards API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/dashboards-api
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_json_dashboard` downloads all existing dashboard configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+
+## Resource Example Usage
+
+{{ tffile "test_data/dashboards/example_a_json.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

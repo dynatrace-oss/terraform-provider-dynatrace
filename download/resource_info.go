@@ -306,6 +306,19 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"})
 		},
 	},
+	"dynatrace_json_dashboard": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{dashboards.NewJSONService(environmentURL+"/api/config/v1", apiToken)}
+			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			return counter.Numbering(v.(*dashboards.JSONDashboard).Name)
+		},
+		HardcodedIds: []string{"dynatrace_management_zone"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
+			return Replace(resources, "dynatrace_management_zone", dsData, ReplacedID{RefDS: "dynatrace_management_zone", RefRes: "dynatrace_management_zone"})
+		},
+	},
 	"dynatrace_database_anomalies": {
 		NoListClient: func(environmentURL, apiToken string) NoListClient {
 			return databaseservices.NewService(environmentURL+"/api/config/v1", apiToken)
