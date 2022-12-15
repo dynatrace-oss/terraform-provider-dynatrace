@@ -198,12 +198,12 @@ github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.2 h1:idQU8D
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.2/go.mod h1:QQY1vcZV9eVnCUhl9xryTcfyTy+oZA80XKTYRgYgg9k=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2 h1:OmD99du/sNtc4xKx5Gum5dMUQD880ce//XnvkEHdbVE=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2/go.mod h1:3pOHqS+abmm2M0KRv5ulOU/gQX8APl3PYvPxBkFmlFI=
-github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.4 h1:+Dq+TMIU/Q7HhKqO/a87V9NSvee8qcUSxnQyADzkl5c=
-github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.4/go.mod h1:s+1ATeRp5xGImhYRmfrnovEVo6T4AtCBIgiWi4/MwBA=
+github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.5 h1:waeWI3yKbrA1RqPIZIeCmOuitLt5HFOr0EitdqXhY1k=
+github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.5/go.mod h1:s+1ATeRp5xGImhYRmfrnovEVo6T4AtCBIgiWi4/MwBA=
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2 h1:rGiuB6D+24bNNVE14p5QM56WdbdjfqEX6U7JRlrczAM=
 github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2/go.mod h1:X+e6c3B6D/8pIXEpil5yg06j3rpXBEFOdd5EIYxBUyI=
-github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1 h1:1n3LkGMA0WiiIYvPqGDFC3VsbTkfssQC/YvyprFfOJI=
-github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1/go.mod h1:LTzdeziZmWsQN0v1IBNdye26dxkxKFhXflkYiogHqTw=
+github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.2 h1:nfQCkNwbO5tIEqdgU7Er8oeshhQq0JtmsC58OKkqlp0=
+github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.2/go.mod h1:o4NmPwGB4BvUvsyLGLw4AGXJ1P3VeszJ1tEfPMSNxmQ=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4 h1:ZhpdFZQW2wskXJCIRMHZO9o0cMjBCUiTmOTXZnUkq6c=
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4/go.mod h1:MQkYbvci1MGaHfHUT5VI60QmqnwBK9s5d1yXY0erVmo=
 github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.7 h1:2mGmPO7BKPtz+vCW/diMtIBHY/1cKEIk8pog5UfQops=
@@ -791,8 +791,9 @@ google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884/go.mod h1:55QSHmfG
 google.golang.org/genproto v0.0.0-20200515170657-fc4c6c6a6587/go.mod h1:YsZOwe1myG/8QRHRsmBRE1LrgQY60beZKjly0O1fX9U=
 google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013/go.mod h1:NbSheEEYHJ7i3ixzK3sjbqSGDJWnxyFXZblF3eUsNvo=
 google.golang.org/genproto v0.0.0-20200618031413-b414f8b61790/go.mod h1:jDfRM7FcilCzHH/e9qn6dsT145K34l5v+OpcnNgKAAA=
-google.golang.org/genproto v0.0.0-20200711021454-869866162049 h1:YFTFpQhgvrLrmxtiIncJxFXeCyq84ixuKWVCaCAi9Oc=
 google.golang.org/genproto v0.0.0-20200711021454-869866162049/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
+google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d h1:92D1fum1bJLKSdr11OJ+54YeCMCGYIygTA7R/YZxH5M=
+google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/grpc v1.8.0/go.mod h1:yo6s7OP7yaDglbqo1J04qKzAhqBH6lvTonzMVmEdcZw=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=
 google.golang.org/grpc v1.20.1/go.mod h1:10oTOabMzJvdu6/UiuZezV6QK5dSlG84ov/aaiqXj38=

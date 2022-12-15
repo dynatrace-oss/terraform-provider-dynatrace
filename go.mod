@@ -51,9 +51,9 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups v1.0.2
-	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.4
+	github.com/dtcookie/dynatrace/api/config/v2/keyrequests v1.0.5
 	github.com/dtcookie/dynatrace/api/config/v2/maintenance v1.0.2
-	github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.1
+	github.com/dtcookie/dynatrace/api/config/v2/managementzones v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.4
 	github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.7
 	github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.8
@@ -134,7 +134,7 @@ require (
 	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
-	google.golang.org/genproto v0.0.0-20200711021454-869866162049 // indirect
+	google.golang.org/genproto v0.0.0-20200904004341-0bd0a958aa1d // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )

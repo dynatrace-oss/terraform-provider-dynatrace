@@ -164,11 +164,13 @@ type DownloadConfig struct {
 func ValidateResource(keyVal string) (string, string) {
 	res1 := ""
 	res2 := ""
+	parts := strings.Split(keyVal, "=")
+	keyVal = parts[0]
 	for resName := range ResourceInfoMap {
-		if strings.HasPrefix(keyVal, resName) {
+		if keyVal == resName {
 			res1 = resName
-			if strings.HasPrefix(keyVal, resName+"=") {
-				res2 = keyVal[len(resName)+1:]
+			if len(parts) > 1 {
+				res2 = parts[1]
 			}
 		}
 	}

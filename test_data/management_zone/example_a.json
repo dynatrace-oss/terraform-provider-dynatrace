@@ -1,0 +1,302 @@
+{
+	"objectId": "vu9U3hXa3q0AAAABABhidWlsdGluOm1hbmFnZW1lbnQtem9uZXMABnRlbmFudAAGdGVuYW50ACRlYjY1Njg0Ny03MmMxLTM0OTgtODU4ZC1iYTJiZGI4MzFkZWK-71TeFdrerQ",
+	"summary": "Cloud: Google",
+	"created": 1671135129305,
+	"modified": 1671135129305,
+	"author": "dt0c01.EONSMAEBO6C77HAVCNPEEQG3",
+	"updateToken": "vu9U3hXY3q0ATAAkZWI2NTY4NDctNzJjMS0zNDk4LTg1OGQtYmEyYmRiODMxZGViACRjMTBiM2M5MC03Y2I0LTExZWQtODAwMS0wMTAwMDAwMDAwMDO-71TeFdjerQ",
+	"scope": "environment",
+	"schemaId": "builtin:management-zones",
+	"schemaVersion": "1.0.4",
+	"value": {
+	  "name": "Cloud: Google",
+	  "rules": [
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION_NAMESPACE",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "extensions",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CUSTOM_DEVICE",
+			"conditions": [
+			  {
+				"key": "CUSTOM_DEVICE_NAME",
+				"operator": "CONTAINS",
+				"stringValue": "gcp",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "HOST",
+			"conditions": [
+			  {
+				"key": "HOST_CLOUD_TYPE",
+				"operator": "EQUALS",
+				"enumValue": "GOOGLE_CLOUD_PLATFORM"
+			  }
+			],
+			"hostToPGPropagation": true
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "SERVICE",
+			"conditions": [
+			  {
+				"key": "HOST_GROUP_ID",
+				"operator": "EQUALS",
+				"entityId": "HOST_GROUP-8A29CED074001723"
+			  }
+			],
+			"serviceToHostPropagation": true,
+			"serviceToPGPropagation": true
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION_NAMESPACE",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "linkerd",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "KUBERNETES_CLUSTER",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "consul",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION_NAMESPACE",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "gke",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "DIMENSION",
+		  "dimensionRule": {
+			"appliesTo": "METRIC",
+			"conditions": [
+			  {
+				"conditionType": "METRIC_KEY",
+				"ruleMatcher": "BEGINS_WITH",
+				"value": "cloud.gcp."
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "KUBERNETES_CLUSTER",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "extensions",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "HOST",
+			"conditions": [
+			  {
+				"key": "HOST_GROUP_ID",
+				"operator": "EQUALS",
+				"entityId": "HOST_GROUP-8A29CED074001723"
+			  }
+			],
+			"hostToPGPropagation": true
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "linkerd",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "WEB_APPLICATION",
+			"conditions": [
+			  {
+				"key": "WEB_APPLICATION_NAME",
+				"operator": "CONTAINS",
+				"stringValue": "gcp",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "SERVICE",
+			"conditions": [
+			  {
+				"key": "HOST_CLOUD_TYPE",
+				"operator": "EQUALS",
+				"enumValue": "GOOGLE_CLOUD_PLATFORM"
+			  }
+			],
+			"serviceToHostPropagation": true,
+			"serviceToPGPropagation": true
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION_NAMESPACE",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "consul",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "extensions",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "consul",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "CLOUD_APPLICATION",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "gke",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "KUBERNETES_CLUSTER",
+			"conditions": [
+			  {
+				"key": "KUBERNETES_CLUSTER_NAME",
+				"operator": "EQUALS",
+				"stringValue": "linkerd",
+				"caseSensitive": false
+			  }
+			]
+		  }
+		},
+		{
+		  "enabled": true,
+		  "type": "ME",
+		  "attributeRule": {
+			"entityType": "WEB_APPLICATION",
+			"conditions": [
+			  {
+				"key": "WEB_APPLICATION_NAME",
+				"operator": "CONTAINS",
+				"stringValue": "www.gcp.easytravel.com",
+				"caseSensitive": true
+			  }
+			]
+		  }
+		}
+	  ]
+	}
+  }

@@ -40,6 +40,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuesharinggroups"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	v2maintenance "github.com/dtcookie/dynatrace/api/config/v2/maintenance"
+	v2managementzones "github.com/dtcookie/dynatrace/api/config/v2/managementzones"
 	"github.com/dtcookie/dynatrace/api/config/v2/networkzones"
 	"github.com/dtcookie/dynatrace/api/config/v2/notifications"
 	"github.com/dtcookie/dynatrace/api/config/v2/slo"
@@ -454,6 +455,12 @@ var ResourceInfoMap = map[string]ResourceStruct{
 	"dynatrace_management_zone": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{managementzones.NewService(environmentURL+"/api/config/v1", apiToken)}
+			return clients
+		},
+	},
+	"dynatrace_management_zone_v2": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{v2managementzones.NewService(environmentURL+"/api/v2", apiToken)}
 			return clients
 		},
 	},

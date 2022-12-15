@@ -95,6 +95,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2alerting"
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2maintenance"
+	v2mgmz "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2mgmz"
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2networkzones"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -160,6 +161,7 @@ func Provider() *schema.Provider {
 			"dynatrace_dashboard":                  dashboards.Resource(),
 			"dynatrace_json_dashboard":             jsondashboards.Resource(),
 			"dynatrace_management_zone":            mgmz.Resource(),
+			"dynatrace_management_zone_v2":         v2mgmz.Resource(),
 			"dynatrace_maintenance_window":         maintenance.Resource(),
 			"dynatrace_maintenance":                v2maintenance.Resource(),
 			"dynatrace_request_attribute":          requestattributes.Resource(),
