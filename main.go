@@ -203,6 +203,10 @@ func exportv2(args []string) bool {
 		fmt.Println("The environment variable DYNATRACE_API_TOKEN needs to be set")
 		os.Exit(0)
 	}
+	iamClientID := os.Getenv("DT_CLIENT_ID")
+	iamAccountID := os.Getenv("DT_ACCOUNT_ID")
+	iamClientSecret := os.Getenv("DT_CLIENT_SECRET")
+
 	targetFolder := os.Getenv("DYNATRACE_TARGET_FOLDER")
 	if targetFolder == "" {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
@@ -247,7 +251,7 @@ func exportv2(args []string) bool {
 		}
 	}
 
-	return downloadv2.Download(environmentURL, apiToken, targetFolder, *refArg, *comIdArg, *migrateArg, *excludeArg, *linkArg, *verbose, *preview, resArgs)
+	return downloadv2.Download(environmentURL, apiToken, iamClientID, iamAccountID, iamClientSecret, targetFolder, *refArg, *comIdArg, *migrateArg, *excludeArg, *linkArg, *verbose, *preview, resArgs)
 }
 
 func export(args []string) bool {

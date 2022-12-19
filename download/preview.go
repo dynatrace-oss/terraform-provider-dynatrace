@@ -21,6 +21,22 @@ func PrintPreview(dlConfig DownloadConfig) error {
 		}
 		if ResourceInfoMap[resName].NoListClient != nil {
 			fmt.Fprintf(w, "%v\t%v\t\n", trimRes, 1)
+		} else if resStruct.IAMClient != nil {
+			clients := resStruct.IAMClient(
+				dlConfig.IAMClientID,
+				dlConfig.IAMAccountID,
+				dlConfig.IAMClientID,
+			)
+			count = 0
+			for _, client := range clients {
+				ids, err := client.LIST()
+				if err != nil {
+					return err
+				}
+				count += len(ids)
+			}
+			fmt.Fprintf(w, "%v\t%v\t\n", trimRes, count)
+
 		} else {
 			clients := resStruct.RESTClient(
 				dlConfig.EnvironmentURL,

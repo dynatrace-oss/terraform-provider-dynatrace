@@ -25,6 +25,7 @@ import (
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
+	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
@@ -56,6 +57,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
+	iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/iam/groups"
+	iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/iam/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/filters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
@@ -139,6 +142,24 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_CLUSTER_URL", "DT_CLUSTER_URL"}, nil),
 			},
+			"iam_client_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_ID"}, nil),
+			},
+			"iam_account_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_ACCOUNT_ID"}, nil),
+			},
+			"iam_client_secret": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_SECRET"}, nil),
+			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"dynatrace_alerting_profiles":         alerting.DataSource(),
@@ -155,6 +176,7 @@ func Provider() *schema.Provider {
 			"dynatrace_aws_iam_external":          dsaws.DataSource(),
 			"dynatrace_request_attribute":         reqattrds.DataSource(),
 			"dynatrace_calculated_service_metric": metricsds.DataSource(),
+			"dynatrace_iam_group":                 ds_iam_groups.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),
@@ -224,6 +246,8 @@ func Provider() *schema.Provider {
 			"dynatrace_credentials":                vaultres.Resource(),
 			"dynatrace_synthetic_location":         locations.Resource(),
 			"dynatrace_network_zone":               networkzone.Resource(),
+			"dynatrace_iam_user":                   iam_users.Resource(),
+			"dynatrace_iam_group":                  iam_groups.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

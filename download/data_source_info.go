@@ -1,6 +1,7 @@
 package download
 
 import (
+	"github.com/dtcookie/dynatrace/api/accounts/iam"
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
 	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
@@ -14,6 +15,20 @@ import (
 )
 
 var DataSourceInfoMap = map[string]DataSourceStruct{
+	"dynatrace_iam_group": {
+		IAMClient: func(clientID string, accountID string, clientSecret string) DataSourceClient {
+			return iam.NewGroupService(clientID, accountID, clientSecret)
+		},
+		MarshallHCL: func(restObject interface{}, dlConfig DownloadConfig) map[string]*DataSourceDetails {
+			stubs := restObject.([]*iam.ListGroup)
+			var restMap = map[string]*DataSourceDetails{}
+			for _, stub := range stubs {
+				restMap[stub.UUID] = &DataSourceDetails{Values: map[string]interface{}{}}
+				restMap[stub.UUID].Values["name"] = stub.Name
+			}
+			return restMap
+		},
+	},
 	"dynatrace_alerting_profile": {
 		RESTClient: func(environmentURL string, apiToken string) DataSourceClient {
 			return alerting.NewService(environmentURL+"/api/v2", apiToken)
@@ -151,6 +166,7 @@ var DataSourceInfoMap = map[string]DataSourceStruct{
 
 type DataSourceStruct struct {
 	RESTClient  func(string, string) DataSourceClient
+	IAMClient   func(string, string, string) DataSourceClient
 	MarshallHCL func(interface{}, DownloadConfig) map[string]*DataSourceDetails
 	UniqueName  func(map[string]interface{}) string
 }

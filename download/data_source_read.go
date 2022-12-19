@@ -6,13 +6,23 @@ func (me DataSourceData) ProcessRead(dlConfig DownloadConfig, resDataMap Resourc
 			continue
 		}
 
-		client := dsStruct.RESTClient(
-			dlConfig.EnvironmentURL,
-			dlConfig.APIToken,
-		)
+		var client DataSourceClient
+		if dsStruct.IAMClient != nil {
+			client = dsStruct.IAMClient(
+				dlConfig.IAMClientID,
+				dlConfig.IAMAccountID,
+				dlConfig.IAMClientSecret,
+			)
+		} else {
+			client = dsStruct.RESTClient(
+				dlConfig.EnvironmentURL,
+				dlConfig.APIToken,
+			)
+		}
 		if err := me.read(dlConfig, dsName, client); err != nil {
 			return err
 		}
+
 	}
 	return nil
 }

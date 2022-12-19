@@ -68,7 +68,7 @@ func DetermineCanHardLink(targetFolder string) {
 	// fmt.Println(".. using hard link capabilities")
 }
 
-func Download(environmentURL string, apiToken string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, linkArg bool, verbose bool, preview bool, resArgs map[string][]string) bool {
+func Download(environmentURL string, apiToken string, iamClientID string, iamAccountID string, iamClientSecret string, targetFolder string, refArg bool, comIdArg bool, migrateArg bool, excludeArg bool, linkArg bool, verbose bool, preview bool, resArgs map[string][]string) bool {
 	if linkArg {
 		DetermineCanHardLink(targetFolder)
 	} else {
@@ -81,15 +81,18 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 	var replacedIDs = ReplacedIDs{}
 
 	dlConfig := DownloadConfig{
-		EnvironmentURL: environmentURL,
-		APIToken:       apiToken,
-		TargetFolder:   targetFolder,
-		References:     refArg,
-		CommentedID:    comIdArg,
-		Migrate:        migrateArg,
-		Exclude:        excludeArg,
-		ResourceNames:  resArgs,
-		Verbose:        verbose,
+		EnvironmentURL:  environmentURL,
+		APIToken:        apiToken,
+		IAMClientID:     iamClientID,
+		IAMAccountID:    iamAccountID,
+		IAMClientSecret: iamClientSecret,
+		TargetFolder:    targetFolder,
+		References:      refArg,
+		CommentedID:     comIdArg,
+		Migrate:         migrateArg,
+		Exclude:         excludeArg,
+		ResourceNames:   resArgs,
+		Verbose:         verbose,
 	}
 
 	if preview {
@@ -150,15 +153,18 @@ func Download(environmentURL string, apiToken string, targetFolder string, refAr
 }
 
 type DownloadConfig struct {
-	EnvironmentURL string
-	APIToken       string
-	TargetFolder   string
-	References     bool
-	CommentedID    bool
-	Migrate        bool
-	Exclude        bool
-	ResourceNames  map[string][]string
-	Verbose        bool
+	EnvironmentURL  string
+	APIToken        string
+	TargetFolder    string
+	IAMClientID     string
+	IAMAccountID    string
+	IAMClientSecret string
+	References      bool
+	CommentedID     bool
+	Migrate         bool
+	Exclude         bool
+	ResourceNames   map[string][]string
+	Verbose         bool
 }
 
 func ValidateResource(keyVal string) (string, string) {

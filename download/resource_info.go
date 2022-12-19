@@ -3,6 +3,7 @@ package download
 import (
 	"reflect"
 
+	"github.com/dtcookie/dynatrace/api/accounts/iam"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/applications"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/databaseservices"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/diskevents"
@@ -458,6 +459,23 @@ var ResourceInfoMap = map[string]ResourceStruct{
 			return clients
 		},
 	},
+	"dynatrace_iam_user": {
+		IAMClient: func(clientID string, accountID string, clientSecret string) []StandardClient {
+			return []StandardClient{iam.NewUserService(clientID, accountID, clientSecret)}
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			return counter.Numbering(v.(*iam.User).Email)
+		},
+		HardcodedIds: []string{"dynatrace_iam_group"},
+		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
+			return Replace(resources, "dynatrace_iam_group", dsData, ReplacedID{RefDS: "dynatrace_iam_group", RefRes: "dynatrace_iam_group"})
+		},
+	},
+	"dynatrace_iam_group": {
+		IAMClient: func(clientID string, accountID string, clientSecret string) []StandardClient {
+			return []StandardClient{iam.NewGroupService(clientID, accountID, clientSecret)}
+		},
+	},
 	"dynatrace_management_zone_v2": {
 		RESTClient: func(environmentURL, apiToken string) []StandardClient {
 			clients := []StandardClient{v2managementzones.NewService(environmentURL+"/api/v2", apiToken)}
@@ -728,6 +746,7 @@ var ResourceInfoMap = map[string]ResourceStruct{
 type ResourceStruct struct {
 	RESTClient   func(environmentURL, apiToken string) []StandardClient
 	NoListClient func(environmentURL, apiToken string) NoListClient
+	IAMClient    func(clientID string, accountID string, clientSecret string) []StandardClient
 	CustomName   NameFunc
 	HardcodedIds []string
 	DsReplaceIds DataSourceReplaceFunc

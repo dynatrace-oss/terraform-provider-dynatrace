@@ -39,6 +39,18 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 		if resName == "dynatrace_dashboard" && !dlConfig.MatchResource(resName) {
 			continue
 		}
+		if resName == "dynatrace_json_dashboard" && !dlConfig.MatchResource(resName) {
+			continue
+		}
+		if resName == "dynatrace_iam_user" && !dlConfig.MatchResource(resName) {
+			continue
+		}
+		if resName == "dynatrace_iam_group" && !dlConfig.MatchResource(resName) {
+			continue
+		}
+		if resName == "dynatrace_management_zone" && !dlConfig.MatchResource(resName) {
+			continue
+		}
 		fmt.Println("Processing read: ", resName)
 		if ResourceInfoMap[resName].NoListClient != nil {
 			client := resStruct.NoListClient(
@@ -61,15 +73,28 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 				return err
 			}
 		} else {
-			clients := resStruct.RESTClient(
-				dlConfig.EnvironmentURL,
-				dlConfig.APIToken,
-			)
+			var clients []StandardClient
+			if resStruct.IAMClient != nil {
+				if len(dlConfig.IAMClientID) == 0 || len(dlConfig.IAMAccountID) == 0 || len(dlConfig.IAMClientSecret) == 0 {
+					continue
+				}
+				clients = resStruct.IAMClient(
+					dlConfig.IAMClientID,
+					dlConfig.IAMAccountID,
+					dlConfig.IAMClientSecret,
+				)
+			} else {
+				clients = resStruct.RESTClient(
+					dlConfig.EnvironmentURL,
+					dlConfig.APIToken,
+				)
+			}
 			for _, client := range clients {
 				if err := me.read(dlConfig, resName, client, nil); err != nil {
 					return err
 				}
 			}
+
 		}
 	}
 
@@ -117,10 +142,22 @@ func (me ResourceData) ProcessRepIdRead(dlConfig DownloadConfig, replacedIds Rep
 						return err
 					}
 				} else {
-					clients := ResourceInfoMap[resName].RESTClient(
-						dlConfig.EnvironmentURL,
-						dlConfig.APIToken,
-					)
+					var clients []StandardClient
+					if ResourceInfoMap[resName].IAMClient != nil {
+						if len(dlConfig.IAMClientID) == 0 || len(dlConfig.IAMAccountID) == 0 || len(dlConfig.IAMClientSecret) == 0 {
+							continue
+						}
+						clients = ResourceInfoMap[resName].IAMClient(
+							dlConfig.IAMClientID,
+							dlConfig.IAMAccountID,
+							dlConfig.IAMClientSecret,
+						)
+					} else {
+						clients = ResourceInfoMap[resName].RESTClient(
+							dlConfig.EnvironmentURL,
+							dlConfig.APIToken,
+						)
+					}
 					for _, client := range clients {
 						if err := me.read(dlConfig, resName, client, repId); err != nil {
 							return err
