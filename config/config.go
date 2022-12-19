@@ -29,6 +29,12 @@ import (
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
 var HTTPVerbose = (strings.TrimSpace(os.Getenv("DYNATRACE_DEBUG")) == "true")
 
+type IAM struct {
+	ClientID     string
+	AccountID    string
+	ClientSecret string
+}
+
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
 	DTenvURL          string
@@ -37,6 +43,7 @@ type ProviderConfiguration struct {
 	ClusterAPIV2URL   string
 	ClusterAPIToken   string
 	APIToken          string
+	IAM               IAM
 }
 
 type Getter interface {
@@ -68,5 +75,10 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (interface{}, diag.
 		APIToken:          apiToken,
 		ClusterAPIToken:   clusterAPIToken,
 		ClusterAPIV2URL:   clusterURL,
+		IAM: IAM{
+			ClientID:     d.Get("iam_client_id").(string),
+			AccountID:    d.Get("iam_account_id").(string),
+			ClientSecret: d.Get("iam_client_secret").(string),
+		},
 	}, diags
 }
