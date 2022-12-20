@@ -35,6 +35,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/v2/alerting"
 	"github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues"
 	v2metrics "github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents"
+	"github.com/dtcookie/dynatrace/api/config/v2/apitokens"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges"
 	"github.com/dtcookie/dynatrace/api/config/v2/ibmmq/queuemanagers"
@@ -75,6 +76,19 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		HardcodedIds: []string{"dynatrace_alerting_profile"},
 		DsReplaceIds: func(resources Resources, dsData DataSourceData) map[string][]*ReplacedID {
 			return replaceIdsNotif(resources, dsData)
+		},
+	},
+	"dynatrace_api_token": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{apitokens.NewService(environmentURL+"/api/v2", apiToken)}
+			return clients
+		},
+		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
+			name := v.(*apitokens.ApiToken).Name
+			if name == "" {
+				name = "BlankName"
+			}
+			return counter.Numbering(name)
 		},
 	},
 	"dynatrace_application_anomalies": {

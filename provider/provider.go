@@ -42,6 +42,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/v2metrics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/applicationdetectionrules"
@@ -248,6 +249,7 @@ func Provider() *schema.Provider {
 			"dynatrace_network_zone":               networkzone.Resource(),
 			"dynatrace_iam_user":                   iam_users.Resource(),
 			"dynatrace_iam_group":                  iam_groups.Resource(),
+			"dynatrace_api_token":                  apitokens.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

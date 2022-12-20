@@ -180,6 +180,8 @@ github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.2 h1:x
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/frequentissues v1.0.2/go.mod h1:9hLKpRFitWy/c48TLVBrdJqGYYE1SRqn6Zii7IJdL5w=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents v1.0.3 h1:EqVllaeevyDXQ3gnreS1mE4h6HPZAIqpJdKqqKoA1bQ=
 github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents v1.0.3/go.mod h1:hMGBe5womWgf5oHSNtjxwQipgh/MHRr4zYsmKG4Kv8c=
+github.com/dtcookie/dynatrace/api/config/v2/apitokens v1.0.2 h1:W4+zoJ3Yybuh0Mm0afHnLemFwz2uJ3bfgqcDkasbub8=
+github.com/dtcookie/dynatrace/api/config/v2/apitokens v1.0.2/go.mod h1:3+StyjPFRgGWaLaZRITPc6mYLd8KCd1QmAZrDfuZQNc=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1 h1:+S95mcmku/uhAw9ebzBVGMYHRd36W8LhGXbLiCGBlng=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1/go.mod h1:FImVOIo2us8yeenfjt6utMlLxENy5gd22/hjB8Aqqv4=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.3 h1:gVwzYha8jKHNM5rOOSQIfsJbYUoAGZHzOHy8s/0O7Hc=
