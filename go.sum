@@ -162,8 +162,8 @@ github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.2 h1:MzdH8K7pr8euIPq
 github.com/dtcookie/dynatrace/api/config/requestnaming v1.0.2/go.mod h1:IU1tIeECrZ2jykldw2bSlNCzH+8mJ9vaoqnNxUgM/zY=
 github.com/dtcookie/dynatrace/api/config/synthetic/locations v1.0.1 h1:zwjDhQ/2Tdz7zQHUqSc3X7gIb9M3nMxvSjdu1pbDWDw=
 github.com/dtcookie/dynatrace/api/config/synthetic/locations v1.0.1/go.mod h1:2bgZtc3E006/yjzxAROo6+0DrvxlMGo3Rm5MrtLrj+k=
-github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.20 h1:cfcb89C+l+jJhvm5q6w78j4uAKMtgphyBgJOZ+GD3OQ=
-github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.20/go.mod h1:ZX485yUyjSp7vEgYrjQwtCS8yYNayI+9nK0IngJ2lfE=
+github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.22 h1:y2phAVGx8zEJ60UR+n6CAdV066cdpZB0R002Oko+QSM=
+github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.22/go.mod h1:ZX485yUyjSp7vEgYrjQwtCS8yYNayI+9nK0IngJ2lfE=
 github.com/dtcookie/dynatrace/api/config/topology/host v1.0.2 h1:EmGsxzv967kSXg3F0UZDW9JV556y9nkyzX1FGDtfkNE=
 github.com/dtcookie/dynatrace/api/config/topology/host v1.0.2/go.mod h1:ybHwLWWE+h+S+Y1YjnwUXynmYgyVDalDscQlU28VFbw=
 github.com/dtcookie/dynatrace/api/config/topology/process v1.0.3 h1:p4QsaloLgMZo94Qm+UZnB+HVzqs+mT53oweEEa9hbpU=
