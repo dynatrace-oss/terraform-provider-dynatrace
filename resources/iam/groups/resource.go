@@ -19,6 +19,7 @@ package groups
 
 import (
 	"context"
+	"log"
 
 	"github.com/dtcookie/dynatrace/api/accounts/iam"
 	"github.com/dtcookie/dynatrace/rest"
@@ -44,6 +45,9 @@ func Resource() *schema.Resource {
 
 func NewService(m interface{}) *iam.GroupServiceClient {
 	conf := m.(*config.ProviderConfiguration)
+	log.Println("conf.IAM.ClientID", conf.IAM.ClientID)
+	log.Println("conf.IAM.AccountID", conf.IAM.AccountID)
+	log.Println("conf.IAM.ClientSecret", conf.IAM.ClientSecret)
 
 	apiService := iam.NewGroupService(conf.IAM.ClientID, conf.IAM.AccountID, conf.IAM.ClientSecret)
 	rest.Verbose = config.HTTPVerbose
