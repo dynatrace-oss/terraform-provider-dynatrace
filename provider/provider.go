@@ -147,19 +147,19 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_ID"}, nil),
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_ID", "DT_CLIENT_ID"}, nil),
 			},
 			"iam_account_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_ACCOUNT_ID"}, nil),
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_ACCOUNT_ID", "DT_ACCOUNT_ID"}, nil),
 			},
 			"iam_client_secret": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_SECRET"}, nil),
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_SECRET", "DT_CLIENT_SECRET"}, nil),
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
