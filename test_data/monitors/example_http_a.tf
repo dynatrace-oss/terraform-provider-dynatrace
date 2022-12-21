@@ -1,5 +1,5 @@
 resource "dynatrace_http_monitor" "#name#" {
-  name = "#name#"
+  name      = "#name#"
   frequency = 1
   locations = ["GEOLOCATION-F3E06A526BE3B4C4"]
   anomaly_detection {
@@ -7,12 +7,15 @@ resource "dynatrace_http_monitor" "#name#" {
     }
     outage_handling {
       global_outage = true
+      global_outage_policy {
+        consecutive_runs = 1
+      }
     }
   }
   script {
     request {
-      description = "getOffice365ActiveUserCounts"
-      method = "GET"
+      description     = "getOffice365ActiveUserCounts"
+      method          = "GET"
       post_processing = <<-EOT
         if (response.getStatusCode() != 200) {
             api.fail("HTTP error: " + response.getStatusCode());
@@ -61,25 +64,25 @@ resource "dynatrace_http_monitor" "#name#" {
         if ("yammer" in counts) api.setValue("yammer", counts.yammer);
         if ("teams" in counts) api.setValue("teams", counts.teams);
       EOT
-      url = "https://graph.microsoft.com/v1.0/reports/getOffice365ActiveUserCounts(period='D7')"
+      url             = "https://graph.microsoft.com/v1.0/reports/getOffice365ActiveUserCounts(period='D7')"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
           }
           header {
-            name = "Accept"
+            name  = "Accept"
             value = "application/json"
           }
         }
       }
     }
     request {
-      description = "getMailboxUsageQuotaStatusMailboxCounts"
-      method = "GET"
+      description     = "getMailboxUsageQuotaStatusMailboxCounts"
+      method          = "GET"
       post_processing = <<-EOT
         if (response.getStatusCode() != 200) {
             api.fail("HTTP error: " + response.getStatusCode());
@@ -124,27 +127,27 @@ resource "dynatrace_http_monitor" "#name#" {
         api.setValue("send_receive_prohibited", ("send_receive_prohibited" in counts) ? counts.send_receive_prohibited : 0);
         api.setValue("indeterminate", ("indeterminate" in counts) ? counts.send_receive_prohibited : 0);
       EOT
-      url = "https://graph.microsoft.com/v1.0/reports/getMailboxUsageQuotaStatusMailboxCounts(period='D7')"
+      url             = "https://graph.microsoft.com/v1.0/reports/getMailboxUsageQuotaStatusMailboxCounts(period='D7')"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }
     }
     request {
-      description = "getMailboxUsageStorage"
-      method = "GET"
+      description     = "getMailboxUsageStorage"
+      method          = "GET"
       post_processing = <<-EOT
         if (response.getStatusCode() != 200) {
             api.fail("HTTP error: " + response.getStatusCode());
@@ -182,27 +185,27 @@ resource "dynatrace_http_monitor" "#name#" {
         api.setValue("storage_used", ("storage_used" in counts) ? counts.storage_used / 1024 / 1024 / 1024 : 0);
         api.setValue("storage_used_mailbox", ("storage_used" in counts) ? counts.storage_used / 1024 / 1024 / 1024 : 0);
       EOT
-      url = "https://graph.microsoft.com/v1.0/reports/getMailboxUsageStorage(period='D7')"
+      url             = "https://graph.microsoft.com/v1.0/reports/getMailboxUsageStorage(period='D7')"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }
     }
     request {
-      description = "getSharePointSiteUsageStorage"
-      method = "GET"
+      description     = "getSharePointSiteUsageStorage"
+      method          = "GET"
       post_processing = <<-EOT
         if (response.getStatusCode() != 200) {
             api.fail("HTTP error: " + response.getStatusCode());
@@ -242,27 +245,27 @@ resource "dynatrace_http_monitor" "#name#" {
         
         api.setValue("storage_used_sharepoint", ("storage_used" in counts) ? counts.storage_used / 1024 / 1024 / 1024 : 0);
       EOT
-      url = "https://graph.microsoft.com/v1.0/reports/getSharePointSiteUsageStorage(period='D7')"
+      url             = "https://graph.microsoft.com/v1.0/reports/getSharePointSiteUsageStorage(period='D7')"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }
     }
     request {
-      description = "getOneDriveUsageStorage"
-      method = "GET"
+      description     = "getOneDriveUsageStorage"
+      method          = "GET"
       post_processing = <<-EOT
         if (response.getStatusCode() != 200) {
             api.fail("HTTP error: " + response.getStatusCode());
@@ -302,27 +305,27 @@ resource "dynatrace_http_monitor" "#name#" {
         
         api.setValue("storage_used_onedrive", ("storage_used" in counts) ? counts.storage_used / 1024 / 1024 / 1024 : 0);
       EOT
-      url = "https://graph.microsoft.com/v1.0/reports/getOneDriveUsageStorage(period='D7')"
+      url             = "https://graph.microsoft.com/v1.0/reports/getOneDriveUsageStorage(period='D7')"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }
     }
     request {
-      description = "ServiceComms/CurrentStatus"
-      method = "GET"
+      description     = "ServiceComms/CurrentStatus"
+      method          = "GET"
       post_processing = <<-EOT
         var healthyStates = [
             "PostIncidentReviewPublished",
@@ -351,31 +354,31 @@ resource "dynatrace_http_monitor" "#name#" {
         });
         api.setValue("service_status", payload);
       EOT
-      url = "https://manage.office.com/api/v1.0/{CREDENTIALS_VAULT-1A8E917381883F54|token}/ServiceComms/CurrentStatus"
+      url             = "https://manage.office.com/api/v1.0/{CREDENTIALS_VAULT-1A8E917381883F54|token}/ServiceComms/CurrentStatus"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Bearer {CREDENTIALS_VAULT-CE4EA27BA94C9061|token}"
           }
           header {
-            name = "Accept"
+            name  = "Accept"
             value = "application/json"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }
     }
     request {
       description = "api/v2/metrics/ingest"
-      body = <<-EOT
+      body        = <<-EOT
         office365.user.count,product=sharepoint {sharepoint}
         office365.user.count,product=onedrive {onedrive}
         office365.user.count,product=yammer {yammer}
@@ -393,25 +396,25 @@ resource "dynatrace_http_monitor" "#name#" {
         office365.storage.used.bytes,site=onedrive {storage_used_onedrive}
         {service_status}
       EOT
-      method = "POST"
-      url = "https://siz65484.live.dynatrace.com/api/v2/metrics/ingest"
+      method      = "POST"
+      url         = "https://siz65484.live.dynatrace.com/api/v2/metrics/ingest"
       configuration {
         accept_any_certificate = true
-        follow_redirects = true
+        follow_redirects       = true
         headers {
           header {
-            name = "Content-Type"
+            name  = "Content-Type"
             value = "text/plain"
           }
           header {
-            name = "Authorization"
+            name  = "Authorization"
             value = "Api-Token {CREDENTIALS_VAULT-55F1E51535993619|token}"
           }
         }
       }
       validation {
         rule {
-          type = "httpStatusesList"
+          type  = "httpStatusesList"
           value = "\u003e=400"
         }
       }

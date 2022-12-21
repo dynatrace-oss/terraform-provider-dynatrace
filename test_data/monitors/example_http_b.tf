@@ -7,6 +7,9 @@ resource "dynatrace_http_monitor" "#name#" {
     }
     outage_handling {
       global_outage = true
+      global_outage_policy {
+        consecutive_runs = 1
+      }
     }
   }
   script {

@@ -19,7 +19,7 @@ package monitors_test
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -53,7 +53,7 @@ func (test *TestStruct) ResourceKey() string {
 func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *testing.T) (*resource.TestCase, error) {
 	var content []byte
 	var err error
-	if content, err = ioutil.ReadFile(file); err != nil {
+	if content, err = os.ReadFile(file); err != nil {
 		return nil, err
 	}
 	config := string(content)

@@ -1,20 +1,23 @@
 resource "dynatrace_browser_monitor" "#name#" {
-  name = "#name#"
-  frequency = 15
-  locations = ["GEOLOCATION-B4B9167CAAA88F6A","GEOLOCATION-03E96F97A389F96A"]
+  name                   = "#name#"
+  frequency              = 15
+  locations              = ["GEOLOCATION-B4B9167CAAA88F6A", "GEOLOCATION-03E96F97A389F96A"]
   manually_assigned_apps = ["APPLICATION-EA7C4B59F27D43EB"]
   anomaly_detection {
     loading_time_thresholds {
       enabled = true
     }
     outage_handling {
-      global_outage = true
+      global_outage  = true
       retry_on_error = true
+      global_outage_policy {
+        consecutive_runs = 1
+      }
     }
   }
   key_performance_metrics {
     load_action_kpm = "VISUALLY_COMPLETE"
-    xhr_action_kpm = "VISUALLY_COMPLETE"
+    xhr_action_kpm  = "VISUALLY_COMPLETE"
   }
   script {
     type = "clickpath"
@@ -25,12 +28,12 @@ resource "dynatrace_browser_monitor" "#name#" {
         network_type = "GPRS"
       }
       device {
-        name = "Apple iPhone 8"
+        name        = "Apple iPhone 8"
         orientation = "landscape"
       }
       headers {
         header {
-          name = "kjh"
+          name  = "kjh"
           value = "kjh"
         }
       }
@@ -39,13 +42,13 @@ resource "dynatrace_browser_monitor" "#name#" {
       }
       javascript_setttings {
         timeout_settings {
-          action_limit = 3
+          action_limit  = 3
           total_timeout = 100
         }
         visually_complete_options {
           image_size_threshold = 0
-          inactivity_timeout = 0
-          mutation_timeout = 0
+          inactivity_timeout   = 0
+          mutation_timeout     = 0
         }
       }
     }
@@ -55,7 +58,7 @@ resource "dynatrace_browser_monitor" "#name#" {
         navigate {
           url = "https://www.orf.at"
           authentication {
-            type = "http_authentication"
+            type  = "http_authentication"
             creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
           }
           wait {
@@ -68,12 +71,12 @@ resource "dynatrace_browser_monitor" "#name#" {
         navigate {
           url = "https://www.orf.at"
           authentication {
-            type = "http_authentication"
+            type  = "http_authentication"
             creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
           }
           validate {
             validation {
-              type = "text_match"
+              type  = "text_match"
               match = "kkl"
               regex = true
               target {
@@ -82,15 +85,15 @@ resource "dynatrace_browser_monitor" "#name#" {
             }
           }
           wait {
-            timeout = 60000
+            timeout  = 60000
             wait_for = "validation"
             validation {
-              type = "element_match"
+              type  = "element_match"
               match = "kjkj"
               target {
                 locators {
                   locator {
-                    type = "css"
+                    type  = "css"
                     value = "jjj"
                   }
                 }
