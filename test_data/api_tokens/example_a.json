@@ -1,0 +1,11 @@
+{
+    "id": "dt0c01.ZLHM7REQX7JNW352GZ4ZNX6R",
+    "name": "",
+    "enabled": false,
+    "personalAccessToken": false,
+    "owner": "",
+    "creationDate": "2022-12-19T16:36:40.293Z",
+    "scopes": [
+      "geographicRegions.read"
+    ]
+  }
