@@ -18,7 +18,7 @@ Use the links to the left to learn about the available resources and data source
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.15.0"
+            version = "1.16.0"
             source = "dynatrace-oss/dynatrace"
         }
     }
@@ -61,9 +61,9 @@ Invoking the export functionality requires
 * Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
 
 ## Export Utility
-Windows: `terraform-provider-dynatrace.exe -exportv2 [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
+Windows: `terraform-provider-dynatrace.exe -export [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
 
-Linux: `./terraform-provider-dynatrace -exportv2 [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
+Linux: `./terraform-provider-dynatrace -export [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
 ### Options
 * `-v` Enable verbose logging
 * `-ref` Enable resources with data sources and dependencies
@@ -92,9 +92,9 @@ Linux: `./terraform-provider-dynatrace -exportv2 [-v] [-ref] [-id] [-migrate] [-
 * Due to the complexity of dashboards, there may be cases where the `terraform apply` fails after an export. Dashboard validation will be improved in a future release.
 
 ## Export Utility (Legacy method)
-Windows: `terraform-provider-dynatrace.exe export *[<resourcename>[=<id>]]`
+Windows: `terraform-provider-dynatrace.exe exportv1 *[<resourcename>[=<id>]]`
 
-Linux: `./terraform-provider-dynatrace export *[<resourcename>[=<id>]]`
+Linux: `./terraform-provider-dynatrace exportv1 *[<resourcename>[=<id>]]`
 
 ### Usage Examples
 * `./terraform-provider-dynatrace exportv1` downloads all available configuration settings
@@ -113,3 +113,6 @@ Linux: `./terraform-provider-dynatrace export *[<resourcename>[=<id>]]`
 - `dt_cluster_api_token` (String, Sensitive)
 - `dt_cluster_url` (String, Sensitive)
 - `dt_env_url` (String)
+- `iam_account_id` (String, Sensitive)
+- `iam_client_id` (String, Sensitive)
+- `iam_client_secret` (String, Sensitive)

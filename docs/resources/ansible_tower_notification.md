@@ -15,9 +15,9 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_ansible_tower_notification` downloads the existing Problem Notifications for Ansible Tower
+- `terraform-provider-dynatrace -export dynatrace_ansible_tower_notification` downloads the existing Problem Notifications for Ansible Tower
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 

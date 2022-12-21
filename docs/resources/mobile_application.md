@@ -19,9 +19,9 @@ Session and user action properties are expected to be sorted by their `key`.
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_mobile_application` downloads all existing web application configuration
+- `terraform-provider-dynatrace -export dynatrace_mobile_application` downloads all existing web application configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
