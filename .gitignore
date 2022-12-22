@@ -9,3 +9,4 @@ configuration/*
 configuration_playground/*
 export.cmd
 tf2json.cmd
+configuration-*/*
