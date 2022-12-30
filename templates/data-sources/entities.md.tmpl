@@ -1,0 +1,26 @@
+---
+layout: ""
+page_title: "dynatrace_entities Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_entities` covers queries for the list of entities based off of type
+---
+
+# dynatrace_entities (Data Source)
+
+The entities data source allows all entities to be retrieved by its type.
+
+- `type` (String) Type of the entity, e.g. SERVICE. All available entity types can be retrieved with [/api/v2/entityTypes](https://www.dynatrace.com/support/help/dynatrace-api/environment-api/entity-v2/get-all-entity-types).
+
+## Example Usage
+
+```terraform
+data "dynatrace_entities" "Test" {
+  type = "SERVICE"
+}
+
+output "Service_List" {
+  value = data.dynatrace_entities.Test.entities
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

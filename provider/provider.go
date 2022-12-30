@@ -24,6 +24,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
@@ -178,6 +180,8 @@ func Provider() *schema.Provider {
 			"dynatrace_request_attribute":         reqattrds.DataSource(),
 			"dynatrace_calculated_service_metric": metricsds.DataSource(),
 			"dynatrace_iam_group":                 ds_iam_groups.DataSource(),
+			"dynatrace_entity":                    entity.DataSource(),
+			"dynatrace_entities":                  entities.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":             customservices.Resource(),

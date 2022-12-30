@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: "dynatrace_entity Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_entity` covers queries for the ID of a entity based on name and type
+---
+
+# dynatrace_entity (Data Source)
+
+The entity data source allows the entity ID to be retrieved by its name and type.
+
+- `name` (String) Display name of the entity
+- `type` (String) Type of the entity, e.g. SERVICE. All available entity types can be retrieved with [/api/v2/entityTypes](https://www.dynatrace.com/support/help/dynatrace-api/environment-api/entity-v2/get-all-entity-types).
+
+If multiple services match the given criteria, the first result will be retrieved.
+
+## Example Usage
+
+```terraform
+data "dynatrace_entity" "Test" {
+  type = "SERVICE"
+  name = "BookingService"
+}
+
+output "id" {
+  value = data.dynatrace_entity.Test.id
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
