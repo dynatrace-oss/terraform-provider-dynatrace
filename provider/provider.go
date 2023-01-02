@@ -51,6 +51,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/errorrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/privacy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/consumption"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/cloudfoundry"
@@ -254,6 +255,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_user":                   iam_users.Resource(),
 			"dynatrace_iam_group":                  iam_groups.Resource(),
 			"dynatrace_api_token":                  apitokens.Resource(),
+			"dynatrace_ddu_pool":                   consumption.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
