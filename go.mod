@@ -90,6 +90,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/common v1.0.6 // indirect
 	github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.12 // indirect
 	github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1 // indirect
+	github.com/dtcookie/dynatrace/api/config/v2/consumption v0.0.0-00010101000000-000000000000 // indirect
 	github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2 // indirect
 	github.com/dtcookie/gojson v0.9.1 // indirect
 	github.com/dtcookie/xjson v1.0.2 // indirect
@@ -141,5 +142,3 @@ require (
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
-
-replace github.com/dtcookie/dynatrace/api/config/v2/consumption => /Users/adrian.gonciarz/go/src/github.com/dtcookie/dynatrace/api/config/v2/consumption
