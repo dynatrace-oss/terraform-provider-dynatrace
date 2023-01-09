@@ -10,3 +10,5 @@ configuration_playground/*
 export.cmd
 tf2json.cmd
 configuration-*/*
+terraform-provider-dynatrace.http.log
+terraform-provider-dynatrace.tests.log
