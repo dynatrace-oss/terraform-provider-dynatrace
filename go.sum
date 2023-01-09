@@ -152,8 +152,8 @@ github.com/dtcookie/dynatrace/api/config/naming/processgroups v1.0.5 h1:V11SYC5K
 github.com/dtcookie/dynatrace/api/config/naming/processgroups v1.0.5/go.mod h1:Zq4qwnZ9ooU9TtcspTN7+g+JlwDWlXZBWtvUIz6jLY4=
 github.com/dtcookie/dynatrace/api/config/naming/services v1.0.5 h1:j7wCPL3p/MHv7PjLHN8nVAhBMVO3hX0m4HdGKnAOCY0=
 github.com/dtcookie/dynatrace/api/config/naming/services v1.0.5/go.mod h1:mnYIF5eaclHr8APAGo3R8yEwuIEQjCRP/Q/gKceCiJI=
-github.com/dtcookie/dynatrace/api/config/networkzones v1.0.1 h1:n2mtcSGSLlgSKdXrXrYOT6+DMr1Fmic/XV8A9gU14VY=
-github.com/dtcookie/dynatrace/api/config/networkzones v1.0.1/go.mod h1:PyZH5tSDuMvgfDliaFxf6Op7Ay+V42K1hLebVv8HGNU=
+github.com/dtcookie/dynatrace/api/config/networkzones v1.0.2 h1:VXpWaq3RKUEq1VtbuAtOTnuzrrQA/ljU+RbLFsUbrEg=
+github.com/dtcookie/dynatrace/api/config/networkzones v1.0.2/go.mod h1:PyZH5tSDuMvgfDliaFxf6Op7Ay+V42K1hLebVv8HGNU=
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.13 h1:Au3oMnDD1NPX10XzFHIoYVQawtQEujRvg/TaeuSsJas=
 github.com/dtcookie/dynatrace/api/config/notifications v1.0.13/go.mod h1:/4i9ezxmEiJhrq6ZJ+4TEeROX1020byZvEAp141arJ0=
 github.com/dtcookie/dynatrace/api/config/requestattributes v1.0.14 h1:1PgBtmCwlwEau8y98g7JgdVd9cDI6o4I0uf2ll0a3Gw=
