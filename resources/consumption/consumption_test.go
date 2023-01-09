@@ -33,7 +33,7 @@ import (
 
 const ResourceName = "dynatrace_ddu_pool"
 const TestDataFolder = "../../test_data/consumption"
-const RequestPath = "%s/autoTags/%s"
+const RequestPath = "%s/settings/objects/%s"
 const TestCaseID = "consumption"
 
 type TestStruct struct {
@@ -77,7 +77,7 @@ func (test *TestStruct) CreateTestCase(file string, localJSONFile string, t *tes
 	}, nil
 }
 
-func TestAutoTags(t *testing.T) {
+func TestDDUPools(t *testing.T) {
 	if disabled, ok := testbase.DisabledTests[TestCaseID]; ok && disabled {
 		t.Skip()
 	}

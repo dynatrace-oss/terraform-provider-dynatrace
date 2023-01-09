@@ -1,0 +1,153 @@
+{
+  "dynatrace": "1",
+  "schemaId": "builtin:accounting.ddu.limit",
+  "displayName": "Davis data units pools",
+  "description": "Define the maximum Davis data units allowed to be consumed within one month or year.",
+  "documentation": "",
+  "schemaGroups": [
+    "group:accounting"
+  ],
+  "version": "3.4.1",
+  "multiObject": false,
+  "maxObjects": 1,
+  "allowedScopes": [
+    "environment"
+  ],
+  "enums": {
+    "limitType": {
+      "displayName": "limitType",
+      "description": "",
+      "documentation": "",
+      "items": [
+        {
+          "value": "MONTHLY",
+          "displayName": "monthly"
+        },
+        {
+          "value": "ANNUAL",
+          "displayName": "annual"
+        }
+      ],
+      "type": "enum"
+    }
+  },
+  "types": {
+    "limit": {
+      "version": "0",
+      "versionInfo": "",
+      "displayName": "limit",
+      "summaryPattern": "",
+      "description": "",
+      "documentation": "",
+      "properties": {
+        "limitEnabled": {
+          "displayName": "Enable limit",
+          "description": "",
+          "documentation": "",
+          "type": "boolean",
+          "nullable": false,
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": false
+        },
+        "limitType": {
+          "displayName": "Time frame of limit",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/enums/limitType"
+          },
+          "nullable": false,
+          "precondition": {
+            "type": "EQUALS",
+            "property": "limitEnabled",
+            "expectedValue": true
+          },
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": "MONTHLY"
+        },
+        "limitValue": {
+          "displayName": "Maximum per time frame",
+          "description": "The upper limit for the defined time frame",
+          "documentation": "",
+          "type": "integer",
+          "nullable": false,
+          "constraints": [
+            {
+              "type": "RANGE",
+              "maximum": 1000000000,
+              "minimum": 0
+            }
+          ],
+          "precondition": {
+            "type": "EQUALS",
+            "property": "limitEnabled",
+            "expectedValue": true
+          },
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": 0
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "metrics": {
+      "displayName": "Metrics",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/limit"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    },
+    "logMonitoring": {
+      "displayName": "Log Monitoring",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/limit"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    },
+    "serverless": {
+      "displayName": "Serverless",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/limit"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    },
+    "events": {
+      "displayName": "Events",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/limit"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    },
+    "traces": {
+      "displayName": "Traces",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/limit"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    }
+  }
+}
