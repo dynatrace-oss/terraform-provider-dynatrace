@@ -44,6 +44,12 @@ func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "id")
 	delete(m, "name")
 	delete(m, "metadata")
+	delete(m, "author")
+	delete(m, "created")
+	delete(m, "modified")
+	delete(m, "objectId")
+	delete(m, "schemaVersion")
+	delete(m, "updateToken")
 }
 
 func (test *TestStruct) ResourceKey() string {
@@ -96,14 +102,14 @@ func TestDDUPools(t *testing.T) {
 }
 
 func (test *TestStruct) URL(id string) string {
-	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTenvURL
+	envURL := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration).DTApiV2URL
 	reqPath := RequestPath
 	return fmt.Sprintf(reqPath, envURL, id)
 }
 
 func (test *TestStruct) CheckDestroy(s *terraform.State) error {
 	providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
-	restClient := consump.NewService(providerConf.DTenvURL, providerConf.APIToken)
+	restClient := consump.NewService(providerConf.DTApiV2URL, providerConf.APIToken)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != ResourceName {
@@ -129,7 +135,7 @@ func (test *TestStruct) CheckDestroy(s *terraform.State) error {
 func CheckExists(n string, t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		providerConf := testbase.TestAccProvider.Meta().(*config.ProviderConfiguration)
-		restClient := consump.NewService(providerConf.DTenvURL, providerConf.APIToken)
+		restClient := consump.NewService(providerConf.DTApiV2URL, providerConf.APIToken)
 
 		if rs, ok := s.RootModule().Resources[n]; ok {
 			if _, err := restClient.Get(rs.Primary.ID); err != nil {

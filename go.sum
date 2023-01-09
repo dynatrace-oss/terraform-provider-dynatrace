@@ -184,6 +184,8 @@ github.com/dtcookie/dynatrace/api/config/v2/apitokens v1.0.2 h1:W4+zoJ3Yybuh0Mm0
 github.com/dtcookie/dynatrace/api/config/v2/apitokens v1.0.2/go.mod h1:3+StyjPFRgGWaLaZRITPc6mYLd8KCd1QmAZrDfuZQNc=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1 h1:+S95mcmku/uhAw9ebzBVGMYHRd36W8LhGXbLiCGBlng=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1/go.mod h1:FImVOIo2us8yeenfjt6utMlLxENy5gd22/hjB8Aqqv4=
+github.com/dtcookie/dynatrace/api/config/v2/consumption v1.0.0 h1:1i8SoxxpalNwoBevFELS9bXIVn4hX95LGx4TkVjTdIE=
+github.com/dtcookie/dynatrace/api/config/v2/consumption v1.0.0/go.mod h1:SFIGfqn7cYmO9Ur3ulyz3TmF3oxrB/Txj2u1se6L7WM=
 github.com/dtcookie/dynatrace/api/config/v2/entities v1.0.0 h1:0rdrJE4GnJ68x9VB5A3weuCJPouP3PN9+IqZU+a5z6I=
 github.com/dtcookie/dynatrace/api/config/v2/entities v1.0.0/go.mod h1:3nCJUm7j+KEXGR9vcvUCgUDOjLdjj2lHIWVyQkDmHVM=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.3 h1:gVwzYha8jKHNM5rOOSQIfsJbYUoAGZHzOHy8s/0O7Hc=
