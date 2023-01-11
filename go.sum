@@ -208,8 +208,8 @@ github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.5 h1:ctHCuWecb+IxI
 github.com/dtcookie/dynatrace/api/config/v2/networkzones v1.0.5/go.mod h1:5gufl9+Uroalesw/4mjx87TeCFLK3ctoPBnuVKmiVYw=
 github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.8 h1:7A1DbE29UUrd9hjk0GcMvcJ+nDs1VfPVQPA5rHJ5HsA=
 github.com/dtcookie/dynatrace/api/config/v2/notifications v1.0.8/go.mod h1:+SBQ5uWoFmTIVYipz1wxmzkAjxjZoUfu1LKGBiZZoX4=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.9 h1:MmAdpfXszPDmMjMMWhyrHHrQnRE4sfH9konhanIy4Vo=
-github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.9/go.mod h1:c0hZDH0MwlYUQRhFrVZwKo1Q5UJELD7iSzAjPfD0OlY=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.10 h1:97TvIrsEJHeUxKIUQEedVP/0QLjr9CRApW/ynV1zUAg=
+github.com/dtcookie/dynatrace/api/config/v2/slo v1.0.10/go.mod h1:c0hZDH0MwlYUQRhFrVZwKo1Q5UJELD7iSzAjPfD0OlY=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.5 h1:GzSP60cSOeeEAYtSWQiKmD1Vy39kQ1pWCzWUOpMNqFk=
 github.com/dtcookie/dynatrace/api/config/v2/spans/attributes v1.0.5/go.mod h1:VXg0MTX7u5u0nu84SFVcpdBiYaD/awqCEZfLkRYg200=
 github.com/dtcookie/dynatrace/api/config/v2/spans/capture v1.0.4 h1:O+owRrS4qwrz1HbFfNkKIm2JZevq4SrVcN+hGahJWQw=
