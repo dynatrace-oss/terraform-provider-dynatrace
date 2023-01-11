@@ -110,6 +110,8 @@ github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.9 h1:oJOgygj3Upimx
 github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.9/go.mod h1:uH/5rUuTp/1+pwH5Ethb9lm+jUrP+59UsWCL4rCwD9k=
 github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.17 h1:Yfm0tg7VhHaUgQXMdW4P17zqO+u1mextiQYUb+CXF4o=
 github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.17/go.mod h1:OPVpjv2tx+LmSFtbWGsSUq9iVNU6tdck4+d3JyVSgxY=
+github.com/dtcookie/dynatrace/api/config/anomalies/processgroups v1.0.1 h1:Mq9ZOJ8J8qEdCFr4Jn/7Etem/cY0FeRrA2fW43kH5GA=
+github.com/dtcookie/dynatrace/api/config/anomalies/processgroups v1.0.1/go.mod h1:ljUsKHvElU2Rp7BK7JXReXYnpzh2Gl05+BQ5MWRSA5k=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.14 h1:2mrD+vZO7B7zQlWoXW3mCU6e+bUJbr/QsbYj4lGd0xo=
 github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.14/go.mod h1:QGuWH8waqKkTpbOo8k9Y/ilsijQlhdMA/IMDlxOieJI=
 github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.6 h1:QRlUeeyC84vGR0ISGhG2OXkpEm7zGtu3lfYRKHW1pLU=

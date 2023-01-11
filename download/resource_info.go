@@ -9,6 +9,7 @@ import (
 	"github.com/dtcookie/dynatrace/api/config/anomalies/diskevents"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/hosts"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/metricevents"
+	pganomalies "github.com/dtcookie/dynatrace/api/config/anomalies/processgroups"
 	"github.com/dtcookie/dynatrace/api/config/anomalies/services"
 	"github.com/dtcookie/dynatrace/api/config/applications/mobile"
 	"github.com/dtcookie/dynatrace/api/config/applications/web"
@@ -531,6 +532,12 @@ var ResourceInfoMap = map[string]ResourceStruct{
 		},
 		CustomName: func(dlConfig DownloadConfig, resourceName string, v interface{}, counter NameCounter) string {
 			return resourceName
+		},
+	},
+	"dynatrace_pg_anomalies": {
+		RESTClient: func(environmentURL, apiToken string) []StandardClient {
+			clients := []StandardClient{pganomalies.NewService(environmentURL+"/api/config/v1", apiToken)}
+			return clients
 		},
 	},
 	"dynatrace_ops_genie_notification": {

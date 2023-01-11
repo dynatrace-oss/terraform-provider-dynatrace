@@ -15,6 +15,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/anomalies/diskevents v1.0.13
 	github.com/dtcookie/dynatrace/api/config/anomalies/hosts v1.0.9
 	github.com/dtcookie/dynatrace/api/config/anomalies/metricevents v1.0.17
+	github.com/dtcookie/dynatrace/api/config/anomalies/processgroups v1.0.1
 	github.com/dtcookie/dynatrace/api/config/anomalies/services v1.0.14
 	github.com/dtcookie/dynatrace/api/config/applications/mobile v1.0.6
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.17

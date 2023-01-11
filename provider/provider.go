@@ -42,6 +42,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
+	pganomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/processgroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/v2metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
@@ -208,6 +209,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_anomalies":           metrics.Resource(),
 			"dynatrace_metric_events":              v2metrics.Resource(),
 			"dynatrace_disk_anomalies":             disks.Resource(),
+			"dynatrace_pg_anomalies":               pganomalies.Resource(),
 			"dynatrace_calculated_service_metric":  service.Resource(),
 			"dynatrace_service_naming":             servicenaming.Resource(),
 			"dynatrace_host_naming":                hostnaming.Resource(),

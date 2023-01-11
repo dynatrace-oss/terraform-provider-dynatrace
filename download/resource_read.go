@@ -24,6 +24,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/api/config/dashboards/sharing"
 	servicetopology "github.com/dtcookie/dynatrace/api/config/topology/service"
+	"github.com/dtcookie/dynatrace/api/config/v2/entities"
 	"github.com/dtcookie/dynatrace/api/config/v2/keyrequests"
 	"github.com/dtcookie/hcl"
 	"github.com/google/uuid"
@@ -70,6 +71,14 @@ func (me ResourceData) ProcessRead(dlConfig DownloadConfig) error {
 			}
 		} else if resName == "dynatrace_key_requests" {
 			if err := me.readKeyRequests(dlConfig, resName, nil); err != nil {
+				return err
+			}
+		} else if resName == "dynatrace_pg_anomalies" {
+			clients := ResourceInfoMap[resName].RESTClient(
+				dlConfig.EnvironmentURL,
+				dlConfig.APIToken,
+			)
+			if err := me.readPgAnomalies(dlConfig, resName, clients[0], nil); err != nil {
 				return err
 			}
 		} else {
@@ -353,6 +362,42 @@ func (me ResourceData) readKeyRequests(dlConfig DownloadConfig, resourceName str
 				RESTObject: marshaller,
 				Name:       name,
 				UniqueName: resNameCounter.Numbering(escape(name)),
+			}
+			resources[resource.UniqueName] = &resource
+		}
+	}
+	me[resourceName] = resources
+
+	return nil
+}
+
+func (me ResourceData) readPgAnomalies(dlConfig DownloadConfig, resourceName string, client StandardClient, replacedIds []*ReplacedID) error {
+	resources := Resources{}
+
+	entitiesClient := entities.NewService(dlConfig.EnvironmentURL+"/api/v2", dlConfig.APIToken)
+	entitiesSettings, err := entitiesClient.List("PROCESS_GROUP")
+
+	resNameCounter := NewNameCounter().Replace(ResourceName)
+	if err != nil {
+		return err
+	}
+	for _, pg := range *entitiesSettings.Entities {
+		if dlConfig.ResourceNames[resourceName] != nil {
+			if (!dlConfig.Exclude && !dlConfig.MatchID(resourceName, *pg.EntityId)) || (dlConfig.Exclude && dlConfig.MatchID(resourceName, *pg.EntityId)) {
+				continue
+			}
+		}
+
+		config, err := client.GET(*pg.EntityId)
+		if err != nil {
+			return err
+		}
+		if marshaller, ok := config.(hcl.Marshaler); ok {
+			resource := Resource{
+				ID:         *pg.EntityId,
+				Name:       *pg.DisplayName,
+				RESTObject: marshaller,
+				UniqueName: resNameCounter.Numbering(escape(*pg.DisplayName)),
 			}
 			resources[resource.UniqueName] = &resource
 		}
