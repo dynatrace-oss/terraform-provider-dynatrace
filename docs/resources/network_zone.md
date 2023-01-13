@@ -24,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ### Optional
 
-- `alternative_zones` (Set of String) A list of alternative network zones.
+- `alternative_zones` (List of String) A list of alternative network zones.
 - `description` (String) A short description of the network zone
 - `num_of_configured_activegates` (Number) The number of ActiveGates in the network zone.
 - `num_of_configured_oneagents` (Number) The number of OneAgents that are configured to use the network zone as primary.
