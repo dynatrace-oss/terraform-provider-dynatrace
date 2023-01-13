@@ -86,8 +86,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dtcookie/assert v1.2.0 h1:hIvkPGBWCdPs+4XTfzZHoJjoNkpDmpZDv0N8X0zh6Pk=
 github.com/dtcookie/assert v1.2.0/go.mod h1:06O/8B/CcX9Gmle1625gltKzxtBS6I/ZdCSyszs9nbA=
-github.com/dtcookie/dynatrace/api/accounts/iam v1.0.2 h1:5neX1Iq5VPtFuTPKGSAte63LhGdpCFeBujX4P9BnY3Q=
-github.com/dtcookie/dynatrace/api/accounts/iam v1.0.2/go.mod h1:KpJRkhXZ+RiCONTvzKUlw0zcoLYkc88SwqMVqwMeA3A=
+github.com/dtcookie/dynatrace/api/accounts/iam v1.0.3 h1:kdGGlhd+0QRyuaz+yxHf+XR2j2l9tgvgI7JndAwB+zM=
+github.com/dtcookie/dynatrace/api/accounts/iam v1.0.3/go.mod h1:KpJRkhXZ+RiCONTvzKUlw0zcoLYkc88SwqMVqwMeA3A=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.1 h1:ESiCmkKvXa8PPTz+vdIHUUdppMRF98iZcWHNgLN3UWQ=
 github.com/dtcookie/dynatrace/api/cluster/v1/groups v1.0.1/go.mod h1:Fu6DLjbLWEtQMvu27ooZbOECulgwSOq9a7J521YyuQA=
 github.com/dtcookie/dynatrace/api/cluster/v1/users v1.0.1 h1:xI9cdivZ1RY8gFIA7l3jo5dcS81spv/+4JYcZ3wAR5w=
