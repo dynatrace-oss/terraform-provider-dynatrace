@@ -21,6 +21,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/applications/web v1.0.17
 	github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.3
 	github.com/dtcookie/dynatrace/api/config/autotags v1.0.27
+	github.com/dtcookie/dynatrace/api/config/common v1.0.7
 	github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.18
 	github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.14
 	github.com/dtcookie/dynatrace/api/config/credentials/cloudfoundry v1.0.3
@@ -51,6 +52,7 @@ require (
 	github.com/dtcookie/dynatrace/api/config/v2/anomalies/metricevents v1.0.3
 	github.com/dtcookie/dynatrace/api/config/v2/apitokens v1.0.2
 	github.com/dtcookie/dynatrace/api/config/v2/consumption v1.0.0
+	github.com/dtcookie/dynatrace/api/config/v2/customtags v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/entities v1.0.0
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.3
 	github.com/dtcookie/dynatrace/api/config/v2/ibmmq/imsbridges v1.0.3
@@ -89,7 +91,6 @@ require (
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.12 // indirect
-	github.com/dtcookie/dynatrace/api/config/common v1.0.6 // indirect
 	github.com/dtcookie/dynatrace/api/config/entityruleengine v1.0.12 // indirect
 	github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1 // indirect
 	github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2 // indirect

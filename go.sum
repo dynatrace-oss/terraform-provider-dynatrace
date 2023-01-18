@@ -122,8 +122,8 @@ github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionru
 github.com/dtcookie/dynatrace/api/config/applications/web/applicationdetectionrules v1.0.3/go.mod h1:TJtdK6f1vS+cxiIkzwNi0WpMRhpPWXJvHT6Ycco82sE=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.27 h1:J2PEu0OxFGoqwMUPbKL5FguP5q3111KNppu/qwlEDI0=
 github.com/dtcookie/dynatrace/api/config/autotags v1.0.27/go.mod h1:QKZ0f8nx63K0bB5C5+E8Y9NLTsgC1+UQRkyCWWHRerE=
-github.com/dtcookie/dynatrace/api/config/common v1.0.6 h1:bvGI2BaS9ProTnZ3x+cYw6iZHec0gEeSCvp5CRwxuug=
-github.com/dtcookie/dynatrace/api/config/common v1.0.6/go.mod h1:hasFYVMC5w8mRov7NPEyzx20BbVIoIVFUM0lt4Qq5m0=
+github.com/dtcookie/dynatrace/api/config/common v1.0.7 h1:ygDwuHB69nLNoFoMEor4Qu7TpJu3DbwnJYggR0Grhcw=
+github.com/dtcookie/dynatrace/api/config/common v1.0.7/go.mod h1:AgLem4zCBuS43A5FyT+wmkR2kea28xCBwSEE54pP/34=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.18 h1:DClYDVmVkRIXRTEykXktoXBEx3JwL4ge/FlfrrN/MJM=
 github.com/dtcookie/dynatrace/api/config/credentials/aws v1.0.18/go.mod h1:9503vbz4Koz0TTrczOj/qWughN3WGqRWcxWw4vZxMy0=
 github.com/dtcookie/dynatrace/api/config/credentials/azure v1.0.14 h1:cXJaAp6LwR8s5vWLjmGoxpf80d90yVT/4Sw7GH8b9dE=
@@ -188,6 +188,8 @@ github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1 h1:+S95mcmku/uhAw9ebzB
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.1/go.mod h1:FImVOIo2us8yeenfjt6utMlLxENy5gd22/hjB8Aqqv4=
 github.com/dtcookie/dynatrace/api/config/v2/consumption v1.0.0 h1:1i8SoxxpalNwoBevFELS9bXIVn4hX95LGx4TkVjTdIE=
 github.com/dtcookie/dynatrace/api/config/v2/consumption v1.0.0/go.mod h1:SFIGfqn7cYmO9Ur3ulyz3TmF3oxrB/Txj2u1se6L7WM=
+github.com/dtcookie/dynatrace/api/config/v2/customtags v1.0.0 h1:TLIzDWZ3BPfN0cwikt16S4z85a82tpbCY5rmcGuEcp8=
+github.com/dtcookie/dynatrace/api/config/v2/customtags v1.0.0/go.mod h1:DEkLPz6PJzp3EyXBwzGekIS2pv/UyjPHB6P3CzJUlxo=
 github.com/dtcookie/dynatrace/api/config/v2/entities v1.0.0 h1:0rdrJE4GnJ68x9VB5A3weuCJPouP3PN9+IqZU+a5z6I=
 github.com/dtcookie/dynatrace/api/config/v2/entities v1.0.0/go.mod h1:3nCJUm7j+KEXGR9vcvUCgUDOjLdjj2lHIWVyQkDmHVM=
 github.com/dtcookie/dynatrace/api/config/v2/ibmmq/filters v1.0.3 h1:gVwzYha8jKHNM5rOOSQIfsJbYUoAGZHzOHy8s/0O7Hc=

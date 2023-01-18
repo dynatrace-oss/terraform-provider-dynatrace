@@ -60,3 +60,10 @@ func DecoderFrom(d *schema.ResourceData, res *schema.Resource) hcl.Decoder {
 		Schema: res.Schema,
 	}})
 }
+
+func StateDecoderFrom(d *schema.ResourceData, res *schema.Resource) hcl.Decoder {
+	return hcl.DecoderFrom(&bootstrapDecoder{&schema.ConfigFieldReader{
+		Config: terraform.NewResourceConfigShimmed(d.GetRawState(), res.CoreConfigSchema()),
+		Schema: res.Schema,
+	}})
+}

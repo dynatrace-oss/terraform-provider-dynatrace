@@ -59,6 +59,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s"
 	vaultres "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
@@ -258,6 +259,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_group":                  iam_groups.Resource(),
 			"dynatrace_api_token":                  apitokens.Resource(),
 			"dynatrace_ddu_pool":                   consumption.Resource(),
+			"dynatrace_custom_tags":                customtags.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
