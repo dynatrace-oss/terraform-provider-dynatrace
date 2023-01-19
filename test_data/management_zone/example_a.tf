@@ -1,5 +1,5 @@
 resource "dynatrace_management_zone_v2" "#name#" {
-  name = "Cloud: Google"
+  name = "#name#"
   rules {
     rule {
       type            = "ME"
