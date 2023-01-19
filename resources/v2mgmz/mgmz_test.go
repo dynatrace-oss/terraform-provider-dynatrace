@@ -50,7 +50,7 @@ func (test *TestStruct) Anonymize(m map[string]interface{}) {
 	delete(m, "summary")
 	delete(m, "updateToken")
 	delete(m, "name")
-	// delete(m["value"].(map[string]interface{}), "name")
+	delete(m["value"].(map[string]interface{}), "name")
 }
 
 func (test *TestStruct) ResourceKey() string {
