@@ -57,6 +57,7 @@ func (me *service) Get(id string, v *entities.Settings) (err error) {
 			key = *tempObj.NextPageKey
 		}
 	}
+	*v = dataObj
 	return nil
 }
 
