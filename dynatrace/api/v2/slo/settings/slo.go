@@ -30,7 +30,7 @@ import (
 type SLO struct {
 	Name              string  `json:"name"`                        // The name of the SLO
 	Enabled           bool    `json:"enabled,omitempty"`           // The SLO is enabled (`true`) or disabled (`false`)
-	Description       *string `json:"customDescription,omitempty"` // The custom description of the SLO (optional)
+	Description       *string `json:"description,omitempty"`       // The custom description of the SLO (optional)
 	UseRateMetric     bool    `json:"useRateMetric"`               // The type of the metric to use for SLO calculation: \n\n* `true`: An existing percentage-based metric. \n* `false`: A ratio of two metrics. \n\nFor a list of available metrics, see [Built-in metric page](https://dt-url.net/be03kow) or try the [GET metrics](https://dt-url.net/8e43kxf) API call
 	MetricRate        *string `json:"metricRate,omitempty"`        // The percentage-based metric for the calculation of the SLO. \n\nRequired when the **useRateMetric** is set to `true`
 	MetricExpression  *string `json:"metricExpression,omitempty"`  // The percentage-based metric expression for the calculation of the SLO
