@@ -210,6 +210,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		jsondashboards.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
+		Dependencies.Service,
 		Dependencies.ID(ResourceTypes.SLO),
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
@@ -289,6 +290,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	).Specify(notifications.Types.Slack),
 	ResourceTypes.SLO: NewResourceDescriptor(
 		slo.Service,
+		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 	),
