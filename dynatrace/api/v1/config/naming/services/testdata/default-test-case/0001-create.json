@@ -1,0 +1,33 @@
+{
+    "displayName": "${randomize}",
+    "enabled": true,
+    "nameFormat": "{Service:WebApplicationId} jlkj",
+    "rules": [
+        {
+            "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "ENTITY_ID",
+                "value": "PROCESS_GROUP-BEA6CD8766CD22D8"
+            },
+            "key": {
+                "attribute": "PROCESS_GROUP_ID",
+                "type": "STATIC"
+            }
+        },
+        {
+            "comparisonInfo": {
+                "caseSensitive": true,
+                "negate": false,
+                "operator": "BEGINS_WITH",
+                "type": "STRING",
+                "value": "dfadsfadfl;kl;"
+            },
+            "key": {
+                "attribute": "SERVICE_AKKA_ACTOR_SYSTEM",
+                "type": "STATIC"
+            }
+        }
+    ],
+    "type": "SERVICE"
+}

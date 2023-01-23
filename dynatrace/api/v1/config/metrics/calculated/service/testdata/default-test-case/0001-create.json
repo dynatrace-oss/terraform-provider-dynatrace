@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "attribute": "HTTP_REQUEST_METHOD",
+      "comparisonInfo": {
+        "comparison": "EQUALS_ANY_OF",
+        "negate": false,
+        "type": "HTTP_METHOD",
+        "values": [
+          "POST",
+          "GET"
+        ]
+      }
+    }
+  ],
+  "enabled": true,
+  "managementZones": [
+    "AAAA"
+  ],
+  "metricDefinition": {
+    "metric": "REQUEST_ATTRIBUTE",
+    "requestAttribute": "foo"
+  },
+  "name": "x${randomize}",
+  "tsmMetricKey": "calc:service.x${randomize}",
+  "unit": "MILLI_SECOND_PER_MINUTE"
+}

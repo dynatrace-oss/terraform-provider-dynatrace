@@ -1,0 +1,8 @@
+{
+    "enabled": true,
+    "metric": "LOW_DISK_SPACE",
+    "name": "khj",
+    "samples": 3,
+    "threshold": 10,
+    "violatingSamples": 3
+}

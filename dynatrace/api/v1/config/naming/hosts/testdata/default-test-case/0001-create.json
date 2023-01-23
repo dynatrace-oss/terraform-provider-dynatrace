@@ -1,0 +1,34 @@
+{
+    "displayName": "asdf",
+    "enabled": true,
+    "nameFormat": "{AwsAutoScalingGroup:Name}",
+    "rules": [
+        {
+            "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SIMPLE_HOST_TECH",
+                "value": {
+                    "type": "BOSH"
+                }
+            },
+            "key": {
+                "attribute": "HOST_TECHNOLOGY",
+                "type": "STATIC"
+            }
+        },
+        {
+            "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "INTEGER",
+                "value": 3
+            },
+            "key": {
+                "attribute": "HOST_AIX_VIRTUAL_CPU_COUNT",
+                "type": "STATIC"
+            }
+        }
+    ],
+    "type": "HOST"
+}

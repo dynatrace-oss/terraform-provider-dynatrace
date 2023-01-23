@@ -1,0 +1,25 @@
+{
+  "enabled": false,
+  "name": "${randomize}",
+  "queueEntryPoint": false,
+  "rules": [
+    {
+      "annotations": [
+        "someannotation"
+      ],
+      "className": "sca.component.mediation.java.${randomize}",
+      "enabled": false,
+      "matcher": "STARTS_WITH",
+      "methodRules": [
+        {
+          "argumentTypes": [
+            "java.lang.String"
+          ],
+          "methodName": "Execute",
+          "returnType": "void"
+        }
+      ]
+    }
+  ],
+  "technology": "java"
+}

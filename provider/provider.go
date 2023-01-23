@@ -20,7 +20,7 @@ package provider
 import (
 	"context"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
@@ -34,78 +34,16 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
 	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/alerting"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/applications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/databases"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/disks"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/frequentissues"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/hosts"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/metrics"
-	pganomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/processgroups"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/services"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/anomalies/v2metrics"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/mobile"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/applicationdetectionrules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/errorrules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/applications/web/privacy"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotags"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/consumption"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/aws"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/azure"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/cloudfoundry"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/k8s"
-	vaultres "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/credentials/vault"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customservices"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
+	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
-	iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/iam/groups"
-	iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/iam/users"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/filters"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/imsbridges"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuemanagers"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/ibmmq/queuesharinggroups"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/jsondashboards"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/keyrequests"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/maintenance"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/metrics/calculated/service"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/mgmz"
-	hostnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/hosts"
-	processgroupnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/processgroups"
-	servicenaming "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/naming/services"
-	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/ansible"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/email"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/jira"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/opsgenie"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/pagerduty"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/servicenow"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/slack"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/trello"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/victorops"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/webhook"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/notifications/xmatters"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestattributes"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/requestnaming"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/slo"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/attributes"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/capture"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/ctxprop"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/entrypoints"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/spans/resattr"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/locations"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/synthetic/monitors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
-	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2alerting"
-	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2maintenance"
-	v2mgmz "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2mgmz"
-	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/v2networkzones"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -114,10 +52,10 @@ import (
 // ResourceSpecification has no documentation
 type ResourceSpecification interface {
 	Resource() *schema.Resource
-	Create(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics
-	Update(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics
-	Read(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics
-	Delete(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics
+	Create(context.Context, *schema.ResourceData, any) diag.Diagnostics
+	Update(context.Context, *schema.ResourceData, any) diag.Diagnostics
+	Read(context.Context, *schema.ResourceData, any) diag.Diagnostics
+	Delete(context.Context, *schema.ResourceData, any) diag.Diagnostics
 }
 
 // Provider function for Dynatrace API
@@ -187,78 +125,76 @@ func Provider() *schema.Provider {
 			"dynatrace_entities":                  entities.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"dynatrace_custom_service":             customservices.Resource(),
-			"dynatrace_dashboard":                  dashboards.Resource(),
-			"dynatrace_json_dashboard":             jsondashboards.Resource(),
-			"dynatrace_management_zone":            mgmz.Resource(),
-			"dynatrace_management_zone_v2":         v2mgmz.Resource(),
-			"dynatrace_maintenance_window":         maintenance.Resource(),
-			"dynatrace_maintenance":                v2maintenance.Resource(),
-			"dynatrace_request_attribute":          requestattributes.Resource(),
-			"dynatrace_alerting_profile":           alerting.Resource(),
-			"dynatrace_alerting":                   v2alerting.Resource(),
-			"dynatrace_notification":               notifications.Resource(),
-			"dynatrace_autotag":                    autotags.Resource(),
-			"dynatrace_aws_credentials":            aws.Resource(),
-			"dynatrace_azure_credentials":          azure.Resource(),
-			"dynatrace_k8s_credentials":            k8s.Resource(),
-			"dynatrace_cloudfoundry_credentials":   cloudfoundry.Resource(),
-			"dynatrace_service_anomalies":          services.Resource(),
-			"dynatrace_application_anomalies":      applications.Resource(),
-			"dynatrace_host_anomalies":             hosts.Resource(),
-			"dynatrace_database_anomalies":         databases.Resource(),
-			"dynatrace_custom_anomalies":           metrics.Resource(),
-			"dynatrace_metric_events":              v2metrics.Resource(),
-			"dynatrace_disk_anomalies":             disks.Resource(),
-			"dynatrace_pg_anomalies":               pganomalies.Resource(),
-			"dynatrace_calculated_service_metric":  service.Resource(),
-			"dynatrace_service_naming":             servicenaming.Resource(),
-			"dynatrace_host_naming":                hostnaming.Resource(),
-			"dynatrace_processgroup_naming":        processgroupnaming.Resource(),
-			"dynatrace_slo":                        slo.Resource(),
-			"dynatrace_span_entry_point":           entrypoints.Resource(),
-			"dynatrace_span_capture_rule":          capture.Resource(),
-			"dynatrace_span_context_propagation":   ctxprop.Resource(),
-			"dynatrace_resource_attributes":        resattr.Resource(),
-			"dynatrace_span_attribute":             attributes.Resource(),
-			"dynatrace_dashboard_sharing":          sharing.Resource(),
+			"dynatrace_custom_service":             resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
+			"dynatrace_dashboard":                  resources.NewGeneric(export.ResourceTypes.Dashboard).Resource(),
+			"dynatrace_json_dashboard":             resources.NewGeneric(export.ResourceTypes.JSONDashboard).Resource(),
+			"dynatrace_management_zone":            resources.NewGeneric(export.ResourceTypes.ManagementZone).Resource(),
+			"dynatrace_management_zone_v2":         resources.NewGeneric(export.ResourceTypes.ManagementZoneV2).Resource(),
+			"dynatrace_maintenance_window":         resources.NewGeneric(export.ResourceTypes.MaintenanceWindow).Resource(),
+			"dynatrace_maintenance":                resources.NewGeneric(export.ResourceTypes.Maintenance).Resource(),
+			"dynatrace_request_attribute":          resources.NewGeneric(export.ResourceTypes.RequestAttribute).Resource(),
+			"dynatrace_alerting_profile":           resources.NewGeneric(export.ResourceTypes.AlertingProfile).Resource(),
+			"dynatrace_alerting":                   resources.NewGeneric(export.ResourceTypes.Alerting).Resource(),
+			"dynatrace_notification":               resources.NewGeneric(export.ResourceTypes.Notification).Resource(),
+			"dynatrace_autotag":                    resources.NewGeneric(export.ResourceTypes.AutoTag).Resource(),
+			"dynatrace_aws_credentials":            resources.NewGeneric(export.ResourceTypes.AWSCredentials).Resource(),
+			"dynatrace_azure_credentials":          resources.NewGeneric(export.ResourceTypes.AzureCredentials).Resource(),
+			"dynatrace_k8s_credentials":            resources.NewGeneric(export.ResourceTypes.KubernetesCredentials).Resource(),
+			"dynatrace_cloudfoundry_credentials":   resources.NewGeneric(export.ResourceTypes.CloudFoundryCredentials).Resource(),
+			"dynatrace_service_anomalies":          resources.NewGeneric(export.ResourceTypes.ServiceAnomalies).Resource(),
+			"dynatrace_application_anomalies":      resources.NewGeneric(export.ResourceTypes.ApplicationAnomalies).Resource(),
+			"dynatrace_host_anomalies":             resources.NewGeneric(export.ResourceTypes.HostAnomalies).Resource(),
+			"dynatrace_database_anomalies":         resources.NewGeneric(export.ResourceTypes.DatabaseAnomalies).Resource(),
+			"dynatrace_custom_anomalies":           resources.NewGeneric(export.ResourceTypes.CustomAnomalies).Resource(),
+			"dynatrace_metric_events":              resources.NewGeneric(export.ResourceTypes.MetricEvents).Resource(),
+			"dynatrace_disk_anomalies":             resources.NewGeneric(export.ResourceTypes.DiskEventAnomalies).Resource(),
+			"dynatrace_calculated_service_metric":  resources.NewGeneric(export.ResourceTypes.CalculatedServiceMetric).Resource(),
+			"dynatrace_service_naming":             resources.NewGeneric(export.ResourceTypes.ServiceNaming).Resource(),
+			"dynatrace_host_naming":                resources.NewGeneric(export.ResourceTypes.HostNaming).Resource(),
+			"dynatrace_processgroup_naming":        resources.NewGeneric(export.ResourceTypes.ProcessGroupNaming).Resource(),
+			"dynatrace_slo":                        resources.NewGeneric(export.ResourceTypes.SLO).Resource(),
+			"dynatrace_span_entry_point":           resources.NewGeneric(export.ResourceTypes.SpanEntryPoint).Resource(),
+			"dynatrace_span_capture_rule":          resources.NewGeneric(export.ResourceTypes.SpanCaptureRule).Resource(),
+			"dynatrace_span_context_propagation":   resources.NewGeneric(export.ResourceTypes.SpanContextPropagation).Resource(),
+			"dynatrace_resource_attributes":        resources.NewGeneric(export.ResourceTypes.ResourceAttributes).Resource(),
+			"dynatrace_span_attribute":             resources.NewGeneric(export.ResourceTypes.SpanAttribute).Resource(),
+			"dynatrace_dashboard_sharing":          resources.NewGeneric(export.ResourceTypes.DashboardSharing).Resource(),
 			"dynatrace_environment":                environments.Resource(),
-			"dynatrace_mobile_application":         mobile.Resource(),
-			"dynatrace_browser_monitor":            monitors.BrowserResource(),
-			"dynatrace_http_monitor":               monitors.HTTPResource(),
-			"dynatrace_web_application":            web.Resource(),
-			"dynatrace_application_data_privacy":   privacy.Resource(),
-			"dynatrace_application_error_rules":    errorrules.Resource(),
-			"dynatrace_request_naming":             requestnaming.Resource(),
-			"dynatrace_request_namings":            requestnaming.OrderResource(),
+			"dynatrace_mobile_application":         resources.NewGeneric(export.ResourceTypes.MobileApplication).Resource(),
+			"dynatrace_browser_monitor":            resources.NewGeneric(export.ResourceTypes.BrowserMonitor).Resource(),
+			"dynatrace_http_monitor":               resources.NewGeneric(export.ResourceTypes.HTTPMonitor).Resource(),
+			"dynatrace_web_application":            resources.NewGeneric(export.ResourceTypes.WebApplication).Resource(),
+			"dynatrace_application_data_privacy":   resources.NewGeneric(export.ResourceTypes.ApplicationDataPrivacy).Resource(),
+			"dynatrace_application_error_rules":    resources.NewGeneric(export.ResourceTypes.ApplicationErrorRules).Resource(),
+			"dynatrace_request_naming":             resources.NewGeneric(export.ResourceTypes.RequestNaming).Resource(),
+			"dynatrace_request_namings":            resources.NewGeneric(export.ResourceTypes.RequestNamings).Resource(),
 			"dynatrace_user_group":                 usergroups.Resource(),
 			"dynatrace_user":                       users.Resource(),
-			"dynatrace_key_requests":               keyrequests.Resource(),
-			"dynatrace_queue_manager":              queuemanagers.Resource(),
-			"dynatrace_ibm_mq_filters":             filters.Resource(),
-			"dynatrace_queue_sharing_groups":       queuesharinggroups.Resource(),
-			"dynatrace_ims_bridges":                imsbridges.Resource(),
-			"dynatrace_network_zones":              networkzones.Resource(),
-			"dynatrace_application_detection_rule": applicationdetectionrules.Resource(),
-			"dynatrace_frequent_issues":            frequentissues.Resource(),
-			"dynatrace_ansible_tower_notification": ansible.Resource(),
-			"dynatrace_email_notification":         email.Resource(),
-			"dynatrace_jira_notification":          jira.Resource(),
-			"dynatrace_ops_genie_notification":     opsgenie.Resource(),
-			"dynatrace_pager_duty_notification":    pagerduty.Resource(),
-			"dynatrace_service_now_notification":   servicenow.Resource(),
-			"dynatrace_slack_notification":         slack.Resource(),
-			"dynatrace_trello_notification":        trello.Resource(),
-			"dynatrace_victor_ops_notification":    victorops.Resource(),
-			"dynatrace_webhook_notification":       webhook.Resource(),
-			"dynatrace_xmatters_notification":      xmatters.Resource(),
-			"dynatrace_credentials":                vaultres.Resource(),
-			"dynatrace_synthetic_location":         locations.Resource(),
-			"dynatrace_network_zone":               networkzone.Resource(),
-			"dynatrace_iam_user":                   iam_users.Resource(),
-			"dynatrace_iam_group":                  iam_groups.Resource(),
-			"dynatrace_api_token":                  apitokens.Resource(),
-			"dynatrace_ddu_pool":                   consumption.Resource(),
+			"dynatrace_key_requests":               resources.NewGeneric(export.ResourceTypes.KeyRequests).Resource(),
+			"dynatrace_queue_manager":              resources.NewGeneric(export.ResourceTypes.QueueManager).Resource(),
+			"dynatrace_ibm_mq_filters":             resources.NewGeneric(export.ResourceTypes.IBMMQFilters).Resource(),
+			"dynatrace_queue_sharing_groups":       resources.NewGeneric(export.ResourceTypes.QueueSharingGroups).Resource(),
+			"dynatrace_ims_bridges":                resources.NewGeneric(export.ResourceTypes.IMSBridge).Resource(),
+			"dynatrace_network_zones":              resources.NewGeneric(export.ResourceTypes.NetworkZones).Resource(),
+			"dynatrace_application_detection_rule": resources.NewGeneric(export.ResourceTypes.ApplicationDetection).Resource(),
+			"dynatrace_frequent_issues":            resources.NewGeneric(export.ResourceTypes.FrequentIssues).Resource(),
+			"dynatrace_ansible_tower_notification": resources.NewGeneric(export.ResourceTypes.AnsibleTowerNotification).Resource(),
+			"dynatrace_email_notification":         resources.NewGeneric(export.ResourceTypes.EmailNotification).Resource(),
+			"dynatrace_jira_notification":          resources.NewGeneric(export.ResourceTypes.JiraNotification).Resource(),
+			"dynatrace_ops_genie_notification":     resources.NewGeneric(export.ResourceTypes.OpsGenieNotification).Resource(),
+			"dynatrace_pager_duty_notification":    resources.NewGeneric(export.ResourceTypes.PagerDutyNotification).Resource(),
+			"dynatrace_service_now_notification":   resources.NewGeneric(export.ResourceTypes.ServiceNowNotification).Resource(),
+			"dynatrace_slack_notification":         resources.NewGeneric(export.ResourceTypes.SlackNotification).Resource(),
+			"dynatrace_trello_notification":        resources.NewGeneric(export.ResourceTypes.TrelloNotification).Resource(),
+			"dynatrace_victor_ops_notification":    resources.NewGeneric(export.ResourceTypes.VictorOpsNotification).Resource(),
+			"dynatrace_webhook_notification":       resources.NewGeneric(export.ResourceTypes.WebHookNotification).Resource(),
+			"dynatrace_xmatters_notification":      resources.NewGeneric(export.ResourceTypes.XMattersNotification).Resource(),
+			"dynatrace_credentials":                resources.NewGeneric(export.ResourceTypes.Credentials).Resource(),
+			"dynatrace_synthetic_location":         resources.NewGeneric(export.ResourceTypes.SyntheticLocation).Resource(),
+			"dynatrace_network_zone":               resources.NewGeneric(export.ResourceTypes.NetworkZone).Resource(),
+			"dynatrace_iam_user":                   resources.NewGeneric(export.ResourceTypes.IAMUser).Resource(),
+			"dynatrace_iam_group":                  resources.NewGeneric(export.ResourceTypes.IAMGroup).Resource(),
+			"dynatrace_api_token":                  resources.NewGeneric(export.ResourceTypes.APIToken).Resource(),
 			"dynatrace_custom_tags":                customtags.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,

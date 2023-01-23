@@ -385,6 +385,5 @@ Required:
 
 Optional:
 
-- `string_representation` (String) The string representation of the tag
 - `value` (String) The value of the tag. Not applicable to custom tags
  

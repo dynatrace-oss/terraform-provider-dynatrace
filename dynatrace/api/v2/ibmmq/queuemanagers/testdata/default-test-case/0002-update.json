@@ -1,0 +1,10 @@
+{
+  "name": "${randomize}",
+  "clusters": [],
+  "aliasQueues": [
+    {
+      "aliasQueue": "OSB.C0702.REPLY",
+      "baseQueue": "OSB.REPLY"
+    }
+  ]
+}

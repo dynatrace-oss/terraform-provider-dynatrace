@@ -20,15 +20,15 @@ package main_test
 // type ResourceTest interface {
 // 	ResourceKey() string
 // 	CreateTestCase(string, string, *testing.T) (*resource.TestCase, error)
-// 	Anonymize(m map[string]interface{})
+// 	Anonymize(m map[string]any)
 // 	URL(id string) string
 // }
 
 // func compareLocalRemote(test ResourceTest, n string, localJSONFile string, t *testing.T) resource.TestCheckFunc {
 // 	return func(s *terraform.State) error {
 // 		var err error
-// 		var localMap map[string]interface{}
-// 		var remoteMap map[string]interface{}
+// 		var localMap map[string]any
+// 		var remoteMap map[string]any
 
 // 		if rs, ok := s.RootModule().Resources[n]; ok {
 // 			token := testAccProvider.Meta().(*config.ProviderConfiguration).APIToken
@@ -53,7 +53,7 @@ package main_test
 // 	}
 // }
 
-// func deepEqual(a interface{}, b interface{}) bool {
+// func deepEqual(a any, b any) bool {
 // 	if a == nil && b == nil {
 // 		return true
 // 	}
@@ -67,22 +67,22 @@ package main_test
 // 		return false
 // 	}
 // 	switch ta := a.(type) {
-// 	case map[string]interface{}:
-// 		return deepEqualMap(ta, b.(map[string]interface{}))
+// 	case map[string]any:
+// 		return deepEqualMap(ta, b.(map[string]any))
 // 	case bool:
 // 		return ta == b.(bool)
 // 	case string:
 // 		return ta == b.(string)
 // 	case float64:
 // 		return ta == b.(float64)
-// 	case []interface{}:
-// 		return deepEqualSlice(ta, b.([]interface{}))
+// 	case []any:
+// 		return deepEqualSlice(ta, b.([]any))
 // 	default:
 // 		panic(fmt.Errorf("unsupported type %T", ta))
 // 	}
 // }
 
-// func deepEqualSlice(a []interface{}, b []interface{}) bool {
+// func deepEqualSlice(a []any, b []any) bool {
 // 	if len(a) != len(b) {
 // 		return false
 // 	}
@@ -101,7 +101,7 @@ package main_test
 // 	return true
 // }
 
-// func deepEqualMap(a map[string]interface{}, b map[string]interface{}) bool {
+// func deepEqualMap(a map[string]any, b map[string]any) bool {
 // 	for k, va := range a {
 // 		vb, found := b[k]
 // 		if !found {
@@ -114,7 +114,7 @@ package main_test
 // 	return true
 // }
 
-// func loadHTTP(url string, token string) (map[string]interface{}, error) {
+// func loadHTTP(url string, token string) (map[string]any, error) {
 // 	var err error
 // 	var request *http.Request
 // 	var response *http.Response
@@ -135,20 +135,20 @@ package main_test
 // 		return nil, err
 // 	}
 
-// 	m := map[string]interface{}{}
+// 	m := map[string]any{}
 // 	if err = json.Unmarshal(data, &m); err != nil {
 // 		return nil, err
 // 	}
 // 	return m, nil
 // }
 
-// func loadLocal(file string) (map[string]interface{}, error) {
+// func loadLocal(file string) (map[string]any, error) {
 // 	var err error
 // 	var data []byte
 // 	if data, err = ioutil.ReadFile(file); err != nil {
 // 		return nil, err
 // 	}
-// 	m := map[string]interface{}{}
+// 	m := map[string]any{}
 // 	if err = json.Unmarshal(data, &m); err != nil {
 // 		return nil, err
 // 	}

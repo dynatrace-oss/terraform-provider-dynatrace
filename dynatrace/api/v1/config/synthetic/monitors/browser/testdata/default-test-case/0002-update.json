@@ -1,0 +1,153 @@
+{
+  "name": "${randomize}",
+  "type": "BROWSER",
+  "frequencyMin": 15,
+  "enabled": false,
+  "anomalyDetection": {
+    "outageHandling": {
+      "globalOutage": true,
+      "globalOutagePolicy": {
+        "consecutiveRuns": 1
+      },
+      "localOutage": false,
+      "localOutagePolicy": {
+        "affectedLocations": null,
+        "consecutiveRuns": null
+      },
+      "retryOnError": true
+    },
+    "loadingTimeThresholds": {
+      "enabled": true,
+      "thresholds": []
+    }
+  },
+  "locations": [
+    "GEOLOCATION-B4B9167CAAA88F6A",
+    "GEOLOCATION-03E96F97A389F96A"
+  ],
+  "tags": [],
+  "manuallyAssignedApps": [],
+  "keyPerformanceMetrics": {
+    "loadActionKpm": "VISUALLY_COMPLETE",
+    "xhrActionKpm": "VISUALLY_COMPLETE"
+  },
+  "script": {
+    "version": "1.0",
+    "type": "clickpath",
+    "configuration": {
+      "userAgent": "Mozilla",
+      "device": {
+        "deviceName": "Apple iPhone 8",
+        "orientation": "landscape"
+      },
+      "bandwidth": {
+        "networkType": "GPRS"
+      },
+      "requestHeaders": {
+        "addHeaders": [
+          {
+            "name": "kjh",
+            "value": "kjh"
+          }
+        ]
+      },
+      "bypassCSP": true,
+      "javaScriptSettings": {
+        "timeoutSettings": {
+          "temporaryActionLimit": 3,
+          "temporaryActionTotalTimeout": 100
+        },
+        "customProperties": null,
+        "visuallyCompleteOptions": {
+          "imageSizeThreshold": 0,
+          "inactivityTimeout": 0,
+          "mutationTimeout": 0,
+          "excludedUrls": null,
+          "excludedElements": null
+        }
+      },
+      "disableWebSecurity": false,
+      "ignoredErrorCodes": {
+        "statusCodes": "400"
+      }
+    },
+    "events": [
+      {
+        "type": "navigate",
+        "description": "Loading of \"https://www.orf.at\"",
+        "url": "https://www.orf.at",
+        "wait": {
+          "waitFor": "page_complete"
+        },
+        "authentication": {
+          "type": "http_authentication",
+          "credential": {
+            "id": "CREDENTIALS_VAULT-26F62024BC3ABBCF"
+          }
+        }
+      },
+      {
+        "type": "navigate",
+        "description": "jhjhjh",
+        "url": "https://www.orf.at",
+        "wait": {
+          "waitFor": "validation",
+          "timeoutInMilliseconds": 60000,
+          "validation": {
+            "type": "element_match",
+            "match": "kjkj",
+            "failIfFound": false,
+            "target": {
+              "locators": [
+                {
+                  "type": "css",
+                  "value": "jjj"
+                }
+              ]
+            }
+          }
+        },
+        "validate": [
+          {
+            "type": "text_match",
+            "match": "kkl",
+            "isRegex": true,
+            "failIfFound": false,
+            "target": {
+              "window": "k"
+            }
+          }
+        ],
+        "authentication": {
+          "type": "http_authentication",
+          "credential": {
+            "id": "CREDENTIALS_VAULT-26F62024BC3ABBCF"
+          }
+        }
+      },
+      {
+        "type": "click",
+        "description": "fvf",
+        "button": 0,
+        "wait": {
+          "waitFor": "page_complete"
+        },
+        "validate": [
+          {
+            "type": "text_match",
+            "match": "",
+            "failIfFound": false
+          }
+        ]
+      },
+      {
+        "type": "javascript",
+        "description": "jsfoo",
+        "javaScript": "let x = 3;\nfor (var i = 0; i \u003c x; x++) {\n    console.log(\"asdf\");\n}\n",
+        "wait": {
+          "waitFor": "page_complete"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+    "description": null,
+    "name": "${randomize}",
+    "rules": [
+        {
+            "conditions": [
+                {
+                    "comparisonInfo": {
+                        "caseSensitive": true,
+                        "negate": false,
+                        "operator": "EQUALS",
+                        "type": "STRING",
+                        "value": "Requests to public networks"
+                    },
+                    "key": {
+                        "attribute": "SERVICE_DETECTED_NAME",
+                        "type": "STATIC"
+                    }
+                },
+                {
+                    "comparisonInfo": {
+                        "negate": false,
+                        "operator": "EQUALS",
+                        "type": "SERVICE_TOPOLOGY",
+                        "value": "EXTERNAL_SERVICE"
+                    },
+                    "key": {
+                        "attribute": "SERVICE_TOPOLOGY",
+                        "type": "STATIC"
+                    }
+                }
+            ],
+            "enabled": true,
+            "normalization": "LEAVE_TEXT_AS_IS",
+            "type": "SERVICE",
+            "valueFormat": "{Service:EndpointPath}"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+  "enabled": false,
+  "displayName": "${randomize}",
+  "alertingProfile": "vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRmNzVlNjhlZi1hY2E3LTNhMDctOWMyMS05NGViMDBlY2ZjNTa-71TeFdrerQ",
+  "type": "OPS_GENIE",
+  "opsGenieNotification": {
+    "apiKey": "#######",
+    "domain": "jhjh",
+    "message": "{ProblemImpact} Problem {ProblemID}: {ProblemTitle}"
+  }
+}

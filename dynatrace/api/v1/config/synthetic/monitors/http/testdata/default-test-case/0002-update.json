@@ -1,0 +1,58 @@
+{
+  "name": "${randomize}",
+  "type": "HTTP",
+  "frequencyMin": 1,
+  "enabled": false,
+  "anomalyDetection": {
+    "outageHandling": {
+      "globalOutage": true,
+      "globalOutagePolicy": {
+        "consecutiveRuns": 1
+      },
+      "localOutage": false,
+      "localOutagePolicy": {
+        "affectedLocations": null,
+        "consecutiveRuns": null
+      },
+      "retryOnError": false
+    },
+    "loadingTimeThresholds": {
+      "enabled": true,
+      "thresholds": []
+    }
+  },
+  "locations": [
+    "GEOLOCATION-57F63BAD1C6A415C"
+  ],
+  "tags": [],
+  "manuallyAssignedApps": [],
+  "script": {
+    "version": "1.0",
+    "requests": [
+      {
+        "description": "google.at",
+        "url": "https://www.google.at",
+        "method": "GET",
+        "authentication": {
+          "type": "KERBEROS",
+          "credentials": "CREDENTIALS_VAULT-4DFB50E5F50A21A4",
+          "realmName": "REALMNAME",
+          "kdcIp": "10.0.0.1"
+        },
+        "validation": {
+          "rules": [
+            {
+              "type": "httpStatusesList",
+              "passIfFound": false,
+              "value": "\u003e=400"
+            }
+          ]
+        },
+        "configuration": {
+          "acceptAnyCertificate": true,
+          "followRedirects": true
+        }
+      }
+    ]
+  }
+}

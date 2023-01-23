@@ -1,0 +1,152 @@
+{
+  "conversionGoals": [],
+  "costControlUserSessionPercentage": 100,
+  "customActionApdexSettings": {
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000
+  },
+  "keyUserActions": [
+    {
+      "name": "Loading of page /example",
+      "actionType": "Load",
+      "domain": "test.com"
+    }
+  ],
+  "loadActionApdexSettings": {
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000
+  },
+  "loadActionKeyPerformanceMetric": "VISUALLY_COMPLETE",
+  "metaDataCaptureSettings": [],
+  "monitoringSettings": {
+    "fetchRequests": true,
+    "xmlHttpRequest": true,
+    "javaScriptFrameworkSupport": {
+      "angular": true,
+      "dojo": false,
+      "extJS": true,
+      "icefaces": true,
+      "jQuery": true,
+      "mooTools": true,
+      "prototype": true,
+      "activeXObject": true
+    },
+    "contentCapture": {
+      "resourceTimingSettings": {
+        "w3cResourceTimings": true,
+        "nonW3cResourceTimings": false,
+        "nonW3cResourceTimingsInstrumentationDelay": 50,
+        "resourceTimingCaptureType": null,
+        "resourceTimingsDomainLimit": null
+      },
+      "javaScriptErrors": true,
+      "timeoutSettings": {
+        "timedActionSupport": false,
+        "temporaryActionLimit": 0,
+        "temporaryActionTotalTimeout": 100
+      },
+      "visuallyCompleteAndSpeedIndex": true,
+      "visuallyComplete2Settings": null
+    },
+    "excludeXhrRegex": "",
+    "correlationHeaderInclusionRegex": "",
+    "injectionMode": "JAVASCRIPT_TAG",
+    "addCrossOriginAnonymousAttribute": true,
+    "scriptTagcacheDurationInHours": 1,
+    "libraryFileLocation": "",
+    "monitoringDataPath": "",
+    "customConfigurationProperties": "",
+    "serverRequestPathId": "",
+    "secureCookieAttribute": false,
+    "cookiePlacementDomain": "",
+    "cacheControlHeaderOptimizations": true,
+    "advancedJavaScriptTagSettings": {
+      "syncBeaconFirefox": false,
+      "syncBeaconInternetExplorer": false,
+      "instrumentUnsupportedAjaxFrameworks": false,
+      "specialCharactersToEscape": "",
+      "maxActionNameLength": 100,
+      "maxErrorsToCapture": 10,
+      "additionalEventHandlers": {
+        "userMouseupEventForClicks": false,
+        "clickEventHandler": false,
+        "mouseupEventHandler": false,
+        "blurEventHandler": false,
+        "changeEventHandler": false,
+        "toStringMethod": false,
+        "maxDomNodesToInstrument": 5000
+      },
+      "eventWrapperSettings": {
+        "click": false,
+        "mouseUp": false,
+        "change": false,
+        "blur": false,
+        "touchStart": false,
+        "touchEnd": false
+      },
+      "globalEventCaptureSettings": {
+        "mouseUp": true,
+        "mouseDown": true,
+        "click": true,
+        "doubleClick": true,
+        "keyUp": true,
+        "keyDown": true,
+        "scroll": true,
+        "additionalEventCapturedAsUserInput": ""
+      }
+    },
+    "browserRestrictionSettings": {
+      "mode": "EXCLUDE"
+    },
+    "ipAddressRestrictionSettings": {
+      "mode": "EXCLUDE"
+    }
+  },
+  "name": "${randomize}",
+  "realUserMonitoringEnabled": true,
+  "sessionReplayConfig": {
+    "enabled": false,
+    "costControlPercentage": 100,
+    "enableCssResourceCapturing": true,
+    "cssResourceCapturingExclusionRules": []
+  },
+  "type": "AUTO_INJECTED",
+  "userActionAndSessionProperties": null,
+  "userActionNamingSettings": {
+    "placeholders": [],
+    "loadActionNamingRules": [],
+    "xhrActionNamingRules": [],
+    "customActionNamingRules": [],
+    "ignoreCase": true,
+    "useFirstDetectedLoadAction": true,
+    "splitUserActionsByDomain": true,
+    "queryParameterCleanups": [
+      "cfid",
+      "phpsessid",
+      "__sid",
+      "cftoken",
+      "sid"
+    ]
+  },
+  "userTags": null,
+  "waterfallSettings": {
+    "uncompressedResourcesThreshold": 860,
+    "resourcesThreshold": 100000,
+    "resourceBrowserCachingThreshold": 50,
+    "slowFirstPartyResourcesThreshold": 200000,
+    "slowThirdPartyResourcesThreshold": 200000,
+    "slowCdnResourcesThreshold": 200000,
+    "speedIndexVisuallyCompleteRatioThreshold": 50
+  },
+  "xhrActionApdexSettings": {
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000
+  },
+  "xhrActionKeyPerformanceMetric": "VISUALLY_COMPLETE"
+}

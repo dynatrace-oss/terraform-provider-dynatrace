@@ -1,0 +1,69 @@
+{
+  "aggregation": "FIRST",
+  "confidential": false,
+  "dataSources": [
+    {
+      "enabled": true,
+      "methods": [
+        {
+          "capture": "CLASS_NAME",
+          "method": {
+            "argumentTypes": [
+              "!0",
+              "System.Func`2\u003c!0,System.Threading.Tasks.Task\u003e"
+            ],
+            "className": "NServiceBus.Pipeline.options`1",
+            "methodName": "Invoke",
+            "returnType": "System.Threading.Tasks.Task",
+            "visibility": "PUBLIC"
+          }
+        }
+      ],
+      "source": "METHOD_PARAM",
+      "technology": "DOTNET",
+      "valueProcessing": {
+        "extractSubstring": {
+          "delimiter": "h",
+          "position": "BEFORE"
+        },
+        "splitAt": "t",
+        "trim": true,
+        "valueCondition": {
+          "negate": false,
+          "operator": "ENDS_WITH",
+          "value": "gh"
+        },
+        "valueExtractorRegex": "s(.*+)"
+      }
+    },
+    {
+      "enabled": true,
+      "methods": [
+        {
+          "capture": "CLASS_NAME",
+          "method": {
+            "argumentTypes": [
+              "!0",
+              "System.Func`1\u003cSystem.Threading.Tasks.Task\u003e"
+            ],
+            "className": "NServiceBus.Pipeline.options`1",
+            "methodName": "Invoke",
+            "returnType": "System.Threading.Tasks.Task",
+            "visibility": "PUBLIC"
+          }
+        }
+      ],
+      "source": "METHOD_PARAM",
+      "technology": "DOTNET",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      }
+    }
+  ],
+  "dataType": "STRING",
+  "enabled": true,
+  "name": "${randomize}",
+  "normalization": "ORIGINAL",
+  "skipPersonalDataMasking": false
+}

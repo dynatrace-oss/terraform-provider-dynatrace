@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "displayName": "${randomize}",
+  "alertingProfile": "vu9U3hXa3q0AAAABABhidWlsdGluOmFsZXJ0aW5nLnByb2ZpbGUABnRlbmFudAAGdGVuYW50ACRjMjFmOTY5Yi01ZjAzLTMzM2QtODNlMC00ZjhmMTM2ZTc2ODK-71TeFdrerQ",
+  "type": "XMATTERS",
+  "xMattersNotification": {
+    "url": "https://webhook.site/40bf4d43-1a50-4ebd-913d-bf50ce7c3a1e",
+    "acceptAnyCertificate": true,
+    "headers": [
+      {
+        "name": "http-header-name-01",
+        "secret": false,
+        "value": "http-header-value-01"
+      },
+      {
+        "name": "http-header-name-02",
+        "secret": true,
+        "secretValue": "#######"
+      }
+    ],
+    "payload": "x-matters-payload"
+  }
+}

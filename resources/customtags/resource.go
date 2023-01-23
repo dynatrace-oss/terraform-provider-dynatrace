@@ -20,14 +20,15 @@ package customtags
 import (
 	"context"
 	"encoding/json"
+	"log"
 
-	"github.com/dtcookie/dynatrace/api/config/common"
-	"github.com/dtcookie/dynatrace/api/config/v2/customtags"
-	"github.com/dtcookie/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/confighcl"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
+	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
+	cfg "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -37,7 +38,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        hcl2sdk.Convert(new(customtags.Settings).Schema()),
+		Schema:        new(settings.Settings).Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -46,27 +47,20 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m interface{}) *customtags.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := customtags.NewService(conf.DTApiV2URL, conf.APIToken)
-	rest.Verbose = config.HTTPVerbose
-	return apiService
-}
-
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
-func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config := new(customtags.Settings)
+func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
-	err := NewService(m).Create(config)
-	if err != nil {
+
+	if _, err := customtags.Service(cfg.Credentials(m)).Create(config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
 
-	marshalled, err := config.MarshalHCL()
-	if err != nil {
+	marshalled := hcl.Properties{}
+	if err := config.MarshalHCL(marshalled); err != nil {
 		return diag.FromErr(err)
 	}
 	for k, v := range marshalled {
@@ -84,14 +78,14 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
-func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	config := new(customtags.Settings)
+func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
 
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
-	stateConfig := new(customtags.Settings)
+	stateConfig := new(settings.Settings)
 	if val, ok := stateDecoder.GetOk("current_state"); ok {
 		state := val.(string)
 		if len(state) > 0 {
@@ -119,15 +113,18 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	}
 
 	if len(deleteTags) > 0 {
-		delConfig := new(customtags.Settings)
+		delConfig := new(settings.Settings)
 		delConfig.EntitySelector = config.EntitySelector
 		delConfig.Tags = deleteTags
-		if err := NewService(m).Delete(delConfig); err != nil {
-			return diag.FromErr(err)
+		srv := customtags.Service(cfg.Credentials(m))
+		if fullDeleter, ok := srv.(FullDeleter); ok {
+			if err := fullDeleter.DeleteValue(stateConfig); err != nil {
+				return diag.FromErr(err)
+			}
 		}
 	}
 
-	if err := NewService(m).Update(config); err != nil {
+	if err := customtags.Service(cfg.Credentials(m)).Update(config.EntitySelector, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -142,9 +139,9 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Read queries the Dynatrace Server for the configuration
-func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
-	stateConfig := new(customtags.Settings)
+	stateConfig := new(settings.Settings)
 
 	var selector string
 	if val, ok := stateDecoder.GetOk("entity_selector"); ok {
@@ -159,8 +156,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 		}
 	}
 
-	apiConfig, err := NewService(m).Get(selector)
-	if err != nil {
+	apiConfig := new(settings.Settings)
+	if err := customtags.Service(cfg.Credentials(m)).Get(selector, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -175,8 +172,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 	}
 	apiConfig.Tags = filteredTags
 
-	marshalled, err := apiConfig.MarshalHCL()
-	if err != nil {
+	marshalled := hcl.Properties{}
+	if err := apiConfig.MarshalHCL(marshalled); err != nil {
 		return diag.FromErr(err)
 	}
 	for k, v := range marshalled {
@@ -187,9 +184,9 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 }
 
 // Delete the configuration
-func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
-	stateConfig := new(customtags.Settings)
+	stateConfig := new(settings.Settings)
 	if val, ok := stateDecoder.GetOk("entity_selector"); ok {
 		stateConfig.EntitySelector = val.(string)
 	}
@@ -202,9 +199,21 @@ func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		}
 	}
 
-	if err := NewService(m).Delete(stateConfig); err != nil {
-		return diag.FromErr(err)
+	srv := customtags.Service(cfg.Credentials(m))
+	if fullDeleter, ok := srv.(FullDeleter); ok {
+		if err := fullDeleter.DeleteValue(stateConfig); err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
+	responseConfig := new(settings.Settings)
+	srv.Get(stateConfig.EntitySelector, responseConfig)
+	dd, _ := json.Marshal(responseConfig)
+	log.Println(string(dd))
+
 	return diag.Diagnostics{}
+}
+
+type FullDeleter interface {
+	DeleteValue(v *settings.Settings) error
 }

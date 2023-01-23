@@ -1,73 +1,67 @@
+/**
+* @license
+* Copyright 2020 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
 package mgmz
 
 import (
-	mgmzapi "github.com/dtcookie/dynatrace/api/config/managementzones"
-	api20 "github.com/dtcookie/dynatrace/api/config/v2/managementzones"
-	"github.com/dtcookie/hcl"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
-	"github.com/google/uuid"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
 		Read: DataSourceRead,
-		Schema: hcl2sdk.Convert(map[string]*hcl.Schema{
+		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     hcl.TypeString,
+				Type:     schema.TypeString,
 				Required: true,
 			},
 			"settings_20_id": {
-				Type:     hcl.TypeString,
+				Type:     schema.TypeString,
 				Computed: true,
 			},
-		}),
+		},
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m interface{}) error {
+func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	conf := m.(*config.ProviderConfiguration)
-	apiService := mgmzapi.NewService(conf.DTenvURL, conf.APIToken)
-	mgmzList, err := apiService.ListAll()
-	if err != nil {
-		return err
-	}
-	found := false
-	if len(mgmzList) > 0 {
-		for _, mgmz := range mgmzList {
-			if name == mgmz.Name {
-				d.SetId(mgmz.ID)
-				found = true
-				break
-			}
-		}
-	}
-	if !found {
-		id := "not-found-" + uuid.New().String()
-		d.SetId(id)
-		d.Set("settings_20_id", id)
-		return nil
-	}
-
-	client20 := api20.NewService(conf.DTApiV2URL, conf.APIToken)
-	stubs, err := client20.List()
-	if err != nil {
+	service := export.Service(config.Credentials(m), export.ResourceTypes.ManagementZone)
+	var stubs settings.Stubs
+	if stubs, err = service.List(); err != nil {
 		return err
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
 			if name == stub.Name {
-				d.Set("settings_20_id", stub.ID)
+				d.SetId(stub.ID)
+				if stub.LegacyID != nil {
+					d.Set("settings_20_id", *stub.LegacyID)
+				}
+				return nil
 			}
 		}
 	}
-
+	d.SetId("")
 	return nil
-	// return fmt.Errorf("no management zone with name '%s' found", name)
 }

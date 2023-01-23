@@ -1,43 +1,58 @@
+/**
+* @license
+* Copyright 2020 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
 package process
 
 import (
-	"fmt"
-
-	processapi "github.com/dtcookie/dynatrace/api/config/topology/process"
-	tagapi "github.com/dtcookie/dynatrace/api/config/topology/tag"
-	"github.com/dtcookie/hcl"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
 	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
+	processes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/processes"
+	processsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/processes/settings"
+	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
 		Read: DataSourceRead,
-		Schema: hcl2sdk.Convert(map[string]*hcl.Schema{
+		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     hcl.TypeString,
+				Type:     schema.TypeString,
 				Required: true,
 			},
 			"tags": {
-				Type:        hcl.TypeSet,
-				Elem:        &hcl.Schema{Type: hcl.TypeString},
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
 				Description: "Required tags of the process to find",
 				MinItems:    1,
 			},
-		}),
+		},
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m interface{}) error {
+func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	var tagList []interface{}
+	var tagList []any
 	var tags []tagapi.Tag
 	if v, ok := d.GetOk("tags"); ok {
 		sTags := v.(*schema.Set)
@@ -45,15 +60,18 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 		dscommon.StringsToTags(tagList, &tags)
 	}
 
-	conf := m.(*config.ProviderConfiguration)
-	apiService := processapi.NewService(conf.DTNonConfigEnvURL, conf.APIToken)
-	processList, err := apiService.List()
-	if err != nil {
+	service := processes.Service(config.Credentials(m))
+	var stubs settings.Stubs
+	if stubs, err = service.List(); err != nil {
 		return err
 	}
-	if len(processList) > 0 {
-		for _, process := range processList {
-			if name == process.DisplayName {
+	if len(stubs) > 0 {
+		for _, stub := range stubs {
+			if name == stub.Name {
+				var process processsettings.Process
+				if err = service.Get(stub.ID, &process); err != nil {
+					return err
+				}
 				if dscommon.TagSubsetCheck(process.Tags, tags) {
 					d.SetId(process.EntityId)
 					return nil
@@ -62,5 +80,6 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return fmt.Errorf("no process with name '%s' and tag(s) %v found", name, tagList)
+	d.SetId("")
+	return nil
 }

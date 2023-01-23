@@ -1,0 +1,25 @@
+{
+    "description": "Created via Terraform",
+    "name": "${randomize}",
+    "rules": [
+        {
+            "conditions": [
+                {
+                    "comparisonInfo": {
+                        "caseSensitive": false,
+                        "negate": false,
+                        "operator": "EQUALS",
+                        "type": "STRING",
+                        "value": "example"
+                    },
+                    "key": {
+                        "attribute": "HOST_GROUP_NAME",
+                        "type": "STATIC"
+                    }
+                }
+            ],
+            "enabled": true,
+            "type": "HOST"
+        }
+    ]
+}

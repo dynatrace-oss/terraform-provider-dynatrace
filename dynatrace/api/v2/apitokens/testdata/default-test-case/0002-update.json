@@ -1,0 +1,12 @@
+{
+  "name": "${randomize}",
+  "enabled": true,
+  "personalAccessToken": false,
+  "owner": "reinhard.pilz@dynatrace.com",
+  "creationDate": "2022-03-08T11:31:53.218Z",
+  "lastUsedDate": "2022-12-30T11:27:11.842Z",
+  "lastUsedIpAddress": "35.242.134.47",
+  "scopes": [
+    "metrics.ingest"
+  ]
+}

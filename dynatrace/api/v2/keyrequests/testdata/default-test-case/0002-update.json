@@ -1,0 +1,6 @@
+{
+  "keyRequestNames": [
+    "SELECT 1 FROM SYSIBM.SYSDUMMY1"
+  ],
+  "serviceId": "SERVICE-A8AA57B256A04419"
+}

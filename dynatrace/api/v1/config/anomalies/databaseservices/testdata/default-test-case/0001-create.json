@@ -1,0 +1,29 @@
+{
+    "databaseConnectionFailureCount": {
+        "connectionFailsCount": 5,
+        "enabled": true,
+        "timePeriodMinutes": 5
+    },
+    "failureRateIncrease": {
+        "detectionMode": "DETECT_USING_FIXED_THRESHOLDS",
+        "thresholds": {
+            "sensitivity": "LOW",
+            "threshold": 0
+        }
+    },
+    "loadDrop": {
+        "enabled": false
+    },
+    "loadSpike": {
+        "enabled": false
+    },
+    "responseTimeDegradation": {
+        "detectionMode": "DETECT_USING_FIXED_THRESHOLDS",
+        "thresholds": {
+            "loadThreshold": "FIFTEEN_REQUESTS_PER_MINUTE",
+            "responseTimeThresholdMilliseconds": 15,
+            "sensitivity": "HIGH",
+            "slowestResponseTimeThresholdMilliseconds": 23
+        }
+    }
+}
