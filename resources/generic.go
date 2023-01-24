@@ -19,6 +19,7 @@ package resources
 
 import (
 	"context"
+	"errors"
 	"os"
 	"strings"
 
@@ -97,6 +98,13 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	stub, err := me.Service(m).Create(sttngs)
 	if err != nil {
+		if restError, ok := err.(rest.Error); ok {
+			vm := restError.ViolationMessage()
+			if len(vm) > 0 {
+				return diag.FromErr(errors.New(vm))
+			}
+			return diag.FromErr(errors.New(restError.Message))
+		}
 		return diag.FromErr(err)
 	}
 	d.SetId(stub.ID)
@@ -120,6 +128,13 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 		return diag.FromErr(err)
 	}
 	if err := me.Service(m).Update(d.Id(), sttngs); err != nil {
+		if restError, ok := err.(rest.Error); ok {
+			vm := restError.ViolationMessage()
+			if len(vm) > 0 {
+				return diag.FromErr(errors.New(vm))
+			}
+			return diag.FromErr(errors.New(restError.Message))
+		}
 		return diag.FromErr(err)
 	}
 	return me.Read(ctx, d, m)

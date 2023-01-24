@@ -46,6 +46,24 @@ func (me Error) Error() string {
 	return msg
 }
 
+func (me Error) ViolationMessage() string {
+	if len(me.ConstraintViolations) == 0 {
+		return ""
+	}
+	result := ""
+	for _, violation := range me.ConstraintViolations {
+		if len(result) > 0 {
+			result = result + "\n"
+		}
+		if violation.Message == "must not be null" {
+			result = result + violation.Path + " " + violation.Message
+		} else {
+			result = result + violation.Message
+		}
+	}
+	return result
+}
+
 type ConstraintViolation struct {
 	Description       string `json:"description,omitempty"`
 	ParameterLocation string `json:"parameterLocation,omitempty"`
