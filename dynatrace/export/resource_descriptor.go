@@ -69,10 +69,10 @@ import (
 	disk_event_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/diskevents"
 	host_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/hosts"
 	custom_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/metricevents"
+	pg_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/processgroups"
 	service_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/services"
 
 	host_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
 	processgroup_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
@@ -361,7 +361,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.IAMUser:               NewResourceDescriptor(users.Service),
 	ResourceTypes.IAMGroup:              NewResourceDescriptor(groups.Service),
 	ResourceTypes.DDUPool:               NewResourceDescriptor(ddupool.Service),
-	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(processgroups.Service),
+	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(pg_anomalies.Service),
 }
 
 var BlackListedResources = []ResourceType{
