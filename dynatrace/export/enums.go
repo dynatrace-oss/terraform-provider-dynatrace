@@ -94,6 +94,7 @@ var ResourceTypes = struct {
 	IAMUser                  ResourceType
 	IAMGroup                 ResourceType
 	ProcessGroupAnomalies    ResourceType
+	DDUPool                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -163,6 +164,7 @@ var ResourceTypes = struct {
 	"dynatrace_iam_user",
 	"dynatrace_iam_group",
 	"dynatrace_pg_anomalies",
+	"dynatrace_ddu_pool",
 }
 
 type ResourceStatus string

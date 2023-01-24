@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package consumption_test
+package ddupool_test
 
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/consumption"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestConsumption(t *testing.T) {
-	api.TestService(t, consumption.Service)
+	api.TestService(t, ddupool.Service)
 }
 
 func TestAccConsumption(t *testing.T) {
