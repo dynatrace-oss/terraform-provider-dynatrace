@@ -11,11 +11,6 @@
         "name": "http-header-name-01",
         "secret": false,
         "value": "http-header-value-01"
-      },
-      {
-        "name": "http-header-name-02",
-        "secret": true,
-        "secretValue": "#######"
       }
     ],
     "payload": "x-matters-payload"
