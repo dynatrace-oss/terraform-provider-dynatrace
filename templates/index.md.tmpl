@@ -91,17 +91,4 @@ Linux: `./terraform-provider-dynatrace -export [-v] [-ref] [-id] [-migrate] [-ex
 ### Known Issues
 * Due to the complexity of dashboards, there may be cases where the `terraform apply` fails after an export. Dashboard validation will be improved in a future release.
 
-## Export Utility (Legacy method)
-Windows: `terraform-provider-dynatrace.exe exportv1 *[<resourcename>[=<id>]]`
-
-Linux: `./terraform-provider-dynatrace exportv1 *[<resourcename>[=<id>]]`
-
-### Usage Examples
-* `./terraform-provider-dynatrace exportv1` downloads all available configuration settings
-* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard` downloads all available dashboards
-* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard dynatrace_slo` downloads all available dashboards and all available SLOs
-* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads only the dashboard with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`
-* `./terraform-provider-dynatrace exportv1 dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`
-* `./terraform-provider-dynatrace exportv1 dynatrace_slo dynatrace_dashboard=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_dashboard=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads all available SLOs and only the dashboards with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5
-
 {{ .SchemaMarkdown | trimspace }}
