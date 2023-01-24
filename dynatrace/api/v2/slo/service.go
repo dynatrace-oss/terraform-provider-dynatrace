@@ -66,6 +66,7 @@ func (me *service) Get(id string, v *slo.SLO) error {
 			}
 		}
 		numRequiredSuccesses--
+		time.Sleep(200 * time.Millisecond)
 	}
 
 	return nil
