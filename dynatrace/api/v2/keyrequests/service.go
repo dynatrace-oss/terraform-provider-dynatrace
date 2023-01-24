@@ -18,7 +18,8 @@
 package keyrequests
 
 import (
-	toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
+	// toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
+	toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	keyrequests "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/keyrequests/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -36,7 +37,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*keyrequest
 			if err := topologyService.Get(v.ServiceID, service); err != nil {
 				return "", err
 			}
-			return "Key Requests for " + service.DisplayName, nil
+			return "Key Requests for " + *service.DisplayName, nil
 		},
 	})
 }
