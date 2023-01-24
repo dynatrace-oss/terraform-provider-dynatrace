@@ -69,7 +69,6 @@ import (
 	disk_event_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/diskevents"
 	host_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/hosts"
 	custom_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/metricevents"
-	pg_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/processgroups"
 	service_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/services"
 
 	host_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts"
@@ -275,14 +274,23 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		pagerduty.Service,
 		Dependencies.ID(ResourceTypes.Alerting),
 	).Specify(notifications.Types.PagerDuty),
-	ResourceTypes.ProcessGroupNaming:    NewResourceDescriptor(processgroup_naming.Service),
-	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(pg_anomalies.Service),
-	ResourceTypes.QueueManager:          NewResourceDescriptor(queuemanagers.Service),
-	ResourceTypes.RequestAttribute:      NewResourceDescriptor(requestattributes.Service),
-	ResourceTypes.RequestNaming:         NewResourceDescriptor(requestnaming.Service),
-	ResourceTypes.ResourceAttributes:    NewResourceDescriptor(resattr.Service),
-	ResourceTypes.ServiceAnomalies:      NewResourceDescriptor(service_anomalies.Service),
-	ResourceTypes.ServiceNaming:         NewResourceDescriptor(service_naming.Service),
+	ResourceTypes.ProcessGroupNaming: NewResourceDescriptor(processgroup_naming.Service),
+	ResourceTypes.QueueManager:       NewResourceDescriptor(queuemanagers.Service),
+	ResourceTypes.RequestAttribute: NewResourceDescriptor(
+		requestattributes.Service,
+		Dependencies.Host,
+		Dependencies.HostGroup,
+		Dependencies.ProcessGroup,
+		Dependencies.ProcessGroupInstance,
+		Dependencies.Service,
+	),
+	ResourceTypes.RequestNaming: NewResourceDescriptor(
+		requestnaming.Service,
+		Dependencies.RequestAttribute,
+	),
+	ResourceTypes.ResourceAttributes: NewResourceDescriptor(resattr.Service),
+	ResourceTypes.ServiceAnomalies:   NewResourceDescriptor(service_anomalies.Service),
+	ResourceTypes.ServiceNaming:      NewResourceDescriptor(service_naming.Service),
 	ResourceTypes.ServiceNowNotification: NewResourceDescriptor(
 		servicenow.Service,
 		Dependencies.ID(ResourceTypes.Alerting),
