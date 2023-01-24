@@ -1,4 +1,4 @@
-package consumption
+package ddupool
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"

@@ -15,10 +15,10 @@
 * limitations under the License.
  */
 
-package consumption
+package ddupool
 
 import (
-	consumption "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/consumption/settings"
+	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +26,6 @@ import (
 const SchemaVersion = "3.4.1"
 const SchemaID = "builtin:accounting.ddu.limit"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*consumption.DDUPool] {
-	return settings20.Service[*consumption.DDUPool](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*ddupool.DDUPool] {
+	return settings20.Service[*ddupool.DDUPool](credentials, SchemaID, SchemaVersion)
 }

@@ -1,4 +1,4 @@
-package consumption
+package ddupool
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -12,6 +12,10 @@ type DDUPool struct {
 	ServerlessPool    DDUPoolConfig `json:"serverless"`
 	EventsPool        DDUPoolConfig `json:"events"`
 	TracesPool        DDUPoolConfig `json:"traces"`
+}
+
+func (me *DDUPool) Name() string {
+	return "ddupool"
 }
 
 func (me *DDUPool) Schema() map[string]*schema.Schema {
@@ -72,27 +76,27 @@ func (me *DDUPool) Schema() map[string]*schema.Schema {
 func (me *DDUPool) MarshalHCL(properties hcl.Properties) error {
 
 	if me.MetricsPool.LimitEnabled {
-		if err := properties.Encode("metrics", me.MetricsPool); err != nil {
+		if err := properties.Encode("metrics", &me.MetricsPool); err != nil {
 			return err
 		}
 	}
 	if me.LogMonitoringPool.LimitEnabled {
-		if err := properties.Encode("log_monitoring", me.LogMonitoringPool); err != nil {
+		if err := properties.Encode("log_monitoring", &me.LogMonitoringPool); err != nil {
 			return err
 		}
 	}
 	if me.ServerlessPool.LimitEnabled {
-		if err := properties.Encode("serverless", me.ServerlessPool); err != nil {
+		if err := properties.Encode("serverless", &me.ServerlessPool); err != nil {
 			return err
 		}
 	}
 	if me.EventsPool.LimitEnabled {
-		if err := properties.Encode("events", me.EventsPool); err != nil {
+		if err := properties.Encode("events", &me.EventsPool); err != nil {
 			return err
 		}
 	}
 	if me.TracesPool.LimitEnabled {
-		if err := properties.Encode("traces", me.TracesPool); err != nil {
+		if err := properties.Encode("traces", &me.TracesPool); err != nil {
 			return err
 		}
 	}
