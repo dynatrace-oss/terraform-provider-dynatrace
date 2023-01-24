@@ -37,7 +37,7 @@ type RequestAttribute struct {
 	DataSources             []*DataSource              `json:"dataSources"`             // The list of data sources.
 	DataType                DataType                   `json:"dataType"`                // The data type of the request attribute.
 	Normalization           Normalization              `json:"normalization"`           // String values transformation.   If the **dataType** is not `string`, set the `Original` here.
-	Enabled                 *bool                      `json:"enabled"`                 // The request attribute is enabled (`true`) or disabled (`false`).
+	Enabled                 bool                       `json:"enabled"`                 // The request attribute is enabled (`true`) or disabled (`false`).
 	Aggregation             Aggregation                `json:"aggregation"`             // Aggregation type for the request values.
 	Unknowns                map[string]json.RawMessage `json:"-"`
 }
@@ -123,7 +123,7 @@ func (me *RequestAttribute) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("normalization", string(me.Normalization)); err != nil {
 		return err
 	}
-	if err := properties.Encode("enabled", opt.Bool(me.Enabled)); err != nil {
+	if err := properties.Encode("enabled", me.Enabled); err != nil {
 		return err
 	}
 	if err := properties.Encode("aggregation", string(me.Aggregation)); err != nil {
@@ -180,7 +180,7 @@ func (me *RequestAttribute) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Normalization = Normalization(value.(string))
 	}
 	if value, ok := decoder.GetOk("enabled"); ok {
-		me.Enabled = opt.NewBool(value.(bool))
+		me.Enabled = value.(bool)
 	}
 	if value, ok := decoder.GetOk("aggregation"); ok {
 		me.Aggregation = Aggregation(value.(string))
