@@ -29,7 +29,7 @@ func TestTarFolder(t *testing.T) {
 		return
 	}
 	defer func() {
-		// os.Remove("reini-war-data.tar")
+		os.Remove("reini-war-data.tar")
 	}()
 	for k, v := range testdata {
 		if err := folder.Save(settings.Stub{ID: k, Name: k}, []byte(v)); err != nil {
