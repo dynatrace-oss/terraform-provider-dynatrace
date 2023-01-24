@@ -25,10 +25,12 @@ import (
 
 // Config contains the setup of the monitor
 type Config struct {
-	UserAgent            *string `json:"userAgent,omitempty"`            // The User agent of the request
-	AcceptAnyCertificate *bool   `json:"acceptAnyCertificate,omitempty"` // If set to `false`, then the monitor fails with invalid SSL certificates.\n\nIf not set, the `false` option is used
-	FollowRedirects      *bool   `json:"followRedirects,omitempty"`      // If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.
-	RequestHeaders       Headers `json:"requestHeaders,omitempty"`       // By default, only the `User-Agent` header is set.\n\nYou can't set or modify this header here. Use the `userAgent` field for that.
+	UserAgent            *string `json:"userAgent,omitempty"`                     // The User agent of the request
+	AcceptAnyCertificate *bool   `json:"acceptAnyCertificate,omitempty"`          // If set to `false`, then the monitor fails with invalid SSL certificates.\n\nIf not set, the `false` option is used
+	FollowRedirects      *bool   `json:"followRedirects,omitempty"`               // If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.
+	RequestHeaders       Headers `json:"requestHeaders,omitempty"`                // By default, only the `User-Agent` header is set.\n\nYou can't set or modify this header here. Use the `userAgent` field for that.
+	ClientCertificate    *string `json:"certStoreId,omitempty"`                   // The client certificate, if applicable - eg. CREDENTIALS_VAULT-XXXXXXXXXXXXXXXX
+	SensitiveData        *bool   `json:"shouldNotPersistSensitiveData,omitempty"` // Option not to store and display request and response bodies and header values in execution details, `true` or `false`. If not set, `false`.
 }
 
 func (me *Config) Schema() map[string]*schema.Schema {
@@ -54,6 +56,17 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Headers).Schema()},
+		},
+		"client_certificate": {
+			Type:        schema.TypeString,
+			Description: "The client certificate, if applicable - eg. CREDENTIALS_VAULT-XXXXXXXXXXXXXXXX",
+			Optional:    true,
+			Sensitive:   true,
+		},
+		"sensitive_data": {
+			Type:        schema.TypeBool,
+			Description: "Option not to store and display request and response bodies and header values in execution details, `true` or `false`. If not set, `false`.",
+			Optional:    true,
 		},
 	}
 }
@@ -81,6 +94,16 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("headers", me.RequestHeaders); err != nil {
 		return err
 	}
+	if me.ClientCertificate != nil && len(*me.ClientCertificate) > 0 {
+		if err := properties.Encode("client_certificate", me.ClientCertificate); err != nil {
+			return err
+		}
+	}
+	if me.SensitiveData != nil && *me.SensitiveData {
+		if err := properties.Encode("sensitive_data", me.SensitiveData); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -92,6 +115,12 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("follow_redirects", &me.FollowRedirects); err != nil {
+		return err
+	}
+	if err := decoder.Decode("client_certificate", &me.ClientCertificate); err != nil {
+		return err
+	}
+	if err := decoder.Decode("sensitive_data", &me.SensitiveData); err != nil {
 		return err
 	}
 	if _, ok := decoder.GetOk("headers.#"); ok {

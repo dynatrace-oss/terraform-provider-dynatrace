@@ -46,15 +46,16 @@ func (me *Requests) Schema() map[string]*schema.Schema {
 }
 
 type Request struct {
-	Description    *string              `json:"description,omitempty"`   // A short description of the event to appear in the web UI
-	URL            string               `json:"url"`                     // The URL to check
-	Method         string               `json:"method"`                  // The HTTP method of the request
-	Authentication *Authentication      `json:"authentication"`          // Authentication options for this request
-	RequestBody    *string              `json:"requestBody,omitempty"`   // The body of the HTTP request—you need to escape all JSON characters. \n\n Is set to null if the request method is GET, HEAD, or OPTIONS.
-	Validation     *validation.Settings `json:"validation,omitempty"`    // Validation helps you verify that your HTTP monitor loads the expected content
-	Configuration  *request.Config      `json:"configuration,omitempty"` // The setup of the monitor
-	PreProcessing  *string              `json:"preProcessingScript,omitempty"`
-	PostProcessing *string              `json:"postProcessingScript,omitempty"`
+	Description    *string              `json:"description,omitempty"`          // A short description of the event to appear in the web UI
+	URL            string               `json:"url"`                            // The URL to check
+	Method         string               `json:"method"`                         // The HTTP method of the request
+	Authentication *Authentication      `json:"authentication"`                 // Authentication options for this request
+	RequestBody    *string              `json:"requestBody,omitempty"`          // The body of the HTTP request—you need to escape all JSON characters. \n\n Is set to null if the request method is GET, HEAD, or OPTIONS.
+	Validation     *validation.Settings `json:"validation,omitempty"`           // Validation helps you verify that your HTTP monitor loads the expected content
+	Configuration  *request.Config      `json:"configuration,omitempty"`        // The setup of the monitor
+	PreProcessing  *string              `json:"preProcessingScript,omitempty"`  // Javascript code to execute before sending the request.
+	PostProcessing *string              `json:"postProcessingScript,omitempty"` // Javascript code to execute after sending the request.
+	RequestTimeout *int                 `json:"requestTimeout,omitempty"`       // Adapt request timeout option - the maximum time this request is allowed to consume. Keep in mind the maximum timeout of the complete monitor is 60 seconds
 }
 
 func JSONStringsEqual(s1, s2 string) bool {
@@ -164,6 +165,11 @@ func (me *Request) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(request.Config).Schema()},
 		},
+		"request_timeout": {
+			Type:        schema.TypeInt,
+			Description: "Adapt request timeout option - the maximum time this request is allowed to consume. Keep in mind the maximum timeout of the complete monitor is 60 seconds",
+			Optional:    true,
+		},
 	}
 }
 
@@ -203,6 +209,11 @@ func (me *Request) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("configuration", me.Configuration); err != nil {
 		return err
 	}
+	if me.RequestTimeout != nil {
+		if err := properties.Encode("request_timeout", me.RequestTimeout); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -223,6 +234,9 @@ func (me *Request) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("post_processing", &me.PostProcessing); err != nil {
+		return err
+	}
+	if err := decoder.Decode("request_timeout", &me.RequestTimeout); err != nil {
 		return err
 	}
 	if result, ok := decoder.GetOk("validation.#"); ok && result.(int) == 1 {
