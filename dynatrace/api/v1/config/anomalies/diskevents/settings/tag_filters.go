@@ -18,9 +18,6 @@
 package diskevents
 
 import (
-	"sort"
-	"strings"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -42,27 +39,36 @@ func (me TagFilters) Schema() map[string]*schema.Schema {
 }
 
 func (me TagFilters) MarshalHCL(properties hcl.Properties) error {
-	tagFilters := TagFilters{}
-	tagFilters = append(tagFilters, me...)
-	sort.Slice(tagFilters, func(i int, j int) bool {
-		a := tagFilters[i]
-		b := tagFilters[j]
-		return strings.Compare(a.Key, b.Key) > 0
-	})
-	return properties.EncodeSlice("filter", tagFilters)
+	if len(me) > 0 {
+		entries := []any{}
+		for _, entry := range me {
+			marshalled := hcl.Properties{}
+			if err := entry.MarshalHCL(marshalled); err == nil {
+				entries = append(entries, marshalled)
+			} else {
+				return err
+			}
+		}
+		if len(entries) > 0 {
+			properties["filter"] = entries
+		}
+	}
+	return nil
 }
 
 func (me *TagFilters) UnmarshalHCL(decoder hcl.Decoder) error {
-	nme := TagFilters{}
-	if result, ok := decoder.GetOk("filter.#"); ok {
-		for idx := 0; idx < result.(int); idx++ {
+	if value, ok := decoder.GetOk("filter"); ok {
+
+		entrySet := value.(*schema.Set)
+
+		for _, entryMap := range entrySet.List() {
+			hash := entrySet.F(entryMap)
 			entry := new(common.TagFilter)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "filter", idx)); err != nil {
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "filter", hash)); err != nil {
 				return err
 			}
-			nme = append(nme, entry)
+			*me = append(*me, entry)
 		}
 	}
-	*me = nme
 	return nil
 }
