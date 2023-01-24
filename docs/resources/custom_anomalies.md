@@ -15,9 +15,9 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_custom_anomalies` downloads all existing custom metric event configuration
+- `terraform-provider-dynatrace -export dynatrace_custom_anomalies` downloads all existing custom metric event configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
@@ -25,18 +25,11 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_custom_anomalies" "#name#" {
   name                  = "#name#"
   description           = "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}."
+  metric_selector       = "ghputoutgoing:filter(existsKey(\"dt.entity.service\"),in(\"dt.entity.service\",entitySelector(\"type(SERVICE),mzId(6734823652592292763)\"))):avg"
   enabled               = true
-  aggregation_type      = "AVG"
-  disabled_reason       = "NONE"
-  metric_id             = "ghputoutgoing"
   primary_dimension_key = "dt.entity.service"
   severity              = "PERFORMANCE"
   warning_reason        = "NONE"
-  scopes {
-    management_zone {
-      id = "6734823652592292763"
-    }
-  }
   strategy {
     auto {
       alert_condition          = "ABOVE"
@@ -152,7 +145,9 @@ Required:
 
 Optional:
 
+- `index` (Number) No documentation available
 - `key` (String) The dimensions key on the metric
+- `name` (String) No documentation available
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -187,7 +182,9 @@ Required:
 
 Optional:
 
+- `index` (Number) No documentation available
 - `key` (String) The dimensions key on the metric
+- `name` (String) No documentation available
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--dimensions--string--filter"></a>

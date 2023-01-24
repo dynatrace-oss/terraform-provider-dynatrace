@@ -1,0 +1,16 @@
+{
+  "contextPropagationRule": {
+    "ruleName": "${randomize}",
+    "ruleAction": "PROPAGATE",
+    "matchers": [
+      {
+        "source": "SPAN_KIND",
+        "spanKindValue": "PRODUCER",
+        "type": "EQUALS",
+        "sourceKey": null,
+        "value": null,
+        "caseSensitive": false
+      }
+    ]
+  }
+}

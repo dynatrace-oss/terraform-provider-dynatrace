@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "summary": "${randomize}",
+  "queryDefinition": {
+    "type": "METRIC_SELECTOR",
+    "metricSelector": "builtin:cloud.azure.appGateway.backend.settings.traffic.requests.failed:filter(existsKey(\"dt.entity.azure_application_gateway\"),not(remainder(\"dt.entity.azure_application_gateway\")),not(remainder(\"BackendSettingsPool\"))):value",
+    "metricKey": ""
+  },
+  "modelProperties": {
+    "type": "AUTO_ADAPTIVE_THRESHOLD",
+    "alertOnNoData": false,
+    "signalFluctuation": 1,
+    "alertCondition": "ABOVE",
+    "violatingSamples": 3,
+    "samples": 5,
+    "dealertingSamples": 3
+  },
+  "eventTemplate": {
+    "title": "Azure Application Gateway failed requests [Azure]",
+    "description": "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}.",
+    "eventType": "ERROR",
+    "davisMerge": true
+  },
+  "eventEntityDimensionKey": "dt.entity.azure_application_gateway",
+  "legacyId": "builtin:cloud.azure.appGateway.backend.settings.traffic.requests.failed_alert"
+}

@@ -15,9 +15,9 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_span_entry_point` downloads all existing span entry point configuration
+- `terraform-provider-dynatrace -export dynatrace_span_entry_point` downloads all existing span entry point configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 

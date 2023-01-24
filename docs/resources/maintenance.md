@@ -15,9 +15,9 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_maintenance` downloads all existing maintenance window configuration
+- `terraform-provider-dynatrace -export dynatrace_maintenance` downloads all existing maintenance window configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 

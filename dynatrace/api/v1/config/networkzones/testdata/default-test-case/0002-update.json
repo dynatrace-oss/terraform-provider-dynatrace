@@ -1,0 +1,8 @@
+{
+  "id": "${randomize}",
+  "description": "",
+  "numOfOneAgentsFromOtherZones": 0,
+  "numOfOneAgentsUsing": 0,
+  "numOfConfiguredActiveGates": 0,
+  "numOfConfiguredOneAgents": 0
+}

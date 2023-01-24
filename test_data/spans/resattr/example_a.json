@@ -1,10 +1,11 @@
+	
 {
-  "objectId": "vu9U3hXa3q0AAAABABpidWlsdGluOnJlc291cmNlLWF0dHJpYnV0ZQAGdGVuYW50AAZ0ZW5hbnQAJDg0OWU5NWJhLTJkNjEtMzZlMi04MzgyLTkxOTIyMzE3NTdmOb7vVN4V2t6t",
+  "objectId": "vu9U3hXa3q0AAAABABpidWlsdGluOnJlc291cmNlLWF0dHJpYnV0ZQAGdGVuYW50AAZ0ZW5hbnQAJGNkYzk4YjFhLTJjZjUtM2JhYy04ZDk4LTcxYTFjMWMxZmVjOL7vVN4V2t6t",
   "summary": "",
-  "created": 1668169067616,
-  "modified": 1668169067616,
-  "author": "dt0c01.J2R66XVQWSTAPLDHRQVKSPPQ",
-  "updateToken": "vu9U3hXY3q0ATAAkODQ5ZTk1YmEtMmQ2MS0zNmUyLTgzODItOTE5MjIzMTc1N2Y5ACRkYTgyYTYwMC02MWJhLTExZWQtODAwMS0wMTAwMDAwMDAwMDK-71TeFdjerQ",
+  "created": 1670619636800,
+  "modified": 1670619636800,
+  "author": "dt0c01.EONSMAEBO6C77HAVCNPEEQG3",
+  "updateToken": "vu9U3hXY3q0ATAAkY2RjOThiMWEtMmNmNS0zYmFjLThkOTgtNzFhMWMxYzFmZWM4ACQ4NzkxNDQwMC03ODA0LTExZWQtODAwMS0wMTAwMDAwMDAwMDO-71TeFdjerQ",
   "scope": "environment",
   "schemaId": "builtin:resource-attribute",
   "schemaVersion": "1.0.24",
@@ -17,12 +18,12 @@
       },
       {
         "enabled": true,
-        "attributeKey": "cdefgh",
+        "attributeKey": "jjhhj",
         "masking": "NOT_MASKED"
       },
       {
-        "enabled": false,
-        "attributeKey": "jjhhj",
+        "enabled": true,
+        "attributeKey": "cdefgh",
         "masking": "NOT_MASKED"
       }
     ]

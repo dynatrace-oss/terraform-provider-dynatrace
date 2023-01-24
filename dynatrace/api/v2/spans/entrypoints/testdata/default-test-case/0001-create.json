@@ -1,0 +1,16 @@
+{
+  "entryPointRule": {
+    "ruleName": "${randomize}",
+    "ruleAction": "DONT_CREATE_ENTRYPOINT",
+    "matchers": [
+      {
+        "source": "SPAN_NAME",
+        "spanKindValue": null,
+        "type": "DOES_NOT_CONTAIN",
+        "sourceKey": null,
+        "value": "foo",
+        "caseSensitive": true
+      }
+    ]
+  }
+}

@@ -15,9 +15,9 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_calculated_service_metric` downloads all existing calculated service metric configuration
+- `terraform-provider-dynatrace -export dynatrace_calculated_service_metric` downloads all existing calculated service metric configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
@@ -114,11 +114,14 @@ Optional:
 <a id="nestedblock--conditions--condition--comparison--boolean"></a>
 ### Nested Schema for `conditions.condition.comparison.boolean`
 
+Required:
+
+- `value` (Boolean) The value to compare to
+
 Optional:
 
 - `operator` (String) Operator of the comparison. You can reverse it by setting `negate` to `true`. Possible values are `EQUALS`, `EQUALS_ANY_OF` and `EXISTS`
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- `value` (Boolean) The value to compare to
 - `values` (Set of Boolean) The values to compare to
 
 

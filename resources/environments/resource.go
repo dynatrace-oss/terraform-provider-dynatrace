@@ -21,13 +21,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dtcookie/dynatrace/api/cluster/v2/envs"
-	"github.com/dtcookie/dynatrace/rest"
-	"github.com/dtcookie/hcl"
-	"github.com/dtcookie/opt"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/hcl2sdk"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/envs"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -36,7 +34,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        hcl2sdk.Convert(new(envs.Environment).Schema()),
+		Schema:        new(envs.Environment).Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -45,15 +43,14 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m interface{}) *envs.ServiceClient {
+func NewService(m any) *envs.ServiceClient {
 	conf := m.(*config.ProviderConfiguration)
 	apiService := envs.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/cluster/v2"), conf.ClusterAPIToken)
-	rest.Verbose = config.HTTPVerbose
 	return apiService
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
-func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	config := new(envs.Environment)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -68,7 +65,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
-func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	config := new(envs.Environment)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -81,12 +78,13 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Read queries the Dynatrace Server for the configuration
-func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	config, err := NewService(m).Get(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	marshalled, err := config.MarshalHCL()
+	marshalled := hcl.Properties{}
+	err = config.MarshalHCL(marshalled)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -97,7 +95,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 }
 
 // Delete the configuration
-func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}

@@ -1,0 +1,14 @@
+{
+  "name": "${randomize}",
+  "enabled": true,
+  "useRateMetric": true,
+  "metricRate": "",
+  "metricExpression": "100-builtin:span_failure_rate:filter(eq(\"span.kind\",internal)):splitBy()",
+  "metricNumerator": "",
+  "metricDenominator": "",
+  "evaluationType": "AGGREGATE",
+  "filter": "",
+  "target": 80,
+  "warning": 90,
+  "timeframe": "-1h"
+}

@@ -1,0 +1,9 @@
+{
+  "attributeKeys": [
+    {
+      "enabled": true,
+      "attributeKey": "${randomize}",
+      "masking": "NOT_MASKED"
+    }
+  ]
+}

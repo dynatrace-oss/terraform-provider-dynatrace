@@ -1,0 +1,33 @@
+{
+    "description": "",
+    "enabled": true,    
+    "name": "abcd",
+    "schedule": {
+        "end": "2021-05-11 14:41",
+        "recurrenceType": "ONCE",
+        "start": "2021-05-11 13:41",
+        "zoneId": "Europe/Vienna"
+    },
+    "scope": {
+        "entities": [],
+        "matches": [
+            {
+                "managementZoneId": null,
+                "tagCombination": "AND",
+                "tags": [
+                    {
+                        "context": "CONTEXTLESS",
+                        "key": "deldel1"
+                    },
+                    {
+                        "context": "CONTEXTLESS",
+                        "key": "bggtedgxen"
+                    }
+                ]
+            }
+        ]
+    },
+    "suppressSyntheticMonitorsExecution": true,
+    "suppression": "DONT_DETECT_PROBLEMS",
+    "type": "PLANNED"
+}

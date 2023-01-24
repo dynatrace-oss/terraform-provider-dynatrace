@@ -15,30 +15,33 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_browser_monitor` downloads all existing browser monitor configuration
+- `terraform-provider-dynatrace -export dynatrace_browser_monitor` downloads all existing browser monitor configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
 ```terraform
 resource "dynatrace_browser_monitor" "#name#" {
-  name = "#name#"
-  frequency = 15
-  locations = ["GEOLOCATION-B4B9167CAAA88F6A","GEOLOCATION-03E96F97A389F96A"]
-  manually_assigned_apps = ["APPLICATION-62B3F4F16786DE50"]
+  name                   = "#name#"
+  frequency              = 15
+  locations              = ["GEOLOCATION-B4B9167CAAA88F6A", "GEOLOCATION-03E96F97A389F96A"]
+  manually_assigned_apps = ["APPLICATION-EA7C4B59F27D43EB"]
   anomaly_detection {
     loading_time_thresholds {
       enabled = true
     }
     outage_handling {
-      global_outage = true
+      global_outage  = true
       retry_on_error = true
+      global_outage_policy {
+        consecutive_runs = 1
+      }
     }
   }
   key_performance_metrics {
     load_action_kpm = "VISUALLY_COMPLETE"
-    xhr_action_kpm = "VISUALLY_COMPLETE"
+    xhr_action_kpm  = "VISUALLY_COMPLETE"
   }
   script {
     type = "clickpath"
@@ -49,12 +52,12 @@ resource "dynatrace_browser_monitor" "#name#" {
         network_type = "GPRS"
       }
       device {
-        name = "Apple iPhone 8"
+        name        = "Apple iPhone 8"
         orientation = "landscape"
       }
       headers {
         header {
-          name = "kjh"
+          name  = "kjh"
           value = "kjh"
         }
       }
@@ -63,13 +66,13 @@ resource "dynatrace_browser_monitor" "#name#" {
       }
       javascript_setttings {
         timeout_settings {
-          action_limit = 3
+          action_limit  = 3
           total_timeout = 100
         }
         visually_complete_options {
           image_size_threshold = 0
-          inactivity_timeout = 0
-          mutation_timeout = 0
+          inactivity_timeout   = 0
+          mutation_timeout     = 0
         }
       }
     }
@@ -79,7 +82,7 @@ resource "dynatrace_browser_monitor" "#name#" {
         navigate {
           url = "https://www.orf.at"
           authentication {
-            type = "http_authentication"
+            type  = "http_authentication"
             creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
           }
           wait {
@@ -92,12 +95,12 @@ resource "dynatrace_browser_monitor" "#name#" {
         navigate {
           url = "https://www.orf.at"
           authentication {
-            type = "http_authentication"
+            type  = "http_authentication"
             creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
           }
           validate {
             validation {
-              type = "text_match"
+              type  = "text_match"
               match = "kkl"
               regex = true
               target {
@@ -106,15 +109,15 @@ resource "dynatrace_browser_monitor" "#name#" {
             }
           }
           wait {
-            timeout = 60000
+            timeout  = 60000
             wait_for = "validation"
             validation {
-              type = "element_match"
+              type  = "element_match"
               match = "kjkj"
               target {
                 locators {
                   locator {
-                    type = "css"
+                    type  = "css"
                     value = "jjj"
                   }
                 }
@@ -229,11 +232,22 @@ Optional:
 Optional:
 
 - `global_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
+- `global_outage_policy` (Block List) Global outage handling configuration. 
+
+ Alert if **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--global_outage_policy))
 - `local_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
 - `local_outage_policy` (Block List) Local outage handling configuration. 
 
  Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--local_outage_policy))
 - `retry_on_error` (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
+
+<a id="nestedblock--anomaly_detection--outage_handling--global_outage_policy"></a>
+### Nested Schema for `anomaly_detection.outage_handling.global_outage_policy`
+
+Required:
+
+- `consecutive_runs` (Number) The number of consecutive fails to trigger an alert
+
 
 <a id="nestedblock--anomaly_detection--outage_handling--local_outage_policy"></a>
 ### Nested Schema for `anomaly_detection.outage_handling.local_outage_policy`

@@ -1,0 +1,36 @@
+{
+    "displayName": "Tibco EMS",
+    "enabled": true,
+    "nameFormat": "{ProcessGroup:DetectedName} {ProcessGroup:CommandLineArgs}",
+    "rules": [
+        {
+            "comparisonInfo": {
+                "negate": false,
+                "operator": "EQUALS",
+                "type": "SIMPLE_TECH",
+                "value": {
+                    "type": "ADO_NET"
+                }
+            },
+            "key": {
+                "attribute": "PROCESS_GROUP_TECHNOLOGY",
+                "type": "STATIC"
+            }
+        },
+        {
+            "comparisonInfo": {
+                "caseSensitive": true,
+                "negate": false,
+                "operator": "CONTAINS",
+                "type": "STRING",
+                "value": "-config"
+            },
+            "key": {
+                "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+                "dynamicKey": "COMMAND_LINE_ARGS",
+                "type": "PROCESS_PREDEFINED_METADATA_KEY"
+            }
+        }
+    ],
+    "type": "PROCESS_GROUP"
+}

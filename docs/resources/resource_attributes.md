@@ -15,16 +15,31 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_resource_attributes` downloads all existing resource attribute configuration
+- `terraform-provider-dynatrace -export dynatrace_resource_attributes` downloads all existing resource attribute configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
 ```terraform
 resource "dynatrace_resource_attributes" "#name#" {
-  enabled = ["gffgf", "cdefgh"]
-  disabled = ["jjhhj"]
+  keys {
+    rule {
+      enabled       = true
+      attribute_key = "cdefgh"
+      masking       = "NOT_MASKED"
+    }
+    rule {
+      enabled       = true
+      attribute_key = "gffgf"
+      masking       = "NOT_MASKED"
+    }
+    rule {
+      enabled       = true
+      attribute_key = "jjhhj"
+      masking       = "NOT_MASKED"
+    }
+  }
 }
 ```
 
@@ -33,10 +48,28 @@ resource "dynatrace_resource_attributes" "#name#" {
 
 ### Optional
 
-- `disabled` (Set of String) configured attributes that currently shouldn't be taken into consideration
-- `enabled` (Set of String) attributes that should get captured
+- `keys` (Block List, Max: 1) Attribute key allow-list (see [below for nested schema](#nestedblock--keys))
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--keys"></a>
+### Nested Schema for `keys`
+
+Optional:
+
+- `rule` (Block List) Attribute key allow-list (see [below for nested schema](#nestedblock--keys--rule))
+
+<a id="nestedblock--keys--rule"></a>
+### Nested Schema for `keys.rule`
+
+Required:
+
+- `attribute_key` (String) Attribute key **service.name** is automatically captured by default
+- `enabled` (Boolean) If this is true, the value of the specified key is stored.
+- `masking` (String) Introduce more granular control over the visibility of attribute values.  
+Choose **Do not mask** to allow every user to see the actual value and use it in defining other configurations.  
+Choose **Mask entire value** to hide the whole value of this attribute from everyone who does not have 'View sensitive request data' permission. These attributes can't be used to define other configurations. 
+Choose **Mask only confidential data** to apply automatic masking strategies to your data. These strategies include, for example, credit card numbers, IBAN, IPs, email-addresses, etc. It may not be possible to recognize all sensitive data so please always make sure to verify that sensitive data is actually masked. If sensitive data is not recognized, please use **Mask entire value** instead. Users with 'View sensitive request data' permission will be able to see the entire value, others only the non-sensitive parts. These attributes can't be used to define other configurations.
  

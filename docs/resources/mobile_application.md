@@ -19,9 +19,9 @@ Session and user action properties are expected to be sorted by their `key`.
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace export dynatrace_mobile_application` downloads all existing web application configuration
+- `terraform-provider-dynatrace -export dynatrace_mobile_application` downloads all existing web application configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment).
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 
@@ -104,6 +104,7 @@ resource "dynatrace_mobile_application" "SIXTH_ASDFGHIJK" {
 - `application_id` (String) The UUID of the application.
 
 It is used only by OneAgent to send data to Dynatrace. If not specified it will get generated.
+- `application_type` (String) The type of the application. Either `CUSTOM_APPLICATION` or `MOBILE_APPLICATION`.
 - `beacon_endpoint_url` (String) The URL of the beacon endpoint.
 
 Only applicable when the **beacon_endpoint_type** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`

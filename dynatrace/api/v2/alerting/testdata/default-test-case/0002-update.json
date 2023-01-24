@@ -1,0 +1,60 @@
+{
+  "name": "${randomize}",
+  "managementZone": null,
+  "severityRules": [
+    {
+      "severityLevel": "AVAILABILITY",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentA:production"
+      ]
+    },
+    {
+      "severityLevel": "MONITORING_UNAVAILABLE",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentD:production"
+      ]
+    },
+    {
+      "severityLevel": "RESOURCE_CONTENTION",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentF:production"
+      ]
+    },
+    {
+      "severityLevel": "CUSTOM_ALERT",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentB:production"
+      ]
+    },
+    {
+      "severityLevel": "PERFORMANCE",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentE:production"
+      ]
+    },
+    {
+      "severityLevel": "ERRORS",
+      "delayInMinutes": 0,
+      "tagFilterIncludeMode": "INCLUDE_ALL",
+      "tagFilter": [
+        "Team:test",
+        "EnvironmentC:production"
+      ]
+    }
+  ]
+}

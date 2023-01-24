@@ -1,0 +1,9 @@
+{
+  "name": "${randomize}",
+  "applicationIdentifier": "APPLICATION-7A72BEF2D4C193DF",
+  "filterConfig": {
+    "pattern": "jenkins.mushroom.home",
+    "applicationMatchType": "MATCHES",
+    "applicationMatchTarget": "DOMAIN"
+  }
+}

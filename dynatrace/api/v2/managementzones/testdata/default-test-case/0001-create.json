@@ -1,0 +1,37 @@
+{
+  "rules": [
+    {
+      "enabled": true,
+      "type": "ME",
+      "attributeRule": {
+        "pgToServicePropagation": true,
+        "entityType": "PROCESS_GROUP",
+        "pgToHostPropagation": true,
+        "conditions": [
+          {
+            "tag": "Environment",
+            "key": "PROCESS_GROUP_TAGS",
+            "operator": "TAG_KEY_EQUALS"
+          }
+        ]
+      }
+    },
+    {
+      "enabled": true,
+      "type": "ME",
+      "attributeRule": {
+        "pgToServicePropagation": true,
+        "entityType": "PROCESS_GROUP",
+        "pgToHostPropagation": true,
+        "conditions": [
+          {
+            "tag": "Team",
+            "key": "PROCESS_GROUP_TAGS",
+            "operator": "TAG_KEY_EQUALS"
+          }
+        ]
+      }
+    }
+  ],
+  "name": "${randomize}"
+}

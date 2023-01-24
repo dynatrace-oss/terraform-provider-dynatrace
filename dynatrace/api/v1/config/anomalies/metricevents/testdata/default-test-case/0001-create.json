@@ -1,0 +1,18 @@
+{
+    "description": "The {metricname} value of {severity} was {alert_condition} the baseline of {baseline}.",
+    "disabledReason": "NONE",
+    "enabled": true,
+    "metricSelector": "(builtin:service.errors.total.count)\n/\n((builtin:service.errors.total.successCount)+(builtin:service.errors.total.count))",
+    "monitoringStrategy": {
+        "alertCondition": "ABOVE",
+        "alertingOnMissingData": false,
+        "dealertingSamples": 5,
+        "numberOfSignalFluctuations": 1,
+        "samples": 5,
+        "type": "AUTO_ADAPTIVE_BASELINE",
+        "violatingSamples": 3
+    },
+    "name": "reini",
+    "severity": "PERFORMANCE",
+    "warningReason": "NONE"
+}

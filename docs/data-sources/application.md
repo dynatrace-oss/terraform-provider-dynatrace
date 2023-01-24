@@ -37,10 +37,6 @@ resource "dynatrace_application_detection_rule" "#name#" {
 
 - `name` (String)
 
-### Optional
-
-- `tags` (Set of String) Required tags of the application to find
-
 ### Read-Only
 
 - `id` (String) The ID of this resource.

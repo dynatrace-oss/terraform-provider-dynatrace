@@ -1,0 +1,77 @@
+{
+  "objectId": "vu9U3hXa3q0AAAABACdidWlsdGluOmFub21hbHktZGV0ZWN0aW9uLm1ldHJpYy1ldmVudHMABnRlbmFudAAGdGVuYW50ACQ3YTI2NjQ5ZS01ZTk1LTMxNjktYjlmMC0zMjMyZmQxMGJmZDi-71TeFdrerQ",
+  "summary": "",
+  "created": 1671134494423,
+  "modified": 1671134494423,
+  "author": "dt0c01.EONSMAEBO6C77HAVCNPEEQG3",
+  "updateToken": "vu9U3hXY3q0ATAAkN2EyNjY0OWUtNWU5NS0zMTY5LWI5ZjAtMzIzMmZkMTBiZmQ4ACQ0NjlmZWU3MC03Y2IzLTExZWQtODAwMS0wMTAwMDAwMDAwMDK-71TeFdjerQ",
+  "scope": "environment",
+  "schemaId": "builtin:anomaly-detection.metric-events",
+  "schemaVersion": "1.0.3",
+  "value": {
+    "enabled": true,
+    "summary": "sample_name",
+    "queryDefinition": {
+      "type": "METRIC_KEY",
+      "metricKey": "builtin:host.disk.usedPct",
+      "aggregation": "AVG",
+      "entityFilter": {
+        "dimensionKey": "dt.entity.host",
+        "conditions": [
+          {
+            "type": "HOST_GROUP_NAME",
+            "operator": "EQUALS",
+            "value": "HOST-42FDD00356069724"
+          },
+          {
+            "type": "NAME",
+            "operator": "EQUALS",
+            "value": "HOST-80FF882B3215BF1A"
+          },
+          {
+            "type": "ENTITY_ID",
+            "operator": "EQUALS",
+            "value": "HOST-32D0DB4904B28FB3"
+          },
+          {
+            "type": "MANAGEMENT_ZONE",
+            "operator": "EQUALS",
+            "value": "-189204438944455158"
+          }
+        ]
+      },
+      "dimensionFilter": [
+        {
+          "dimensionKey": "dt.entity.disk",
+          "dimensionValue": "DISK-3DC3FC42FBB07595"
+        },
+        {
+          "dimensionKey": "dt.entity.host",
+          "dimensionValue": "HOST-9DDF1200A29EFAC9"
+        },
+        {
+          "dimensionKey": "dt.entity.disk.name",
+          "dimensionValue": "/local"
+        }
+      ]
+    },
+    "modelProperties": {
+      "type": "STATIC_THRESHOLD",
+      "threshold": 1,
+      "alertOnNoData": false,
+      "alertCondition": "ABOVE",
+      "violatingSamples": 3,
+      "samples": 5,
+      "dealertingSamples": 5
+    },
+    "eventTemplate": {
+      "title": "sample_name",
+      "description": "some description",
+      "eventType": "CUSTOM_ALERT",
+      "davisMerge": false,
+      "metadata": []
+    },
+    "eventEntityDimensionKey": "dt.entity.host",
+    "legacyId": "a848e7e2-7501-4025-9325-e08c259abf46"
+  }
+}

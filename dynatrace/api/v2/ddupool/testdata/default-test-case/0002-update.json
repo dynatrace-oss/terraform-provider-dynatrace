@@ -1,0 +1,25 @@
+{
+    "metrics": {
+        "limitEnabled": true,
+        "limitType": "MONTHLY",
+        "limitValue": 4
+    },
+    "logMonitoring": {
+        "limitEnabled": true,
+        "limitType": "ANNUAL",
+        "limitValue": 50
+    },
+    "serverless": {
+        "limitEnabled": true,
+        "limitType": "MONTHLY",
+        "limitValue": 86
+    },
+    "events": {
+        "limitEnabled": false
+    },
+    "traces": {
+        "limitEnabled": true,
+        "limitType": "ANNUAL",
+        "limitValue": 500
+    }
+}

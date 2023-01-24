@@ -1,0 +1,2432 @@
+{
+  "dashboardMetadata": {
+    "hasConsistentColors": false,
+    "name": "${randomize}",
+    "owner": "${randomize}",
+    "preset": false,
+    "shared": true,
+    "tilesNameSize": null
+  },
+  "tiles": [
+    {
+      "bounds": {
+        "height": 76,
+        "left": 152,
+        "top": 114,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,exchange)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,exchange)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Exchange",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "exchange"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 38,
+        "left": 0,
+        "top": 0,
+        "width": 608
+      },
+      "configured": true,
+      "name": "Active Users",
+      "nameSize": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "HEADER"
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 152,
+        "top": 38,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,skype)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,skype)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Skype",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "skype"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 304,
+        "top": 38,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,onedrive)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,onedrive)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "OneDrive",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "onedrive"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 456,
+        "top": 38,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,teams)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,teams)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Teams",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "teams"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 456,
+        "top": 114,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,sharepoint)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,sharepoint)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Sharepoint",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "sharepoint"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 304,
+        "top": 114,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,yammer)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,yammer)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Yammer",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "yammer"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 152,
+        "left": 0,
+        "top": 38,
+        "width": 152
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:filter(and(or(eq(product,office365)))):splitBy():max:auto:sort(value(max,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(office365.user.count.gauge:filter(and(or(eq(product,office365)))):splitBy():max:auto:sort(value(max,descending)):limit(1))"
+      ],
+      "name": "Office 365",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "office365"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "product",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:filter(and(eq(product,exchange))):splitBy():max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 228,
+        "left": 0,
+        "top": 190,
+        "width": 608
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.user.count.gauge:splitBy(product):max:auto:sort(value(max,descending)):limit(10)):limit(100):names"
+      ],
+      "name": "Active Users",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": null,
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 10,
+          "metric": "office365.user.count.gauge",
+          "metricSelector": "",
+          "sortBy": null,
+          "spaceAggregation": "MAX",
+          "splitBy": [
+            "product"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": null,
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.user.count.gauge:fold:splitBy(product):max:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "TOP_LIST"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 608,
+        "top": 114,
+        "width": 266
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))),or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Dublin~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))),or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Dublin~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1))"
+      ],
+      "name": "Europe",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "Dublin"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.synthetic_location",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              },
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "portal.office.com"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.http_check_step",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "builtin:synthetic.http.request.dns.geo",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "dt.entity.synthetic_location"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "HTTP request - DNS lookup time (by location)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 608,
+        "top": 190,
+        "width": 266
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"N. Virginia~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"N. Virginia~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1))"
+      ],
+      "name": "North America",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "N. Virginia"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.synthetic_location",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              },
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "portal.office.com"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.http_check_step",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "builtin:synthetic.http.request.dns.geo",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "dt.entity.synthetic_location"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "HTTP request - DNS lookup time (by location)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 608,
+        "top": 266,
+        "width": 266
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"São Paulo~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"São Paulo~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1))"
+      ],
+      "name": "South America",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "São Paulo"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.synthetic_location",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              },
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "portal.office.com"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.http_check_step",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "builtin:synthetic.http.request.dns.geo",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "dt.entity.synthetic_location"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "HTTP request - DNS lookup time (by location)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 608,
+        "top": 342,
+        "width": 266
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))),or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Sydney~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))),or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Sydney~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1))"
+      ],
+      "name": "Pacific",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "Sydney"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.synthetic_location",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              },
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "portal.office.com"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.http_check_step",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "builtin:synthetic.http.request.dns.geo",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "dt.entity.synthetic_location"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "HTTP request - DNS lookup time (by location)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 38,
+        "left": 608,
+        "top": 0,
+        "width": 266
+      },
+      "configured": true,
+      "name": "DNS Lookup Time",
+      "nameSize": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "HEADER"
+    },
+    {
+      "bounds": {
+        "height": 76,
+        "left": 608,
+        "top": 38,
+        "width": 266
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Tokyo~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1)):limit(100):names",
+        "resolution=null\u0026(builtin:synthetic.http.request.dns.geo:filter(and(or(in(\"dt.entity.synthetic_location\",entitySelector(\"type(synthetic_location),entityName(~\"Tokyo~\")\"))),or(in(\"dt.entity.http_check_step\",entitySelector(\"type(http_check_step),entityName(~\"portal.office.com~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(1))"
+      ],
+      "name": "Asia",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "Tokyo"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.synthetic_location",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              },
+              {
+                "criteria": [
+                  {
+                    "evaluator": "IN",
+                    "matchExactly": null,
+                    "value": "portal.office.com"
+                  }
+                ],
+                "entityAttribute": "entityName",
+                "filter": "dt.entity.http_check_step",
+                "filterOperator": "OR",
+                "filterType": "NAME",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 1,
+          "metric": "builtin:synthetic.http.request.dns.geo",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "dt.entity.synthetic_location"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": {
+          "linkTileColorToThreshold": null,
+          "showSparkLine": true,
+          "showTrend": null
+        },
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "HTTP request - DNS lookup time (by location)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "SINGLE_VALUE"
+      }
+    },
+    {
+      "bounds": {
+        "height": 266,
+        "left": 342,
+        "top": 418,
+        "width": 532
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.mailbox.quota.count.gauge:splitBy(category):avg:auto:sort(value(avg,descending)):limit(10)):limit(100):names"
+      ],
+      "name": "Outlook Mailbox Quota Counts",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": null,
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 10,
+          "metric": "office365.mailbox.quota.count.gauge",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "category"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": null,
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.mailbox.quota.count.gauge:fold:splitBy(category):avg:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "TOP_LIST"
+      }
+    },
+    {
+      "bounds": {
+        "height": 266,
+        "left": 0,
+        "top": 418,
+        "width": 342
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.storage.used.bytes:splitBy(site):avg:auto:sort(value(avg,descending)):limit(10)):limit(100):names"
+      ],
+      "name": "Storage Used (GB)",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": null,
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 10,
+          "metric": "office365.storage.used.bytes",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "site"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": null,
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": "office365.mailbox.storage.used:fold:splitBy():avg:auto:sort(value(avg,descending)):limit(100)",
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "PIE_CHART"
+      }
+    },
+    {
+      "bounds": {
+        "height": 646,
+        "left": 874,
+        "top": 38,
+        "width": 304
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.service.status:filter(and(or(eq(healthy,true)))):splitBy(workload,status):avg:auto:sort(value(avg,descending)):limit(10)):limit(100):names"
+      ],
+      "name": "Healthy",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "true"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "healthy",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 10,
+          "metric": "office365.service.status",
+          "metricSelector": null,
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "workload",
+            "status"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": "-5m"
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": null,
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": null,
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": 0
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": null
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "TOP_LIST"
+      }
+    },
+    {
+      "bounds": {
+        "height": 646,
+        "left": 1178,
+        "top": 38,
+        "width": 304
+      },
+      "configured": true,
+      "customName": "Data explorer results",
+      "metricExpressions": [
+        "resolution=Inf\u0026(office365.service.status:filter(and(or(eq(healthy,false)))):splitBy(workload,status):avg:auto:sort(value(avg,descending)):limit(10)):limit(100):names"
+      ],
+      "name": "Unhealthy",
+      "nameSize": null,
+      "queries": [
+        {
+          "enabled": true,
+          "filterBy": {
+            "criteria": [],
+            "entityAttribute": null,
+            "filter": null,
+            "filterOperator": "AND",
+            "filterType": null,
+            "globalEntity": null,
+            "nestedFilters": [
+              {
+                "criteria": [
+                  {
+                    "evaluator": "EQ",
+                    "matchExactly": null,
+                    "value": "false"
+                  }
+                ],
+                "entityAttribute": null,
+                "filter": "healthy",
+                "filterOperator": "OR",
+                "filterType": "DIMENSION",
+                "globalEntity": null,
+                "nestedFilters": [],
+                "relationship": null
+              }
+            ],
+            "relationship": null
+          },
+          "foldTransformation": null,
+          "generatedMetricSelector": null,
+          "id": "A",
+          "limit": 10,
+          "metric": "office365.service.status",
+          "metricSelector": "office365.service.status:fold:filter(and(eq(healthy,false))):splitBy(workload,status):avg:auto:sort(value(avg,descending)):limit(10)",
+          "sortBy": null,
+          "spaceAggregation": "AVG",
+          "splitBy": [
+            "workload",
+            "status"
+          ],
+          "timeAggregation": "DEFAULT"
+        }
+      ],
+      "queriesSettings": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": "-5m"
+      },
+      "tileType": "DATA_EXPLORER",
+      "visualConfig": {
+        "axes": {
+          "xAxis": {
+            "displayName": null,
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "global": {
+          "hasTrendline": null,
+          "hideLegend": null,
+          "seriesType": null,
+          "theme": null,
+          "threshold": null
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "heatmapSettings": {
+          "showLabels": null,
+          "xAxisBuckets": null,
+          "yAxis": "VALUE",
+          "yAxisBuckets": null
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLabels": false,
+          "showLegend": true
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "alias": null,
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": [],
+            "unitTransform": null,
+            "valueFormat": null
+          }
+        ],
+        "singleValueSettings": null,
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": null
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "columnId": null,
+            "queryId": null,
+            "rules": [
+              {
+                "color": "#7dc540",
+                "value": null
+              },
+              {
+                "color": "#f5d30f",
+                "value": null
+              },
+              {
+                "color": "#dc172a",
+                "value": 0
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "type": "TOP_LIST"
+      }
+    },
+    {
+      "bounds": {
+        "height": 38,
+        "left": 874,
+        "top": 0,
+        "width": 646
+      },
+      "configured": true,
+      "name": "Office365 Service Status",
+      "nameSize": null,
+      "tileFilter": {
+        "managementZone": null,
+        "timeframe": null
+      },
+      "tileType": "HEADER"
+    }
+  ]
+}

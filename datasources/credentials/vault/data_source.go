@@ -18,12 +18,13 @@
 package vault
 
 import (
-	"errors"
 	"fmt"
 
-	"github.com/dtcookie/dynatrace/api/config/credentials/vault"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
+	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -50,7 +51,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m interface{}) error {
+func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	name := ""
 	typ := ""
 	scope := ""
@@ -66,35 +67,36 @@ func DataSourceRead(d *schema.ResourceData, m interface{}) error {
 	if name == "" && typ == "" && scope == "" {
 		return fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string")
 	}
-	conf := m.(*config.ProviderConfiguration)
-	apiService := vault.NewService(conf.DTenvURL, conf.APIToken)
-	stubList, err := apiService.ListAll()
-	if err != nil {
+
+	service := export.Service(config.Credentials(m), export.ResourceTypes.Credentials)
+	var stubs settings.Stubs
+	if stubs, err = service.List(); err != nil {
 		return err
 	}
-	if len(stubList.Credentials) == 0 {
-		return errors.New("no matching credentials found")
+	if len(stubs) == 0 {
+		d.SetId("")
 	}
-	for _, stub := range stubList.Credentials {
+	for _, stub := range stubs {
 		if name != "" && stub.Name != name {
 			continue
 		}
-		creds, err := apiService.Get(*stub.ID)
-		if err != nil {
+		var credentials vault.Credentials
+		if err = service.Get(stub.ID, &credentials); err != nil {
 			return err
 		}
-		if scope != "" && string(creds.Scope) != scope {
+		if scope != "" && string(credentials.Scope) != scope {
 			continue
 		}
-		if typ != "" && string(creds.Type) != typ {
+		if typ != "" && string(credentials.Type) != typ {
 			continue
 		}
-		d.Set("scope", string(creds.Scope))
-		d.Set("type", string(creds.Type))
+		d.Set("scope", string(credentials.Scope))
+		d.Set("type", string(credentials.Type))
 		d.Set("name", stub.Name)
-		d.SetId(*stub.ID)
+		d.SetId(stub.ID)
 		return nil
 	}
 
-	return errors.New("no matching credentials found")
+	d.SetId("")
+	return nil
 }

@@ -1,0 +1,16 @@
+{
+  "conditions": [
+    {
+      "attribute": "WEBREQUEST_URL_PATH",
+      "comparisonInfo": {
+        "caseSensitive": false,
+        "comparison": "BEGINS_WITH",
+        "negate": false,
+        "type": "STRING",
+        "value": "/url"
+      }
+    }
+  ],
+  "enabled": true,
+  "namingPattern": "${randomize}"
+}

@@ -1,0 +1,61 @@
+{
+    "networkDroppedPacketsDetection": {
+        "enabled": true
+    },
+    "highNetworkDetection": {
+        "enabled": true
+    },
+    "networkHighRetransmissionDetection": {
+        "enabled": true
+    },
+    "networkTcpProblemsDetection": {
+        "enabled": true
+    },
+    "networkErrorsDetection": {
+        "enabled": true
+    },
+    "highMemoryDetection": {
+        "customThresholds": {
+            "usedMemoryPercentageWindows": 80,
+            "usedMemoryPercentageNonWindows": 80,
+            "pageFaultsPerSecondNonWindows": 20,
+            "pageFaultsPerSecondWindows": 100
+        },
+        "enabled": true
+    },
+    "highCpuSaturationDetection": {
+        "enabled": true
+    },
+    "outOfMemoryDetection": {
+        "enabled": true
+    },
+    "outOfThreadsDetection": {
+        "enabled": true
+    },
+    "highGcActivityDetection": {
+        "enabled": true
+    },
+    "connectionLostDetection": {
+        "enabledOnGracefulShutdowns": false,
+        "enabled": true
+    },
+    "diskSlowWritesAndReadsDetection": {
+        "enabled": true
+    },
+    "diskLowSpaceDetection": {
+        "enabled": true,
+        "customThresholds": {
+            "freeSpacePercentage": 3
+        }
+    },
+    "diskLowInodesDetection": {
+        "enabled": true
+    },
+    "metadata": {
+        "clusterVersion": "1.256.123.20221216-133150",
+        "currentConfigurationVersions": [
+            "1.2.4",
+            "3"
+        ]
+    }
+}
