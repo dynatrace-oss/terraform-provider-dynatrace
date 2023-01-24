@@ -113,6 +113,8 @@ Linux: `./terraform-provider-dynatrace exportv1 *[<resourcename>[=<id>]]`
 - `dt_cluster_api_token` (String, Sensitive)
 - `dt_cluster_url` (String, Sensitive)
 - `dt_env_url` (String)
+
 - `iam_account_id` (String, Sensitive)
 - `iam_client_id` (String, Sensitive)
 - `iam_client_secret` (String, Sensitive)
+
