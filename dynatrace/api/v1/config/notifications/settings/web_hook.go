@@ -76,7 +76,7 @@ func (me *WebHookConfig) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"header": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Optional:    true,
 			Description: "A list of the additional HTTP headers",
 			Elem:        &schema.Resource{Schema: new(HTTPHeader).Schema()},
@@ -113,10 +113,8 @@ func (me *WebHookConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("notify_event_merges", me.NotifyEventMergesEnabled); err != nil {
 		return err
 	}
-	if len(me.Headers) > 0 {
-		if err := properties.EncodeSlice("header", me.Headers); err != nil {
-			return err
-		}
+	if err := properties.Encode("header", me.Headers); err != nil {
+		return err
 	}
 	if err := properties.Encode("payload", me.Payload); err != nil {
 		return err

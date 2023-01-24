@@ -3,8 +3,12 @@ resource "dynatrace_notification" "#name#" {
     name             = "#name#"
     account          = ";l;ll;"
     active           = true
-    alerting_profile = "f75e68ef-aca7-3a07-9c21-94eb00ecfc56"
+    alerting_profile = dynatrace_alerting_profile.Default.id
     service_api_key  = "#######"
     service_name     = "lklklk"
   }
+}
+
+resource "dynatrace_alerting_profile" "Default" {
+  display_name = "#name#"
 }

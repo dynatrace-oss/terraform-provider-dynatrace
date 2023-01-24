@@ -102,11 +102,8 @@ func (me *XMattersConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("accept_any_certificate", me.AcceptAnyCertificate); err != nil {
 		return err
 	}
-
-	if len(me.Headers) > 0 {
-		if err := properties.EncodeSlice("header", me.Headers); err != nil {
-			return err
-		}
+	if err := properties.Encode("header", me.Headers); err != nil {
+		return err
 	}
 	if err := properties.Encode("payload", me.Payload); err != nil {
 		return err

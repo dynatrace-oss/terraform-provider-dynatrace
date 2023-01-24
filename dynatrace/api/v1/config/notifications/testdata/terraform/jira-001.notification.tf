@@ -3,12 +3,16 @@ resource "dynatrace_notification" "#name#" {
     name             = "#name#"
     description      = "jira-description"
     active           = false
-    alerting_profile = "c21f969b-5f03-333d-83e0-4f8f136e7682"
+    alerting_profile = dynatrace_alerting_profile.Default.id
     issue_type       = "jira-issue-type"
     password         = "#######"
-    project_key      = "jira-project-key"
+    project_key      = "#name#"
     summary          = "jira-summary"
     url              = "https://localhost:9999/jira"
     username         = "jira-user-name"
   }
+}
+
+resource "dynatrace_alerting_profile" "Default" {
+  display_name = "#name#"
 }

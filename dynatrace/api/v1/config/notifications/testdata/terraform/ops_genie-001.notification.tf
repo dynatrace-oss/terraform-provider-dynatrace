@@ -2,9 +2,13 @@ resource "dynatrace_notification" "#name#" {
   ops_genie {
     name             = "#name#"
     active           = false
-    alerting_profile = "f75e68ef-aca7-3a07-9c21-94eb00ecfc56"
+    alerting_profile = dynatrace_alerting_profile.Default.id
     api_key          = "#######"
-    domain           = "jhjh"
+    domain           = "#name#"
     message          = "{ProblemImpact} Problem {ProblemID}: {ProblemTitle}"
   }
+}
+
+resource "dynatrace_alerting_profile" "Default" {
+  display_name = "#name#"
 }

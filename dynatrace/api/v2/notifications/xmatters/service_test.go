@@ -25,11 +25,9 @@ import (
 )
 
 func TestXMattersNotifications(t *testing.T) {
-	t.Skip()
 	api.TestService(t, xmatters.Service)
 }
 
 func TestAccXMattersNotifications(t *testing.T) {
-	t.Skip()
 	api.TestAcc(t)
 }
