@@ -72,6 +72,7 @@ import (
 	service_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/services"
 
 	host_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
 	processgroup_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
@@ -357,9 +358,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		order.Service,
 		Dependencies.ID(ResourceTypes.RequestNaming),
 	),
-	ResourceTypes.IAMUser:  NewResourceDescriptor(users.Service),
-	ResourceTypes.IAMGroup: NewResourceDescriptor(groups.Service),
-	ResourceTypes.DDUPool:  NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMUser:               NewResourceDescriptor(users.Service),
+	ResourceTypes.IAMGroup:              NewResourceDescriptor(groups.Service),
+	ResourceTypes.DDUPool:               NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(processgroups.Service),
 }
 
 var BlackListedResources = []ResourceType{
