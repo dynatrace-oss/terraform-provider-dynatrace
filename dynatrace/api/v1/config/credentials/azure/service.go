@@ -18,6 +18,8 @@
 package azure
 
 import (
+	"sync"
+
 	azure "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -25,10 +27,12 @@ import (
 const SchemaID = "v1:config:credentials:azure"
 const BasePath = "/api/config/v1/azure/credentials"
 
+var mu sync.Mutex
+
 func Service(credentials *settings.Credentials) settings.CRUDService[*azure.AzureCredentials] {
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath),
+		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
 	)
 }

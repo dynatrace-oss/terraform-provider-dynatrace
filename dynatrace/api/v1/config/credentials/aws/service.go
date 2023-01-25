@@ -18,6 +18,8 @@
 package aws
 
 import (
+	"sync"
+
 	aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -25,10 +27,12 @@ import (
 const SchemaID = "v1:config:credentials:aws"
 const BasePath = "/api/config/v1/aws/credentials"
 
+var mu sync.Mutex
+
 func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCredentialsConfig] {
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).WithStubs(&settings.Stubs{}),
+		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).WithStubs(&settings.Stubs{}).WithMutex(mu.Lock, mu.Unlock),
 	)
 }

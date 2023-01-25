@@ -18,6 +18,8 @@
 package cloudfoundry
 
 import (
+	"sync"
+
 	cloudfoundry "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -25,10 +27,12 @@ import (
 const SchemaID = "v1:config:credentials:cloudfoundry"
 const BasePath = "/api/config/v1/cloudFoundry/credentials"
 
+var mu sync.Mutex
+
 func Service(credentials *settings.Credentials) settings.CRUDService[*cloudfoundry.CloudFoundryCredentials] {
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*cloudfoundry.CloudFoundryCredentials](BasePath),
+		settings.DefaultServiceOptions[*cloudfoundry.CloudFoundryCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
 	)
 }

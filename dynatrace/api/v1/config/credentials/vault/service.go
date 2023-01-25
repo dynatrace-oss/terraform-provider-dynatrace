@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"sync"
 
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -30,11 +31,14 @@ import (
 const SchemaID = "v1:config:credentials"
 const BasePath = "/api/config/v1/credentials"
 
+var mu sync.Mutex
+
 func Service(credentials *settings.Credentials) settings.CRUDService[*vault.Credentials] {
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*vault.Credentials](BasePath).
+			WithMutex(mu.Lock, mu.Unlock).
 			WithStubs(&vault.CredentialsList{}).
 			NoValidator().
 			WithDeleteRetry(func(id string, err error) (bool, error) {
