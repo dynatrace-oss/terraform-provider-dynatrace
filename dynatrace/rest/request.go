@@ -196,8 +196,8 @@ func (me *request) Raw() ([]byte, error) {
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
-	// logger.Println("  ", res.StatusCode, string(data))
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
+		logger.Println("  ", res.StatusCode, string(data))
 		var env errorEnvelope
 		if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
 			return nil, Error{Code: env.Error.Code, Method: me.method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
