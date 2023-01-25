@@ -24,10 +24,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestMetricEventAnomalies(t *testing.T) {
+func TestAPITokens(t *testing.T) {
 	api.TestService(t, apitokens.Service)
 }
 
-func TestAccMetricEventAnomalies(t *testing.T) {
+func TestAccAPITokens(t *testing.T) {
 	api.TestAcc(t)
 }
