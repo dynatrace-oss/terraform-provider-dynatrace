@@ -134,13 +134,11 @@ func (amm *AzureMonitoredMetric) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
 		amm.Name = opt.NewString(value.(string))
 	}
-	if _, ok := decoder.GetOk("dimensions.#"); ok {
+	if err := decoder.Decode("dimensions", &amm.Dimensions); err != nil {
+		return err
+	}
+	if amm.Dimensions == nil {
 		amm.Dimensions = []string{}
-		if dims, ok := decoder.GetOk("dimensions"); ok {
-			for _, dim := range dims.([]any) {
-				amm.Dimensions = append(amm.Dimensions, dim.(string))
-			}
-		}
 	}
 	return nil
 }

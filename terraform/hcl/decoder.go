@@ -228,20 +228,36 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			*vActual = strs
 			return true, nil
 		case *[]string:
-			set := result.(*schema.Set)
-			strs := []string{}
-			for _, elem := range set.List() {
-				strs = append(strs, elem.(string))
+			switch set := result.(type) {
+			case *schema.Set:
+				strs := []string{}
+				for _, elem := range set.List() {
+					strs = append(strs, elem.(string))
+				}
+				*vActual = strs
+			case []any:
+				strs := []string{}
+				for _, elem := range set {
+					strs = append(strs, elem.(string))
+				}
+				*vActual = strs
 			}
-			*vActual = strs
 			return true, nil
 		case *[]float64:
-			set := result.(*schema.Set)
-			strs := []float64{}
-			for _, elem := range set.List() {
-				strs = append(strs, elem.(float64))
+			switch set := result.(type) {
+			case *schema.Set:
+				strs := []float64{}
+				for _, elem := range set.List() {
+					strs = append(strs, elem.(float64))
+				}
+				*vActual = strs
+			case []any:
+				strs := []float64{}
+				for _, elem := range set {
+					strs = append(strs, elem.(float64))
+				}
+				*vActual = strs
 			}
-			*vActual = strs
 			return true, nil
 		case *string:
 			*vActual = result.(string)
