@@ -38,6 +38,8 @@ type ServiceOptions[T Settings] struct {
 	HasNoValidator bool
 	Name           func(id string, v T) (string, error)
 	HijackOnCreate func(err error, service RService[T], v T) (*Stub, error)
+	Lock           func()
+	Unlock         func()
 }
 
 func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T) (*Stub, error)) *ServiceOptions[T] {
@@ -47,6 +49,12 @@ func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T)
 
 func (me *ServiceOptions[T]) WithCreateRetry(fn func(v T, err error) T) *ServiceOptions[T] {
 	me.CreateRetry = fn
+	return me
+}
+
+func (me *ServiceOptions[T]) WithMutex(lock func(), unlock func()) *ServiceOptions[T] {
+	me.Lock = lock
+	me.Unlock = unlock
 	return me
 }
 

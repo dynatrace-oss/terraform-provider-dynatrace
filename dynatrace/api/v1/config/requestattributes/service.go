@@ -18,6 +18,8 @@
 package requestattributes
 
 import (
+	"sync"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	requestattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestattributes/settings"
@@ -26,10 +28,12 @@ import (
 const SchemaID = "v1:config:request-attributes"
 const BasePath = "/api/config/v1/service/requestAttributes"
 
+var mu sync.Mutex
+
 func Service(credentials *settings.Credentials) settings.CRUDService[*requestattributes.RequestAttribute] {
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*requestattributes.RequestAttribute](BasePath),
+		settings.DefaultServiceOptions[*requestattributes.RequestAttribute](BasePath).WithMutex(mu.Lock, mu.Unlock),
 	)
 }

@@ -152,6 +152,10 @@ func (me *defaultService[T]) Validate(v T) error {
 }
 
 func (me *defaultService[T]) Create(v T) (*Stub, error) {
+	if me.options != nil && me.options.Lock != nil && me.options.Unlock != nil {
+		me.options.Lock()
+		defer me.options.Unlock()
+	}
 	stub, err := me.create(v)
 	if err != nil {
 		return nil, err
