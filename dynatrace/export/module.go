@@ -345,7 +345,7 @@ func (me *Module) GetNonPostProcessedResources() []*Resource {
 	return resources
 }
 
-func (me *Module) Download(keys ...string) (err error) {
+func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 	if shutdown.System.Stopped() {
 		return nil
 	}
@@ -359,31 +359,31 @@ func (me *Module) Download(keys ...string) (err error) {
 		}
 	}
 
-	// 	fmt.Print(ClearLine)
-	// 	fmt.Print("\r")
-	// 	fmt.Printf("  - %s (%d of %d)", me.Type, idx, length)
-	// }
-	// fmt.Print(ClearLine)
-	// fmt.Print("\r")
-	// fmt.Printf("  - %s\n", me.Type)
-
 	const ClearLine = "\033[2K"
 	if len(keys) == 0 {
 		length := len(me.Resources)
-		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+		if multiThreaded {
+			fmt.Printf("Downloading \"%s\"\n", me.Type)
+		} else {
+			fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+		}
 		idx := 0
 		for _, resource := range me.Resources {
 			if err := resource.Download(); err != nil {
 				return err
 			}
 			idx++
+			if !multiThreaded {
+				fmt.Print(ClearLine)
+				fmt.Print("\r")
+				fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+			}
+		}
+		if !multiThreaded {
 			fmt.Print(ClearLine)
 			fmt.Print("\r")
-			fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+			fmt.Printf("Downloading \"%s\"\n", me.Type)
 		}
-		fmt.Print(ClearLine)
-		fmt.Print("\r")
-		fmt.Printf("Downloading \"%s\"\n", me.Type)
 		return nil
 	}
 	resourcesToDownload := []*Resource{}
@@ -395,20 +395,28 @@ func (me *Module) Download(keys ...string) (err error) {
 		}
 	}
 	length := len(me.Resources)
-	fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+	if multiThreaded {
+		fmt.Printf("Downloading \"%s\"\n", me.Type)
+	} else {
+		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+	}
 	idx := 0
 	for _, resource := range resourcesToDownload {
 		if err := resource.Download(); err != nil {
 			return err
 		}
 		idx++
+		if !multiThreaded {
+			fmt.Print(ClearLine)
+			fmt.Print("\r")
+			fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+		}
+	}
+	if !multiThreaded {
 		fmt.Print(ClearLine)
 		fmt.Print("\r")
-		fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+		fmt.Printf("Downloading \"%s\"\n", me.Type)
 	}
-	fmt.Print(ClearLine)
-	fmt.Print("\r")
-	fmt.Printf("Downloading \"%s\"\n", me.Type)
 	return nil
 }
 

@@ -25,18 +25,23 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 type crudService[T settings.Settings] struct {
+	mu      sync.Mutex
 	service settings.CRUDService[T]
 	folder  string
 	index   *stubIndex
 }
 
 func (me *crudService[T]) Create(v T) (*settings.Stub, error) {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	if mode == ModeOffline {
 		return nil, errors.New("modifications not allowed in offline mode")
 	}
@@ -53,6 +58,9 @@ func (me *crudService[T]) Create(v T) (*settings.Stub, error) {
 }
 
 func (me *crudService[T]) Delete(id string) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	if mode == ModeOffline {
 		return errors.New("modifications not allowed in offline mode")
 	}
@@ -72,10 +80,16 @@ func (me *crudService[T]) Delete(id string) error {
 }
 
 func (me *crudService[T]) List() (settings.Stubs, error) {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	return me.list(true)
 }
 
 func (me *crudService[T]) ListNoValues() (settings.Stubs, error) {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	return me.list(false)
 }
 
@@ -120,6 +134,9 @@ func (me *crudService[T]) list(withValues bool) (settings.Stubs, error) {
 }
 
 func (me *crudService[T]) Get(id string, v T) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	var cache bool
 	var err error
 	if cache, err = me.loadConfig(id, v); err != nil {
@@ -144,6 +161,9 @@ func (me *crudService[T]) Get(id string, v T) error {
 }
 
 func (me *crudService[T]) Update(id string, v T) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	if mode == ModeOffline {
 		return errors.New("modifications not allowed in offline mode")
 	}
@@ -157,6 +177,9 @@ func (me *crudService[T]) Update(id string, v T) error {
 }
 
 func (me *crudService[T]) Validate(v T) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	if mode == ModeOffline {
 		// Validation by default succeeds in offline mode
 		return nil
@@ -312,7 +335,12 @@ func (me *crudService[T]) SchemaID() string {
 	return me.service.SchemaID() + ":cache"
 }
 
+var mu sync.Mutex
+
 func CRUD[T settings.Settings](service settings.CRUDService[T], force ...bool) settings.CRUDService[T] {
+	mu.Lock()
+	defer mu.Unlock()
+
 	if len(force) == 0 {
 		if mode == ModeDisabled {
 			return service

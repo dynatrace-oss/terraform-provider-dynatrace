@@ -22,6 +22,7 @@ import (
 	"os"
 	"path"
 	"sort"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
@@ -31,6 +32,7 @@ import (
 )
 
 type Environment struct {
+	mu           sync.Mutex
 	OutputFolder string
 	Credentials  *settings.Credentials
 	Modules      map[ResourceType]*Module
@@ -73,18 +75,24 @@ func (me *Environment) InitialDownload() error {
 		resourceTypes = append(resourceTypes, string(resourceType))
 	}
 	sort.Strings(resourceTypes)
-
+	var wg sync.WaitGroup
+	wg.Add(len(resourceTypes))
 	for _, sResourceType := range resourceTypes {
-		if shutdown.System.Stopped() {
-			return nil
-		}
+		go func(sResourceType string) error {
+			defer wg.Done()
+			if shutdown.System.Stopped() {
+				return nil
+			}
 
-		keys := me.ResArgs[sResourceType]
-		module := me.Module(ResourceType(sResourceType))
-		if err := module.Download(keys...); err != nil {
-			return err
-		}
+			keys := me.ResArgs[sResourceType]
+			module := me.Module(ResourceType(sResourceType))
+			if err := module.Download(true, keys...); err != nil {
+				return err
+			}
+			return nil
+		}(sResourceType)
 	}
+	wg.Wait()
 	return nil
 }
 
@@ -147,6 +155,8 @@ func (me *Environment) Finish() (err error) {
 }
 
 func (me *Environment) Module(resType ResourceType) *Module {
+	me.mu.Lock()
+	defer me.mu.Unlock()
 	if stored, found := me.Modules[resType]; found {
 		return stored
 	}
