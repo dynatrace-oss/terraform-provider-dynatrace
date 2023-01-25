@@ -24,10 +24,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestConsumption(t *testing.T) {
+func TestDDUPools(t *testing.T) {
 	api.TestService(t, ddupool.Service)
 }
 
-func TestAccConsumption(t *testing.T) {
+func TestAccDDUPools(t *testing.T) {
 	api.TestAcc(t)
 }
