@@ -150,6 +150,10 @@ func (me *service[T]) Validate(v T) error {
 }
 
 func (me *service[T]) Create(v T) (*settings.Stub, error) {
+	return me.create(v, false)
+}
+
+func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 	soc := SettingsObjectCreate{
 		SchemaID:      me.schemaID,
 		SchemaVersion: me.schemaVersion,
@@ -164,6 +168,11 @@ func (me *service[T]) Create(v T) (*settings.Stub, error) {
 	objectID := []SettingsObjectCreateResponse{}
 
 	if err := req.Finish(&objectID); err != nil {
+		if me.options != nil && me.options.CreateRetry != nil && !retry {
+			if modifiedPayload := me.options.CreateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
+				return me.create(modifiedPayload, true)
+			}
+		}
 		if me.options != nil && me.options.HijackOnCreate != nil {
 			var hijackedStub *settings.Stub
 			if hijackedStub, err = me.options.HijackOnCreate(err, me, v); err != nil {
@@ -183,8 +192,20 @@ func (me *service[T]) Create(v T) (*settings.Stub, error) {
 }
 
 func (me *service[T]) Update(id string, v T) error {
+	return me.update(id, v, false)
+}
+
+func (me *service[T]) update(id string, v T, retry bool) error {
 	sou := SettingsObjectUpdate{Value: v, SchemaVersion: me.schemaVersion}
-	return me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish()
+	if err := me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
+		if me.options != nil && me.options.UpdateRetry != nil && !retry {
+			if modifiedPayload := me.options.UpdateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
+				return me.update(id, modifiedPayload, true)
+			}
+		}
+		return err
+	}
+	return nil
 }
 
 func (me *service[T]) Delete(id string) error {

@@ -18,6 +18,9 @@
 package notifications
 
 import (
+	"strings"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/filtered"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -40,7 +43,19 @@ func (me *filter) Suffix() string {
 
 func Service(credentials *settings.Credentials, t Type) settings.CRUDService[*Notification] {
 	return filtered.Service[*Notification](
-		settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{LegacyID: settings.LegacyObjIDDecode}),
+		settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
+			LegacyID:    settings.LegacyObjIDDecode,
+			CreateRetry: UseOAuth2Fix,
+			UpdateRetry: UseOAuth2Fix,
+		}),
 		&filter{Type: t},
 	)
+}
+
+func UseOAuth2Fix(v *Notification, err error) *Notification {
+	if strings.Contains(err.Error(), "Given property 'useOAuth2' with value: 'null' does not comply with required NonNull of schema") {
+		v.WebHook.UseOAuth2 = opt.NewBool(false)
+		return v
+	}
+	return nil
 }

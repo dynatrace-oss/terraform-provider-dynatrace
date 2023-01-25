@@ -36,6 +36,7 @@ type WebHook struct {
 	NotifyClosedProblems     bool         `json:"notifyClosedProblems"`     // Call webhook if problem is closed
 	Headers                  http.Headers `json:"headers,omitempty"`        // Additional HTTP headers
 	Payload                  string       `json:"payload"`                  // The content of the notification message. Type '{' for placeholder suggestions
+	UseOAuth2                *bool        `json:"useOAuth2,omitempty"`
 }
 
 func (me *WebHook) FillDemoValues() []string {
