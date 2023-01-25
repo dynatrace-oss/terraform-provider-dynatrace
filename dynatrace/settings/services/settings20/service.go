@@ -33,10 +33,10 @@ func Service[T settings.Settings](credentials *settings.Credentials, schemaID st
 		opts = options[0]
 	}
 	return &service[T]{
-		schemaID:      schemaID,
-		schemaVersion: schemaVersion,
-		client:        rest.DefaultClient(credentials.URL, credentials.Token),
-		options:       opts,
+		schemaID: schemaID,
+		// schemaVersion: schemaVersion,
+		client:  rest.DefaultClient(credentials.URL, credentials.Token),
+		options: opts,
 	}
 }
 
