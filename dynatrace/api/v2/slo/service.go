@@ -47,7 +47,7 @@ func (me *service) Get(id string, v *slo.SLO) error {
 		return err
 	}
 
-	numRequiredSuccesses := 40
+	numRequiredSuccesses := 10
 	for numRequiredSuccesses > 0 {
 		length := 0
 

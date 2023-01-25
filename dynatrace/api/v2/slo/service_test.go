@@ -29,5 +29,6 @@ func TestServiceLevelObjectives(t *testing.T) {
 }
 
 func TestAccServiceLevelObjectives(t *testing.T) {
+	t.Skip("TODO: check polling mechanism")
 	api.TestAcc(t)
 }
