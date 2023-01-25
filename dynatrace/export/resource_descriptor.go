@@ -358,10 +358,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		order.Service,
 		Dependencies.ID(ResourceTypes.RequestNaming),
 	),
-	ResourceTypes.IAMUser:               NewResourceDescriptor(users.Service),
-	ResourceTypes.IAMGroup:              NewResourceDescriptor(groups.Service),
-	ResourceTypes.DDUPool:               NewResourceDescriptor(ddupool.Service),
-	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(pg_anomalies.Service),
+	ResourceTypes.IAMUser:  NewResourceDescriptor(users.Service),
+	ResourceTypes.IAMGroup: NewResourceDescriptor(groups.Service),
+	ResourceTypes.DDUPool:  NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
+		pg_anomalies.Service,
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.ProcessGroupInstance),
+	),
 }
 
 var BlackListedResources = []ResourceType{
