@@ -59,13 +59,22 @@ func Name(v any) string {
 	if field.IsValid() && field.Type() == stringType {
 		return field.String()
 	}
+	if field.IsValid() && field.Type() == stringPointerType {
+		return field.Elem().String()
+	}
 	field = rv.FieldByName("Label")
 	if field.IsValid() && field.Type() == stringType {
 		return field.String()
+	}
+	if field.IsValid() && field.Type() == stringPointerType {
+		return field.Elem().String()
 	}
 	field = rv.FieldByName("Key")
 	if field.IsValid() && field.Type() == stringType {
 		return field.String()
 	}
-	panic(rv.Type().Name())
+	if field.IsValid() && field.Type() == stringPointerType {
+		return field.Elem().String()
+	}
+	panic(rv.Type().Name() + " does neither have a property 'Name', 'DisplayName', 'Label' or 'Key' nor does it offer a method 'Name()'")
 }
