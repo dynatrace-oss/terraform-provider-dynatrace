@@ -57,43 +57,44 @@ func sk(s string) string {
 }
 
 func resOpt(bc string, sch map[string]*schema.Schema) bool {
-	bc = strings.TrimPrefix(bc, ".")
-	if strings.Contains(bc, ".") {
-		idx := strings.Index(bc, ".")
-		return resOpt0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
-	}
-	return resOpt0(bc, "", sch[bc])
-}
+	return false
+	// 	bc = strings.TrimPrefix(bc, ".")
+	// 	if strings.Contains(bc, ".") {
+	// 		idx := strings.Index(bc, ".")
+	// 		return resOpt0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
+	// 	}
+	// 	return resOpt0(bc, "", sch[bc])
+	// }
 
-func resOpt0(key string, bc string, sch *schema.Schema) bool {
-	if sch == nil {
-		return false
-	}
-	switch sch.Type {
-	case schema.TypeBool:
-		return sch.Optional
-	case schema.TypeInt:
-		return sch.Optional
-	case schema.TypeFloat:
-		return sch.Optional
-	case schema.TypeString:
-		return sch.Optional
-	case schema.TypeList:
-		switch v := sch.Elem.(type) {
-		case *schema.Resource:
-			return resOpt(bc, v.Schema)
-		default:
-			return sch.Optional
-		}
+	// func resOpt0(key string, bc string, sch *schema.Schema) bool {
+	// 	if sch == nil {
+	// 		return false
+	// 	}
+	// 	switch sch.Type {
+	// 	case schema.TypeBool:
+	// 		return sch.Optional
+	// 	case schema.TypeInt:
+	// 		return sch.Optional
+	// 	case schema.TypeFloat:
+	// 		return sch.Optional
+	// 	case schema.TypeString:
+	// 		return sch.Optional
+	// 	case schema.TypeList:
+	// 		switch v := sch.Elem.(type) {
+	// 		case *schema.Resource:
+	// 			return resOpt(bc, v.Schema)
+	// 		default:
+	// 			return sch.Optional
+	// 		}
 
-	case schema.TypeMap:
-		return false
-	case schema.TypeSet:
-		return false
-	default:
-		return false
+	// 	case schema.TypeMap:
+	// 		return false
+	// 	case schema.TypeSet:
+	// 		return false
+	// 	default:
+	// 		return false
 
-	}
+	// 	}
 }
 
 type exportEntry interface {
