@@ -1,0 +1,26 @@
+---
+layout: ""
+page_title: dynatrace_pg_alerting Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_pg_alerting` covers configuration for process group availability monitoring
+---
+
+# dynatrace_pg_alerting (Resource)
+
+## Dynatrace Documentation
+
+- Process group availability monitoring and alerting - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups/monitoring/process-group-availability-monitoring-and-alerting
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:availability.process-group-alerting`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_pg_alerting` downloads all existing process group availability monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/availability/process_group_alerting/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
