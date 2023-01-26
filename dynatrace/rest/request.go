@@ -21,14 +21,20 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
+
+const MinWaitTime = 5 * time.Second
+const MaxWaitTime = 1 * time.Minute
 
 var logger = initLogger()
 var Logger = logger
@@ -128,14 +134,8 @@ func (me *request) Finish(vs ...any) error {
 	return nil
 }
 
-// var allrequests = map[string]string{}
-
 func (me *request) Raw() ([]byte, error) {
 	url := me.client.envURL + me.url
-	// if _, found := allrequests[url]; found {
-	// 	panic(url)
-	// }
-	// allrequests[url] = url
 	var err error
 	var body io.Reader
 	var data []byte
@@ -186,12 +186,14 @@ func (me *request) Raw() ([]byte, error) {
 	} else {
 		httpClient.Transport = http.DefaultTransport
 	}
-
-	if res, err = httpClient.Do(req); err != nil {
-		return nil, err
-	}
+	response, err := me.execute(func() (*http.Response, error) {
+		if res, err = httpClient.Do(req); err != nil {
+			return nil, err
+		}
+		return res, nil
+	})
 	if me.onResponse != nil {
-		me.onResponse(res)
+		me.onResponse(response)
 	}
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
@@ -213,6 +215,7 @@ func (me *request) Raw() ([]byte, error) {
 		}
 		return nil, fmt.Errorf("status code %d (expected: %d)", res.StatusCode, me.expect)
 	}
+
 	return data, nil
 }
 
@@ -224,4 +227,94 @@ func (me *request) Expect(codes ...int) Request {
 func (me *request) OnResponse(onResponse func(resp *http.Response)) Request {
 	me.onResponse = onResponse
 	return me
+}
+
+func (s *request) execute(callback func() (*http.Response, error)) (*http.Response, error) {
+
+	response, err := callback()
+	if err != nil {
+		return nil, err
+	}
+
+	maxIterationCount := 5
+	currentIteration := 0
+
+	for response.StatusCode == http.StatusTooManyRequests && currentIteration < maxIterationCount {
+
+		limit, humanReadableTimestamp, timeInMicroseconds, err := s.extractRateLimitHeaders(response)
+		if err != nil {
+			return response, err
+		}
+
+		logger.Printf("Rate limit of %s requests/min reached (iteration: %d)", limit, currentIteration+1)
+		logger.Printf("Attempting to sleep until %s", humanReadableTimestamp)
+
+		now := Now()                                            // client time
+		resetTime := MicrosecondsToUnixTime(timeInMicroseconds) // server time
+		// mixing server and client time here - sanity check necessary
+		sleepDuration := min(max(resetTime.Sub(now), MinWaitTime), MaxWaitTime)
+
+		time.Sleep(sleepDuration)
+
+		currentIteration++
+		if response, err = callback(); err != nil {
+			return nil, err
+		}
+	}
+
+	return response, nil
+}
+
+func (s *request) extractRateLimitHeaders(response *http.Response) (limit string, humanReadableResetTimestamp string, resetTimeInMicroseconds int64, err error) {
+	limit = response.Header.Get("X-RateLimit-Limit")
+	reset := response.Header.Get("X-RateLimit-Reset")
+
+	if len(limit) == 0 {
+		return "", "", 0, errors.New("rate limit header 'X-RateLimit-Limit' not found")
+	}
+	if len(reset) == 0 {
+		return "", "", 0, errors.New("rate limit header 'X-RateLimit-Reset' not found")
+	}
+
+	humanReadableResetTimestamp, resetTimeInMicroseconds, err = StringTimestampToHumanReadableFormat(reset)
+	if err != nil {
+		return "", "", 0, err
+	}
+
+	return limit, humanReadableResetTimestamp, resetTimeInMicroseconds, nil
+}
+
+func min(a, b time.Duration) time.Duration {
+	if a.Nanoseconds() < b.Nanoseconds() {
+		return a
+	}
+
+	return b
+}
+
+func max(a, b time.Duration) time.Duration {
+	if a.Nanoseconds() < b.Nanoseconds() {
+		return b
+	}
+	return a
+}
+
+func Now() time.Time {
+	nowInLocalTimeZone := time.Now()
+	location, _ := time.LoadLocation("UTC")
+	return nowInLocalTimeZone.In(location)
+}
+
+// StringTimestampToHumanReadableFormat parses and sanity-checks a unix timestamp as string and returns it
+// as int64 and a human-readable representation of it
+func StringTimestampToHumanReadableFormat(unixTimestampAsString string) (humanReadable string, parsedTimestamp int64, err error) {
+	if parsedTimestamp, err = strconv.ParseInt(unixTimestampAsString, 10, 64); err != nil {
+		return "", 0, fmt.Errorf("%s is not a valid unix timestamp", unixTimestampAsString)
+	}
+	return time.Unix(parsedTimestamp, 0).Format(time.RFC3339), parsedTimestamp, nil
+}
+
+// MicrosecondsToUnixTime converts the UTC time in microseconds to a time.Time struct (unix time)
+func MicrosecondsToUnixTime(timeInMicroseconds int64) time.Time {
+	return time.Unix(timeInMicroseconds/1000000, (timeInMicroseconds%1000000)*1000)
 }
