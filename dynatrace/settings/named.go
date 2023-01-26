@@ -76,5 +76,5 @@ func Name(v any) string {
 	if field.IsValid() && field.Type() == stringPointerType {
 		return field.Elem().String()
 	}
-	panic(rv.Type().Name() + " does neither have a property 'Name', 'DisplayName', 'Label' or 'Key' nor does it offer a method 'Name()'")
+	panic(rv.Type().PkgPath() + "." + rv.Type().Name() + " does neither have a property 'Name', 'DisplayName', 'Label' or 'Key' nor does it offer a method 'Name()'")
 }
