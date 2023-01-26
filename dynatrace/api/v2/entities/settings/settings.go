@@ -29,6 +29,10 @@ type Settings struct {
 	Entities    Entities `json:"entities,omitempty"`    // A list of monitored entities.
 }
 
+func (me *Settings) Name() string {
+	return "entities"
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"total_count": {
