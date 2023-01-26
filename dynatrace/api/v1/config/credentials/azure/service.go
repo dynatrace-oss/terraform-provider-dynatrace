@@ -18,9 +18,11 @@
 package azure
 
 import (
+	"fmt"
 	"sync"
 
 	azure "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -33,6 +35,19 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*azure.Azur
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
+		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath).
+			WithMutex(mu.Lock, mu.Unlock).
+			WithOnBeforeUpdate(func(id string, v *azure.AzureCredentials) error {
+				if v.SupportingServicesManagedInDynatrace {
+					var creds azure.AzureCredentials
+					client := rest.DefaultClient(credentials.URL, credentials.Token)
+
+					if err := client.Get(fmt.Sprintf("%s/%s", BasePath, "id"), 200).Finish(&creds); err != nil {
+						return err
+					}
+					v.SupportingServices = creds.SupportingServices
+				}
+				return nil
+			}),
 	)
 }

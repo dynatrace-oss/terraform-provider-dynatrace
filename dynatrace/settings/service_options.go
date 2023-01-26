@@ -47,6 +47,11 @@ func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T)
 	return me
 }
 
+func (me *ServiceOptions[T]) WithOnBeforeUpdate(fn func(id string, v T) error) *ServiceOptions[T] {
+	me.OnBeforeUpdate = fn
+	return me
+}
+
 func (me *ServiceOptions[T]) WithCreateRetry(fn func(v T, err error) T) *ServiceOptions[T] {
 	me.CreateRetry = fn
 	return me

@@ -29,17 +29,18 @@ import (
 
 // AzureCredentials Configuration of Azure app-level credentials.
 type AzureCredentials struct {
-	Label                        string                     `json:"label"`                        // The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed.
-	DirectoryID                  string                     `json:"directoryId"`                  // The Directory ID (also referred to as Tenant ID)  The combination of Application ID and Directory ID must be unique.
-	AutoTagging                  *bool                      `json:"autoTagging"`                  // The automatic capture of Azure tags is on (`true`) or off (`false`).
-	MonitorOnlyTagPairs          []*CloudTag                `json:"monitorOnlyTagPairs"`          // A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
-	MonitorOnlyExcludingTagPairs []*CloudTag                `json:"monitorOnlyExcludingTagPairs"` // A list of Azure tags to be excluded from monitoring.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
-	Active                       *bool                      `json:"active,omitempty"`             // The monitoring is enabled (`true`) or disabled (`false`).  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
-	AppID                        string                     `json:"appId"`                        // The Application ID (also referred to as Client ID)  The combination of Application ID and Directory ID must be unique.
-	Key                          *string                    `json:"key,omitempty"`                // The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
-	MonitorOnlyTaggedEntities    *bool                      `json:"monitorOnlyTaggedEntities"`    // Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
-	SupportingServices           []*AzureSupportingService  `json:"supportingServices,omitempty"` // A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.
-	Unknowns                     map[string]json.RawMessage `json:"-"`
+	Label                                string                     `json:"label"`                        // The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed.
+	DirectoryID                          string                     `json:"directoryId"`                  // The Directory ID (also referred to as Tenant ID)  The combination of Application ID and Directory ID must be unique.
+	AutoTagging                          *bool                      `json:"autoTagging"`                  // The automatic capture of Azure tags is on (`true`) or off (`false`).
+	MonitorOnlyTagPairs                  []*CloudTag                `json:"monitorOnlyTagPairs"`          // A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
+	MonitorOnlyExcludingTagPairs         []*CloudTag                `json:"monitorOnlyExcludingTagPairs"` // A list of Azure tags to be excluded from monitoring.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
+	Active                               *bool                      `json:"active,omitempty"`             // The monitoring is enabled (`true`) or disabled (`false`).  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
+	AppID                                string                     `json:"appId"`                        // The Application ID (also referred to as Client ID)  The combination of Application ID and Directory ID must be unique.
+	Key                                  *string                    `json:"key,omitempty"`                // The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
+	MonitorOnlyTaggedEntities            *bool                      `json:"monitorOnlyTaggedEntities"`    // Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
+	SupportingServices                   []*AzureSupportingService  `json:"supportingServices,omitempty"` // A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.
+	SupportingServicesManagedInDynatrace bool                       `json:"-"`
+	Unknowns                             map[string]json.RawMessage `json:"-"`
 }
 
 func (ac *AzureCredentials) Name() string {
@@ -106,9 +107,20 @@ func (ac *AzureCredentials) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.",
 			Optional:    true,
-			Elem: &schema.Resource{
-				Schema: new(AzureSupportingService).Schema(),
+			Elem:        &schema.Resource{Schema: new(AzureSupportingService).Schema()},
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				if d.IsNewResource() {
+					return false
+				}
+				ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
+				return ssmid.(bool)
 			},
+		},
+		"supporting_services_managed_in_dynatrace": {
+			Type:        schema.TypeBool,
+			Description: "If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.",
+			Optional:    true,
+			Default:     false,
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
@@ -405,6 +417,9 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 			}
 			ac.SupportingServices = append(ac.SupportingServices, entry)
 		}
+	}
+	if value, ok := decoder.GetOk("supporting_services_managed_in_dynatrace"); ok {
+		ac.SupportingServicesManagedInDynatrace = value.(bool)
 	}
 	return nil
 }
