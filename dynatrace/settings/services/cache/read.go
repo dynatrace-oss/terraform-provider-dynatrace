@@ -24,22 +24,30 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 type readService[T settings.Settings] struct {
+	mu      sync.Mutex
 	service settings.RService[T]
 	folder  string
 	index   *stubIndex
 }
 
 func (me *readService[T]) List() (settings.Stubs, error) {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	return me.list(true)
 }
 
 func (me *readService[T]) ListNoValues() (settings.Stubs, error) {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	return me.list(false)
 }
 
@@ -118,6 +126,9 @@ func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
 }
 
 func (me *readService[T]) Get(id string, v T) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
 	var cache bool
 	var err error
 	if cache, err = me.loadConfig(id, v); err != nil {
@@ -283,6 +294,9 @@ func (me *readService[T]) SchemaID() string {
 }
 
 func Read[T settings.Settings](service settings.RService[T], force ...bool) settings.RService[T] {
+	mu.Lock()
+	defer mu.Unlock()
+
 	if len(force) == 0 {
 		if mode == ModeDisabled {
 			return service
