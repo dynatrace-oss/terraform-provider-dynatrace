@@ -20,6 +20,7 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type errorEnvelope struct {
@@ -55,7 +56,7 @@ func (me Error) ViolationMessage() string {
 		if len(result) > 0 {
 			result = result + "\n"
 		}
-		if violation.Message == "must not be null" {
+		if strings.Contains(violation.Message, "must not be null") || strings.Contains(violation.Message, "Element may not be null on creation") {
 			result = result + violation.Path + " " + violation.Message
 		} else {
 			result = result + violation.Message
