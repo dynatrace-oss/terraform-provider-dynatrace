@@ -386,6 +386,8 @@ var BlackListedResources = []ResourceType{
 	// excluding by default
 	ResourceTypes.JSONDashboard, // may replace dynatrace_dashboard in the future
 	ResourceTypes.DashboardSharing,
+
+	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
