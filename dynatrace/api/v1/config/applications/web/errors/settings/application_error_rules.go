@@ -18,6 +18,8 @@
 package errors
 
 import (
+	"encoding/json"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -93,4 +95,43 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 		"http_errors":                &me.HTTPErrors,
 		"custom_errors":              &me.CustomErrors,
 	})
+}
+
+func (me *Rules) Store() ([]byte, error) {
+	var data []byte
+	var err error
+	if data, err = json.Marshal(me); err != nil {
+		return nil, err
+	}
+	m := map[string]json.RawMessage{}
+	if err = json.Unmarshal(data, &m); err != nil {
+		return nil, err
+	}
+	if data, err = json.Marshal(me.Name); err != nil {
+		return nil, err
+	}
+	m["name"] = data
+	if data, err = json.Marshal(me.WebApplicationID); err != nil {
+		return nil, err
+	}
+	m["webApplicationID"] = data
+	return json.MarshalIndent(m, "", "  ")
+}
+
+func (me *Rules) Load(data []byte) error {
+	if err := json.Unmarshal(data, &me); err != nil {
+		return err
+	}
+
+	c := struct {
+		Name             string `json:"name"`
+		WebApplicationID string `json:"webApplicationID"`
+	}{}
+	if err := json.Unmarshal(data, &c); err != nil {
+		return err
+	}
+	me.Name = c.Name
+	me.WebApplicationID = c.WebApplicationID
+
+	return nil
 }
