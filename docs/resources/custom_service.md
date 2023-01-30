@@ -99,10 +99,6 @@ Optional:
 - `file` (Block List, Max: 1) The PHP file containing the class or methods to instrument. Required for PHP custom service. Not applicable to Java and .NET (see [below for nested schema](#nestedblock--rule--file))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
-Read-Only:
-
-- `id` (String) The ID of the detection rule
-
 <a id="nestedblock--rule--method"></a>
 ### Nested Schema for `rule.method`
 

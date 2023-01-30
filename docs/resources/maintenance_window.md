@@ -58,7 +58,6 @@ resource "dynatrace_maintenance_window" "#name#" {
 
 - `description` (String) A short description of the maintenance purpose
 - `enabled` (Boolean) The Maintenance Window is enabled or disabled
-- `metadata` (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
 - `schedule` (Block List, Max: 1) The schedule of the maintenance window (see [below for nested schema](#nestedblock--schedule))
 - `scope` (Block List, Max: 1) the tiles this Dashboard consist of (see [below for nested schema](#nestedblock--scope))
 - `suppress_synth_mon_exec` (Boolean) Suppress execution of synthetic monitors during the maintenance
@@ -67,16 +66,6 @@ resource "dynatrace_maintenance_window" "#name#" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-<a id="nestedblock--metadata"></a>
-### Nested Schema for `metadata`
-
-Optional:
-
-- `cluster_version` (String) Dynatrace server version
-- `configuration_versions` (List of Number) A Sorted list of the version numbers of the configuration
-- `current_configuration_versions` (List of String) A Sorted list of the version numbers of the configuration
-
 
 <a id="nestedblock--schedule"></a>
 ### Nested Schema for `schedule`
@@ -125,7 +114,7 @@ Optional:
 
 - `mz_id` (String) The ID of a management zone to which the matched entities must belong
 - `tag_combination` (String) The logic that applies when several tags are specified: AND/OR.  If not set, the OR logic is used
-- `tags` (Block List) The tag you want to use for matching.  You can use custom tags from the UI, AWS tags, Cloud Foundry tags, OpenShift/Kubernetes, and tags based on environment variables (see [below for nested schema](#nestedblock--scope--matches--tags))
+- `tags` (Block Set) The tag you want to use for matching.  You can use custom tags from the UI, AWS tags, Cloud Foundry tags, OpenShift/Kubernetes, and tags based on environment variables (see [below for nested schema](#nestedblock--scope--matches--tags))
 - `type` (String) The type of the Dynatrace entities (for example, hosts or services) you want to pick up by matching
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 

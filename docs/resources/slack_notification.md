@@ -24,6 +24,10 @@ description: |-
 - `profile` (String) The ID of the associated alerting profile
 - `url` (String, Sensitive) The URL of the Slack WebHook. This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
 
+### Optional
+
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

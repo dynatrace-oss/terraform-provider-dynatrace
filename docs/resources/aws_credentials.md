@@ -68,7 +68,7 @@ Optional:
 - `account_id` (String) the ID of the Amazon account
 - `external_id` (String) the external ID token for setting an IAM role. You can obtain it with the `GET /aws/iamExternalId` request
 - `iam_role` (String) the IAM role to be used by Dynatrace to get monitoring data
-- `secret_key` (String) the secret access key
+- `secret_key` (String, Sensitive) the secret access key
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 

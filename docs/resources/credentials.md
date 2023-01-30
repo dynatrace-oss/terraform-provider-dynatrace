@@ -23,7 +23,7 @@ description: |-
 ### Optional
 
 - `certificate` (String) The certificate in the string format.
-- `credential_usage_summary` (Block List, Max: 2) The list contains summary data related to the use of credentials (see [below for nested schema](#nestedblock--credential_usage_summary))
+- `credential_usage_summary` (Block List, Max: 2, Deprecated) The list contains summary data related to the use of credentials (see [below for nested schema](#nestedblock--credential_usage_summary))
 - `description` (String) A short description of the credentials set
 - `external` (Block List, Max: 1) External Vault Configuration (see [below for nested schema](#nestedblock--external))
 - `format` (String) The certificate format. Possible values are `PEM`, `PKCS12` and `UNKNOWN`.

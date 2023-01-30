@@ -358,7 +358,7 @@ The maximum allowed width is `1920`.
 
 Required:
 
-- `header` (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--configuration--headers--header))
+- `header` (Block Set, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--configuration--headers--header))
 
 Optional:
 
@@ -1351,7 +1351,7 @@ Required:
 
 Optional:
 
-- `tag` (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
+- `tag` (Block Set) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
 
 <a id="nestedblock--tags--tag"></a>
 ### Nested Schema for `tags.tag`

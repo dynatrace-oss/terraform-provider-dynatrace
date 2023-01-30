@@ -65,8 +65,8 @@ resource "dynatrace_autotag" "#name#" {
 
 ### Optional
 
+- `description` (String) The description of the auto-tag.
 - `entity_selector_based_rule` (Block Set) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
-- `metadata` (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
 - `rules` (Block Set) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
@@ -86,16 +86,6 @@ Optional:
 - `value_format` (String) The value of the entity-selector-based auto-tag. If specified, the tag is used in the `name:valueFormat` format. 
 
 For example, you can extend the `Infrastructure` tag to `Infrastructure:Windows` and `Infrastructure:Linux`
-
-
-<a id="nestedblock--metadata"></a>
-### Nested Schema for `metadata`
-
-Optional:
-
-- `cluster_version` (String) Dynatrace server version
-- `configuration_versions` (List of Number) A Sorted list of the version numbers of the configuration
-- `current_configuration_versions` (List of String) A Sorted list of the version numbers of the configuration
 
 
 <a id="nestedblock--rules"></a>

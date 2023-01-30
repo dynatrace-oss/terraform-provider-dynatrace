@@ -344,6 +344,7 @@ resource "dynatrace_management_zone_v2" "#name#" {
 ### Optional
 
 - `description` (String) Description
+- `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
 - `rules` (Block List, Max: 1) Rules (see [below for nested schema](#nestedblock--rules))
 
 ### Read-Only

@@ -56,5 +56,6 @@ data "dynatrace_alerting_profile" "Default" {
 - `bcc` (Set of String) The list of the email BCC-recipients
 - `cc` (Set of String) The list of the email CC-recipients
 - `id` (String) The ID of this resource.
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `notify_closed_problems` (Boolean) Send email if problem is closed
  

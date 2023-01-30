@@ -27,6 +27,7 @@ description: |-
 
 - `headers` (Block List, Max: 1) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--headers))
 - `insecure` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `notify_closed_problems` (Boolean) Send email if problem is closed
 - `notify_event_merges` (Boolean) Call webhook if new events merge into existing problems
 

@@ -72,7 +72,7 @@ Required:
 
 Optional:
 
-- `filter` (Block List) A Tag Filter (see [below for nested schema](#nestedblock--tags--filter))
+- `filter` (Block Set) A Tag Filter (see [below for nested schema](#nestedblock--tags--filter))
 
 <a id="nestedblock--tags--filter"></a>
 ### Nested Schema for `tags.filter`

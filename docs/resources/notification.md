@@ -45,7 +45,6 @@ resource "dynatrace_notification" "#name#" {
 - `ansible_tower` (Block List, Max: 1) Configuration for Ansible Tower Notification (see [below for nested schema](#nestedblock--ansible_tower))
 - `config` (Block List, Max: 1) Configuration for Generic Notification (see [below for nested schema](#nestedblock--config))
 - `email` (Block List, Max: 1) Configuration for Email Notification (see [below for nested schema](#nestedblock--email))
-- `hipchat` (Block List, Max: 1) Configuration for HipChat Notification (see [below for nested schema](#nestedblock--hipchat))
 - `jira` (Block List, Max: 1) Configuration for Jira Notification (see [below for nested schema](#nestedblock--jira))
 - `ops_genie` (Block List, Max: 1) Configuration for OpsGenie Notification (see [below for nested schema](#nestedblock--ops_genie))
 - `pager_duty` (Block List, Max: 1) Configuration for PagerDuty Notification (see [below for nested schema](#nestedblock--pager_duty))
@@ -112,22 +111,6 @@ Optional:
 - `cc_receivers` (Set of String) The list of the email CC-recipients
 - `receivers` (Set of String) The list of the email recipients
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-
-
-<a id="nestedblock--hipchat"></a>
-### Nested Schema for `hipchat`
-
-Required:
-
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `alerting_profile` (String) The ID of the associated alerting profile
-- `message` (String) The content of the notification message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- `name` (String) The name of the notification configuration
-
-Optional:
-
-- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- `url` (String) The URL of the HipChat WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
 
 
 <a id="nestedblock--jira"></a>
@@ -275,7 +258,7 @@ Required:
 
 Optional:
 
-- `header` (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--web_hook--header))
+- `header` (Block Set) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--web_hook--header))
 - `notify_event_merges` (Boolean) Call webhook if new events merge into existing problems
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
@@ -306,7 +289,7 @@ Required:
 
 Optional:
 
-- `header` (Block List) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--xmatters--header))
+- `header` (Block Set) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--xmatters--header))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 <a id="nestedblock--xmatters--header"></a>

@@ -28,6 +28,7 @@ description: |-
 
 - `events` (Boolean) Send events into ServiceNow ITOM
 - `instance` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. This field is mutually exclusive with the **url** field. You can only use one of them
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `password` (String, Sensitive) The password to the ServiceNow account
 - `url` (String) The URL of the on-premise ServiceNow installation. This field is mutually exclusive with the **instance** field. You can only use one of them
 

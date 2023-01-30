@@ -570,6 +570,7 @@ Optional:
 - `description` (String) A short description of the event to appear in the web UI.
 - `post_processing` (String) Javascript code to execute after sending the request.
 - `pre_processing` (String) Javascript code to execute before sending the request.
+- `request_timeout` (Number) Adapt request timeout option - the maximum time this request is allowed to consume. Keep in mind the maximum timeout of the complete monitor is 60 seconds
 - `validation` (Block List, Max: 1) Validation helps you verify that your HTTP monitor loads the expected content (see [below for nested schema](#nestedblock--script--request--validation))
 
 <a id="nestedblock--script--request--authentication"></a>
@@ -594,10 +595,12 @@ Optional:
 - `accept_any_certificate` (Boolean) If set to `false`, then the monitor fails with invalid SSL certificates.
 
 If not set, the `false` option is used
+- `client_certificate` (String, Sensitive) The client certificate, if applicable - eg. CREDENTIALS_VAULT-XXXXXXXXXXXXXXXX
 - `follow_redirects` (Boolean) If set to `false`, redirects are reported as successful requests with response code 3xx.
 
 If not set, the `false` option is used.
 - `headers` (Block List, Max: 1) The setup of the monitor (see [below for nested schema](#nestedblock--script--request--configuration--headers))
+- `sensitive_data` (Boolean) Option not to store and display request and response bodies and header values in execution details, `true` or `false`. If not set, `false`.
 - `user_agent` (String) The User agent of the request
 
 <a id="nestedblock--script--request--configuration--headers"></a>
@@ -605,7 +608,7 @@ If not set, the `false` option is used.
 
 Required:
 
-- `header` (Block List, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--request--configuration--headers--header))
+- `header` (Block Set, Min: 1) contains an HTTP header of the request (see [below for nested schema](#nestedblock--script--request--configuration--headers--header))
 
 <a id="nestedblock--script--request--configuration--headers--header"></a>
 ### Nested Schema for `script.request.configuration.headers.header`
@@ -646,7 +649,7 @@ Optional:
 
 Optional:
 
-- `tag` (Block List) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
+- `tag` (Block Set) Tag with source of a Dynatrace entity. (see [below for nested schema](#nestedblock--tags--tag))
 
 <a id="nestedblock--tags--tag"></a>
 ### Nested Schema for `tags.tag`

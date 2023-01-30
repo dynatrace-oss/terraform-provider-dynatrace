@@ -67,6 +67,7 @@ resource "dynatrace_maintenance" "#name#" {
 
 - `enabled` (Boolean) The maintenance window is enabled or disabled
 - `filters` (Block List) The filters of the maintenance window (see [below for nested schema](#nestedblock--filters))
+- `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
 
 ### Read-Only
 

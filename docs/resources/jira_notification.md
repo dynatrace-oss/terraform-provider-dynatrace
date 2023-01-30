@@ -30,6 +30,7 @@ description: |-
 ### Optional
 
 - `api_token` (String, Sensitive) The API token for the Jira profile. Using password authentication [was deprecated by Jira](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-basic-auth-and-cookie-based-auth/)
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only
 

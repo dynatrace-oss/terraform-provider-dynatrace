@@ -70,13 +70,6 @@ resource "dynatrace_http_monitor" "#name#" {
 
 Optional:
 
-- `location` (Block List) The name of the location (see [below for nested schema](#nestedblock--locations--location))
-
-<a id="nestedblock--locations--location"></a>
-### Nested Schema for `locations.location`
-
-Optional:
-
 - `cloud_platform` (String) The cloud provider where the location is hosted. 
 
  Only applicable to `PUBLIC` locations

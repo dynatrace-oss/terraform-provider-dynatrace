@@ -105,7 +105,6 @@ resource "dynatrace_management_zone" "#name#" {
 - `description` (String) The description of the management zone
 - `dimensional_rule` (Block List) A list of dimensional data rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--dimensional_rule))
 - `entity_selector_based_rule` (Block List) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
-- `metadata` (Block List, Max: 1, Deprecated) `metadata` exists for backwards compatibility but shouldn't get specified anymore (see [below for nested schema](#nestedblock--metadata))
 - `rules` (Block List) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
@@ -158,16 +157,6 @@ Optional:
 - `enabled` (Boolean) The rule is enabled (`true`) or disabled (`false`)
 - `selector` (String) The entity selector string, by which the entities are selected
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-
-
-<a id="nestedblock--metadata"></a>
-### Nested Schema for `metadata`
-
-Optional:
-
-- `cluster_version` (String) Dynatrace server version
-- `configuration_versions` (List of Number) A Sorted list of the version numbers of the configuration
-- `current_configuration_versions` (List of String) A Sorted list of the version numbers of the configuration
 
 
 <a id="nestedblock--rules"></a>

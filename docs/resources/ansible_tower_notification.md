@@ -53,6 +53,7 @@ data "dynatrace_alerting_profile" "Default" {
 
 - `active` (Boolean) The notification is active (`true`) or inactive (`false`). Default is `false`.
 - `insecure` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates. Default is `false`.
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `password` (String, Sensitive) The password for the Ansible Tower account
 
 ### Read-Only

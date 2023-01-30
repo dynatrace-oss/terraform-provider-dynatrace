@@ -28,6 +28,7 @@ description: |-
 - `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
 - `bcc` (Set of String) The list of the email BCC-recipients
 - `cc` (Set of String) The list of the email CC-recipients
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `notify_closed_problems` (Boolean) Send email if problem is closed
 
 ### Read-Only

@@ -62,6 +62,7 @@ data "dynatrace_alerting_profile" "Default" {
 - `headers` (Block List, Max: 1) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--headers))
 - `id` (String) The ID of this resource.
 - `insecure` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 <a id="nestedblock--headers"></a>
 ### Nested Schema for `headers`

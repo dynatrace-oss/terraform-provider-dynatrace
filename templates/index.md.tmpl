@@ -18,7 +18,7 @@ Use the links to the left to learn about the available resources and data source
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.16.0"
+            version = "1.18.0"
             source = "dynatrace-oss/dynatrace"
         }
     }
@@ -36,7 +36,28 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 * `Capture request data`
 * `Read SLO`
 * `Read settings`
+* `Read API tokens`
+* `Read entities`
+* `Read Geographic regions`
+* `Read network zones`
+* `Read synthetic locations`
 * `Read synthetic monitors, locations, and nodes`
+* `Capture request data`
+* `Read credential vault entries`
+* `Access problem and event feed, metrics and topology`
+* `Read synthetic monitors, locations, and nodes`
+* `Write settings`
+* `Write API tokens`
+* `Write entities`
+* `Write network zones`
+* `Write SLO`
+* `Write synthetic locations`
+* `Write credential vault entries`
+* `Change data privacy settings`
+* `Create and read synthetic monitors, locations`
+* `Write configuration`
+
+
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin, the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can be directly invoked.
