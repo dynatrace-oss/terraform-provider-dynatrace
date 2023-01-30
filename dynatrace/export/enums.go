@@ -96,6 +96,7 @@ var ResourceTypes = struct {
 	ProcessGroupAnomalies    ResourceType
 	DDUPool                  ResourceType
 	ProcessGroupAlerting     ResourceType
+	ServiceAnomaliesV2       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -167,6 +168,7 @@ var ResourceTypes = struct {
 	"dynatrace_pg_anomalies",
 	"dynatrace_ddu_pool",
 	"dynatrace_pg_alerting",
+	"dynatrace_service_anomalies_v2",
 }
 
 type ResourceStatus string

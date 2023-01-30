@@ -142,6 +142,7 @@ func Provider() *schema.Provider {
 			"dynatrace_k8s_credentials":            resources.NewGeneric(export.ResourceTypes.KubernetesCredentials).Resource(),
 			"dynatrace_cloudfoundry_credentials":   resources.NewGeneric(export.ResourceTypes.CloudFoundryCredentials).Resource(),
 			"dynatrace_service_anomalies":          resources.NewGeneric(export.ResourceTypes.ServiceAnomalies).Resource(),
+			"dynatrace_service_anomalies_v2":       resources.NewGeneric(export.ResourceTypes.ServiceAnomaliesV2).Resource(),
 			"dynatrace_application_anomalies":      resources.NewGeneric(export.ResourceTypes.ApplicationAnomalies).Resource(),
 			"dynatrace_host_anomalies":             resources.NewGeneric(export.ResourceTypes.HostAnomalies).Resource(),
 			"dynatrace_database_anomalies":         resources.NewGeneric(export.ResourceTypes.DatabaseAnomalies).Resource(),

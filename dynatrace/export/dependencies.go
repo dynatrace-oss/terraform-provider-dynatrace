@@ -41,6 +41,7 @@ var Dependencies = struct {
 	ManagementZone       Dependency
 	LegacyID             func(resourceType ResourceType) Dependency
 	ID                   func(resourceType ResourceType) Dependency
+	ServiceMethod        Dependency
 	Service              Dependency
 	HostGroup            Dependency
 	Host                 Dependency
@@ -51,6 +52,7 @@ var Dependencies = struct {
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
 	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
+	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
 	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
 	HostGroup:            &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
 	Host:                 &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},

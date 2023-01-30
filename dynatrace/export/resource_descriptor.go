@@ -33,6 +33,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/metricevents"
+	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
@@ -292,7 +293,13 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.ResourceAttributes: NewResourceDescriptor(resattr.Service),
 	ResourceTypes.ServiceAnomalies:   NewResourceDescriptor(service_anomalies.Service),
-	ResourceTypes.ServiceNaming:      NewResourceDescriptor(service_naming.Service),
+	ResourceTypes.ServiceAnomaliesV2: NewResourceDescriptor(
+		service_anomalies_v2.Service,
+		Coalesce(Dependencies.ServiceMethod),
+		Coalesce(Dependencies.Service),
+		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.ServiceNaming: NewResourceDescriptor(service_naming.Service),
 	ResourceTypes.ServiceNowNotification: NewResourceDescriptor(
 		servicenow.Service,
 		Dependencies.ID(ResourceTypes.Alerting),
