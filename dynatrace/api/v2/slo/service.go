@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -29,6 +30,8 @@ import (
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 )
+
+var mu sync.Mutex
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*slo.SLO] {
 	return &service{credentials: credentials}
@@ -92,7 +95,7 @@ func (me *service) List() (settings.Stubs, error) {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	req := client.Get("/api/v2/slo?pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", 200)
+	req := client.Get("/api/v2/slo?pageSize=4000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", 200)
 	var slos sloList
 	if err = req.Finish(&slos); err != nil {
 		return nil, err
@@ -110,6 +113,9 @@ func (me *service) Validate(v *slo.SLO) error {
 }
 
 func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
 	var err error
 
 	var id string
