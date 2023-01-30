@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	"net/url"
 )
@@ -111,6 +112,9 @@ func (me *service[T]) List() (settings.Stubs, error) {
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
+		if shutdown.System.Stopped() {
+			return stubs, nil
+		}
 
 		if len(sol.Items) > 0 {
 			for _, item := range sol.Items {
@@ -167,24 +171,25 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 	req := me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
 	objectID := []SettingsObjectCreateResponse{}
 
-	if err := req.Finish(&objectID); err != nil {
+	if oerr := req.Finish(&objectID); oerr != nil {
 		if me.options != nil && me.options.CreateRetry != nil && !retry {
-			if modifiedPayload := me.options.CreateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
+			if modifiedPayload := me.options.CreateRetry(v, oerr); (any)(modifiedPayload) != (any)(nil) {
 				return me.create(modifiedPayload, true)
 			}
 		}
 		if me.options != nil && me.options.HijackOnCreate != nil {
 			var hijackedStub *settings.Stub
-			if hijackedStub, err = me.options.HijackOnCreate(err, me, v); err != nil {
-				return nil, err
+			var hierr error
+			if hijackedStub, hierr = me.options.HijackOnCreate(oerr, me, v); hierr != nil {
+				return nil, hierr
 			}
 			if hijackedStub != nil {
 				return hijackedStub, me.Update(hijackedStub.ID, v)
 			} else {
-				return nil, err
+				return nil, oerr
 			}
 		}
-		return nil, err
+		return nil, oerr
 	}
 	itemName := settings.Name(v)
 	stub := &settings.Stub{ID: objectID[0].ObjectID, Name: itemName}
