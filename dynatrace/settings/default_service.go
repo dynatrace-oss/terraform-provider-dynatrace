@@ -133,7 +133,15 @@ func (me *defaultService[T]) List() (Stubs, error) {
 	}
 
 	res := stubs.ToStubs()
-	return res, nil
+	m := map[string]*Stub{}
+	for _, stub := range res {
+		m[stub.ID] = stub
+	}
+	res = Stubs{}
+	for _, stub := range m {
+		res = append(res, stub)
+	}
+	return res.ToStubs(), nil
 }
 
 func (me *defaultService[T]) Validate(v T) error {
