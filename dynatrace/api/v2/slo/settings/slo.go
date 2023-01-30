@@ -209,5 +209,8 @@ func (me *SLO) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.MetricRate = nonNil(me.MetricRate)
 	// me.MetricExpression = nonNil(me.MetricExpression)
 	me.UseRateMetric = (me.MetricRate != nil) && len(*me.MetricRate) > 0
+	if me.MetricExpression != nil {
+		*me.MetricExpression = strings.TrimSpace(*me.MetricExpression)
+	}
 	return err
 }
