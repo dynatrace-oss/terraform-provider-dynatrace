@@ -19,6 +19,7 @@ package rest
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -31,6 +32,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"golang.org/x/sync/semaphore"
 )
 
 const MinWaitTime = 5 * time.Second
@@ -38,6 +42,7 @@ const MaxWaitTime = 1 * time.Minute
 
 var logger = initLogger()
 var Logger = logger
+var errorLogger = initErrorLogger()
 
 type onDemandWriter struct {
 	logFileName string
@@ -46,7 +51,7 @@ type onDemandWriter struct {
 
 func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 	if odw.file == nil {
-		if odw.file, err = os.OpenFile(odw.logFileName, os.O_APPEND|os.O_CREATE, os.ModePerm); err != nil {
+		if odw.file, err = os.OpenFile(odw.logFileName, os.O_TRUNC|os.O_CREATE, os.ModePerm); err != nil {
 			return 0, err
 		}
 	}
@@ -59,6 +64,18 @@ func initLogger() *log.Logger {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
+		}
+		return logger
+	}
+	return log.New(io.Discard, "", log.LstdFlags)
+}
+
+func initErrorLogger() *log.Logger {
+	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
+	if len(restLogFileName) > 0 && restLogFileName != "false" {
+		logger := log.New(os.Stderr, "", log.LstdFlags)
+		if restLogFileName != "true" {
+			logger.SetOutput(&onDemandWriter{logFileName: strings.TrimSuffix(restLogFileName, ".log") + ".err.log"})
 		}
 		return logger
 	}
@@ -117,6 +134,9 @@ func (me *request) Payload(payload any) Request {
 }
 
 func (me *request) Finish(vs ...any) error {
+	if shutdown.System.Stopped() {
+		return nil
+	}
 	var v any
 	if len(vs) > 0 {
 		v = vs[0]
@@ -125,6 +145,9 @@ func (me *request) Finish(vs ...any) error {
 	var data []byte
 	if data, err = me.Raw(); err != nil {
 		return err
+	}
+	if shutdown.System.Stopped() {
+		return nil
 	}
 	if v != nil {
 		if err = json.Unmarshal(data, &v); err != nil {
@@ -192,14 +215,26 @@ func (me *request) Raw() ([]byte, error) {
 		}
 		return res, nil
 	})
+	if shutdown.System.Stopped() {
+		return nil, nil
+	}
 	if me.onResponse != nil {
 		me.onResponse(response)
 	}
+	if err != nil {
+		return nil, err
+	}
+	requestData := data
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
-		logger.Println("  ", res.StatusCode, string(data))
+		if len(requestData) > 0 {
+			errorLogger.Println(me.method, url+"\n    "+string(requestData))
+		} else {
+			errorLogger.Println(me.method, url)
+		}
+		errorLogger.Println("  ", res.StatusCode, string(data))
 		var env errorEnvelope
 		if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
 			return nil, Error{Code: env.Error.Code, Method: me.method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
@@ -229,7 +264,19 @@ func (me *request) OnResponse(onResponse func(resp *http.Response)) Request {
 	return me
 }
 
+const maxWorkers = 20
+
+var sem = semaphore.NewWeighted(maxWorkers)
+
 func (s *request) execute(callback func() (*http.Response, error)) (*http.Response, error) {
+	err := sem.Acquire(context.Background(), 1)
+	if err != nil {
+		return nil, err
+	}
+	defer sem.Release(1)
+	if shutdown.System.Stopped() {
+		return nil, nil
+	}
 
 	response, err := callback()
 	if err != nil {
