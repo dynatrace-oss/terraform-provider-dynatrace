@@ -31,10 +31,34 @@ import (
 )
 
 type readService[T settings.Settings] struct {
-	mu      sync.Mutex
-	service settings.RService[T]
-	folder  string
-	index   *stubIndex
+	mu        sync.Mutex
+	service   settings.RService[T]
+	folder    string
+	index     *stubIndex
+	tarFolder *TarFolder
+}
+
+func (me *readService[T]) init() error {
+	if me.index != nil {
+		return nil
+	}
+	me.index = &stubIndex{Stubs: settings.Stubs{}, IDs: map[string]*settings.Stub{}, Complete: false}
+	os.MkdirAll(me.folder, os.ModePerm)
+	tarFolder, complete, err := NewTarFolder(path.Join(me.folder, "data"))
+	if err != nil {
+		return err
+	}
+	me.index.Complete = complete
+
+	me.tarFolder = tarFolder
+	stubs, err := me.tarFolder.List()
+	if err != nil {
+		return err
+	}
+	for _, stub := range stubs {
+		me.index.Add(stub.ID, stub.Name)
+	}
+	return nil
 }
 
 func (me *readService[T]) List() (settings.Stubs, error) {
@@ -52,14 +76,13 @@ func (me *readService[T]) ListNoValues() (settings.Stubs, error) {
 }
 
 func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
-	var err error
-	var index *stubIndex
-	if exists(indexFile(me.folder)) {
-		if index, err = me.loadIndex(); err != nil {
-			return nil, err
-		}
-		if withValues && index.Complete {
-			for _, stub := range index.Stubs {
+	if err := me.init(); err != nil {
+		return nil, err
+	}
+
+	if withValues {
+		for _, stub := range me.index.Stubs {
+			if stub.Value == nil {
 				stub.Value = settings.NewSettings[T](me)
 				if cache, err := me.loadConfig(stub.ID, stub.Value.(T)); err != nil {
 					return nil, err
@@ -68,51 +91,18 @@ func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
 				}
 			}
 		}
-		return index.Stubs.ToStubs(), nil
-	}
-	if mode == ModeOffline {
-		return settings.Stubs{}, nil
 	}
 
+	if mode == ModeOffline || me.index.Complete {
+		return me.index.Stubs.ToStubs(), nil
+	}
+
+	var err error
 	var stubs settings.Stubs
 	if stubs, err = me.service.List(); err != nil {
 		return nil, err
 	}
-	if me.index != nil {
-		for _, stub := range stubs {
-			me.index.Add(stub.ID, stub.Name)
-		}
-		me.index.Complete = true
-		me.storeIndex(me.index)
-	} else {
-		entries, _ := os.ReadDir(me.folder)
-		for _, entry := range entries {
-			if entry.Name() == ".index.json" {
-				continue
-			}
-			var data []byte
-			if data, err = os.ReadFile(path.Join(me.folder, entry.Name())); err != nil {
-				return nil, err
-			}
-			var record record
-			if err = json.Unmarshal(data, &record); err != nil {
-				return nil, err
-			}
-			var sttngs T
-			if record.Value != nil {
-				id := record.ID
-				sttngs = settings.NewSettings(me.service)
-				if err = settings.FromJSON(record.Value, sttngs); err != nil {
-					return nil, err
-				}
-				if legacyIDAware, ok := me.service.(settings.LegacyIDAware); ok {
-					settings.SetLegacyID(id, legacyIDAware.LegacyID(), sttngs)
-				}
-			}
-			stubs = append(stubs, &settings.Stub{ID: record.ID, Name: record.Name, Value: sttngs})
-		}
-		me.storeIndex(&stubIndex{Complete: true, Stubs: stubs})
-	}
+	me.index.Complete = true
 	for _, stub := range stubs {
 		if stub.Value != nil {
 			if typeValue, ok := stub.Value.(T); ok {
@@ -128,6 +118,10 @@ func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
 func (me *readService[T]) Get(id string, v T) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
+
+	if err := me.init(); err != nil {
+		return err
+	}
 
 	var cache bool
 	var err error
@@ -154,85 +148,20 @@ func (me *readService[T]) Get(id string, v T) error {
 	return nil
 }
 
-func (me *readService[T]) loadIndex() (*stubIndex, error) {
-	if me.index != nil {
-		return me.index, nil
+func (me *readService[T]) notifyGet(id string, v T) error {
+	if legacyIDAware, ok := me.service.(settings.LegacyIDAware); ok {
+		settings.SetLegacyID(id, legacyIDAware.LegacyID(), v)
 	}
-	me.index = new(stubIndex)
-	var err error
-	var data []byte
-
-	filePath := indexFile(me.folder)
-	if exists(filePath) {
-		if data, err = os.ReadFile(filePath); err != nil {
-			return nil, err
-		}
-		if err = json.Unmarshal(data, me.index); err != nil {
-			return nil, err
-		}
-	}
-	me.index.IDs = map[string]*settings.Stub{}
-	for _, stub := range me.index.Stubs {
-		me.index.IDs[stub.ID] = stub
-	}
-	return me.index, nil
-}
-
-func (me *readService[T]) storeIndex(index *stubIndex) error {
-	os.MkdirAll(me.folder, os.ModePerm)
-	var err error
-	var file *os.File
-	var data []byte
-
-	if file, err = os.Create(indexFile(me.folder)); err != nil {
-		return err
-	}
-	defer file.Close()
-	if data, err = json.Marshal(index); err != nil {
-		return err
-	}
-	if _, err = file.Write(data); err != nil {
-		return err
-	}
-
-	// keeping index that has just been stored in memory
-	me.index = index
-	me.index.IDs = map[string]*settings.Stub{}
-	// We don't want to keep the settings that are potentially
-	// attached to the in memory stubs.
-	// We read these settings from disk if required
-	me.index.Stubs = me.index.Stubs.ToStubs()
-	for _, stub := range me.index.Stubs {
-		stub.Value = nil
-		me.index.IDs[stub.ID] = stub
-	}
-	return nil
-}
-
-func (me *readService[T]) dataFile(id string) string {
-	filename := fmt.Sprintf("%s.bin.json", id)
-	filename = strings.ReplaceAll(filename, ":", ".")
-	filename = strings.ReplaceAll(filename, "/", "_")
-	filename = strings.ReplaceAll(filename, ":", "_")
-	filename = strings.ReplaceAll(filename, "|", "_")
-	filename = strings.ReplaceAll(filename, "<", "_")
-	filename = strings.ReplaceAll(filename, ">", "_")
-	filename = strings.ReplaceAll(filename, "\"", "_")
-	filename = strings.ReplaceAll(filename, "?", "_")
-	filename = strings.ReplaceAll(filename, "*", "_")
-	return path.Join(me.folder, filename)
+	return me.storeConfig(id, v)
 }
 
 func (me *readService[T]) storeConfig(id string, v T) error {
-	os.MkdirAll(me.folder, os.ModePerm)
-	var err error
-	var data []byte
-	var file *os.File
-
-	if file, err = os.Create(me.dataFile(id)); err != nil {
+	if err := me.init(); err != nil {
 		return err
 	}
-	defer file.Close()
+
+	var err error
+	var data []byte
 
 	if data, err = settings.ToJSON(v); err != nil {
 		return err
@@ -242,51 +171,30 @@ func (me *readService[T]) storeConfig(id string, v T) error {
 	if data, err = json.MarshalIndent(record{ID: id, Name: configName, Value: data}, "", "  "); err != nil {
 		return err
 	}
-	if _, err = file.Write(data); err != nil {
-		return err
-	}
-
-	if me.index != nil {
-		if _, found := me.index.IDs[id]; !found {
-			log.Printf("%s not found", id)
-			var index *stubIndex
-			if index, err = me.loadIndex(); err != nil {
-				return err
-			}
-			return me.storeIndex(index.Add(id, configName))
-		}
-	}
-	return nil
-}
-
-func (me *readService[T]) notifyGet(id string, v T) error {
-	if legacyIDAware, ok := me.service.(settings.LegacyIDAware); ok {
-		settings.SetLegacyID(id, legacyIDAware.LegacyID(), v)
-	}
-	return me.storeConfig(id, v)
+	me.index.Add(id, configName)
+	return me.tarFolder.Save(settings.Stub{ID: id, Name: configName}, data)
 }
 
 func (me *readService[T]) loadConfig(id string, v T) (bool, error) {
-	var err error
-	var data []byte
-	filePath := me.dataFile(id)
-	if exists(filePath) {
-		if data, err = os.ReadFile(filePath); err != nil {
-			return false, err
-		}
-		var record record
-		if err = json.Unmarshal(data, &record); err != nil {
-			return false, err
-		}
-		if err = settings.FromJSON(record.Value, v); err != nil {
-			return false, err
-		}
-		if legacyIDAware, ok := me.service.(settings.LegacyIDAware); ok {
-			settings.SetLegacyID(id, legacyIDAware.LegacyID(), v)
-		}
-		return true, nil
+	stub, data, err := me.tarFolder.Get(id)
+	if err != nil {
+		return false, err
 	}
-	return false, nil
+	if stub == nil {
+		return false, nil
+	}
+
+	var record record
+	if err = json.Unmarshal(data, &record); err != nil {
+		return false, err
+	}
+	if err = settings.FromJSON(record.Value, v); err != nil {
+		return false, err
+	}
+	if legacyIDAware, ok := me.service.(settings.LegacyIDAware); ok {
+		settings.SetLegacyID(id, legacyIDAware.LegacyID(), v)
+	}
+	return true, nil
 }
 
 func (me *readService[T]) SchemaID() string {

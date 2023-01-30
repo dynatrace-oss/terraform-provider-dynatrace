@@ -31,13 +31,13 @@ type indexEntry struct {
 
 type tarIndex map[string]indexEntry
 
-func NewTarFolder(name string) (*TarFolder, error) {
+func NewTarFolder(name string) (*TarFolder, bool, error) {
 	tf := &TarFolder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
 
 	if fileExists(tf.name) {
-		return tf, tf.initExisting()
+		return tf, true, tf.initExisting()
 	}
-	return tf, tf.initNew()
+	return tf, false, tf.initNew()
 
 }
 
@@ -122,38 +122,13 @@ func (me *TarFolder) Get(id string) (*settings.Stub, []byte, error) {
 	return &stub, data, nil
 }
 
-func (me *TarFolder) ListNoValues() (settings.Stubs, error) {
+func (me *TarFolder) List() (settings.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 	stubs := settings.Stubs{}
 	for _, v := range me.index {
 		st := v.Stub
 		stubs = append(stubs, &st)
-	}
-	return stubs, nil
-}
-
-func (me *TarFolder) List() (settings.Stubs, error) {
-	me.mu.Lock()
-	defer me.mu.Unlock()
-	file, err := os.OpenFile(me.name, os.O_RDONLY, 0)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var stubs settings.Stubs
-	for _, idxEntry := range me.index {
-		if _, err := file.Seek(idxEntry.Offset, 0); err != nil {
-			return nil, err
-		}
-		data, err := me.read(file)
-		if err != nil {
-			return nil, err
-		}
-		stub := idxEntry.Stub
-		stub.Value = data
-		stubs = append(stubs, &stub)
 	}
 	return stubs, nil
 }
@@ -201,7 +176,11 @@ func (me *TarFolder) Save(stub settings.Stub, data []byte) error {
 }
 
 func (tf *TarFolder) write(writer *tar.Writer, name string, data []byte) error {
-	if err := writer.WriteHeader(&tar.Header{Name: name, Size: int64(len(data))}); err != nil {
+	if name != bootstrapentry {
+		name = name + ".json"
+	}
+	if err := writer.WriteHeader(
+		&tar.Header{Name: name, Size: int64(len(data))}); err != nil {
 		return err
 	}
 	if _, err := writer.Write(data); err != nil {
@@ -212,7 +191,7 @@ func (tf *TarFolder) write(writer *tar.Writer, name string, data []byte) error {
 
 func (me *TarFolder) writeIndex(writer *tar.Writer) error {
 	defer writer.Close()
-	data, err := json.Marshal(me.index)
+	data, err := json.MarshalIndent(me.index, "", "\t")
 	if err != nil {
 		panic(err)
 	}

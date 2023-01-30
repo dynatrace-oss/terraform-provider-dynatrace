@@ -10,6 +10,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 	github.com/zclconf/go-cty v1.12.1
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 )
 
 require (

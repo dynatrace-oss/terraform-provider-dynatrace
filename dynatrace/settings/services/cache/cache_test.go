@@ -22,7 +22,7 @@ var testdata = map[string]string{
 
 func TestTarFolder(t *testing.T) {
 	os.Remove("reini-war-data.tar")
-	folder, err := cache.NewTarFolder("reini-war-data")
+	folder, _, err := cache.NewTarFolder("reini-war-data")
 	hide(folder)
 	if err != nil {
 		t.Error(err)
@@ -37,7 +37,7 @@ func TestTarFolder(t *testing.T) {
 			return
 		}
 	}
-	folder, err = cache.NewTarFolder("reini-war-data")
+	folder, _, err = cache.NewTarFolder("reini-war-data")
 	if err != nil {
 		t.Error(err)
 		return

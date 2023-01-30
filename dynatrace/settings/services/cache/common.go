@@ -19,7 +19,6 @@ package cache
 
 import (
 	"encoding/json"
-	"errors"
 	"os"
 	"path"
 
@@ -114,25 +113,10 @@ func (me *stubIndex) Add(id string, name string) *stubIndex {
 	return me
 }
 
-func exists(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if errors.Is(err, os.ErrNotExist) {
-		return false
-	}
-	return false
-}
-
 var caches = map[string]any{}
 
 type record struct {
 	ID    string
 	Name  string
 	Value json.RawMessage
-}
-
-func indexFile(folder string) string {
-	return path.Join(folder, ".index.json")
 }
