@@ -74,11 +74,10 @@ func (me *crudService[T]) Create(v T) (*settings.Stub, error) {
 	}
 	var err error
 	var stub *settings.Stub
-	var index *stubIndex
 	if stub, err = me.service.Create(v); err != nil {
 		return nil, err
 	}
-	index.Add(stub.ID, stub.Name)
+	me.index.Add(stub.ID, stub.Name)
 	if err := me.tarFolder.Save(*stub, nil); err != nil {
 		return nil, err
 	}
