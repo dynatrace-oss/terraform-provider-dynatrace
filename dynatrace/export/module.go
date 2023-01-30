@@ -24,7 +24,9 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -71,6 +73,9 @@ func (me *Module) GetResourcesReferencedFromOtherModules() []*Resource {
 			resources = append(resources, resource)
 		}
 	}
+	sort.Slice(resources, func(i, j int) bool {
+		return resources[i].ID < resources[j].ID
+	})
 	return resources
 }
 
@@ -86,6 +91,9 @@ func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	for resourceType := range resourceTypes {
 		result = append(result, resourceType)
 	}
+	sort.Slice(result, func(i, j int) bool {
+		return result[i] < result[j]
+	})
 	return result
 }
 
@@ -242,6 +250,9 @@ func (me *Module) WriteVariablesFile() (err error) {
 		cmd.Wait()
 	}()
 
+	sort.Slice(referencedResourceTypes, func(i, j int) bool {
+		return referencedResourceTypes[i] < referencedResourceTypes[j]
+	})
 	for _, resourceType := range referencedResourceTypes {
 		if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
 			type = any
@@ -267,7 +278,13 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 		datasourcesFile.Close()
 		format(datasourcesFile.Name(), true)
 	}()
-	for dataSourceID, dataSource := range me.DataSources {
+	dataSourceIDs := []string{}
+	for dataSourceID := range me.DataSources {
+		dataSourceIDs = append(dataSourceIDs, dataSourceID)
+	}
+	sort.Strings(dataSourceIDs)
+	for _, dataSourceID := range dataSourceIDs {
+		dataSource := me.DataSources[dataSourceID]
 		if _, err = datasourcesFile.WriteString(fmt.Sprintf(`data "dynatrace_entity" "%s" {
 			type = "%s"
 			name = "%s"				
@@ -368,17 +385,28 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 			fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
 		}
 		idx := 0
+		var wg sync.WaitGroup
+		wg.Add(len(me.Resources))
+
 		for _, resource := range me.Resources {
-			if err := resource.Download(); err != nil {
-				return err
-			}
-			idx++
-			if !multiThreaded {
-				fmt.Print(ClearLine)
-				fmt.Print("\r")
-				fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-			}
+			go func(resource *Resource) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err := resource.Download(); err != nil {
+					return err
+				}
+				idx++
+				if !multiThreaded {
+					fmt.Print(ClearLine)
+					fmt.Print("\r")
+					fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+				}
+				return nil
+			}(resource)
 		}
+		wg.Wait()
 		if !multiThreaded {
 			fmt.Print(ClearLine)
 			fmt.Print("\r")
@@ -401,17 +429,27 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
 	}
 	idx := 0
+	var wg sync.WaitGroup
+	wg.Add(len(resourcesToDownload))
 	for _, resource := range resourcesToDownload {
-		if err := resource.Download(); err != nil {
-			return err
-		}
-		idx++
-		if !multiThreaded {
-			fmt.Print(ClearLine)
-			fmt.Print("\r")
-			fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-		}
+		go func(resource *Resource) error {
+			defer wg.Done()
+			if shutdown.System.Stopped() {
+				return nil
+			}
+			if err := resource.Download(); err != nil {
+				return err
+			}
+			idx++
+			if !multiThreaded {
+				fmt.Print(ClearLine)
+				fmt.Print("\r")
+				fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+			}
+			return nil
+		}(resource)
 	}
+	wg.Wait()
 	if !multiThreaded {
 		fmt.Print(ClearLine)
 		fmt.Print("\r")
@@ -440,7 +478,7 @@ func (me *Module) Discover() error {
 
 	var err error
 
-	var stubs []*settings.Stub
+	var stubs settings.Stubs
 	// log.Println("Discovering \"" + me.Type + "\" ...")
 	if stubs, err = me.Service.List(); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
@@ -455,7 +493,11 @@ func (me *Module) Discover() error {
 		}
 		return err
 	}
+	stubs = stubs.Sort()
 	for _, stub := range stubs {
+		if stub.Name == "" {
+			panic(me.Type)
+		}
 		res := me.Resource(stub.ID).SetName(stub.Name)
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
