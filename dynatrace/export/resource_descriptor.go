@@ -34,6 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/metricevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/filters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/imsbridges"
@@ -365,6 +366,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
 		Coalesce(Dependencies.ProcessGroupInstance),
+	),
+	ResourceTypes.ProcessGroupAlerting: NewResourceDescriptor(
+		processgroupalerting.Service,
+		Coalesce(Dependencies.ProcessGroup),
 	),
 }
 

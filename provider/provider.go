@@ -198,6 +198,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_tags":                customtags.Resource(),
 			"dynatrace_pg_anomalies":               resources.NewGeneric(export.ResourceTypes.ProcessGroupAnomalies).Resource(),
 			"dynatrace_ddu_pool":                   resources.NewGeneric(export.ResourceTypes.DDUPool).Resource(),
+			"dynatrace_pg_alerting":                resources.NewGeneric(export.ResourceTypes.ProcessGroupAlerting).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
