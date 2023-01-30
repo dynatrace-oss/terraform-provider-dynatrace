@@ -39,7 +39,7 @@ func (me *service) List() (settings.Stubs, error) {
 }
 
 func (me *service) Get(id string, v *order.Order) error {
-	return me.client.Get("/api/config/v1/service/requestNaming", 200).Finish(v)
+	return me.client.Get("/api/config/v1/service/requestNaming/order", 200).Finish(v)
 }
 
 func (me *service) SchemaID() string {
