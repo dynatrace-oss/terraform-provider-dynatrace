@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 )
@@ -40,8 +41,11 @@ type service struct {
 
 func (me *service) Get(id string, v *entities.Settings) (err error) {
 	var dataObj entities.Settings
-	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=100&entitySelector=type("%s")&fields=tags`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
+	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&entitySelector=type("%s")&fields=tags`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
 		return err
+	}
+	if shutdown.System.Stopped() {
+		return nil
 	}
 	if dataObj.NextPageKey != nil {
 		key := *dataObj.NextPageKey
