@@ -54,9 +54,9 @@ func (me *CalculatedServiceMetric) FillDemoValues() []string {
 	if len(me.ManagementZones) > 0 {
 		return []string{}
 	}
-	if me.EntityID != nil && len(*me.EntityID) > 0 {
-		return []string{}
-	}
+	// if me.EntityID != nil && len(*me.EntityID) > 0 {
+	// 	return []string{}
+	// }
 	reqConditions := []string{"SERVICE_DISPLAY_NAME", "SERVICE_PUBLIC_DOMAIN_NAME", "SERVICE_WEB_APPLICATION_ID", "SERVICE_WEB_CONTEXT_ROOT", "SERVICE_WEB_SERVER_NAME", "SERVICE_WEB_SERVICE_NAME", "SERVICE_WEB_SERVICE_NAMESPACE", "REMOTE_SERVICE_NAME", "REMOTE_ENDPOINT", "AZURE_FUNCTIONS_SITE_NAME", "AZURE_FUNCTIONS_FUNCTION_NAME", "CTG_GATEWAY_URL", "CTG_SERVER_NAME", "ACTOR_SYSTEM", "ESB_APPLICATION_NAME", "SERVICE_TAG", "SERVICE_TYPE", "PROCESS_GROUP_TAG", "PROCESS_GROUP_NAME"}
 	result := []string{}
 	var found bool
