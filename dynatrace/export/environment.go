@@ -27,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 )
@@ -46,7 +47,7 @@ func (me *Environment) DataSource(id string) *DataSource {
 			return dataSource
 		}
 	}
-	service := entity.Service(me.Credentials)
+	service := cache.Read(entity.Service(me.Credentials))
 	var entity entitysettings.Entity
 	if err := service.Get(id, &entity); err == nil {
 		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type}
@@ -70,16 +71,34 @@ func (me *Environment) Export() (err error) {
 }
 
 func (me *Environment) InitialDownload() error {
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") == "true")
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
 		resourceTypes = append(resourceTypes, string(resourceType))
 	}
 	sort.Strings(resourceTypes)
-	var wg sync.WaitGroup
-	wg.Add(len(resourceTypes))
-	for _, sResourceType := range resourceTypes {
-		go func(sResourceType string) error {
-			defer wg.Done()
+
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(resourceTypes))
+		for _, sResourceType := range resourceTypes {
+			go func(sResourceType string) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+
+				keys := me.ResArgs[sResourceType]
+				module := me.Module(ResourceType(sResourceType))
+				if err := module.Download(false, keys...); err != nil {
+					return err
+				}
+				return nil
+			}(sResourceType)
+		}
+		wg.Wait()
+	} else {
+		for _, sResourceType := range resourceTypes {
 			if shutdown.System.Stopped() {
 				return nil
 			}
@@ -89,10 +108,9 @@ func (me *Environment) InitialDownload() error {
 			if err := module.Download(true, keys...); err != nil {
 				return err
 			}
-			return nil
-		}(sResourceType)
+		}
 	}
-	wg.Wait()
+
 	return nil
 }
 
