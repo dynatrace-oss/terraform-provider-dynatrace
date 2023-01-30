@@ -232,6 +232,10 @@ const ALL_MATCH_NO_CAPTURING_GROUP = `(?<!\()\.[\*\+](?![\)\+\?])`
 const CHARACTER_CLASS_WITH_GREEDY_OR_LAZY_QUANTIFIER = `(?<!\\)(?:\\\\)*](?>\*|\+)(?!\+)`
 
 func regexCheck(s string) ([]string, error) {
+	return []string{}, nil
+}
+
+func RegexCheck(s string) ([]string, error) {
 	result := []string{}
 	match := false
 	var err error
