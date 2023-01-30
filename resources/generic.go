@@ -107,6 +107,9 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 		}
 		return diag.FromErr(err)
 	}
+	if stub == nil {
+		return diag.FromErr(errors.New("stub was nil"))
+	}
 	d.SetId(stub.ID)
 	// if settings.SupportsFlawedReasons(sttngs) {
 	// 	flawedReasons := settings.GetFlawedReasons(sttngs)
