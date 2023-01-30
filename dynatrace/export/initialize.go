@@ -45,32 +45,7 @@ func Initialize() (environment *Environment, err error) {
 	os.Setenv("dynatrace.secrets", "true")
 	cache.Enable()
 	resArgs := map[string][]string{}
-	for _, idx := range tailArgs {
-		key, id := ValidateResource(idx)
-		if len(key) == 0 {
-			return nil, fmt.Errorf("unknown resource `%s`", idx)
-		}
-		stored, ok := resArgs[key]
-		if ok {
-			if stored != nil {
-				if id == "" {
-					resArgs[key] = nil
-				} else {
-					stored = append(stored, id)
-					resArgs[key] = stored
-				}
-			}
-		} else {
-			if id == "" {
-				resArgs[key] = nil
-			} else {
-				stored = []string{id}
-				resArgs[key] = stored
-			}
-		}
-	}
-
-	if len(resArgs) == 0 {
+	if flags.Exclude {
 		for resourceType := range AllResources {
 			blackListed := false
 			for _, blackListedResourceType := range BlackListedResources {
@@ -81,6 +56,53 @@ func Initialize() (environment *Environment, err error) {
 			}
 			if !blackListed {
 				resArgs[string(resourceType)] = []string{}
+			}
+		}
+		for _, idx := range tailArgs {
+			key, _ := ValidateResource(idx)
+			if len(key) == 0 {
+				return nil, fmt.Errorf("unknown resource `%s`", idx)
+			}
+			delete(resArgs, key)
+		}
+	} else {
+		for _, idx := range tailArgs {
+			key, id := ValidateResource(idx)
+			if len(key) == 0 {
+				return nil, fmt.Errorf("unknown resource `%s`", idx)
+			}
+			stored, ok := resArgs[key]
+			if ok {
+				if stored != nil {
+					if id == "" {
+						resArgs[key] = nil
+					} else {
+						stored = append(stored, id)
+						resArgs[key] = stored
+					}
+				}
+			} else {
+				if id == "" {
+					resArgs[key] = nil
+				} else {
+					stored = []string{id}
+					resArgs[key] = stored
+				}
+			}
+		}
+
+		if len(resArgs) == 0 {
+			for resourceType := range AllResources {
+				blackListed := false
+				for _, blackListedResourceType := range BlackListedResources {
+					if resourceType == blackListedResourceType {
+						blackListed = true
+						break
+					}
+				}
+				if !blackListed {
+					resArgs[string(resourceType)] = []string{}
+				}
 			}
 		}
 	}
@@ -118,6 +140,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
 	flat := flag.Bool("flat", false, "prevent creating a module structure")
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
+	exclude := flag.Bool("exclude", false, "exclude specified resources")
 
 	flag.Parse()
 	return Flags{
@@ -129,6 +152,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		FlagPreviewOnly:     *preview,
 		Flat:                *flat,
 		ImportState:         *importState,
+		Exclude:             *exclude,
 	}, flag.Args()
 }
 
@@ -157,4 +181,5 @@ type Flags struct {
 	FlagPreviewOnly     bool
 	Flat                bool
 	ImportState         bool
+	Exclude             bool
 }
