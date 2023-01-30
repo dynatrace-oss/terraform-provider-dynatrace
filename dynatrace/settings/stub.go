@@ -17,6 +17,10 @@
 
 package settings
 
+import (
+	"sort"
+)
+
 type Stub struct {
 	ID       string  `json:"id"`
 	Name     string  `json:"name"`
@@ -26,6 +30,19 @@ type Stub struct {
 }
 
 type Stubs []*Stub
+
+func (me Stubs) Sort() Stubs {
+	stubs := append(Stubs{}, me...)
+	sort.Slice(stubs, func(i, j int) bool {
+		a := stubs[i]
+		b := stubs[j]
+		if a.Name < b.Name {
+			return true
+		}
+		return a.ID < b.ID
+	})
+	return stubs
+}
 
 func (me *Stubs) ToStubs() Stubs {
 	res := []*Stub{}
