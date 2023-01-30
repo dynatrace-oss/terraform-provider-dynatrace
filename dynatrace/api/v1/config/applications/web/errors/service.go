@@ -52,23 +52,17 @@ func (me *service) Get(id string, v *errors.Rules) error {
 		return err
 	}
 
-	// application := web.Application{}
-	// if err := me.webAppService.Get(id, &application); err != nil {
-	// 	return err
-	// }
 	stubs, err := me.webAppService.List()
 	if err != nil {
 		return err
 	}
 	for _, stub := range stubs {
 		if stub.ID == id {
-			v.Name = "Data Privacy Settings for " + stub.Name
+			v.Name = "Error Rules for " + stub.Name
 			v.WebApplicationID = id
 			break
 		}
 	}
-	// v.Name = "Error Rules for " + application.Name
-	// v.WebApplicationID = id
 	return nil
 }
 
@@ -225,12 +219,6 @@ func (me *service) List() (settings.Stubs, error) {
 		return nil, err
 	}
 	for _, stub := range stubs {
-		if strings.HasSuffix(stub.ID, "-data-privacy") {
-			panic("")
-		}
-		if strings.HasSuffix(stub.ID, "-error-rules") {
-			panic("")
-		}
 		stub.Name = "Error Rules for " + stub.Name
 		stub.ID = stub.ID + "-error-rules"
 	}
