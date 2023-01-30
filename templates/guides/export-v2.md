@@ -6,22 +6,13 @@ description: |-
 ---
 
 ## Export Utility
+Windows: `terraform-provider-dynatrace.exe -export [-ref] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
 
-### Command Line Syntax
-Invoking the export functionality requires
-* The environment variable `DYNATRACE_ENV_URL` as the URL of your Dynatrace environment
-* The environment variable `DYNATRACE_API_TOKEN` as the API Token of your Dynatrace environment
-* Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
-
-Windows: `terraform-provider-dynatrace.exe -export [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
-
-Linux: `./terraform-provider-dynatrace -export [-v] [-ref] [-id] [-migrate] [-exclude] [<resourcename>[=<id>]]`
+Linux: `./terraform-provider-dynatrace -export [-ref] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
 ### Options
-* `-v` Enable verbose logging
 * `-ref` Enable resources with data sources and dependencies
 * `-id` Enable commented id output in resource files
-* `-migrate` Enable output specific to environment migration
-    -  Removes node IDs from private synthetic locations
+* `-flat` All downloaded resources end up directly within the target folder - no module structure will be created
 * `-exclude` Exclude specified resource(s) from export
 
 **NOTE:** Dashboards (because there could be thousands of them) are currently excluded from the export unless the resource is directly specified in the command line arguments.
