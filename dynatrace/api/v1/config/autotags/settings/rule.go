@@ -80,9 +80,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 			Description: "A list of matching rules for the management zone. The management zone applies only if **all** conditions are fulfilled",
 			MinItems:    1,
 			Optional:    true,
-			Elem: &schema.Resource{
-				Schema: new(entityruleengine.Condition).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(entityruleengine.Condition).Schema()},
 		},
 		"value_format": {
 			Type:        schema.TypeString,
