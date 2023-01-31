@@ -1,6 +1,9 @@
 package mgmz
 
 import (
+	"sort"
+
+	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -33,6 +36,11 @@ func DataSourceMultiple() *schema.Resource {
 							Computed:    true,
 							Description: "The name of the Management Zone",
 						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The description of the Management Zone",
+						},
 					},
 				},
 			},
@@ -49,11 +57,20 @@ func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
 	}
 	d.SetId(staticID)
 	values := []map[string]any{}
+	sort.SliceStable(stubs, func(i, j int) bool {
+		return stubs[i].Name < stubs[j].Name
+	})
 	for _, stub := range stubs {
+		stubValue := stub.Value.(*managementzones.Settings)
+		description := ""
+		if stubValue != nil && stubValue.Description != nil {
+			description = *stubValue.Description
+		}
 		values = append(values, map[string]any{
-			"id":        stub.ID,
-			"legacy_id": settings.LegacyID(stub.ID),
-			"name":      stub.Name,
+			"id":          stub.ID,
+			"legacy_id":   stubValue.LegacyID,
+			"name":        stub.Name,
+			"description": description,
 		})
 	}
 	d.Set("values", values)
