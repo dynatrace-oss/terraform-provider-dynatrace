@@ -71,7 +71,7 @@ func (me *Environment) Export() (err error) {
 }
 
 func (me *Environment) InitialDownload() error {
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") == "true")
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
 		resourceTypes = append(resourceTypes, string(resourceType))
