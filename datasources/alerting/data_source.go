@@ -18,8 +18,14 @@
 package alerting
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	"sort"
+
+	alertingsrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
+	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting/settings"
+	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones"
+	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -33,23 +39,95 @@ func DataSource() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
+			"values": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The ID of the Alerting Profile when referred to as a Settings 2.0 resource (e.g. from within `dynatrace_slack_notification`)",
+						},
+						"legacy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The ID of the Alerting Profile when referred to as a Configuration API resource (e.g. from within `dynatrace_notification`)",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of the Alerting Profile",
+						},
+						"management_zone_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The ID of the management zone to which the alerting profile applies (Settings 2.0)",
+						},
+						"management_zone_legacy_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The ID of the management zone to which the alerting profile applies (Configuration API)",
+						},
+					},
+				},
+			},
 		},
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(d *schema.ResourceData, m any) error {
 	d.SetId("dynatrace_alerting_profiles")
-	service := export.Service(config.Credentials(m), export.ResourceTypes.AlertingProfile)
+	service := cache.Read[*alerting.Profile](alertingsrv.Service(config.Credentials(m)), true)
+	var err error
 	var stubs settings.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}
-	if len(stubs) > 0 {
-		profiles := map[string]any{}
-		for _, stub := range stubs {
-			profiles[stub.Name] = stub.ID
-		}
-		d.Set("profiles", profiles)
+	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(config.Credentials(m)), true)
+	var mgmzStubs settings.Stubs
+	if mgmzStubs, err = mgmzService.List(); err != nil {
+		return err
 	}
+	mgms := map[string]*settings.Stub{}
+	for _, mgmzStub := range mgmzStubs {
+		mgms[*mgmzStub.LegacyID] = mgmzStub
+	}
+
+	profiles := map[string]any{}
+	for _, stub := range stubs {
+		profiles[stub.Name] = stub.LegacyID
+	}
+	d.Set("profiles", profiles)
+	values := []map[string]any{}
+	sort.SliceStable(stubs, func(i, j int) bool {
+		return stubs[i].Name < stubs[j].Name
+	})
+	for _, stub := range stubs {
+		stubValue := stub.Value.(*alerting.Profile)
+		var mgmzLegacyID *string
+		if stubValue != nil && stubValue.ManagementZone != nil {
+			mgmzLegacyID = stubValue.ManagementZone
+		}
+		var mgmzID string
+		if mgmzLegacyID != nil {
+			mgmzID = mgms[*mgmzLegacyID].ID
+		}
+		m := map[string]any{
+			"id":                        stub.ID,
+			"legacy_id":                 stubValue.LegacyID,
+			"name":                      stub.Name,
+			"management_zone_id":        "",
+			"management_zone_legacy_id": "",
+		}
+		if mgmzLegacyID != nil {
+			m["management_zone_id"] = mgmzID
+			m["management_zone_legacy_id"] = *mgmzLegacyID
+		}
+		values = append(values, m)
+	}
+	d.Set("values", values)
 	return nil
 }
