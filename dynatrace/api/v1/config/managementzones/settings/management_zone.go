@@ -19,7 +19,6 @@ package managementzones
 
 import (
 	"encoding/json"
-	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -61,56 +60,31 @@ func (mz *ManagementZone) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"rules": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "A list of rules for management zone usage.  Each rule is evaluated independently of all other rules",
 			Optional:    true,
 			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: new(Rule).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(Rule).Schema()},
 		},
 		"dimensional_rule": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "A list of dimensional data rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: new(DimensionalRule).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(DimensionalRule).Schema()},
 		},
 		"entity_selector_based_rule": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: new(EntitySelectorBasedRule).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(EntitySelectorBasedRule).Schema()},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
 			Optional:    true,
 		},
-	}
-}
-
-func (mz *ManagementZone) SortRules() {
-	if len(mz.Rules) > 0 {
-		conds := []*Rule{}
-		condStrings := sort.StringSlice{}
-		for _, entry := range mz.Rules {
-			entry.SortConditions()
-			condBytes, _ := json.Marshal(entry)
-			condStrings = append(condStrings, string(condBytes))
-		}
-		condStrings.Sort()
-		for _, condString := range condStrings {
-			cond := Rule{}
-			json.Unmarshal([]byte(condString), &cond)
-			conds = append(conds, &cond)
-		}
-		mz.Rules = conds
 	}
 }
 
@@ -126,11 +100,8 @@ func (mz *ManagementZone) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if mz.Rules != nil {
-		mz.SortRules()
-		if err := properties.Encode("rules", mz.Rules); err != nil {
-			return err
-		}
+	if err := properties.Encode("rules", mz.Rules); err != nil {
+		return err
 	}
 	if err := properties.Encode("dimensional_rule", mz.DimensionalRules); err != nil {
 		return err
@@ -165,35 +136,15 @@ func (mz *ManagementZone) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("description"); ok {
 		mz.Description = opt.NewString(value.(string))
 	}
-	if result, ok := decoder.GetOk("rules.#"); ok {
-		mz.Rules = []*Rule{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(Rule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "rules", idx)); err != nil {
-				return err
-			}
-			mz.Rules = append(mz.Rules, entry)
-		}
+	if err := decoder.DecodeSlice("rules", &mz.Rules); err != nil {
+		return err
 	}
-	if result, ok := decoder.GetOk("dimensional_rule.#"); ok {
-		mz.DimensionalRules = []*DimensionalRule{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(DimensionalRule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "dimensional_rule", idx)); err != nil {
-				return err
-			}
-			mz.DimensionalRules = append(mz.DimensionalRules, entry)
-		}
+
+	if err := decoder.DecodeSlice("dimensional_rule", &mz.DimensionalRules); err != nil {
+		return err
 	}
-	if result, ok := decoder.GetOk("entity_selector_based_rule.#"); ok {
-		mz.EntitySelectorBasedRules = []*EntitySelectorBasedRule{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(EntitySelectorBasedRule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "entity_selector_based_rule", idx)); err != nil {
-				return err
-			}
-			mz.EntitySelectorBasedRules = append(mz.EntitySelectorBasedRules, entry)
-		}
+	if err := decoder.DecodeSlice("entity_selector_based_rule", &mz.EntitySelectorBasedRules); err != nil {
+		return err
 	}
 	return nil
 }
