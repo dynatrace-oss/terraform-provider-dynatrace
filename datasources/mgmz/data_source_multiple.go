@@ -4,9 +4,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
-	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
+const staticID = "46465fe6-70cb-4564-864f-c3344caae5c0"
 
 func DataSourceMultiple() *schema.Resource {
 	return &schema.Resource{
@@ -46,7 +47,7 @@ func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
 	if stubs, err = service.List(); err != nil {
 		return err
 	}
-	d.SetId(uuid.New().String())
+	d.SetId(staticID)
 	values := []map[string]any{}
 	for _, stub := range stubs {
 		values = append(values, map[string]any{
