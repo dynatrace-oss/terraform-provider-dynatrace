@@ -59,33 +59,19 @@ func (me *AutoTag) Schema() map[string]*schema.Schema {
 			Description: "The description of the auto-tag.",
 			Optional:    true,
 		},
-		// "metadata": {
-		// 	Type:        schema.TypeList,
-		// 	MaxItems:    1,
-		// 	Description: "`metadata` exists for backwards compatibility but shouldn't get specified anymore",
-		// 	Deprecated:  "`metadata` exists for backwards compatibility but shouldn't get specified anymore",
-		// 	Optional:    true,
-		// 	Elem: &schema.Resource{
-		// 		Schema: new(api.ConfigMetadata).Schema(),
-		// 	},
-		// },
 		"rules": {
 			Type:        schema.TypeSet,
 			Description: "A list of rules for management zone usage.  Each rule is evaluated independently of all other rules",
 			Optional:    true,
 			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: new(Rule).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(Rule).Schema()},
 		},
 		"entity_selector_based_rule": {
 			Type:        schema.TypeSet,
 			Description: "A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
-			Elem: &schema.Resource{
-				Schema: new(EntitySelectorBasedRule).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(EntitySelectorBasedRule).Schema()},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
