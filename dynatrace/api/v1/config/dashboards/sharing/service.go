@@ -98,7 +98,7 @@ func (me *service) Validate(v *sharing.DashboardSharing) error {
 
 func (me *service) Update(id string, v *sharing.DashboardSharing) error {
 	id = strings.TrimSuffix(id, "-sharing")
-	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
+	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return err
 	}
 	return nil
