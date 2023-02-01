@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
@@ -377,6 +378,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ProcessGroupAlerting: NewResourceDescriptor(
 		processgroupalerting.Service,
 		Coalesce(Dependencies.ProcessGroup),
+	),
+	ResourceTypes.DatabaseAnomaliesV2: NewResourceDescriptor(
+		database_anomalies_v2.Service,
+		Coalesce(Dependencies.ServiceMethod),
+		Coalesce(Dependencies.Service),
+		Coalesce(Dependencies.HostGroup),
 	),
 }
 

@@ -147,6 +147,7 @@ func Provider() *schema.Provider {
 			"dynatrace_application_anomalies":      resources.NewGeneric(export.ResourceTypes.ApplicationAnomalies).Resource(),
 			"dynatrace_host_anomalies":             resources.NewGeneric(export.ResourceTypes.HostAnomalies).Resource(),
 			"dynatrace_database_anomalies":         resources.NewGeneric(export.ResourceTypes.DatabaseAnomalies).Resource(),
+			"dynatrace_database_anomalies_v2":      resources.NewGeneric(export.ResourceTypes.DatabaseAnomaliesV2).Resource(),
 			"dynatrace_custom_anomalies":           resources.NewGeneric(export.ResourceTypes.CustomAnomalies).Resource(),
 			"dynatrace_metric_events":              resources.NewGeneric(export.ResourceTypes.MetricEvents).Resource(),
 			"dynatrace_disk_anomalies":             resources.NewGeneric(export.ResourceTypes.DiskEventAnomalies).Resource(),

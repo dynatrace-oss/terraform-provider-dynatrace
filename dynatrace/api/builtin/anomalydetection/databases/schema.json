@@ -1,0 +1,932 @@
+{
+	"allowedScopes": [
+		"SERVICE_METHOD",
+		"SERVICE",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects database-service related performance anomalies such as response time degradations and failure rate increases.",
+	"displayName": "Anomaly detection for databases",
+	"documentation": " Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for certain services. Read more about [Automated multi-dimensional baselining](https://dt-url.net/5r5p0pnz/ \"Visit Dynatrace support center\").\n\nTo avoid false-positive problem notifications, [automated anomaly detection](https://dt-url.net/5r5p0pnz/ \"Visit Dynatrace support center\") is only available for applications and services that have run for at least 20% of a week (7 days).",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Using fixed thresholds",
+					"value": "fixed"
+				}
+			],
+			"type": "enum"
+		},
+		"sensitivity": {
+			"description": "",
+			"displayName": "Sensitivity",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Low",
+					"value": "low"
+				},
+				{
+					"displayName": "Medium",
+					"value": "medium"
+				},
+				{
+					"displayName": "High",
+					"value": "high"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"databaseConnections": {
+			"description": "Alert if the number of failed database connects within the specified time exceeds the specified absolute threshold:",
+			"displayName": "Database failed connects",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/databaseConnections"
+			}
+		},
+		"failureRate": {
+			"description": "",
+			"displayName": "Failure rate",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/failureRate"
+			}
+		},
+		"loadDrops": {
+			"description": "Alert if the observed load is lower than the expected load by a specified margin for a specified amount of time.",
+			"displayName": "Service load drops",
+			"documentation": "Dynatrace learns your typical service load over an observation period of one week.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/loadDrops"
+			}
+		},
+		"loadSpikes": {
+			"description": "Alert if the observed load exceeds the expected load by a specified margin for a specified amount of time.",
+			"displayName": "Service load spikes",
+			"documentation": "Dynatrace learns your typical service load over an observation period of one week.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/loadSpikes"
+			}
+		},
+		"responseTime": {
+			"description": "",
+			"displayName": "Response time",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/responseTime"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.databases",
+	"types": {
+		"databaseConnections": {
+			"description": "",
+			"displayName": "Failed database connects",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect failed database connects",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"maxFailedConnects": {
+					"constraints": [
+						{
+							"maximum": 9999999,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "failed connects"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "integer"
+				},
+				"timePeriod": {
+					"constraints": [
+						{
+							"maximum": 15,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Time span",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failureRate": {
+			"description": "",
+			"displayName": "Failure rate",
+			"documentation": "",
+			"properties": {
+				"autoDetection": {
+					"description": "Alert if the percentage of failing service calls increases by **both** the absolute and relative thresholds:",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/failureRateAuto"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for increases in failure rate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect increases in failure rate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fixedDetection": {
+					"description": "Alert if a given failure rate is exceeded during any 5-minute-period",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/failureRateFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failureRateAuto": {
+			"description": "",
+			"displayName": "failureRateAuto",
+			"documentation": "",
+			"properties": {
+				"absoluteIncrease": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtection"
+					}
+				},
+				"relativeIncrease": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failureRateFixed": {
+			"description": "",
+			"displayName": "failureRateFixed",
+			"documentation": "",
+			"properties": {
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtection"
+					}
+				},
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"loadDrops": {
+			"description": "",
+			"displayName": "Service load drops",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect service load drops",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"loadDropPercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"subType": "percentage",
+					"type": "float"
+				},
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Time span",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"loadSpikes": {
+			"description": "",
+			"displayName": "Service load spikes",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect service load spikes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"loadSpikePercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 100,
+							"type": "RANGE"
+						}
+					],
+					"default": 200,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"subType": "percentage",
+					"type": "float"
+				},
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Time span",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"overAlertingProtection": {
+			"description": "",
+			"displayName": "overAlertingProtection",
+			"documentation": "",
+			"properties": {
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Only alert if the abnormal state remains for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"requestsPerMinute": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Only alert if there are at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "requests per minute"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTime": {
+			"description": "",
+			"displayName": "Response time",
+			"documentation": "",
+			"properties": {
+				"autoDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/responseTimeAuto"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for response time degradations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect response time degradations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fixedDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/responseTimeFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAuto": {
+			"description": "",
+			"displayName": "responseTimeAuto",
+			"documentation": "",
+			"properties": {
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtection"
+					}
+				},
+				"responseTimeAll": {
+					"description": "Alert if the median response time of all requests degrades beyond **both** the absolute and relative thresholds:",
+					"displayName": "All requests",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeAutoAll"
+					}
+				},
+				"responseTimeSlowest": {
+					"description": "Alert if the response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeAutoSlowest"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAutoAll": {
+			"description": "",
+			"displayName": "responseTimeAutoAll",
+			"documentation": "",
+			"properties": {
+				"degradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"degradationPercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAutoSlowest": {
+			"description": "",
+			"displayName": "responseTimeAutoSlowest",
+			"documentation": "",
+			"properties": {
+				"slowestDegradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 20,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"slowestDegradationPercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixed": {
+			"description": "",
+			"displayName": "responseTimeFixed",
+			"documentation": "",
+			"properties": {
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtection"
+					}
+				},
+				"responseTimeAll": {
+					"description": "Alert if the median response time of all requests degrades beyond this threshold within an observation period of 5 minutes:",
+					"displayName": "All requests",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeFixedAll"
+					}
+				},
+				"responseTimeSlowest": {
+					"description": "Alert if the response time of the slowest 10% of requests degrades beyond this threshold within an observation period of 5 minutes:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeFixedSlowest"
+					}
+				},
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixedAll": {
+			"description": "",
+			"displayName": "responseTimeFixedAll",
+			"documentation": "",
+			"properties": {
+				"degradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixedSlowest": {
+			"description": "",
+			"displayName": "responseTimeFixedSlowest",
+			"documentation": "",
+			"properties": {
+				"slowestDegradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 20,
+					"description": "",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.16"
+}
