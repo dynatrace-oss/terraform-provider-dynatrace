@@ -1,0 +1,615 @@
+{
+	"allowedScopes": [
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace OneAgent automatically monitors all process groups detected in your environment (processes running during OneAgent installation must be restarted to initiate monitoring).",
+	"displayName": "Custom process monitoring rules",
+	"documentation": "OneAgent additionally provides deep monitoring for all processes that it can monitor at the request- and PurePath levels. Define process monitoring rules below if you don’t want to monitor all your processes automatically, or if you need to define an exception for specific processes.",
+	"dynatrace": "1",
+	"enums": {
+		"AgentItemName": {
+			"description": "",
+			"displayName": "AgentItemName",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Environment variable",
+					"value": "UNKNOWN"
+				},
+				{
+					"displayName": "Apache configuration path",
+					"value": "APACHE_CONFIG_PATH"
+				},
+				{
+					"displayName": "Apache Spark master IP address",
+					"value": "APACHE_SPARK_MASTER_IP_ADDRESS"
+				},
+				{
+					"displayName": "Catalina base",
+					"value": "CATALINA_BASE"
+				},
+				{
+					"displayName": "Catalina home",
+					"value": "CATALINA_HOME"
+				},
+				{
+					"displayName": "Cloud Foundry application",
+					"value": "CLOUD_FOUNDRY_APP_NAME"
+				},
+				{
+					"displayName": "Cloud Foundry instance index",
+					"value": "CLOUD_FOUNDRY_INSTANCE_INDEX"
+				},
+				{
+					"displayName": "Cloud Foundry space ID",
+					"value": "CLOUD_FOUNDRY_SPACE_ID"
+				},
+				{
+					"displayName": "Cloud Foundry space",
+					"value": "CLOUD_FOUNDRY_SPACE_NAME"
+				},
+				{
+					"displayName": "ColdFusion JVM configuration file",
+					"value": "COLDFUSION_JVM_CONFIG_FILE"
+				},
+				{
+					"displayName": "Container ID",
+					"value": "CONTAINER_ID"
+				},
+				{
+					"displayName": "Docker stripped image name",
+					"value": "CONTAINER_IMAGE_NAME"
+				},
+				{
+					"displayName": "Container name",
+					"value": "CONTAINER_NAME"
+				},
+				{
+					"displayName": "Declarative Grouping Id",
+					"value": "DECLARATIVE_ID"
+				},
+				{
+					"displayName": ".NET Core application DLL",
+					"value": "DOTNET_COMMAND"
+				},
+				{
+					"displayName": ".NET Core application DLL path",
+					"value": "DOTNET_COMMAND_PATH"
+				},
+				{
+					"displayName": "Elasticsearch cluster",
+					"value": "ELASTIC_SEARCH_CLUSTER_NAME"
+				},
+				{
+					"displayName": "Elasticsearch node",
+					"value": "ELASTIC_SEARCH_NODE_NAME"
+				},
+				{
+					"displayName": "EXE name",
+					"value": "EXE_NAME"
+				},
+				{
+					"displayName": "EXE path",
+					"value": "EXE_PATH"
+				},
+				{
+					"displayName": "GlassFish domain",
+					"value": "GLASSFISH_DOMAIN_NAME"
+				},
+				{
+					"displayName": "GlassFish instance",
+					"value": "GLASSFISH_INSTANCE_NAME"
+				},
+				{
+					"displayName": "IIS application pool",
+					"value": "IIS_APP_POOL"
+				},
+				{
+					"displayName": "IIS role",
+					"value": "IIS_ROLE_NAME"
+				},
+				{
+					"displayName": "Java JAR file",
+					"value": "JAVA_JAR_FILE"
+				},
+				{
+					"displayName": "Java JAR path",
+					"value": "JAVA_JAR_PATH"
+				},
+				{
+					"displayName": "Java main class",
+					"value": "JAVA_MAIN_CLASS"
+				},
+				{
+					"displayName": "JBoss mode",
+					"value": "JBOSS_MODE"
+				},
+				{
+					"displayName": "JBoss home",
+					"value": "JBOSS_HOME"
+				},
+				{
+					"displayName": "JBoss server",
+					"value": "JBOSS_SERVER_NAME"
+				},
+				{
+					"displayName": "Kubernetes base pod name",
+					"value": "KUBERNETES_BASEPODNAME"
+				},
+				{
+					"displayName": "Kubernetes container name",
+					"value": "KUBERNETES_CONTAINERNAME"
+				},
+				{
+					"displayName": "Kubernetes full pod name",
+					"value": "KUBERNETES_FULLPODNAME"
+				},
+				{
+					"displayName": "Kubernetes namespace",
+					"value": "KUBERNETES_NAMESPACE"
+				},
+				{
+					"displayName": "Kubernetes pod UID",
+					"value": "KUBERNETES_PODUID"
+				},
+				{
+					"displayName": "Node.js application",
+					"value": "NODEJS_APP_NAME"
+				},
+				{
+					"displayName": "Node.js script name",
+					"value": "NODEJS_SCRIPT_NAME"
+				},
+				{
+					"displayName": "Dynatrace custom cluster ID",
+					"value": "RUXIT_CLUSTER_ID"
+				},
+				{
+					"displayName": "Dynatrace custom node ID",
+					"value": "RUXIT_NODE_ID"
+				},
+				{
+					"displayName": "ColdFusion Windows service name",
+					"value": "SERVICE_NAME"
+				},
+				{
+					"displayName": "Varnish instance",
+					"value": "VARNISH_INSTANCE_NAME"
+				},
+				{
+					"displayName": "WebLogic home",
+					"value": "WEBLOGIC_HOME"
+				},
+				{
+					"displayName": "WebLogic",
+					"value": "WEBLOGIC_NAME"
+				},
+				{
+					"displayName": "WebSphere cell",
+					"value": "WEBSPHERE_CELL_NAME"
+				},
+				{
+					"displayName": "WebSphere cluster",
+					"value": "WEBSPHERE_CLUSTER_NAME"
+				},
+				{
+					"displayName": "WebSphere node",
+					"value": "WEBSPHERE_NODE_NAME"
+				},
+				{
+					"displayName": "WebSphere server",
+					"value": "WEBSPHERE_SERVER_NAME"
+				},
+				{
+					"displayName": "WebSphere Liberty server name",
+					"value": "WEBSPHERE_LIBERTY_SERVER_NAME"
+				},
+				{
+					"displayName": "Command line args",
+					"value": "COMMAND_LINE_ARGS"
+				},
+				{
+					"displayName": "AWS ECR image account ID",
+					"value": "AWS_ECR_ACCOUNT_ID"
+				},
+				{
+					"displayName": "AWS ECR image region",
+					"value": "AWS_ECR_REGION"
+				},
+				{
+					"displayName": "Container image version",
+					"value": "CONTAINER_IMAGE_VERSION"
+				},
+				{
+					"displayName": "WebLogic cluster",
+					"value": "WEBLOGIC_CLUSTER_NAME"
+				},
+				{
+					"displayName": "WebLogic domain",
+					"value": "WEBLOGIC_DOMAIN_NAME"
+				},
+				{
+					"displayName": "AWS Lambda region",
+					"value": "AWS_REGION"
+				},
+				{
+					"displayName": "AWS Lambda function",
+					"value": "AWS_LAMBDA_FUNCTION_NAME"
+				},
+				{
+					"displayName": "ASP.NET Core application path",
+					"value": "ASP_NET_CORE_APPLICATION_PATH"
+				},
+				{
+					"displayName": "HYBRIS_CONFIG_DIR",
+					"value": "HYBRIS_CONFIG_DIR"
+				},
+				{
+					"displayName": "Hybris configuration directory",
+					"value": "HYBRIS_DATA_DIR"
+				},
+				{
+					"displayName": "Hybris bin directory",
+					"value": "HYBRIS_BIN_DIR"
+				},
+				{
+					"displayName": "Node.js application base directory",
+					"value": "NODEJS_APP_BASE_DIR"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks engine property file",
+					"value": "TIPCO_BUSINESSWORKS_PROPERTY_FILE"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks engine property file path",
+					"value": "TIPCO_BUSINESSWORKS_PROPERTY_FILE_PATH"
+				},
+				{
+					"displayName": "Cloud Foundry application ID",
+					"value": "CLOUD_FOUNDRY_APPLICATION_ID"
+				},
+				{
+					"displayName": "IBM Integration node",
+					"value": "IIB_BROKER_NAME"
+				},
+				{
+					"displayName": "IBM Integration server",
+					"value": "IIB_EXECUTION_GROUP_NAME"
+				},
+				{
+					"displayName": "PHP script",
+					"value": "PHP_CLI_SCRIPT_PATH"
+				},
+				{
+					"displayName": "PHP working directory",
+					"value": "PHP_CLI_WORKING_DIR"
+				},
+				{
+					"displayName": "Google Cloud Project",
+					"value": "GOOGLE_CLOUD_PROJECT"
+				},
+				{
+					"displayName": "Google App Engine service",
+					"value": "GAE_SERVICE"
+				},
+				{
+					"displayName": "Google App Engine instance",
+					"value": "GAE_INSTANCE"
+				},
+				{
+					"displayName": "IBM CICS region name",
+					"value": "IBM_CICS_REGION"
+				},
+				{
+					"displayName": "IBM IMS control region name",
+					"value": "IBM_IMS_CONTROL"
+				},
+				{
+					"displayName": "IBM IMS message processing region name",
+					"value": "IBM_IMS_MPR"
+				},
+				{
+					"displayName": "IBM IMS connect region name",
+					"value": "IBM_IMS_CONNECT"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks home",
+					"value": "TIBCO_BUSINESSWORKS_HOME"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks domain name",
+					"value": "TIBCO_BUSINESSWORKS_DOMAIN_NAME"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks app space name",
+					"value": "TIBCO_BUSINESSWORKS_APP_SPACE_NAME"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks app node name",
+					"value": "TIBCO_BUSINESSWORKS_APP_NODE_NAME"
+				},
+				{
+					"displayName": "IBM CICS Transaction Gateway name",
+					"value": "IBM_CTG_NAME"
+				},
+				{
+					"displayName": "IBM CICS/IMS application ID",
+					"value": "IBM_CICS_IMS_APPLID"
+				},
+				{
+					"displayName": "IBM CICS/IMS job name",
+					"value": "IBM_CICS_IMS_JOBNAME"
+				},
+				{
+					"displayName": "IBM IMS SOAP Gateway name",
+					"value": "IBM_IMS_SOAP_GW_NAME"
+				},
+				{
+					"displayName": "Equinox config path",
+					"value": "EQUINOX_CONFIG_PATH"
+				},
+				{
+					"displayName": "SoftwareAG install root",
+					"value": "SOFTWAREAG_INSTALL_ROOT"
+				},
+				{
+					"displayName": "SoftwareAG product property name",
+					"value": "SOFTWAREAG_PRODUCTPROPNAME"
+				},
+				{
+					"displayName": "AWS ECS cluster",
+					"value": "AWS_ECS_CLUSTER"
+				},
+				{
+					"displayName": "AWS ECS container name",
+					"value": "AWS_ECS_CONTAINERNAME"
+				},
+				{
+					"displayName": "AWS ECS family",
+					"value": "AWS_ECS_FAMILY"
+				},
+				{
+					"displayName": "AWS ECS revision",
+					"value": "AWS_ECS_REVISION"
+				},
+				{
+					"displayName": "Spring Boot startup class",
+					"value": "SPRINGBOOT_STARTUP_CLASS"
+				},
+				{
+					"displayName": "Spring Boot app name",
+					"value": "SPRINGBOOT_APP_NAME"
+				},
+				{
+					"displayName": "Spring Boot profile name",
+					"value": "SPRINGBOOT_PROFILE_NAME"
+				},
+				{
+					"displayName": "Oracle SID",
+					"value": "ORACLE_SID"
+				},
+				{
+					"displayName": "MSSQL Instance Name",
+					"value": "MSSQL_INSTANCE_NAME"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks Container Edition version",
+					"value": "TIBCO_BUSINESSWORKS_CE_VERSION"
+				},
+				{
+					"displayName": "TIBCO BusinessWorks Container Edition app name",
+					"value": "TIBCO_BUSINESSWORKS_CE_APP_NAME"
+				},
+				{
+					"displayName": "Go Binary Linkage",
+					"value": "PG_ID_CALC_INPUT_KEY_LINKAGE"
+				}
+			],
+			"type": "enum"
+		},
+		"ConditionOperator": {
+			"description": "",
+			"displayName": "ConditionOperator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "begins with",
+					"value": "STARTS"
+				},
+				{
+					"displayName": "does not begin with",
+					"value": "NOT_STARTS"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS"
+				},
+				{
+					"displayName": "does not end with",
+					"value": "NOT_ENDS"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "does not contain",
+					"value": "NOT_CONTAINS"
+				},
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				},
+				{
+					"displayName": "exists",
+					"value": "EXISTS"
+				},
+				{
+					"displayName": "does not exist",
+					"value": "NOT_EXISTS"
+				}
+			],
+			"type": "enum"
+		},
+		"MonitoringMode": {
+			"description": "",
+			"displayName": "MonitoringMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not monitor",
+					"value": "MONITORING_OFF"
+				},
+				{
+					"displayName": "Monitor",
+					"value": "MONITORING_ON"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add custom rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"condition": {
+			"description": "",
+			"displayName": "Condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Condition"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"mode": {
+			"default": "MONITORING_OFF",
+			"description": "",
+			"displayName": "Mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/MonitoringMode"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process.custom-process-monitoring-rule",
+	"types": {
+		"Condition": {
+			"description": "",
+			"displayName": "Condition",
+			"documentation": "",
+			"properties": {
+				"envVar": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "supported only with OneAgent 1.167+",
+					"displayName": "Environment variable key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "UNKNOWN",
+						"property": "item",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"item": {
+					"default": "APACHE_CONFIG_PATH",
+					"description": "",
+					"displayName": "Condition target",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/AgentItemName"
+					}
+				},
+				"operator": {
+					"default": "STARTS",
+					"description": "",
+					"displayName": "Condition operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ConditionOperator"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren''t allowed in parameters",
+							"pattern": "^[^;,:]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Condition value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"EXISTS",
+								"NOT_EXISTS"
+							],
+							"property": "operator",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.4.4"
+}

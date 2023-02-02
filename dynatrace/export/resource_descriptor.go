@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
+	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
@@ -383,6 +384,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		database_anomalies_v2.Service,
 		Coalesce(Dependencies.ServiceMethod),
 		Coalesce(Dependencies.Service),
+		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.ProcessMonitoringRule: NewResourceDescriptor(
+		customprocessmonitoring.Service,
 		Coalesce(Dependencies.HostGroup),
 	),
 }
