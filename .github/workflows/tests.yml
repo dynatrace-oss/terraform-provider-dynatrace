@@ -42,7 +42,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructuredisks
+        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructure/disks
       - name: TestInfraPerDiskAnomalyDetection
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -53,7 +53,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructuredisks/perdiskoverride
+        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride
       - name: TestInfraHostAnomalyDetection
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -64,7 +64,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructurehosts
+        run: go test -v ./dynatrace/api/builtin/anomalydetection/infrastructure/hosts
       - name: TestAlerting
         env:
           GOPROXY: "https://proxy.golang.org"
