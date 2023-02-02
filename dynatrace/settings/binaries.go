@@ -22,9 +22,35 @@ import (
 	"reflect"
 )
 
+type Loader interface {
+	Load(data []byte) error
+}
+
+type Storer interface {
+	Store() ([]byte, error)
+}
+
 func ToJSON[T Settings](v T) ([]byte, error) {
 	if storer, ok := any(v).(Storer); ok {
 		return storer.Store()
+	}
+	scopeField, scopeTag := getScopeField(v)
+	if scopeField.IsValid() {
+		var data []byte
+		var err error
+		if data, err = json.Marshal(v); err != nil {
+			return nil, err
+		}
+		m := map[string]json.RawMessage{}
+		if err = json.Unmarshal(data, &m); err != nil {
+			return nil, err
+		}
+		scope := GetScope(v)
+		if data, err = json.Marshal(scope); err != nil {
+			return nil, err
+		}
+		m[scopeTag] = data
+		return json.MarshalIndent(m, "", "  ")
 	}
 	return json.Marshal(v)
 }
@@ -33,6 +59,21 @@ func FromJSON[T Settings](data []byte, v T) error {
 	if loader, ok := any(v).(Loader); ok {
 		return loader.Load(data)
 	}
+	scopeField, scopeTag := getScopeField(v)
+	if scopeField.IsValid() {
+		if err := json.Unmarshal(data, &v); err != nil {
+			return err
+		}
+		m := map[string]any{}
+		if err := json.Unmarshal(data, &m); err != nil {
+			return err
+		}
+		if scope, found := m[scopeTag]; found {
+			SetScope(v, scope.(string))
+		}
+		return nil
+	}
+
 	return json.Unmarshal(data, v)
 }
 

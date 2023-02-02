@@ -39,8 +39,3 @@ type SettingsObjectListItem struct {
 	SchemaVersion string          `json:"schemaVersion"`
 	Value         json.RawMessage `json:"value"`
 }
-
-type ScopeAware interface {
-	SetScope(string)
-	GetScope() string
-}

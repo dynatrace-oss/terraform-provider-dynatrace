@@ -83,9 +83,7 @@ func (me *service[T]) Get(id string, v T) error {
 	if err = json.Unmarshal(settingsObject.Value, v); err != nil {
 		return err
 	}
-	if scopeAware, ok := any(v).(ScopeAware); ok {
-		scopeAware.SetScope(settingsObject.Scope)
-	}
+	settings.SetScope(v, settingsObject.Scope)
 	if me.options != nil && me.options.LegacyID != nil {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
@@ -125,9 +123,7 @@ func (me *service[T]) List() (settings.Stubs, error) {
 				if me.options != nil && me.options.LegacyID != nil {
 					settings.SetLegacyID(item.ObjectID, me.options.LegacyID, newItem)
 				}
-				if scopeAware, ok := any(newItem).(ScopeAware); ok {
-					scopeAware.SetScope(item.Scope)
-				}
+				settings.SetScope(newItem, item.Scope)
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
 					if itemName, err = me.options.Name(item.ObjectID, newItem); err != nil {
@@ -164,9 +160,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 		Scope:         "environment",
 		Value:         v,
 	}
-	if scopeAware, ok := any(v).(ScopeAware); ok {
-		soc.Scope = scopeAware.GetScope()
-	}
+	soc.Scope = settings.GetScope(v)
 
 	req := me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
 	objectID := []SettingsObjectCreateResponse{}

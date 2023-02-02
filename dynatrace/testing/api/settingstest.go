@@ -18,7 +18,6 @@
 package api
 
 import (
-	"encoding/json"
 	"io/fs"
 	"os"
 	"path"
@@ -47,10 +46,11 @@ func load(path string, v any, randomize string) error {
 		return err
 	}
 
-	if loader, ok := v.(settings.Loader); ok {
-		return loader.Load([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)))
-	}
-	return json.Unmarshal([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)), v)
+	// if loader, ok := v.(settings.Loader); ok {
+	// 	return loader.Load([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)))
+	// }
+	return settings.FromJSON([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)), any(v).(settings.Settings))
+	// return json.Unmarshal([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)), v)
 }
 
 func TestService[V settings.Settings](t *testing.T, createService func(*settings.Credentials) settings.CRUDService[V]) {

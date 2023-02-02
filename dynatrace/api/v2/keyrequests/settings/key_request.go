@@ -18,8 +18,6 @@
 package keyrequests
 
 import (
-	"encoding/json"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -28,19 +26,11 @@ import (
 // KeyRequest has no documentation
 type KeyRequest struct {
 	Names     []string `json:"keyRequestNames"`
-	ServiceID string   `json:"-"`
+	ServiceID string   `json:"-" scope:"serviceId"`
 }
 
 func (me *KeyRequest) Name() string {
 	return "Key Requests for " + me.ServiceID
-}
-
-func (me *KeyRequest) SetScope(scope string) {
-	me.ServiceID = scope
-}
-
-func (me *KeyRequest) GetScope() string {
-	return me.ServiceID
 }
 
 func (me *KeyRequest) Schema() map[string]*schema.Schema {
@@ -72,37 +62,4 @@ func (me *KeyRequest) UnmarshalHCL(decoder hcl.Decoder) error {
 		"names":   &me.Names,
 		"service": &me.ServiceID,
 	})
-}
-
-func (me *KeyRequest) Store() ([]byte, error) {
-	var data []byte
-	var err error
-	if data, err = json.Marshal(me); err != nil {
-		return nil, err
-	}
-	m := map[string]json.RawMessage{}
-	if err = json.Unmarshal(data, &m); err != nil {
-		return nil, err
-	}
-	if data, err = json.Marshal(me.ServiceID); err != nil {
-		return nil, err
-	}
-	m["serviceId"] = data
-	return json.MarshalIndent(m, "", "  ")
-}
-
-func (me *KeyRequest) Load(data []byte) error {
-	if err := json.Unmarshal(data, &me); err != nil {
-		return err
-	}
-
-	c := struct {
-		ServiceID string `json:"serviceId"`
-	}{}
-	if err := json.Unmarshal(data, &c); err != nil {
-		return err
-	}
-	me.ServiceID = c.ServiceID
-
-	return nil
 }
