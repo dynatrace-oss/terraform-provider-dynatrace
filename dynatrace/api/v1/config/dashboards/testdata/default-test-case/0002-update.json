@@ -17,6 +17,7 @@
   },
   "tiles": [
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -30,6 +31,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -64,6 +66,7 @@
       "tileType": "HOSTS"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -80,6 +83,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -96,6 +100,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -112,6 +117,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -125,6 +131,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 38,
@@ -138,6 +145,7 @@
       "tileType": "MARKDOWN"
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -262,6 +270,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -387,6 +396,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -512,6 +522,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -641,6 +652,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -762,6 +774,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -883,6 +896,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1005,6 +1019,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1154,6 +1169,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1267,6 +1283,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1391,6 +1408,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1503,6 +1521,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 152,
@@ -1633,6 +1652,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 152,
@@ -1763,6 +1783,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1875,6 +1896,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -1987,6 +2009,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,
@@ -2100,6 +2123,7 @@
       }
     },
     {
+      "isAutoRefreshDisabled": false,
       "assignedEntities": [],
       "bounds": {
         "height": 304,

@@ -48,6 +48,7 @@ type Tile struct {
 	ExcludeMaintenanceWindows *bool                              `json:"excludeMaintenanceWindows,omitempty"` // Include (`false') or exclude (`true`) maintenance windows from availability calculations
 	ChartVisible              *bool                              `json:"chartVisible,omitempty"`
 	NameSize                  *NameSize                          `json:"nameSize,omitempty"` // The size of the tile name. Possible values are `small`, `medium` and `large`.
+	AutoRefreshDisabled       bool                               `json:"isAutoRefreshDisabled,omitempty"`
 
 	Unknowns map[string]json.RawMessage `json:"-"`
 }
@@ -167,6 +168,11 @@ func (me *Tile) Schema() map[string]*schema.Schema {
 			Description: "",
 			Optional:    true,
 		},
+		"auto_refresh_disabled": {
+			Type:        schema.TypeBool,
+			Description: "Auto Refresh is disabled (`true`)",
+			Optional:    true,
+		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
@@ -191,6 +197,9 @@ func (me *Tile) MarshalHCL(properties hcl.Properties) error {
 		}
 	}
 	if err := properties.Encode("configured", opt.Bool(me.Configured)); err != nil {
+		return err
+	}
+	if err := properties.Encode("auto_refresh_disabled", me.AutoRefreshDisabled); err != nil {
 		return err
 	}
 	if err := properties.Encode("bounds", me.Bounds); err != nil {
@@ -266,6 +275,7 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(me.Unknowns, "exclude_maintenance_windows")
 		delete(me.Unknowns, "chart_visible")
 		delete(me.Unknowns, "name_size")
+		delete(me.Unknowns, "auto_refresh_disabled")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -275,6 +285,9 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("tile_type"); ok {
 		me.TileType = TileType(value.(string))
+	}
+	if value, ok := decoder.GetOk("auto_refresh_disabled"); ok {
+		me.AutoRefreshDisabled = value.(bool)
 	}
 	if value, ok := decoder.GetOk("name_size"); ok {
 		var nameSize = value.(string)
@@ -378,6 +391,13 @@ func (me *Tile) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 		m["configured"] = rawMessage
+	}
+	{
+		rawMessage, err := json.Marshal(me.AutoRefreshDisabled)
+		if err != nil {
+			return nil, err
+		}
+		m["isAutoRefreshDisabled"] = rawMessage
 	}
 	if me.Bounds != nil {
 		rawMessage, err := json.Marshal(me.Bounds)
@@ -510,6 +530,11 @@ func (me *Tile) UnmarshalJSON(data []byte) error {
 			me.NameSize = NameSize(nameSize).Ref()
 		}
 	}
+	if v, found := m["isAutoRefreshDisabled"]; found {
+		if err := json.Unmarshal(v, &me.AutoRefreshDisabled); err != nil {
+			return err
+		}
+	}
 	if v, found := m["configured"]; found {
 		if err := json.Unmarshal(v, &me.Configured); err != nil {
 			return err
@@ -606,6 +631,7 @@ func (me *Tile) UnmarshalJSON(data []byte) error {
 	delete(m, "excludeMaintenanceWindows")
 	delete(m, "chartVisible")
 	delete(m, "nameSize")
+	delete(m, "isAutoRefreshDisabled")
 
 	if len(m) > 0 {
 		me.Unknowns = m

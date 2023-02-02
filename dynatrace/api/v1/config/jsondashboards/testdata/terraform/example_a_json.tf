@@ -14,6 +14,7 @@ resource "dynatrace_json_dashboard" "#name#" {
       "tiles" : [
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -56,6 +57,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -98,6 +100,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -140,6 +143,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -198,6 +202,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -240,6 +245,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -282,6 +288,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -324,6 +331,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -366,6 +374,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -424,6 +433,7 @@ resource "dynatrace_json_dashboard" "#name#" {
         },
         {
           "name" : "Custom chart",
+          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -470,6 +480,7 @@ resource "dynatrace_json_dashboard" "#name#" {
           }
         },
         {
+          "isAutoRefreshDisabled": false,
           "name" : "Custom chart",
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
@@ -517,6 +528,7 @@ resource "dynatrace_json_dashboard" "#name#" {
           }
         },
         {
+          "isAutoRefreshDisabled": false,
           "name" : "Custom chart",
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
@@ -559,6 +571,7 @@ resource "dynatrace_json_dashboard" "#name#" {
           }
         },
         {
+          "isAutoRefreshDisabled": false,
           "name" : "Performance ",
           "tileType" : "HEADER",
           "configured" : true,
@@ -571,6 +584,7 @@ resource "dynatrace_json_dashboard" "#name#" {
           "tileFilter" : {}
         },
         {
+          "isAutoRefreshDisabled": false,
           "name" : "Data volume",
           "tileType" : "HEADER",
           "configured" : true,
