@@ -37,7 +37,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope for the service anomaly detection",
+			Description: "The scope for the database anomaly detection",
 			Required:    true,
 		},
 		"database_connections": {
