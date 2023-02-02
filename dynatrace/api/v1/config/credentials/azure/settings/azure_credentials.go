@@ -210,13 +210,13 @@ func (ac *AzureCredentials) MarshalJSON() ([]byte, error) {
 	} else {
 		return nil, err
 	}
-	if ac.SupportingServices != nil {
-		rawMessage, err := json.Marshal(ac.SupportingServices)
-		if err != nil {
-			return nil, err
-		}
-		m["supportingServices"] = rawMessage
-	}
+	// if ac.SupportingServices != nil {
+	// 	rawMessage, err := json.Marshal(ac.SupportingServices)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	m["supportingServices"] = rawMessage
+	// }
 	return json.Marshal(m)
 }
 
@@ -273,11 +273,11 @@ func (ac *AzureCredentials) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
-	if v, found := m["supportingServices"]; found {
-		if err := json.Unmarshal(v, &ac.SupportingServices); err != nil {
-			return err
-		}
-	}
+	// if v, found := m["supportingServices"]; found {
+	// 	if err := json.Unmarshal(v, &ac.SupportingServices); err != nil {
+	// 		return err
+	// 	}
+	// }
 	delete(m, "id")
 	delete(m, "label")
 	delete(m, "directoryId")
@@ -337,9 +337,9 @@ func (ac *AzureCredentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("monitor_only_tagged_entities", opt.Bool(ac.MonitorOnlyTaggedEntities)); err != nil {
 		return err
 	}
-	if err := properties.Encode("supporting_services", ac.SupportingServices); err != nil {
-		return err
-	}
+	// if err := properties.Encode("supporting_services", ac.SupportingServices); err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
