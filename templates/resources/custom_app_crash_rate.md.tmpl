@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_custom_app_crash_rate Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_custom_app_crash_rate` covers configuration for custom application crash rate increase
+---
+
+# dynatrace_custom_app_crash_rate (Resource)
+
+## Dynatrace Documentation
+
+- Adjust the sensitivity of anomaly detection for applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-applications
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:anomaly-detection.rum-custom-crash-rate-increase`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_custom_app_crash_rate` downloads all existing custom application crash rate increase configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/anomalies/custom_app/crash_rate/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

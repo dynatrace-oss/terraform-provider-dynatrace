@@ -1,0 +1,267 @@
+{
+	"allowedScopes": [
+		"CUSTOM_APPLICATION",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects application-related performance anomalies such as failure rate increases. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for certain applications.",
+	"displayName": "Crash rate increase settings for custom applications",
+	"documentation": "\n\nTo avoid false-positive problem notifications, [automated anomaly detection](https://dt-url.net/op03t6j \"Visit Dynatrace support center\") is only available for applications and services that have run for at least 20% of a week (7 days).",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Using fixed thresholds",
+					"value": "fixed"
+				}
+			],
+			"type": "enum"
+		},
+		"sensitivity": {
+			"description": "",
+			"displayName": "Sensitivity",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Low",
+					"value": "low"
+				},
+				{
+					"displayName": "Medium",
+					"value": "medium"
+				},
+				{
+					"displayName": "High",
+					"value": "high"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"crashRateIncrease": {
+			"description": "",
+			"displayName": "Crash rate increase",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/CrashRateIncrease"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.rum-custom-crash-rate-increase",
+	"types": {
+		"CrashRateIncrease": {
+			"description": "",
+			"displayName": "Crash rate increase",
+			"documentation": "",
+			"properties": {
+				"crashRateIncreaseAuto": {
+					"description": "Alert crash rate increases when auto-detected baseline is exceeded by a certain number of users",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/CrashRateIncreaseAuto"
+					}
+				},
+				"crashRateIncreaseFixed": {
+					"description": "Alert crash rate increases when the defined threshold is exceeded by a certain number of users",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/CrashRateIncreaseFixed"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection strategy for crash rate increases",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect crash rate increase",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CrashRateIncreaseAuto": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"baselineViolationPercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 100,
+							"type": "RANGE"
+						}
+					],
+					"default": 150,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "Dynatrace learns the typical crash rate for all app versions and will create an alert if the baseline is violated by more than a specified threshold. Analysis happens based on a sliding window of 10 minutes.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"concurrentUsers": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Amount of users",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Detection sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CrashRateIncreaseFixed": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"absoluteCrashRate": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 20,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"concurrentUsers": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Amount of users",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}
