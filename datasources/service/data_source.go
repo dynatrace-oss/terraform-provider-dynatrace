@@ -18,6 +18,8 @@
 package service
 
 import (
+	"strings"
+
 	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
 	servsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services/settings"
@@ -42,6 +44,11 @@ func DataSource() *schema.Resource {
 				Description: "Required tags of the service to find",
 				MinItems:    1,
 			},
+			"operator": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "EQUALS",
+			},
 		},
 	}
 }
@@ -50,6 +57,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
+	}
+
+	var operator string
+	if v, ok := d.GetOk("operator"); ok {
+		operator = v.(string)
 	}
 
 	var tagList []any
@@ -67,7 +79,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
-			if name == stub.Name {
+			if name == stub.Name || (operator == string(Operators.Contains) && strings.Contains(stub.Name, name)) {
 				var record servsettings.Settings
 				if err = service.Get(stub.ID, &record); err != nil {
 					return err
@@ -82,4 +94,15 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	d.SetId("")
 	return nil
+}
+
+type Operator string
+
+// Operators offers the known enum values
+var Operators = struct {
+	Contains Operator
+	Equals   Operator
+}{
+	"CONTAINS",
+	"EQUALS",
 }
