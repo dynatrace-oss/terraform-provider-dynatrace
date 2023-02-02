@@ -1,0 +1,1874 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects infrastructure-related performance anomalies such as high CPU saturation and memory outages. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for hosts.",
+	"displayName": "Anomaly detection for infrastructure: Host",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ConnectionLostDetectionSensitivity": {
+			"description": "",
+			"displayName": "ConnectionLostDetectionSensitivity",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Don't alert on graceful host shutdown",
+					"value": "DONT_ALERT_ON_GRACEFUL_SHUTDOWN"
+				},
+				{
+					"displayName": "Alert on graceful host shutdown",
+					"value": "ALERT_ON_GRACEFUL_SHUTDOWN"
+				}
+			],
+			"type": "enum"
+		},
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Based on custom settings",
+					"value": "custom"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"host": {
+			"description": "",
+			"displayName": "Hosts",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/host"
+			}
+		},
+		"network": {
+			"description": "",
+			"displayName": "Network",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/network"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection.infrastructure",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.infrastructure-hosts",
+	"types": {
+		"connectionLostDetection": {
+			"description": "",
+			"displayName": "Connection lost detection",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect host or monitoring connection lost problems",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"onGracefulShutdowns": {
+					"default": "DONT_ALERT_ON_GRACEFUL_SHUTDOWN",
+					"description": "",
+					"displayName": "Graceful host shutdowns",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/ConnectionLostDetectionSensitivity"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"eventThresholds": {
+			"constraints": [
+				{
+					"customValidatorId": "samplesFitInWindowValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "eventThresholds",
+			"documentation": "",
+			"properties": {
+				"dealertingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "The number of **10-second samples** that form the sliding evaluation window for dealerting.",
+					"displayName": "Evaluation window size for dealerting samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event",
+					"displayName": "Dealerting samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "The number of **10-second samples** that form the sliding evaluation window to detect violating samples.",
+					"displayName": "Evaluation window size for violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 18,
+					"description": "The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event",
+					"displayName": "Violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highCpuSaturationDetection": {
+			"description": "",
+			"displayName": "CPU saturation detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/highCpuSaturationDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for CPU saturation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect CPU saturation on host",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highCpuSaturationDetectionThresholds": {
+			"description": "",
+			"displayName": "highCpuSaturationDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"cpuSaturation": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 95,
+					"description": "",
+					"displayName": "Alert if the CPU usage is higher than this threshold for the defined amount of samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highGcActivityDetection": {
+			"description": "",
+			"displayName": "High GC activity detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the GC time **or** the GC suspension is exceeded",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/highGcActivityDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high GC activity",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "You may also configure high GC activity alerting for .NET processes on [extensions events page](/#settings/anomalydetection/extensionevents).",
+					"displayName": "Detect high GC activity",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highGcActivityDetectionThresholds": {
+			"description": "",
+			"displayName": "highGcActivityDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"gcSuspensionPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 25,
+					"description": "",
+					"displayName": "Alert if the GC suspension is higher than this threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"gcTimePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 40,
+					"description": "",
+					"displayName": "Alert if GC time is higher than this threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highMemoryDetection": {
+			"description": "",
+			"displayName": "High memory usage detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **both** the memory usage and the memory page fault rate thresholds are exceeded on Windows or on Unix systems",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/highMemoryDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high memory usage",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high memory usage on host",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highMemoryDetectionThresholds": {
+			"description": "",
+			"displayName": "highMemoryDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"pageFaultsPerSecondNonWindows": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 20,
+					"description": "",
+					"displayName": "Alert if the memory page fault rate on Unix systems is higher than this threshold for the defined amount of samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "faults/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"pageFaultsPerSecondWindows": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Alert if the memory page fault rate on Windows is higher than this threshold for the defined amount of samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "faults/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"usedMemoryPercentageNonWindows": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 80,
+					"description": "",
+					"displayName": "Alert if the memory usage on Unix systems is higher than this threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"usedMemoryPercentageWindows": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 90,
+					"description": "",
+					"displayName": "Alert if the memory usage on Windows is higher than this threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highNetworkDetection": {
+			"description": "",
+			"displayName": "highNetworkDetection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/highNetworkDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high network utilization",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect high network utilization",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highNetworkDetectionThresholds": {
+			"description": "",
+			"displayName": "highNetworkDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"errorsPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 90,
+					"description": "",
+					"displayName": "Alert if sent/received traffic utilization is higher than this threshold for the defined amount of samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"host": {
+			"description": "",
+			"displayName": "Hosts",
+			"documentation": "",
+			"properties": {
+				"connectionLostDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/connectionLostDetection"
+					}
+				},
+				"highCpuSaturationDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/highCpuSaturationDetection"
+					}
+				},
+				"highGcActivityDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/highGcActivityDetection"
+					}
+				},
+				"highMemoryDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/highMemoryDetection"
+					}
+				},
+				"outOfMemoryDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/outOfMemoryDetection"
+					}
+				},
+				"outOfThreadsDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/outOfThreadsDetection"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"network": {
+			"description": "",
+			"displayName": "Network",
+			"documentation": "",
+			"properties": {
+				"highNetworkDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/highNetworkDetection"
+					}
+				},
+				"networkDroppedPacketsDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/networkDroppedPacketsDetection"
+					}
+				},
+				"networkErrorsDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/networkErrorsDetection"
+					}
+				},
+				"networkHighRetransmissionDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/networkHighRetransmissionDetection"
+					}
+				},
+				"networkTcpProblemsDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/networkTcpProblemsDetection"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkDroppedPacketsDetection": {
+			"description": "",
+			"displayName": "networkDroppedPacketsDetection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the dropped packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/networkDroppedPacketsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high number of dropped packets",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high number of dropped packets",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkDroppedPacketsDetectionThresholds": {
+			"description": "",
+			"displayName": "networkDroppedPacketsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"droppedPacketsPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Receive/transmit dropped packet percentage threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"totalPacketsRate": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Total packets rate threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "packets/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkErrorsDetection": {
+			"description": "",
+			"displayName": "networkErrorsDetection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the receive/transmit error packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/networkErrorsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high number of network errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high number of network errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkErrorsDetectionThresholds": {
+			"description": "",
+			"displayName": "networkErrorsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"errorsPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Receive/transmit error packet percentage threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"totalPacketsRate": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Total packets rate threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "packets/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkHighRetransmissionDetection": {
+			"description": "",
+			"displayName": "networkHighRetransmissionDetection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the retransmission rate is higher than the specified threshold **and** the number of retransmitted packets is higher than the defined threshold for the defined amount of samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/networkHighRetransmissionDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for high retransmission rate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect high retransmission rate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkHighRetransmissionDetectionThresholds": {
+			"description": "",
+			"displayName": "networkHighRetransmissionDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"retransmissionRatePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Retransmission rate threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"retransmittedPacketsNumberPerMinute": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Number of retransmitted packets threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "packets/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkTcpProblemsDetection": {
+			"description": "",
+			"displayName": "networkTcpProblemsDetection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the percentage of new connection failures is higher than the specified threshold **and** the number of failed connections is higher than the defined threshold for the defined amount of samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/networkTcpProblemsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for TCP connectivity problems",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect TCP connectivity problems for process",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"networkTcpProblemsDetectionThresholds": {
+			"description": "",
+			"displayName": "networkTcpProblemsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"failedConnectionsNumberPerMinute": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Number of failed connections threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "connections/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"newConnectionFailuresPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "New connection failure threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"outOfMemoryDetection": {
+			"description": "",
+			"displayName": "Java out of memory problem detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/outOfMemoryDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for Java out of memory problem",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect Java out of memory problem",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"outOfMemoryDetectionThresholds": {
+			"description": "",
+			"displayName": "outOfMemoryDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/strictEventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"outOfMemoryExceptionsNumber": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Alert if the number of Java out-of-memory exceptions is at least this value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "exceptions/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"outOfThreadsDetection": {
+			"description": "",
+			"displayName": "Java out of threads problem detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/outOfThreadsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for Java out of threads problem",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect Java out of threads problem",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"outOfThreadsDetectionThresholds": {
+			"description": "",
+			"displayName": "outOfThreadsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/strictEventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"outOfThreadsExceptionsNumber": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Alert if the number of Java out-of-threads exceptions is at least this value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "exceptions/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"strictEventThresholds": {
+			"constraints": [
+				{
+					"customValidatorId": "samplesFitInWindowValidatorStrict",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "strictEventThresholds",
+			"documentation": "",
+			"properties": {
+				"dealertingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "The number of **10-second samples** that form the sliding evaluation window for dealerting.",
+					"displayName": "Evaluation window size for dealerting samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event",
+					"displayName": "Dealerting samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 6,
+					"description": "The number of **10-second samples** that form the sliding evaluation window to detect violating samples.",
+					"displayName": "Evaluation window size for violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event",
+					"displayName": "Violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.253"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.2.5"
+}

@@ -24,6 +24,7 @@ import (
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructuredisks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructuredisks/perdiskoverride"
+	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructurehosts"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -247,6 +248,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	).Specify(notifications.Types.Email),
 	ResourceTypes.FrequentIssues: NewResourceDescriptor(frequentissues.Service),
 	ResourceTypes.HostAnomalies:  NewResourceDescriptor(host_anomalies.Service),
+	ResourceTypes.HostAnomaliesV2: NewResourceDescriptor(
+		host_anomalies_v2.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
 	ResourceTypes.HTTPMonitor: NewResourceDescriptor(
 		http.Service,
 		Dependencies.ID(ResourceTypes.SyntheticLocation),

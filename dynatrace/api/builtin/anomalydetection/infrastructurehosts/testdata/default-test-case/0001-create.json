@@ -1,0 +1,107 @@
+{
+  "scope": "HOST-1234567890000000",
+  "host": {
+    "connectionLostDetection": {
+      "enabled": true,
+      "onGracefulShutdowns": "DONT_ALERT_ON_GRACEFUL_SHUTDOWN"
+    },
+    "highCpuSaturationDetection": {
+      "customThresholds": {
+        "cpuSaturation": 95,
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 30,
+          "violatingSamples": 18
+        }
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "highGcActivityDetection": {
+      "customThresholds": {
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 30,
+          "violatingSamples": 18
+        },
+        "gcSuspensionPercentage": 25,
+        "gcTimePercentage": 40
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "highMemoryDetection": {
+      "detectionMode": "auto",
+      "enabled": true
+    },
+    "outOfMemoryDetection": {
+      "customThresholds": {
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 6,
+          "violatingSamples": 1
+        },
+        "outOfMemoryExceptionsNumber": 1
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "outOfThreadsDetection": {
+      "customThresholds": {
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 6,
+          "violatingSamples": 1
+        },
+        "outOfThreadsExceptionsNumber": 1
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    }
+  },
+  "network": {
+    "highNetworkDetection": {
+      "customThresholds": {
+        "errorsPercentage": 90,
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 30,
+          "violatingSamples": 18
+        }
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "networkDroppedPacketsDetection": {
+      "detectionMode": "auto",
+      "enabled": true
+    },
+    "networkErrorsDetection": {
+      "detectionMode": "auto",
+      "enabled": true
+    },
+    "networkHighRetransmissionDetection": {
+      "customThresholds": {
+        "eventThresholds": {
+          "dealertingEvaluationWindow": 30,
+          "dealertingSamples": 30,
+          "violatingEvaluationWindow": 30,
+          "violatingSamples": 18
+        },
+        "retransmissionRatePercentage": 10,
+        "retransmittedPacketsNumberPerMinute": 10
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "networkTcpProblemsDetection": {
+      "detectionMode": "auto",
+      "enabled": true
+    }
+  }
+}
