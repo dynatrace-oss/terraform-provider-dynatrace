@@ -38,29 +38,33 @@ func Coalesce(d Dependency) Dependency {
 }
 
 var Dependencies = struct {
-	ManagementZone       Dependency
-	LegacyID             func(resourceType ResourceType) Dependency
-	ID                   func(resourceType ResourceType) Dependency
-	ServiceMethod        Dependency
-	Service              Dependency
-	HostGroup            Dependency
-	Host                 Dependency
-	Disk                 Dependency
-	ProcessGroup         Dependency
-	ProcessGroupInstance Dependency
-	RequestAttribute     Dependency
+	ManagementZone          Dependency
+	LegacyID                func(resourceType ResourceType) Dependency
+	ID                      func(resourceType ResourceType) Dependency
+	ServiceMethod           Dependency
+	Service                 Dependency
+	HostGroup               Dependency
+	Host                    Dependency
+	Disk                    Dependency
+	ProcessGroup            Dependency
+	ProcessGroupInstance    Dependency
+	RequestAttribute        Dependency
+	CustomApplication       Dependency
+	DeviceApplicationMethod Dependency
 }{
-	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
-	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
-	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
-	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
-	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
-	HostGroup:            &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
-	Host:                 &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},
-	Disk:                 &entityds{"DISK", "DISK-[A-Z0-9]{16}", false},
-	ProcessGroup:         &entityds{"PROCESS_GROUP", "PROCESS_GROUP-[A-Z0-9]{16}", false},
-	ProcessGroupInstance: &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
-	RequestAttribute:     &reqAttName{ResourceTypes.RequestAttribute},
+	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
+	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
+	ID:                      func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
+	ServiceMethod:           &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
+	Service:                 &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
+	HostGroup:               &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
+	Host:                    &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},
+	Disk:                    &entityds{"DISK", "DISK-[A-Z0-9]{16}", false},
+	ProcessGroup:            &entityds{"PROCESS_GROUP", "PROCESS_GROUP-[A-Z0-9]{16}", false},
+	ProcessGroupInstance:    &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
+	RequestAttribute:        &reqAttName{ResourceTypes.RequestAttribute},
+	CustomApplication:       &entityds{"CUSTOM_APPLICATION", "CUSTOM_APPLICATION-[A-Z0-9]{16}", false},
+	DeviceApplicationMethod: &entityds{"DEVICE_APPLICATION_METHOD", "DEVICE_APPLICATION_METHOD-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {

@@ -1,0 +1,757 @@
+{
+	"allowedScopes": [
+		"DEVICE_APPLICATION_METHOD",
+		"CUSTOM_APPLICATION",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects application-related performance anomalies such as response time degradations and traffic spikes. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for certain applications.",
+	"displayName": "Anomaly detection for custom applications",
+	"documentation": "\n\nTo avoid false-positive problem notifications, [automated anomaly detection](https://dt-url.net/op03t6j \"Visit Dynatrace support center\") is only available for applications and services that have run for at least 20% of a week (7 days).",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Using fixed thresholds",
+					"value": "fixed"
+				}
+			],
+			"type": "enum"
+		},
+		"sensitivity": {
+			"description": "",
+			"displayName": "Sensitivity",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Low",
+					"value": "low"
+				},
+				{
+					"displayName": "Medium",
+					"value": "medium"
+				},
+				{
+					"displayName": "High",
+					"value": "high"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"errorRateIncrease": {
+			"description": "",
+			"displayName": "Error rate increase",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ErrorRateIncrease"
+			}
+		},
+		"slowUserActions": {
+			"description": "",
+			"displayName": "Slow user actions",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SlowUserActions"
+			}
+		},
+		"unexpectedHighLoad": {
+			"description": "",
+			"displayName": "Unexpected high load",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/UnexpectedHighLoad"
+			}
+		},
+		"unexpectedLowLoad": {
+			"description": "",
+			"displayName": "Unexpected low load",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/UnexpectedLowLoad"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.rum-custom",
+	"types": {
+		"ErrorRateIncrease": {
+			"description": "",
+			"displayName": "Error rate increase",
+			"documentation": "",
+			"properties": {
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection strategy for error rate increases",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect reported error rate increase",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"errorRateIncreaseAuto": {
+					"description": "Alert if the percentage of user actions affected by reported errors exceeds **both** the absolute threshold and the relative threshold",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/ErrorRateIncreaseAuto"
+					}
+				},
+				"errorRateIncreaseFixed": {
+					"description": "Alert if the custom reported error rate threshold is exceeded during any 5-minute period",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/ErrorRateIncreaseFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ErrorRateIncreaseAuto": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"thresholdAbsolute": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"thresholdRelative": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ErrorRateIncreaseFixed": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Detection sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				},
+				"thresholdAbsolute": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActions": {
+			"description": "",
+			"displayName": "Slow user actions",
+			"documentation": "",
+			"properties": {
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection strategy for slow user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect slow user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"slowUserActionsAuto": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/SlowUserActionsAuto"
+					}
+				},
+				"slowUserActionsFixed": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/SlowUserActionsFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActionsAuto": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationAvoidOveralerting": {
+					"description": "To avoid over-alerting do not alert for low traffic applications with less than",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsAvoidOveralerting"
+					}
+				},
+				"durationThresholdAll": {
+					"description": "Alert if the action duration of all user actions degrades beyond **both** the absolute and relative threshold:",
+					"displayName": "All user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsAutoAll"
+					}
+				},
+				"durationThresholdSlowest": {
+					"description": "Alert if the action duration of the slowest 10% of user actions degrades beyond **both** the absolute and relative threshold:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsAutoSlowest"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActionsAutoAll": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationThreshold": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"slowdownPercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActionsAutoSlowest": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationThreshold": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1000,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"slowdownPercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"SlowUserActionsAvoidOveralerting": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"minActionRate": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "user actions / min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActionsFixed": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationAvoidOveralerting": {
+					"description": "To avoid over-alerting do not alert for low traffic applications with less than",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsAvoidOveralerting"
+					}
+				},
+				"durationThresholdAllFixed": {
+					"description": "Alert if the action duration of all user actions degrades beyond the absolute threshold:",
+					"displayName": "All user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsManualAll"
+					}
+				},
+				"durationThresholdSlowest": {
+					"description": "Alert if the action duration of the slowest 10% of user actions degrades beyond the absolute threshold:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SlowUserActionsManualSlowest"
+					}
+				},
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Detection sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowUserActionsManualAll": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationThreshold": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"SlowUserActionsManualSlowest": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"durationThreshold": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1000,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"UnexpectedHighLoad": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect unexpected high load",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"thresholdPercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 100,
+							"type": "RANGE"
+						}
+					],
+					"default": 200,
+					"description": "",
+					"displayName": "Alert if the observed traffic exceeds this threshold",
+					"documentation": "Dynatrace learns your typical application traffic over an observation period of one week. Depending on this expected value Dynatrace detects abnormal traffic spikes within your application.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"UnexpectedLowLoad": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect unexpected low load",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"thresholdPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Alert if the observed traffic drops below this threshold",
+					"documentation": "Dynatrace learns your typical application traffic over an observation period of one week. Depending on this expected value Dynatrace detects abnormal traffic drops within your application.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

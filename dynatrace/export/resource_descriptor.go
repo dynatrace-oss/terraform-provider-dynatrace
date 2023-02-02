@@ -25,6 +25,7 @@ import (
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
 	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts"
+	custom_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -210,6 +211,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	).Except(func(id string, name string) bool {
 		return strings.HasPrefix(id, "builtin:") || strings.HasPrefix(id, "ruxit.") || strings.HasPrefix(id, "dynatrace.") || strings.HasPrefix(id, "custom.remote.python.") || strings.HasPrefix(id, "custom.python.")
 	}),
+	ResourceTypes.CustomAppAnomalies: NewResourceDescriptor(
+		custom_app_anomalies.Service,
+		Coalesce(Dependencies.DeviceApplicationMethod),
+		Coalesce(Dependencies.CustomApplication),
+	),
 	ResourceTypes.CustomService: NewResourceDescriptor(customservices.Service),
 	ResourceTypes.Credentials: NewResourceDescriptor(
 		vault.Service,

@@ -1,0 +1,22 @@
+{
+    "errorRateIncrease": {
+        "detectionMode": "fixed",
+        "enabled": true,
+        "errorRateIncreaseFixed": {
+            "sensitivity": "low",
+            "thresholdAbsolute": 5
+        }
+    },
+    "scope": "CUSTOM_APPLICATION-1234567890000000",
+    "slowUserActions": {
+        "enabled": false
+    },
+    "unexpectedHighLoad": {
+        "enabled": true,
+        "thresholdPercentage": 300
+    },
+    "unexpectedLowLoad": {
+        "enabled": true,
+        "thresholdPercentage": 80
+    }
+}
