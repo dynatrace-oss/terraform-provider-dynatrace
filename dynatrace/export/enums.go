@@ -99,6 +99,8 @@ var ResourceTypes = struct {
 	ServiceAnomaliesV2       ResourceType
 	DatabaseAnomaliesV2      ResourceType
 	ProcessMonitoringRule    ResourceType
+	DiskAnomaliesV2          ResourceType
+	DiskSpecificAnomaliesV2  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -173,6 +175,8 @@ var ResourceTypes = struct {
 	"dynatrace_service_anomalies_v2",
 	"dynatrace_database_anomalies_v2",
 	"dynatrace_process_monitoring_rule",
+	"dynatrace_disk_anomalies_v2",
+	"dynatrace_disk_specific_anomalies_v2",
 }
 
 type ResourceStatus string

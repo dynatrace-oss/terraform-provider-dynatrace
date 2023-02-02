@@ -1,0 +1,27 @@
+{
+  "diskLowInodesDetection": {
+    "customThresholds": {
+      "freeInodesPercentage": 1
+    },
+    "detectionMode": "custom",
+    "enabled": true
+  },
+  "diskLowSpaceDetection": {
+    "customThresholds": {
+      "freeSpacePercentage": 1
+    },
+    "detectionMode": "custom",
+    "enabled": true
+  },
+  "diskSlowWritesAndReadsDetection": {
+    "customThresholds": {
+      "writeAndReadTime": 300
+    },
+    "detectionMode": "custom",
+    "enabled": true
+  },
+  "disk_id": "DISK-1234567890000000",
+  "overrideDiskLowSpaceDetection": true,
+  "overrideLowInodesDetection": true,
+  "overrideSlowWritesAndReadsDetection": true
+}

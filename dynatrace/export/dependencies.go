@@ -45,6 +45,7 @@ var Dependencies = struct {
 	Service              Dependency
 	HostGroup            Dependency
 	Host                 Dependency
+	Disk                 Dependency
 	ProcessGroup         Dependency
 	ProcessGroupInstance Dependency
 	RequestAttribute     Dependency
@@ -56,6 +57,7 @@ var Dependencies = struct {
 	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
 	HostGroup:            &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
 	Host:                 &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},
+	Disk:                 &entityds{"DISK", "DISK-[A-Z0-9]{16}", false},
 	ProcessGroup:         &entityds{"PROCESS_GROUP", "PROCESS_GROUP-[A-Z0-9]{16}", false},
 	ProcessGroupInstance: &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
 	RequestAttribute:     &reqAttName{ResourceTypes.RequestAttribute},

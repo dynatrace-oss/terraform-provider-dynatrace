@@ -22,6 +22,8 @@ import (
 	"strings"
 
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
+	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructuredisks"
+	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructuredisks/perdiskoverride"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -231,6 +233,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),
+	ResourceTypes.DiskAnomaliesV2: NewResourceDescriptor(
+		disk_anomalies_v2.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.DiskSpecificAnomaliesV2: NewResourceDescriptor(
+		disk_specific_anomalies_v2.Service,
+		Coalesce(Dependencies.Disk),
+	),
 	ResourceTypes.EmailNotification: NewResourceDescriptor(
 		email.Service,
 		Dependencies.ID(ResourceTypes.Alerting),

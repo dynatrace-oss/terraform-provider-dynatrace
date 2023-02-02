@@ -151,6 +151,8 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_anomalies":           resources.NewGeneric(export.ResourceTypes.CustomAnomalies).Resource(),
 			"dynatrace_metric_events":              resources.NewGeneric(export.ResourceTypes.MetricEvents).Resource(),
 			"dynatrace_disk_anomalies":             resources.NewGeneric(export.ResourceTypes.DiskEventAnomalies).Resource(),
+			"dynatrace_disk_anomalies_v2":          resources.NewGeneric(export.ResourceTypes.DiskAnomaliesV2).Resource(),
+			"dynatrace_disk_specific_anomalies_v2": resources.NewGeneric(export.ResourceTypes.DiskSpecificAnomaliesV2).Resource(),
 			"dynatrace_calculated_service_metric":  resources.NewGeneric(export.ResourceTypes.CalculatedServiceMetric).Resource(),
 			"dynatrace_service_naming":             resources.NewGeneric(export.ResourceTypes.ServiceNaming).Resource(),
 			"dynatrace_host_naming":                resources.NewGeneric(export.ResourceTypes.HostNaming).Resource(),
