@@ -50,10 +50,17 @@ func GetScope(settings Settings) string {
 		return "environment"
 	}
 	if scopeField.Type() == stringType {
-		return scopeField.Interface().(string)
+		res := scopeField.Interface().(string)
+		if len(res) == 0 {
+			return "environment"
+		}
+		return res
 	}
 	if scopeField.Type() == stringPointerType {
 		pScope := scopeField.Interface().(*string)
+		if pScope == nil {
+			return "environment"
+		}
 		return *pScope
 	}
 	return "environment"
