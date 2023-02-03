@@ -24,10 +24,10 @@ import (
 )
 
 type Settings struct {
-	Condition *Condition     `json:"condition"`       // Condition
-	Enabled   bool           `json:"enabled"`         // Enabled
-	Mode      MonitoringMode `json:"mode"`            // Mode
-	Scope     string         `json:"-" scope:"scope"` // The scope of this setting (HOST_GROUP environment)
+	Condition   *Condition     `json:"condition"`             // Condition
+	Enabled     bool           `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
+	Mode        MonitoringMode `json:"mode"`                  // Possible Values: `MONITORING_ON`, `MONITORING_OFF`
+	HostGroupID string         `json:"-" scope:"hostGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope
 }
 
 func (me *Settings) Name() string {
@@ -46,17 +46,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Enabled",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 		"mode": {
 			Type:        schema.TypeString,
-			Description: "Mode",
+			Description: "Possible Values: `MONITORING_ON`, `MONITORING_OFF`",
 			Required:    true,
 		},
-		"scope": {
+		"host_group_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (HOST_GROUP environment)",
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope",
 			Optional:    true,
 			Default:     "environment",
 		},
@@ -65,18 +65,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"condition": me.Condition,
-		"enabled":   me.Enabled,
-		"mode":      me.Mode,
-		"scope":     me.Scope,
+		"condition":     me.Condition,
+		"enabled":       me.Enabled,
+		"mode":          me.Mode,
+		"host_group_id": me.HostGroupID,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"condition": &me.Condition,
-		"enabled":   &me.Enabled,
-		"mode":      &me.Mode,
-		"scope":     &me.Scope,
+		"condition":     &me.Condition,
+		"enabled":       &me.Enabled,
+		"mode":          &me.Mode,
+		"host_group_id": &me.HostGroupID,
 	})
 }
