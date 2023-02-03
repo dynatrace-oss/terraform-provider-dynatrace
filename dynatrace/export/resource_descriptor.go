@@ -27,6 +27,7 @@ import (
 	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts"
 	custom_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	custom_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
+	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -416,6 +417,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ProcessMonitoringRule: NewResourceDescriptor(
 		customprocessmonitoring.Service,
 		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.ProcessMonitoring: NewResourceDescriptor(
+		processmonitoring.Service,
+		Coalesce(Dependencies.Host),
 	),
 }
 

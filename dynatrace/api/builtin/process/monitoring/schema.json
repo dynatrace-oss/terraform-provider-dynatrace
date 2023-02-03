@@ -1,0 +1,49 @@
+{
+	"allowedScopes": [
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace OneAgent automatically monitors all process groups detected in your environment (processes running during OneAgent installation must be restarted to initiate monitoring).",
+	"displayName": "Process group monitoring",
+	"documentation": "OneAgent additionally provides deep monitoring for all processes that it can monitor at the request- and PurePath levels.",
+	"dynatrace": "1",
+	"enums": {
+		"MonitoringMode": {
+			"description": "",
+			"displayName": "MonitoringMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not monitor",
+					"value": "MONITORING_OFF"
+				},
+				{
+					"displayName": "Monitor",
+					"value": "MONITORING_ON"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"autoMonitoring": {
+			"default": true,
+			"description": "By disabling automatic deep monitoring the Dynatrace OneAgent will only deep monitor processes that are covered by a respective deep monitoring rule or where monitoring is enabled explicitly.\nDisabling only works if all installed Agents have version 1.123 or higher. \n\n With automatic monitoring enabled, you can create rules that define exceptions to automatic process detection and monitoring. With automatic monitoring disabled, you can define rules that identify specific processes that should be monitored. Rules are applied in the order listed in the custom and built-in process monitoring rules settings. This means that you can construct complex operations for fine-grain control over the processes that are monitored in your environment. For example, you might define an inclusion rule that’s followed by an exclusion rule covering the same process.\nOnce created, monitoring rules can be enabled/disabled at any time. The rules will only take effect after restart of the processes in question. Alternatively, you can disable automatic monitoring entirely and instead define \"Include\" rules for those processes you want to monitor.",
+			"displayName": "Enable automatic deep monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process.process-monitoring",
+	"types": {},
+	"version": "0.2"
+}
