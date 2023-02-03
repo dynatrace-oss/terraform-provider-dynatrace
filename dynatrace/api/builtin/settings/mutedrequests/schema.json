@@ -1,0 +1,42 @@
+{
+	"allowedScopes": [
+		"SERVICE"
+	],
+	"description": "Configuration for specifying Muted requests for particular Service. Each Service could have several Muted requests. ",
+	"displayName": "Muted requests",
+	"documentation": "Dynatrace enables you to mute automatic alerts for selected, unimportant service requests. This will also exclude them from the service chart so that you can focus on the performance of requests that affect your customers. You can learn more about Muted requests in our [help]( https://dt-url.net/ze62t5p \"Visit dynatrace.com \")",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"mutedRequestNames": {
+			"description": "",
+			"displayName": "Muted request names",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"type": "NOT_BLANK"
+					},
+					{
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "Name(s) of the Muted request(s)",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaId": "builtin:settings.mutedrequests",
+	"types": {},
+	"version": "0.0.4"
+}

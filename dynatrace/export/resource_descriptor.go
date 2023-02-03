@@ -34,6 +34,7 @@ import (
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
@@ -315,6 +316,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MobileApplication: NewResourceDescriptor(
 		mobile.Service,
 		Dependencies.ID(ResourceTypes.RequestAttribute),
+	),
+	ResourceTypes.MutedRequests: NewResourceDescriptor(
+		mutedrequests.Service,
+		Coalesce(Dependencies.Service),
 	),
 	ResourceTypes.NetworkZone:  NewResourceDescriptor(networkzone.Service),
 	ResourceTypes.NetworkZones: NewResourceDescriptor(networkzones.Service),

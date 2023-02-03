@@ -1,0 +1,7 @@
+{
+    "mutedRequestNames": [
+        "/heartbeat",
+        "/stayalive"
+    ],
+    "serviceId": "SERVICE-1234567890000000"
+}
