@@ -209,6 +209,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_app_anomalies":       resources.NewGeneric(export.ResourceTypes.CustomAppAnomalies).Resource(),
 			"dynatrace_custom_app_crash_rate":      resources.NewGeneric(export.ResourceTypes.CustomAppCrashRate).Resource(),
 			"dynatrace_process_monitoring":         resources.NewGeneric(export.ResourceTypes.ProcessMonitoring).Resource(),
+			"dynatrace_process_availability":       resources.NewGeneric(export.ResourceTypes.ProcessAvailability).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

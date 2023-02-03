@@ -51,12 +51,12 @@ type MetadataItem struct {
 
 func (me *MetadataItem) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"metadata_key": {
+		"key": {
 			Type:        schema.TypeString,
 			Description: "Type 'dt.' for key hints.",
 			Required:    true,
 		},
-		"metadata_value": {
+		"value": {
 			Type:        schema.TypeString,
 			Description: "no documentation available",
 			Required:    true,
@@ -66,14 +66,14 @@ func (me *MetadataItem) Schema() map[string]*schema.Schema {
 
 func (me *MetadataItem) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"metadata_key":   me.MetadataKey,
-		"metadata_value": me.MetadataValue,
+		"key":   me.MetadataKey,
+		"value": me.MetadataValue,
 	})
 }
 
 func (me *MetadataItem) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"metadata_key":   &me.MetadataKey,
-		"metadata_value": &me.MetadataValue,
+		"key":   &me.MetadataKey,
+		"value": &me.MetadataValue,
 	})
 }

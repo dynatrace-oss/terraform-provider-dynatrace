@@ -40,11 +40,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"metadata": {
 			Type:        schema.TypeList,
 			Description: "Set of additional key-value properties to be attached to the triggered event.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(MetadataItems).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"name": {
 			Type:        schema.TypeString,
@@ -54,11 +53,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"rules": {
 			Type:        schema.TypeList,
 			Description: "Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DetectionConditions).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(DetectionConditions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
