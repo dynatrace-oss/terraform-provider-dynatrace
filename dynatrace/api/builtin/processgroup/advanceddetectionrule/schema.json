@@ -1,0 +1,328 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Advanced process group detection rules enable you to adapt the detection logic for deep monitored processes by **leveraging properties that are automatically detected** by OneAgent during the startup of a process. \n\nAdvanced detection rules are capable to extract additional process group and instance identifier from processes to fine tune the automatic detection logic of OneAgent. [More about custom process-group detection](https://dt-url.net/1722wrz) \n\nNote: Detection rules change the composition, makeup, and identity of a process group, not just the name. If you only need to change default name use the [naming rules](/#settings/pgnamingsettings \"Visit Naming rules page\") instead. \n\nProcess-group detection rules only affect processes that are deep monitored by the Dynatrace OneAgent and require a restart of your processes to affect how processes are identified and grouped.",
+	"displayName": "Advanced detection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"minAgentVersion": "1.123"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"groupExtraction": {
+			"description": "You can define the properties that should be used to identify your process groups.",
+			"displayName": "Process group extraction",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/processGroupExtraction"
+			}
+		},
+		"instanceExtraction": {
+			"description": "You can define the properties that should be used to identify your process instances.",
+			"displayName": "Process instance extraction",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/processInstanceExtraction"
+			}
+		},
+		"processDetection": {
+			"description": "Apply this rule to processes where the selected property contains the specified string.",
+			"displayName": "Process group detection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/processGroupDetection"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-group.advanced-detection-rule",
+	"types": {
+		"delimiter": {
+			"description": "",
+			"displayName": "delimiter",
+			"documentation": "",
+			"properties": {
+				"from": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
+							"pattern": "^[^,:;]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Delimit from",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"removeIds": {
+					"default": true,
+					"description": "(e.g. versions, hex, dates, and build numbers)",
+					"displayName": "Ignore numbers",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"to": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
+							"pattern": "^[^,:;]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Delimit to",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"processGroupDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"containedString": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
+							"pattern": "^[^,:;]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "(case sensitive)",
+					"displayName": "Contained string",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "agentItemName",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"restrictToProcessType": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "processType",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"description": "Note: Not all types can be detected at startup.",
+					"displayName": "Restrict this rule to specific process types.",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"processGroupExtraction": {
+			"description": "",
+			"displayName": "processGroupExtraction",
+			"documentation": "",
+			"properties": {
+				"delimiter": {
+					"description": "Optionally delimit this property between *From* and *To*.",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/delimiter"
+					}
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "agentItemName",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"standaloneRule": {
+					"default": true,
+					"description": "If this option is selected, the default Dynatrace behavior is disabled for these detected processes. Only this rule is used to separate the process group.\n\nIf this option is not selected, this rule contributes to the default Dynatrace process group detection. \n\n[See our help page for examples.](https://dt-url.net/1722wrz)",
+					"displayName": "Standalone rule",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"processInstanceExtraction": {
+			"description": "",
+			"displayName": "processInstanceExtraction",
+			"documentation": "",
+			"properties": {
+				"delimiter": {
+					"description": "Optionally delimit this property between *From* and *To*.",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"property": "property",
+							"type": "NULL"
+						},
+						"type": "NOT"
+					},
+					"type": {
+						"$ref": "#/types/delimiter"
+					}
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "agentItemName",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"description": "",
+					"displayName": "Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.5"
+}
