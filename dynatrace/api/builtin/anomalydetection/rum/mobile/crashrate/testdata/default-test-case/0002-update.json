@@ -1,0 +1,11 @@
+{
+    "applicationId": "MOBILE_APPLICATION-1234567890000000",
+    "crashRateIncrease": {
+        "crashRateIncreaseFixed": {
+            "absoluteCrashRate": 25,
+            "concurrentUsers": 200
+        },
+        "detectionMode": "fixed",
+        "enabled": true
+    }
+}

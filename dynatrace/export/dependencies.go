@@ -50,6 +50,7 @@ var Dependencies = struct {
 	ProcessGroupInstance    Dependency
 	RequestAttribute        Dependency
 	CustomApplication       Dependency
+	MobileApplication       Dependency
 	DeviceApplicationMethod Dependency
 }{
 	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
@@ -64,6 +65,7 @@ var Dependencies = struct {
 	ProcessGroupInstance:    &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
 	RequestAttribute:        &reqAttName{ResourceTypes.RequestAttribute},
 	CustomApplication:       &entityds{"CUSTOM_APPLICATION", "CUSTOM_APPLICATION-[A-Z0-9]{16}", false},
+	MobileApplication:       &entityds{"MOBILE_APPLICATION", "MOBILE_APPLICATION-[A-Z0-9]{16}", false},
 	DeviceApplicationMethod: &entityds{"DEVICE_APPLICATION_METHOD", "DEVICE_APPLICATION_METHOD-[A-Z0-9]{16}", false},
 }
 

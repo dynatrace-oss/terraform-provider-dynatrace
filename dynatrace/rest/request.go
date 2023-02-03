@@ -228,6 +228,13 @@ func (me *request) Raw() ([]byte, error) {
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
+	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		if data != nil {
+			logger.Println(res.Status, string(data))
+		} else {
+			logger.Println(res.Status)
+		}
+	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
 		if len(requestData) > 0 {
 			errorLogger.Println(me.method, url+"\n    "+string(requestData))
