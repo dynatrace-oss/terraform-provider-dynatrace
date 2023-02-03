@@ -109,6 +109,7 @@ var ResourceTypes = struct {
 	AdvancedProcessGroupDetectionRule ResourceType
 	MobileAppAnomalies                ResourceType
 	MobileAppCrashRate                ResourceType
+	WebAppAnomalies                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -193,6 +194,7 @@ var ResourceTypes = struct {
 	"dynatrace_advanced_process_group_detection_rule",
 	"dynatrace_mobile_app_anomalies",
 	"dynatrace_mobile_app_crash_rate",
+	"dynatrace_web_app_anomalies",
 }
 
 type ResourceStatus string

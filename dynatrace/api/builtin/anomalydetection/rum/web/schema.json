@@ -1,0 +1,909 @@
+{
+	"allowedScopes": [
+		"APPLICATION_METHOD",
+		"APPLICATION",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects application-related performance anomalies such as response time degradations, failure rate increases, and traffic spikes. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for certain applications.",
+	"displayName": "Anomaly detection for applications",
+	"documentation": "\n\nTo avoid false-positive problem notifications, [automated anomaly detection](https://dt-url.net/op03t6j \"Visit Dynatrace support center\") is only available for applications and services that have run for at least 20% of a week (7 days).",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Using fixed thresholds",
+					"value": "fixed"
+				}
+			],
+			"type": "enum"
+		},
+		"sensitivity": {
+			"description": "",
+			"displayName": "Sensitivity",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Low",
+					"value": "low"
+				},
+				{
+					"displayName": "Medium",
+					"value": "medium"
+				},
+				{
+					"displayName": "High",
+					"value": "high"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"errorRate": {
+			"description": "",
+			"displayName": "Error rate",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/errorRate"
+			}
+		},
+		"responseTime": {
+			"description": "",
+			"displayName": "Response time",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/responseTime"
+			}
+		},
+		"trafficDrops": {
+			"description": "",
+			"displayName": "Detect traffic drops",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/appTrafficDrops"
+			}
+		},
+		"trafficSpikes": {
+			"description": "",
+			"displayName": "Detect traffic spikes",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/appTrafficSpikes"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.rum-web",
+	"types": {
+		"appTrafficDrops": {
+			"description": "",
+			"displayName": "Application load drops",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect traffic drops",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"trafficDrops": {
+					"description": "Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic drops within your application.",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/trafficDrops"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"appTrafficSpikes": {
+			"description": "",
+			"displayName": "Application load spikes",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect traffic spikes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"trafficSpikes": {
+					"description": "Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic spikes within your application.",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/trafficSpikes"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"errorRate": {
+			"description": "",
+			"displayName": "Error rate",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect increases in JavaScript errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"errorRateAuto": {
+					"description": "Alert if the percentage of failing user actions increases by **both** the absolute and relative thresholds:",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "errorRateDetectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/errorRateAuto"
+					}
+				},
+				"errorRateDetectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection strategy for increases in JavaScript errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"errorRateFixed": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "errorRateDetectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/errorRateFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"errorRateAuto": {
+			"description": "",
+			"displayName": "errorRateAuto",
+			"documentation": "",
+			"properties": {
+				"absoluteIncrease": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtectionAuto"
+					}
+				},
+				"relativeIncrease": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"errorRateFixed": {
+			"description": "",
+			"displayName": "errorRateFixed",
+			"documentation": "",
+			"properties": {
+				"errorRateReqPerMin": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "To avoid over-alerting for low traffic applications",
+					"displayName": "Minimum number of actions per minute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"errorRateSensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				},
+				"maxFailureRateIncrease": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Alert if this custom error rate threshold is exceeded during any 5-minute-period",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				},
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Amount of minutes the observed traffic has to stay in abnormal state before alert",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"overAlertingProtectionAuto": {
+			"description": "",
+			"displayName": "overAlertingProtectionAuto",
+			"documentation": "",
+			"properties": {
+				"actionsPerMinute": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "Only alert if there are at least",
+					"displayName": "Minimum number of actions per minute",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "actions per minute"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Only alert if the abnormal state remains for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTime": {
+			"description": "",
+			"displayName": "Response time",
+			"documentation": "",
+			"properties": {
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection strategy for key performance metric degradations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect key performance metric degradations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"responseTimeAuto": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "auto",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/responseTimeAuto"
+					}
+				},
+				"responseTimeFixed": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "fixed",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/responseTimeFixed"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAuto": {
+			"description": "",
+			"displayName": "responseTimeAuto",
+			"documentation": "",
+			"properties": {
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtectionAuto"
+					}
+				},
+				"responseTimeAll": {
+					"description": "Alert if the median response time of all user actions degrades beyond **both** the absolute and relative thresholds:",
+					"displayName": "All user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeAutoAll"
+					}
+				},
+				"responseTimeSlowest": {
+					"description": "Alert if the response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeAutoSlowest"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAutoAll": {
+			"description": "",
+			"displayName": "responseTimeAutoAll",
+			"documentation": "",
+			"properties": {
+				"degradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"degradationPercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeAutoSlowest": {
+			"description": "",
+			"displayName": "responseTimeAutoSlowest",
+			"documentation": "",
+			"properties": {
+				"slowestDegradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1000,
+					"description": "",
+					"displayName": "Absolute threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"slowestDegradationPercent": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Relative threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixed": {
+			"description": "",
+			"displayName": "responseTimeFixed",
+			"documentation": "",
+			"properties": {
+				"overAlertingProtection": {
+					"description": "",
+					"displayName": "Avoid over-alerting",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overAlertingProtectionAuto"
+					}
+				},
+				"responseTimeAll": {
+					"description": "Alert if the key performance metric of all requests degrades beyond this threshold:",
+					"displayName": "All user actions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeFixedAll"
+					}
+				},
+				"responseTimeSlowest": {
+					"description": "Alert if the key performance metric of the slowest 10% of requests degrades beyond this threshold:",
+					"displayName": "Slowest 10%",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/responseTimeFixedSlowest"
+					}
+				},
+				"sensitivity": {
+					"default": "low",
+					"description": "",
+					"displayName": "Sensitivity",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/sensitivity"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixedAll": {
+			"description": "",
+			"displayName": "responseTimeFixedAll",
+			"documentation": "",
+			"properties": {
+				"degradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Alert if the key performance metric degrades beyond this many ms within an observation period of 5 minutes",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"responseTimeFixedSlowest": {
+			"description": "",
+			"displayName": "responseTimeFixedSlowest",
+			"documentation": "",
+			"properties": {
+				"slowestDegradationMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 100000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1000,
+					"description": "",
+					"displayName": "Alert if the key performance metric of the slowest 10% degrades beyond this many ms within an observation period of 5 minutes",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"trafficDrops": {
+			"description": "",
+			"displayName": "trafficDrops",
+			"documentation": "",
+			"properties": {
+				"abnormalStateAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Minutes the observed traffic has to stay in abnormal state before alert",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"trafficDropPercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "Alert if the observed traffic is less than this percentage of the expected value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"trafficSpikes": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"minutesAbnormalState": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Minutes an application has to stay in abnormal state before alert",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minute(s)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"trafficSpikePercentage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 200,
+					"description": "",
+					"displayName": "Alert if the observed traffic is more than this percentage of the expected value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

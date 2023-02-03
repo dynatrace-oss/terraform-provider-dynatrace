@@ -29,6 +29,7 @@ import (
 	custom_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
 	mobile_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
 	mobile_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
+	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -234,6 +235,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MobileAppCrashRate: NewResourceDescriptor(
 		mobile_app_crash_rate.Service,
 		Coalesce(Dependencies.MobileApplication),
+	),
+	ResourceTypes.WebAppAnomalies: NewResourceDescriptor(
+		web_app_anomalies.Service,
+		Coalesce(Dependencies.Application),
+		Coalesce(Dependencies.ApplicationMethod),
 	),
 	ResourceTypes.CustomService: NewResourceDescriptor(customservices.Service),
 	ResourceTypes.Credentials: NewResourceDescriptor(

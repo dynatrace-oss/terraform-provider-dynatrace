@@ -52,6 +52,8 @@ var Dependencies = struct {
 	CustomApplication       Dependency
 	MobileApplication       Dependency
 	DeviceApplicationMethod Dependency
+	Application             Dependency
+	ApplicationMethod       Dependency
 }{
 	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -67,6 +69,8 @@ var Dependencies = struct {
 	CustomApplication:       &entityds{"CUSTOM_APPLICATION", "CUSTOM_APPLICATION-[A-Z0-9]{16}", false},
 	MobileApplication:       &entityds{"MOBILE_APPLICATION", "MOBILE_APPLICATION-[A-Z0-9]{16}", false},
 	DeviceApplicationMethod: &entityds{"DEVICE_APPLICATION_METHOD", "DEVICE_APPLICATION_METHOD-[A-Z0-9]{16}", false},
+	Application:             &entityds{"APPLICATION", "APPLICATION-[A-Z0-9]{16}", false},
+	ApplicationMethod:       &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {
