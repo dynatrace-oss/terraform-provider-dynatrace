@@ -191,6 +191,7 @@ func (me *Environment) Module(resType ResourceType) *Module {
 }
 
 func (me *Environment) CreateFile(name string) (*os.File, error) {
+	os.MkdirAll(me.GetFolder(), os.ModePerm)
 	return os.Create(path.Join(me.GetFolder(), name))
 }
 
