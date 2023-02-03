@@ -1,5 +1,5 @@
 {
-    "scope": "HOST_GROUP-CF1DA380B3A53F17",
+    "hostGroupId": "HOST_GROUP-CF1DA380B3A53F17",
     "enabled": true,
     "mode": "MONITORING_OFF",
     "condition": {

@@ -1,5 +1,5 @@
 {
-    "scope": "environment",
+    "hostGroupId": "environment",
     "enabled": true,
     "mode": "MONITORING_OFF",
     "condition": {
