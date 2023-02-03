@@ -101,66 +101,41 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 				allSettings = append(allSettings, settings)
 			}
 
-			if len(allSettings) == 0 {
-				return
-			}
-			st.T.Run(entry.Name(), func(t *testing.T) {
-				t.Helper()
-				assert := assert.New(t)
-				service := createService(&settings.Credentials{URL: envURL, Token: apiToken})
+			if len(allSettings) > 0 {
+				st.T.Run(entry.Name(), func(t *testing.T) {
+					t.Helper()
+					assert := assert.New(t)
+					service := createService(&settings.Credentials{URL: envURL, Token: apiToken})
 
-				var err error
-				var stub *settings.Stub
+					var err error
+					var stub *settings.Stub
 
-				createSettings := allSettings[0]
+					createSettings := allSettings[0]
 
-				if validator, ok := service.(settings.Validator[V]); ok {
-					if err = validator.Validate(createSettings); err != nil {
-						assert.Error(err)
-						return
-					}
-				}
-
-				if t.Failed() {
-					return
-				}
-
-				if stub, err = service.Create(createSettings); err != nil {
-					assert.Error(err)
-					return
-				}
-
-				if !t.Failed() {
-					t.Cleanup(func() {
-						if service != nil && stub != nil {
-							if err = service.Delete(stub.ID); err != nil {
-								assert.Error(err)
-							}
+					if validator, ok := service.(settings.Validator[V]); ok {
+						if err = validator.Validate(createSettings); err != nil {
+							assert.Error(err)
+							return
 						}
-					})
-				}
+					}
 
-				remoteSettings := settings.NewSettings(service.(settings.RService[V]))
-				if err = service.Get(stub.ID, remoteSettings); err != nil {
-					assert.Error(err)
-					return
-				}
-
-				FillDemoValues(remoteSettings)
-				Anonymize(remoteSettings)
-				Anonymize(createSettings)
-				settings.ClearLegacyID(remoteSettings)
-
-				assert.Equals(createSettings, remoteSettings)
-
-				for idx := 1; idx < len(allSettings); idx++ {
 					if t.Failed() {
 						return
 					}
-					updateSettings := allSettings[idx]
-					if err = service.Update(stub.ID, updateSettings); err != nil {
+
+					if stub, err = service.Create(createSettings); err != nil {
 						assert.Error(err)
 						return
+					}
+
+					if !t.Failed() {
+						t.Cleanup(func() {
+							if service != nil && stub != nil {
+								if err = service.Delete(stub.ID); err != nil {
+									assert.Error(err)
+								}
+							}
+						})
 					}
 
 					remoteSettings := settings.NewSettings(service.(settings.RService[V]))
@@ -168,16 +143,39 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 						assert.Error(err)
 						return
 					}
-					Anonymize(remoteSettings)
+
 					FillDemoValues(remoteSettings)
-					Anonymize(updateSettings)
+					Anonymize(remoteSettings)
+					Anonymize(createSettings)
 					settings.ClearLegacyID(remoteSettings)
-					assert.Equals(updateSettings, remoteSettings)
-				}
 
-			})
+					assert.Equals(createSettings, remoteSettings)
+
+					for idx := 1; idx < len(allSettings); idx++ {
+						if t.Failed() {
+							return
+						}
+						updateSettings := allSettings[idx]
+						if err = service.Update(stub.ID, updateSettings); err != nil {
+							assert.Error(err)
+							return
+						}
+
+						remoteSettings := settings.NewSettings(service.(settings.RService[V]))
+						if err = service.Get(stub.ID, remoteSettings); err != nil {
+							assert.Error(err)
+							return
+						}
+						Anonymize(remoteSettings)
+						FillDemoValues(remoteSettings)
+						Anonymize(updateSettings)
+						settings.ClearLegacyID(remoteSettings)
+						assert.Equals(updateSettings, remoteSettings)
+					}
+
+				})
+			}
 		}
-
 	}
 }
 
