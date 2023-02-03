@@ -105,6 +105,7 @@ var ResourceTypes = struct {
 	CustomAppAnomalies       ResourceType
 	CustomAppCrashRate       ResourceType
 	ProcessMonitoring        ResourceType
+	ProcessAvailability      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -185,6 +186,7 @@ var ResourceTypes = struct {
 	"dynatrace_custom_app_anomalies",
 	"dynatrace_custom_app_crash_rate",
 	"dynatrace_process_monitoring",
+	"dynatrace_process_availability",
 }
 
 type ResourceStatus string

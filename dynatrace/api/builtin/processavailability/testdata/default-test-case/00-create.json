@@ -1,0 +1,17 @@
+{
+    "scope": "environment",
+    "enabled": true,
+    "name": "${randomize}",
+    "rules": [
+        {
+            "property": "executable",
+            "condition": "$contains(svc)"
+        }
+    ],
+    "metadata": [
+        {
+            "metadataKey": "foo",
+            "metadataValue": "bar"
+        }
+    ]
+}

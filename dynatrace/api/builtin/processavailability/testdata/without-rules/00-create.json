@@ -1,0 +1,5 @@
+{
+    "scope": "environment",
+    "enabled": true,
+    "name": "${randomize}"
+}

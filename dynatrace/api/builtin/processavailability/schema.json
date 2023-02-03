@@ -1,0 +1,242 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "This feature allows you to monitor if at least one process matching the specified monitoring rule exists on your host. If no process running on your host matches the rule, you receive an alert. If you also enable **Process instance snapshots**, you receive a detailed report on the activity of the most resource-consuming processes, as well as on the latest activity of the processes matching the rule.",
+	"displayName": "Process availability",
+	"documentation": "\n\nIn order to monitor the availability of a certain group of processes, you must first define a monitoring rule. Give your monitoring rule a unique name and add its detection rules to which Dynatrace will match the processes on your host.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37)",
+	"dynatrace": "1",
+	"enums": {
+		"ProcessItem": {
+			"description": "",
+			"displayName": "ProcessItem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Executable",
+					"value": "executable"
+				},
+				{
+					"displayName": "Executable path",
+					"value": "executablePath"
+				},
+				{
+					"displayName": "Command line",
+					"value": "commandLine"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 400,
+	"metadata": {
+		"addItemButton": "Add monitoring rule",
+		"itemDisplayName": "New monitoring rule",
+		"minAgentVersion": "1.237"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"metadata": {
+			"description": "Set of additional key-value properties to be attached to the triggered event.",
+			"displayName": "Properties",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/MetadataItem"
+				}
+			},
+			"maxObjects": 30,
+			"metadata": {
+				"addItemButton": "Add Property",
+				"itemDisplayName": "New property"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Monitored rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Enter a display name for the monitoring rule."
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"rules": {
+			"description": "Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.",
+			"displayName": "Define detection rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Detection rule definition",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/DetectionCondition"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add detection rule",
+				"itemDisplayName": "New detection rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:processavailability",
+	"types": {
+		"DetectionCondition": {
+			"description": "",
+			"displayName": "DetectionCondition",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
+							"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "- $contains(svc) – Matches if svc appears anywhere in the process property value.\n- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.\n- $prefix(svc) – Matches if app matches the prefix of the process property value.\n- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.\n\nFor example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37).",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter the property condition to be detected using the syntax below."
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"property": {
+					"default": "executable",
+					"description": "",
+					"displayName": "Select process property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ProcessItem"
+					}
+				}
+			},
+			"summaryPattern": "{property} {condition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetadataItem": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Unknown predefined property key.",
+							"customValidatorId": "event-property-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type 'dt.' for key hints.",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_property_key",
+					"type": "text"
+				},
+				"metadataValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type '{' for placeholder hints.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{metadataKey}: {metadataValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

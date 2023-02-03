@@ -1,0 +1,21 @@
+{
+    "scope": "HOST_GROUP-0000000000000000",
+    "enabled": true,
+    "name": "${randomize}",
+    "rules": [
+        {
+            "property": "executable",
+            "condition": "$contains(svc)"
+        },
+        {
+            "property": "executable",
+            "condition": "$eq(svc)"
+        }
+    ],
+    "metadata": [
+        {
+            "metadataKey": "foo",
+            "metadataValue": "bar"
+        }
+    ]
+}
