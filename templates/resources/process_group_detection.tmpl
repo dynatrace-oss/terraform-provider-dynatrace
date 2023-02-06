@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: "dynatrace_process_group_detection Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_process_group_detection` covers configuration for Advanced Process Group Detection Rules
+---
+
+# dynatrace_process_group_detection (Resource)
+
+
+## Dynatrace Documentation
+
+- Advanced Process Group Detection Rules - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups/configuration/pg-detection#advanced
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:process-group.advanced-detection-rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_group_detection` downloads all existing muted requests configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/adv_pg_detection/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

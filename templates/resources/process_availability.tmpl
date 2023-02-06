@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: "dynatrace_process_availability Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_process_availability` covers configuration to monitor key processes on a host
+---
+
+# dynatrace_process_availability (Resource)
+
+
+## Dynatrace Documentation
+
+- Process Availability - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/hosts/monitoring/process-availability
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:processavailability`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_availability` downloads all existing muted requests configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/process_availability/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
