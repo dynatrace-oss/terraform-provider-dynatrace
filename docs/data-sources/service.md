@@ -36,6 +36,7 @@ resource "dynatrace_key_requests" "#name#" {
 
 ### Optional
 
+- `operator` (String)
 - `tags` (Set of String) Required tags of the service to find
 
 ### Read-Only

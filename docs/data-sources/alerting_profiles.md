@@ -39,3 +39,15 @@ resource "dynatrace_notification" "#name#" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `values` (List of Object) (see [below for nested schema](#nestedatt--values))
+
+<a id="nestedatt--values"></a>
+### Nested Schema for `values`
+
+Read-Only:
+
+- `id` (String)
+- `legacy_id` (String)
+- `management_zone_id` (String)
+- `management_zone_legacy_id` (String)
+- `name` (String)

@@ -103,9 +103,9 @@ resource "dynatrace_management_zone" "#name#" {
 ### Optional
 
 - `description` (String) The description of the management zone
-- `dimensional_rule` (Block List) A list of dimensional data rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--dimensional_rule))
-- `entity_selector_based_rule` (Block List) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
-- `rules` (Block List) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
+- `dimensional_rule` (Block Set) A list of dimensional data rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--dimensional_rule))
+- `entity_selector_based_rule` (Block Set) A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies (see [below for nested schema](#nestedblock--entity_selector_based_rule))
+- `rules` (Block Set) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 ### Read-Only
