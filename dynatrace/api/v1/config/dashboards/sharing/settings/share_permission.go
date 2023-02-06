@@ -96,8 +96,7 @@ func (me *SharePermissions) Schema() map[string]*schema.Schema {
 
 // MarshalHCL has no documentation
 func (me SharePermissions) MarshalHCL(properties hcl.Properties) error {
-	props := hcl.Properties{}
-	return props.EncodeSlice("permission", me)
+	return properties.EncodeSlice("permission", me)
 }
 
 // UnmarshalHCL has no documentation
