@@ -111,6 +111,7 @@ var ResourceTypes = struct {
 	MobileAppCrashRate                ResourceType
 	WebAppAnomalies                   ResourceType
 	MutedRequests                     ResourceType
+	ConnectivityAlerts                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -197,6 +198,7 @@ var ResourceTypes = struct {
 	"dynatrace_mobile_app_crash_rate",
 	"dynatrace_web_app_anomalies",
 	"dynatrace_muted_requests",
+	"dynatrace_connectivity_alerts",
 }
 
 type ResourceStatus string

@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
@@ -452,6 +453,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 	),
 	ResourceTypes.AdvancedProcessGroupDetectionRule: NewResourceDescriptor(advanceddetectionrule.Service),
+	ResourceTypes.ConnectivityAlerts: NewResourceDescriptor(
+		connectivityalerts.Service,
+		Coalesce(Dependencies.ProcessGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{

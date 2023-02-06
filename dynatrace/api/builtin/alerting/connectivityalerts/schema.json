@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP"
+	],
+	"description": "Enable or disable TCP connectivity problems for processes of this process group.",
+	"displayName": "Connectivity alerts",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.193"
+	},
+	"multiObject": false,
+	"properties": {
+		"connectivityAlerts": {
+			"default": true,
+			"description": "",
+			"displayName": "TCP connectivity problems",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:alerting.connectivity-alerts",
+	"types": {},
+	"version": "1"
+}

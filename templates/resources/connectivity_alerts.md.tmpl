@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_connectivity_alerts Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_connectivity_alerts` covers configuration for process group connectivity alerts
+---
+
+# dynatrace_connectivity_alerts (Resource)
+
+## Dynatrace Documentation
+
+- Process Groups - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups 
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:alerting.connectivity-alerts`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_connectivity_alerts` downloads all existing process group connectivity alerts
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/connectivity_alerts/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
