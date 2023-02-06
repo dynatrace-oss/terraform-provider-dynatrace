@@ -1,4 +1,4 @@
-resource "dynatrace_advanced_process_group_detection_rule" "_47d495a8-5577-436d-a3b3-777924c2d103" {
+resource "dynatrace_process_group_detection" "_47d495a8-5577-436d-a3b3-777924c2d103" {
   enabled = true
   group_extraction {
     property        = "COMMAND_LINE_ARGS"

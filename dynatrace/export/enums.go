@@ -192,7 +192,7 @@ var ResourceTypes = struct {
 	"dynatrace_custom_app_crash_rate",
 	"dynatrace_process_monitoring",
 	"dynatrace_process_availability",
-	"dynatrace_advanced_process_group_detection_rule",
+	"dynatrace_process_group_detection",
 	"dynatrace_mobile_app_anomalies",
 	"dynatrace_mobile_app_crash_rate",
 	"dynatrace_web_app_anomalies",
