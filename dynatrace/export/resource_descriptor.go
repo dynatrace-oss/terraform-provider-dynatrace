@@ -217,6 +217,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CloudFoundryCredentials: NewResourceDescriptor(cloudfoundry.Service),
 	ResourceTypes.CustomAnomalies: NewResourceDescriptor(
 		custom_anomalies.Service,
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 	).Except(func(id string, name string) bool {
 		return strings.HasPrefix(id, "builtin:") || strings.HasPrefix(id, "ruxit.") || strings.HasPrefix(id, "dynatrace.") || strings.HasPrefix(id, "custom.remote.python.") || strings.HasPrefix(id, "custom.python.")
 	}),
