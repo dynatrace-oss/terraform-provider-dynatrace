@@ -1,0 +1,22 @@
+{
+    "detection": [
+        {
+            "id": "PGIdentifierSample2",
+            "processGroupName": "PGDisplayNameSample2",
+            "report": "always",
+            "rules": [
+                {
+                    "condition": "$contains(TerraformExecutable2)",
+                    "property": "executable"
+                },
+                {
+                    "condition": "$contains(TerraformSample2)",
+                    "property": "commandLine"
+                }
+            ]
+        }
+    ],
+    "enabled": false,
+    "name": "${randomize}",
+    "scope": "environment"
+}

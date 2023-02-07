@@ -1,0 +1,22 @@
+{
+    "detection": [
+        {
+            "id": "PGIdentifierSample",
+            "processGroupName": "PGDisplayNameSample",
+            "report": "always",
+            "rules": [
+                {
+                    "condition": "$contains(TerraformExecutable)",
+                    "property": "executable"
+                },
+                {
+                    "condition": "$contains(TerraformSample)",
+                    "property": "commandLine"
+                }
+            ]
+        }
+    ],
+    "enabled": true,
+    "name": "${randomize}",
+    "scope": "HOST-1234567890000000"
+}

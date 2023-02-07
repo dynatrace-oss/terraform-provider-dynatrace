@@ -216,6 +216,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_anomalies":          resources.NewGeneric(export.ResourceTypes.WebAppAnomalies).Resource(),
 			"dynatrace_muted_requests":             resources.NewGeneric(export.ResourceTypes.MutedRequests).Resource(),
 			"dynatrace_connectivity_alerts":        resources.NewGeneric(export.ResourceTypes.ConnectivityAlerts).Resource(),
+			"dynatrace_declarative_grouping":       resources.NewGeneric(export.ResourceTypes.DeclarativeGrouping).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

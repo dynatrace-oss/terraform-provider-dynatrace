@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_declarative_grouping Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_declarative_grouping` covers configuration for declarative process grouping
+---
+
+# dynatrace_declarative_grouping (Resource)
+
+## Dynatrace Documentation
+
+- Declarative process grouping - https://www.dynatrace.com/support/help/shortlink/process-groups#declare
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:declarativegrouping`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_declarative_grouping` downloads all existing declarative process grouping configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/declarative_grouping/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

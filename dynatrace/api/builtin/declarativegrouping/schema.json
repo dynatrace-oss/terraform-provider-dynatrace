@@ -1,0 +1,259 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace automatically monitors process groups that are of known technology types or that consume significant resources. With declarative process grouping, you can automatically monitor additional technologies.",
+	"displayName": "Declarative process grouping",
+	"documentation": "\n\nNote that declarative grouping does not work for processes that have [deep monitoring enabled](https://dt-url.net/3203vvp).\n\nTo add a new process group, you must first define the technology type. The technology type can be a generic technology name or a custom name. Each technology type can be associated with multiple process groups.\n\nNext, give your process group a unique name and identifier. This name is used to identify the process group throughout your Dynatrace environment. Finally, add detection rules so that Dynatrace can automatically identify processes that belong in this group.\n\nFor complete details, see [Declarative process grouping](https://dt-url.net/j142w57)",
+	"dynatrace": "1",
+	"enums": {
+		"ProcessItem": {
+			"description": "",
+			"displayName": "ProcessItem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Executable",
+					"value": "executable"
+				},
+				{
+					"displayName": "Executable path",
+					"value": "executablePath"
+				},
+				{
+					"displayName": "Command line",
+					"value": "commandLine"
+				}
+			],
+			"type": "enum"
+		},
+		"ReportItem": {
+			"description": "",
+			"displayName": "Report",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Always",
+					"value": "always"
+				},
+				{
+					"displayName": "Only when resource usage is high",
+					"value": "highResourceUsage"
+				},
+				{
+					"displayName": "Never",
+					"value": "never"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 400,
+	"metadata": {
+		"addItemButton": "Add monitored technology",
+		"itemDisplayName": "New technology",
+		"minAgentVersion": "1.217"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"detection": {
+			"description": "Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.",
+			"displayName": "Define the process group",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Process group definition",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/ProcessDefinition"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add process group",
+				"itemDisplayName": "New process group"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Monitored technology name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Enter a display name for the monitored technology type."
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:declarativegrouping",
+	"types": {
+		"DetectionCondition": {
+			"description": "",
+			"displayName": "DetectionCondition",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
+							"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "- $contains(svc) – Matches if svc appears anywhere in the process property value.\n- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.\n- $prefix(svc) – Matches if app matches the prefix of the process property value.\n- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.\n\nFor example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.\n\nFor more details, see [Declarative process grouping](https://dt-url.net/j142w57).",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter the property condition to be detected using the syntax below."
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"property": {
+					"default": "executable",
+					"description": "",
+					"displayName": "Select process property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ProcessItem"
+					}
+				}
+			},
+			"summaryPattern": "{property} {condition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ProcessDefinition": {
+			"description": "",
+			"displayName": "ProcessDefinition",
+			"documentation": "",
+			"properties": {
+				"id": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Process group identifier",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter a string (no empty spaces)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"processGroupName": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "This identifier is used by Dynatrace to recognize this process group.",
+					"displayName": "Process group display name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter a descriptive name"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"report": {
+					"default": "always",
+					"description": "This property tells OneAgent a condition for reporting the created Process group to Dynatrace.",
+					"displayName": "Report process group",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.259"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ReportItem"
+					}
+				},
+				"rules": {
+					"description": "Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it.",
+					"displayName": "Define detection rules",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "Detection rule definition",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/DetectionCondition"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add detection rule",
+						"itemDisplayName": "New detection rule"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "{processGroupName} ({id})",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.20"
+}
