@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_host_monitoring Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_host_monitoring` covers configuration for host monitoring
+---
+
+# dynatrace_host_monitoring (Resource)
+
+## Dynatrace Documentation
+
+- Hosts - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/hosts
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:host.monitoring`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_host_monitoring` downloads all existing host monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/host/monitoring/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

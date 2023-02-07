@@ -32,6 +32,7 @@ import (
 	mobile_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
+	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -463,6 +464,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		declarativegrouping.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.HostMonitoring: NewResourceDescriptor(
+		hostmonitoring.Service,
+		Coalesce(Dependencies.Host),
 	),
 }
 

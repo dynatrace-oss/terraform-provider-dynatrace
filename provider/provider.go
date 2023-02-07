@@ -217,6 +217,7 @@ func Provider() *schema.Provider {
 			"dynatrace_muted_requests":             resources.NewGeneric(export.ResourceTypes.MutedRequests).Resource(),
 			"dynatrace_connectivity_alerts":        resources.NewGeneric(export.ResourceTypes.ConnectivityAlerts).Resource(),
 			"dynatrace_declarative_grouping":       resources.NewGeneric(export.ResourceTypes.DeclarativeGrouping).Resource(),
+			"dynatrace_host_monitoring":            resources.NewGeneric(export.ResourceTypes.HostMonitoring).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
