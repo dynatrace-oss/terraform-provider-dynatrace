@@ -42,6 +42,17 @@ func (me *service) Get(id string, v *customservices.CustomService) error {
 	if id, technology, ok := settings.SplitID(id); ok {
 		return me.GetWithTechnology(id, technology, v)
 	}
+	for _, technology := range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Go, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP} {
+		if err := me.GetWithTechnology(id, string(technology), v); err != nil {
+			if restError, ok := err.(rest.Error); ok {
+				if restError.Code != 404 {
+					return err
+				}
+			}
+		} else {
+			return nil
+		}
+	}
 	return errors.New("unable to determine technology")
 }
 
@@ -119,6 +130,17 @@ func (me *service) UpdateWithTechnology(id string, technology string, v any) err
 func (me *service) Delete(id string) error {
 	if id, technology, ok := settings.SplitID(id); ok {
 		return me.DeleteWithTechnology(id, technology)
+	}
+	for _, technology := range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Go, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP} {
+		if err := me.DeleteWithTechnology(id, string(technology)); err != nil {
+			if restError, ok := err.(rest.Error); ok {
+				if restError.Code != 404 {
+					return err
+				}
+			}
+		} else {
+			return nil
+		}
 	}
 	return errors.New("unable to determine technology")
 }
