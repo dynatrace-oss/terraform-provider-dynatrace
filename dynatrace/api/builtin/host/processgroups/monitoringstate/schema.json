@@ -1,0 +1,88 @@
+{
+	"allowedScopes": [
+		"HOST"
+	],
+	"description": "Enable or disable monitoring for certain process groups on this host",
+	"displayName": "Process group monitoring",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ProcessGroupMonitoringMode": {
+			"description": "",
+			"displayName": "Monitoring mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not monitor",
+					"value": "MONITORING_OFF"
+				},
+				{
+					"displayName": "Monitor",
+					"value": "MONITORING_ON"
+				},
+				{
+					"displayName": "Default",
+					"value": "DEFAULT"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add process group"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"MonitoringState": {
+			"default": "MONITORING_ON",
+			"description": "",
+			"displayName": "Monitoring state",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ProcessGroupMonitoringMode"
+			}
+		},
+		"ProcessGroup": {
+			"constraints": [
+				{
+					"customMessage": "Please provide a valid processgroup ID.",
+					"pattern": "^PROCESS_GROUP-[0-9A-F]{16}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "pgsOfHost",
+				"resetValue": "NEVER",
+				"useApiSearch": true,
+				"validate": false
+			},
+			"default": "",
+			"description": "",
+			"displayName": "Process group",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		}
+	},
+	"schemaId": "builtin:host.process-groups.monitoring-state",
+	"types": {},
+	"version": "1.0.1"
+}

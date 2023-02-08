@@ -33,6 +33,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
+	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -468,6 +469,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HostMonitoring: NewResourceDescriptor(
 		hostmonitoring.Service,
 		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.HostProcessGroupMonitoring: NewResourceDescriptor(
+		hostprocessgroupmonitoring.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.ProcessGroup),
 	),
 }
 

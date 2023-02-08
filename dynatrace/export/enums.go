@@ -114,6 +114,7 @@ var ResourceTypes = struct {
 	ConnectivityAlerts                ResourceType
 	DeclarativeGrouping               ResourceType
 	HostMonitoring                    ResourceType
+	HostProcessGroupMonitoring        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -203,6 +204,7 @@ var ResourceTypes = struct {
 	"dynatrace_connectivity_alerts",
 	"dynatrace_declarative_grouping",
 	"dynatrace_host_monitoring",
+	"dynatrace_host_process_group_monitoring",
 }
 
 type ResourceStatus string
