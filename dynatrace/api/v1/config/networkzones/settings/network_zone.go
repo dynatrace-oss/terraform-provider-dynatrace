@@ -18,6 +18,7 @@
 package networkzones
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -25,7 +26,8 @@ import (
 
 // NetworkZone TODO: documentation
 type NetworkZone struct {
-	ID                           *string  `json:"id,omitempty"`                           // The ID of the network zone
+	ID                           *string  `json:"id,omitempty"` // The ID of the network zone
+	NetworkZoneName              *string  `json:"-"`
 	Description                  *string  `json:"description,omitempty"`                  // A short description of the network zone
 	AltZones                     []string `json:"alternativeZones,omitempty"`             // A list of alternative network zones.
 	NumOfOneAgentsFromOtherZones *int     `json:"numOfOneAgentsFromOtherZones,omitempty"` // The number of OneAgents from other network zones that are using ActiveGates in the network zone.
@@ -44,6 +46,11 @@ type NetworkZones struct {
 
 func (me *NetworkZone) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Description: "Name of the network zone, not case sensitive. Dynatrace stores the name in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot",
+			Optional:    true,
+		},
 		"description": {
 			Type:        schema.TypeString,
 			Description: "A short description of the network zone",
@@ -78,8 +85,16 @@ func (me *NetworkZone) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *NetworkZone) PrepareMarshalHCL(decoder hcl.Decoder) error {
+	if name, ok := decoder.GetOk("name"); ok && len(name.(string)) > 0 {
+		me.NetworkZoneName = opt.NewString(name.(string))
+	}
+	return nil
+}
+
 func (me *NetworkZone) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"name":                              me.NetworkZoneName,
 		"description":                       me.Description,
 		"alternative_zones":                 me.AltZones,
 		"num_of_oneagents_from_other_zones": me.NumOfOneAgentsFromOtherZones,
@@ -91,6 +106,7 @@ func (me *NetworkZone) MarshalHCL(properties hcl.Properties) error {
 
 func (me *NetworkZone) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"name":              &me.NetworkZoneName,
 		"description":       &me.Description,
 		"alternative_zones": &me.AltZones,
 	})

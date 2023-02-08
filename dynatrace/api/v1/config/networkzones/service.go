@@ -69,10 +69,13 @@ func (me *service) Create(v *networkzones.NetworkZone) (*settings.Stub, error) {
 
 	// id := *v.ID
 	id := uuid.NewString()
+	if v.NetworkZoneName != nil {
+		id = *v.NetworkZoneName
+	}
 
-	var stub settings.Stub
-	req := me.client.Put(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), v, 201)
-	if err = req.Finish(&stub); err != nil {
+	req := me.client.Put(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), v, 201, 204)
+
+	if err = req.Finish(); err != nil {
 		if strings.Contains(err.Error(), "Not allowed because network zones are disabled") {
 			if _, err := enable.Service(me.credentials).Create(&enablesettings.NetworkZones{Enabled: true}); err != nil {
 				return nil, err
@@ -80,15 +83,18 @@ func (me *service) Create(v *networkzones.NetworkZone) (*settings.Stub, error) {
 			return me.Create(v)
 		}
 		if strings.Contains(err.Error(), "Creation and modification of network zone is only possible via cluster API.") {
-			name := uuid.NewString()
-			return &settings.Stub{ID: name + "---flawed----", Name: name}, nil
+			return &settings.Stub{ID: id + "---flawed----", Name: id}, nil
 		}
 		return nil, err
 	}
-	return &stub, nil
+
+	return &settings.Stub{ID: id, Name: id}, nil
 }
 
 func (me *service) Update(id string, v *networkzones.NetworkZone) error {
+	if id != strings.ToLower(*v.NetworkZoneName) {
+		return fmt.Errorf("Network zone name cannot be modified, please destroy and create with the new name")
+	}
 	if err := me.client.Put(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
 		return err
 	}
