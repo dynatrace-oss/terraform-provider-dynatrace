@@ -1,0 +1,210 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "IP range end must be \u003e IP range start address",
+			"customValidatorId": "ipRangeValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "If you don't see performance data for some of your customers on the world map, it may be because those customers have private IP addresses. You can map such private IP addresses to geographic regions to make them visible on the map. You can even override settings for customer IP addresses if necessary for mapping purposes.\n\n",
+	"displayName": "Map IP addresses to locations",
+	"documentation": "\n\nGranularity of regional performance analysis increases as the number of detected user requests goes up in a specific region (continent, country, state, or city). You can even override auto-detected IP addresses if necessary to improve mapping accuracy.\n\n## Dynatrace built in IP mapping\n\nDynatrace uses an IP address to geolocation mapping service offered by [MaxMind GeoIP2](https://dt-url.net/6a21pxd). The names for regions and cities are following the [GeoNames database](https://dt-url.net/tz41pwz).\nTo find out which names and IDs are used out of the box, use the [geographic regions REST API](/rest-api-doc/index.jsp?urls.primaryName=Environment%20API%20v2#/Geographic%20regions).",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 5000,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"city": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [
+					"regionCode",
+					"countryCode"
+				],
+				"fullContext": false,
+				"identifier": "uem_city_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"description": "The city name of the location.",
+			"displayName": "City",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"countryCode": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "uem_country_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "",
+			"description": "The country code of the location. \n\n Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).",
+			"displayName": "Country",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"ip": {
+			"constraints": [
+				{
+					"customMessage": "Invalid IP address",
+					"customValidatorId": "ipValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Single IP or IP range start address",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"ipTo": {
+			"constraints": [
+				{
+					"customMessage": "Invalid IP address",
+					"customValidatorId": "ipValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "IP range end",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"latitude": {
+			"constraints": [
+				{
+					"maximum": 90,
+					"minimum": -90,
+					"type": "RANGE"
+				}
+			],
+			"default": 0,
+			"description": "",
+			"displayName": "Latitude",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"precondition": {
+					"property": "city",
+					"type": "NULL"
+				},
+				"type": "NOT"
+			},
+			"type": "float"
+		},
+		"longitude": {
+			"constraints": [
+				{
+					"maximum": 180,
+					"minimum": -180,
+					"type": "RANGE"
+				}
+			],
+			"default": 0,
+			"description": "",
+			"displayName": "Longitude",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"precondition": {
+					"property": "city",
+					"type": "NULL"
+				},
+				"type": "NOT"
+			},
+			"type": "float"
+		},
+		"regionCode": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [
+					"countryCode"
+				],
+				"fullContext": false,
+				"identifier": "uem_region_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"description": "The region code of the location. \n\n For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. \n\n For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.",
+			"displayName": "Region",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.geographic-regions",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.ip-mappings",
+	"types": {},
+	"version": "1.1.1"
+}

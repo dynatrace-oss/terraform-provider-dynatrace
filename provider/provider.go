@@ -219,6 +219,7 @@ func Provider() *schema.Provider {
 			"dynatrace_declarative_grouping":          resources.NewGeneric(export.ResourceTypes.DeclarativeGrouping).Resource(),
 			"dynatrace_host_monitoring":               resources.NewGeneric(export.ResourceTypes.HostMonitoring).Resource(),
 			"dynatrace_host_process_group_monitoring": resources.NewGeneric(export.ResourceTypes.HostProcessGroupMonitoring).Resource(),
+			"dynatrace_rum_ip_locations":              resources.NewGeneric(export.ResourceTypes.RUMIPLocations).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
