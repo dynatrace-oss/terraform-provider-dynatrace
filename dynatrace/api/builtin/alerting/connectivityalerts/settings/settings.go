@@ -24,11 +24,11 @@ import (
 
 type Settings struct {
 	ConnectivityAlerts bool   `json:"connectivityAlerts"`       // TCP connectivity problems
-	ProcessGroupID     string `json:"-" scope:"processGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	ProcessGroupID     string `json:"-" scope:"processGroupId"` // The scope of this settings
 }
 
 func (me *Settings) Name() string {
-	return *&me.ProcessGroupID
+	return me.ProcessGroupID
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
