@@ -38,6 +38,7 @@ import (
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
+	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -477,6 +478,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ProcessGroup),
 	),
 	ResourceTypes.RUMIPLocations: NewResourceDescriptor(ipmappings.Service),
+	ResourceTypes.CustomAppEnablement: NewResourceDescriptor(
+		rumcustomenablement.Service,
+		Dependencies.ID(ResourceTypes.MobileApplication),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -494,6 +499,8 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.DashboardSharing,
 
 	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
+
+	ResourceTypes.CustomAppEnablement, // slight overlap with ResourceTypes.MobileApplication
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

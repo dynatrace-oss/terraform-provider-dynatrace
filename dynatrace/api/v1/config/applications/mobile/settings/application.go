@@ -32,7 +32,7 @@ type Application struct {
 	Name                             string                         `json:"name"`                                       // The name of the application
 	ApplicationType                  *ApplicationType               `json:"applicationType,omitempty"`                  // The type of the application
 	ApplicationID                    *string                        `json:"applicationId,omitempty"`                    // The UUID of the application.\n\nIt is used only by OneAgent to send data to Dynatrace
-	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // The percentage of user sessions to be analyzed
+	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // (Field has overlap with `dynatrace_custom_app_enablement`) The percentage of user sessions to be analyzed
 	ApdexSettings                    *MobileCustomApdex             `json:"apdexSettings,omitempty"`
 	OptInModeEnabled                 bool                           `json:"optInModeEnabled,omitempty"`     // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
 	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled,omitempty"` // The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
@@ -119,7 +119,7 @@ func (me *Application) Schema() map[string]*schema.Schema {
 		},
 		"user_session_percentage": {
 			Type:        schema.TypeInt,
-			Description: "The percentage of user sessions to be analyzed",
+			Description: "(Field has overlap with `dynatrace_custom_app_enablement`) The percentage of user sessions to be analyzed",
 			Optional:    true,
 		},
 		"opt_in_mode": {

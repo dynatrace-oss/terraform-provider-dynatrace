@@ -116,6 +116,7 @@ var ResourceTypes = struct {
 	HostMonitoring                    ResourceType
 	HostProcessGroupMonitoring        ResourceType
 	RUMIPLocations                    ResourceType
+	CustomAppEnablement               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -207,6 +208,7 @@ var ResourceTypes = struct {
 	"dynatrace_host_monitoring",
 	"dynatrace_host_process_group_monitoring",
 	"dynatrace_rum_ip_locations",
+	"dynatrace_custom_app_enablement",
 }
 
 type ResourceStatus string
