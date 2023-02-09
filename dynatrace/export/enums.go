@@ -118,6 +118,7 @@ var ResourceTypes = struct {
 	RUMIPLocations                    ResourceType
 	CustomAppEnablement               ResourceType
 	MobileAppEnablement               ResourceType
+	WebAppEnablement                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -211,6 +212,7 @@ var ResourceTypes = struct {
 	"dynatrace_rum_ip_locations",
 	"dynatrace_custom_app_enablement",
 	"dynatrace_mobile_app_enablement",
+	"dynatrace_web_app_enablement",
 }
 
 type ResourceStatus string

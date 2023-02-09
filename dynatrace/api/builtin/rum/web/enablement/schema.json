@@ -1,0 +1,154 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Real User Monitoring is required to enable Session Replay.",
+			"customValidatorId": "sessionReplayRumEnabledValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
+	"displayName": "Enablement and cost control",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"rum": {
+			"description": "Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
+			"displayName": "Real User Monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/rum"
+			}
+		},
+		"sessionReplay": {
+			"description": "[Session Replay](https://dt-url.net/session-replay) captures all user interactions within your application and replays them in a movie-like experience while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
+			"displayName": "Session Replay",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/sessionReplay"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring",
+		"group:rum-settings"
+	],
+	"schemaId": "builtin:rum.web.enablement",
+	"types": {
+		"rum": {
+			"description": "",
+			"displayName": "rum",
+			"documentation": "",
+			"properties": {
+				"costAndTrafficControl": {
+					"constraints": [
+						{
+							"customMessage": "Percentage should be between 0 and 100.",
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "Percentage of user sessions captured and analyzed",
+					"displayName": "Cost and traffic control",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enable Real User Monitoring",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"sessionReplay": {
+			"description": "",
+			"displayName": "sessionReplay",
+			"documentation": "",
+			"properties": {
+				"costAndTrafficControl": {
+					"constraints": [
+						{
+							"customMessage": "Percentage should be between 0 and 100.",
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "[Percentage of user sessions recorded with Session Replay](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.",
+					"displayName": "Cost and traffic control",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"enabled": {
+					"constraints": [
+						{
+							"customMessage": "Session Replay can't be activated currently, either due to the status of your licensing agreement or because you've exhausted your quota of DEM units. Please contact Dynatrace Sales to update your license.",
+							"customValidatorId": "sessionReplayLicenseValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "For emergency reasons session replay has been disabled on this application and cannot be re-enabled. Please contact your Dynatrace support.",
+							"customValidatorId": "sessionReplayDisabledByEmergencyValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Session Replay can't be enabled for your application because the secondary storage for Session Replay data hasn't been configured correctly. Please contact support or your Dynatrace administrator",
+							"customValidatorId": "replayStorageReadinessValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "sessionReplayMinJsAgentValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": false,
+					"description": "Before enabling, Dynatrace checks your system against the prerequisites for [Session Replay](https://dt-url.net/ma3m0psf).",
+					"displayName": "Enable Session Replay",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.6"
+}

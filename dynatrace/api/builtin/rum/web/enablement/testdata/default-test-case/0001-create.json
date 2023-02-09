@@ -1,0 +1,11 @@
+{
+    "applicationId": "environment",
+    "rum": {
+        "costAndTrafficControl": 25,
+        "enabled": true
+    },
+    "sessionReplay": {
+        "enabled": false,
+        "costAndTrafficControl": 25
+    }
+}

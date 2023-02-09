@@ -34,8 +34,8 @@ import (
 type Application struct {
 	Name                             string                         `json:"name"`                             // The name of the web application, displayed in the UI
 	Type                             ApplicationType                `json:"type"`                             // The type of the web application
-	RealUserMonitoringEnabled        bool                           `json:"realUserMonitoringEnabled"`        // Real user monitoring enabled/disabled
-	CostControlUserSessionPercentage int                            `json:"costControlUserSessionPercentage"` // Analize *X*% of user sessions
+	RealUserMonitoringEnabled        bool                           `json:"realUserMonitoringEnabled"`        // (Field has overlap with `dynatrace_web_app_enablement`) Real user monitoring enabled/disabled
+	CostControlUserSessionPercentage int                            `json:"costControlUserSessionPercentage"` // (Field has overlap with `dynatrace_web_app_enablement`) Analize *X*% of user sessions
 	LoadActionKeyPerformanceMetric   LoadActionKeyPerformanceMetric `json:"loadActionKeyPerformanceMetric"`   // The key performance metric of load actions
 	SessionReplayConfig              *sessionreplay.Settings        `json:"sessionReplayConfig,omitempty"`    // Session replay settings
 	XHRActionKeyPerformanceMetric    XHRActionKeyPerformanceMetric  `json:"xhrActionKeyPerformanceMetric"`    // The key performance metric of XHR actions
@@ -67,12 +67,12 @@ func (me *Application) Schema() map[string]*schema.Schema {
 		},
 		"real_user_monitoring_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Real user monitoring enabled/disabled",
+			Description: "(Field has overlap with `dynatrace_web_app_enablement`) Real user monitoring enabled/disabled",
 			Optional:    true,
 		},
 		"cost_control_user_session_percentage": {
 			Type:        schema.TypeInt,
-			Description: "Analize *X*% of user sessions",
+			Description: "(Field has overlap with `dynatrace_web_app_enablement`) Analize *X*% of user sessions",
 			Required:    true,
 		},
 		"load_action_key_performance_metric": {

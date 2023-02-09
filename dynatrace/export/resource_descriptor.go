@@ -41,6 +41,7 @@ import (
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
+	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -486,6 +487,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MobileAppEnablement: NewResourceDescriptor(
 		rummobileenablement.Service,
 		Dependencies.ID(ResourceTypes.MobileApplication),
+	),
+	ResourceTypes.WebAppEnablement: NewResourceDescriptor(
+		rumwebenablement.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 }
 

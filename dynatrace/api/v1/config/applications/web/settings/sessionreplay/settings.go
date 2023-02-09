@@ -25,8 +25,8 @@ import (
 
 // Settings Session replay settings
 type Settings struct {
-	Enabled                            bool     `json:"enabled"`                            // SessionReplay Enabled
-	CostControlPercentage              int32    `json:"costControlPercentage"`              // Session replay sampling rating in percentage
+	Enabled                            bool     `json:"enabled"`                            // (Field has overlap with `dynatrace_web_app_enablement`) SessionReplay Enabled
+	CostControlPercentage              int32    `json:"costControlPercentage"`              // (Field has overlap with `dynatrace_web_app_enablement`) Session replay sampling rating in percentage
 	EnableCSSResourceCapturing         bool     `json:"enableCssResourceCapturing"`         // Capture (`true`) or don't capture (`false`) CSS resources from the session
 	CSSResourceCapturingExclusionRules []string `json:"cssResourceCapturingExclusionRules"` // A list of URLs to be excluded from CSS resource capturing
 }
@@ -35,12 +35,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "SessionReplay Enabled/Disabled",
+			Description: "(Field has overlap with `dynatrace_web_app_enablement`) SessionReplay Enabled/Disabled",
 			Optional:    true,
 		},
 		"cost_control_percentage": {
 			Type:        schema.TypeInt,
-			Description: "Session replay sampling rating in percent",
+			Description: "(Field has overlap with `dynatrace_web_app_enablement`) Session replay sampling rating in percent",
 			Required:    true,
 		},
 		"enable_css_resource_capturing": {

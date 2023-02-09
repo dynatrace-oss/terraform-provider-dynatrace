@@ -222,6 +222,7 @@ func Provider() *schema.Provider {
 			"dynatrace_rum_ip_locations":              resources.NewGeneric(export.ResourceTypes.RUMIPLocations).Resource(),
 			"dynatrace_custom_app_enablement":         resources.NewGeneric(export.ResourceTypes.CustomAppEnablement).Resource(),
 			"dynatrace_mobile_app_enablement":         resources.NewGeneric(export.ResourceTypes.MobileAppEnablement).Resource(),
+			"dynatrace_web_app_enablement":            resources.NewGeneric(export.ResourceTypes.WebAppEnablement).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
