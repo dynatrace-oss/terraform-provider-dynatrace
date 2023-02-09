@@ -32,10 +32,10 @@ type Application struct {
 	Name                             string                         `json:"name"`                                       // The name of the application
 	ApplicationType                  *ApplicationType               `json:"applicationType,omitempty"`                  // The type of the application
 	ApplicationID                    *string                        `json:"applicationId,omitempty"`                    // The UUID of the application.\n\nIt is used only by OneAgent to send data to Dynatrace
-	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // (Field has overlap with `dynatrace_custom_app_enablement`) The percentage of user sessions to be analyzed
+	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // (Field has overlap with `dynatrace_mobile_app_enablement` for mobile and `dynatrace_custom_app_enablement` for custom apps) The percentage of user sessions to be analyzed
 	ApdexSettings                    *MobileCustomApdex             `json:"apdexSettings,omitempty"`
 	OptInModeEnabled                 bool                           `json:"optInModeEnabled,omitempty"`     // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
-	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled,omitempty"` // The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
+	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled,omitempty"` // (Field has overlap with `dynatrace_mobile_app_enablement`) The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
 	SessionReplayOnCrashEnabled      bool                           `json:"sessionReplayOnCrashEnabled"`    // The session replay on crash is enabled (`true`) or disabled (`false`). \n\nEnabling requires both **sessionReplayEnabled** and **optInModeEnabled** values set to `true`.\nAlso, this value is only applicable to mobile and not to custom apps
 	BeaconEndpointType               BeaconEndpointType             `json:"beaconEndpointType"`             // The type of the beacon endpoint
 	BeaconEndpointUrl                *string                        `json:"beaconEndpointUrl,omitempty"`    // The URL of the beacon endpoint.\n\nOnly applicable when the **beaconEndpointType** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
@@ -119,7 +119,7 @@ func (me *Application) Schema() map[string]*schema.Schema {
 		},
 		"user_session_percentage": {
 			Type:        schema.TypeInt,
-			Description: "(Field has overlap with `dynatrace_custom_app_enablement`) The percentage of user sessions to be analyzed",
+			Description: "(Field has overlap with `dynatrace_mobile_app_enablement` for mobile and `dynatrace_custom_app_enablement` for custom apps) The percentage of user sessions to be analyzed",
 			Optional:    true,
 		},
 		"opt_in_mode": {
@@ -129,7 +129,7 @@ func (me *Application) Schema() map[string]*schema.Schema {
 		},
 		"session_replay": {
 			Type:        schema.TypeBool,
-			Description: "The session replay is enabled (`true`) or disabled (`false`).",
+			Description: "(Field has overlap with `dynatrace_mobile_app_enablement`) The session replay is enabled (`true`) or disabled (`false`).",
 			Optional:    true,
 		},
 		"session_replay_on_crash": {

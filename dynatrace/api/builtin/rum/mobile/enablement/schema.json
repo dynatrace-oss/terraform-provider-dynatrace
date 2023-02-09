@@ -1,0 +1,118 @@
+{
+	"allowedScopes": [
+		"MOBILE_APPLICATION",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "This scope does not identify a valid application.",
+			"customValidatorId": "valid-application-scope",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Real User Monitoring is required to enable Session Replay.",
+			"customValidatorId": "mobile-session-replay-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
+	"displayName": "Enablement and cost control",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"rum": {
+			"description": "Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
+			"displayName": "Real User Monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/rum"
+			}
+		},
+		"sessionReplay": {
+			"description": "[Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
+			"displayName": "Session Replay on crashes",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/sessionReplay"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-general",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.mobile.enablement",
+	"types": {
+		"rum": {
+			"description": "",
+			"displayName": "rum",
+			"documentation": "",
+			"properties": {
+				"costAndTrafficControl": {
+					"constraints": [
+						{
+							"customMessage": "Percentage should be between 1 and 100.",
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "Percentage of user sessions captured and analyzed",
+					"displayName": "Cost and traffic control",
+					"documentation": "By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enable Real User Monitoring",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"sessionReplay": {
+			"description": "",
+			"displayName": "sessionReplay",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
+					"displayName": "Enable Session Replay on crashes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.1.6"
+}

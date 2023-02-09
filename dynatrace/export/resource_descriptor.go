@@ -40,6 +40,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
+	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -480,6 +481,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.RUMIPLocations: NewResourceDescriptor(ipmappings.Service),
 	ResourceTypes.CustomAppEnablement: NewResourceDescriptor(
 		rumcustomenablement.Service,
+		Dependencies.ID(ResourceTypes.MobileApplication),
+	),
+	ResourceTypes.MobileAppEnablement: NewResourceDescriptor(
+		rummobileenablement.Service,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 }
