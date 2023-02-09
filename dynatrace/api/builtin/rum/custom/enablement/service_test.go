@@ -24,10 +24,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestRUMCustomEnablement(t *testing.T) {
+func TestCustomAppEnablement(t *testing.T) {
 	api.TestService(t, enablement.Service)
 }
 
-func TestAccRUMCustomEnablement(t *testing.T) {
+func TestAccCustomAppEnablement(t *testing.T) {
 	api.TestAcc(t)
 }
