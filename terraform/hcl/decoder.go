@@ -145,10 +145,17 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 			for _, element := range resultSet.List() {
 				hash := resultSet.F(element)
 				entry := reflect.New(elemType.Elem()).Interface()
+				invalid := false
 				if err := entry.(Unmarshaler).UnmarshalHCL(NewDecoder(d, key, hash)); err != nil {
-					return err
+					if err.Error() != "invalid" {
+						return err
+					} else {
+						invalid = true
+					}
 				}
-				vSlice.Set(reflect.Append(vSlice, reflect.ValueOf(entry)))
+				if !invalid {
+					vSlice.Set(reflect.Append(vSlice, reflect.ValueOf(entry)))
+				}
 			}
 		} else {
 			vSlice := rv.Elem()

@@ -40,29 +40,11 @@ func (me *AttributeConditions) Schema() map[string]*schema.Schema {
 }
 
 func (me AttributeConditions) MarshalHCL(properties hcl.Properties) error {
-	if len(me) > 0 {
-		if err := properties.EncodeSlice("condition", me); err != nil {
-			return err
-		}
-	}
-	return nil
+	return properties.EncodeSlice("condition", me)
 }
 
 func (me *AttributeConditions) UnmarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("condition"); ok {
-
-		entrySet := value.(*schema.Set)
-
-		for _, entryMap := range entrySet.List() {
-			hash := entrySet.F(entryMap)
-			entry := new(AttributeCondition)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "condition", hash)); err != nil {
-				return err
-			}
-			*me = append(*me, entry)
-		}
-	}
-	return nil
+	return decoder.DecodeSlice("condition", me)
 }
 
 // No documentation available

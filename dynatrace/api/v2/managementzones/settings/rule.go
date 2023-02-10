@@ -18,6 +18,8 @@
 package managementzones
 
 import (
+	"errors"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -38,12 +40,7 @@ func (me *Rules) Schema() map[string]*schema.Schema {
 }
 
 func (me Rules) MarshalHCL(properties hcl.Properties) error {
-	if len(me) > 0 {
-		if err := properties.EncodeSlice("rule", me); err != nil {
-			return err
-		}
-	}
-	return nil
+	return properties.EncodeSlice("rule", me)
 }
 
 func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -92,9 +89,6 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 			Description:      "Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
 			Optional:         true,
 			DiffSuppressFunc: hcl.SuppressEOT,
-			// StateFunc: func(i interface{}) string {
-			// 	return strings.TrimSpace(i.(string))
-			// },
 		},
 	}
 }
@@ -110,6 +104,9 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
+	if _, ok := decoder.GetOk("type"); !ok {
+		return errors.New("invalid")
+	}
 	return decoder.DecodeAll(map[string]any{
 		"enabled":         &me.Enabled,
 		"type":            &me.Type,
