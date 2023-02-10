@@ -11,13 +11,13 @@ import (
 
 // Environment representas basic configuration for an environment
 type Environment struct {
-	ID      *string           `json:"id,omitempty"`   // The ID of the environment
-	Name    string            `json:"name"`           // The display name of the environment
-	Trial   *bool             `json:"trial"`          // Specifies whether the environment is a trial environment or a non-trial environment. Creating a trial environment is only possible if your license allows that. The default value is false (non-trial)
-	State   State             `json:"state"`          // Indicates whether the environment is enabled or disabled. The default value is ENABLED
-	Tags    []string          `json:"tags,omitempty"` // A set of tags that are assigned to this environment. Every tag can have a maximum length of 100 characters
-	Quotas  *quota.Settings   `json:"quotas"`         // Environment level consumption and quotas information. Only returned if includeConsumptionInfo or includeUncachedConsumptionInfo param is true
-	Storage *storage.Settings `json:"storage"`        // Environment level storage usage and limit information. Not returned if includeStorageInfo param is not true. If skipped when editing via PUT method then already set limits will remain
+	ID      *string           `json:"id,omitempty"`      // The ID of the environment
+	Name    string            `json:"name"`              // The display name of the environment
+	Trial   *bool             `json:"trial"`             // Specifies whether the environment is a trial environment or a non-trial environment. Creating a trial environment is only possible if your license allows that. The default value is false (non-trial)
+	State   State             `json:"state"`             // Indicates whether the environment is enabled or disabled. The default value is ENABLED
+	Tags    []string          `json:"tags,omitempty"`    // A set of tags that are assigned to this environment. Every tag can have a maximum length of 100 characters
+	Quotas  *quota.Settings   `json:"quotas,omitempty"`  // Environment level consumption and quotas information. Only returned if includeConsumptionInfo or includeUncachedConsumptionInfo param is true
+	Storage *storage.Settings `json:"storage,omitempty"` // Environment level storage usage and limit information. Not returned if includeStorageInfo param is not true. If skipped when editing via PUT method then already set limits will remain
 }
 
 func (me *Environment) Schema() map[string]*schema.Schema {
@@ -93,16 +93,16 @@ func (me *Environment) UnmarshalHCL(decoder hcl.Decoder) error {
 	}); err != nil {
 		return err
 	}
-	if me.Quotas == nil {
-		me.Quotas = &quota.Settings{
-			HostUnits:     &quota.HostUnits{MaxLimit: nil},
-			DEMUnits:      &quota.DEMUnits{MonthlyLimit: nil, AnnualLimit: nil},
-			UserSessions:  &quota.UserSessions{TotalMonthlyLimit: nil, TotalAnnualLimit: nil},
-			Synthetic:     &quota.Synthetic{MonthlyLimit: nil, AnnualLimit: nil},
-			DDUs:          &quota.DavisDataUnits{MonthlyLimit: nil, AnnualLimit: nil},
-			LogMonitoring: &quota.LogMonitoring{MonthlyLimit: nil, AnnualLimit: nil},
-		}
-	}
+	// if me.Quotas == nil {
+	// 	me.Quotas = &quota.Settings{
+	// 		HostUnits:     &quota.HostUnits{MaxLimit: nil},
+	// 		DEMUnits:      &quota.DEMUnits{MonthlyLimit: nil, AnnualLimit: nil},
+	// 		UserSessions:  &quota.UserSessions{TotalMonthlyLimit: nil, TotalAnnualLimit: nil},
+	// 		Synthetic:     &quota.Synthetic{MonthlyLimit: nil, AnnualLimit: nil},
+	// 		DDUs:          &quota.DavisDataUnits{MonthlyLimit: nil, AnnualLimit: nil},
+	// 		LogMonitoring: &quota.LogMonitoring{MonthlyLimit: nil, AnnualLimit: nil},
+	// 	}
+	// }
 	return nil
 }
 

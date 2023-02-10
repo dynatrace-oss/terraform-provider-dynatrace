@@ -8,8 +8,8 @@ import (
 
 // LogMonitoring represents log monitoring consumption and quota information on environment level. Not set (and not editable) if Log monitoring is not enabled. Not set (and not editable) if Log monitoring is migrated to Davis data on license level. If skipped when editing via PUT method then already set quotas will remain
 type LogMonitoring struct {
-	MonthlyLimit *int64 `json:"monthlyLimit"` // Monthly environment quota. Not set if unlimited. When updating via PUT method, skipping this field will set quota unlimited
-	AnnualLimit  *int64 `json:"annualLimit"`  // Annual environment quota. Not set if unlimited. When updating via PUT method, skipping this field will set quota unlimited
+	MonthlyLimit *int64 `json:"monthlyLimit,omitempty"` // Monthly environment quota. Not set if unlimited. When updating via PUT method, skipping this field will set quota unlimited
+	AnnualLimit  *int64 `json:"annualLimit,omitempty"`  // Annual environment quota. Not set if unlimited. When updating via PUT method, skipping this field will set quota unlimited
 }
 
 func (me *LogMonitoring) IsEmpty() bool {

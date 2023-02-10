@@ -8,12 +8,12 @@ import (
 
 // Settings represents environment level consumption and quotas information. Only returned if includeConsumptionInfo or includeUncachedConsumptionInfo param is true. If skipped when editing via PUT method then already set quotas will remain
 type Settings struct {
-	HostUnits     *HostUnits      `json:"hostUnits"`         // Host units consumption and quota information on environment level. If skipped when editing via PUT method then already set quota will remain
-	DEMUnits      *DEMUnits       `json:"demUnits"`          // DEM units consumption and quota information on environment level. Not set (and not editable) if DEM units is not enabled. If skipped when editing via PUT method then already set quotas will remain
-	UserSessions  *UserSessions   `json:"userSessions"`      // User sessions consumption and quota information on environment level. If skipped when editing via PUT method then already set quotas will remain
-	Synthetic     *Synthetic      `json:"syntheticMonitors"` // Synthetic monitors consumption and quota information on environment level. Not set (and not editable) if neither Synthetic nor DEM units is enabled. If skipped when editing via PUT method then already set quotas will remain
-	DDUs          *DavisDataUnits `json:"davisDataUnits"`    // Davis Data Units consumption and quota information on environment level. Not set (and not editable) if Davis data units is not enabled. If skipped when editing via PUT method then already set quotas will remain
-	LogMonitoring *LogMonitoring  `json:"logMonitoring"`     // Log Monitoring consumption and quota information on environment level. Not set (and not editable) if Log monitoring is not enabled. Not set (and not editable) if Log monitoring is migrated to Davis data on license level. If skipped when editing via PUT method then already set quotas will remain
+	HostUnits     *HostUnits      `json:"hostUnits,omitempty"`         // Host units consumption and quota information on environment level. If skipped when editing via PUT method then already set quota will remain
+	DEMUnits      *DEMUnits       `json:"demUnits,omitempty"`          // DEM units consumption and quota information on environment level. Not set (and not editable) if DEM units is not enabled. If skipped when editing via PUT method then already set quotas will remain
+	UserSessions  *UserSessions   `json:"userSessions,omitempty"`      // User sessions consumption and quota information on environment level. If skipped when editing via PUT method then already set quotas will remain
+	Synthetic     *Synthetic      `json:"syntheticMonitors,omitempty"` // Synthetic monitors consumption and quota information on environment level. Not set (and not editable) if neither Synthetic nor DEM units is enabled. If skipped when editing via PUT method then already set quotas will remain
+	DDUs          *DavisDataUnits `json:"davisDataUnits,omitempty"`    // Davis Data Units consumption and quota information on environment level. Not set (and not editable) if Davis data units is not enabled. If skipped when editing via PUT method then already set quotas will remain
+	LogMonitoring *LogMonitoring  `json:"logMonitoring,omitempty"`     // Log Monitoring consumption and quota information on environment level. Not set (and not editable) if Log monitoring is not enabled. Not set (and not editable) if Log monitoring is migrated to Davis data on license level. If skipped when editing via PUT method then already set quotas will remain
 }
 
 func (me *Settings) IsEmpty() bool {
@@ -144,8 +144,12 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("logs", &me.LogMonitoring); err != nil {
 		return err
 	}
-	if me.LogMonitoring == nil {
-		me.LogMonitoring = &LogMonitoring{MonthlyLimit: nil, AnnualLimit: nil}
+	if me.LogMonitoring != nil && me.LogMonitoring.IsEmpty() {
+		me.LogMonitoring = nil
 	}
+
+	// if me.LogMonitoring == nil {
+	// 	me.LogMonitoring = &LogMonitoring{MonthlyLimit: nil, AnnualLimit: nil}
+	// }
 	return nil
 }

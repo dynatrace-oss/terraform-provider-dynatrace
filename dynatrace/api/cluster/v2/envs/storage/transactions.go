@@ -6,5 +6,5 @@ type Transactions struct {
 }
 
 func (me *Transactions) IsEmpty() bool {
-	return me == nil || me.MaxLimit == nil
+	return me == nil || me.MaxLimit == nil || *me.MaxLimit == 0
 }

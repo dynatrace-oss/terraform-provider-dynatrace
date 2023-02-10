@@ -6,5 +6,5 @@ type LogMonitoringStorage struct {
 }
 
 func (me *LogMonitoringStorage) IsEmpty() bool {
-	return me == nil || me.MaxLimit == nil
+	return me == nil || me.MaxLimit == nil || *me.MaxLimit == 0
 }

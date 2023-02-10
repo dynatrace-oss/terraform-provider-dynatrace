@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"strconv"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/envs/storage/retention"
@@ -12,17 +14,17 @@ type Settings struct {
 	TransactionTrafficQuota *TransactionTrafficQuota `json:"transactionTrafficQuota"` // Maximum number of newly monitored entry point PurePaths captured per process/minute on environment level. Can be set to any value from 100 to 100000. If skipped when editing via PUT method then already set limit will remain
 	UserActionsPerMinute    *UserActionsPerMinute    `json:"userActionsPerMinute"`    // Maximum number of user actions generated per minute on environment level. Can be set to any value from 1 to 2147483646 or left unlimited. If skipped when editing via PUT method then already set limit will remain
 
-	Transactions              *Transactions              `json:"transactionStorage"`        // Transaction storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
-	SessionReplayStorage      *SessionReplayStorage      `json:"sessionReplayStorage"`      // Session replay storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
-	SymbolFilesFromMobileApps *SymbolFilesFromMobileApps `json:"symbolFilesFromMobileApps"` // Symbol files from mobile apps storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
-	LogMonitoringStorage      *LogMonitoringStorage      `json:"logMonitoringStorage"`      // Log monitoring storage usage and limit information on environment level. Not editable when Log monitoring is not allowed by license or not configured on cluster level. If skipped when editing via PUT method then already set limit will remain
+	Transactions              *Transactions              `json:"transactionStorage"`             // Transaction storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
+	SessionReplayStorage      *SessionReplayStorage      `json:"sessionReplayStorage"`           // Session replay storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
+	SymbolFilesFromMobileApps *SymbolFilesFromMobileApps `json:"symbolFilesFromMobileApps"`      // Symbol files from mobile apps storage usage and limit information on environment level. If skipped when editing via PUT method then already set limit will remain
+	LogMonitoringStorage      *LogMonitoringStorage      `json:"logMonitoringStorage,omitempty"` // Log monitoring storage usage and limit information on environment level. Not editable when Log monitoring is not allowed by license or not configured on cluster level. If skipped when editing via PUT method then already set limit will remain
 
-	ServiceRequestLevelRetention *retention.ServiceRequestLevel `json:"serviceRequestLevelRetention"` // Service request level retention settings on environment level. Service code level retention time can't be greater than service request level retention time and both can't exceed one year.If skipped when editing via PUT method then already set limit will remain
-	ServiceCodeLevelRetention    *retention.ServiceCodeLevel    `json:"serviceCodeLevelRetention"`    // Service code level retention settings on environment level. Service code level retention time can't be greater than service request level retention time and both can't exceed one year.If skipped when editing via PUT method then already set limit will remain
-	RealUserMonitoringRetention  *retention.RealUserMonitoring  `json:"realUserMonitoringRetention"`  // Real user monitoring retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
-	SyntheticMonitoringRetention *retention.SyntheticMonitoring `json:"syntheticMonitoringRetention"` // Synthetic monitoring retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
-	SessionReplayRetention       *retention.SessionReplay       `json:"sessionReplayRetention"`       // Session replay retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
-	LogMonitoringRetention       *retention.LogMonitoring       `json:"logMonitoringRetention"`       // Log monitoring retention settings on environment level. Not editable when Log monitoring is not allowed by license or not configured on cluster level. Can be set to any value from 5 to 90 days. If skipped when editing via PUT method then already set limit will remain
+	ServiceRequestLevelRetention *retention.ServiceRequestLevel `json:"serviceRequestLevelRetention,omitempty"` // Service request level retention settings on environment level. Service code level retention time can't be greater than service request level retention time and both can't exceed one year.If skipped when editing via PUT method then already set limit will remain
+	ServiceCodeLevelRetention    *retention.ServiceCodeLevel    `json:"serviceCodeLevelRetention,omitempty"`    // Service code level retention settings on environment level. Service code level retention time can't be greater than service request level retention time and both can't exceed one year.If skipped when editing via PUT method then already set limit will remain
+	RealUserMonitoringRetention  *retention.RealUserMonitoring  `json:"realUserMonitoringRetention,omitempty"`  // Real user monitoring retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
+	SyntheticMonitoringRetention *retention.SyntheticMonitoring `json:"syntheticMonitoringRetention,omitempty"` // Synthetic monitoring retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
+	SessionReplayRetention       *retention.SessionReplay       `json:"sessionReplayRetention,omitempty"`       // Session replay retention settings on environment level. Can be set to any value from 1 to 35 days. If skipped when editing via PUT method then already set limit will remain
+	LogMonitoringRetention       *retention.LogMonitoring       `json:"logMonitoringRetention,omitempty"`       // Log monitoring retention settings on environment level. Not editable when Log monitoring is not allowed by license or not configured on cluster level. Can be set to any value from 5 to 90 days. If skipped when editing via PUT method then already set limit will remain
 }
 
 type limits struct {
@@ -86,12 +88,12 @@ func (me *limits) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type retent struct {
-	ServiceRequestLevel int64
-	ServiceCodeLevel    int64
-	RUM                 int64
-	Synthetic           int64
-	SessionReplay       int64
-	Logs                int64
+	ServiceRequestLevel *int64
+	ServiceCodeLevel    *int64
+	RUM                 *int64
+	Synthetic           *int64
+	SessionReplay       *int64
+	Logs                *int64
 }
 
 func (me *retent) Schema() map[string]*schema.Schema {
@@ -123,38 +125,49 @@ func (me *retent) Schema() map[string]*schema.Schema {
 		},
 		"logs": {
 			Type:        schema.TypeInt,
-			Required:    true,
+			Optional:    true,
 			Description: "Log monitoring retention settings on environment level in days. Not editable when Log monitoring is not allowed by license or not configured on cluster level. Can be set to any value from 5 to 90 days",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				iOldValue, err := strconv.Atoi(oldValue)
+				if err != nil {
+					return false
+				}
+				iNewValue, err := strconv.Atoi(newValue)
+				if err != nil {
+					return false
+				}
+				return iOldValue == 35 && iNewValue == 0
+			},
 		}}
 }
 
 func (me *retent) MarshalHCL(properties hcl.Properties) error {
-	if me.ServiceCodeLevel != 0 {
+	if me.ServiceCodeLevel != nil && *me.ServiceCodeLevel != 0 {
 		if err := properties.Encode("service_code_level", me.ServiceCodeLevel); err != nil {
 			return err
 		}
 	}
-	if me.ServiceCodeLevel != 0 {
+	if me.ServiceRequestLevel != nil && *me.ServiceRequestLevel != 0 {
 		if err := properties.Encode("service_request_level", me.ServiceRequestLevel); err != nil {
 			return err
 		}
 	}
-	if me.RUM != 0 {
+	if me.RUM != nil && *me.RUM != 0 {
 		if err := properties.Encode("rum", me.RUM); err != nil {
 			return err
 		}
 	}
-	if me.Synthetic != 0 {
+	if me.Synthetic != nil && *me.Synthetic != 0 {
 		if err := properties.Encode("synthetic", me.Synthetic); err != nil {
 			return err
 		}
 	}
-	if me.SessionReplay != 0 {
+	if me.SessionReplay != nil && *me.SessionReplay != 0 {
 		if err := properties.Encode("session_replay", me.SessionReplay); err != nil {
 			return err
 		}
 	}
-	if me.Logs != 0 {
+	if me.Logs != nil && *me.Logs != 0 {
 		if err := properties.Encode("logs", me.Logs); err != nil {
 			return err
 		}
@@ -234,12 +247,12 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	}
 
 	if err := properties.Encode("retention", &retent{
-		Logs:                me.LogMonitoringRetention.MaxLimitInDays,
-		SessionReplay:       me.SessionReplayRetention.MaxLimitInDays,
-		ServiceCodeLevel:    me.ServiceCodeLevelRetention.MaxLimitInDays,
-		ServiceRequestLevel: me.ServiceRequestLevelRetention.MaxLimitInDays,
-		RUM:                 me.RealUserMonitoringRetention.MaxLimitInDays,
-		Synthetic:           me.SyntheticMonitoringRetention.MaxLimitInDays,
+		Logs:                &me.LogMonitoringRetention.MaxLimitInDays,
+		SessionReplay:       &me.SessionReplayRetention.MaxLimitInDays,
+		ServiceCodeLevel:    &me.ServiceCodeLevelRetention.MaxLimitInDays,
+		ServiceRequestLevel: &me.ServiceRequestLevelRetention.MaxLimitInDays,
+		RUM:                 &me.RealUserMonitoringRetention.MaxLimitInDays,
+		Synthetic:           &me.SyntheticMonitoringRetention.MaxLimitInDays,
 	}); err != nil {
 		return err
 	}
@@ -265,17 +278,31 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.Transactions = &Transactions{MaxLimit: vLimits.Transactions}
 	me.SessionReplayStorage = &SessionReplayStorage{MaxLimit: vLimits.SessionReplay}
 	me.SymbolFilesFromMobileApps = &SymbolFilesFromMobileApps{MaxLimit: vLimits.SymbolFiles}
-	me.LogMonitoringStorage = &LogMonitoringStorage{MaxLimit: vLimits.Logs}
+	if vLimits.Logs != nil {
+		me.LogMonitoringStorage = &LogMonitoringStorage{MaxLimit: vLimits.Logs}
+	}
 
 	ret := new(retent)
 	if err := decoder.Decode("retention", &ret); err != nil {
 		return err
 	}
-	me.LogMonitoringRetention = &retention.LogMonitoring{MaxLimitInDays: ret.Logs}
-	me.SessionReplayRetention = &retention.SessionReplay{MaxLimitInDays: ret.SessionReplay}
-	me.SyntheticMonitoringRetention = &retention.SyntheticMonitoring{MaxLimitInDays: ret.Synthetic}
-	me.RealUserMonitoringRetention = &retention.RealUserMonitoring{MaxLimitInDays: ret.RUM}
-	me.ServiceCodeLevelRetention = &retention.ServiceCodeLevel{MaxLimitInDays: ret.ServiceCodeLevel}
-	me.ServiceRequestLevelRetention = &retention.ServiceRequestLevel{MaxLimitInDays: ret.ServiceRequestLevel}
+	if ret.Logs != nil {
+		me.LogMonitoringRetention = &retention.LogMonitoring{MaxLimitInDays: *ret.Logs}
+	}
+	if ret.ServiceCodeLevel != nil {
+		me.SessionReplayRetention = &retention.SessionReplay{MaxLimitInDays: *ret.SessionReplay}
+	}
+	if ret.Synthetic != nil {
+		me.SyntheticMonitoringRetention = &retention.SyntheticMonitoring{MaxLimitInDays: *ret.Synthetic}
+	}
+	if ret.RUM != nil {
+		me.RealUserMonitoringRetention = &retention.RealUserMonitoring{MaxLimitInDays: *ret.RUM}
+	}
+	if ret.ServiceCodeLevel != nil {
+		me.ServiceCodeLevelRetention = &retention.ServiceCodeLevel{MaxLimitInDays: *ret.ServiceCodeLevel}
+	}
+	if ret.ServiceRequestLevel != nil {
+		me.ServiceRequestLevelRetention = &retention.ServiceRequestLevel{MaxLimitInDays: *ret.ServiceRequestLevel}
+	}
 	return nil
 }
