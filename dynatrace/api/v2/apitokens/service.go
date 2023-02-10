@@ -76,13 +76,7 @@ func (me *service) Validate(v *apitokens.APIToken) error {
 func (me *service) Create(v *apitokens.APIToken) (*settings.Stub, error) {
 	var err error
 
-	resultToken := struct {
-		apitokens.APIToken
-		ID *string `json:"id,omitempty"`
-	}{}
-
-	token := v
-
+	resultToken := apitokens.APIToken{}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	if err = client.Post("/api/v2/apiTokens", v, 201).Finish(&resultToken); err != nil {
 		return nil, err
@@ -98,7 +92,7 @@ func (me *service) Create(v *apitokens.APIToken) (*settings.Stub, error) {
 	resultToken.Name = item.Name
 	resultToken.Scopes = item.Scopes
 
-	return &settings.Stub{ID: *resultToken.ID, Name: token.Name, Value: resultToken}, nil
+	return &settings.Stub{ID: *resultToken.ID, Name: resultToken.Name, Value: resultToken}, nil
 }
 
 func (me *service) Update(id string, v *apitokens.APIToken) error {

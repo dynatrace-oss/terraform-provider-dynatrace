@@ -26,6 +26,7 @@ import (
 )
 
 type APIToken struct {
+	ID                  *string  `json:"id,omitempty"`                  // The ID of the api token
 	Name                string   `json:"name"`                          // The name of the token.
 	Enabled             *bool    `json:"enabled,omitempty"`             // The token is enabled (true) or disabled (false), default disabled (false).
 	PersonalAccessToken *bool    `json:"personalAccessToken,omitempty"` // The token is a personal access token (true) or an API token (false).

@@ -59,7 +59,6 @@ var ResourceTypes = struct {
 	Alerting                          ResourceType
 	FrequentIssues                    ResourceType
 	MetricEvents                      ResourceType
-	APIToken                          ResourceType
 	IBMMQFilters                      ResourceType
 	IMSBridge                         ResourceType
 	QueueManager                      ResourceType
@@ -153,7 +152,6 @@ var ResourceTypes = struct {
 	"dynatrace_alerting",
 	"dynatrace_frequent_issues",
 	"dynatrace_metric_events",
-	"dynatrace_api_token",
 	"dynatrace_ibm_mq_filters",
 	"dynatrace_ims_bridges",
 	"dynatrace_queue_manager",

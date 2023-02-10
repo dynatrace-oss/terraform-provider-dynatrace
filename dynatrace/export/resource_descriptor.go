@@ -56,7 +56,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/metricevents"
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/services"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/filters"
@@ -175,7 +174,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		ansible.Service,
 		Dependencies.ID(ResourceTypes.Alerting),
 	).Specify(notifications.Types.AnsibleTower),
-	ResourceTypes.APIToken:             NewResourceDescriptor(apitokens.Service),
 	ResourceTypes.ApplicationAnomalies: NewResourceDescriptor(application_anomalies.Service),
 	ResourceTypes.ApplicationDataPrivacy: NewResourceDescriptor(
 		dataprivacy.Service,
@@ -500,7 +498,6 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.Notification,      // legacy
 	ResourceTypes.AlertingProfile,   // legacy
 	ResourceTypes.Dashboard,         // taken care of dynatrace_json_dashboard
-	ResourceTypes.APIToken,          // should never migrate
 	ResourceTypes.IAMUser,           // not sure whether to migrate
 	ResourceTypes.IAMGroup,          // not sure whether to migrate
 
