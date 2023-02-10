@@ -1,0 +1,32 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP",
+		"environment"
+	],
+	"description": "With [Real User Monitoring](https://dt-url.net/1n2b0prq) enabled, Dynatrace gathers details about load times and page behavior that your customers experience with your application. Only applications with injected JavaScript tags can be monitored.",
+	"displayName": "Real User Monitoring for process group",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enable": {
+			"default": true,
+			"description": "Allows OneAgent to:\n* automatically inject the RUM JavaScript tag into each page delivered by this process group\n* provide the necessary info to correlate RUM data with server-side PurePaths\n* forward beacons to the cluster\n* deliver the monitoring code",
+			"displayName": "Enable Real User Monitoring",
+			"documentation": "If you don't enable this setting, your RUM data may not be correlated with your server-side PurePaths, which will be a problem when the root of the server-side PurePath is captured on this process group. For example, consider an Apache HTTP server as a proxy and a Java app server as a backend. Disabling this setting for the process group of the Apache HTTP server will break the RUM correlation, even if Dynatrace injects the RUM JavaScript tag on the process group of the Java backend. For RUM data to correlate with server-side PurePaths, RUM must be enabled on the OneAgent that instruments the entry point of your application (the Apache HTTP server in this example).",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.processgroup",
+	"types": {},
+	"version": "2.0.1"
+}

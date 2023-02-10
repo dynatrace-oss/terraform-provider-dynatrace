@@ -41,6 +41,7 @@ import (
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
+	rumprocessgroup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/processgroup"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -489,6 +490,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppEnablement: NewResourceDescriptor(
 		rumwebenablement.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.RUMProcessGroup: NewResourceDescriptor(
+		rumprocessgroup.Service,
+		Coalesce(Dependencies.ProcessGroup),
 	),
 }
 
