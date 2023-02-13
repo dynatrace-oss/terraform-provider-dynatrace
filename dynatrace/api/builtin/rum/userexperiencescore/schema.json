@@ -1,0 +1,74 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "A [user experience score](https://dt-url.net/39034wt) is calculated for each user session. Scores reflect the overall performance, usability, and detected errors of each session. Experiences are classified as either Satisfying, Tolerable, or Frustrating.",
+	"displayName": "User experience score",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"considerLastAction": {
+			"default": true,
+			"description": "",
+			"displayName": "If last user action in a session is classified as Frustrating, classify the entire session as Frustrating",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"considerRageClick": {
+			"default": true,
+			"description": "",
+			"displayName": "Consider rage clicks / rage taps in score calculation",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"maxFrustratedUserActionsThreshold": {
+			"constraints": [
+				{
+					"maximum": 90,
+					"minimum": 10,
+					"type": "RANGE"
+				}
+			],
+			"default": 30,
+			"description": "User experience is considered Frustrating when the selected percentage or more of the user actions in a session are rated as Frustrating.",
+			"displayName": "Threshold for Frustrating user experience",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"minSatisfiedUserActionsThreshold": {
+			"constraints": [
+				{
+					"maximum": 90,
+					"minimum": 10,
+					"type": "RANGE"
+				}
+			],
+			"default": 50,
+			"description": "User experience is considered Satisfying when at least the selected percentage of the user actions in a session are rated as Satisfying.",
+			"displayName": "Threshold for Satisfying user experience",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.user-experience-score",
+	"types": {},
+	"version": "1.0.3"
+}

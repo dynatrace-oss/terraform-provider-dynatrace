@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_user_experience_score Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_user_experience_score` covers configuration for real user monitoring user experience score
+---
+
+# dynatrace_user_experience_score (Resource)
+
+## Dynatrace Documentation
+
+- Change user experience score thresholds for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-user-experience-score-web
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.user-experience-score`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_user_experience_score` downloads the existing user experience score configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/rum/user_experience_score/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

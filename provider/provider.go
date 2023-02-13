@@ -226,6 +226,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_enablement":            resources.NewGeneric(export.ResourceTypes.WebAppEnablement).Resource(),
 			"dynatrace_process_group_rum":             resources.NewGeneric(export.ResourceTypes.RUMProcessGroup).Resource(),
 			"dynatrace_rum_provider_breakdown":        resources.NewGeneric(export.ResourceTypes.RUMProviderBreakdown).Resource(),
+			"dynatrace_user_experience_score":         resources.NewGeneric(export.ResourceTypes.UserExperienceScore).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
