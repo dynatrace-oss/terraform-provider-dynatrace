@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_rum_provider_breakdown Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_rum_provider_breakdown` covers configuration for provider breakdown rules for real user monitoring
+---
+
+# dynatrace_rum_provider_breakdown (Resource)
+
+## Dynatrace Documentation
+
+- Configure first-party, third-party, and CDN resource detection for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-third-party-and-cdn-content-detection-web
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.provider-breakdown`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_rum_provider_breakdown` downloads all existing provider breakdown configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/rum/provider_breakdown/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

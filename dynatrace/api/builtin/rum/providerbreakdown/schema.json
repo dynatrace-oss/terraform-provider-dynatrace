@@ -1,0 +1,180 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Set up rules that define how your applications' downloaded content resources (images, CSS, third party widgets, and more) are displayed and categorized for analysis. ",
+	"displayName": "Provider breakdown",
+	"documentation": "Dynatrace uses the provider host names of downloaded resources to categorize content resources into either third party resources, CDN resources, or first party resources.  \n  \nDynatrace auto-detects over 1,000 content providers out-of-the-box, including Google, Amazon, Facebook, and many more. There's nothing you need to do to set up detection of resources. If you can't find your provider in the list below, you can add it manually. To learn more, visit [Configure 3rd-party and CDN content detection](https://dt-url.net/on02tdo).",
+	"dynatrace": "1",
+	"enums": {
+		"ResourceType": {
+			"description": "",
+			"displayName": "ResourceType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "1st party resources",
+					"value": "FirstParty"
+				},
+				{
+					"displayName": "3rd party resources",
+					"value": "ThirdParty"
+				},
+				{
+					"displayName": "CDN resources",
+					"value": "Cdn"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add custom provider item"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"domainNamePatternList": {
+			"constraints": [
+				{
+					"customMessage": "Domain name patterns must be unique.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"domainNamePattern"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Domain name pattern",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/DomainNamePatternListObject"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add name pattern"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"iconUrl": {
+			"constraints": [
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Specify an URL for the provider's brand icon",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, http://somedomain/favicon.ico"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "url",
+			"type": "text"
+		},
+		"reportPublicImprovement": {
+			"default": false,
+			"description": "Send the patterns of this provider to Dynatrace to help us improve 3rd-party detection.",
+			"displayName": "Submit this provider-pattern to improve auto-detection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"resourceName": {
+			"constraints": [
+				{
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Resource name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, Facebook"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"resourceType": {
+			"default": "ThirdParty",
+			"description": "",
+			"displayName": "Resource type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ResourceType"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.content-resources"
+	],
+	"schemaId": "builtin:rum.provider-breakdown",
+	"types": {
+		"DomainNamePatternListObject": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"domainNamePattern": {
+					"constraints": [
+						{
+							"maxLength": 150,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Type your domain name pattern",
+					"documentation": "Please type at least part of this content provider's URL. Asterisks (*) can be used as wildcard characters.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "E.g. .domain.com"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{domainNamePattern}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.6"
+}

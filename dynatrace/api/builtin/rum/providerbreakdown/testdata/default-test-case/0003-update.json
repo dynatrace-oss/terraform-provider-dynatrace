@@ -1,0 +1,10 @@
+{
+  "domainNamePatternList": [
+    {
+      "domainNamePattern": "TerraformCDNExample.com"
+    }
+  ],
+  "reportPublicImprovement": false,
+  "resourceName": "${randomize}",
+  "resourceType": "Cdn"
+}

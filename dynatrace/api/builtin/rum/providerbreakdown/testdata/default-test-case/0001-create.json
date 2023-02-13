@@ -1,0 +1,10 @@
+{
+    "domainNamePatternList": [
+        {
+            "domainNamePattern": "terraform3rdpartyexample.com"
+        }
+    ],
+    "reportPublicImprovement": false,
+    "resourceName": "${randomize}",
+    "resourceType": "ThirdParty"
+}
