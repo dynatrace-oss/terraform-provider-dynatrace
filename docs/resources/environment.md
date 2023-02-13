@@ -61,12 +61,15 @@ Optional:
 
 Required:
 
-- `logs` (Number) Log monitoring retention settings on environment level in days. Not editable when Log monitoring is not allowed by license or not configured on cluster level. Can be set to any value from 5 to 90 days
 - `rum` (Number) Real user monitoring retention settings on environment level in days. Can be set to any value from 1 to 35 days
 - `service_code_level` (Number) Service code level retention settings on environment level in days. Service code level retention time can't be greater than service request level retention time and both can't exceed one year
 - `service_request_level` (Number) Service request level retention settings on environment level in days. Service code level retention time can't be greater than service request level retention time and both can't exceed one year
 - `session_replay` (Number) Session replay retention settings on environment level in days. Can be set to any value from 1 to 35 days
 - `synthetic` (Number) Synthetic monitoring retention settings on environment level in days. Can be set to any value from 1 to 35 days
+
+Optional:
+
+- `logs` (Number) Log monitoring retention settings on environment level in days. Not editable when Log monitoring is not allowed by license or not configured on cluster level. Can be set to any value from 5 to 90 days
 
 
 

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_web_application (Resource)
 
+-> Certain field(s) of this resource has overlap with `dynatrace_web_app_enablement`, please review the schema for additional information.
+
 ## Dynatrace Documentation
 
 - RUM setup and configuration for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications
@@ -273,7 +275,7 @@ resource "dynatrace_web_application" "#name#" {
 
 ### Required
 
-- `cost_control_user_session_percentage` (Number) Analize *X*% of user sessions
+- `cost_control_user_session_percentage` (Number) (Field has overlap with `dynatrace_web_app_enablement`) Analize *X*% of user sessions
 - `custom_action_apdex_settings` (Block List, Min: 1, Max: 1) Defines the Custom Action Apdex settings of an application (see [below for nested schema](#nestedblock--custom_action_apdex_settings))
 - `load_action_apdex_settings` (Block List, Min: 1, Max: 1) Defines the Load Action Apdex settings of an application (see [below for nested schema](#nestedblock--load_action_apdex_settings))
 - `load_action_key_performance_metric` (String) The key performance metric of load actions. Possible values are `ACTION_DURATION`, `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`, `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`, `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX` and `VISUALLY_COMPLETE`
@@ -289,7 +291,7 @@ resource "dynatrace_web_application" "#name#" {
 - `conversion_goals` (Block List, Max: 1) A list of conversion goals of the application (see [below for nested schema](#nestedblock--conversion_goals))
 - `key_user_actions` (Block List) User Action names to be flagged as Key User Actions (see [below for nested schema](#nestedblock--key_user_actions))
 - `meta_data_capture_settings` (Block List, Max: 1) Java script agent meta data capture settings (see [below for nested schema](#nestedblock--meta_data_capture_settings))
-- `real_user_monitoring_enabled` (Boolean) Real user monitoring enabled/disabled
+- `real_user_monitoring_enabled` (Boolean) (Field has overlap with `dynatrace_web_app_enablement`) Real user monitoring enabled/disabled
 - `session_replay_config` (Block List, Max: 1) Settings regarding Session Replay (see [below for nested schema](#nestedblock--session_replay_config))
 - `url_injection_pattern` (String) URL injection pattern for manual web application
 - `user_action_and_session_properties` (Block List, Max: 1) User action and session properties settings (see [below for nested schema](#nestedblock--user_action_and_session_properties))
@@ -753,13 +755,13 @@ Optional:
 
 Required:
 
-- `cost_control_percentage` (Number) Session replay sampling rating in percent
+- `cost_control_percentage` (Number) (Field has overlap with `dynatrace_web_app_enablement`) Session replay sampling rating in percent
 
 Optional:
 
 - `css_resource_capturing_exclusion_rules` (List of String) A list of URLs to be excluded from CSS resource capturing
 - `enable_css_resource_capturing` (Boolean) Capture (`true`) or don't capture (`false`) CSS resources from the session
-- `enabled` (Boolean) SessionReplay Enabled/Disabled
+- `enabled` (Boolean) (Field has overlap with `dynatrace_web_app_enablement`) SessionReplay Enabled/Disabled
 
 
 <a id="nestedblock--user_action_and_session_properties"></a>
