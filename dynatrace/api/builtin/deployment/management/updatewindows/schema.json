@@ -1,0 +1,715 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define maintenance windows for how often and when to update your OneAgent instances. You will be able to apply these windows to OneAgents, Host Groups or your whole Environment in Automatic Update settings screens.",
+	"displayName": "Maintenance windows for OneAgent updates",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"RECURRENCE_ENUM": {
+			"description": "",
+			"displayName": "RECURRENCE_ENUM",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Once",
+					"value": "ONCE"
+				},
+				{
+					"displayName": "Daily intervals",
+					"value": "DAILY"
+				},
+				{
+					"displayName": "Weekly intervals",
+					"value": "WEEKLY"
+				},
+				{
+					"displayName": "Monthly intervals",
+					"value": "MONTHLY"
+				}
+			],
+			"type": "enum"
+		},
+		"TIMEZONE_ENUM": {
+			"description": "",
+			"displayName": "TIMEZONE_ENUM",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "GMT-12:00",
+					"value": "GMT-12:00"
+				},
+				{
+					"displayName": "GMT-11:00",
+					"value": "GMT-11:00"
+				},
+				{
+					"displayName": "GMT-10:00",
+					"value": "GMT-10:00"
+				},
+				{
+					"displayName": "GMT-09:00",
+					"value": "GMT-09:00"
+				},
+				{
+					"displayName": "GMT-08:00",
+					"value": "GMT-08:00"
+				},
+				{
+					"displayName": "GMT-07:00",
+					"value": "GMT-07:00"
+				},
+				{
+					"displayName": "GMT-06:00",
+					"value": "GMT-06:00"
+				},
+				{
+					"displayName": "GMT-05:00",
+					"value": "GMT-05:00"
+				},
+				{
+					"displayName": "GMT-04:00",
+					"value": "GMT-04:00"
+				},
+				{
+					"displayName": "GMT-03:00",
+					"value": "GMT-03:00"
+				},
+				{
+					"displayName": "GMT-02:00",
+					"value": "GMT-02:00"
+				},
+				{
+					"displayName": "GMT-01:00",
+					"value": "GMT-01:00"
+				},
+				{
+					"displayName": "GMT00:00",
+					"value": "GMT+00:00"
+				},
+				{
+					"displayName": "GMT+01:00",
+					"value": "GMT+01:00"
+				},
+				{
+					"displayName": "GMT+02:00",
+					"value": "GMT+02:00"
+				},
+				{
+					"displayName": "GMT+03:00",
+					"value": "GMT+03:00"
+				},
+				{
+					"displayName": "GMT+04:00",
+					"value": "GMT+04:00"
+				},
+				{
+					"displayName": "GMT+05:00",
+					"value": "GMT+05:00"
+				},
+				{
+					"displayName": "GMT+06:00",
+					"value": "GMT+06:00"
+				},
+				{
+					"displayName": "GMT+07:00",
+					"value": "GMT+07:00"
+				},
+				{
+					"displayName": "GMT+08:00",
+					"value": "GMT+08:00"
+				},
+				{
+					"displayName": "GMT+09:00",
+					"value": "GMT+09:00"
+				},
+				{
+					"displayName": "GMT+10:00",
+					"value": "GMT+10:00"
+				},
+				{
+					"displayName": "GMT+11:00",
+					"value": "GMT+11:00"
+				},
+				{
+					"displayName": "GMT+12:00",
+					"value": "GMT+12:00"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Create maintenance window",
+		"itemDisplayName": "New maintenance window"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"dailyRecurrence": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "DAILY",
+				"property": "recurrence",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/dailyRecurrence"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "On/Off",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"monthlyRecurrence": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "MONTHLY",
+				"property": "recurrence",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/monthlyRecurrence"
+			}
+		},
+		"name": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"onceRecurrence": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ONCE",
+				"property": "recurrence",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/onceRecurrence"
+			}
+		},
+		"recurrence": {
+			"default": "WEEKLY",
+			"description": "",
+			"displayName": "Recurrence",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/RECURRENCE_ENUM"
+			}
+		},
+		"weeklyRecurrence": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "WEEKLY",
+				"property": "recurrence",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/weeklyRecurrence"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:updates"
+	],
+	"schemaId": "builtin:deployment.management.update-windows",
+	"types": {
+		"dailyRecurrence": {
+			"description": "",
+			"displayName": "dailyRecurrence",
+			"documentation": "",
+			"properties": {
+				"every": {
+					"constraints": [
+						{
+							"maximum": 731,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Every X days",
+					"documentation": "Every **X** days:\n* `1` = every day,\n* `2` = every two days,\n* `3` = every three days,\n* etc.\n",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/recurrenceRange"
+					}
+				},
+				"updateTime": {
+					"description": "",
+					"displayName": "Update time",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/updateTime"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"monthlyRecurrence": {
+			"description": "",
+			"displayName": "monthlyRecurrence",
+			"documentation": "",
+			"properties": {
+				"every": {
+					"constraints": [
+						{
+							"maximum": 24,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Every X months",
+					"documentation": "Every **X** months:\n* `1` = every month,\n* `2` = every two months,\n* `3` = every three months,\n* etc.\n",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/recurrenceRange"
+					}
+				},
+				"selectedMonthDay": {
+					"constraints": [
+						{
+							"maximum": 31,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Day of the month",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"updateTime": {
+					"description": "",
+					"displayName": "Update time",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/updateTime"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"onceRecurrence": {
+			"description": "",
+			"displayName": "onceRecurrence",
+			"documentation": "",
+			"properties": {
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Update time",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/onceWindow"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"onceWindow": {
+			"constraints": [
+				{
+					"customMessage": "Start must be before End",
+					"customValidatorId": "start-end-one-time-container-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "onceWindow",
+			"documentation": "",
+			"properties": {
+				"end": {
+					"default": "1970-01-01T00:00:00Z",
+					"description": "",
+					"displayName": "End",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "now/d+d4h"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "zoned_date_time"
+				},
+				"start": {
+					"default": "1970-01-01T00:00:00Z",
+					"description": "",
+					"displayName": "Start",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "now/d+d2h"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "zoned_date_time"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"recurrenceRange": {
+			"constraints": [
+				{
+					"customMessage": "Start must be before End",
+					"customValidatorId": "recurrence-range-container-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "recurrenceRange",
+			"documentation": "",
+			"properties": {
+				"end": {
+					"default": "1970-01-01T00:00:00Z",
+					"description": "",
+					"displayName": "End",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "now/d+1y"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "zoned_date_time"
+				},
+				"start": {
+					"default": "1970-01-01T00:00:00Z",
+					"description": "",
+					"displayName": "Start",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "now/d"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "zoned_date_time"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"selectedWeekDays": {
+			"constraints": [
+				{
+					"customMessage": "At least one day must be selected",
+					"customValidatorId": "at-least-one-selected",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "selectedWeekDays",
+			"documentation": "",
+			"properties": {
+				"friday": {
+					"default": false,
+					"description": "",
+					"displayName": "Friday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"monday": {
+					"default": true,
+					"description": "",
+					"displayName": "Monday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"saturday": {
+					"default": false,
+					"description": "",
+					"displayName": "Saturday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"sunday": {
+					"default": false,
+					"description": "",
+					"displayName": "Sunday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"thursday": {
+					"default": false,
+					"description": "",
+					"displayName": "Thursday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"tuesday": {
+					"default": false,
+					"description": "",
+					"displayName": "Tuesday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"wednesday": {
+					"default": false,
+					"description": "",
+					"displayName": "Wednesday",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"updateTime": {
+			"description": "",
+			"displayName": "updateTime",
+			"documentation": "",
+			"properties": {
+				"duration": {
+					"constraints": [
+						{
+							"maximum": 1440,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 60,
+					"description": "",
+					"displayName": "Duration (minutes)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"startTime": {
+					"constraints": [
+						{
+							"customMessage": "The time must be in the format HH:mm from 0:00 to 23:59. ",
+							"pattern": "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+							"type": "PATTERN"
+						},
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "03:00",
+					"description": "",
+					"displayName": "Start time (24-hour clock)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"timeZone": {
+					"default": "GMT+00:00",
+					"description": "",
+					"displayName": "Time zone",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/TIMEZONE_ENUM"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"weeklyRecurrence": {
+			"description": "",
+			"displayName": "weeklyRecurrence",
+			"documentation": "",
+			"properties": {
+				"every": {
+					"constraints": [
+						{
+							"maximum": 105,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Every X weeks",
+					"documentation": "Every **X** weeks:\n* `1` = every week,\n* `2` = every two weeks,\n* `3` = every three weeks,\n* etc.\n",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/recurrenceRange"
+					}
+				},
+				"selectedWeekDays": {
+					"description": "",
+					"displayName": "Day of the week",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/selectedWeekDays"
+					}
+				},
+				"updateTime": {
+					"description": "",
+					"displayName": "Update time",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/updateTime"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.63.2"
+}

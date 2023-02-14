@@ -122,6 +122,7 @@ var ResourceTypes = struct {
 	RUMProviderBreakdown              ResourceType
 	UserExperienceScore               ResourceType
 	WebAppResourceCleanup             ResourceType
+	UpdateWindows                     ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -219,6 +220,7 @@ var ResourceTypes = struct {
 	"dynatrace_rum_provider_breakdown",
 	"dynatrace_user_experience_score",
 	"dynatrace_web_app_resource_cleanup",
+	"dynatrace_update_windows",
 }
 
 type ResourceStatus string
