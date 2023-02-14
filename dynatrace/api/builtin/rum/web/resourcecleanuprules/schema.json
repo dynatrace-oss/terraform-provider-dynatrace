@@ -1,0 +1,89 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Resource URL cleanup rules are used to aggregate resource URLs that are otherwise identical except for dynamic elements such as IDs (for example, from REST APIs), query strings (for example, random arguments that disable caching), and other session data. Once such session-specific detail is stripped away, URLs are displayed in aggregate within waterfall analysis view. Note that resource URL cleanup rules are executed in the order specified below. For complete details about cleanup rules, visit [Define URL cleanup rules](https://dt-url.net/resource-cleanup-rules-response-codes).",
+	"displayName": "Resource URL cleanup rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 20,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 50,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "For example: *Mask journeyId*",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"regularExpression": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 100,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Value is not a valid regular expression.",
+					"customValidatorId": "validRegex",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "Value breaks regex restriction.",
+					"customValidatorId": "dangerousRegEx-REGEX_BASED_MATCHING_RELAXED",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Regular expression",
+			"documentation": "For example: `(.*)(journeyId=)-?\\d+(.*)`",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"replaceWith": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 50,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Replace with",
+			"documentation": "For example: `$1$2\\*$3`",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.content-resources"
+	],
+	"schemaId": "builtin:rum.web.resource-cleanup-rules",
+	"types": {},
+	"version": "1.0.6"
+}

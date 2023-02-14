@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_web_app_resource_cleanup Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_web_app_resource_cleanup` covers configuration for resource URL cleanup rules for real user monitoring
+---
+
+# dynatrace_web_app_resource_cleanup (Resource)
+
+## Dynatrace Documentation
+
+- Define URL cleanup rules - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/how-to-use/waterfall-analysis#define-url-cleanup-rules
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.web.resource-cleanup-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_web_app_resource_cleanup` downloads all existing resource URL cleanup rules configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/rum/web/resourcecleanuprules/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

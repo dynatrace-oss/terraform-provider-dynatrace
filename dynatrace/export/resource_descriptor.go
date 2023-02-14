@@ -45,6 +45,7 @@ import (
 	rumproviderbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
+	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -497,8 +498,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		rumprocessgroup.Service,
 		Coalesce(Dependencies.ProcessGroup),
 	),
-	ResourceTypes.RUMProviderBreakdown: NewResourceDescriptor(rumproviderbreakdown.Service),
-	ResourceTypes.UserExperienceScore:  NewResourceDescriptor(userexperiencescore.Service),
+	ResourceTypes.RUMProviderBreakdown:  NewResourceDescriptor(rumproviderbreakdown.Service),
+	ResourceTypes.UserExperienceScore:   NewResourceDescriptor(userexperiencescore.Service),
+	ResourceTypes.WebAppResourceCleanup: NewResourceDescriptor(webappresourcecleanup.Service),
 }
 
 var BlackListedResources = []ResourceType{
