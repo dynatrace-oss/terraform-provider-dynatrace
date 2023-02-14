@@ -518,6 +518,8 @@ var BlackListedResources = []ResourceType{
 
 	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
 
+	ResourceTypes.WebAppEnablement,    // slight overlap with ResourceTypes.MobileApplication
+	ResourceTypes.MobileAppEnablement, // slight overlap with ResourceTypes.MobileApplication
 	ResourceTypes.CustomAppEnablement, // slight overlap with ResourceTypes.MobileApplication
 }
 
