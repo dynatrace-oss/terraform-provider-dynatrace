@@ -89,7 +89,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	if err = locs.MarshalHCL(marshalled); err != nil {
 		return err
 	}
-	d.Set("locations", marshalled["locations"])
+	d.Set("locations", marshalled["location"])
 
 	return nil
 }
