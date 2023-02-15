@@ -54,6 +54,7 @@ var Dependencies = struct {
 	DeviceApplicationMethod Dependency
 	Application             Dependency
 	ApplicationMethod       Dependency
+	SyntheticTest           Dependency
 }{
 	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -71,6 +72,7 @@ var Dependencies = struct {
 	DeviceApplicationMethod: &entityds{"DEVICE_APPLICATION_METHOD", "DEVICE_APPLICATION_METHOD-[A-Z0-9]{16}", false},
 	Application:             &entityds{"APPLICATION", "APPLICATION-[A-Z0-9]{16}", false},
 	ApplicationMethod:       &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
+	SyntheticTest:           &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {

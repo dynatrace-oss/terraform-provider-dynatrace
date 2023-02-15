@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_browser_monitor_performance Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_browser_monitor_performance` covers configuration for browser monitor performance thresholds
+---
+
+# dynatrace_browser_monitor_performance (Resource)
+
+## Dynatrace Documentation
+
+- Performance thresholds - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/configure-browser-monitors#performance-thresholds
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:synthetic.browser.performance-thresholds`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_browser_monitor_performance` downloads all existing browser monitor performance thresholds configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/synthetic/browser/performance_thresholds/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

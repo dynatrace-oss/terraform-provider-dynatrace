@@ -233,6 +233,7 @@ func Provider() *schema.Provider {
 			"dynatrace_process_group_monitoring":       resources.NewGeneric(export.ResourceTypes.ProcessGroupMonitoring).Resource(),
 			"dynatrace_process_group_simple_detection": resources.NewGeneric(export.ResourceTypes.ProcessGroupSimpleDetection).Resource(),
 			"dynatrace_log_metrics":                    resources.NewGeneric(export.ResourceTypes.LogMetrics).Resource(),
+			"dynatrace_browser_monitor_performance":    resources.NewGeneric(export.ResourceTypes.BrowserMonitorPerformanceThresholds).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

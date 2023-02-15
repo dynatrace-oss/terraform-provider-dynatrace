@@ -1,0 +1,10 @@
+{
+    "enabled": false,
+    "scope": "SYNTHETIC_TEST-1234567890000000",
+    "thresholds": [
+        {
+            "event": "SYNTHETIC_TEST-1234567890000000",
+            "threshold": 15
+        }
+    ]
+}
