@@ -1,0 +1,11 @@
+{
+    "dimensions": [
+      "dt.os.type",
+      "dt.entity.process_group"
+    ],
+    "enabled": false,
+    "key": "log.terraformexample",
+    "measure": "ATTRIBUTE",
+    "measureAttribute": "dt.entity.host",
+    "query": "TestMatcherValue"
+  }

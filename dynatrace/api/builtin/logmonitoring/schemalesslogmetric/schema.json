@@ -1,0 +1,254 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Measure cannot be changed, please create a new metric instead.",
+			"customValidatorId": "measure-not-changed-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "With [log metrics](https://dt-url.net/ngn07i6), you can use queries to create metrics from logs data for dashboarding, analysis, and custom alerting.\n\n Note:\n- Newly-defined log metrics are available only for log data ingested after [metric creation](https://dt-url.net/iy23x1d).\n- Log metrics consume DDUs.\n\nFor complete details on pricing, visit [DDUs for custom metrics](https://dt-url.net/vg43xi8).",
+	"displayName": "Log metrics",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Measure": {
+			"description": "",
+			"displayName": "Measure",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Occurrence of logs records",
+					"value": "OCCURRENCE"
+				},
+				{
+					"displayName": "Attribute value",
+					"value": "ATTRIBUTE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add log metric"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"dimensions": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customMessage": "Dimension may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+						"pattern": "^[.a-z0-9_\\-]+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "A hyphen cannot be the first character of a part.",
+						"pattern": "^((?!\\.-).)+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "span_id cannot be a dimension",
+						"pattern": "^(?!span_id$).+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "trace_id cannot be a dimension",
+						"pattern": "^(?!trace_id$).+$",
+						"type": "PATTERN"
+					}
+				],
+				"datasource": {
+					"filterProperties": [],
+					"fullContext": false,
+					"identifier": "logAttributes",
+					"resetValue": "NEVER",
+					"useApiSearch": false,
+					"validate": false
+				},
+				"description": "",
+				"displayName": "Dimension",
+				"documentation": "",
+				"metadata": {
+					"useCombobox": "enabled"
+				},
+				"subType": "datasource",
+				"type": "text"
+			},
+			"maxObjects": 50,
+			"metadata": {
+				"addItemButton": "Add dimension"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"key": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The metric key must begin with the 'log.' prefix.",
+					"pattern": "^log\\..+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "The metric key must contain at least two, non-empty parts separated by a dot.",
+					"pattern": "^[^.]+(\\.[^.]+?)+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Key may contain only alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.A-Za-z0-9_\\-]+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "A hyphen cannot be the first character of a part.",
+					"pattern": "^((?!\\.-).)+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "log.",
+			"description": "",
+			"displayName": "Metric key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"measure": {
+			"default": "OCCURRENCE",
+			"description": "",
+			"displayName": "Metric measurement",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Measure"
+			}
+		},
+		"measureAttribute": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Attribute may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.a-z0-9_\\-]+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "A hyphen cannot be the first character of a part.",
+					"pattern": "^((?!\\.-).)+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "span_id cannot be a dimension",
+					"pattern": "^(?!span_id$).+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "trace_id cannot be a dimension",
+					"pattern": "^(?!trace_id$).+$",
+					"type": "PATTERN"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "logAttributes",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"default": "",
+			"description": "",
+			"displayName": "Attribute",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"autoSelectFirst": "disabled",
+				"placeholder": "Select an option from the list or type in any attribute name.",
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ATTRIBUTE",
+				"property": "measure",
+				"type": "EQUALS"
+			},
+			"subType": "datasource",
+			"type": "text"
+		},
+		"query": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "log-matcher-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "Invisible unicode chars (for example: ZeroWidthSpace) aren't allowed.",
+					"customValidatorId": "invisible-chars-query-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring.analysis",
+		"group:log-monitoring"
+	],
+	"schemaId": "builtin:logmonitoring.schemaless-log-metric",
+	"types": {},
+	"version": "8.0.47"
+}

@@ -126,6 +126,7 @@ var ResourceTypes = struct {
 	ProcessGroupDetectionFlags        ResourceType
 	ProcessGroupMonitoring            ResourceType
 	ProcessGroupSimpleDetection       ResourceType
+	LogMetrics                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -227,6 +228,7 @@ var ResourceTypes = struct {
 	"dynatrace_process_group_detection_flags",
 	"dynatrace_process_group_monitoring",
 	"dynatrace_process_group_simple_detection",
+	"dynatrace_log_metrics",
 }
 
 type ResourceStatus string

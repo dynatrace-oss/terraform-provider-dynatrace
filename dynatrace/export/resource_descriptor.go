@@ -35,6 +35,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -516,6 +517,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ProcessGroup),
 	),
 	ResourceTypes.ProcessGroupSimpleDetection: NewResourceDescriptor(processgroupsimpledetection.Service),
+	ResourceTypes.LogMetrics:                  NewResourceDescriptor(schemalesslogmetric.Service),
 }
 
 var BlackListedResources = []ResourceType{
