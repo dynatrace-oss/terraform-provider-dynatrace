@@ -123,6 +123,7 @@ var ResourceTypes = struct {
 	UserExperienceScore               ResourceType
 	WebAppResourceCleanup             ResourceType
 	UpdateWindows                     ResourceType
+	ProcessGroupDetectionFlags        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -221,6 +222,7 @@ var ResourceTypes = struct {
 	"dynatrace_user_experience_score",
 	"dynatrace_web_app_resource_cleanup",
 	"dynatrace_update_windows",
+	"dynatrace_process_group_detection_flags",
 }
 
 type ResourceStatus string

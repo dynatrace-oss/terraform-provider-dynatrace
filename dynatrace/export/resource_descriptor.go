@@ -39,6 +39,7 @@ import (
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/detectionflags"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
@@ -503,6 +504,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.UserExperienceScore:   NewResourceDescriptor(userexperiencescore.Service),
 	ResourceTypes.WebAppResourceCleanup: NewResourceDescriptor(webappresourcecleanup.Service),
 	ResourceTypes.UpdateWindows:         NewResourceDescriptor(updatewindows.Service),
+	ResourceTypes.ProcessGroupDetectionFlags: NewResourceDescriptor(
+		detectionflags.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{

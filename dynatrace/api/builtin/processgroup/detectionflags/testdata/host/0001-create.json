@@ -1,0 +1,18 @@
+{
+    "addNodeJsScriptName": false,
+    "autoDetectCassandraClusters": true,
+    "autoDetectSpringBoot": true,
+    "autoDetectTibcoContainerEditionEngines": true,
+    "autoDetectTibcoEngines": false,
+    "autoDetectWebMethodsIntegrationServer": false,
+    "autoDetectWebSphereLibertyApplication": true,
+    "groupIBMMQbyInstanceName": false,
+    "identifyJbossServerBySystemProperty": true,
+    "ignoreUniqueIdentifiers": false,
+    "scope": "HOST-1234567890000000",
+    "shortLivedProcessesMonitoring": true,
+    "splitOracleDatabasePG": false,
+    "splitOracleListenerPG": false,
+    "useCatalinaBase": false,
+    "useDockerContainerName": false
+  }

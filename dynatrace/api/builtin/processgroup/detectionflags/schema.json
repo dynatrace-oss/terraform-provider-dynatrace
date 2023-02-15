@@ -1,0 +1,209 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Enable or disable process group detection flags",
+	"displayName": "Built-in detection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"addNodeJsScriptName": {
+			"default": true,
+			"description": "",
+			"displayName": "Use Node.js script name to distinguish processes started from same directory in addition to application id.",
+			"documentation": "In older versions, Node.js applications were distinguished based on their directory name, omitting the script name. Changing this setting may change the general handling of Node.js process groups. Leave unchanged if in doubt.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.141"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectCassandraClusters": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect Cassandra clusters",
+			"documentation": "Enabling this flag will detect separate Cassandra process groups based on the configured Cassandra cluster name.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.129"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectSpringBoot": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect Spring Boot applications",
+			"documentation": "Enabling this flag will detect Spring Boot process groups based on command line and applications' configuration files.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.175"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectTibcoContainerEditionEngines": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect TIBCO BusinessWorks Container Edition engines",
+			"documentation": "Enabling this flag will detect separate TIBCO BusinessWorks process groups per engine property file.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.181"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectTibcoEngines": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect TIBCO BusinessWorks engines",
+			"documentation": "Enabling this flag will detect separate TIBCO BusinessWorks process groups per engine property file.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.141"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectWebMethodsIntegrationServer": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect webMethods Integration Server",
+			"documentation": "Enabling this flag will detect webMethods Integration Server including specific properties like install root and product name.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.161"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"autoDetectWebSphereLibertyApplication": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect WebSphere Liberty application",
+			"documentation": "Enabling this flag will detect separate WebSphere Liberty process groups based on java command line.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.233"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"groupIBMMQbyInstanceName": {
+			"default": true,
+			"description": "",
+			"displayName": "Group IBM MQ processes by queue manager name",
+			"documentation": "Enable to group and separately analyze the processes of each IBM MQ Queue manager instance. Each process group receives a unique name based on the queue manager instance name.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.250"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"identifyJbossServerBySystemProperty": {
+			"default": true,
+			"description": "",
+			"displayName": "Identify and name JBoss servers based on system property jboss.server.name",
+			"documentation": "Enabling this flag will detect the JBoss server name from the system property jboss.server.name=\u003cserver-name\u003e, only if -D[Server:\u003cserver-name\u003e] is not set.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.157"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ignoreUniqueIdentifiers": {
+			"default": true,
+			"description": "",
+			"displayName": "Ignore versions, builds, dates, and GUIDs in process directory names",
+			"documentation": "To determine the unique identity of each detected process, and to generate a unique name for each detected process, Dynatrace evaluates the name of the directory that each process binary is contained within. For application containers like Tomcat and JBoss, Dynatrace evaluates important directories like CATALINA_HOME and JBOSS_HOME for this information. In some automated deployment scenarios such directory names are updated automatically with new version numbers, build numbers, dates, or GUIDs. Enable this setting to ensure that automated directory name changes don't result in Dynatrace registering pre-existing processes as new processes.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"shortLivedProcessesMonitoring": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor short lived processes",
+			"documentation": "Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring. Disabling this flag blocks passing data to cluster only, it does not stop data collection and has no effect on performance.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.235"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"splitOracleDatabasePG": {
+			"default": false,
+			"description": "",
+			"displayName": "Group Oracle database processes by SID",
+			"documentation": "Enable to group and separately analyze the processes of each Oracle DB. Each process group receives a unique name based on the Oracle DB SID.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.231"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"splitOracleListenerPG": {
+			"default": false,
+			"description": "",
+			"displayName": "Group Oracle listener processes by name",
+			"documentation": "Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.243"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"useCatalinaBase": {
+			"default": false,
+			"description": "",
+			"displayName": "Use CATALINA_BASE to identify Tomcat cluster nodes",
+			"documentation": "By default, Tomcat clusters are identified and named based on the CATALINA_HOME directory name. This setting results in the use of the CATALINA_BASE directory name to identify multiple Tomcat nodes within each Tomcat cluster. If this setting is not enabled, each CATALINA_HOME+CATALINA_BASE combination will be considered a separate Tomcat cluster. In other words, Tomcat clusters can't have multiple nodes on a single host.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"useDockerContainerName": {
+			"default": false,
+			"description": "",
+			"displayName": "Use Docker container name to distinguish multiple containers",
+			"documentation": "By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. Use this flag with caution!",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-group.detection-flags",
+	"types": {},
+	"version": "0.0.8"
+}
