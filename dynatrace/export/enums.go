@@ -125,6 +125,7 @@ var ResourceTypes = struct {
 	UpdateWindows                     ResourceType
 	ProcessGroupDetectionFlags        ResourceType
 	ProcessGroupMonitoring            ResourceType
+	ProcessGroupSimpleDetection       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -225,6 +226,7 @@ var ResourceTypes = struct {
 	"dynatrace_update_windows",
 	"dynatrace_process_group_detection_flags",
 	"dynatrace_process_group_monitoring",
+	"dynatrace_process_group_simple_detection",
 }
 
 type ResourceStatus string

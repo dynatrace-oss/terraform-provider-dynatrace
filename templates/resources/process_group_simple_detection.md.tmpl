@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_process_group_simple_detection Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_process_group_simple_detection` covers configuration for process group simple detection rules
+---
+
+# dynatrace_process_group_simple_detection (Resource)
+
+## Dynatrace Documentation
+
+- Simple detection rules - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/pg-detection#simple
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:process-group.simple-detection-rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_group_simple_detection` downloads all existing process group simple detection rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/process_group/simple_detection/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

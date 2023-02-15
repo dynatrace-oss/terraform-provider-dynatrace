@@ -1,0 +1,143 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Simple process group detection rules enable you to adapt the default process-group detection logic for deep monitored processes via **environment variables** or **Java system properties**. [More about custom process-group detection](https://dt-url.net/ty02won) \n\nNote: Detection rules change the composition, makeup, and identity of a process group, not just the name. If you only need to change default name use the [naming rules](/#settings/pgnamingsettings \"Visit Naming rules page\") instead. \n\nProcess-group detection rules only affect processes that are deep monitored by the Dynatrace OneAgent and require a restart of your processes to affect how processes are identified and grouped.",
+	"displayName": "Simple detection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"DetectionRuleType": {
+			"description": "",
+			"displayName": "DetectionRuleType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Java system property",
+					"value": "prop"
+				},
+				{
+					"displayName": "Environment variable",
+					"value": "env"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"minAgentVersion": "1.149"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"groupIdentifier": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Whitespaces aren't allowed.",
+					"type": "NO_WHITESPACE"
+				},
+				{
+					"customMessage": "Comma symbols (\",\") aren't allowed.",
+					"pattern": "^[^,]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "If Dynatrace detects this property at startup of a process, it will use its value to identify process groups more granular.",
+			"displayName": "Group identifier",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"instanceIdentifier": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Whitespaces aren't allowed.",
+					"type": "NO_WHITESPACE"
+				},
+				{
+					"customMessage": "Comma symbols (\",\") aren't allowed.",
+					"pattern": "^[^,]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Use a variable to identify instances within a process group.\n\nThe type of variable is the same as selected in 'Property source'.",
+			"displayName": "Instance identifier",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"processType": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "processType",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"description": "Note: Not all types can be detected at startup.",
+			"displayName": "Restrict this rule to specific process types",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"ruleType": {
+			"default": "prop",
+			"description": "Source to use to separate processes into multiple process groups.",
+			"displayName": "Property source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/DetectionRuleType"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-group.simple-detection-rule",
+	"types": {},
+	"version": "1.0.4"
+}

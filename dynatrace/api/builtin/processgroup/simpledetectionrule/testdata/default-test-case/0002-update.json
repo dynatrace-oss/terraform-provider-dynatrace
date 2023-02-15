@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "groupIdentifier": "GroupIdentifierExample",
+    "instanceIdentifier": "InstanceIdentifierExample",
+    "processType": "PROCESS_TYPE_GO",
+    "ruleType": "prop"
+  }
