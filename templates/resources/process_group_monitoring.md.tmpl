@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_process_group_monitoring Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_process_group_monitoring` covers configuration to enable or disable monitoring for certain process groups
+---
+
+# dynatrace_process_group_monitoring (Resource)
+
+## Dynatrace Documentation
+
+- Process deep monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/pg-monitoring
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:process-group.monitoring.state`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_group_monitoring` downloads all existing process group monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/process_group/monitoring_state/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

@@ -230,6 +230,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_resource_cleanup":      resources.NewGeneric(export.ResourceTypes.WebAppResourceCleanup).Resource(),
 			"dynatrace_update_windows":                resources.NewGeneric(export.ResourceTypes.UpdateWindows).Resource(),
 			"dynatrace_process_group_detection_flags": resources.NewGeneric(export.ResourceTypes.ProcessGroupDetectionFlags).Resource(),
+			"dynatrace_process_group_monitoring":      resources.NewGeneric(export.ResourceTypes.ProcessGroupMonitoring).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

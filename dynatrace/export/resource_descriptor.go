@@ -40,6 +40,7 @@ import (
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/detectionflags"
+	processgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/monitoring/state"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
@@ -508,6 +509,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		detectionflags.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.ProcessGroupMonitoring: NewResourceDescriptor(
+		processgroupmonitoring.Service,
+		Coalesce(Dependencies.ProcessGroup),
 	),
 }
 

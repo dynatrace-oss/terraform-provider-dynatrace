@@ -1,0 +1,50 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP"
+	],
+	"description": "Enable or disable monitoring for certain process groups",
+	"displayName": "Process group monitoring",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ProcessGroupMonitoringMode": {
+			"description": "",
+			"displayName": "Monitoring mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not monitor",
+					"value": "MONITORING_OFF"
+				},
+				{
+					"displayName": "Monitor",
+					"value": "MONITORING_ON"
+				},
+				{
+					"displayName": "Default",
+					"value": "DEFAULT"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"MonitoringState": {
+			"default": "DEFAULT",
+			"description": "",
+			"displayName": "Monitoring state",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ProcessGroupMonitoringMode"
+			}
+		}
+	},
+	"schemaId": "builtin:process-group.monitoring.state",
+	"types": {},
+	"version": "0.4"
+}
