@@ -1,0 +1,159 @@
+{
+	"allowedScopes": [
+		"HTTP_CHECK"
+	],
+	"description": "Set cookies to store state information or instruct the server not to send certain kinds of information.",
+	"displayName": "Cookies",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cookies": {
+			"constraints": [
+				{
+					"customMessage": "Cookie name must be unique.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"name"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/CookieEntry"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add cookie"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "set"
+		},
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Set cookies",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:synthetic.http"
+	],
+	"schemaId": "builtin:synthetic.http.cookies",
+	"types": {
+		"CookieEntry": {
+			"description": "",
+			"displayName": "Cookie",
+			"documentation": "",
+			"properties": {
+				"domain": {
+					"constraints": [
+						{
+							"customMessage": "Domain cannot be empty",
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Enclose placeholder values in brackets, for example \\{email\\}",
+					"displayName": "Domain",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, 'example.com'"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "synthetic_variable_placeholder",
+					"type": "text"
+				},
+				"name": {
+					"constraints": [
+						{
+							"customMessage": "Name cannot be empty",
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This cookie is not allowed",
+							"customValidatorId": "cookie-name-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Enclose placeholder values in brackets, for example \\{email\\}",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "synthetic_variable_placeholder",
+					"type": "text"
+				},
+				"path": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Enclose placeholder values in brackets, for example \\{email\\}",
+					"displayName": "Path (optional)",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, '/' or '/mydir'"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "synthetic_variable_placeholder",
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"customMessage": "Value cannot be empty",
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Enclose placeholder values in brackets, for example \\{email\\}",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "synthetic_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name} (value: ''{value}'', domain: ''{domain}'', path: ''{path}'')",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

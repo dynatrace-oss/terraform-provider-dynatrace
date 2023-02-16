@@ -1,0 +1,11 @@
+{
+    "scope": "HTTP_CHECK-1234567890000000",
+    "enabled": true,
+    "cookies": [
+        {
+            "domain": "google.com",
+            "name": "SampleName",
+            "value": "SampleValue"
+        }
+    ]
+}
