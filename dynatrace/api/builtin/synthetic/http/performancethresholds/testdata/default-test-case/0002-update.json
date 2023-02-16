@@ -1,0 +1,10 @@
+{
+    "enabled": false,
+    "scope": "HTTP_CHECK-1234567890000000",
+    "thresholds": [
+        {
+            "event": "HTTP_CHECK-1234567890000000",
+            "threshold": 15
+        }
+    ]
+}

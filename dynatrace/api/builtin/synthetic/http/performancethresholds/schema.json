@@ -1,0 +1,121 @@
+{
+	"allowedScopes": [
+		"HTTP_CHECK"
+	],
+	"description": "Dynatrace generates a new problem if this synthetic monitor exceeds any of the performance thresholds below in 3 of the 5 most recent executions at a given location, unless there is an open maintenance window for the synthetic monitor. Multiple locations with 3 such violations can be included in a problem. The problem is closed if no performance threshold is violated in the 5 most recent executions at each of the previously affected locations.",
+	"displayName": "Performance thresholds",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Generate a problem and send an alert on performance threshold violations",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"thresholds": {
+			"constraints": [
+				{
+					"customMessage": "A threshold for the specified request already exists.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"event"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Performance thresholds",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/ThresholdEntry"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add threshold"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaId": "builtin:synthetic.http.performance-thresholds",
+	"types": {
+		"ThresholdEntry": {
+			"description": "",
+			"displayName": "Performance thresholds",
+			"documentation": "",
+			"properties": {
+				"event": {
+					"constraints": [
+						{
+							"customMessage": "Please use a format of TYPE-ID",
+							"pattern": "^[A-Z][A-Z0-9_]*-[0-9A-F]{16}$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "ID must identify the synthetic monitor or a synthetic event of the monitor.",
+							"customValidatorId": "step-of-test-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "synthetic_event_datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Request",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Threshold (in seconds)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "{event} with a threshold of {threshold} s",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.6"
+}

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_http_monitor_performance Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_http_monitor_performance` covers configuration for HTTP monitor performance thresholds
+---
+
+# dynatrace_http_monitor_performance (Resource)
+
+## Dynatrace Documentation
+
+- Performance thresholds - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/http-monitors/configure-http-monitors#performance-thresholds
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:synthetic.http.performance-thresholds`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_http_monitor_performance` downloads all existing HTTP monitor performance thresholds configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/synthetic/http/performance_thresholds/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

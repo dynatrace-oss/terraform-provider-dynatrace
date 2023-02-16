@@ -128,6 +128,7 @@ var ResourceTypes = struct {
 	ProcessGroupSimpleDetection         ResourceType
 	LogMetrics                          ResourceType
 	BrowserMonitorPerformanceThresholds ResourceType
+	HttpMonitorPerformanceThresholds    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -231,6 +232,7 @@ var ResourceTypes = struct {
 	"dynatrace_process_group_simple_detection",
 	"dynatrace_log_metrics",
 	"dynatrace_browser_monitor_performance",
+	"dynatrace_http_monitor_performance",
 }
 
 type ResourceStatus string

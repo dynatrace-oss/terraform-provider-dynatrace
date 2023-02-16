@@ -55,6 +55,7 @@ var Dependencies = struct {
 	Application             Dependency
 	ApplicationMethod       Dependency
 	SyntheticTest           Dependency
+	HttpCheck               Dependency
 }{
 	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -73,6 +74,7 @@ var Dependencies = struct {
 	Application:             &entityds{"APPLICATION", "APPLICATION-[A-Z0-9]{16}", false},
 	ApplicationMethod:       &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
 	SyntheticTest:           &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
+	HttpCheck:               &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {

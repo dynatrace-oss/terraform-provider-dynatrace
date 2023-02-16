@@ -53,6 +53,7 @@ import (
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	browserperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
+	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
@@ -522,6 +523,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.BrowserMonitorPerformanceThresholds: NewResourceDescriptor(
 		browserperformancethresholds.Service,
 		Coalesce(Dependencies.SyntheticTest),
+	),
+	ResourceTypes.HttpMonitorPerformanceThresholds: NewResourceDescriptor(
+		httpperformancethresholds.Service,
+		Coalesce(Dependencies.HttpCheck),
 	),
 }
 
