@@ -52,6 +52,7 @@ import (
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
+	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	browserperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
 	httpcookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
@@ -538,6 +539,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		sessionreplaywebprivacy.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.SessionReplayResourceCapture: NewResourceDescriptor(
+		sessionreplayresourcecapture.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -555,10 +560,11 @@ var BlackListedResources = []ResourceType{
 
 	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
 
-	ResourceTypes.WebAppEnablement,        // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.MobileAppEnablement,     // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.CustomAppEnablement,     // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.SessionReplayWebPrivacy, // slight overlap with ResourceTypes.ApplicationDataPrivacy
+	ResourceTypes.WebAppEnablement,             // slight overlap with ResourceTypes.MobileApplication
+	ResourceTypes.MobileAppEnablement,          // slight overlap with ResourceTypes.MobileApplication
+	ResourceTypes.CustomAppEnablement,          // slight overlap with ResourceTypes.MobileApplication
+	ResourceTypes.SessionReplayWebPrivacy,      // slight overlap with ResourceTypes.ApplicationDataPrivacy
+	ResourceTypes.SessionReplayResourceCapture, // slight overlap with ResourceTypes.WebApplication
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

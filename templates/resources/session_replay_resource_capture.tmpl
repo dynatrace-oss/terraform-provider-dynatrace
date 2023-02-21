@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_session_replay_resource_capture Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_session_replay_resource_capture` covers configuration for Session Replay resource capture
+---
+
+# dynatrace_session_replay_resource_capture (Resource)
+
+-> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_web_application`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+
+## Dynatrace Documentation
+
+- Resource capture - https://www.dynatrace.com/support/help/platform-modules/digital-experience/session-replay/configure-session-replay-web#sr-resource-capturing
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:sessionreplay.web.resource-capturing`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_session_replay_resource_capture` downloads all existing Session Replay resource capture configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "test_data/session_replay/resource_capture/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
