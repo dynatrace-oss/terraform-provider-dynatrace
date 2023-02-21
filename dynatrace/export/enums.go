@@ -130,6 +130,7 @@ var ResourceTypes = struct {
 	BrowserMonitorPerformanceThresholds ResourceType
 	HttpMonitorPerformanceThresholds    ResourceType
 	HttpMonitorCookies                  ResourceType
+	SessionReplayWebPrivacy             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -235,6 +236,7 @@ var ResourceTypes = struct {
 	"dynatrace_browser_monitor_performance",
 	"dynatrace_http_monitor_performance",
 	"dynatrace_http_monitor_cookies",
+	"dynatrace_session_replay_web_privacy",
 }
 
 type ResourceStatus string

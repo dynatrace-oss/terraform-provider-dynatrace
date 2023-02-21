@@ -1,0 +1,11 @@
+{
+    "applicationId": "environment",
+    "enableOptInMode": true,
+    "maskingPresets": {
+      "playbackMaskingPreset": "MASK_ALL",
+      "recordingMaskingPreset": "MASK_USER_INPUT"
+    },
+    "urlExclusionPatternList": [
+      "www.google.com"
+    ]
+  }

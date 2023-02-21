@@ -236,6 +236,7 @@ func Provider() *schema.Provider {
 			"dynatrace_browser_monitor_performance":    resources.NewGeneric(export.ResourceTypes.BrowserMonitorPerformanceThresholds).Resource(),
 			"dynatrace_http_monitor_performance":       resources.NewGeneric(export.ResourceTypes.HttpMonitorPerformanceThresholds).Resource(),
 			"dynatrace_http_monitor_cookies":           resources.NewGeneric(export.ResourceTypes.HttpMonitorCookies).Resource(),
+			"dynatrace_session_replay_web_privacy":     resources.NewGeneric(export.ResourceTypes.SessionReplayWebPrivacy).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

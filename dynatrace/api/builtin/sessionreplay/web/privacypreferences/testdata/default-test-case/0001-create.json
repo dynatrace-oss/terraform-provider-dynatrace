@@ -1,0 +1,8 @@
+{
+    "applicationId": "environment",
+    "enableOptInMode": false,
+    "maskingPresets": {
+      "playbackMaskingPreset": "MASK_ALL",
+      "recordingMaskingPreset": "MASK_ALL"
+    }
+  }
