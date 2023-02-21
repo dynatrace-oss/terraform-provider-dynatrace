@@ -560,11 +560,11 @@ var BlackListedResources = []ResourceType{
 
 	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
 
-	ResourceTypes.WebAppEnablement,             // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.MobileAppEnablement,          // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.CustomAppEnablement,          // slight overlap with ResourceTypes.MobileApplication
-	ResourceTypes.SessionReplayWebPrivacy,      // slight overlap with ResourceTypes.ApplicationDataPrivacy
-	ResourceTypes.SessionReplayResourceCapture, // slight overlap with ResourceTypes.WebApplication
+	ResourceTypes.WebAppEnablement,             // overlap with ResourceTypes.MobileApplication
+	ResourceTypes.MobileAppEnablement,          // overlap with ResourceTypes.MobileApplication
+	ResourceTypes.CustomAppEnablement,          // overlap with ResourceTypes.MobileApplication
+	ResourceTypes.SessionReplayWebPrivacy,      // overlap with ResourceTypes.ApplicationDataPrivacy
+	ResourceTypes.SessionReplayResourceCapture, // overlap with ResourceTypes.WebApplication
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

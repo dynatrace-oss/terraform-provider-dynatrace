@@ -26,22 +26,22 @@ import (
 // ContentMaskingSettings represents content masking settings for Session Replay. \n\nFor more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation
 type ContentMaskingSettings struct {
 	RecordingMaskingSettingsVersion int32                        `json:"recordingMaskingSettingsVersion"` // The version of the content masking. \n\nYou can use this API only with the version 2. \n\nIf you're using version 1, set this field to `2` in the PUT request to switch to version 2
-	RecordingMaskingSettings        *SessionReplayMaskingSetting `json:"recordingMaskingSettings"`        // Configuration of the Session Replay masking during Recording
-	PlaybackMaskingSettings         *SessionReplayMaskingSetting `json:"playbackMaskingSettings"`         // Configuration of the Session Replay masking during Playback
+	RecordingMaskingSettings        *SessionReplayMaskingSetting `json:"recordingMaskingSettings"`        // (Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Recording
+	PlaybackMaskingSettings         *SessionReplayMaskingSetting `json:"playbackMaskingSettings"`         // (Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Playback
 }
 
 func (me *ContentMaskingSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"recording": {
 			Type:        schema.TypeList,
-			Description: "Configuration of the Session Replay masking during Recording",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Recording",
 			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(SessionReplayMaskingSetting).Schema()},
 		},
 		"playback": {
 			Type:        schema.TypeList,
-			Description: "Configuration of the Session Replay masking during Playback",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Playback",
 			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(SessionReplayMaskingSetting).Schema()},

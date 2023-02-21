@@ -24,19 +24,19 @@ import (
 
 // Content masking preferences. To protect your end users' privacy, select or customize [predefined masking options](https://dt-url.net/sr-masking-preset-options) that suit your content recording and playback requirements.// The recording masking settings are applied at record time to all webpages that your users navigate to. The playback masking settings are applied when replaying recorded sessions, including those that were recorded before your masking settings were applied.// Note: When you set the recording masking settings to a more restrictive option, the same option is also enabled for playback masking settings, which affects all past recorded sessions as well.
 type MaskingPresetConfig struct {
-	PlaybackMaskingAllowListRules  AllowListRules `json:"playbackMaskingAllowListRules,omitempty"`  // The elements are defined by the CSS selector or attribute name.
-	PlaybackMaskingBlockListRules  BlockListRules `json:"playbackMaskingBlockListRules,omitempty"`  // The elements are defined by the CSS selector or attribute name.
-	PlaybackMaskingPreset          MaskingPreset  `json:"playbackMaskingPreset"`                    // Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`
-	RecordingMaskingAllowListRules AllowListRules `json:"recordingMaskingAllowListRules,omitempty"` // The elements are defined by the CSS selector or attribute name.
-	RecordingMaskingBlockListRules BlockListRules `json:"recordingMaskingBlockListRules,omitempty"` // The elements are defined by the CSS selector or attribute name.
-	RecordingMaskingPreset         MaskingPreset  `json:"recordingMaskingPreset"`                   // Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`
+	PlaybackMaskingAllowListRules  AllowListRules `json:"playbackMaskingAllowListRules,omitempty"`  // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
+	PlaybackMaskingBlockListRules  BlockListRules `json:"playbackMaskingBlockListRules,omitempty"`  // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
+	PlaybackMaskingPreset          MaskingPreset  `json:"playbackMaskingPreset"`                    // (Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`
+	RecordingMaskingAllowListRules AllowListRules `json:"recordingMaskingAllowListRules,omitempty"` // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
+	RecordingMaskingBlockListRules BlockListRules `json:"recordingMaskingBlockListRules,omitempty"` // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
+	RecordingMaskingPreset         MaskingPreset  `json:"recordingMaskingPreset"`                   // (Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`
 }
 
 func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"playback_masking_allow_list_rules": {
 			Type:        schema.TypeList,
-			Description: "The elements are defined by the CSS selector or attribute name.",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(AllowListRules).Schema()},
 			MinItems:    1,
@@ -44,7 +44,7 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		},
 		"playback_masking_block_list_rules": {
 			Type:        schema.TypeList,
-			Description: "The elements are defined by the CSS selector or attribute name.",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(BlockListRules).Schema()},
 			MinItems:    1,
@@ -52,12 +52,12 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		},
 		"playback_masking_preset": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`",
 			Required:    true,
 		},
 		"recording_masking_allow_list_rules": {
 			Type:        schema.TypeList,
-			Description: "The elements are defined by the CSS selector or attribute name.",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(AllowListRules).Schema()},
 			MinItems:    1,
@@ -65,7 +65,7 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		},
 		"recording_masking_block_list_rules": {
 			Type:        schema.TypeList,
-			Description: "The elements are defined by the CSS selector or attribute name.",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(BlockListRules).Schema()},
 			MinItems:    1,
@@ -73,7 +73,7 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		},
 		"recording_masking_preset": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`",
 			Required:    true,
 		},
 	}

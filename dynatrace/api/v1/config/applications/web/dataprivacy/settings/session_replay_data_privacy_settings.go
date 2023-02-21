@@ -25,28 +25,28 @@ import (
 
 // SessionReplayDataPrivacySettings Data privacy settings for Session Replay
 type SessionReplayDataPrivacySettings struct {
-	OptIn                  bool                    `json:"optInModeEnabled,omitempty"`       // If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
-	URLExclusionRules      []string                `json:"urlExclusionRules,omitempty"`      // A list of URLs to be excluded from recording
-	ContentMaskingSettings *ContentMaskingSettings `json:"contentMaskingSettings,omitempty"` // Content masking settings for Session Replay. \n\nFor more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation
+	OptIn                  bool                    `json:"optInModeEnabled,omitempty"`       // (Field has overlap with `dynatrace_session_replay_web_privacy`) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
+	URLExclusionRules      []string                `json:"urlExclusionRules,omitempty"`      // (Field has overlap with `dynatrace_session_replay_web_privacy`) A list of URLs to be excluded from recording
+	ContentMaskingSettings *ContentMaskingSettings `json:"contentMaskingSettings,omitempty"` // (Field has overlap with `dynatrace_session_replay_web_privacy`) Content masking settings for Session Replay. \n\nFor more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation
 }
 
 func (me *SessionReplayDataPrivacySettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"opt_in": {
 			Type:        schema.TypeBool,
-			Description: "If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called",
 			Optional:    true,
 		},
 		"url_exclusion_rules": {
 			Type:        schema.TypeList,
-			Description: "A list of URLs to be excluded from recording",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) A list of URLs to be excluded from recording",
 			Optional:    true,
 			MinItems:    1,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"content_masking_settings": {
 			Type:        schema.TypeList,
-			Description: "Content masking settings for Session Replay. \n\nFor more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) Content masking settings for Session Replay. \n\nFor more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation",
 			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(ContentMaskingSettings).Schema()},
