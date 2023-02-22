@@ -23,6 +23,7 @@ import (
 	"path"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/google/uuid"
 )
 
 type Mode byte
@@ -66,7 +67,7 @@ func GetCacheFolder() string {
 }
 
 func getCacheRootFolder() string {
-	folder := path.Join(os.TempDir(), ".terraform-provider-dynatrace")
+	folder := path.Join(os.TempDir(), ".terraform-provider-dynatrace", uuid.NewString())
 	if envFolder := os.Getenv(ENV_VAR_CACHE_ROOT_FOLDER); envFolder != "" {
 		folder = envFolder
 	}
