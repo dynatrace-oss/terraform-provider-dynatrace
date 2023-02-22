@@ -58,6 +58,7 @@ import (
 	browseroutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/outagehandling"
 	browserperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
 	httpcookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
+	httpoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -555,6 +556,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		browseroutagehandling.Service,
 		Coalesce(Dependencies.SyntheticTest),
 	),
+	ResourceTypes.HttpMonitorOutageHandling: NewResourceDescriptor(
+		httpoutagehandling.Service,
+		Coalesce(Dependencies.HttpCheck),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -578,6 +583,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.SessionReplayWebPrivacy,      // overlap with ResourceTypes.ApplicationDataPrivacy
 	ResourceTypes.SessionReplayResourceCapture, // overlap with ResourceTypes.WebApplication
 	ResourceTypes.BrowserMonitorOutageHandling, // overlap with ResourceTypes.BrowserMonitor
+	ResourceTypes.HttpMonitorOutageHandling,    // overlap with ResourceTypes.HTTPMonitor
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

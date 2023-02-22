@@ -1,0 +1,139 @@
+{
+	"allowedScopes": [
+		"HTTP_CHECK",
+		"environment"
+	],
+	"description": "Dynatrace can generate problems for both global outages and/or local outages based on the availability of either all configured locations or only individual locations over consecutive runs.",
+	"displayName": "Outage handling",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"globalConsecutiveOutageCountThreshold": {
+			"constraints": [
+				{
+					"customMessage": "Consecutive outage count not supported. Must be one of 1, 2, 3 or 5.",
+					"customValidatorId": "synthetic_monitor_consecutive_outage_count_validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "consecutive_outage_count_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": 1,
+			"description": "",
+			"displayName": "Alert if all locations are unable to access my web application",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "globalOutages",
+				"type": "EQUALS"
+			},
+			"subType": "datasource",
+			"type": "integer"
+		},
+		"globalOutages": {
+			"default": true,
+			"description": "",
+			"displayName": "Generate a problem and send an alert when the monitor is unavailable at all configured locations.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"localConsecutiveOutageCountThreshold": {
+			"constraints": [
+				{
+					"customMessage": "Consecutive outage count not supported. Must be one of 1, 2, 3 or 5.",
+					"customValidatorId": "synthetic_monitor_consecutive_outage_count_validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "consecutive_outage_count_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": 3,
+			"description": "",
+			"displayName": "are unable to access my web application",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "localOutages",
+				"type": "EQUALS"
+			},
+			"subType": "datasource",
+			"type": "integer"
+		},
+		"localLocationOutageCountThreshold": {
+			"constraints": [
+				{
+					"minimum": 0,
+					"type": "RANGE"
+				},
+				{
+					"customMessage": "Invalid location count. Location count must be 1 on the tenant level.",
+					"customValidatorId": "synthetic_tenant_level_location_count_validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "synthetic_location_count_datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"default": 1,
+			"description": "",
+			"displayName": "Alert if at least",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "localOutages",
+				"type": "EQUALS"
+			},
+			"subType": "datasource",
+			"type": "integer"
+		},
+		"localOutages": {
+			"default": false,
+			"description": "",
+			"displayName": "Generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.http-monitor-default-settings"
+	],
+	"schemaId": "builtin:synthetic.http.outage-handling",
+	"types": {},
+	"version": "1.3.2"
+}

@@ -27,11 +27,11 @@ import (
 
 // OutageHandlingPolicy Outage handling configuration
 type OutageHandlingPolicy struct {
-	GlobalOutage       bool                `json:"globalOutage"`       // (Field has overlap with `dynatrace_browser_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
-	GlobalOutagePolicy *GlobalOutagePolicy `json:"globalOutagePolicy"` // (Field has overlap with `dynatrace_browser_monitor_outage`) Global outage handling configuration. \n\n Alert if **consecutiveRuns** times consecutively
-	LocalOutage        bool                `json:"localOutage"`        // (Field has overlap with `dynatrace_browser_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
-	LocalOutagePolicy  *LocalOutagePolicy  `json:"localOutagePolicy"`  // (Field has overlap with `dynatrace_browser_monitor_outage`) Local outage handling configuration. \n\n Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively
-	RetryOnError       bool                `json:"retryOnError"`       // (Field has overlap with `dynatrace_browser_monitor_outage`) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
+	GlobalOutage       bool                `json:"globalOutage"`       // (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
+	GlobalOutagePolicy *GlobalOutagePolicy `json:"globalOutagePolicy"` // (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Global outage handling configuration. \n\n Alert if **consecutiveRuns** times consecutively
+	LocalOutage        bool                `json:"localOutage"`        // (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
+	LocalOutagePolicy  *LocalOutagePolicy  `json:"localOutagePolicy"`  // (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Local outage handling configuration. \n\n Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively
+	RetryOnError       bool                `json:"retryOnError"`       // (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
 }
 
 func (me *OutageHandlingPolicy) MarshalJSON() ([]byte, error) {
@@ -62,28 +62,28 @@ func (me *OutageHandlingPolicy) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"global_outage": {
 			Type:        schema.TypeBool,
-			Description: "When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations",
+			Description: "(Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations",
 			Optional:    true,
 		},
 		"local_outage": {
 			Type:        schema.TypeBool,
-			Description: "When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location",
+			Description: "(Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location",
 			Optional:    true,
 		},
 		"retry_on_error": {
 			Type:        schema.TypeBool,
-			Description: "Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored",
+			Description: "(Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored",
 			Optional:    true,
 		},
 		"local_outage_policy": {
 			Type:        schema.TypeList,
-			Description: "Local outage handling configuration. \n\n Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively",
+			Description: "(Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Local outage handling configuration. \n\n Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(LocalOutagePolicy).Schema()},
 		},
 		"global_outage_policy": {
 			Type:        schema.TypeList,
-			Description: "Global outage handling configuration. \n\n Alert if **consecutiveRuns** times consecutively",
+			Description: "(Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Global outage handling configuration. \n\n Alert if **consecutiveRuns** times consecutively",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(GlobalOutagePolicy).Schema()},
 		},

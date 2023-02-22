@@ -241,6 +241,7 @@ func Provider() *schema.Provider {
 			"dynatrace_usability_analytics":             resources.NewGeneric(export.ResourceTypes.UsabilityAnalytics).Resource(),
 			"dynatrace_synthetic_availability":          resources.NewGeneric(export.ResourceTypes.SyntheticAvailability).Resource(),
 			"dynatrace_browser_monitor_outage":          resources.NewGeneric(export.ResourceTypes.BrowserMonitorOutageHandling).Resource(),
+			"dynatrace_http_monitor_outage":             resources.NewGeneric(export.ResourceTypes.HttpMonitorOutageHandling).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
