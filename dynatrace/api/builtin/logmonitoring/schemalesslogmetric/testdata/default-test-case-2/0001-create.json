@@ -4,7 +4,7 @@
       "dt.entity.process_group"
     ],
     "enabled": false,
-    "key": "log.terraformexample",
+    "key": "log.terraformexample2",
     "measure": "ATTRIBUTE",
     "measureAttribute": "dt.entity.host",
     "query": "TestMatcherValue"
