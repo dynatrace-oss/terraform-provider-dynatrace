@@ -1,0 +1,31 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace offers the possibility to configure maintenance windows. By default maintenance windows only affect problem detection and alerting. You can change this behavior and calculate availability including/excluding maintenance window periods.",
+	"displayName": "Synthetic availability",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"excludeMaintenanceWindows": {
+			"default": false,
+			"description": "",
+			"displayName": "Exclude periods with maintenance windows from availability calculation",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.synthetic-monitors"
+	],
+	"schemaId": "builtin:synthetic.synthetic-availability-settings",
+	"types": {},
+	"version": "1.0.1"
+}
