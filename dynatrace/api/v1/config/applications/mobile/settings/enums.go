@@ -76,3 +76,23 @@ var Aggregations = struct {
 	Min:   Aggregation("MIN"),
 	Sum:   Aggregation("SUM"),
 }
+
+type IconType string
+
+var IconTypes = struct {
+	AmazonEcho        IconType
+	Desktop           IconType
+	Embedded          IconType
+	IoT               IconType
+	MicrosoftHololens IconType
+	UFO               IconType
+	Users             IconType
+}{
+	AmazonEcho:        IconType("AMAZON_ECHO"),
+	Desktop:           IconType("DESKTOP"),
+	Embedded:          IconType("EMBEDDED"),
+	IoT:               IconType("IOT"),
+	MicrosoftHololens: IconType("MICROSOFT_HOLOLENS"),
+	UFO:               IconType("UFO"),
+	Users:             IconType("USERS"),
+}
