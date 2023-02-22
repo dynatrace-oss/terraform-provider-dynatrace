@@ -134,6 +134,7 @@ var ResourceTypes = struct {
 	SessionReplayResourceCapture        ResourceType
 	UsabilityAnalytics                  ResourceType
 	SyntheticAvailability               ResourceType
+	BrowserMonitorOutageHandling        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -243,6 +244,7 @@ var ResourceTypes = struct {
 	"dynatrace_session_replay_resource_capture",
 	"dynatrace_usability_analytics",
 	"dynatrace_synthetic_availability",
+	"dynatrace_browser_monitor_outage",
 }
 
 type ResourceStatus string

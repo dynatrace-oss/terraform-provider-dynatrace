@@ -240,6 +240,7 @@ func Provider() *schema.Provider {
 			"dynatrace_session_replay_resource_capture": resources.NewGeneric(export.ResourceTypes.SessionReplayResourceCapture).Resource(),
 			"dynatrace_usability_analytics":             resources.NewGeneric(export.ResourceTypes.UsabilityAnalytics).Resource(),
 			"dynatrace_synthetic_availability":          resources.NewGeneric(export.ResourceTypes.SyntheticAvailability).Resource(),
+			"dynatrace_browser_monitor_outage":          resources.NewGeneric(export.ResourceTypes.BrowserMonitorOutageHandling).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
