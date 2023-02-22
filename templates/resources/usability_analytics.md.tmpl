@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_usability_analytics Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_usability_analytics` covers detection of usability issues within your application. User action types that commonly reflect user frustration include dead clicks, rage clicks, rage rotates, and page refreshes
+---
+
+# dynatrace_usability_analytics (Resource)
+
+## Dynatrace Documentation
+
+- User experience score - https://www.dynatrace.com/support/help/platform-modules/digital-experience/basic-concepts/ratings/user-experience-score#calculate-the-user-experience-score
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:usability-analytics`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_usability_analytics` downloads the existing settings for Usability Analytics
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/usability/analytics/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

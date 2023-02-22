@@ -1,0 +1,32 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment"
+	],
+	"description": "Analyze detected usability issues within your application.",
+	"displayName": "Usability analytics",
+	"documentation": "User action types that commonly reflect user frustration include dead clicks, rage clicks, rage rotates, and page refreshes.",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"detectRageClicks": {
+			"default": true,
+			"description": "Three or more rapid clicks within the same area of a web page are considered to be rage clicks. Rage clicks commonly reflect slow-loading or failed page resources. Rage click counts are compiled for each session and considered in the [User Experience Score](https://dt-url.net/39034wt) .\nWith this setting enabled, a rage click count is compiled for each monitored user session.",
+			"displayName": "Detect rage clicks",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:preferences"
+	],
+	"schemaId": "builtin:usability-analytics",
+	"types": {},
+	"version": "1"
+}
