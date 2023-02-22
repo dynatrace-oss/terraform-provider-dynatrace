@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_web_application (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_web_app_enablement`, please review the schema for additional information.
+-> Certain field(s) of this resource has overlap with `dynatrace_web_app_enablement` and `dynatrace_session_replay_resource_capture`, please review the schema for additional information.
 
 ## Dynatrace Documentation
 
@@ -759,8 +759,8 @@ Required:
 
 Optional:
 
-- `css_resource_capturing_exclusion_rules` (List of String) A list of URLs to be excluded from CSS resource capturing
-- `enable_css_resource_capturing` (Boolean) Capture (`true`) or don't capture (`false`) CSS resources from the session
+- `css_resource_capturing_exclusion_rules` (List of String) (Field has overlap with `dynatrace_session_replay_resource_capture`) A list of URLs to be excluded from CSS resource capturing
+- `enable_css_resource_capturing` (Boolean) (Field has overlap with `dynatrace_session_replay_resource_capture`) Capture (`true`) or don't capture (`false`) CSS resources from the session
 - `enabled` (Boolean) (Field has overlap with `dynatrace_web_app_enablement`) SessionReplay Enabled/Disabled
 
 

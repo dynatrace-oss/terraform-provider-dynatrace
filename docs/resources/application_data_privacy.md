@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_application_data_privacy (Resource)
 
+-> Certain field(s) of this resource has overlap with `dynatrace_session_replay_web_privacy`, please review the schema for additional information.
+
 ## Dynatrace Documentation
 
 - Configure data privacy settings for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-real-user-monitoring-according-to-gdpr
@@ -46,22 +48,22 @@ The full documentation of the export feature is available [here](https://registr
 
 Required:
 
-- `content_masking_settings` (Block List, Min: 1, Max: 1) Content masking settings for Session Replay. 
+- `content_masking_settings` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_session_replay_web_privacy`) Content masking settings for Session Replay. 
 
 For more details, see [Configure Session Replay](https://dt-url.net/0m03slq) in Dynatrace Documentation (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings))
 
 Optional:
 
-- `opt_in` (Boolean) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
-- `url_exclusion_rules` (List of String) A list of URLs to be excluded from recording
+- `opt_in` (Boolean) (Field has overlap with `dynatrace_session_replay_web_privacy`) If `true`, session recording is disabled until JavaScriptAPI `dtrum.enableSessionReplay()` is called
+- `url_exclusion_rules` (List of String) (Field has overlap with `dynatrace_session_replay_web_privacy`) A list of URLs to be excluded from recording
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings`
 
 Required:
 
-- `playback` (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Playback (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback))
-- `recording` (Block List, Min: 1, Max: 1) Configuration of the Session Replay masking during Recording (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording))
+- `playback` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Playback (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--playback))
+- `recording` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_session_replay_web_privacy`) Configuration of the Session Replay masking during Recording (see [below for nested schema](#nestedblock--session_replay_data_privacy--content_masking_settings--recording))
 
 <a id="nestedblock--session_replay_data_privacy--content_masking_settings--playback"></a>
 ### Nested Schema for `session_replay_data_privacy.content_masking_settings.playback`
