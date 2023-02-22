@@ -55,8 +55,8 @@ func (aad *AWSAuthenticationData) Schema() map[string]*schema.Schema {
 		},
 		"external_id": {
 			Type:        schema.TypeString,
-			Description: "the external ID token for setting an IAM role. You can obtain it with the `GET /aws/iamExternalId` request",
-			Optional:    true,
+			Description: "(Read only) the external ID token for setting an IAM role. You can obtain it with the `GET /aws/iamExternalId` request",
+			Computed:    true,
 		},
 		"iam_role": {
 			Type:        schema.TypeString,
