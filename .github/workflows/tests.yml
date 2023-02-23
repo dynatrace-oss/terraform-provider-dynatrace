@@ -394,7 +394,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/synthetic/monitoredtechnologies/apache
+        run: go test -v ./dynatrace/api/builtin/monitoredtechnologies/apache
       - name: TestMonitoredTechnologiesDotNet
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -405,7 +405,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/synthetic/monitoredtechnologies/dotnet
+        run: go test -v ./dynatrace/api/builtin/monitoredtechnologies/dotnet
       - name: TestMonitoredTechnologiesGo
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -416,7 +416,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/synthetic/monitoredtechnologies/go
+        run: go test -v ./dynatrace/api/builtin/monitoredtechnologies/go
       - name: TestMonitoredTechnologiesIIS
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -427,7 +427,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/builtin/synthetic/monitoredtechnologies/iis
+        run: go test -v ./dynatrace/api/builtin/monitoredtechnologies/iis
       - name: TestAlerting
         env:
           GOPROXY: "https://proxy.golang.org"
