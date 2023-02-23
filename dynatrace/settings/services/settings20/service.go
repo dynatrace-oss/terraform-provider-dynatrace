@@ -20,6 +20,7 @@ package settings20
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -208,7 +209,12 @@ func (me *service[T]) update(id string, v T, retry bool) error {
 }
 
 func (me *service[T]) Delete(id string) error {
-	return me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
+	err := me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
+	if strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
+		return nil
+	}
+	return err
+
 }
 
 func (me *service[T]) Name() string {
