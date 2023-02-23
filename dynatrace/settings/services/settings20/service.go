@@ -210,7 +210,7 @@ func (me *service[T]) update(id string, v T, retry bool) error {
 
 func (me *service[T]) Delete(id string) error {
 	err := me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
-	if strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
+	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
 		return nil
 	}
 	return err
