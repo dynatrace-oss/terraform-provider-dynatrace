@@ -1,0 +1,46 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"environment"
+	],
+	"description": "By default, Go monitoring is enabled on all hosts. If you want to disable Go monitoring on selected hosts, disable it on these hosts via their settings.\n\nIf you want to enable Go monitoring only on selected hosts, disable global Go monitoring and enable it on these hosts via their settings.",
+	"displayName": "Go",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.157"
+	},
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor Go",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabledGoStaticMonitoring": {
+			"default": false,
+			"description": "Learn more about the [known limitations for Go static monitoring](https://www.dynatrace.com/support/help/technology-support/application-software/go/support/go-known-limitations#limitations)",
+			"displayName": "Enable Go static application monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:monitored-technologies.go",
+	"types": {},
+	"version": "0.0.2"
+}
