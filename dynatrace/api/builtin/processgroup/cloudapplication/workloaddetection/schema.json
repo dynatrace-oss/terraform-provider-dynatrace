@@ -1,0 +1,391 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Enabling this setting merges processes of similar workloads into process groups, and consequently, services. Please note that [fine-grained process detection rules](https://www.dynatrace.com/support/help/shortlink/process-groups) will still be applied, while ignoring container or platform specific properties.",
+	"displayName": "Cloud application and workload detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"MatchEnum": {
+			"description": "",
+			"displayName": "Match operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "exists",
+					"value": "EXISTS"
+				},
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "does not contain",
+					"value": "NOT_CONTAINS"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS"
+				},
+				{
+					"displayName": "does not start with",
+					"value": "NOT_STARTS"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS"
+				},
+				{
+					"displayName": "does not end with",
+					"value": "NOT_ENDS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cloudFoundry": {
+			"description": "Enable this setting to get \n * Processes of Cloud Foundry application instances merged into process groups by Cloud Foundry application. \n *  Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups).",
+			"displayName": "Cloud Foundry",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.257"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/CloudFoundryCAWD"
+			}
+		},
+		"docker": {
+			"description": "Enable this setting for plain Docker environments to get \n * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups).",
+			"displayName": "Docker",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.257"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DockerCAWD"
+			}
+		},
+		"kubernetes": {
+			"description": "Enable this setting to get \n * Insights into your Kubernetes namespaces, workloads and pods (cloud application namespace, cloud application and cloud application instance and entities). \n * Container resource metrics (container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). \n * Similar workloads merged into process groups based on defined rules (see below). \n * Version detection for services that run in Kubernetes workloads.",
+			"displayName": "Kubernetes/OpenShift",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.257"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/KubernetesOpenShiftCAWD"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.containers",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-group.cloud-application-workload-detection",
+	"types": {
+		"CloudFoundryCAWD": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enable cloud application and workload detection for Cloud Foundry",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.257"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DockerCAWD": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enable cloud application and workload detection for Docker",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.257"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FilterComplex": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"inclusionToggles": {
+					"description": "",
+					"displayName": "ID calculation based on",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/InclusionToggles"
+					}
+				},
+				"matchFilter": {
+					"description": "",
+					"displayName": "When namespace",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/MatchFilter"
+					}
+				}
+			},
+			"summaryPattern": "Namespace {matchFilter.matchOperator} {matchFilter.namespace}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"InclusionToggles": {
+			"description": "",
+			"displayName": "InclusionToggles",
+			"documentation": "",
+			"properties": {
+				"incBasepod": {
+					"default": false,
+					"description": "",
+					"displayName": "Base pod name",
+					"documentation": "E.g. \"cloud-credential-operator-\" for \"cloud-credential-operator-5ff6dbff57-gszgq\"",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"incContainer": {
+					"default": true,
+					"description": "",
+					"displayName": "Container name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"incNamespace": {
+					"default": true,
+					"description": "",
+					"displayName": "Namespace name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"incProduct": {
+					"default": true,
+					"description": "",
+					"displayName": "Product",
+					"documentation": "If Product is enabled and has no value, it defaults to Base pod name",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"incStage": {
+					"default": true,
+					"description": "",
+					"displayName": "Stage",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"KubernetesOpenShiftCAWD": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enable cloud application and workload detection for Kubernetes/OpenShift",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.257"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"filters": {
+					"constraints": [
+						{
+							"customMessage": "Namespace name and match operator must be unique",
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"matchFilter.namespace",
+								"matchFilter.matchOperator"
+							]
+						}
+					],
+					"description": "Define rules to merge similar Kubernetes workloads into process groups. \n\n You can use workload properties like namespace name, base pod name or container name as well as the [environment variables DT_RELEASE_STAGE and DT_RELEASE_PRODUCT](https://dt-url.net/sb02v2a) for grouping processes of similar workloads. The first applicable rule will be applied. If no rule matches, “Namespace name” + “Base pod name” + “Container name” is used as fallback.",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FilterComplex"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add rule",
+						"minAgentVersion": "1.237"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list",
+					"uiCustomization": {
+						"table": {
+							"columns": [
+								{
+									"displayName": "Namespace name",
+									"propertyRef": "./inclusionToggles/incNamespace"
+								},
+								{
+									"displayName": "Base pod name",
+									"propertyRef": "./inclusionToggles/incBasepod"
+								},
+								{
+									"displayName": "Container name",
+									"propertyRef": "./inclusionToggles/incContainer"
+								},
+								{
+									"displayName": "Stage",
+									"propertyRef": "./inclusionToggles/incStage"
+								},
+								{
+									"displayName": "Product",
+									"propertyRef": "./inclusionToggles/incProduct"
+								}
+							]
+						}
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MatchFilter": {
+			"description": "",
+			"displayName": "MatchFilter",
+			"documentation": "",
+			"properties": {
+				"matchOperator": {
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Match operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MatchEnum"
+					}
+				},
+				"namespace": {
+					"constraints": [
+						{
+							"maxLength": 255,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Namespace name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "EXISTS",
+							"property": "matchOperator",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.4"
+}

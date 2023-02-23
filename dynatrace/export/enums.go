@@ -136,6 +136,7 @@ var ResourceTypes = struct {
 	SyntheticAvailability               ResourceType
 	BrowserMonitorOutageHandling        ResourceType
 	HttpMonitorOutageHandling           ResourceType
+	CloudAppWorkloadDetection           ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -247,6 +248,7 @@ var ResourceTypes = struct {
 	"dynatrace_synthetic_availability",
 	"dynatrace_browser_monitor_outage",
 	"dynatrace_http_monitor_outage",
+	"dynatrace_cloudapp_workloaddetection",
 }
 
 type ResourceStatus string

@@ -1,0 +1,26 @@
+{
+    "cloudFoundry": {
+        "enabled": false
+    },
+    "docker": {
+        "enabled": true
+    },
+    "kubernetes": {
+        "enabled": true,
+        "filters": [
+            {
+                "enabled": false,
+                "inclusionToggles": {
+                    "incBasepod": false,
+                    "incContainer": true,
+                    "incNamespace": true,
+                    "incProduct": true,
+                    "incStage": true
+                },
+                "matchFilter": {
+                    "matchOperator": "EXISTS"
+                }
+            }
+        ]
+    }
+}
