@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_monitored_technologies_dotnet Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_monitored_technologies_dotnet` covers configuration to enable/disable .NET monitoring
+---
+
+# dynatrace_monitored_technologies_dotnet (Resource)
+
+## Dynatrace Documentation
+
+- Hosts - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitored-technologies.dotnet`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_monitored_technologies_dotnet` downloads all existing .NET monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredtechnologies/dotnet/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

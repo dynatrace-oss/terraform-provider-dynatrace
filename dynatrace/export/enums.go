@@ -139,6 +139,7 @@ var ResourceTypes = struct {
 	CloudAppWorkloadDetection           ResourceType
 	MainframeTransactionMonitoring      ResourceType
 	MonitoredTechnologiesApache         ResourceType
+	MonitoredTechnologiesDotNet         ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -253,6 +254,7 @@ var ResourceTypes = struct {
 	"dynatrace_cloudapp_workloaddetection",
 	"dynatrace_mainframe_transaction_monitoring",
 	"dynatrace_monitored_technologies_apache",
+	"dynatrace_monitored_technologies_dotnet",
 }
 
 type ResourceStatus string

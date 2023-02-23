@@ -1,0 +1,43 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"environment"
+	],
+	"description": "By default, .NET monitoring is enabled on all hosts. If you want to disable .NET monitoring on selected hosts, disable it on these hosts via their settings.\n\nIf you want to enable .NET monitoring only on selected hosts, disable global .NET monitoring and enable it on these hosts via their settings.",
+	"displayName": ".NET",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "Requires Dynatrace OneAgent version 1.75 or later on Windows",
+			"displayName": "Monitor .NET",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabledDotNetCore": {
+			"default": true,
+			"description": "Requires Dynatrace OneAgent version 1.117 or later on Windows and version 1.127 or later on Linux and .NET monitoring enabled",
+			"displayName": "Enable .NET Core",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:monitored-technologies.dotnet",
+	"types": {},
+	"version": "0.0.1"
+}
