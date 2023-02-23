@@ -68,9 +68,10 @@ func (me *JSONDashboard) Name() string {
 func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"contents": {
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "Contains the JSON Code of the Dashboard",
+			Type:             schema.TypeString,
+			Required:         true,
+			Description:      "Contains the JSON Code of the Dashboard",
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 	}
 }
