@@ -244,6 +244,7 @@ func Provider() *schema.Provider {
 			"dynatrace_http_monitor_outage":              resources.NewGeneric(export.ResourceTypes.HttpMonitorOutageHandling).Resource(),
 			"dynatrace_cloudapp_workloaddetection":       resources.NewGeneric(export.ResourceTypes.CloudAppWorkloadDetection).Resource(),
 			"dynatrace_mainframe_transaction_monitoring": resources.NewGeneric(export.ResourceTypes.MainframeTransactionMonitoring).Resource(),
+			"dynatrace_monitored_technologies_apache":    resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesApache).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

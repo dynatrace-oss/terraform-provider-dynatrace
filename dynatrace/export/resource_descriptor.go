@@ -37,6 +37,7 @@ import (
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -564,6 +565,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.CloudAppWorkloadDetection:      NewResourceDescriptor(workloaddetection.Service),
 	ResourceTypes.MainframeTransactionMonitoring: NewResourceDescriptor(txmonitoring.Service),
+	ResourceTypes.MonitoredTechnologiesApache: NewResourceDescriptor(
+		apache.Service,
+		Coalesce(Dependencies.Host),
+	),
 }
 
 var BlackListedResources = []ResourceType{
