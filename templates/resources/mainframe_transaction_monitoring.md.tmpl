@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_mainframe_transaction_monitoring Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_mainframe_transaction_monitoring` covers additional monitoring settings for CICS and IMS transactions
+---
+
+# dynatrace_mainframe_transaction_monitoring (Resource)
+
+## Dynatrace Documentation
+
+- Customize CICS and IMS monitoring - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/installation-and-operation/zos/operation/cics-ims-monitoring
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:mainframe.txmonitoring`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_mainframe_transaction_monitoring` downloads all real user monitoring configuration for process groups
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/mainframe/txmonitoring/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

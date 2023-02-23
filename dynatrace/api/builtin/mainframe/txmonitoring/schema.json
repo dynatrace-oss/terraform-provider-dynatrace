@@ -1,0 +1,106 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define additional monitoring settings for CICS and IMS transactions.",
+	"displayName": "Transaction monitoring",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"groupCicsRegions": {
+			"default": true,
+			"description": "If enabled, CICS regions belonging to the same CICSPlex will be grouped into a single process group. If disabled, a process group will be created for each CICS region.",
+			"displayName": "Group CICS regions that belong to the same CICSPlex",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"groupImsRegions": {
+			"default": true,
+			"description": "If enabled, IMS regions belonging to the same subsystem will be grouped into a single process group. If disabled, a process group will be created for each IMS region.",
+			"displayName": "Group IMS regions that belong to the same subsystem",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.243"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"monitorAllCtgProtocols": {
+			"default": false,
+			"description": "If enabled, the CICS Transaction Gateway sensor will trace all EXCI requests including those that are using the TCP/IP or SNA protocol.",
+			"displayName": "Monitor all EXCI requests from CICS Transaction Gateway",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"monitorAllIncomingWebRequests": {
+			"default": false,
+			"description": "Dynatrace automatically traces incoming web requests when they are called by already-monitored services. Enable this setting to monitor all incoming web requests. We recommend enabling it only over a short period of time.",
+			"displayName": "Monitor all incoming web requests",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"nodeLimit": {
+			"constraints": [
+				{
+					"maximum": 999999,
+					"minimum": 0,
+					"type": "RANGE"
+				}
+			],
+			"default": 500,
+			"description": "",
+			"displayName": "PurePath node limit: maximum number of nodes per CICS/IMS program call",
+			"documentation": "We recommend the default limit of 500 nodes. The value 0 means unlimited number of nodes.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"zosCicsServiceDetectionUsesTransactionId": {
+			"default": true,
+			"description": "If enabled, a CICS service will be created for each monitored transaction ID within a process group. If disabled, a CICS service will be created for each monitored CICS region within a process group. We recommend enabling it only when the CICS regions are grouped by their CICSPlex.",
+			"displayName": "Create CICS services based on transaction IDs",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.237"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"zosImsServiceDetectionUsesTransactionId": {
+			"default": true,
+			"description": "If enabled, an IMS service will be created for each monitored transaction ID within a process group. If disabled, an IMS service will be created for each monitored IMS region within a process group. We recommend enabling it only when the IMS regions are grouped by their subsystem.",
+			"displayName": "Create IMS services based on transaction IDs",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.237"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:mainframe"
+	],
+	"schemaId": "builtin:mainframe.txmonitoring",
+	"types": {},
+	"version": "1.6.2"
+}
