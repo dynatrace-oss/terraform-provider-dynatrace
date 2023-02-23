@@ -247,6 +247,7 @@ func Provider() *schema.Provider {
 			"dynatrace_monitored_technologies_apache":    resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesApache).Resource(),
 			"dynatrace_monitored_technologies_dotnet":    resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesDotNet).Resource(),
 			"dynatrace_monitored_technologies_go":        resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesGo).Resource(),
+			"dynatrace_monitored_technologies_iis":       resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesIIS).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -141,6 +141,7 @@ var ResourceTypes = struct {
 	MonitoredTechnologiesApache         ResourceType
 	MonitoredTechnologiesDotNet         ResourceType
 	MonitoredTechnologiesGo             ResourceType
+	MonitoredTechnologiesIIS            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -257,6 +258,7 @@ var ResourceTypes = struct {
 	"dynatrace_monitored_technologies_apache",
 	"dynatrace_monitored_technologies_dotnet",
 	"dynatrace_monitored_technologies_go",
+	"dynatrace_monitored_technologies_iis",
 }
 
 type ResourceStatus string
