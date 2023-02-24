@@ -44,6 +44,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/java"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nginx"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nodejs"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/opentracingnative"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -597,6 +598,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.MonitoredTechnologiesNodeJS: NewResourceDescriptor(
 		nodejs.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.MonitoredTechnologiesOpenTracing: NewResourceDescriptor(
+		opentracingnative.Service,
 		Coalesce(Dependencies.Host),
 	),
 }
