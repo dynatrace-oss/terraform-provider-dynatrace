@@ -68,6 +68,11 @@ func (me *ServiceOptions[T]) WithStubs(stubs RecordStubs) *ServiceOptions[T] {
 	return me
 }
 
+func (me *ServiceOptions[T]) WithCreateConfirm(confirm int) *ServiceOptions[T] {
+	me.CreateConfirm = confirm
+	return me
+}
+
 func (me *ServiceOptions[T]) NoValidator() *ServiceOptions[T] {
 	me.HasNoValidator = true
 	return me
