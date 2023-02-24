@@ -252,6 +252,7 @@ func Provider() *schema.Provider {
 			"dynatrace_monitored_technologies_nginx":       resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesNGINX).Resource(),
 			"dynatrace_monitored_technologies_nodejs":      resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesNodeJS).Resource(),
 			"dynatrace_monitored_technologies_opentracing": resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesOpenTracing).Resource(),
+			"dynatrace_monitored_technologies_php":         resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesPHP).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
