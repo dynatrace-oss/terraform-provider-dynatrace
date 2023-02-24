@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_monitored_technologies_nodejs Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_monitored_technologies_nodejs` covers configuration to enable/disable Node.js monitoring
+---
+
+# dynatrace_monitored_technologies_nodejs (Resource)
+
+## Dynatrace Documentation
+
+- Hosts - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitored-technologies.nodejs`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_monitored_technologies_nodejs` downloads all existing Node.js monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredtechnologies/nodejs/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

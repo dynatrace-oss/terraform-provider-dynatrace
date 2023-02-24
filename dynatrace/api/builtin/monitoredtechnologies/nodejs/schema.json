@@ -1,0 +1,28 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"environment"
+	],
+	"description": "By default, Node.js monitoring is enabled on all hosts. If you want to disable Node.js monitoring on selected hosts, disable it on these hosts via their settings.\n\nIf you want to enable Node.js monitoring only on selected hosts, disable global Node.js monitoring and enable it on these hosts via their settings.",
+	"displayName": "Node.js",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor Node.js",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:monitored-technologies.nodejs",
+	"types": {},
+	"version": "0.0.1"
+}
