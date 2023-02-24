@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_monitored_technologies_varnish Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_monitored_technologies_varnish` covers configuration to enable/disable Varnish monitoring
+---
+
+# dynatrace_monitored_technologies_varnish (Resource)
+
+## Dynatrace Documentation
+
+- Hosts - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitored-technologies.varnish`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_monitored_technologies_varnish` downloads all existing Varnish monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredtechnologies/varnish/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
