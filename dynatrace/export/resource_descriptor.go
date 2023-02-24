@@ -47,6 +47,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/opentracingnative"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -612,6 +613,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.MonitoredTechnologiesVarnish: NewResourceDescriptor(
 		varnish.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.MonitoredTechnologiesWSMB: NewResourceDescriptor(
+		wsmb.Service,
 		Coalesce(Dependencies.Host),
 	),
 }
