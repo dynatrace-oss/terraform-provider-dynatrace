@@ -109,6 +109,7 @@ func (me *CalculatedServiceMetric) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The key of the calculated service metric",
+			ForceNew:    true,
 		},
 		"unit_display_name": {
 			Type:        schema.TypeString,
