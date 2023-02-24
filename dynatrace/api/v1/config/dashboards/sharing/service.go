@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -97,8 +98,23 @@ func (me *service) Validate(v *sharing.DashboardSharing) error {
 }
 
 func (me *service) Update(id string, v *sharing.DashboardSharing) error {
+	return me.update(id, v, 0)
+}
+
+const max_retries = 10
+
+func (me *service) update(id string, v *sharing.DashboardSharing, retry int) error {
 	id = strings.TrimSuffix(id, "-sharing")
 	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
+		// newly created dashboards are sometimes not yet known cluster wide
+		// this retry functionality tries to make up for that
+		if strings.Contains(err.Error(), "Dashboard does not exist") {
+			if retry > max_retries {
+				return err
+			}
+			time.Sleep(10 * time.Second)
+			return me.update(id, v, retry+1)
+		}
 		return err
 	}
 	return nil
