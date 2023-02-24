@@ -31,10 +31,10 @@ import (
 
 // DashboardMetadata contains parameters of a dashboard
 type DashboardMetadata struct {
-	Name                string                     `json:"name"`                     // the name of the dashboard
-	Shared              *bool                      `json:"shared,omitempty"`         // the dashboard is shared (`true`) or private (`false`)
-	Owner               *string                    `json:"owner,omitempty"`          // the owner of the dashboard
-	SharingDetails      *SharingInfo               `json:"sharingDetails,omitempty"` // represents sharing configuration of a dashboard
+	Name string `json:"name"` // the name of the dashboard
+	// Shared              *bool                      `json:"shared,omitempty"`         // the dashboard is shared (`true`) or private (`false`)
+	Owner *string `json:"owner,omitempty"` // the owner of the dashboard
+	// SharingDetails      *SharingInfo               `json:"sharingDetails,omitempty"` // represents sharing configuration of a dashboard
 	Filter              *DashboardFilter           `json:"dashboardFilter,omitempty"`
 	Tags                []string                   `json:"tags,omitempty"`                // a set of tags assigned to the dashboard
 	Preset              bool                       `json:"preset"`                        // the dashboard is a preset (`true`)
@@ -53,9 +53,11 @@ func (me *DashboardMetadata) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"shared": {
-			Type:        schema.TypeBool,
-			Description: "the dashboard is shared (`true`) or private (`false`)",
-			Optional:    true,
+			Type:             schema.TypeBool,
+			Description:      "the dashboard is shared (`true`) or private (`false`)",
+			Optional:         true,
+			Deprecated:       "Please use the resource `dynatrace_dashboard_sharing` to configure share settings",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"consistent_colors": {
 			Type:        schema.TypeBool,
@@ -68,13 +70,13 @@ func (me *DashboardMetadata) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"sharing_details": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			MaxItems:    1,
-			Description: "represents sharing configuration of a dashboard",
-			Elem: &schema.Resource{
-				Schema: new(SharingInfo).Schema(),
-			},
+			Type:             schema.TypeList,
+			Optional:         true,
+			MaxItems:         1,
+			Description:      "represents sharing configuration of a dashboard",
+			Elem:             &schema.Resource{Schema: new(SharingInfo).Schema()},
+			Deprecated:       "Please use the resource `dynatrace_dashboard_sharing` to configure share settings",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"filter": {
 			Type:        schema.TypeList,
@@ -128,16 +130,20 @@ func (me *DashboardMetadata) MarshalHCL(properties hcl.Properties) error {
 	if len(me.Unknowns) > 0 {
 		delete(me.Unknowns, "hasConsistentColors")
 		delete(me.Unknowns, "tilesNameSize")
+		delete(me.Unknowns, "sharingDetails")
+		delete(me.Unknowns, "shared")
 	}
-	if err := properties.Unknowns(me.Unknowns); err != nil {
-		return err
+	if len(me.Unknowns) > 0 {
+		if err := properties.Unknowns(me.Unknowns); err != nil {
+			return err
+		}
 	}
 	if err := properties.Encode("name", me.Name); err != nil {
 		return err
 	}
-	if err := properties.Encode("shared", opt.Bool(me.Shared)); err != nil {
-		return err
-	}
+	// if err := properties.Encode("shared", opt.Bool(me.Shared)); err != nil {
+	// 	return err
+	// }
 	if err := properties.Encode("preset", me.Preset); err != nil {
 		return err
 	}
@@ -153,9 +159,9 @@ func (me *DashboardMetadata) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("valid_filter_keys", me.ValidFilterKeys); err != nil {
 		return err
 	}
-	if err := properties.Encode("sharing_details", me.SharingDetails); err != nil {
-		return err
-	}
+	// if err := properties.Encode("sharing_details", me.SharingDetails); err != nil {
+	// 	return err
+	// }
 	if err := properties.Encode("filter", me.Filter); err != nil {
 		return err
 	}
@@ -180,11 +186,16 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(me.Unknowns, "name")
 		delete(me.Unknowns, "shared")
 		delete(me.Unknowns, "owner")
-		delete(me.Unknowns, "sharing_details")
+		delete(me.Unknowns, "sharingDetails")
 		delete(me.Unknowns, "dashboard_filter")
 		delete(me.Unknowns, "dynamic_filters")
 		delete(me.Unknowns, "tags")
 		delete(me.Unknowns, "valid_filter_keys")
+		delete(me.Unknowns, "shared")
+		if cc, ok := me.Unknowns["hasConsistentColors"]; ok {
+			json.Unmarshal(cc, &me.HasConsistentColors)
+		}
+		delete(me.Unknowns, "hasConsistentColors")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -195,21 +206,21 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
 	}
-	if value, ok := decoder.GetOk("shared"); ok {
-		me.Shared = opt.NewBool(value.(bool))
-	}
+	// if value, ok := decoder.GetOk("shared"); ok {
+	// 	me.Shared = opt.NewBool(value.(bool))
+	// }
 	if value, ok := decoder.GetOk("preset"); ok {
 		me.Preset = value.(bool)
 	}
 	if value, ok := decoder.GetOk("owner"); ok {
 		me.Owner = opt.NewString(value.(string))
 	}
-	if _, ok := decoder.GetOk("sharing_details.#"); ok {
-		me.SharingDetails = new(SharingInfo)
-		if err := me.SharingDetails.UnmarshalHCL(hcl.NewDecoder(decoder, "sharing_details", 0)); err != nil {
-			return err
-		}
-	}
+	// if _, ok := decoder.GetOk("sharing_details.#"); ok {
+	// 	me.SharingDetails = new(SharingInfo)
+	// 	if err := me.SharingDetails.UnmarshalHCL(hcl.NewDecoder(decoder, "sharing_details", 0)); err != nil {
+	// 		return err
+	// 	}
+	// }
 	if _, ok := decoder.GetOk("filter.#"); ok {
 		me.Filter = new(DashboardFilter)
 		if err := me.Filter.UnmarshalHCL(hcl.NewDecoder(decoder, "filter", 0)); err != nil {
@@ -242,15 +253,15 @@ func (me *DashboardMetadata) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("tilesNameSize", me.TilesNameSize); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("shared", me.Shared); err != nil {
-		return nil, err
-	}
+	// if err := m.Marshal("shared", me.Shared); err != nil {
+	// 	return nil, err
+	// }
 	if err := m.Marshal("owner", me.Owner); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("sharingDetails", me.SharingDetails); err != nil {
-		return nil, err
-	}
+	// if err := m.Marshal("sharingDetails", me.SharingDetails); err != nil {
+	// 	return nil, err
+	// }
 	if err := m.Marshal("dashboardFilter", me.Filter); err != nil {
 		return nil, err
 	}
@@ -264,6 +275,9 @@ func (me *DashboardMetadata) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	if err := m.Marshal("validFilterKeys", me.ValidFilterKeys); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("hasConsistentColors", me.HasConsistentColors); err != nil {
 		return nil, err
 	}
 	return json.Marshal(m)
@@ -280,15 +294,15 @@ func (me *DashboardMetadata) UnmarshalJSON(data []byte) error {
 	if err := m.Unmarshal("tilesNameSize", &me.TilesNameSize); err != nil {
 		return nil
 	}
-	if err := m.Unmarshal("shared", &me.Shared); err != nil {
-		return nil
-	}
+	// if err := m.Unmarshal("shared", &me.Shared); err != nil {
+	// 	return nil
+	// }
 	if err := m.Unmarshal("owner", &me.Owner); err != nil {
 		return nil
 	}
-	if err := m.Unmarshal("sharingDetails", &me.SharingDetails); err != nil {
-		return nil
-	}
+	// if err := m.Unmarshal("sharingDetails", &me.SharingDetails); err != nil {
+	// 	return nil
+	// }
 	if err := m.Unmarshal("dashboardFilter", &me.Filter); err != nil {
 		return nil
 	}
@@ -302,6 +316,9 @@ func (me *DashboardMetadata) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 	if err := m.Unmarshal("validFilterKeys", &me.ValidFilterKeys); err != nil {
+		return nil
+	}
+	if err := m.Unmarshal("hasConsistentColors", &me.HasConsistentColors); err != nil {
 		return nil
 	}
 	if len(m) > 0 {
