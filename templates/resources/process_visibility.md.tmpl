@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: "dynatrace_process_visibility Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_process_visibility` covers configuration for process instance snapshots
+---
+
+# dynatrace_process_visibility (Resource)
+
+
+## Dynatrace Documentation
+
+- Process instance snapshots - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/monitoring/host-monitoring#snapshots
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:processvisibility`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_visibility` downloads all existing process instance snapshots configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/processvisibility/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

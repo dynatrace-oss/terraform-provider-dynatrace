@@ -149,6 +149,7 @@ var ResourceTypes = struct {
 	MonitoredTechnologiesPHP            ResourceType
 	MonitoredTechnologiesVarnish        ResourceType
 	MonitoredTechnologiesWSMB           ResourceType
+	ProcessVisibility                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -273,6 +274,7 @@ var ResourceTypes = struct {
 	"dynatrace_monitored_technologies_php",
 	"dynatrace_monitored_technologies_varnish",
 	"dynatrace_monitored_technologies_wsmb",
+	"dynatrace_process_visibility",
 }
 
 type ResourceStatus string

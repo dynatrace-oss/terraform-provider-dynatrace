@@ -1,0 +1,53 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "If this feature is enabled, Dynatrace examines the most resource-consuming processes running on your host and the processes monitored by **Process availability**. \nWhen a triggering event occurs, metrics reported 10 minutes before and 10 minutes after the event for those processes are sent to the cluster.\n\nA graph of the resource consumption by process is available.\n\nIf **Process instance snapshots** is triggered by **Process availability**, you can see the behavior of processes before they ended, and whether they restarted within 10 minutes.",
+	"displayName": "Process instance snapshots",
+	"documentation": "\n\nReported process metrics:\n- CPU usage (%)\n- Memory usage (B)\n- Incoming network traffic (KB)\n- Outgoing network traffic (KB)\n\nMetrics are reported once per minute and cover the number of processes defined in **Reported processes limit**.\n\nEach host can report up to 60 minutes of these metrics per day. When the limit is exceeded, metrics aren't sent even when a new event arises.\n\nEvents triggering **Process instance snapshots**:\n- High host CPU usage\n- High host memory usage\n- High packet drop rates\n- High NIC utilization rates\n- High number of NIC errors\n- Manual requests\n- Process availability events\n\nFor details, see [Process instance snapshots](https://dt-url.net/yw02uea)",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.237"
+	},
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enable Process instance snapshots",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"maxProcesses": {
+			"constraints": [
+				{
+					"maximum": 100,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 100,
+			"description": "",
+			"displayName": "Reported processes limit",
+			"documentation": "The maximum amount of processes that host may report is **100**",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-visibility",
+	"types": {},
+	"version": "1"
+}

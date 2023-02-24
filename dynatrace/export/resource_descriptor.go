@@ -56,6 +56,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/detectionflags"
 	processgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/monitoring/state"
 	processgroupsimpledetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/simpledetectionrule"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processvisibility"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
@@ -619,6 +620,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		wsmb.Service,
 		Coalesce(Dependencies.Host),
 	),
+	ResourceTypes.ProcessVisibility: NewResourceDescriptor(
+		processvisibility.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup)),
 }
 
 var BlackListedResources = []ResourceType{
