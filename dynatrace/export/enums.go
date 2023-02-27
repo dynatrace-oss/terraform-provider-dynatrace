@@ -151,6 +151,7 @@ var ResourceTypes = struct {
 	MonitoredTechnologiesWSMB           ResourceType
 	ProcessVisibility                   ResourceType
 	RUMHostHeaders                      ResourceType
+	RUMIPDetermination                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -277,6 +278,7 @@ var ResourceTypes = struct {
 	"dynatrace_monitored_technologies_wsmb",
 	"dynatrace_process_visibility",
 	"dynatrace_rum_host_headers",
+	"dynatrace_rum_ip_determination",
 }
 
 type ResourceStatus string

@@ -1,0 +1,42 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "These settings are used for web applications, mobile apps and custom applications.\n\n **Identify client IP addresses**\n\n Client IP addresses are automatically determined based on HTTP request header. If your client IP addresses use a different header, create a custom rule so that the IP addresses can be identified.",
+	"displayName": "IP determination",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 10,
+	"metadata": {
+		"addItemButton": "Create custom client IP header"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"headerName": {
+			"constraints": [
+				{
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Client IP header name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.geographic-regions",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.ip-determination",
+	"types": {},
+	"version": "1.0.1"
+}
