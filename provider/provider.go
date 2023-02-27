@@ -256,6 +256,7 @@ func Provider() *schema.Provider {
 			"dynatrace_monitored_technologies_varnish":     resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesVarnish).Resource(),
 			"dynatrace_monitored_technologies_wsmb":        resources.NewGeneric(export.ResourceTypes.MonitoredTechnologiesWSMB).Resource(),
 			"dynatrace_process_visibility":                 resources.NewGeneric(export.ResourceTypes.ProcessVisibility).Resource(),
+			"dynatrace_rum_host_headers":                   resources.NewGeneric(export.ResourceTypes.RUMHostHeaders).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
