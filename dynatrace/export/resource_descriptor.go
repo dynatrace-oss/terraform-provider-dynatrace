@@ -62,6 +62,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipdetermination"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
+	mobilerequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/requesterrors"
 	rumprocessgroup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/processgroup"
 	rumproviderbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
@@ -629,6 +630,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.RUMHostHeaders:     NewResourceDescriptor(hostheaders.Service),
 	ResourceTypes.RUMIPDetermination: NewResourceDescriptor(ipdetermination.Service),
+	ResourceTypes.MobileAppRequestErrors: NewResourceDescriptor(
+		mobilerequesterrors.Service,
+		Coalesce(Dependencies.MobileApplication),
+		Coalesce(Dependencies.CustomApplication),
+	),
 }
 
 var BlackListedResources = []ResourceType{

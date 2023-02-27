@@ -1,0 +1,11 @@
+{
+    "errorRules": [
+        {
+            "errorCodes": "407"
+        },
+        {
+            "errorCodes": "408"
+        }
+    ],
+    "scope": "MOBILE_APPLICATION-1234567890000000"
+}

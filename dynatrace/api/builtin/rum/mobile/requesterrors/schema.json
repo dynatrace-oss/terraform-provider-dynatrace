@@ -1,0 +1,88 @@
+{
+	"allowedScopes": [
+		"MOBILE_APPLICATION",
+		"CUSTOM_APPLICATION"
+	],
+	"description": "Create exclusion rules to define which HTTP response codes should not be treated as errors. By default, Dynatrace considers all 4xx and 5xx response status codes to be web request errors.",
+	"displayName": "Request errors",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"addItemButton": "Add request error rule",
+		"itemDisplayName": "New request error rule"
+	},
+	"multiObject": false,
+	"properties": {
+		"errorRules": {
+			"constraints": [
+				{
+					"customMessage": "Duplicate error rule found",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"errorCodes"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/RequestErrorRule"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add exclusion rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaId": "builtin:rum.mobile.request-errors",
+	"types": {
+		"RequestErrorRule": {
+			"description": "",
+			"displayName": "RequestErrorRule",
+			"documentation": "",
+			"properties": {
+				"errorCodes": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "The entered rules are not valid",
+							"customValidatorId": "httpErrorCodes",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Exclude response codes",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, 401-409, 500"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Exclude HTTP {errorCodes}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

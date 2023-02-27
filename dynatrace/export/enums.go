@@ -152,6 +152,7 @@ var ResourceTypes = struct {
 	ProcessVisibility                   ResourceType
 	RUMHostHeaders                      ResourceType
 	RUMIPDetermination                  ResourceType
+	MobileAppRequestErrors              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -279,6 +280,7 @@ var ResourceTypes = struct {
 	"dynatrace_process_visibility",
 	"dynatrace_rum_host_headers",
 	"dynatrace_rum_ip_determination",
+	"dynatrace_mobile_app_request_errors",
 }
 
 type ResourceStatus string

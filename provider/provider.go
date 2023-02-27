@@ -258,6 +258,7 @@ func Provider() *schema.Provider {
 			"dynatrace_process_visibility":                 resources.NewGeneric(export.ResourceTypes.ProcessVisibility).Resource(),
 			"dynatrace_rum_host_headers":                   resources.NewGeneric(export.ResourceTypes.RUMHostHeaders).Resource(),
 			"dynatrace_rum_ip_determination":               resources.NewGeneric(export.ResourceTypes.RUMIPDetermination).Resource(),
+			"dynatrace_mobile_app_request_errors":          resources.NewGeneric(export.ResourceTypes.MobileAppRequestErrors).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
