@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_oneagent_features Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_oneagent_features` allows for enabling and disabling OneAgent Features (Sensors, ...)
+---
+
+# dynatrace_oneagent_features (Resource)
+
+## Dynatrace Documentation
+
+- OneAgent Features - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-features#configuration-via-web-ui
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:oneagent.features`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_oneagent_features` downloads the current configuration for OneAgent Features
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/oneagent/features/testdata/terraform/001-create.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

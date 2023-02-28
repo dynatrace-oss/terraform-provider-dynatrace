@@ -49,6 +49,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -637,6 +638,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CustomApplication),
 	),
 	ResourceTypes.TransactionStartFilters: NewResourceDescriptor(txstartfilters.Service),
+	ResourceTypes.OneAgentFeatures: NewResourceDescriptor(
+		features.Service,
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.ProcessGroupInstance),
+	),
 }
 
 var BlackListedResources = []ResourceType{

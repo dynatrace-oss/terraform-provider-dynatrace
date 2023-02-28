@@ -1,0 +1,106 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP_INSTANCE",
+		"PROCESS_GROUP",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Tenant's minimum OneAgent or ActiveGate version(s) don't satisfy feature requirements",
+			"customValidatorId": "oafs-min-tenant-agents-versions",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Inconsistent State: In case instrumentation is turned off also the feature needs to be turned off.",
+			"customValidatorId": "oafs-consistency-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Dynatrace OneAgent follows a zero-configuration approach. Therefore, the set of default features apply when you roll out OneAgent the first time. When additional features become available with newer OneAgent versions, they can be activated here to make them available across your environment.",
+	"displayName": "OneAgent features",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add override"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"forcible": {
+			"description": "",
+			"displayName": "Activate this feature also in OneAgents only fulfilling the minimum Opt-In version",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": true,
+			"precondition": {
+				"pattern": "^.+_FORCIBLE$",
+				"property": "key",
+				"type": "REGEX_MATCH"
+			},
+			"type": "boolean"
+		},
+		"instrumentation": {
+			"description": "",
+			"displayName": "Instrumentation enabled (change needs a process restart)",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": true,
+			"precondition": {
+				"pattern": "^SENSOR_.+$",
+				"property": "key",
+				"type": "REGEX_MATCH"
+			},
+			"type": "boolean"
+		},
+		"key": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "OneAgentFeatureSettingsDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "",
+			"description": "",
+			"displayName": "Feature",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"autoSelectFirst": "disabled",
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:oneagent.features",
+	"types": {},
+	"version": "1.5.7"
+}
