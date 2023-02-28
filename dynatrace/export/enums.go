@@ -155,6 +155,7 @@ var ResourceTypes = struct {
 	MobileAppRequestErrors              ResourceType
 	TransactionStartFilters             ResourceType
 	OneAgentFeatures                    ResourceType
+	RUMOverloadPrevention               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -285,6 +286,7 @@ var ResourceTypes = struct {
 	"dynatrace_mobile_app_request_errors",
 	"dynatrace_transaction_start_filters",
 	"dynatrace_oneagent_features",
+	"dynatrace_rum_overload_prevention",
 }
 
 type ResourceStatus string

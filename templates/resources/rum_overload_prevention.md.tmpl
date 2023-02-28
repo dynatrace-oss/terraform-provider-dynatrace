@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_rum_overload_prevention Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_rum_overload_prevention` covers configuration for real user monitoring overload prevention
+---
+
+# dynatrace_rum_overload_prevention (Resource)
+
+## Dynatrace Documentation
+
+- What does a 'Max. user actions per minute exceeded' message mean? - https://www.dynatrace.com/support/help/shortlink/max-user-actions-per-minute-exceeded#can-my-environment-limit-be-changed
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.overload-prevention`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_rum_overload_prevention` downloads all existing real user monitoring overload prevention configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/overloadprevention/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

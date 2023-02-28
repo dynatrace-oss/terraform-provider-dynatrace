@@ -1,0 +1,38 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Adjust the limit below to control the overall cluster performance capacity and prevent unexpected high consumption of your license volume.",
+	"displayName": "RUM overload prevention",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"overloadPreventionLimit": {
+			"constraints": [
+				{
+					"customValidatorId": "Overload-prevention-limit-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": 3500,
+			"description": "Once this limit is reached, Dynatrace [throttles the number of captured user sessions](https://dt-url.net/fm3v0p7g).",
+			"displayName": "Maximum user actions per minute",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring",
+		"group:preferences"
+	],
+	"schemaId": "builtin:rum.overload-prevention",
+	"types": {},
+	"version": "1"
+}

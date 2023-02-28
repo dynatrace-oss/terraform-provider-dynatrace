@@ -261,6 +261,7 @@ func Provider() *schema.Provider {
 			"dynatrace_mobile_app_request_errors":          resources.NewGeneric(export.ResourceTypes.MobileAppRequestErrors).Resource(),
 			"dynatrace_transaction_start_filters":          resources.NewGeneric(export.ResourceTypes.TransactionStartFilters).Resource(),
 			"dynatrace_oneagent_features":                  resources.NewGeneric(export.ResourceTypes.OneAgentFeatures).Resource(),
+			"dynatrace_rum_overload_prevention":            resources.NewGeneric(export.ResourceTypes.RUMOverloadPrevention).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
