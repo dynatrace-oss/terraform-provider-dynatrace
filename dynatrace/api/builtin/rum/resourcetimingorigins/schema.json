@@ -1,0 +1,76 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "OneAgent uses the `Server-Timing` response header to communicate RUM correlation data to the Real User Monitoring JavaScript. In case of cross-origin requests, the RUM JavaScript can only access the value of the `Server-Timing` header if the `Timing-Allow-Origin` header allows its origin to do so.\n\nAdd rules to restrict resource-timing information access to only defined origins. If not already set by your application, OneAgent will automatically add the `Timing-Allow-Origin` header to the response of your web application, thereby granting all origins access to resource timing details.",
+	"displayName": "Advanced correlation",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"OriginMatcherType": {
+			"description": "",
+			"displayName": "OriginMatcherType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"matcher": {
+			"default": "CONTAINS",
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/OriginMatcherType"
+			}
+		},
+		"pattern": {
+			"constraints": [
+				{
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Pattern",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.resource-timing-origins",
+	"types": {},
+	"version": "0.0.4"
+}

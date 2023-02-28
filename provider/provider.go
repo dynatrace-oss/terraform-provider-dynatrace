@@ -262,6 +262,7 @@ func Provider() *schema.Provider {
 			"dynatrace_transaction_start_filters":          resources.NewGeneric(export.ResourceTypes.TransactionStartFilters).Resource(),
 			"dynatrace_oneagent_features":                  resources.NewGeneric(export.ResourceTypes.OneAgentFeatures).Resource(),
 			"dynatrace_rum_overload_prevention":            resources.NewGeneric(export.ResourceTypes.RUMOverloadPrevention).Resource(),
+			"dynatrace_rum_advanced_correlation":           resources.NewGeneric(export.ResourceTypes.RUMAdvancedCorrelation).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

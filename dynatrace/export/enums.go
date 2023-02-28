@@ -156,6 +156,7 @@ var ResourceTypes = struct {
 	TransactionStartFilters             ResourceType
 	OneAgentFeatures                    ResourceType
 	RUMOverloadPrevention               ResourceType
+	RUMAdvancedCorrelation              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -287,6 +288,7 @@ var ResourceTypes = struct {
 	"dynatrace_transaction_start_filters",
 	"dynatrace_oneagent_features",
 	"dynatrace_rum_overload_prevention",
+	"dynatrace_rum_advanced_correlation",
 }
 
 type ResourceStatus string

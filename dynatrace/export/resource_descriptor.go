@@ -68,6 +68,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/overloadprevention"
 	rumprocessgroup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/processgroup"
 	rumproviderbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
@@ -644,7 +645,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ProcessGroup),
 		Coalesce(Dependencies.ProcessGroupInstance),
 	),
-	ResourceTypes.RUMOverloadPrevention: NewResourceDescriptor(overloadprevention.Service),
+	ResourceTypes.RUMOverloadPrevention:  NewResourceDescriptor(overloadprevention.Service),
+	ResourceTypes.RUMAdvancedCorrelation: NewResourceDescriptor(resourcetimingorigins.Service),
 }
 
 var BlackListedResources = []ResourceType{
