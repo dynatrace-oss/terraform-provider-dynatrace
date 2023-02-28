@@ -1,0 +1,11 @@
+{
+    "includedCicsTerminalTransactionIds": [
+        "DTAX"
+    ],
+    "includedCicsTransactionIds": [
+        "TIPU"
+    ],
+    "includedImsTransactionIds": [
+        "FAKE"
+    ]
+}

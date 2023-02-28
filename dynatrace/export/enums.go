@@ -153,6 +153,7 @@ var ResourceTypes = struct {
 	RUMHostHeaders                      ResourceType
 	RUMIPDetermination                  ResourceType
 	MobileAppRequestErrors              ResourceType
+	TransactionStartFilters             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -281,6 +282,7 @@ var ResourceTypes = struct {
 	"dynatrace_rum_host_headers",
 	"dynatrace_rum_ip_determination",
 	"dynatrace_mobile_app_request_errors",
+	"dynatrace_transaction_start_filters",
 }
 
 type ResourceStatus string

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_transaction_start_filters Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_transaction_start_filters` covers customization of CICS and IMS Monitoring
+---
+
+# dynatrace_transaction_start_filters (Resource)
+
+## Dynatrace Documentation
+
+- Customize CICS and IMS monitoring - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/installation-and-operation/zos/operation/cics-ims-monitoring#transaction-start-filters
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:mainframe.txstartfilters`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_transaction_start_filters` downloads the current configuration for Transaction Start Filters
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/mainframe/txstartfilters/testdata/terraform/001-create.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
