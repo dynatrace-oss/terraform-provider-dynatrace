@@ -18,10 +18,7 @@
 package attributes
 
 import (
-	"strings"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
 	attributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/attributes/settings"
@@ -31,12 +28,5 @@ const SchemaID = "builtin:span-attribute"
 const SchemaVersion = "0.0.28"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*attributes.SpanAttribute] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*attributes.SpanAttribute]{HijackOnCreate: HiJack})
-}
-
-func HiJack(err error, service settings.RService[*attributes.SpanAttribute], v *attributes.SpanAttribute) (*settings.Stub, error) {
-	if strings.Contains(err.Error(), "Attribute keys must be unique.") {
-		return settings.FindByName(cache.Read(service, true), settings.Name(v))
-	}
-	return nil, nil
+	return settings20.Service[*attributes.SpanAttribute](credentials, SchemaID, SchemaVersion)
 }
