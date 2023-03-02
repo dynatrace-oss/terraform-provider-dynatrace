@@ -1,0 +1,104 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace identifies resource types by their file extensions. In certain cases, however, downloaded resources may lack the correct file extensions. For such cases you can set up rules that define the correct resource types of these resources. These rules ensure that resource-type breakdowns are rendered properly and that the resources types in the waterfall chart are displayed correctly.",
+	"displayName": "Resource types",
+	"documentation": "\n\nDynatrace supports Java regular expressions syntax. Resource types of resources with URL fragments that match provided regular expressions will be overriden by the value given in the *Primary resource type* field and can be further categorized by specifying a *Secondary resource type*.\n\n#### Example\n\nType *^.\\*\\\\.od.{1}$* into the **Regular expression field**, select *Other* as **Primary resource type** and type *OpenDocument* into the **Secondary resource type** field to override the default resource type for resources with file extension *.od**.",
+	"dynatrace": "1",
+	"enums": {
+		"PrimaryResourceType": {
+			"description": "",
+			"displayName": "PrimaryResourceType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "CSS",
+					"value": "CSS"
+				},
+				{
+					"displayName": "Image",
+					"value": "IMAGE"
+				},
+				{
+					"displayName": "Script",
+					"value": "SCRIPT"
+				},
+				{
+					"displayName": "Other",
+					"value": "OTHER"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 20,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"primaryResourceType": {
+			"default": "CSS",
+			"description": "",
+			"displayName": "The primary type of the resource.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/PrimaryResourceType"
+			}
+		},
+		"regularExpression": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 100,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Value is not a valid regular expression.",
+					"customValidatorId": "validRegex",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "Value breaks regex restriction.",
+					"customValidatorId": "dangerousRegEx-REGEX_BASED_MATCHING_RELAXED",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "The regular expression to detect the resource.",
+			"displayName": "Regular expression",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"secondaryResourceType": {
+			"constraints": [
+				{
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "The secondary type of the resource.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.content-resources"
+	],
+	"schemaId": "builtin:rum.web.resource-types",
+	"types": {},
+	"version": "1.0.2"
+}
