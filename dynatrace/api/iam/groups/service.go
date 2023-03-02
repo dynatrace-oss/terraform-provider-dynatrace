@@ -3,6 +3,7 @@ package groups
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
@@ -45,7 +46,7 @@ func (me *GroupServiceClient) Create(group *groups.Group) (*settings.Stub, error
 	var responseBytes []byte
 
 	client := iam.NewIAMClient(me)
-	if responseBytes, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", me.AccountID()), []*groups.Group{group}, 201, false); err != nil {
+	if responseBytes, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), []*groups.Group{group}, 201, false); err != nil {
 		return nil, err
 	}
 
@@ -57,7 +58,7 @@ func (me *GroupServiceClient) Create(group *groups.Group) (*settings.Stub, error
 	groupName := responseGroups[0].Name
 
 	if len(group.Permissions) > 0 {
-		if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), group.Permissions, 200, false); err != nil {
+		if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), group.Permissions, 200, false); err != nil {
 			return nil, err
 		}
 	}
@@ -69,7 +70,7 @@ func (me *GroupServiceClient) Update(uuid string, group *groups.Group) error {
 	var err error
 
 	client := iam.NewIAMClient(me)
-	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", me.AccountID(), uuid), []*groups.Group{group}, 201, false); err != nil {
+	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), []*groups.Group{group}, 201, false); err != nil {
 		return err
 	}
 
@@ -78,7 +79,7 @@ func (me *GroupServiceClient) Update(uuid string, group *groups.Group) error {
 	if len(group.Permissions) > 0 {
 		permissions = group.Permissions
 	}
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), uuid), permissions, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), permissions, 200, false); err != nil {
 		return err
 	}
 
@@ -102,7 +103,7 @@ func (me *GroupServiceClient) List() (settings.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -128,7 +129,7 @@ func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
 		if stub.ID == id {
 			var responseBytes []byte
 
-			if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), id), 200, false); err != nil {
+			if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false); err != nil {
 				return err
 			}
 			var groupStub ListGroup
@@ -147,6 +148,6 @@ func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
 }
 
 func (me *GroupServiceClient) Delete(id string) error {
-	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", me.AccountID(), id), 200, false)
+	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
 	return err
 }

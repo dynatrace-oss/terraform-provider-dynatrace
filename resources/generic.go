@@ -80,6 +80,7 @@ func (me *Generic) createCredentials(m any) *settings.Credentials {
 	return &settings.Credentials{
 		Token: conf.APIToken,
 		URL:   conf.EnvironmentURL,
+		IAM:   conf.IAM,
 	}
 }
 

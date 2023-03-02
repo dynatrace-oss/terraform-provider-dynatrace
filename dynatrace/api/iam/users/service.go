@@ -3,6 +3,7 @@ package users
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -43,7 +44,7 @@ func (me *UserServiceClient) Create(user *users.User) (*settings.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(me)
-	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", me.AccountID()), user, 201, false); err != nil {
+	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), user, 201, false); err != nil {
 		return nil, err
 	}
 
@@ -51,7 +52,7 @@ func (me *UserServiceClient) Create(user *users.User) (*settings.Stub, error) {
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), groups, 200, false); err != nil {
 		return nil, err
 	}
 
@@ -73,7 +74,7 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", me.AccountID(), email), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), email), 200, false); err != nil {
 		return err
 	}
 
@@ -149,6 +150,9 @@ func (me *UserServiceClient) List() (settings.Stubs, error) {
 }
 
 func (me *UserServiceClient) Delete(email string) error {
-	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", me.AccountID(), email), 200, false)
+	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), email), 200, false)
+	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
+		return nil
+	}
 	return err
 }

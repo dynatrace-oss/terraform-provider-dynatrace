@@ -43,7 +43,7 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 		url.QueryEscape(auth.ClientID()),
 		url.QueryEscape(auth.ClientSecret()),
 		url.QueryEscape("account-idm-read account-idm-write iam:policies:read iam:policies:write iam-policies-management"),
-		url.QueryEscape("urn:dtaccount:"+auth.AccountID()),
+		url.QueryEscape("urn:dtaccount:"+strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")),
 	)
 	payload := strings.NewReader(payloadStr)
 
