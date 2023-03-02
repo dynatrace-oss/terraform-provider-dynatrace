@@ -263,6 +263,7 @@ func Provider() *schema.Provider {
 			"dynatrace_oneagent_features":                  resources.NewGeneric(export.ResourceTypes.OneAgentFeatures).Resource(),
 			"dynatrace_rum_overload_prevention":            resources.NewGeneric(export.ResourceTypes.RUMOverloadPrevention).Resource(),
 			"dynatrace_rum_advanced_correlation":           resources.NewGeneric(export.ResourceTypes.RUMAdvancedCorrelation).Resource(),
+			"dynatrace_web_app_beacon_origins":             resources.NewGeneric(export.ResourceTypes.WebAppBeaconOrigins).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

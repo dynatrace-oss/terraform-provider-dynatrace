@@ -1,0 +1,4 @@
+{
+    "matcher": "EQUALS",
+    "pattern": "Terraform-Origin-Test"
+}

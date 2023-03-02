@@ -157,6 +157,7 @@ var ResourceTypes = struct {
 	OneAgentFeatures                    ResourceType
 	RUMOverloadPrevention               ResourceType
 	RUMAdvancedCorrelation              ResourceType
+	WebAppBeaconOrigins                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -289,6 +290,7 @@ var ResourceTypes = struct {
 	"dynatrace_oneagent_features",
 	"dynatrace_rum_overload_prevention",
 	"dynatrace_rum_advanced_correlation",
+	"dynatrace_web_app_beacon_origins",
 }
 
 type ResourceStatus string

@@ -1,0 +1,76 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Specify the RUM beacon origins that must be accepted by OneAgent and ActiveGate. Dynatrace tries to match each of your defined rules against the `Origin` request header of your incoming beacons and copies the origin from the matched header to the `Access-Control-Allow-Origin` response header. Beacon origins that aren't part of the defined rule set will be rejected and the beacon response will return HTTP 403. If your rule set is empty, beacon origins will be accepted from any domain. Note that when you enable the first rule, applications that don't match the rule no longer collect RUM data.",
+	"displayName": "Beacon origins for CORS",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"OriginMatcherType": {
+			"description": "",
+			"displayName": "OriginMatcherType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 20,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"matcher": {
+			"default": "CONTAINS",
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/OriginMatcherType"
+			}
+		},
+		"pattern": {
+			"constraints": [
+				{
+					"maxLength": 253,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Pattern",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.web.beacon-domain-origins",
+	"types": {},
+	"version": "1.0.3"
+}
