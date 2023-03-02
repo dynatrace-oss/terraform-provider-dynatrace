@@ -27,6 +27,7 @@ type Host struct {
 	HighCpuSaturationDetection *HighCpuSaturationDetection `json:"highCpuSaturationDetection"`
 	HighGcActivityDetection    *HighGcActivityDetection    `json:"highGcActivityDetection"`
 	HighMemoryDetection        *HighMemoryDetection        `json:"highMemoryDetection"`
+	HighSystemLoadDetection    *HighSystemLoadDetection    `json:"highSystemLoadDetection"`
 	OutOfMemoryDetection       *OutOfMemoryDetection       `json:"outOfMemoryDetection"`
 	OutOfThreadsDetection      *OutOfThreadsDetection      `json:"outOfThreadsDetection"`
 }
@@ -65,6 +66,15 @@ func (me *Host) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"high_system_load_detection": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+
+			Elem:     &schema.Resource{Schema: new(HighSystemLoadDetection).Schema()},
+			MinItems: 1,
+			MaxItems: 1,
+		},
 		"out_of_memory_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
@@ -90,6 +100,7 @@ func (me *Host) MarshalHCL(properties hcl.Properties) error {
 		"high_cpu_saturation_detection": me.HighCpuSaturationDetection,
 		"high_gc_activity_detection":    me.HighGcActivityDetection,
 		"high_memory_detection":         me.HighMemoryDetection,
+		"high_system_load_detection":    me.HighSystemLoadDetection,
 		"out_of_memory_detection":       me.OutOfMemoryDetection,
 		"out_of_threads_detection":      me.OutOfThreadsDetection,
 	})
@@ -101,6 +112,7 @@ func (me *Host) UnmarshalHCL(decoder hcl.Decoder) error {
 		"high_cpu_saturation_detection": &me.HighCpuSaturationDetection,
 		"high_gc_activity_detection":    &me.HighGcActivityDetection,
 		"high_memory_detection":         &me.HighMemoryDetection,
+		"high_system_load_detection":    &me.HighSystemLoadDetection,
 		"out_of_memory_detection":       &me.OutOfMemoryDetection,
 		"out_of_threads_detection":      &me.OutOfThreadsDetection,
 	})
