@@ -174,6 +174,7 @@ var ResourceTypes = struct {
 	WebAppBeaconOrigins                 ResourceType
 	WebAppResourceTypes                 ResourceType
 	GenericTypes                        ResourceType
+	GenericRelationships                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -309,6 +310,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_beacon_origins",
 	"dynatrace_web_app_resource_types",
 	"dynatrace_generic_types",
+	"dynatrace_generic_relationships",
 }
 
 type ResourceStatus string

@@ -1,0 +1,502 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "A generic relationship must have at least one generic type.",
+			"customValidatorId": "MinOneGenericTypeValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Looking for topology extraction support? Find the [topology model](https://www.dynatrace.com/support/help/shortlink/topology-model#custom-topology-model \"Visit Dynatrace support center\") help page here.\n\n Entity types can be related to each other. The relationship registry contains rules by which relationships between related entities are automatically established.",
+	"displayName": "Generic relationships",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"IngestDataSource": {
+			"description": "Ingest datasource defines a data source type to evaluate for type creation.",
+			"displayName": "Ingest datasource",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Metrics",
+					"value": "Metrics"
+				},
+				{
+					"displayName": "Logs",
+					"value": "Logs"
+				},
+				{
+					"displayName": "Spans",
+					"value": "Spans"
+				},
+				{
+					"displayName": "Entities",
+					"value": "Entities"
+				},
+				{
+					"displayName": "Topology",
+					"value": "Topology"
+				},
+				{
+					"displayName": "Events",
+					"value": "Events"
+				}
+			],
+			"type": "enum"
+		},
+		"Normalization": {
+			"description": "Normalize text or leave it as-is?",
+			"displayName": "Normalization",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Leave text as-is",
+					"value": "Leave text as-is"
+				},
+				{
+					"displayName": "To upper case",
+					"value": "To upper case"
+				},
+				{
+					"displayName": "To lower case",
+					"value": "To lower case"
+				}
+			],
+			"type": "enum"
+		},
+		"RelationType": {
+			"description": "The relationship describes how source and destination entities relate to each other.",
+			"displayName": "Type of relationship",
+			"documentation": "Each relationship is defined as a directed association between a **source** and a **destination** entity type. There are four types of relationships:\n1. **Calls** is a directed communication dependency that means that the source entity sends a message to the destination entity.\n\u003e Example: **application** *calls* **service**\n2. **Is child of** represents a directed structural association with the meaning that an entity is a part of another entity. The source entity is the part, the destination entity is the composite. Usually a child cannot exist without its parent composite and the composite experiences problems if parts become unavailable.\n\u003e Example: **disk** *is child of* **host**\n3. **Is instance of** means that an entity represents one specific instance of another entity, which is, in turn, representing a category of entities that share common properties. An example would be a *service instance* which is an instance of a *service*.\nIn this case the *source* would be *service instance*, the *destination* would be *service*. While all service instances share a set of common properties, each individual instance has additional properties and relationships.\n\u003e Example: **service instance** *is instance of* **service**.\n4. **Runs on** is similar to *is child of* with regards to the source entity being structurally dependent on the destination entity. The source entity typically cannot exist without the destination entity. The main difference is that the source entity is not *part* of the destination entity but just dependent on the destinations existence. While an *is child of* relationship can also imply that a destination entity (i.e. parent) is incomplete or less capable if source entities (i.e. children) experience problems, the *runs on* relationship does not have such implications.\n\u003e Example: **host** *runs on* **virtual machine**",
+			"items": [
+				{
+					"displayName": "is instance of",
+					"value": "INSTANCE_OF"
+				},
+				{
+					"displayName": "runs on",
+					"value": "RUNS_ON"
+				},
+				{
+					"displayName": "is child of",
+					"value": "CHILD_OF"
+				},
+				{
+					"displayName": "calls",
+					"value": "CALLS"
+				},
+				{
+					"displayName": "is part of",
+					"value": "PART_OF"
+				},
+				{
+					"displayName": "is same as",
+					"value": "SAME_AS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add relationship definition",
+		"itemDisplayName": "New relationship"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"createdBy": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The user or extension that created this relationship.",
+			"displayName": "Created by",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "Enables or disables the relationship",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"fromRole": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Specify a role for the source entity. If both source and destination type are the same, referring different roles will allow identification of a relationships direction. If role is left blank, any role of the source type is considered for the relationship.",
+			"displayName": "Role of source type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"fromType": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Type name must start with a letter and end with a letter or number.",
+					"pattern": "^[A-Za-z].*[A-Za-z\\d]$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must be lower case only.",
+					"pattern": "^[^A-Z]*$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must only contain valid special chars (':', '-', '_', ).",
+					"pattern": "^[\\w:-]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Define an entity type as the source of the relationship.",
+			"displayName": "Source type name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "genericType",
+			"type": "text"
+		},
+		"sources": {
+			"description": "Specify all sources which should be evaluated for this relationship rule. The relationship is only created when any of the filters match.",
+			"displayName": "Source filters",
+			"documentation": "",
+			"items": {
+				"description": "The source filter determines based on which data the relationship should be created. If any source filters match, a possible relationship will be evaluated.",
+				"displayName": "Source filter item",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/SourceFilter"
+				}
+			},
+			"maxObjects": 10,
+			"metadata": {
+				"addItemButton": "Add Source",
+				"itemDisplayName": "New source filter"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"toRole": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Specify a role for the destination entity. If both source and destination type are the same, referring different roles will allow identification of a relationships direction. If role is left blank, any role of the destination type is considered for the relationship.",
+			"displayName": "Role of destination type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"toType": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Type name must start with a letter and end with a letter or number.",
+					"pattern": "^[A-Za-z].*[A-Za-z\\d]$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must be lower case only",
+					"pattern": "^[^A-Z]*$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must only contain valid special chars (':', '-', '_', ).",
+					"pattern": "^[\\w:-]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Define an entity type as the destination of the relationship. You can choose the same type as the source type. In this case you also may assign different roles for source and destination for having directed relationships.",
+			"displayName": "Destination type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "genericType",
+			"type": "text"
+		},
+		"typeOfRelation": {
+			"default": "INSTANCE_OF",
+			"description": "Type of the relationship between the Source Type and the Destination Type",
+			"displayName": "Type of relationship",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/RelationType"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:topology-model"
+	],
+	"schemaId": "builtin:monitoredentities.generic.relation",
+	"types": {
+		"MappingRule": {
+			"description": "",
+			"displayName": "MappingRule",
+			"documentation": "",
+			"properties": {
+				"destinationProperty": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"../../../../toType"
+						],
+						"fullContext": true,
+						"identifier": "generic-relation-destination-property",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "The case-sensitive name of a property of the destination type.",
+					"displayName": "Destination property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"destinationTransformation": {
+					"default": "Leave text as-is",
+					"description": "Normalize text or leave it as-is?",
+					"displayName": "Destination Normalization",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Normalization"
+					}
+				},
+				"sourceProperty": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"../../../../fromType"
+						],
+						"fullContext": true,
+						"identifier": "generic-relation-source-property",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "The case-sensitive name of a property of the source type.",
+					"displayName": "Source property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"sourceTransformation": {
+					"default": "Leave text as-is",
+					"description": "Normalize text or leave it as-is?",
+					"displayName": "Source Normalization",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Normalization"
+					}
+				}
+			},
+			"summaryPattern": "source.{sourceProperty} equals destination.{destinationProperty}",
+			"type": "object",
+			"version": "1.0.1",
+			"versionInfo": ""
+		},
+		"SourceFilter": {
+			"description": "The source filter determines based on which data the relationship should be created. This way a subset of a specified data source can be used for creating the type.",
+			"displayName": "Source filter",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "The condition must either use '$eq' or '$prefix' as predicates.",
+							"pattern": "^\\s*(?:\\$eq|\\$prefix)[^A-Za-z0-9].*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "No spaces are allowed except as part of values.",
+							"pattern": "^(?:\\$eq\\(.+?\\)|\\$prefix\\(.+?\\))$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "A predicate must have a non-blank value.",
+							"pattern": "^\\s*(?:\\$eq\\s*?\\(.+?\\)|\\$prefix\\s*?\\(.+?\\))\\s*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "The predicate needs to be followed by parenthesis.",
+							"pattern": "^\\s*(\\$eq|\\$prefix)\\s*\\(.*\\)\\s*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Invalid condition. Currently only '$eq(\u003cvalue\u003e)' and '$prefix(\u003cvalue\u003e)' are allowed and you need to escape '(', ')' and '~' by prefixing them with '~'.",
+							"customValidatorId": "ValidCondition",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "$eq()",
+					"description": "Specify a filter that needs to match in order for the extraction to happen.",
+					"displayName": "Condition",
+					"documentation": "Two different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', while `$prefix(value)` will ensure that the source begins with exactly 'value'.\nIf your value contains the characters '(', ')' or '\\~', you need to escape them by adding a '\\~' in front of them.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"Logs",
+								"Spans",
+								"Entities",
+								"Topology"
+							],
+							"property": "sourceType",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"mappingRules": {
+					"description": "Specify all properties which should be compared. If all mapping rules match a relationship between entities will be created.",
+					"displayName": "Mapping Rules",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "Mapping rule",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/MappingRule"
+						}
+					},
+					"maxObjects": 10,
+					"metadata": {
+						"addItemButton": "Add mapping rule",
+						"itemDisplayName": "Mapping rule"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"Entities"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "set"
+				},
+				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "topology-data-source-type",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "Metrics",
+					"description": "Specify the source type of the filter to identify which data source should be evaluated.",
+					"displayName": "Datasource type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/IngestDataSource"
+					}
+				}
+			},
+			"summaryPattern": "{sourceType} source that matches {condition}",
+			"type": "object",
+			"version": "1.0.7",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.34"
+}

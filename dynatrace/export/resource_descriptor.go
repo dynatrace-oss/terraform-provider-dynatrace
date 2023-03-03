@@ -38,6 +38,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/dotnet"
@@ -653,6 +654,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppBeaconOrigins:    NewResourceDescriptor(beacondomainorigins.Service),
 	ResourceTypes.WebAppResourceTypes:    NewResourceDescriptor(resourcetypes.Service),
 	ResourceTypes.GenericTypes:           NewResourceDescriptor(generictypes.Service),
+	ResourceTypes.GenericRelationships:   NewResourceDescriptor(relation.Service),
 }
 
 var BlackListedResources = []ResourceType{

@@ -266,6 +266,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_beacon_origins":             resources.NewGeneric(export.ResourceTypes.WebAppBeaconOrigins).Resource(),
 			"dynatrace_web_app_resource_types":             resources.NewGeneric(export.ResourceTypes.WebAppResourceTypes).Resource(),
 			"dynatrace_generic_types":                      resources.NewGeneric(export.ResourceTypes.GenericTypes).Resource(),
+			"dynatrace_generic_relationships":              resources.NewGeneric(export.ResourceTypes.GenericRelationships).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

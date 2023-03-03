@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_generic_relationships Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_generic_relationships` covers configuration for custom topology generic relationships
+---
+
+# dynatrace_generic_relationships (Resource)
+
+## Dynatrace Documentation
+
+- Define custom topology - https://www.dynatrace.com/support/help/extend-dynatrace/extend-topology/custom-topology
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitoredentities.generic.relation`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_generic_relationships` downloads all existing custom topology generic relationships configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredentities/generic/relation/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
