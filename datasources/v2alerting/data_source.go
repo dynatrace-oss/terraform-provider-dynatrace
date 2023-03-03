@@ -32,6 +32,10 @@ func DataSource() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"legacy_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -53,6 +57,10 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	for _, stub := range stubs {
 		if stub.Name == name {
 			d.SetId(stub.ID)
+			legacyID := settings.LegacyID(stub.ID)
+			if len(legacyID) > 0 {
+				d.Set("legacy_id", legacyID)
+			}
 			return nil
 		}
 	}
