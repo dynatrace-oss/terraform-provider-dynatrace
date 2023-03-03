@@ -173,6 +173,7 @@ var ResourceTypes = struct {
 	RUMAdvancedCorrelation              ResourceType
 	WebAppBeaconOrigins                 ResourceType
 	WebAppResourceTypes                 ResourceType
+	GenericTypes                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -307,6 +308,7 @@ var ResourceTypes = struct {
 	"dynatrace_rum_advanced_correlation",
 	"dynatrace_web_app_beacon_origins",
 	"dynatrace_web_app_resource_types",
+	"dynatrace_generic_types",
 }
 
 type ResourceStatus string

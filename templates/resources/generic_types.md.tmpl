@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_generic_types Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_generic_types` covers configuration for custom topology generic types
+---
+
+# dynatrace_generic_types (Resource)
+
+## Dynatrace Documentation
+
+- Define custom topology - https://www.dynatrace.com/support/help/extend-dynatrace/extend-topology/custom-topology
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitoredentities.generic.type`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_generic_types` downloads all existing custom topology generic types configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredentities/generic/type/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
