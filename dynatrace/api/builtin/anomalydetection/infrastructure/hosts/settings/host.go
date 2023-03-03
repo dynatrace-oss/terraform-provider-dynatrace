@@ -69,7 +69,7 @@ func (me *Host) Schema() map[string]*schema.Schema {
 		"high_system_load_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Optional:    true,
 
 			Elem:     &schema.Resource{Schema: new(HighSystemLoadDetection).Schema()},
 			MinItems: 1,

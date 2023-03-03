@@ -33,6 +33,6 @@ var DetectionModes = struct {
 	Auto   DetectionMode
 	Custom DetectionMode
 }{
-	DetectionMode("Auto"),
-	DetectionMode("Custom"),
+	DetectionMode("auto"),
+	DetectionMode("custom"),
 }
