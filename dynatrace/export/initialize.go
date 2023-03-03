@@ -133,6 +133,7 @@ func Initialize() (environment *Environment, err error) {
 func createFlags() (flags Flags, tailArgs []string) {
 	flag.Bool("export", true, "")
 	refArg := flag.Bool("ref", false, "enable data sources and dependencies")
+	dataSourceArg := flag.Bool("datasources", false, "when resolving dependencies eligible resources will be referred as data sources")
 	comIdArg := flag.Bool("id", false, "enable commented ids")
 	migrateArg := flag.Bool("migrate", false, "enable migration output")
 	verbose := flag.Bool("v", false, "enable verbose logging")
@@ -153,6 +154,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		Flat:                *flat,
 		ImportState:         *importState,
 		Exclude:             *exclude,
+		DataSources:         *dataSourceArg,
 	}, flag.Args()
 }
 
@@ -182,4 +184,5 @@ type Flags struct {
 	Flat                bool
 	ImportState         bool
 	Exclude             bool
+	DataSources         bool
 }
