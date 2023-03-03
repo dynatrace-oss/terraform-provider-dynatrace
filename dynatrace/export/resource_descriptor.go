@@ -70,8 +70,10 @@ import (
 	rumproviderbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
@@ -647,6 +649,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.RUMOverloadPrevention:  NewResourceDescriptor(overloadprevention.Service),
 	ResourceTypes.RUMAdvancedCorrelation: NewResourceDescriptor(resourcetimingorigins.Service),
+	ResourceTypes.WebAppBeaconOrigins:    NewResourceDescriptor(beacondomainorigins.Service),
+	ResourceTypes.WebAppResourceTypes:    NewResourceDescriptor(resourcetypes.Service),
 }
 
 var BlackListedResources = []ResourceType{

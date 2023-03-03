@@ -15,17 +15,18 @@
 * limitations under the License.
  */
 
-package hosts
+package resourcetypes
 
-import (
-	hosts "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-)
+type PrimaryResourceType string
 
-const SchemaVersion = "1.2.8"
-const SchemaID = "builtin:anomaly-detection.infrastructure-hosts"
-
-func Service(credentials *settings.Credentials) settings.CRUDService[*hosts.Settings] {
-	return settings20.Service[*hosts.Settings](credentials, SchemaID, SchemaVersion)
+var PrimaryResourceTypes = struct {
+	Css    PrimaryResourceType
+	Image  PrimaryResourceType
+	Other  PrimaryResourceType
+	Script PrimaryResourceType
+}{
+	"CSS",
+	"IMAGE",
+	"OTHER",
+	"SCRIPT",
 }

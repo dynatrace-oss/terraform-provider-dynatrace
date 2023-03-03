@@ -15,17 +15,19 @@
 * limitations under the License.
  */
 
-package hosts
+package resourcetypes_test
 
 import (
-	hosts "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-const SchemaVersion = "1.2.8"
-const SchemaID = "builtin:anomaly-detection.infrastructure-hosts"
+func TestWebAppResourceTypes(t *testing.T) {
+	api.TestService(t, resourcetypes.Service)
+}
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*hosts.Settings] {
-	return settings20.Service[*hosts.Settings](credentials, SchemaID, SchemaVersion)
+func TestAccWebAppResourceTypes(t *testing.T) {
+	api.TestAcc(t)
 }

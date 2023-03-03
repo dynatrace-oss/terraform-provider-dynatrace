@@ -789,6 +789,134 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"highSystemLoadDetection": {
+			"description": "",
+			"displayName": "System load detection",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": true,
+								"property": "enabled",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "custom",
+								"property": "detectionMode",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/highSystemLoadDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode for High System Load",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "Detection High System Load is available only on AIX hosts.",
+					"displayName": "Detect High System Load on host",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.261"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"highSystemLoadDetectionThresholds": {
+			"description": "",
+			"displayName": "highSystemLoadDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"eventThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/eventThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": true,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"systemLoad": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"host": {
 			"description": "",
 			"displayName": "Hosts",
@@ -836,6 +964,17 @@
 					"nullable": false,
 					"type": {
 						"$ref": "#/types/highMemoryDetection"
+					}
+				},
+				"highSystemLoadDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/highSystemLoadDetection"
 					}
 				},
 				"outOfMemoryDetection": {
@@ -1870,5 +2009,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.5"
+	"version": "1.2.8"
 }
