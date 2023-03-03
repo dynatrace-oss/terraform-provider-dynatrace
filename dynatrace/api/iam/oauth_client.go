@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 )
 
 type Authenticator interface {
@@ -24,7 +25,11 @@ type oauthResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
+var mutex *sync.Mutex = new(sync.Mutex)
+
 func getBearer(auth Authenticator, forceNew bool) (string, error) {
+	mutex.Lock()
+	defer mutex.Unlock()
 	var httpReq *http.Request
 	var httpRes *http.Response
 	var body []byte
