@@ -46,6 +46,13 @@ type Module struct {
 	Service     settings.CRUDService[settings.Settings]
 }
 
+func (me *Module) IsReferencedAsDataSource() bool {
+	if !me.Environment.Flags.DataSources {
+		return false
+	}
+	return me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.Alerting
+}
+
 func (me *Module) DataSource(id string) *DataSource {
 	if dataSource, found := me.DataSources[id]; found {
 		return dataSource
@@ -184,6 +191,9 @@ func (me *Module) CreateFile(name string) (*os.File, error) {
 }
 
 func (me *Module) WriteProviderFile() (err error) {
+	if me.IsReferencedAsDataSource() {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}
@@ -226,6 +236,9 @@ func (me *Module) WriteProviderFile() (err error) {
 }
 
 func (me *Module) WriteVariablesFile() (err error) {
+	if me.IsReferencedAsDataSource() {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}
@@ -254,18 +267,23 @@ func (me *Module) WriteVariablesFile() (err error) {
 		return referencedResourceTypes[i] < referencedResourceTypes[j]
 	})
 	for _, resourceType := range referencedResourceTypes {
-		if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
-			type = any
-		}
-		
-		`, resourceType)); err != nil {
-			return err
+		if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
+			if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
+				type = any
+			}
+			
+			`, resourceType)); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
 func (me *Module) WriteDataSourcesFile() (err error) {
+	if me.IsReferencedAsDataSource() {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}
@@ -273,6 +291,14 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	var datasourcesFile *os.File
 	if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
 		return err
+	}
+	for _, v := range me.Resources {
+		for _, referencedResource := range v.ResourceReferences {
+			if asDS := AsDataSource(referencedResource); len(asDS) > 0 {
+				datasourcesFile.Write([]byte("\n" + asDS))
+				// fmt.Println(asDS)
+			}
+		}
 	}
 	defer func() {
 		datasourcesFile.Close()
@@ -296,7 +322,20 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	return nil
 }
 
+func (me *Module) PurgeFolder() (err error) {
+	if err = os.RemoveAll(me.GetFolder()); err != nil {
+		return err
+	}
+	if err = os.RemoveAll(me.GetAttentionFolder()); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (me *Module) WriteResourcesFile() (err error) {
+	if me.IsReferencedAsDataSource() {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}

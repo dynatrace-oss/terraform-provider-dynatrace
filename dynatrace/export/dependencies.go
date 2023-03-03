@@ -100,9 +100,27 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 			continue
 		}
 		found := false
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+
+		if resource.IsReferencedAsDataSource() {
+			resOrDsType = func() string {
+				return string(me.resourceType.AsDataSource())
+			}
+			replacePattern = "${data.%s.%s.name}"
+			if environment.Flags.Flat {
+				replacePattern = "${data.%s.%s.name}"
+			}
+		} else {
+			replacePattern = "${var.%s.%s.name}"
+			if environment.Flags.Flat {
+				replacePattern = "${%s.%s.name}"
+			}
+		}
 
 		m1 := regexp.MustCompile(fmt.Sprintf(`"managementZone": {([\S\s]*)"name":(.*)"%s"([\S\s]*)}`, resource.Name))
-		replaced := m1.ReplaceAllString(s, fmt.Sprintf(`"managementZone": {$1"name":$2"%s"$3}`, fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName)))
+		replaced := m1.ReplaceAllString(s, fmt.Sprintf(`"managementZone": {$1"name":$2"%s"$3}`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
@@ -145,10 +163,27 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 	}
 	resources := []any{}
 	for _, resource := range environment.Module(me.resourceType).Resources {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+		if resource.IsReferencedAsDataSource() {
+			resOrDsType = func() string {
+				return string(me.resourceType.AsDataSource())
+			}
+			replacePattern = "${data.%s.%s.legacy_id}"
+			if environment.Flags.Flat {
+				replacePattern = "${data.%s.%s.legacy_id}"
+			}
+		} else {
+			replacePattern = "${var.%s.%s.legacy_id}"
+			if environment.Flags.Flat {
+				replacePattern = "${%s.%s.legacy_id}"
+			}
+		}
 		if len(resource.LegacyID) > 0 {
 			found := false
 			if strings.Contains(s, resource.LegacyID) {
-				s = strings.ReplaceAll(s, resource.LegacyID, fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName))
+				s = strings.ReplaceAll(s, resource.LegacyID, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
 				found = true
 			}
 			if found {
@@ -178,12 +213,31 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	}
 	resources := []any{}
 	for id, resource := range environment.Module(me.resourceType).Resources {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
 		if resource.Type == replacingIn {
 			replacePattern = "${%s.%s.id}"
+		} else {
+			if resource.IsReferencedAsDataSource() {
+				resOrDsType = func() string {
+					return string(me.resourceType.AsDataSource())
+				}
+				replacePattern = "${data.%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${data.%s.%s.id}"
+				}
+			} else {
+				replacePattern = "${var.%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${%s.%s.id}"
+				}
+			}
+
 		}
 		found := false
 		if strings.Contains(s, id) {
-			s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName))
+			s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
 			found = true
 		}
 		if found {

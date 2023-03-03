@@ -25,6 +25,20 @@ func (me ResourceType) Trim() string {
 	return strings.TrimPrefix(string(me), "dynatrace_")
 }
 
+func (me ResourceType) AsDataSource() string {
+	switch me {
+	case ResourceTypes.ManagementZoneV2:
+		return "dynatrace_management_zone"
+	case ResourceTypes.ManagementZone:
+		return "dynatrace_management_zone"
+	case ResourceTypes.AlertingProfile:
+		return "dynatrace_alerting_profile"
+	case ResourceTypes.Alerting:
+		return "dynatrace_alerting_profile"
+	}
+	return ""
+}
+
 var ResourceTypes = struct {
 	AutoTag                             ResourceType
 	CustomService                       ResourceType

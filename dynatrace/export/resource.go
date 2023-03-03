@@ -46,6 +46,10 @@ type Resource struct {
 	Flawed               bool
 }
 
+func (me *Resource) IsReferencedAsDataSource() bool {
+	return me.Module.IsReferencedAsDataSource()
+}
+
 func (me *Resource) SetName(name string) *Resource {
 	me.Name = name
 	terraformName := toTerraformName(name)
@@ -246,6 +250,9 @@ func (me *Resource) PostProcess() error {
 		}
 	}
 	me.Status = ResourceStati.PostProcessed
+	if me.IsReferencedAsDataSource() {
+		return nil
+	}
 	if !me.Module.Environment.Flags.FollowReferences {
 		return nil
 	}
