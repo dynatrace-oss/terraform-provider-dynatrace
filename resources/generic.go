@@ -19,6 +19,7 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"os"
 	"strings"
@@ -110,6 +111,13 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	if stub == nil {
 		return diag.FromErr(errors.New("stub was nil"))
+	}
+	// If the stub returned by the Service contains a value
+	// and that value also contains information about how to restore
+	// that setting to the original state we persist it right away
+	restore := settings.GetRestoreOnDelete(stub.Value)
+	if restore != nil {
+		d.Set("_restore_", *restore)
 	}
 	d.SetId(stub.ID)
 	// if settings.SupportsFlawedReasons(sttngs) {
@@ -224,6 +232,24 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 	if strings.HasSuffix(d.Id(), "---flawed----") {
 		d.SetId("")
 		return diag.Diagnostics{}
+	}
+	// if the state offers an attribute _restore_ deletion essentially means
+	// to restore the settings persisted within that attribute.
+	// If the attribute doesn't contain usable data we're deleting as usual
+	restorev, ok := d.GetOk("_restore_")
+	if ok {
+		restore := restorev.(string)
+		if len(restore) > 0 {
+			sttngs := me.Settings()
+			if err := json.Unmarshal([]byte(restore), sttngs); err != nil {
+				return diag.FromErr(err)
+			}
+			if err := me.Service(m).Update(d.Id(), sttngs); err != nil {
+				return diag.FromErr(err)
+			}
+			d.SetId("")
+			return diag.Diagnostics{}
+		}
 	}
 	if err := me.Service(m).Delete(d.Id()); err != nil {
 		if restError, ok := err.(rest.Error); ok {

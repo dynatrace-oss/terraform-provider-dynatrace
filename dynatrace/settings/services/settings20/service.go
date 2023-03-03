@@ -154,7 +154,41 @@ func (me *service[T]) Create(v T) (*settings.Stub, error) {
 	return me.create(v, false)
 }
 
+type Matcher interface {
+	Match(o any) bool
+}
+
 func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
+	// Special handling for settings with a method named Match(v any) bool
+	// It signals that instead of creating a new record the existing ones on the remote
+	// should be investigated - and if a match exists the original state should get persisted
+	// Upon delete that original state will get reconstructed
+	// Note: Such settings also need to contain a field named `RestoreOnDelete` of type `*string`
+	if matcher, ok := any(v).(Matcher); ok {
+		var stubs settings.Stubs
+		var err error
+		if stubs, err = me.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if stub == nil {
+				continue
+			}
+			if stub.Value == nil {
+				continue
+			}
+			if matcher.Match(stub.Value) {
+				data, je := json.Marshal(stub.Value)
+				if je != nil {
+					break
+				}
+				asjson := string(data)
+				settings.SetRestoreOnDelete(asjson, v)
+				stub.Value = v
+				return stub, me.Update(stub.ID, v)
+			}
+		}
+	}
 	soc := SettingsObjectCreate{
 		SchemaID:      me.schemaID,
 		SchemaVersion: me.schemaVersion,

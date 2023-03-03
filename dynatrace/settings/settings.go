@@ -35,6 +35,41 @@ type Settings interface {
 	Schema() map[string]*schema.Schema
 }
 
+func getRestoreOnDeleteField(v reflect.Value) reflect.Value {
+	field := v.FieldByName("RestoreOnDelete")
+	if !field.IsValid() {
+		return reflect.Value{}
+	}
+	if field.Type() != stringPointerType {
+		return reflect.Value{}
+	}
+	return field
+}
+
+func GetRestoreOnDelete(v any) *string {
+	if v == nil {
+		return nil
+	}
+	rv := reflect.ValueOf(v).Elem()
+	if field := getRestoreOnDeleteField(rv); field.IsValid() {
+		return field.Interface().(*string)
+	}
+	return nil
+}
+
+func SetRestoreOnDelete(restore string, v any) {
+	if GetRestoreOnDelete(v) != nil {
+		return
+	}
+	if len(restore) == 0 {
+		return
+	}
+	rv := reflect.ValueOf(v).Elem()
+	if field := getRestoreOnDeleteField(rv); field.IsValid() {
+		field.Set(reflect.ValueOf(&restore))
+	}
+}
+
 func SetID(settings Settings, id string) {
 	rv := reflect.ValueOf(settings).Elem()
 	if field := getIDField(rv); field.IsValid() {
