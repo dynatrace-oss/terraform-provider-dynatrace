@@ -1,30 +1,15 @@
 {
-    "createdBy": "Terraform",
-    "displayName": "TerraformTest",
-    "enabled": true,
-    "name": "terraform:type",
-    "rules": [
-      {
-        "attributes": [
-          {
-            "key": "TerraformAttribute",
-            "pattern": "{TerraformExtraction}"
-          }
-        ],
-        "iconPattern": "{TerraformIcon}",
-        "idPattern": "{TerraformPlaceholder}",
-        "instanceNamePattern": "{TerraformInstance}",
-        "requiredDimensions": [
-          {
-            "key": "TerraformDimension"
-          }
-        ],
-        "sources": [
-          {
-            "condition": "$eq(TerraformCondition)",
-            "sourceType": "Events"
-          }
-        ]
-      }
-    ]
-  }
+  "createdBy": "Terraform",
+  "enabled": true,
+  "fromRole": "terraformrole",
+  "fromType": "os:service",
+  "sources": [
+    {
+      "condition": "$eq(terraform)",
+      "sourceType": "Metrics"
+    }
+  ],
+  "toRole": "terraformrole",
+  "toType": "terraformdestination",
+  "typeOfRelation": "PART_OF"
+}
