@@ -45,7 +45,9 @@ func CreateExportCredentials() (*Credentials, error) {
 	apiToken := os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
 	if apiToken == "" {
 		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
-		return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
+		if apiToken == "" {
+			return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
+		}
 	}
 	credentials := &Credentials{
 		URL:   environmentURL,
