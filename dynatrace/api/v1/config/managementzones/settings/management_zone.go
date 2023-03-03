@@ -19,11 +19,13 @@ package managementzones
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -78,7 +80,20 @@ func (mz *ManagementZone) Schema() map[string]*schema.Schema {
 			Description: "A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(EntitySelectorBasedRule).Schema()},
+			Set: func(i interface{}) int {
+				if m, mok := i.(map[string]any); mok {
+					for k, v := range m {
+						if vs, ok := v.(string); ok {
+							m[k] = strings.TrimSpace(vs)
+						}
+					}
+					dd, _ := json.Marshal(m)
+					return hashcode.String(string(dd))
+				}
+				dd, _ := json.Marshal(i)
+				return hashcode.String(string(dd))
+			},
+			Elem: &schema.Resource{Schema: new(EntitySelectorBasedRule).Schema()},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
@@ -145,6 +160,16 @@ func (mz *ManagementZone) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if err := decoder.DecodeSlice("entity_selector_based_rule", &mz.EntitySelectorBasedRules); err != nil {
 		return err
+	}
+	if len(mz.EntitySelectorBasedRules) > 0 {
+		var rules []*EntitySelectorBasedRule
+		for _, rule := range mz.EntitySelectorBasedRules {
+			if (rule.Enabled == nil || *rule.Enabled == false) && len(rule.Selector) == 0 {
+				continue
+			}
+			rules = append(rules, rule)
+		}
+		mz.EntitySelectorBasedRules = rules
 	}
 	return nil
 }

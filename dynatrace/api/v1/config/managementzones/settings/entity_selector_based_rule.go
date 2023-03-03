@@ -19,6 +19,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -42,9 +43,16 @@ func (me *EntitySelectorBasedRule) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"selector": {
-			Type:        schema.TypeString,
-			Description: "The entity selector string, by which the entities are selected",
-			Optional:    true,
+			Type:             schema.TypeString,
+			Description:      "The entity selector string, by which the entities are selected",
+			Optional:         true,
+			DiffSuppressFunc: hcl.SuppressEOT,
+			StateFunc: func(i interface{}) string {
+				if i == nil {
+					return ""
+				}
+				return strings.TrimSpace(i.(string))
+			},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
