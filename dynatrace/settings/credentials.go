@@ -33,6 +33,36 @@ type Credentials struct {
 	}
 }
 
+func CreateExportCredentials() (*Credentials, error) {
+	environmentURL := os.Getenv("DYNATRACE_SOURCE_ENV_URL")
+	if environmentURL == "" {
+		environmentURL = os.Getenv("DYNATRACE_ENV_URL")
+		if environmentURL == "" {
+			return nil, errors.New("the environment variable DYNATRACE_ENV_URL or DYNATRACE_SOURCE_ENV_URL needs to be set")
+		}
+	}
+	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
+	apiToken := os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
+	if apiToken == "" {
+		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
+		return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
+	}
+	credentials := &Credentials{
+		URL:   environmentURL,
+		Token: apiToken,
+		IAM: struct {
+			ClientID     string
+			AccountID    string
+			ClientSecret string
+		}{
+			ClientID:     os.Getenv("DT_CLIENT_ID"),
+			AccountID:    os.Getenv("DT_ACCOUNT_ID"),
+			ClientSecret: os.Getenv("DT_CLIENT_SECRET"),
+		},
+	}
+	return credentials, nil
+}
+
 func CreateCredentials() (*Credentials, error) {
 	environmentURL := os.Getenv("DYNATRACE_ENV_URL")
 	if environmentURL == "" {

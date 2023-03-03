@@ -117,7 +117,7 @@ func Initialize() (environment *Environment, err error) {
 	}
 
 	var credentials *settings.Credentials
-	if credentials, err = settings.CreateCredentials(); err != nil {
+	if credentials, err = settings.CreateExportCredentials(); err != nil {
 		return nil, err
 	}
 
