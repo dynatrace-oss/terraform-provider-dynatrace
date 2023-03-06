@@ -28,6 +28,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_request_attribute" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.WebApplication:
+		return fmt.Sprintf(`data "dynatrace_application" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}
