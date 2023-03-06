@@ -292,13 +292,16 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
 		return err
 	}
+	dsm := map[string]string{}
 	for _, v := range me.Resources {
 		for _, referencedResource := range v.ResourceReferences {
 			if asDS := AsDataSource(referencedResource); len(asDS) > 0 {
-				datasourcesFile.Write([]byte("\n" + asDS))
-				// fmt.Println(asDS)
+				dsm[asDS] = asDS
 			}
 		}
+	}
+	for ds := range dsm {
+		datasourcesFile.Write([]byte("\n" + ds))
 	}
 	defer func() {
 		datasourcesFile.Close()
