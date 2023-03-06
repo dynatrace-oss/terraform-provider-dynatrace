@@ -19,6 +19,7 @@ package export
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -314,11 +315,13 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	sort.Strings(dataSourceIDs)
 	for _, dataSourceID := range dataSourceIDs {
 		dataSource := me.DataSources[dataSourceID]
+		dataSourceName := dataSource.Name
+		dd, _ := json.Marshal(dataSourceName)
 		if _, err = datasourcesFile.WriteString(fmt.Sprintf(`data "dynatrace_entity" "%s" {
 			type = "%s"
-			name = "%s"				
+			name = %s
 		}
-`, dataSourceID, dataSource.Type, dataSource.Name)); err != nil {
+`, dataSourceID, dataSource.Type, string(dd))); err != nil {
 			return err
 		}
 	}
