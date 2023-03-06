@@ -233,7 +233,6 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 					replacePattern = "${%s.%s.id}"
 				}
 			}
-
 		}
 		found := false
 		if strings.Contains(s, id) {
@@ -301,15 +300,36 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 	}
 	resources := []any{}
 	for _, resource := range environment.Module(me.resourceType).Resources {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+		if resource.Type == replacingIn {
+			replacePattern = "${%s.%s.name}"
+		} else {
+			if resource.IsReferencedAsDataSource() {
+				resOrDsType = func() string {
+					return string(me.resourceType.AsDataSource())
+				}
+				replacePattern = "${data.%s.%s.name}"
+				if environment.Flags.Flat {
+					replacePattern = "${data.%s.%s.name}"
+				}
+			} else {
+				replacePattern = "${var.%s.%s.name}"
+				if environment.Flags.Flat {
+					replacePattern = "${%s.%s.name}"
+				}
+			}
+		}
 		found := false
 		m1 := regexp.MustCompile(fmt.Sprintf("request_attribute(.*)=(.*)\"%s\"", resource.Name))
-		replaced := m1.ReplaceAllString(s, fmt.Sprintf("request_attribute$1=$2\"%s\"", fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName)))
+		replaced := m1.ReplaceAllString(s, fmt.Sprintf("request_attribute$1=$2\"%s\"", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
 		}
 		m1 = regexp.MustCompile(fmt.Sprintf("{RequestAttribute:%s}", resource.Name))
-		replaced = m1.ReplaceAllString(s, fmt.Sprintf("{RequestAttribute:%s}", fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName)))
+		replaced = m1.ReplaceAllString(s, fmt.Sprintf("{RequestAttribute:%s}", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true

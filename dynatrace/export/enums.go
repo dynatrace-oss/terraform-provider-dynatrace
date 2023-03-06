@@ -35,6 +35,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_alerting_profile"
 	case ResourceTypes.Alerting:
 		return "dynatrace_alerting_profile"
+	case ResourceTypes.RequestAttribute:
+		return "dynatrace_request_attribute"
 	}
 	return ""
 }

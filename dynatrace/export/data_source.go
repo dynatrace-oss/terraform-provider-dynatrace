@@ -24,6 +24,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_alerting_profile" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.RequestAttribute:
+		return fmt.Sprintf(`data "dynatrace_request_attribute" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}
