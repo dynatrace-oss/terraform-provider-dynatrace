@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_data_privacy Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_data_privacy` covers configuration for end users' data privacy
+---
+
+# dynatrace_data_privacy (Resource)
+
+-> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_application_data_privacy`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+
+## Dynatrace Documentation
+
+- Data privacy and security - https://www.dynatrace.com/support/help/manage/data-privacy-and-security
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:preferences.privacy`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_data_privacy` downloads all existing end users' data privacy configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/preferences/privacy/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

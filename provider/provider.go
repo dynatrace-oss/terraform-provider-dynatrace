@@ -268,6 +268,7 @@ func Provider() *schema.Provider {
 			"dynatrace_generic_types":                      resources.NewGeneric(export.ResourceTypes.GenericTypes).Resource(),
 			"dynatrace_generic_relationships":              resources.NewGeneric(export.ResourceTypes.GenericRelationships).Resource(),
 			"dynatrace_slo_normalization":                  resources.NewGeneric(export.ResourceTypes.SLONormalization).Resource(),
+			"dynatrace_data_privacy":                       resources.NewGeneric(export.ResourceTypes.DataPrivacy).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

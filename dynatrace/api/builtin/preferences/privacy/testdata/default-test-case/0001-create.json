@@ -1,0 +1,18 @@
+{
+    "applicationId": "APPLICATION-1234567890000000",
+    "dataCollection": {
+      "optInModeEnabled": true
+    },
+    "doNotTrack": {
+      "complyWithDoNotTrack": false
+    },
+    "masking": {
+      "ipAddressMasking": "public",
+      "ipAddressMaskingEnabled": true,
+      "personalDataUriMaskingEnabled": true,
+      "userActionMaskingEnabled": true
+    },
+    "userTracking": {
+      "persistentCookieEnabled": true
+    }
+  }

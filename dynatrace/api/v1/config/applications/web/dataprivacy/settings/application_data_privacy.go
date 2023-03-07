@@ -28,10 +28,10 @@ import (
 // ApplicationDataPrivacy represents data privacy settings of the application
 type ApplicationDataPrivacy struct {
 	WebApplicationID                *string                           `json:"-"`                                  // Dynatrace entity ID of the web application
-	DataCaptureOptInEnabled         bool                              `json:"dataCaptureOptInEnabled"`            // Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
-	PersistentCookieForUserTracking bool                              `json:"persistentCookieForUserTracking"`    // Set to `true` to set persistent cookie in order to recognize returning devices
-	DoNotTrackBehaviour             DoNotTrackBehaviour               `json:"doNotTrackBehaviour"`                // How to handle the \"Do Not Track\" header: \n\n* `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. \n* `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. \n* `DO_NOT_CAPTURE`: respect the header and do not capture.
-	SessionReplayDataPrivacy        *SessionReplayDataPrivacySettings `json:"sessionReplayDataPrivacy,omitempty"` // Data privacy settings for Session Replay
+	DataCaptureOptInEnabled         bool                              `json:"dataCaptureOptInEnabled"`            // (Field has overlap with `dynatrace_data_privacy`) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
+	PersistentCookieForUserTracking bool                              `json:"persistentCookieForUserTracking"`    // (Field has overlap with `dynatrace_data_privacy`) Set to `true` to set persistent cookie in order to recognize returning devices
+	DoNotTrackBehaviour             DoNotTrackBehaviour               `json:"doNotTrackBehaviour"`                // (Field has overlap with `dynatrace_data_privacy`) How to handle the \"Do Not Track\" header: \n\n* `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. \n* `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. \n* `DO_NOT_CAPTURE`: respect the header and do not capture.
+	SessionReplayDataPrivacy        *SessionReplayDataPrivacySettings `json:"sessionReplayDataPrivacy,omitempty"` // (Field has overlap with `dynatrace_session_replay_web_privacy`) Data privacy settings for Session Replay
 
 	Name string `json:"-"`
 }
@@ -45,22 +45,22 @@ func (me *ApplicationDataPrivacy) Schema() map[string]*schema.Schema {
 		},
 		"data_capture_opt_in": {
 			Type:        schema.TypeBool,
-			Description: "Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called",
+			Description: "(Field has overlap with `dynatrace_data_privacy`) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called",
 			Optional:    true,
 		},
 		"persistent_cookie_for_user_tracking": {
 			Type:        schema.TypeBool,
-			Description: "Set to `true` to set persistent cookie in order to recognize returning devices",
+			Description: "(Field has overlap with `dynatrace_data_privacy`) Set to `true` to set persistent cookie in order to recognize returning devices",
 			Optional:    true,
 		},
 		"do_not_track_behaviour": {
 			Type:        schema.TypeString,
-			Description: "How to handle the \"Do Not Track\" header: \n\n* `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. \n* `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. \n* `DO_NOT_CAPTURE`: respect the header and do not capture.",
+			Description: "(Field has overlap with `dynatrace_data_privacy`) How to handle the \"Do Not Track\" header: \n\n* `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. \n* `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. \n* `DO_NOT_CAPTURE`: respect the header and do not capture.",
 			Required:    true,
 		},
 		"session_replay_data_privacy": {
 			Type:        schema.TypeList,
-			Description: "Data privacy settings for Session Replay",
+			Description: "(Field has overlap with `dynatrace_session_replay_web_privacy`) Data privacy settings for Session Replay",
 			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(SessionReplayDataPrivacySettings).Schema()},

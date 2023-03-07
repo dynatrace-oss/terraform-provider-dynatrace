@@ -1,0 +1,238 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment"
+	],
+	"description": "Use the settings on this page to mask the personal data of your end users and ensure your organization's compliance with data-privacy regulations, including [GDPR](https://dt-url.net/8m3u0pxk).",
+	"displayName": "End users' data privacy",
+	"documentation": "\n\nUnless otherwise stated, all privacy settings below apply to both the data captured from your end users' web browsers and the data captured by OneAgent on the server side. These settings ensure that none of your end-users' personal data are stored by Dynatrace. For complete details on ensuring the data privacy of your end users, see [Data privacy and security](https://dt-url.net/zn03sq4) in Dynatrace Help.",
+	"dynatrace": "1",
+	"enums": {
+		"DoNotTrackOption": {
+			"description": "",
+			"displayName": "DoNotTrackOption",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Capture anonymous user-session data for \"Do Not Track\" enabled browsers",
+					"value": "anonymous"
+				},
+				{
+					"displayName": "Disable Real User Monitoring for \"Do Not Track\" enabled browsers",
+					"value": "disable-rum"
+				}
+			],
+			"type": "enum"
+		},
+		"IpAddressMaskingOption": {
+			"description": "",
+			"displayName": "IpAddressMaskingOption",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Mask all IP addresses",
+					"value": "all"
+				},
+				{
+					"displayName": "Mask only public IP addresses",
+					"value": "public"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"dataCollection": {
+			"description": "To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode.",
+			"displayName": "Opt-in mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DataCollection"
+			}
+		},
+		"doNotTrack": {
+			"description": "Most modern web browsers have a privacy feature called [\"Do Not Track\"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting.",
+			"displayName": "Do Not Track",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DoNotTrack"
+			}
+		},
+		"masking": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Masking"
+			}
+		},
+		"userTracking": {
+			"description": "",
+			"displayName": "User tracking",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/UserTracking"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:preferences",
+		"group:privacy-settings"
+	],
+	"schemaId": "builtin:preferences.privacy",
+	"types": {
+		"DataCollection": {
+			"description": "",
+			"displayName": "DataCollection",
+			"documentation": "",
+			"properties": {
+				"optInModeEnabled": {
+					"default": false,
+					"description": "With [Data-collection and opt-in mode](https://dt-url.net/7l3p0p3h) enabled, Real User Monitoring data isn't captured until dtrum.enable() is called for specific user sessions.",
+					"displayName": "Data-collection and opt-in mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DoNotTrack": {
+			"description": "",
+			"displayName": "DoNotTrack",
+			"documentation": "",
+			"properties": {
+				"complyWithDoNotTrack": {
+					"default": true,
+					"description": "",
+					"displayName": "Comply with \"Do Not Track\" browser settings",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"doNotTrack": {
+					"default": "anonymous",
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "complyWithDoNotTrack",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/DoNotTrackOption"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Masking": {
+			"description": "",
+			"displayName": "Masking",
+			"documentation": "",
+			"properties": {
+				"ipAddressMasking": {
+					"default": "all",
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "ipAddressMaskingEnabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/IpAddressMaskingOption"
+					}
+				},
+				"ipAddressMaskingEnabled": {
+					"default": true,
+					"description": "Dynatrace captures the IP addresses of your end-users to determine the regions from which they access your application. To learn more, visit [Mask IPs and GPS coordinates](https://dt-url.net/mask-end-users-ip-addresses).",
+					"displayName": "Mask end-user IP addresses and GPS coordinates",
+					"documentation": "Dynatrace also captures GPS data from mobile apps that provide their users with the option of sharing geolocation data. On the server side, Dynatrace captures IP addresses to enable detailed troubleshooting for Dynatrace service calls.\n\nOnce enabled, IP address masking sets the last octet of monitored IPv4 addresses and the last 80 bits of IPv6 addresses to zeroes. GPS coordinates are rounded up to 1 decimal place (~10 km). This masking occurs in memory. Full IP addresses are never written to disk. Location lookups are made using anonymized IP addresses and GPS coordinates.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"personalDataUriMaskingEnabled": {
+					"default": false,
+					"description": "Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures full URIs on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).",
+					"displayName": "Mask personal data in URIs",
+					"documentation": "URIs and request headers contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"userActionMaskingEnabled": {
+					"default": false,
+					"description": "When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action. To learn more about masking user actions, visit [Mask user actions](https://dt-url.net/mask-user-action).",
+					"displayName": "Mask user actions (web applications only)",
+					"documentation": "When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action, it constructs a name for the user action based on:\n\n- User event type (click on..., loading of page..., or keypress on...)\n- Title, caption, label, value, ID, className, or other available property of the related HTML element (for example, an image, button, checkbox, or text input field).\n\nIn most instances, the default approach to user-action naming works well, resulting in user-action names such as:\n\n- click on \"Search\" on page /search.html\n- keypress on \"Feedback\" on page /contact.html\n- touch on \"Homescreen\" of page /list.jsf\n\nIn rare circumstances, confidential data (for example, email addresses, usernames, or account numbers) can be unintentionally included in user action names because the confidential data itself is included in an HTML element label, attribute, or other value (for example, click on \"my Account Number: 1231231\"...). If such confidential data appears in your application's user action names, enable the Mask user action names setting. This setting replaces specific HTML element names and values with generic HTML element names. With user-action name masking enabled, the user action names listed above appear as:\n\n- click on INPUT on page /search.html\n- keypress on TEXTAREA on page /contact.html\n- touch on DIV of page /list.jsf",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"UserTracking": {
+			"description": "",
+			"displayName": "UserTracking",
+			"documentation": "",
+			"properties": {
+				"persistentCookieEnabled": {
+					"default": false,
+					"description": "When enabled, Dynatrace places a [persistent cookie](https://dt-url.net/313o0p4n) on all end-user devices to identify returning users.",
+					"displayName": "Use persistent cookies for user tracking",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "3.0.4"
+}
