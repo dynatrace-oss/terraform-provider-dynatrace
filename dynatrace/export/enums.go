@@ -179,6 +179,7 @@ var ResourceTypes = struct {
 	WebAppResourceTypes                 ResourceType
 	GenericTypes                        ResourceType
 	GenericRelationships                ResourceType
+	SLONormalization                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -315,6 +316,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_resource_types",
 	"dynatrace_generic_types",
 	"dynatrace_generic_relationships",
+	"dynatrace_slo_normalization",
 }
 
 type ResourceStatus string

@@ -51,6 +51,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
@@ -655,6 +656,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppResourceTypes:    NewResourceDescriptor(resourcetypes.Service),
 	ResourceTypes.GenericTypes:           NewResourceDescriptor(generictypes.Service),
 	ResourceTypes.GenericRelationships:   NewResourceDescriptor(relation.Service),
+	ResourceTypes.SLONormalization:       NewResourceDescriptor(normalization.Service),
 }
 
 var BlackListedResources = []ResourceType{
