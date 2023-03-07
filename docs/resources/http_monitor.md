@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_http_monitor (Resource)
 
+-> Certain field(s) of this resource has overlap with `dynatrace_http_monitor_outage`, please review the schema for additional information.
+
 ## Dynatrace Documentation
 
 - Synthetic Monitoring - HTTP monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#http-monitors
@@ -518,15 +520,15 @@ Optional:
 
 Optional:
 
-- `global_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
-- `global_outage_policy` (Block List) Global outage handling configuration. 
+- `global_outage` (Boolean) (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable at all configured locations
+- `global_outage_policy` (Block List) (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Global outage handling configuration. 
 
  Alert if **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--global_outage_policy))
-- `local_outage` (Boolean) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
-- `local_outage_policy` (Block List) Local outage handling configuration. 
+- `local_outage` (Boolean) (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) When enabled (`true`), generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
+- `local_outage_policy` (Block List) (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Local outage handling configuration. 
 
  Alert if **affectedLocations** of locations are unable to access the web application **consecutiveRuns** times consecutively (see [below for nested schema](#nestedblock--anomaly_detection--outage_handling--local_outage_policy))
-- `retry_on_error` (Boolean) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
+- `retry_on_error` (Boolean) (Field has overlap with `dynatrace_browser_monitor_outage` and `dynatrace_http_monitor_outage`) Schedule retry if browser monitor execution results in a fail. For HTTP monitors this property is ignored
 
 <a id="nestedblock--anomaly_detection--outage_handling--global_outage_policy"></a>
 ### Nested Schema for `anomaly_detection.outage_handling.global_outage_policy`

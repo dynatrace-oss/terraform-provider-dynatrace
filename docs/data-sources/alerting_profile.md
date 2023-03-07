@@ -40,3 +40,4 @@ resource "dynatrace_webhook_notification" "my_webhook_notification" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `legacy_id` (String)

@@ -53,4 +53,5 @@ resource "dynatrace_calculated_service_metric" "#name#" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `legacy_id` (String)
 - `settings_20_id` (String)

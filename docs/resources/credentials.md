@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_credentials (Resource)
 
--> In order to create a this resource, your `dt_api_token` needs to have the `Write credential vault entries` permission.
+
 
 
 

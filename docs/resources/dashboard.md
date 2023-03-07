@@ -25,7 +25,6 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_dashboard" "#name#" {
   dashboard_metadata {
     name   = "#name#"
-    shared = false
     owner  = "Dynatrace"
     tags   = ["Kubernetes"]
     dynamic_filters {
@@ -836,8 +835,8 @@ Optional:
 - `dynamic_filters` (Block List, Max: 1) Dashboard filter configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters))
 - `filter` (Block List, Max: 1) Global filter Settings for the Dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--filter))
 - `preset` (Boolean) the dashboard is a preset (`true`) or not (`false`). Default is `false`.
-- `shared` (Boolean) the dashboard is shared (`true`) or private (`false`)
-- `sharing_details` (Block List, Max: 1) represents sharing configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--sharing_details))
+- `shared` (Boolean, Deprecated) the dashboard is shared (`true`) or private (`false`)
+- `sharing_details` (Block List, Max: 1, Deprecated) represents sharing configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--sharing_details))
 - `tags` (Set of String) a set of tags assigned to the dashboard
 - `tiles_name_size` (Number) No documentation available
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
