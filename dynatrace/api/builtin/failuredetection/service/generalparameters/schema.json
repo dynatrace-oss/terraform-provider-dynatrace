@@ -1,0 +1,411 @@
+{
+	"allowedScopes": [
+		"SERVICE"
+	],
+	"description": "Dynatrace failure detection automatically detects the vast majority of error conditions in your environment. However, detected service errors don't necessarily mean that the underlying requests have failed. There may be cases where the default service failure detection settings don't meet your particular needs. In such cases, you can configure the settings provided below. For complete details, see [configure service failure detection](https://dt-url.net/ys5k0p4y).",
+	"displayName": "General failure detection parameters",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Override global failure detection settings",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"exceptionRules": {
+			"description": "",
+			"displayName": "Customize failure detection for specific exceptions and errors",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/exceptionRules"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:failure-detection"
+	],
+	"schemaId": "builtin:failure-detection.service.general-parameters",
+	"types": {
+		"compareOperation": {
+			"description": "",
+			"displayName": "compareOperation",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": false,
+					"description": "",
+					"displayName": "Case sensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"STRING_EQUALS",
+							"NOT_STRING_EQUALS",
+							"STARTS_WITH",
+							"NOT_STARTS_WITH",
+							"CONTAINS",
+							"NOT_CONTAINS",
+							"ENDS_WITH",
+							"NOT_ENDS_WITH"
+						],
+						"property": "compareOperationType",
+						"type": "IN"
+					},
+					"type": "boolean"
+				},
+				"compareOperationType": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"../requestAttribute"
+						],
+						"fullContext": true,
+						"identifier": "compare_operation_source",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "STRING_EXISTS",
+					"description": "",
+					"displayName": "Apply this comparison",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"doubleValue": {
+					"default": 0,
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"DOUBLE_EQUALS",
+							"NOT_DOUBLE_EQUALS",
+							"DOUBLE_GREATER_THAN",
+							"DOUBLE_GREATER_THAN_OR_EQUALS",
+							"DOUBLE_LESS_THAN",
+							"DOUBLE_LESS_THAN_OR_EQUALS"
+						],
+						"property": "compareOperationType",
+						"type": "IN"
+					},
+					"type": "float"
+				},
+				"intValue": {
+					"default": 0,
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"INTEGER_EQUALS",
+							"NOT_INTEGER_EQUALS",
+							"INTEGER_GREATER_THAN",
+							"INTEGER_GREATER_THAN_OR_EQUALS",
+							"INTEGER_LESS_THAN",
+							"INTEGER_LESS_THAN_OR_EQUALS"
+						],
+						"property": "compareOperationType",
+						"type": "IN"
+					},
+					"type": "integer"
+				},
+				"textValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"STRING_EQUALS",
+							"NOT_STRING_EQUALS",
+							"STARTS_WITH",
+							"NOT_STARTS_WITH",
+							"CONTAINS",
+							"NOT_CONTAINS",
+							"ENDS_WITH",
+							"NOT_ENDS_WITH"
+						],
+						"property": "compareOperationType",
+						"type": "IN"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"customErrorRule": {
+			"description": "",
+			"displayName": "customErrorRule",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"description": "",
+					"displayName": "Request attribute condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/compareOperation"
+					}
+				},
+				"requestAttribute": {
+					"constraints": [
+						{
+							"customMessage": "Invalid UUID",
+							"pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-5][0-9a-fA-F]{3}\\-[089abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "request_attribute_source",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Request attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "**{requestAttribute}** {condition.compareOperationType|toLowerCase} {condition.textValue|valueSet, select, true{\"{condition.textValue}\"} other{}}{condition.intValue}{condition.doubleValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"exception": {
+			"description": "",
+			"displayName": "exception",
+			"documentation": "",
+			"properties": {
+				"classPattern": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "The pattern will match if it is contained within the actual class name.",
+					"displayName": "Class pattern",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"messagePattern": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Optionally, define an exception message pattern. The pattern will match if the actual exception message contains the pattern.",
+					"displayName": "Exception message pattern",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{classPattern|valueSet, select, true {{messagePattern|valueSet, select, true {**{classPattern}** where message contains \"**{messagePattern}**\"} other {**{classPattern}**}}} other {{messagePattern|valueSet, select, true {Any exception where message contains \"**{messagePattern}**\"} other {Any exception}}}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"exceptionRules": {
+			"description": "",
+			"displayName": "exceptionRules",
+			"documentation": "",
+			"properties": {
+				"customErrorRules": {
+					"description": "Some custom error situations are only detectable via a return value or other means. To support such cases, [define a request attribute](https://dt-url.net/ys5k0p4y) that captures the required data. Then define a custom error rule that determines if the request has failed based on the value of the request attribute.",
+					"displayName": "Custom error rules",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/customErrorRule"
+						}
+					},
+					"maxObjects": 250,
+					"metadata": {
+						"addItemButton": "Add custom error rule"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"customHandledExceptions": {
+					"description": "There may be situations where your application code handles exceptions gracefully in a manner that these failures aren't detected by Dynatrace. Use this setting to define specific gracefully-handled exceptions that should be treated as service failures.",
+					"displayName": "Custom handled exceptions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/exception"
+						}
+					},
+					"maxObjects": 200,
+					"metadata": {
+						"addItemButton": "Add exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": false,
+						"property": "ignoreAllExceptions",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				},
+				"ignoreAllExceptions": {
+					"default": false,
+					"description": "",
+					"displayName": "Ignore all exceptions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ignoreSpanFailureDetection": {
+					"default": false,
+					"description": "",
+					"displayName": "Ignore span failure detection",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ignoredExceptions": {
+					"description": "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.",
+					"displayName": "Ignored Exceptions",
+					"documentation": "If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/exception"
+						}
+					},
+					"maxObjects": 200,
+					"metadata": {
+						"addItemButton": "Add exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": false,
+						"property": "ignoreAllExceptions",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				},
+				"successForcingExceptions": {
+					"description": "Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.",
+					"displayName": "Success forcing exceptions",
+					"documentation": "If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/exception"
+						}
+					},
+					"maxObjects": 200,
+					"metadata": {
+						"addItemButton": "Add exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": false,
+						"property": "ignoreAllExceptions",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

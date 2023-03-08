@@ -181,6 +181,7 @@ var ResourceTypes = struct {
 	GenericRelationships                ResourceType
 	SLONormalization                    ResourceType
 	DataPrivacy                         ResourceType
+	ServiceFailure                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -319,6 +320,7 @@ var ResourceTypes = struct {
 	"dynatrace_generic_relationships",
 	"dynatrace_slo_normalization",
 	"dynatrace_data_privacy",
+	"dynatrace_service_failure",
 }
 
 type ResourceStatus string

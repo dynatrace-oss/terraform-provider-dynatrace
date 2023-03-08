@@ -145,6 +145,7 @@ import (
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/dataprivacy"
@@ -661,6 +662,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DataPrivacy: NewResourceDescriptor(
 		privacy.Service,
 		Coalesce(Dependencies.Application),
+	),
+	ResourceTypes.ServiceFailure: NewResourceDescriptor(
+		generalparameters.Service,
+		Coalesce(Dependencies.Service),
+		Dependencies.ID(ResourceTypes.RequestAttribute),
 	),
 }
 
