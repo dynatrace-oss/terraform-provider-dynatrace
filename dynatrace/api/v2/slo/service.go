@@ -113,8 +113,8 @@ func (me *service) Validate(v *slo.SLO) error {
 }
 
 func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
-	mu.Lock()
-	defer mu.Unlock()
+	// mu.Lock()
+	// defer mu.Unlock()
 
 	var err error
 
@@ -132,7 +132,6 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 	})
 
 	retry := true
-	maxAttempts := 10
 	attempts := 0
 	for retry {
 		attempts = attempts + 1
@@ -140,11 +139,7 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 			if !strings.Contains(err.Error(), "calc:") && !strings.Contains(err.Error(), "Metric selector is invalid") {
 				return &settings.Stub{ID: id, Name: v.Name}, err
 			}
-			if attempts < maxAttempts {
-				time.Sleep(2 * time.Second)
-			} else {
-				return nil, err
-			}
+			time.Sleep(2 * time.Second)
 		} else {
 			retry = false
 		}
@@ -161,6 +156,23 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 		}
 		for _, stub := range slos.SLOs {
 			v.Timeframe = stub.SLO.Timeframe
+		}
+	}
+
+	retry = true
+	numRequiredSuccesses := 20
+	for retry {
+		req = client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
+		if err = req.Finish(v); err != nil {
+			if !strings.Contains(err.Error(), "not found.") {
+				return &settings.Stub{ID: id, Name: v.Name}, err
+			}
+			time.Sleep(2 * time.Second)
+		} else {
+			numRequiredSuccesses--
+			if numRequiredSuccesses < 0 {
+				retry = false
+			}
 		}
 	}
 
