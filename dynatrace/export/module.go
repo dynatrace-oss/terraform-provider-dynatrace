@@ -51,6 +51,9 @@ func (me *Module) IsReferencedAsDataSource() bool {
 	if !me.Environment.Flags.DataSources {
 		return false
 	}
+	if _, found := me.Environment.ResArgs[string(me.Type)]; found {
+		return false
+	}
 	return me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.Alerting || me.Type == ResourceTypes.RequestAttribute || me.Type == ResourceTypes.WebApplication
 }
 
