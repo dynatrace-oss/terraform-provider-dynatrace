@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_application_data_privacy (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_session_replay_web_privacy`, please review the schema for additional information.
+-> Certain field(s) of this resource has overlap with `dynatrace_data_privacy`, please review the schema for additional information.
 
 ## Dynatrace Documentation
 
@@ -26,18 +26,18 @@ The full documentation of the export feature is available [here](https://registr
 
 ### Required
 
-- `do_not_track_behaviour` (String) How to handle the "Do Not Track" header: 
+- `do_not_track_behaviour` (String) (Field has overlap with `dynatrace_data_privacy`) How to handle the "Do Not Track" header: 
 
 * `IGNORE_DO_NOT_TRACK`: ignore the header and capture the data. 
 * `CAPTURE_ANONYMIZED`: capture the data but do not tie it to the user. 
 * `DO_NOT_CAPTURE`: respect the header and do not capture.
-- `session_replay_data_privacy` (Block List, Min: 1, Max: 1) Data privacy settings for Session Replay (see [below for nested schema](#nestedblock--session_replay_data_privacy))
+- `session_replay_data_privacy` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_session_replay_web_privacy`) Data privacy settings for Session Replay (see [below for nested schema](#nestedblock--session_replay_data_privacy))
 - `web_application_id` (String) Dynatrace entity ID of the web application
 
 ### Optional
 
-- `data_capture_opt_in` (Boolean) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
-- `persistent_cookie_for_user_tracking` (Boolean) Set to `true` to set persistent cookie in order to recognize returning devices
+- `data_capture_opt_in` (Boolean) (Field has overlap with `dynatrace_data_privacy`) Set to `true` to disable data capture and cookies until JavaScriptAPI `dtrum.enable()` is called
+- `persistent_cookie_for_user_tracking` (Boolean) (Field has overlap with `dynatrace_data_privacy`) Set to `true` to set persistent cookie in order to recognize returning devices
 
 ### Read-Only
 
