@@ -241,6 +241,11 @@ func (me *request) Raw() ([]byte, error) {
 		} else {
 			errorLogger.Println(me.method, url)
 		}
+		if os.Getenv("DYNATRACE_HTTP_ERROR_RESPONSE_HEADERS") == "true" && len(res.Header) > 0 {
+			for headerName, headerValues := range res.Header {
+				errorLogger.Println("  HEADER", headerName, headerValues)
+			}
+		}
 		errorLogger.Println("  ", res.StatusCode, string(data))
 		var env errorEnvelope
 		if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
