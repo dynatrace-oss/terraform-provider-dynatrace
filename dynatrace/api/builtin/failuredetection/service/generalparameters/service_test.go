@@ -19,16 +19,15 @@ package generalparameters_test
 
 import (
 	"testing"
-	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
-	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestServiceFailure(t *testing.T) {
-	// api.TestService(t, generalparameters.Service)
-	t.Skip()
+	api.TestService(t, generalparameters.Service)
 }
 
 func TestAccServiceFailure(t *testing.T) {
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

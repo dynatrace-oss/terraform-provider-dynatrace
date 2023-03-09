@@ -1,34 +1,8 @@
 {
     "enabled": true,
     "exceptionRules": {
-      "customErrorRules": [
-        {
-          "condition": {
-            "compareOperationType": "STRING_EXISTS"
-          },
-          "requestAttribute": "00000000-0000-0000-0000-000000000000"
-        }
-      ],
-      "customHandledExceptions": [
-        {
-          "classPattern": "ClassPatternExample",
-          "messagePattern": "ExceptionMessagePatternExample"
-        }
-      ],
-      "ignoreAllExceptions": false,
-      "ignoreSpanFailureDetection": true,
-      "ignoredExceptions": [
-        {
-          "classPattern": "ClassPatternExample",
-          "messagePattern": "ExceptionMessagePatternExample"
-        }
-      ],
-      "successForcingExceptions": [
-        {
-          "classPattern": "ClassPatternExample",
-          "messagePattern": "ExceptionMessagePatternExample"
-        }
-      ]
+      "ignoreAllExceptions": true,
+      "ignoreSpanFailureDetection": true
     },
-    "serviceId": "SERVICE-1234567890000000"
+    "serviceId": "SERVICE-D892CFE7DFAB0D08"
   }
