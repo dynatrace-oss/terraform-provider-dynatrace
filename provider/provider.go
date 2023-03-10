@@ -270,6 +270,7 @@ func Provider() *schema.Provider {
 			"dynatrace_slo_normalization":                  resources.NewGeneric(export.ResourceTypes.SLONormalization).Resource(),
 			"dynatrace_data_privacy":                       resources.NewGeneric(export.ResourceTypes.DataPrivacy).Resource(),
 			"dynatrace_service_failure":                    resources.NewGeneric(export.ResourceTypes.ServiceFailure).Resource(),
+			"dynatrace_service_http_failure":               resources.NewGeneric(export.ResourceTypes.ServiceHTTPFailure).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

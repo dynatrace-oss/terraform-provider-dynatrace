@@ -146,6 +146,7 @@ import (
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/httpparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/dataprivacy"
@@ -667,6 +668,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		generalparameters.Service,
 		Coalesce(Dependencies.Service),
 		Dependencies.ID(ResourceTypes.RequestAttribute),
+	),
+	ResourceTypes.ServiceHTTPFailure: NewResourceDescriptor(
+		httpparameters.Service,
+		Coalesce(Dependencies.Service),
 	),
 }
 

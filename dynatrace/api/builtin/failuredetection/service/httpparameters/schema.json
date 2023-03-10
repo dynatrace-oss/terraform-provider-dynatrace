@@ -1,0 +1,185 @@
+{
+	"allowedScopes": [
+		"SERVICE"
+	],
+	"description": "Dynatrace failure detection automatically detects the vast majority of error conditions in your environment. However, detected service errors don't necessarily mean that the underlying requests have failed. There may be cases where the default service failure detection settings don't meet your particular needs. In such cases, you can configure the settings provided below. For complete details, see [configure service failure detection](https://dt-url.net/ys5k0p4y).",
+	"displayName": "HTTP failure detection parameters",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"brokenLinks": {
+			"description": "HTTP 404 response codes are thrown when a web server can't find a certain page. 404s are classified as broken links on the client side and therefore aren't considered to be service failures. By enabling this setting, you can have 404s treated as server-side service failures.",
+			"displayName": "HTTP 404 (broken links)",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/brokenLinks"
+			}
+		},
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Override global failure detection settings",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"httpResponseCodes": {
+			"description": "",
+			"displayName": "HTTP response codes",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/httpResponseCodes"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:failure-detection"
+	],
+	"schemaId": "builtin:failure-detection.service.http-parameters",
+	"types": {
+		"brokenLinks": {
+			"description": "",
+			"displayName": "brokenLinks",
+			"documentation": "",
+			"properties": {
+				"brokenLinkDomains": {
+					"description": "If your application relies on other hosts at other domains, add the associated domain names here. Once configured, Dynatrace will consider 404s thrown by hosts at these domains to be service failures related to your application.",
+					"displayName": "Rules for broken links to related domains",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "Domain",
+						"documentation": "",
+						"metadata": {
+							"placeholder": "For example, www.otherdomain.com"
+						},
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add other application domain"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "http404NotFoundFailures",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				},
+				"http404NotFoundFailures": {
+					"default": false,
+					"description": "",
+					"displayName": "Consider 404 HTTP response codes as failures",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"httpResponseCodes": {
+			"description": "",
+			"displayName": "httpResponseCodes",
+			"documentation": "",
+			"properties": {
+				"clientSideErrors": {
+					"constraints": [
+						{
+							"type": "LENGTH"
+						}
+					],
+					"default": "400-599",
+					"description": "",
+					"displayName": "HTTP response codes which indicate client side errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, 400-499, 503, 510-599"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"failOnMissingResponseCodeClientSide": {
+					"default": false,
+					"description": "",
+					"displayName": "Treat missing HTTP response code as client side error",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"failOnMissingResponseCodeServerSide": {
+					"default": false,
+					"description": "",
+					"displayName": "Treat missing HTTP response code as server side errors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"serverSideErrors": {
+					"constraints": [
+						{
+							"type": "LENGTH"
+						}
+					],
+					"default": "500-599",
+					"description": "",
+					"displayName": "HTTP response codes which indicate an error on the server side",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, 500-599, 402, 405-499"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

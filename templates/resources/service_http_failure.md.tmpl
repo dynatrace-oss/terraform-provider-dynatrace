@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_service_http_failure Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_service_http_failure` covers configuration for service-level HTTP failure detection parameters
+---
+
+# dynatrace_service_http_failure (Resource)
+
+## Dynatrace Documentation
+
+- Configure service failure detection - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-monitoring-settings/configure-service-failure-detection
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:failure-detection.service.http-parameters`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_service_http_failure` downloads all existing service-level HTTP failure detection parameters
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/failuredetection/service/httpparameters/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
