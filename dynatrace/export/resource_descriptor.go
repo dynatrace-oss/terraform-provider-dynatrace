@@ -388,11 +388,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.QueueManager:       NewResourceDescriptor(queuemanagers.Service),
 	ResourceTypes.RequestAttribute: NewResourceDescriptor(
 		requestattributes.Service,
-		Dependencies.Host,
-		Dependencies.HostGroup,
-		Dependencies.ProcessGroup,
-		Dependencies.ProcessGroupInstance,
-		Dependencies.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.ProcessGroupInstance),
+		Coalesce(Dependencies.Service),
 	),
 	ResourceTypes.RequestNaming: NewResourceDescriptor(
 		requestnaming.Service,

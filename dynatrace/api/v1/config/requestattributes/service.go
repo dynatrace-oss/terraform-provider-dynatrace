@@ -34,6 +34,11 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*requestatt
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*requestattributes.RequestAttribute](BasePath).WithMutex(mu.Lock, mu.Unlock),
+		&settings.ServiceOptions[*requestattributes.RequestAttribute]{
+			Get:    settings.Path(BasePath + "/%s?includeProcessGroupReferences=true"),
+			List:   settings.Path(BasePath),
+			Lock:   mu.Lock,
+			Unlock: mu.Unlock,
+		},
 	)
 }
