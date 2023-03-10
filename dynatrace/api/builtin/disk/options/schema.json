@@ -1,0 +1,150 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Disk options settings control the visibility of local disks on your hosts.",
+	"displayName": "Disk options",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"OsTypeEnum": {
+			"description": "",
+			"displayName": "OsTypeEnum",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Any",
+					"value": "OS_TYPE_UNKNOWN"
+				},
+				{
+					"displayName": "AIX",
+					"value": "OS_TYPE_AIX"
+				},
+				{
+					"displayName": "Darwin",
+					"value": "OS_TYPE_DARWIN"
+				},
+				{
+					"displayName": "HPUX",
+					"value": "OS_TYPE_HPUX"
+				},
+				{
+					"displayName": "Linux",
+					"value": "OS_TYPE_LINUX"
+				},
+				{
+					"displayName": "Solaris",
+					"value": "OS_TYPE_SOLARIS"
+				},
+				{
+					"displayName": "Windows",
+					"value": "OS_TYPE_WINDOWS"
+				},
+				{
+					"displayName": "z/OS",
+					"value": "OS_TYPE_ZOS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"exclusions": {
+			"description": "OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.",
+			"displayName": "Exclude disks",
+			"documentation": "Certain filesystems are always excluded as monitoring of them is not useful. For example, autofs, proc, cgroup, tmpfs.",
+			"items": {
+				"description": "Create a rule that will be used to disable monitoring of matching disks. Please be aware that rule with default values will disable monitoring of all disks.",
+				"displayName": "Disk exclusion rule",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/DiskComplex"
+				}
+			},
+			"maxObjects": 200,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"nfsShowAll": {
+			"default": false,
+			"description": "When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later",
+			"displayName": "Show all NFS disks",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.209"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:disk.options",
+	"types": {
+		"DiskComplex": {
+			"description": "",
+			"displayName": "DiskComplex",
+			"documentation": "",
+			"properties": {
+				"filesystem": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "File system type",
+					"documentation": " **File system type field:** the type of the file system to be excluded from monitoring. Examples:\n\n* ext4\n* ext3\n* btrfs\n* ext*\n\n⚠️ File system types are case sensitive! \n\nThe wildcard in the last example means to exclude matching file systems such as types ext4 and ext3",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"mountpoint": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Disk or mount point path",
+					"documentation": " **Disk or mount point path field:** the path to where the disk to be excluded from monitoring is mounted. Examples:\n\n* /mnt/my_disk\n* /staff/emp1\n* C:\\\n* /staff/*\n* /disk*\n\n ⚠️ Mount point paths are case sensitive! \n\nThe wildcard in **/staff/*** means to exclude every child folder of /staff.\n\nThe wildcard in **/disk*** means to exclude every mount point starting with /disk, for example /disk1, /disk99,  /diskabc",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"os": {
+					"default": "OS_TYPE_UNKNOWN",
+					"description": "",
+					"displayName": "Operating system",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/OsTypeEnum"
+					}
+				}
+			},
+			"summaryPattern": "Operating system: ''{os}'', name: ''{mountpoint}'', file system: ''{filesystem}''",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.2.6"
+}

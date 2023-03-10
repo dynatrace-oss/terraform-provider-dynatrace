@@ -1,0 +1,16 @@
+{
+    "exclusions": [
+      {
+        "filesystem": "ntfs",
+        "mountpoint": "C:\\",
+        "os": "OS_TYPE_WINDOWS"
+      },
+      {
+        "filesystem": "ntfs",
+        "mountpoint": "D:\\",
+        "os": "OS_TYPE_WINDOWS"
+      }
+    ],
+    "nfsShowAll": false,
+    "scope": "HOST-1234567890000000"
+  }

@@ -33,6 +33,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
+	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
@@ -672,6 +673,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceHTTPFailure: NewResourceDescriptor(
 		httpparameters.Service,
 		Coalesce(Dependencies.Service),
+	),
+	ResourceTypes.DiskOptions: NewResourceDescriptor(
+		diskoptions.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
 	),
 }
 

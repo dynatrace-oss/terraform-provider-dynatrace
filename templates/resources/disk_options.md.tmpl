@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_disk_options Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_disk_options` covers configuration for host disk visibility settings
+---
+
+# dynatrace_disk_options (Resource)
+
+## Dynatrace Documentation
+
+- Exclude disks - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/configuration/exclude-disks-and-network-traffic#exclude-disks
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:disk.options`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_disk_options` downloads all existing host disk visibility settings
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/disk/options/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
