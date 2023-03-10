@@ -1,0 +1,617 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Set up alerts for OS services in undesirable states both for Windows and Linux systemd.\n Note: Alerting feature is included in host units, however if monitoring ​ is turned on for full availability metric DDU consumption takes place. Refer to [documentation](https://dt-url.net/vl03xzk) for more details.\n\nPlease provide feedback to us about this feature on [Dynatrace Community](https://dt-url.net/nl02tbm).",
+	"displayName": "OS services monitoring",
+	"documentation": "\n\nIn order to set up the alert for a certain group of OS services, you must first define a new policy. Specify which service's states you would like to be alerted about and then add detection rules in order to tell Dynatrace which exact OS services you are interested in. You may specify multiple detection rules.\n\nNote that policies are specified for each of supported operating systems individually and that some of the parameters and properties vary between them.",
+	"dynatrace": "1",
+	"enums": {
+		"System": {
+			"description": "",
+			"displayName": "System",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Windows",
+					"icon": "windows",
+					"value": "WINDOWS"
+				},
+				{
+					"displayName": "Linux",
+					"icon": "linux",
+					"value": "LINUX"
+				}
+			],
+			"type": "enum"
+		},
+		"linuxServiceProp": {
+			"description": "",
+			"displayName": "ServiceItem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Service Name",
+					"value": "ServiceName"
+				},
+				{
+					"displayName": "Startup Type",
+					"value": "StartupType"
+				}
+			],
+			"type": "enum"
+		},
+		"windowsServiceProps": {
+			"description": "",
+			"displayName": "ServiceItem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Display Name",
+					"value": "DisplayName"
+				},
+				{
+					"displayName": "Service Name",
+					"value": "ServiceName"
+				},
+				{
+					"displayName": "Path",
+					"value": "Path"
+				},
+				{
+					"displayName": "Startup Type",
+					"value": "StartupType"
+				},
+				{
+					"displayName": "Manufacturer",
+					"value": "Manufacturer"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 400,
+	"metadata": {
+		"addItemButton": "Add policy",
+		"itemDisplayName": "Add policy",
+		"minAgentVersion": "1.239"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"alertActivationDuration": {
+			"constraints": [
+				{
+					"customMessage": "The value must be in range of 1 to 180.",
+					"maximum": 180,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 1,
+			"description": "The number of **10-second measurement cycles** before alerting is triggered",
+			"displayName": "Alerting delay",
+			"documentation": "Set this value to control the speed of alerting. One is the lowest setting equal to one 10-second sample. If you set this value to 30, alerting is triggered after 5 minutes.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.257"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "alerting",
+				"type": "EQUALS"
+			},
+			"type": "integer"
+		},
+		"alerting": {
+			"default": true,
+			"description": "",
+			"displayName": "Alert",
+			"documentation": "Toggle the switch in order to enable or disable alerting for this policy",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"detectionConditionsLinux": {
+			"description": "",
+			"displayName": "Detection rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/linuxDetectionCondition"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add rule",
+				"itemDisplayName": "New rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"LINUX"
+				],
+				"property": "system",
+				"type": "IN"
+			},
+			"type": "list"
+		},
+		"detectionConditionsWindows": {
+			"description": "",
+			"displayName": "Detection rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/windowsDetectionCondition"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add rule",
+				"itemDisplayName": "New rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"WINDOWS"
+				],
+				"property": "system",
+				"type": "IN"
+			},
+			"type": "list"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"metadata": {
+			"description": "Set of additional key-value properties to be attached to the triggered event.",
+			"displayName": "Properties",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/MetadataItem"
+				}
+			},
+			"maxObjects": 30,
+			"metadata": {
+				"addItemButton": "Add Property",
+				"itemDisplayName": "New property"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "alerting",
+				"type": "EQUALS"
+			},
+			"type": "set"
+		},
+		"monitoring": {
+			"default": false,
+			"description": "",
+			"displayName": "Monitor",
+			"documentation": "Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics consume custom metrics (DDUs). Refer to [documentation](https://dt-url.net/vl03xzk) for DDU consumption examples. Each monitored service consumes one custom metric.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.243"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"notInstalledAlerting": {
+			"default": false,
+			"description": "",
+			"displayName": "Alert if service is not installed",
+			"documentation": "By default, Dynatrace does not alert if the service is not installed. Toggle the switch to enable or disable this feature",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.257"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "alerting",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"statusConditionLinux": {
+			"constraints": [
+				{
+					"customMessage": "This value is mandatory",
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "This value does not match the required format.",
+					"customValidatorId": "OSServicesLinuxStatusRule",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "$eq(failed)",
+			"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(failed)` – Matches services that are in failed state.\n\nAvailable logic operations:\n- `$not($eq(active))` – Matches services with state different from active.\n- `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\nUse one of the following values as a parameter for this condition:\n\n- `reloading`\n- `activating`\n- `deactivating`\n- `failed`\n- `inactive`\n- `active`",
+			"displayName": "Service status condition for alerting",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "LINUX",
+						"property": "system",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": true,
+						"property": "alerting",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "text"
+		},
+		"statusConditionWindows": {
+			"constraints": [
+				{
+					"customMessage": "This value is mandatory",
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "This value does not match the required format.",
+					"customValidatorId": "OSServicesWinStatusRule",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "$not($eq(running))",
+			"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(paused)` – Matches services that are in paused state.\n\nAvailable logic operations:\n- `$not($eq(paused))` – Matches services that are in state different from paused.\n- `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\nUse one of the following values as a parameter for this condition:\n\n- `running`\n- `stopped`\n- `start_pending`\n- `stop_pending`\n- `continue_pending`\n- `pause_pending`\n- `paused`",
+			"displayName": "Service status condition for alerting",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "WINDOWS",
+						"property": "system",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": true,
+						"property": "alerting",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "text"
+		},
+		"system": {
+			"default": "LINUX",
+			"description": "",
+			"displayName": "System",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/System"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:monitoring"
+	],
+	"schemaId": "builtin:os-services-monitoring",
+	"types": {
+		"MetadataItem": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Unknown predefined property key.",
+							"customValidatorId": "event-property-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type 'dt.' for key hints.",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_property_key",
+					"type": "text"
+				},
+				"metadataValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type '{' for placeholder hints.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{metadataKey}: {metadataValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"linuxDetectionCondition": {
+			"description": "",
+			"displayName": "DetectionCondition",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "OSServicesGeneralRule",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"ServiceName"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"property": {
+					"default": "ServiceName",
+					"description": "",
+					"displayName": "Service property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/linuxServiceProp"
+					}
+				},
+				"startupCondition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "OSServicesLinuxStartupRule",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(enabled)` – Matches services with startup type equal to enabled.\n\nAvailable logic operations:\n- `$not($eq(enabled))` – Matches services with startup type different from enabled.\n- `$or($eq(enabled),$eq(disabled))` - Matches services that are either enabled or disabled.\n\nUse one of the following values as a parameter for this condition:\n\n- `enabled`\n- `enabled-runtime`\n- `static`\n- `disabled`",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"StartupType"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{property} match {condition}{startupCondition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"windowsDetectionCondition": {
+			"description": "",
+			"displayName": "DetectionCondition",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "OSServicesGeneralRule",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"Manufacturer",
+							"ServiceName",
+							"DisplayName",
+							"Path"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"property": {
+					"default": "ServiceName",
+					"description": "",
+					"displayName": "Service property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/windowsServiceProps"
+					}
+				},
+				"startupCondition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "OSServicesWinStartupRule",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(manual)` – Matches services that are started manually.\n\nAvailable logic operations:\n- `$not($eq(auto))` – Matches services with startup type different from Automatic.\n- `$or($eq(auto),$eq(manual))` – Matches if service's startup type is either Automatic or Manual.\n\nUse one of the following values as a parameter for this condition:\n\n- `manual` for Manual\n- `manual_trigger` for Manual (Trigger Start)\n- `auto` for Automatic\n- `auto_delay` for Automatic (Delayed Start)\n- `auto_trigger` for Automatic (Trigger Start)\n- `auto_delay_trigger` for Automatic (Delayed Start, Trigger Start)\n- `disabled` for Disabled",
+					"displayName": "Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"StartupType"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{property} match {condition}{startupCondition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"displayName": "System",
+					"propertyRef": "system"
+				},
+				{
+					"displayName": "Alert",
+					"propertyRef": "alerting"
+				},
+				{
+					"displayName": "Monitor",
+					"propertyRef": "monitoring"
+				}
+			]
+		}
+	},
+	"version": "1.1.4"
+}

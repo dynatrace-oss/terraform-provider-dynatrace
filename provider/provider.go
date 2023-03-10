@@ -272,6 +272,7 @@ func Provider() *schema.Provider {
 			"dynatrace_service_failure":                    resources.NewGeneric(export.ResourceTypes.ServiceFailure).Resource(),
 			"dynatrace_service_http_failure":               resources.NewGeneric(export.ResourceTypes.ServiceHTTPFailure).Resource(),
 			"dynatrace_disk_options":                       resources.NewGeneric(export.ResourceTypes.DiskOptions).Resource(),
+			"dynatrace_os_services":                        resources.NewGeneric(export.ResourceTypes.OSServices).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

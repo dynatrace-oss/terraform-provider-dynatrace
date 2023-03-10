@@ -184,6 +184,7 @@ var ResourceTypes = struct {
 	ServiceFailure                      ResourceType
 	ServiceHTTPFailure                  ResourceType
 	DiskOptions                         ResourceType
+	OSServices                          ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -325,6 +326,7 @@ var ResourceTypes = struct {
 	"dynatrace_service_failure",
 	"dynatrace_service_http_failure",
 	"dynatrace_disk_options",
+	"dynatrace_os_services",
 }
 
 type ResourceStatus string

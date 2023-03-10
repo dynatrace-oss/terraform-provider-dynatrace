@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_os_services Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_os_services` covers configuration for monitoring OS services
+---
+
+# dynatrace_os_services (Resource)
+
+## Dynatrace Documentation
+
+- OS services monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/monitoring/os-services
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:os-services-monitoring`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_os_services` downloads all existing OS services monitoring configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/osservicesmonitoring/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

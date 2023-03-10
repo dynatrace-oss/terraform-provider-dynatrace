@@ -1,0 +1,17 @@
+{
+  "alertActivationDuration": 1,
+  "alerting": true,
+  "detectionConditionsLinux": [
+    {
+      "property": "StartupType",
+      "startupCondition": "$eq(enabled)"
+    }
+  ],
+  "enabled": false,
+  "monitoring": false,
+  "name": "Auto-start Linux OS Services",
+  "notInstalledAlerting": false,
+  "scope": "HOST-1234567890000000",
+  "statusConditionLinux": "$eq(failed)",
+  "system": "LINUX"
+}

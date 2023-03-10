@@ -1,0 +1,23 @@
+{
+  "alertActivationDuration": 5,
+  "alerting": true,
+  "detectionConditionsLinux": [
+    {
+      "condition": "$contains(Terraform)",
+      "property": "ServiceName"
+    }
+  ],
+  "enabled": true,
+  "metadata": [
+    {
+      "metadataKey": "TerraformKey",
+      "metadataValue": "TerraformValue"
+    }
+  ],
+  "monitoring": true,
+  "name": "TerraformRule",
+  "notInstalledAlerting": true,
+  "scope": "HOST-1234567890000000",
+  "statusConditionLinux": "$eq(failed)",
+  "system": "LINUX"
+}
