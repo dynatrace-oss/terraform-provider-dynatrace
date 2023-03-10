@@ -126,13 +126,13 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 			found = true
 		}
 		m1 = regexp.MustCompile(fmt.Sprintf(`management_zones = \[(.*)\"%s\"(.*)\]`, resource.Name))
-		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`management_zones = [ $1"%s"$2 ]`, fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName)))
+		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`management_zones = [ $1"%s"$2 ]`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
 		}
 		m1 = regexp.MustCompile(fmt.Sprintf(`mzName\((.*)"%s"(.*)\)`, resource.Name))
-		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`mzName($1"%s"$2)`, fmt.Sprintf(replacePattern, me.resourceType, resource.UniqueName)))
+		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`mzName($1"%s"$2)`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
