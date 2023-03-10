@@ -24,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 ```terraform
 resource "dynatrace_service_failure" "#name#" {
   enabled    = true
-  service_id = "SERVICE-1234567890000000"
+  service_id = "SERVICE-D892CFE7DFAB0D08"
   exception_rules {
     ignore_all_exceptions         = false
     ignore_span_failure_detection = true
