@@ -112,9 +112,6 @@ func (me *Resource) GetFileName() string {
 }
 
 func (me *Resource) GetFile() string {
-	if me.Flawed {
-		return path.Join(me.Module.GetFlawedFolder(), me.GetFileName())
-	}
 	return path.Join(me.Module.GetFolder(), me.GetFileName())
 }
 
@@ -122,11 +119,8 @@ func (me *Resource) GetAttentionFile() string {
 	return path.Join(me.Module.GetAttentionFolder(false), me.GetFileName())
 }
 
-func (me *Resource) CreateFlawedFile() (*os.File, error) {
-	flawedFile := path.Join(me.Module.GetFlawedFolder(false), me.GetFileName())
-	absdir, _ := filepath.Abs(path.Dir(flawedFile))
-	os.MkdirAll(absdir, os.ModePerm)
-	return os.Create(flawedFile)
+func (me *Resource) GetFlawedFile() string {
+	return path.Join(me.Module.GetFlawedFolder(false), me.GetFileName())
 }
 
 func (me *Resource) Download() error {
@@ -226,6 +220,13 @@ func (me *Resource) Download() error {
 		orig, _ := filepath.Abs(me.GetFile())
 		att, _ := filepath.Abs(me.GetAttentionFile())
 		absdir, _ := filepath.Abs(path.Dir(me.GetAttentionFile()))
+		os.MkdirAll(absdir, os.ModePerm)
+		os.Link(orig, att)
+	}
+	if me.Flawed && me.Status != ResourceStati.Erronous {
+		orig, _ := filepath.Abs(me.GetFile())
+		att, _ := filepath.Abs(me.GetFlawedFile())
+		absdir, _ := filepath.Abs(path.Dir(me.GetFlawedFile()))
 		os.MkdirAll(absdir, os.ModePerm)
 		os.Link(orig, att)
 	}
