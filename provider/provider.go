@@ -28,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
+	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
@@ -125,6 +126,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_group":                 ds_iam_groups.DataSource(),
 			"dynatrace_entity":                    entity.DataSource(),
 			"dynatrace_entities":                  entities.DataSource(),
+			"dynatrace_iam_user":                  ds_iam_users.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
