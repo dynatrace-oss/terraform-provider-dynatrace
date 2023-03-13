@@ -206,6 +206,16 @@ func (me *defaultService[T]) Create(v T) (*Stub, error) {
 func (me *defaultService[T]) create(v T) (*Stub, error) {
 	var err error
 
+	if me.options != nil && me.options.Duplicates != nil {
+		dupStub, dupErr := me.options.Duplicates(me, v)
+		if dupErr != nil {
+			return nil, dupErr
+		}
+		if dupStub != nil {
+			return dupStub, nil
+		}
+	}
+
 	client := me.client
 	req := client.Post(me.createURL(v), v).Expect(200, 201)
 

@@ -40,6 +40,7 @@ type ServiceOptions[T Settings] struct {
 	HijackOnCreate func(err error, service RService[T], v T) (*Stub, error)
 	Lock           func()
 	Unlock         func()
+	Duplicates     func(service RService[T], v T) (*Stub, error)
 }
 
 func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T) (*Stub, error)) *ServiceOptions[T] {
@@ -84,6 +85,11 @@ func (me *ServiceOptions[T]) WithOnChanged(onChanged func(rest.Client, string, T
 }
 func (me *ServiceOptions[T]) WithDeleteRetry(deleteRetry func(id string, err error) (bool, error)) *ServiceOptions[T] {
 	me.DeleteRetry = deleteRetry
+	return me
+}
+
+func (me *ServiceOptions[T]) WithDuplicates(fnDuplicates func(service RService[T], v T) (*Stub, error)) *ServiceOptions[T] {
+	me.Duplicates = fnDuplicates
 	return me
 }
 
