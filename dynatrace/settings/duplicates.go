@@ -9,11 +9,11 @@ const DYNATRACE_DUPLICATE_REJECT = "DYNATRACE_DUPLICATE_REJECT"
 const DYNATRACE_DUPLICATE_HIJACK = "DYNATRACE_DUPLICATE_HIJACK"
 
 func RejectDuplicate(resourceNames ...string) bool {
-	return envVarContains(os.Getenv(DYNATRACE_DUPLICATE_REJECT), resourceNames...)
+	return envVarContains(DYNATRACE_DUPLICATE_REJECT, resourceNames...)
 }
 
 func HijackDuplicate(resourceNames ...string) bool {
-	return envVarContains(os.Getenv(DYNATRACE_DUPLICATE_HIJACK), resourceNames...)
+	return envVarContains(DYNATRACE_DUPLICATE_HIJACK, resourceNames...)
 }
 
 func envVarContains(envVar string, search ...string) bool {
