@@ -18,6 +18,8 @@
 package processgroups
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups/settings"
@@ -30,6 +32,33 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*processgro
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*processgroups.NamingRule](BasePath),
+		settings.DefaultServiceOptions[*processgroups.NamingRule](BasePath).WithDuplicates(Duplicates),
 	)
+}
+
+func Duplicates(service settings.RService[*processgroups.NamingRule], v *processgroups.NamingRule) (*settings.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_processgroup_naming") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("A Process Group Naming Rule named '%s' already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_processgroup_naming") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
