@@ -18,6 +18,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services/settings"
@@ -30,6 +32,33 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*services.N
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*services.NamingRule](BasePath),
+		settings.DefaultServiceOptions[*services.NamingRule](BasePath).WithDuplicates(Duplicates),
 	)
+}
+
+func Duplicates(service settings.RService[*services.NamingRule], v *services.NamingRule) (*settings.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_service_naming") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("A Service Naming Rule named '%s' already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_service_naming") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
