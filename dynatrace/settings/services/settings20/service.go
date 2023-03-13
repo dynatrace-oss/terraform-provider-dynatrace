@@ -159,6 +159,17 @@ type Matcher interface {
 }
 
 func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
+
+	if me.options != nil && me.options.Duplicates != nil {
+		dupStub, dupErr := me.options.Duplicates(me, v)
+		if dupErr != nil {
+			return nil, dupErr
+		}
+		if dupStub != nil {
+			return dupStub, nil
+		}
+	}
+
 	// Special handling for settings with a method named Match(v any) bool
 	// It signals that instead of creating a new record the existing ones on the remote
 	// should be investigated - and if a match exists the original state should get persisted

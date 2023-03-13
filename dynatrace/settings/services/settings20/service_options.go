@@ -25,4 +25,5 @@ type ServiceOptions[T settings.Settings] struct {
 	HijackOnCreate func(err error, service settings.RService[T], v T) (*settings.Stub, error)
 	CreateRetry    func(v T, err error) T
 	UpdateRetry    func(v T, err error) T
+	Duplicates     func(service settings.RService[T], v T) (*settings.Stub, error)
 }
