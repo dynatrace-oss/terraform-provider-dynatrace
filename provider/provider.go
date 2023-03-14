@@ -276,6 +276,7 @@ func Provider() *schema.Provider {
 			"dynatrace_disk_options":                       resources.NewGeneric(export.ResourceTypes.DiskOptions).Resource(),
 			"dynatrace_os_services":                        resources.NewGeneric(export.ResourceTypes.OSServices).Resource(),
 			"dynatrace_extension_execution_controller":     resources.NewGeneric(export.ResourceTypes.ExtensionExecutionController).Resource(),
+			"dynatrace_nettracer":                          resources.NewGeneric(export.ResourceTypes.NetTracerTraffic).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -54,6 +54,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/nettracer/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
@@ -688,6 +689,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.ExtensionExecutionController: NewResourceDescriptor(
 		local.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.NetTracerTraffic: NewResourceDescriptor(
+		traffic.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 	),

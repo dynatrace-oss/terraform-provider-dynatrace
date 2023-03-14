@@ -1,0 +1,35 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "NetTracer is an open source tool for tracing TCP events and collecting network connection metrics on Linux.",
+	"displayName": "NetTracer traffic",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"netTracer": {
+			"default": false,
+			"description": "When disabled, OneAgent won't use NetTracer to collect network data from containers. Disabled by default. Applies only to Linux hosts. Requires OneAgent 1.231+.",
+			"displayName": "Enable NetTracer traffic network monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.231"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:monitoring"
+	],
+	"schemaId": "builtin:nettracer.traffic",
+	"types": {},
+	"version": "1.0.1"
+}

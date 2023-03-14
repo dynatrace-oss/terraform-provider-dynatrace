@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_nettracer Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_nettracer` covers configuration for NetTracer traffic
+---
+
+# dynatrace_nettracer (Resource)
+
+## Dynatrace Documentation
+
+- Extended network monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/networks/network-monitoring-with-nettracer
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:nettracer.traffic`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_nettracer` downloads all existing NetTracer traffic configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/nettracer/traffic/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
