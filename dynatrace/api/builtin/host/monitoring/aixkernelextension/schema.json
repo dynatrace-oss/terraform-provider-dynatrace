@@ -1,0 +1,42 @@
+{
+	"allowedScopes": [
+		"HOST"
+	],
+	"description": "Dynatrace can automatically inject OneAgent deep code-monitoring modules for AIX monitoring. Otherwise, manual instrumentation is required for the monitoring of Java, Apache, WebLogic, and Websphere applications on AIX. For details, see [Install OneAgent on AIX](https://dt-url.net/l24t0pm1).",
+	"displayName": "AIX kernel extension",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Allow AIX kernel extension",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "useGlobalSettings",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"useGlobalSettings": {
+			"default": true,
+			"description": "",
+			"displayName": "Use global settings",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:host.monitoring.aix-kernel-extension",
+	"types": {},
+	"version": "1"
+}
