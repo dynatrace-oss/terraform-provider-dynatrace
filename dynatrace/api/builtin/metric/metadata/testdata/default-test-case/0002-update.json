@@ -1,0 +1,7 @@
+{
+    "dimensions": [],
+    "displayName": "${randomize}",
+    "metricId": "metric-func:slo.terraform-test",
+    "tags": [],
+    "unit": "ratio"
+}

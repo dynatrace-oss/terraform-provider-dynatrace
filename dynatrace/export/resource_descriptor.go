@@ -41,6 +41,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
@@ -701,6 +702,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AIXExtension: NewResourceDescriptor(
 		aixkernelextension.Service,
 		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.MetricMetadata: NewResourceDescriptor(
+		metadata.Service,
 	),
 }
 

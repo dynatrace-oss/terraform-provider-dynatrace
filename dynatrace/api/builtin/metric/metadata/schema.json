@@ -1,0 +1,380 @@
+{
+	"allowedScopes": [
+		"metric"
+	],
+	"constraints": [
+		{
+			"customMessage": "Setting and changing meta information is only supported for non-builtin metrics.",
+			"customValidatorId": "is-custom-metric-key",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "[Custom metrics metadata](https://dt-url.net/k603stq \"Custom metrics metadata\") allows you to provide additional information for your metric.\n",
+	"displayName": "Metric metadata",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"UnitDisplayFormat": {
+			"description": "",
+			"displayName": "UnitDisplayFormat",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Binary",
+					"value": "binary"
+				},
+				{
+					"displayName": "Decimal",
+					"value": "decimal"
+				}
+			],
+			"type": "enum"
+		},
+		"ValueType": {
+			"description": "",
+			"displayName": "ValueType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Error",
+					"value": "error"
+				},
+				{
+					"displayName": "Score",
+					"value": "score"
+				},
+				{
+					"displayName": "Unknown",
+					"value": "unknown"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 1023,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"dimensions": {
+			"constraints": [
+				{
+					"customMessage": "Each dimension must have a unique dimension key",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"key"
+					]
+				}
+			],
+			"description": "Define metadata per metric dimension.",
+			"displayName": "Metric dimensions",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Dimension"
+				}
+			},
+			"maxObjects": 80,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"displayName": {
+			"constraints": [
+				{
+					"maxLength": 300,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Display name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"metricProperties": {
+			"description": "",
+			"displayName": "Metric properties",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/MetricProperties"
+			}
+		},
+		"sourceEntityType": {
+			"constraints": [
+				{
+					"maxLength": 300,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "source-entity-type-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Source entity type",
+			"documentation": "Specifies which entity dimension should be used as the primary dimension. The property can only be configured for metrics ingested with the Metrics API.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"tags": {
+			"constraints": [
+				{
+					"customMessage": "Each tag must be unique (case insensitive)",
+					"customValidatorId": "unique-tag-list-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Tags",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"type": "NOT_BLANK"
+					},
+					{
+						"customMessage": "The provided tag is invalid",
+						"customValidatorId": "metric-tag-validator",
+						"type": "CUSTOM_VALIDATOR_REF"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 50,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"unit": {
+			"constraints": [
+				{
+					"maxLength": 63,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Only uppercase and lowercase letters are allowed in units",
+					"pattern": "^[a-zA-Z]+$",
+					"type": "PATTERN"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "unitMetadataDatasource",
+				"resetValue": "NEVER",
+				"useApiSearch": true,
+				"validate": false
+			},
+			"default": "Unspecified",
+			"description": "",
+			"displayName": "Unit",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"unitDisplayFormat": {
+			"description": "",
+			"displayName": "Unit display format",
+			"documentation": "The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\nBinary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\nDecimal: 1 MB = 1000 kB = 1,000,000 bytes\n\nIf not set, the decimal system is used.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"precondition": {
+				"pattern": "^[bB][iI][tT]$|^[bB][iI][tT][pP][eE][rR][sS][eE][cC][oO][nN][dD]$|^[bB][iI][tT][pP][eE][rR][mM][iI][nN][uU][tT][eE]$|^[bB][iI][tT][pP][eE][rR][hH][oO][uU][rR]$|^[bB][yY][tT][eE]$|^[bB][yY][tT][eE][pP][eE][rR][sS][eE][cC][oO][nN][dD]$|^[bB][yY][tT][eE][pP][eE][rR][mM][iI][nN][uU][tT][eE]$|^[bB][yY][tT][eE][pP][eE][rR][hH][oO][uU][rR]$",
+				"property": "unit",
+				"type": "REGEX_MATCH"
+			},
+			"type": {
+				"$ref": "#/enums/UnitDisplayFormat"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:metrics"
+	],
+	"schemaId": "builtin:metric.metadata",
+	"types": {
+		"Dimension": {
+			"description": "",
+			"displayName": "Dimension",
+			"documentation": "",
+			"properties": {
+				"displayName": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Display name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"key": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "The provided dimension key is invalid",
+							"customValidatorId": "dimension-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Dimension key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key} - {displayName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetricProperties": {
+			"constraints": [
+				{
+					"properties": [
+						"maxValue",
+						"minValue"
+					],
+					"type": "GREATER_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "MetricProperties",
+			"documentation": "",
+			"properties": {
+				"impactRelevant": {
+					"description": "",
+					"displayName": "Impact relevant",
+					"documentation": "Whether (true or false) the metric is relevant to a problem's impact.\n\nAn impact-relevant metric is highly dependent on other metrics and changes because an underlying root-cause metric has changed.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
+				"latency": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"description": "",
+					"displayName": "Latency",
+					"documentation": "The latency of the metric, in minutes. \n\n The latency is the expected reporting delay (for example, caused by constraints of cloud vendors or other third-party data sources) between the observation of a metric data point and its availability in Dynatrace. \n\nThe allowed value range is from 1 to 60 minutes.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "integer"
+				},
+				"maxValue": {
+					"description": "",
+					"displayName": "Maximum value",
+					"documentation": "The maximum allowed value of the metric.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "float"
+				},
+				"minValue": {
+					"description": "",
+					"displayName": "Minimum value",
+					"documentation": "The minimum allowed value of the metric.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "float"
+				},
+				"rootCauseRelevant": {
+					"description": "",
+					"displayName": "Root cause relevant",
+					"documentation": "Whether (true or false) the metric is related to a root cause of a problem.\n\nA root-cause relevant metric represents a strong indicator for a faulty component.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
+				"valueType": {
+					"default": "unknown",
+					"description": "",
+					"displayName": "Value type",
+					"documentation": "The type of the metric's value. You have these options:\n\nscore: A score metric is a metric where high values indicate a good situation, while low values indicate trouble. An example of such a metric is a success rate.\n\nerror: An error metric is a metric where high values indicate trouble, while low values indicate a good situation. An example of such a metric is an error count.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ValueType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "4.24"
+}

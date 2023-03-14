@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_metric_metadata Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_metric_metadata` covers configuration for metric metadata
+---
+
+# dynatrace_metric_metadata (Resource)
+
+## Dynatrace Documentation
+
+- Metrics - https://www.dynatrace.com/support/help/observe-and-explore/metrics
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:metric.metadata`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_metric_metadata` downloads all existing metric metadata configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/metric/metadata/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

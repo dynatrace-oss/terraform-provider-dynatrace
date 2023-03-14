@@ -188,6 +188,7 @@ var ResourceTypes = struct {
 	ExtensionExecutionController        ResourceType
 	NetTracerTraffic                    ResourceType
 	AIXExtension                        ResourceType
+	MetricMetadata                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -333,6 +334,7 @@ var ResourceTypes = struct {
 	"dynatrace_extension_execution_controller",
 	"dynatrace_nettracer",
 	"dynatrace_aix_extension",
+	"dynatrace_metric_metadata",
 }
 
 type ResourceStatus string
