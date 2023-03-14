@@ -279,6 +279,7 @@ func Provider() *schema.Provider {
 			"dynatrace_nettracer":                          resources.NewGeneric(export.ResourceTypes.NetTracerTraffic).Resource(),
 			"dynatrace_aix_extension":                      resources.NewGeneric(export.ResourceTypes.AIXExtension).Resource(),
 			"dynatrace_metric_metadata":                    resources.NewGeneric(export.ResourceTypes.MetricMetadata).Resource(),
+			"dynatrace_metric_query":                       resources.NewGeneric(export.ResourceTypes.MetricQuery).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

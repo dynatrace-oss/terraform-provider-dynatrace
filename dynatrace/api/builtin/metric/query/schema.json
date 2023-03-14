@@ -1,0 +1,45 @@
+{
+	"allowedScopes": [
+		"metric"
+	],
+	"description": "A stored metric query allows you to calculate the metrics' values through a metric expression.",
+	"displayName": "Metric query",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"metricSelector": {
+			"constraints": [
+				{
+					"maxLength": 6000,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "stored-query-selector-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "stored-query-requires-func-metric-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Query",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics"
+	],
+	"schemaId": "builtin:metric.query",
+	"types": {},
+	"version": "4.0.2"
+}

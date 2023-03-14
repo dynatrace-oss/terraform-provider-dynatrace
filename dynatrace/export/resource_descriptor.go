@@ -42,6 +42,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/query"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
@@ -703,9 +704,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		aixkernelextension.Service,
 		Coalesce(Dependencies.Host),
 	),
-	ResourceTypes.MetricMetadata: NewResourceDescriptor(
-		metadata.Service,
-	),
+	ResourceTypes.MetricMetadata: NewResourceDescriptor(metadata.Service),
+	ResourceTypes.MetricQuery:    NewResourceDescriptor(query.Service),
 }
 
 var BlackListedResources = []ResourceType{

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_metric_query Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_metric_query` covers configuration for metric query
+---
+
+# dynatrace_metric_query (Resource)
+
+## Dynatrace Documentation
+
+- Metrics - https://www.dynatrace.com/support/help/observe-and-explore/metrics
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:metric.query`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_metric_query` downloads all existing metric query configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/metric/query/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
