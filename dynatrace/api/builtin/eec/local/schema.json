@@ -1,0 +1,102 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Extension Execution Controller configuration for OneAgent deployment",
+	"displayName": "Extension Execution Controller",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"performanceProfile": {
+			"description": "",
+			"displayName": "Performance profile",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Conservative settings.",
+					"displayName": "Default",
+					"value": "DEFAULT"
+				},
+				{
+					"description": "High performance profile.",
+					"displayName": "High limits",
+					"value": "HIGH"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enable Extension Execution Controller",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ingestActive": {
+			"default": true,
+			"description": "",
+			"displayName": "Enable local PIPE/HTTP metric and Log Ingest API",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"performanceProfile": {
+			"default": "DEFAULT",
+			"description": "Select performance profile for Extension Execution Controller [Documentation](https://www.dynatrace.com/support/help/shortlink/extensions-concepts#resource-consumption \"More about performance profiles\")",
+			"displayName": "Performance profile",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.243",
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/enums/performanceProfile"
+			}
+		},
+		"statsdActive": {
+			"default": true,
+			"description": "",
+			"displayName": "Enable Dynatrace StatsD",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:eec.local",
+	"types": {},
+	"version": "0.0.3"
+}

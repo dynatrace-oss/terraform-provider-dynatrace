@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "ingestActive": true,
+  "performanceProfile": "HIGH",
+  "scope": "HOST-1234567890000000",
+  "statsdActive": true
+}
