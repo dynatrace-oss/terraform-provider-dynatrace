@@ -32,6 +32,7 @@ import (
 	mobile_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
 	mobile_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
@@ -710,6 +711,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MetricMetadata:  NewResourceDescriptor(metadata.Service),
 	ResourceTypes.MetricQuery:     NewResourceDescriptor(query.Service),
 	ResourceTypes.ActiveGateToken: NewResourceDescriptor(activegatetoken.Service),
+	ResourceTypes.AuditLog:        NewResourceDescriptor(auditlog.Service),
 }
 
 var BlackListedResources = []ResourceType{

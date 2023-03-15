@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "If enabled, Dynatrace logs all audit-related events, including logins/logouts, configuration changes, and API token changes. Please note that audit logs include personal identifiable information (PII) such as email addresses and IP addresses of Dynatrace users. Audit events can be accessed via the Dynatrace REST API.",
+	"displayName": "Log audit events",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Log all audit-related system events",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:audit-log",
+	"types": {},
+	"version": "1"
+}

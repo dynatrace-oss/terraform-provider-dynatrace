@@ -282,6 +282,7 @@ func Provider() *schema.Provider {
 			"dynatrace_metric_metadata":                    resources.NewGeneric(export.ResourceTypes.MetricMetadata).Resource(),
 			"dynatrace_metric_query":                       resources.NewGeneric(export.ResourceTypes.MetricQuery).Resource(),
 			"dynatrace_activegate_token":                   resources.NewGeneric(export.ResourceTypes.ActiveGateToken).Resource(),
+			"dynatrace_audit_log":                          resources.NewGeneric(export.ResourceTypes.AuditLog).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
