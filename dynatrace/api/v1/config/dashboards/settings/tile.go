@@ -177,6 +177,19 @@ func (me *Tile) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
 			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				if len(newValue) > 0 {
+					m := map[string]any{}
+					json.Unmarshal([]byte(newValue), &m)
+					if len(m) != 1 {
+						return false
+					}
+					if v, ok := m["isAutoRefreshDisabled"]; ok && !v.(bool) {
+						return true
+					}
+				}
+				return false
+			},
 		},
 	}
 }
