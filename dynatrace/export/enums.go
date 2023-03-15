@@ -191,6 +191,7 @@ var ResourceTypes = struct {
 	AIXExtension                        ResourceType
 	MetricMetadata                      ResourceType
 	MetricQuery                         ResourceType
+	ActiveGateToken                     ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -339,6 +340,7 @@ var ResourceTypes = struct {
 	"dynatrace_aix_extension",
 	"dynatrace_metric_metadata",
 	"dynatrace_metric_query",
+	"dynatrace_activegate_token",
 }
 
 type ResourceStatus string

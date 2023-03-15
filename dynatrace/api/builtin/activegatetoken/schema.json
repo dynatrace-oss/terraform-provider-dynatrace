@@ -1,0 +1,47 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace assures out-of-the-box connection security between Dynatrace environment’s elements.",
+	"displayName": "Network security",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"authTokenEnforcementManuallyEnabled": {
+			"constraints": [
+				{
+					"customMessage": "Validation already enforced by system. Changing property will have no effect.",
+					"customValidatorId": "validation-already-enforced",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": false,
+			"description": "",
+			"displayName": "Manually enforce ActiveGate token authentication",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"expiringTokenNotificationsEnabled": {
+			"default": true,
+			"description": "Note: ActiveGate tokens notifications are sent only when you deployed ActiveGate tokens with expiration dates in your environment and notifications are defined ([see notification settings](/ui/settings/builtin:problem.notifications))",
+			"displayName": "Enable notifications about ActiveGate tokens expiration dates",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:activegate-token",
+	"types": {},
+	"version": "1.1"
+}

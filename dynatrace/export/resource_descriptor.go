@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
@@ -706,8 +707,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		aixkernelextension.Service,
 		Coalesce(Dependencies.Host),
 	),
-	ResourceTypes.MetricMetadata: NewResourceDescriptor(metadata.Service),
-	ResourceTypes.MetricQuery:    NewResourceDescriptor(query.Service),
+	ResourceTypes.MetricMetadata:  NewResourceDescriptor(metadata.Service),
+	ResourceTypes.MetricQuery:     NewResourceDescriptor(query.Service),
+	ResourceTypes.ActiveGateToken: NewResourceDescriptor(activegatetoken.Service),
 }
 
 var BlackListedResources = []ResourceType{

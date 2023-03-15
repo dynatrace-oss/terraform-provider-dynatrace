@@ -1,0 +1,4 @@
+{
+    "authTokenEnforcementManuallyEnabled": false,
+    "expiringTokenNotificationsEnabled": true
+}
