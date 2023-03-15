@@ -96,6 +96,7 @@ import (
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
@@ -481,9 +482,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		order.Service,
 		Dependencies.ID(ResourceTypes.RequestNaming),
 	),
-	ResourceTypes.IAMUser:  NewResourceDescriptor(users.Service),
-	ResourceTypes.IAMGroup: NewResourceDescriptor(groups.Service),
-	ResourceTypes.DDUPool:  NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMUser:       NewResourceDescriptor(users.Service),
+	ResourceTypes.IAMGroup:      NewResourceDescriptor(groups.Service),
+	ResourceTypes.IAMPermission: NewResourceDescriptor(permissions.Service),
+	ResourceTypes.DDUPool:       NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -716,6 +718,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.Dashboard,         // taken care of dynatrace_json_dashboard
 	ResourceTypes.IAMUser,           // not sure whether to migrate
 	ResourceTypes.IAMGroup,          // not sure whether to migrate
+	ResourceTypes.IAMPermission,     // not sure whether to migrate
 
 	// excluding by default
 	ResourceTypes.JSONDashboard, // may replace dynatrace_dashboard in the future

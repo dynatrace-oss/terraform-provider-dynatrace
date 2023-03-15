@@ -110,6 +110,7 @@ var ResourceTypes = struct {
 	RequestNamings                      ResourceType
 	IAMUser                             ResourceType
 	IAMGroup                            ResourceType
+	IAMPermission                       ResourceType
 	ProcessGroupAnomalies               ResourceType
 	DDUPool                             ResourceType
 	ProcessGroupAlerting                ResourceType
@@ -257,6 +258,7 @@ var ResourceTypes = struct {
 	"dynatrace_request_namings",
 	"dynatrace_iam_user",
 	"dynatrace_iam_group",
+	"dynatrace_iam_permission",
 	"dynatrace_pg_anomalies",
 	"dynatrace_ddu_pool",
 	"dynatrace_pg_alerting",
