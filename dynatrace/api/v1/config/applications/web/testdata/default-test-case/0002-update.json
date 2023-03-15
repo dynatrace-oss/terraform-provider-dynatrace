@@ -98,12 +98,6 @@
         "scroll": true,
         "additionalEventCapturedAsUserInput": ""
       }
-    },
-    "browserRestrictionSettings": {
-      "mode": "EXCLUDE"
-    },
-    "ipAddressRestrictionSettings": {
-      "mode": "EXCLUDE"
     }
   },
   "name": "${randomize}",
