@@ -193,6 +193,7 @@ var ResourceTypes = struct {
 	MetricQuery                         ResourceType
 	ActiveGateToken                     ResourceType
 	AuditLog                            ResourceType
+	K8sClusterAnomalies                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -343,6 +344,7 @@ var ResourceTypes = struct {
 	"dynatrace_metric_query",
 	"dynatrace_activegate_token",
 	"dynatrace_audit_log",
+	"dynatrace_k8s_cluster_anomalies",
 }
 
 type ResourceStatus string

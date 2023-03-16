@@ -1,0 +1,23 @@
+{
+    "scope": "KUBERNETES_CLUSTER-1234567890000000",
+    "cpuRequestsSaturation": {
+      "configuration": {
+        "observationPeriodInMinutes": 15,
+        "samplePeriodInMinutes": 10,
+        "threshold": 90
+      },
+      "enabled": true
+    },
+    "memoryRequestsSaturation": {
+      "enabled": false
+    },
+    "monitoringIssues": {
+      "enabled": false
+    },
+    "podsSaturation": {
+      "enabled": false
+    },
+    "readinessIssues": {
+      "enabled": false
+    }
+  }

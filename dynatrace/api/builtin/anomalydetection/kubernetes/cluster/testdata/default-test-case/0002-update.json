@@ -1,0 +1,41 @@
+{
+    "scope": "KUBERNETES_CLUSTER-1234567890000000",
+    "cpuRequestsSaturation": {
+      "configuration": {
+        "observationPeriodInMinutes": 20,
+        "samplePeriodInMinutes": 15,
+        "threshold": 95
+      },
+      "enabled": true
+    },
+    "memoryRequestsSaturation": {
+      "configuration": {
+        "observationPeriodInMinutes": 20,
+        "samplePeriodInMinutes": 15,
+        "threshold": 95
+      },
+      "enabled": true
+    },
+    "monitoringIssues": {
+      "configuration": {
+        "observationPeriodInMinutes": 35,
+        "samplePeriodInMinutes": 20
+      },
+      "enabled": true
+    },
+    "podsSaturation": {
+      "configuration": {
+        "observationPeriodInMinutes": 6,
+        "samplePeriodInMinutes": 4,
+        "threshold": 95
+      },
+      "enabled": true
+    },
+    "readinessIssues": {
+      "configuration": {
+        "observationPeriodInMinutes": 5,
+        "samplePeriodInMinutes": 4
+      },
+      "enabled": true
+    }
+  }

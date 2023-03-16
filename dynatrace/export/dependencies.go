@@ -56,6 +56,7 @@ var Dependencies = struct {
 	ApplicationMethod       Dependency
 	SyntheticTest           Dependency
 	HttpCheck               Dependency
+	K8sCluster              Dependency
 }{
 	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -75,6 +76,7 @@ var Dependencies = struct {
 	ApplicationMethod:       &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
 	SyntheticTest:           &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
 	HttpCheck:               &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
+	K8sCluster:              &entityds{"KUBERNETES_CLUSTER", "KUBERNETES_CLUSTER-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {
