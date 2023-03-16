@@ -35,14 +35,16 @@ func (me *GroupConfig) Schema() map[string]*schema.Schema {
 			Description: "If `true`, then the group has the cluster administrator rights",
 		},
 		"access_account": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Description: "If `true`, then the group has the access account rights",
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Description:      "If `true`, then the group has the access account rights",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"manage_account": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Description: "If `true`, then the group has the manage account rights",
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Description:      "If `true`, then the group has the manage account rights",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"ldap_groups": {
 			Type:        schema.TypeSet,
