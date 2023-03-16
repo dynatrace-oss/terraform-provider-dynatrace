@@ -194,6 +194,7 @@ var ResourceTypes = struct {
 	ActiveGateToken                     ResourceType
 	AuditLog                            ResourceType
 	K8sClusterAnomalies                 ResourceType
+	K8sNamespaceAnomalies               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -345,6 +346,7 @@ var ResourceTypes = struct {
 	"dynatrace_activegate_token",
 	"dynatrace_audit_log",
 	"dynatrace_k8s_cluster_anomalies",
+	"dynatrace_k8s_namespace_anomalies",
 }
 
 type ResourceStatus string
