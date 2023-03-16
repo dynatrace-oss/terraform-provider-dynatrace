@@ -44,6 +44,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
+	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 
@@ -179,6 +180,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_namings":                    resources.NewGeneric(export.ResourceTypes.RequestNamings).Resource(),
 			"dynatrace_user_group":                         usergroups.Resource(),
 			"dynatrace_user":                               users.Resource(),
+			"dynatrace_mgmz_permission":                    mgmzperm.Resource(),
 			"dynatrace_key_requests":                       resources.NewGeneric(export.ResourceTypes.KeyRequests).Resource(),
 			"dynatrace_queue_manager":                      resources.NewGeneric(export.ResourceTypes.QueueManager).Resource(),
 			"dynatrace_ibm_mq_filters":                     resources.NewGeneric(export.ResourceTypes.IBMMQFilters).Resource(),

@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_mgmz_permission Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_mgmz_permission` covers permissions to user groups / management zones within managed environments
+---
+
+# dynatrace_mgmz_permission (Resource)
+
+## Dynatrace Documentation
+
+- Manage Groups and Permissions - https://www.dynatrace.com/support/help/manage/access-control/user-management-and-sso/manage-groups-and-permissions#mz
+
+- User management API - https://www.dynatrace.com/support/help/dynatrace-api/account-management-api/user-management-api
+
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_mgmz_permission" "some-perm" {
+  group = dynatrace_user_group.group-a.id
+  environment = "d85dea6a-4287-49d3-bf62-729274ba7036"
+  management_zone = "982182035185200933"
+  permissions = [ "VIEWER", "REPLAY_SESSION_DATA" ]
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 
