@@ -288,6 +288,7 @@ func Provider() *schema.Provider {
 			"dynatrace_k8s_cluster_anomalies":              resources.NewGeneric(export.ResourceTypes.K8sClusterAnomalies).Resource(),
 			"dynatrace_k8s_namespace_anomalies":            resources.NewGeneric(export.ResourceTypes.K8sNamespaceAnomalies).Resource(),
 			"dynatrace_k8s_node_anomalies":                 resources.NewGeneric(export.ResourceTypes.K8sNodeAnomalies).Resource(),
+			"dynatrace_k8s_workload_anomalies":             resources.NewGeneric(export.ResourceTypes.K8sWorkloadAnomalies).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
