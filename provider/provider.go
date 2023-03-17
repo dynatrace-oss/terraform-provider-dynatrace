@@ -290,6 +290,7 @@ func Provider() *schema.Provider {
 			"dynatrace_k8s_node_anomalies":                 resources.NewGeneric(export.ResourceTypes.K8sNodeAnomalies).Resource(),
 			"dynatrace_k8s_workload_anomalies":             resources.NewGeneric(export.ResourceTypes.K8sWorkloadAnomalies).Resource(),
 			"dynatrace_container_builtin_rule":             resources.NewGeneric(export.ResourceTypes.ContainerBuiltinRule).Resource(),
+			"dynatrace_container_rule":                     resources.NewGeneric(export.ResourceTypes.ContainerRule).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

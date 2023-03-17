@@ -198,6 +198,7 @@ var ResourceTypes = struct {
 	K8sNodeAnomalies                    ResourceType
 	K8sWorkloadAnomalies                ResourceType
 	ContainerBuiltinRule                ResourceType
+	ContainerRule                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -353,6 +354,7 @@ var ResourceTypes = struct {
 	"dynatrace_k8s_node_anomalies",
 	"dynatrace_k8s_workload_anomalies",
 	"dynatrace_container_builtin_rule",
+	"dynatrace_container_rule",
 }
 
 type ResourceStatus string
