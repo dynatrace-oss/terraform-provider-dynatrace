@@ -1,0 +1,64 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace disables monitoring of containers that do not run any applications.",
+	"displayName": "Built-in container monitoring rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.171"
+	},
+	"multiObject": false,
+	"properties": {
+		"ignoreDockerPauseContainer": {
+			"default": true,
+			"description": "Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.",
+			"displayName": "Do not monitor containers where Docker stripped image name contains 'pause-amd64'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ignoreKubernetesPauseContainer": {
+			"default": true,
+			"description": "Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.",
+			"displayName": "Do not monitor containers where Kubernetes container name equals 'POD'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ignoreOpenShiftBuildPodName": {
+			"default": true,
+			"description": "Disable monitoring of intermediate containers created during image build.",
+			"displayName": "Do not monitor containers where Kubernetes full pod name ends with '-build'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ignoreOpenShiftSdnNamespace": {
+			"default": true,
+			"description": "Disable monitoring of platform internal containers in the openshift-sdn namespace.",
+			"displayName": "Do not monitor containers where Kubernetes namespace equals 'openshift-sdn'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.containers",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:container.built-in-monitoring-rule",
+	"types": {},
+	"version": "0.0.2"
+}
