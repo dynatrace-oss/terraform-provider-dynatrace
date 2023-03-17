@@ -1,0 +1,111 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Enable/disable automatic injection of code modules into specific containers. ",
+	"displayName": "Container monitoring",
+	"documentation": "Dynatrace OneAgent automatically monitors all processes that are running on your monitored hosts. Within container environments (for example, Kubernetes, OpenShift, Cloud Foundry, or Docker), OneAgent automatically injects code modules into containerized processes to provide out of the box full-stack visibility into applications running within containers. Enabling auto-injection provides deep monitoring for all processes within containers, at both the request- and PurePath levels. If disabled, OneAgent will not inject into a container of a specific type at all. Dynatrace provides complete control over automatic injection of code modules into the container technologies listed below. For full details see [Supported container versions](https://dt-url.net/lmy0p0j \"Visit Dynatrace support center\").",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"boshProcessManager": {
+			"default": true,
+			"description": "Platform: Cloud Foundry\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.159",
+			"displayName": "BOSH Process Manager (BPM) containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.159"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"containerd": {
+			"default": true,
+			"description": "Platform: Kubernetes\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.169",
+			"displayName": "Containerd containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.169"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"crio": {
+			"default": true,
+			"description": "Platform: Kubernetes\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.163",
+			"displayName": "CRI-O containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.163"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"docker": {
+			"default": true,
+			"description": "Platform: Docker and Kubernetes\n\nStatus: Released\n\nOperating system: Linux",
+			"displayName": "Docker containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"dockerWindows": {
+			"default": false,
+			"description": "Platform: Docker\n\nStatus: Early adopter\n\nOperating system: Windows\n\nMin agent version: 1.149",
+			"displayName": "Docker for Windows Server containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.149"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"garden": {
+			"default": true,
+			"description": "Platform: Cloud Foundry\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.133",
+			"displayName": "Garden containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.133"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"winc": {
+			"default": false,
+			"description": "Platform: Cloud Foundry\n\nStatus: Early adopter\n\nOperating system: Windows\n\nMin agent version: 1.175",
+			"displayName": "Winc for Windows Server containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.175"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.containers",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:container.technology",
+	"types": {},
+	"version": "1.0.5"
+}

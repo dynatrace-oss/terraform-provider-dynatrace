@@ -39,6 +39,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
+	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
@@ -738,6 +739,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.ContainerBuiltinRule: NewResourceDescriptor(builtinmonitoringrule.Service),
 	ResourceTypes.ContainerRule:        NewResourceDescriptor(monitoringrule.Service),
+	ResourceTypes.ContainerTechnology: NewResourceDescriptor(
+		containertechnology.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{
