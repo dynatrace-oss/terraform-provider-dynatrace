@@ -1,0 +1,251 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment-default"
+	],
+	"description": "Create rules to capture custom errors and include them in your Apdex calculations or Davis AI problem detection and analysis.\nFor more details, see [Configure custom errors](https://dt-url.net/sh220gh).",
+	"displayName": "Custom errors",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Matcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Everything is matched",
+					"value": "ALL"
+				},
+				{
+					"displayName": "Begins with",
+					"value": "BEGINS_WITH"
+				},
+				{
+					"displayName": "Ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "Contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "Equals",
+					"value": "EQUALS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"errorRules": {
+			"constraints": [
+				{
+					"customMessage": "Duplicate error rule found",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"keyMatcher",
+						"keyPattern",
+						"valueMatcher",
+						"valuePattern"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/CustomErrorRule"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add custom error rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"ignoreCustomErrorsInApdexCalculation": {
+			"default": false,
+			"description": "This setting overrides Apdex settings for individual rules listed below",
+			"displayName": "Ignore custom errors in Apdex calculations",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:rum-errors"
+	],
+	"schemaId": "builtin:rum.web.custom-errors",
+	"types": {
+		"CaptureSettings": {
+			"description": "",
+			"displayName": "CaptureSettings",
+			"documentation": "",
+			"properties": {
+				"capture": {
+					"default": true,
+					"description": "",
+					"displayName": "Capture this error",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"considerForAi": {
+					"default": false,
+					"description": "[View more details](https://dt-url.net/hd580p2k)",
+					"displayName": "Include error in Davis AI problem detection and analysis",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "capture",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"impactApdex": {
+					"default": true,
+					"description": "",
+					"displayName": "Include error in Apdex calculations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "capture",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CustomErrorRule": {
+			"description": "",
+			"displayName": "CustomErrorRule",
+			"documentation": "",
+			"properties": {
+				"captureSettings": {
+					"description": "",
+					"displayName": "Capture settings",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/CaptureSettings"
+					}
+				},
+				"keyMatcher": {
+					"default": "ALL",
+					"description": "",
+					"displayName": "Match key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Matcher"
+					}
+				},
+				"keyPattern": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key pattern",
+					"documentation": "A case-insensitive key pattern",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, my-validation-error"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "ALL",
+							"property": "keyMatcher",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"valueMatcher": {
+					"default": "ALL",
+					"description": "",
+					"displayName": "Match value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Matcher"
+					}
+				},
+				"valuePattern": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value pattern",
+					"documentation": "A case-insensitive value pattern",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, validation failed"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "ALL",
+							"property": "valueMatcher",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{keyMatcher} {keyPattern} {valueMatcher} {valuePattern}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

@@ -31,9 +31,9 @@ type Rules struct {
 	Name                                     string           `json:"-"`
 	IgnoreJavaScriptErrorsInApdexCalculation bool             `json:"ignoreJavaScriptErrorsInApdexCalculation"` // Exclude (`true`) or include (`false`) JavaScript errors in Apdex calculation
 	IgnoreHttpErrorsInApdexCalculation       bool             `json:"ignoreHttpErrorsInApdexCalculation"`       // Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation
-	IgnoreCustomErrorsInApdexCalculation     bool             `json:"ignoreCustomErrorsInApdexCalculation"`     // Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation
+	IgnoreCustomErrorsInApdexCalculation     bool             `json:"ignoreCustomErrorsInApdexCalculation"`     // (Field has overlap with `dynatrace_web_app_custom_errors`) Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation
 	HTTPErrors                               HTTPErrorRules   `json:"httpErrorRules"`                           // An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
-	CustomErrors                             CustomErrorRules `json:"customErrorRules"`                         // An ordered list of custom errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
+	CustomErrors                             CustomErrorRules `json:"customErrorRules"`                         // (Field has overlap with `dynatrace_web_app_custom_errors`) An ordered list of custom errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
 }
 
 func (me *Rules) Schema() map[string]*schema.Schema {
