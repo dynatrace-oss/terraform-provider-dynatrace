@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
 
 type IAMError struct {
@@ -77,8 +79,13 @@ func (me *iamClient) request(url string, method string, expectedResponseCode int
 	var responseBytes []byte
 	var requestBody []byte
 
+	rest.Logger.Println(method, url)
+
 	if requestBody, err = json.Marshal(payload); err != nil {
 		return nil, err
+	}
+	if payload != nil {
+		rest.Logger.Println("  ", string(requestBody))
 	}
 
 	var body io.Reader
@@ -106,6 +113,8 @@ func (me *iamClient) request(url string, method string, expectedResponseCode int
 	if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
 		return nil, err
 	}
+	rest.Logger.Println("  ", httpResponse.StatusCode, string(responseBytes))
+
 	if httpResponse.StatusCode != expectedResponseCode {
 		var iamErr IAMError
 		if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
