@@ -193,6 +193,13 @@ var ResourceTypes = struct {
 	MetricQuery                         ResourceType
 	ActiveGateToken                     ResourceType
 	AuditLog                            ResourceType
+	K8sClusterAnomalies                 ResourceType
+	K8sNamespaceAnomalies               ResourceType
+	K8sNodeAnomalies                    ResourceType
+	K8sWorkloadAnomalies                ResourceType
+	ContainerBuiltinRule                ResourceType
+	ContainerRule                       ResourceType
+	ContainerTechnology                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -343,6 +350,13 @@ var ResourceTypes = struct {
 	"dynatrace_metric_query",
 	"dynatrace_activegate_token",
 	"dynatrace_audit_log",
+	"dynatrace_k8s_cluster_anomalies",
+	"dynatrace_k8s_namespace_anomalies",
+	"dynatrace_k8s_node_anomalies",
+	"dynatrace_k8s_workload_anomalies",
+	"dynatrace_container_builtin_rule",
+	"dynatrace_container_rule",
+	"dynatrace_container_technology",
 }
 
 type ResourceStatus string

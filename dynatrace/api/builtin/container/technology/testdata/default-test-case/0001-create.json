@@ -1,0 +1,10 @@
+{
+    "boshProcessManager": true,
+    "containerd": false,
+    "crio": true,
+    "docker": true,
+    "dockerWindows": true,
+    "garden": false,
+    "scope": "HOST-1234567890000000",
+    "winc": false
+}

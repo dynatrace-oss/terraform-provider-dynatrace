@@ -1,0 +1,6 @@
+{
+    "ignoreDockerPauseContainer": true,
+    "ignoreKubernetesPauseContainer": true,
+    "ignoreOpenShiftBuildPodName": true,
+    "ignoreOpenShiftSdnNamespace": true
+  }

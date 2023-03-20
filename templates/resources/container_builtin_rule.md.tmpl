@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_container_builtin_rule Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_container_builtin_rule` covers configuration for builtin monitoring rules for containers
+---
+
+# dynatrace_container_builtin_rule (Resource)
+
+## Dynatrace Documentation
+
+- Container monitoring rules - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/container-platform-monitoring/container-monitoring-rules
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:container.built-in-monitoring-rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_container_builtin_rule` downloads all existing builtin monitoring rules for containers
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/container/builtinmonitoringrule/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

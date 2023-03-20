@@ -1,0 +1,34 @@
+{
+    "scope": "KUBERNETES_CLUSTER-1234567890000000",
+    "containerRestarts": {
+        "enabled": false
+    },
+    "deploymentStuck": {
+        "configuration": {
+            "observationPeriodInMinutes": 7,
+            "samplePeriodInMinutes": 5
+        },
+        "enabled": true
+    },
+    "notAllPodsReady": {
+        "enabled": false
+    },
+    "pendingPods": {
+        "configuration": {
+            "observationPeriodInMinutes": 17,
+            "samplePeriodInMinutes": 12,
+            "threshold": 3
+        },
+        "enabled": true
+    },
+    "podStuckInTerminating": {
+        "enabled": false
+    },
+    "workloadWithoutReadyPods": {
+        "configuration": {
+            "observationPeriodInMinutes": 7,
+            "samplePeriodInMinutes": 5
+        },
+        "enabled": true
+    }
+}

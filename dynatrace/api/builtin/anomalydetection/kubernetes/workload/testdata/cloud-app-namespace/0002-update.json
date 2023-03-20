@@ -1,0 +1,47 @@
+{
+    "scope": "CLOUD_APPLICATION_NAMESPACE-1234567890000000",
+    "containerRestarts": {
+        "configuration": {
+            "observationPeriodInMinutes": 6,
+            "samplePeriodInMinutes": 4,
+            "threshold": 2
+        },
+        "enabled": true
+    },
+    "deploymentStuck": {
+        "configuration": {
+            "observationPeriodInMinutes": 5,
+            "samplePeriodInMinutes": 4
+        },
+        "enabled": true
+    },
+    "notAllPodsReady": {
+        "configuration": {
+            "observationPeriodInMinutes": 6,
+            "samplePeriodInMinutes": 4
+        },
+        "enabled": true
+    },
+    "pendingPods": {
+        "configuration": {
+            "observationPeriodInMinutes": 16,
+            "samplePeriodInMinutes": 11,
+            "threshold": 2
+        },
+        "enabled": true
+    },
+    "podStuckInTerminating": {
+        "configuration": {
+            "observationPeriodInMinutes": 6,
+            "samplePeriodInMinutes": 4
+        },
+        "enabled": true
+    },
+    "workloadWithoutReadyPods": {
+        "configuration": {
+            "observationPeriodInMinutes": 6,
+            "samplePeriodInMinutes": 4
+        },
+        "enabled": true
+    }
+}

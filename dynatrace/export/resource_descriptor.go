@@ -27,12 +27,19 @@ import (
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
 	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/namespace"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload"
 	custom_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	custom_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
 	mobile_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
 	mobile_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
+	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
@@ -712,6 +719,31 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MetricQuery:     NewResourceDescriptor(query.Service),
 	ResourceTypes.ActiveGateToken: NewResourceDescriptor(activegatetoken.Service),
 	ResourceTypes.AuditLog:        NewResourceDescriptor(auditlog.Service),
+	ResourceTypes.K8sClusterAnomalies: NewResourceDescriptor(
+		cluster.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.K8sNamespaceAnomalies: NewResourceDescriptor(
+		namespace.Service,
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.K8sNodeAnomalies: NewResourceDescriptor(
+		node.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.K8sWorkloadAnomalies: NewResourceDescriptor(
+		workload.Service,
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.ContainerBuiltinRule: NewResourceDescriptor(builtinmonitoringrule.Service),
+	ResourceTypes.ContainerRule:        NewResourceDescriptor(monitoringrule.Service),
+	ResourceTypes.ContainerTechnology: NewResourceDescriptor(
+		containertechnology.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{

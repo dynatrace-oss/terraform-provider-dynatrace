@@ -1,0 +1,757 @@
+{
+	"allowedScopes": [
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes workload. Changing thresholds resets the observation period.",
+	"displayName": "Kubernetes workload anomaly detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minActiveGateVersion": "1.253"
+	},
+	"multiObject": false,
+	"properties": {
+		"containerRestarts": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ContainerRestarts"
+			}
+		},
+		"deploymentStuck": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DeploymentStuck"
+			}
+		},
+		"notAllPodsReady": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/NotAllPodsReady"
+			}
+		},
+		"pendingPods": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/PendingPods"
+			}
+		},
+		"podStuckInTerminating": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/PodStuckInTerminating"
+			}
+		},
+		"workloadWithoutReadyPods": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/WorkloadWithoutReadyPods"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection.kubernetes",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.kubernetes.workload",
+	"types": {
+		"ContainerRestarts": {
+			"description": "",
+			"displayName": "ContainerRestarts",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ContainerRestartsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect container restarts",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ContainerRestartsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "ContainerRestartsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "per minute, for any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "there is at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "restarts"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DeploymentStuck": {
+			"description": "",
+			"displayName": "DeploymentStuck",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DeploymentStuckConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect stuck workloads",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.259"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DeploymentStuckConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "DeploymentStuckConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "workload stops progressing for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"NotAllPodsReady": {
+			"description": "",
+			"displayName": "NotAllPodsReady",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/NotAllPodsReadyConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect workloads with non-ready pods",
+					"documentation": "As of specific pod life cycles of different workload types, cronjobs and jobs are excluded.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"NotAllPodsReadyConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "NotAllPodsReadyConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "some workload pods are not ready for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PendingPods": {
+			"description": "",
+			"displayName": "PendingPods",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/PendingPodsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect pending pods",
+					"documentation": "Number of pods in pending phase",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PendingPodsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "PendingPodsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 15,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "stuck in pending state for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "there is at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "pods"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodStuckInTerminating": {
+			"description": "",
+			"displayName": "PodStuckInTerminating",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/PodStuckInTerminatingConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect pods stuck in terminating",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.259"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodStuckInTerminatingConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "PodStuckInTerminatingConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "pod termination stops progressing for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"WorkloadWithoutReadyPods": {
+			"description": "",
+			"displayName": "WorkloadWithoutReadyPods",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/WorkloadWithoutReadyPodsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect workloads without ready pods",
+					"documentation": "As of specific pod life cycles of different workload types, cronjobs and jobs are excluded.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"WorkloadWithoutReadyPodsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "WorkloadWithoutReadyPodsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "workload has no ready pods for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.4"
+}
