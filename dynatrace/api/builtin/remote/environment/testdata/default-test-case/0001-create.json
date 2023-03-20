@@ -1,0 +1,6 @@
+{
+    "name": "TerraformExample",
+    "networkScope": "EXTERNAL",
+    "token": "################",
+    "uri": "https://terraformexample.live.dynatrace.com"
+}

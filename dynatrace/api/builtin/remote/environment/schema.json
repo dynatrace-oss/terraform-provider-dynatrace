@@ -1,0 +1,159 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "environment-url-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Configure connections to other Dynatrace environments for cross-environment capabilities (e.g. dashboards)",
+	"displayName": "Remote environments",
+	"documentation": "\n\nFor help on remote environments, see [Remote environment API documentation](https://dt-url.net/lc5n0p4z)",
+	"dynatrace": "1",
+	"enums": {
+		"Scope": {
+			"description": "",
+			"displayName": "Scope",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "External",
+					"value": "EXTERNAL"
+				},
+				{
+					"displayName": "Internal",
+					"value": "INTERNAL"
+				},
+				{
+					"displayName": "Cluster",
+					"value": "CLUSTER"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Connect environment"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"networkScope": {
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "network-scope",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "EXTERNAL",
+			"description": "",
+			"displayName": "Network scope",
+			"documentation": "- External: The remote environment is located in an another network.\n- Internal: The remote environment is located in the same network.\n- Cluster: The remote environment is located in the same cluster.\n\nDynatrace SaaS can only use External.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": {
+				"$ref": "#/enums/Scope"
+			}
+		},
+		"token": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Provide a valid token created on the remote environment.",
+			"displayName": "Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"uri": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Specify the full URI to the remote environment. Your local environment will have to be able to connect this URI on a network level.",
+			"displayName": "Remote environment URI",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:integration.external",
+		"group:integration"
+	],
+	"schemaId": "builtin:remote.environment",
+	"types": {},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Name"
+				},
+				{
+					"displayName": "Remote environment URI",
+					"propertyRef": "uri"
+				},
+				{
+					"displayName": "Network scope",
+					"propertyRef": "networkScope"
+				}
+			]
+		}
+	},
+	"version": "1.0.6"
+}

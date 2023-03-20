@@ -292,6 +292,7 @@ func Provider() *schema.Provider {
 			"dynatrace_container_builtin_rule":             resources.NewGeneric(export.ResourceTypes.ContainerBuiltinRule).Resource(),
 			"dynatrace_container_rule":                     resources.NewGeneric(export.ResourceTypes.ContainerRule).Resource(),
 			"dynatrace_container_technology":               resources.NewGeneric(export.ResourceTypes.ContainerTechnology).Resource(),
+			"dynatrace_remote_environments":                resources.NewGeneric(export.ResourceTypes.RemoteEnvironments).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
