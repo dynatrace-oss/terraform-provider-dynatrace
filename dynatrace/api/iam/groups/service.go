@@ -70,7 +70,7 @@ func (me *GroupServiceClient) Update(uuid string, group *groups.Group) error {
 	var err error
 
 	client := iam.NewIAMClient(me)
-	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), []*groups.Group{group}, 201, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), group, 200, false); err != nil {
 		return err
 	}
 
