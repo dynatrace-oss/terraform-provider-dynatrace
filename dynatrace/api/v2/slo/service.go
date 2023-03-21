@@ -18,6 +18,7 @@
 package slo
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -27,6 +28,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 )
@@ -133,13 +135,20 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 
 	retry := true
 	attempts := 0
+	maxattempts := 100
 	for retry {
 		attempts = attempts + 1
 		if err = req.Finish(); err != nil {
-			if !strings.Contains(err.Error(), "calc:") && !strings.Contains(err.Error(), "Metric selector is invalid") {
+			if attempts == maxattempts {
+				return &settings.Stub{ID: id, Name: v.Name}, err
+			}
+			if !strings.Contains(err.Error(), "calc:") && !strings.Contains(err.Error(), "Metric selector is invalid") && !strings.Contains(err.Error(), "<title>HTTP Status 400") {
 				return &settings.Stub{ID: id, Name: v.Name}, err
 			}
 			time.Sleep(2 * time.Second)
+			if shutdown.System.Stopped() {
+				return &settings.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+			}
 		} else {
 			retry = false
 		}
@@ -147,12 +156,15 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 	length := 0
 	for length == 0 {
 		var slos sloList
-		if err = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=id(\"%s\")&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(id)), 200).Finish(&slos); err != nil {
+		if err = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200).Finish(&slos); err != nil {
 			return &settings.Stub{ID: id, Name: v.Name}, err
 		}
 		length = len(slos.SLOs)
 		if length == 0 {
 			time.Sleep(time.Second * 2)
+			if shutdown.System.Stopped() {
+				return &settings.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+			}
 		}
 		for _, stub := range slos.SLOs {
 			v.Timeframe = stub.SLO.Timeframe
@@ -164,10 +176,13 @@ func (me *service) Create(v *slo.SLO) (*settings.Stub, error) {
 	for retry {
 		req = client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
 		if err = req.Finish(v); err != nil {
-			if !strings.Contains(err.Error(), "not found.") {
+			if !strings.Contains(err.Error(), "not found") {
 				return &settings.Stub{ID: id, Name: v.Name}, err
 			}
 			time.Sleep(2 * time.Second)
+			if shutdown.System.Stopped() {
+				return &settings.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+			}
 		} else {
 			numRequiredSuccesses--
 			if numRequiredSuccesses < 0 {
