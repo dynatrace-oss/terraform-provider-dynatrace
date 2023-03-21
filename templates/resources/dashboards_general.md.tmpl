@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_dashboards_general Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_dashboards_general` covers configuration for general dashboard settings
+---
+
+# dynatrace_dashboards_general (Resource)
+
+## Dynatrace Documentation
+
+- Dashboards - https://www.dynatrace.com/support/help/observe-and-explore/dashboards
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:dashboards.general`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_dashboards_general` downloads all existing general dashboard settings
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/dashboards/general/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

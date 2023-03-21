@@ -1,0 +1,128 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure anonymous access and home dashboard settings.",
+	"displayName": "General settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"defaultDashboardList": {
+			"constraints": [
+				{
+					"customMessage": "There can only be one rule per user group.",
+					"customValidatorId": "unique-user-group-list-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Configure home dashboard for selected user group. The selected preset dashboard will be loaded as default landing page for this environment.",
+			"displayName": "Home dashboards",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/UserGroups"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Configure home dashboard"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"enablePublicSharing": {
+			"default": true,
+			"description": "Allow users to grant anonymous access to dashboards. No sign-in will be required to view those dashboards read-only.",
+			"displayName": "Allow anonymous access",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:dashboards"
+	],
+	"schemaId": "builtin:dashboards.general",
+	"types": {
+		"UserGroups": {
+			"description": "",
+			"displayName": "UserGroups",
+			"documentation": "",
+			"properties": {
+				"Dashboard": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "dashboardDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "Preset dashboard to show as default landing page",
+					"displayName": "Home dashboard",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"UserGroup": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "groupIdDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "Show selected dashboard by default for this user group",
+					"displayName": "User group",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{UserGroup} shows ''{Dashboard}'' as home dashboard",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.16"
+}

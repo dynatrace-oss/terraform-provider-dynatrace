@@ -40,6 +40,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
+	dashboardsgeneral "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
@@ -757,9 +758,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		webapprequesterrors.Service,
 		Coalesce(Dependencies.Application),
 	),
-	ResourceTypes.UserSettings: NewResourceDescriptor(
-		usersettings.Service,
-	),
+	ResourceTypes.UserSettings:      NewResourceDescriptor(usersettings.Service),
+	ResourceTypes.DashboardsGeneral: NewResourceDescriptor(dashboardsgeneral.Service),
 }
 
 var BlackListedResources = []ResourceType{
