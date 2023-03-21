@@ -202,6 +202,7 @@ var ResourceTypes = struct {
 	ContainerTechnology                 ResourceType
 	RemoteEnvironments                  ResourceType
 	WebAppCustomErrors                  ResourceType
+	WebAppRequestErrors                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -361,6 +362,7 @@ var ResourceTypes = struct {
 	"dynatrace_container_technology",
 	"dynatrace_remote_environments",
 	"dynatrace_web_app_custom_errors",
+	"dynatrace_web_app_request_errors",
 }
 
 type ResourceStatus string

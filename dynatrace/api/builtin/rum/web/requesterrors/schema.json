@@ -1,0 +1,274 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment-default"
+	],
+	"description": "Create capture and detection rules to include request errors in your Apdex calculations or Davis AI problem detection and analysis.\nFor more details, see [Configure request errors](https://dt-url.net/13020hh).",
+	"displayName": "Request errors",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"UrlFilter": {
+			"description": "",
+			"displayName": "UrlFilter",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "URL begins with",
+					"value": "BEGINS_WITH"
+				},
+				{
+					"displayName": "URL ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "URL contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "URL equals",
+					"value": "EQUALS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"errorRules": {
+			"constraints": [
+				{
+					"customMessage": "Duplicate error rule found",
+					"customValidatorId": "RumAppRequestErrorsSchemaValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/RequestErrorRule"
+				}
+			},
+			"maxObjects": 110,
+			"metadata": {
+				"addItemButton": "Add request error rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"ignoreRequestErrorsInApdexCalculation": {
+			"default": false,
+			"description": "This setting overrides Apdex settings for individual rules listed below",
+			"displayName": "Ignore request errors in Apdex calculations",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:rum-errors"
+	],
+	"schemaId": "builtin:rum.web.request-errors",
+	"types": {
+		"CaptureSettings": {
+			"description": "",
+			"displayName": "CaptureSettings",
+			"documentation": "",
+			"properties": {
+				"capture": {
+					"default": true,
+					"description": "",
+					"displayName": "Capture this error",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"considerForAi": {
+					"default": true,
+					"description": "[View more details](https://dt-url.net/hd580p2k)",
+					"displayName": "Include error in Davis AI problem detection and analysis",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "capture",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"impactApdex": {
+					"default": true,
+					"description": "",
+					"displayName": "Include error in Apdex calculations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "capture",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FilterSettings": {
+			"description": "",
+			"displayName": "FilterSettings",
+			"documentation": "",
+			"properties": {
+				"filter": {
+					"description": "",
+					"displayName": "Filter by URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/UrlFilter"
+					}
+				},
+				"url": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Type a valid URL or IP address…"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"property": "filter",
+							"type": "NULL"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RequestErrorRule": {
+			"constraints": [
+				{
+					"customMessage": "Enable at least one matching option",
+					"customValidatorId": "RumAppRequestErrorsValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "RequestErrorRule",
+			"documentation": "",
+			"properties": {
+				"captureSettings": {
+					"description": "",
+					"displayName": "Capture settings",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/CaptureSettings"
+					}
+				},
+				"considerCspViolations": {
+					"default": false,
+					"description": "",
+					"displayName": "Match by errors that have CSP violations",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.207"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"considerFailedImages": {
+					"default": false,
+					"description": "",
+					"displayName": "Match by errors that have failed image requests",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"errorCodes": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "The entered rules are not valid",
+							"customValidatorId": "httpErrorCodes",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "",
+					"displayName": "Match by error code",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, 401-409, 500"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"filterSettings": {
+					"description": "",
+					"displayName": "Filter settings",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FilterSettings"
+					}
+				}
+			},
+			"summaryPattern": "{errorCodes} {considerFailedImages} {considerCspViolations} {captureSettings.capture} {captureSettings.impactApdex} {captureSettings.considerForAi} {filterSettings.url}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

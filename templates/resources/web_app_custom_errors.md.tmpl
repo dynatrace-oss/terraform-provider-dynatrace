@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_web_app_custom_errors (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_web_app_custom_errors`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+-> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_application_error_rules`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
 
 ## Dynatrace Documentation
 

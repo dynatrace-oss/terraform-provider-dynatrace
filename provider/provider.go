@@ -294,6 +294,7 @@ func Provider() *schema.Provider {
 			"dynatrace_container_technology":               resources.NewGeneric(export.ResourceTypes.ContainerTechnology).Resource(),
 			"dynatrace_remote_environments":                resources.NewGeneric(export.ResourceTypes.RemoteEnvironments).Resource(),
 			"dynatrace_web_app_custom_errors":              resources.NewGeneric(export.ResourceTypes.WebAppCustomErrors).Resource(),
+			"dynatrace_web_app_request_errors":             resources.NewGeneric(export.ResourceTypes.WebAppRequestErrors).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

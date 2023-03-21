@@ -30,9 +30,9 @@ type Rules struct {
 	WebApplicationID                         string           `json:"-"` // The EntityID of the the WebApplication
 	Name                                     string           `json:"-"`
 	IgnoreJavaScriptErrorsInApdexCalculation bool             `json:"ignoreJavaScriptErrorsInApdexCalculation"` // Exclude (`true`) or include (`false`) JavaScript errors in Apdex calculation
-	IgnoreHttpErrorsInApdexCalculation       bool             `json:"ignoreHttpErrorsInApdexCalculation"`       // Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation
+	IgnoreHttpErrorsInApdexCalculation       bool             `json:"ignoreHttpErrorsInApdexCalculation"`       // (Field has overlap with `dynatrace_web_app_request_errors`) Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation
 	IgnoreCustomErrorsInApdexCalculation     bool             `json:"ignoreCustomErrorsInApdexCalculation"`     // (Field has overlap with `dynatrace_web_app_custom_errors`) Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation
-	HTTPErrors                               HTTPErrorRules   `json:"httpErrorRules"`                           // An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
+	HTTPErrors                               HTTPErrorRules   `json:"httpErrorRules"`                           // (Field has overlap with `dynatrace_web_app_request_errors`) An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
 	CustomErrors                             CustomErrorRules `json:"customErrorRules"`                         // (Field has overlap with `dynatrace_web_app_custom_errors`) An ordered list of custom errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies
 }
 
@@ -50,24 +50,24 @@ func (me *Rules) Schema() map[string]*schema.Schema {
 		},
 		"ignore_http_errors_apdex": {
 			Type:        schema.TypeBool,
-			Description: "Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation",
+			Description: "(Field has overlap with `dynatrace_web_app_request_errors`) Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation",
 			Optional:    true,
 		},
 		"ignore_custom_errors_apdex": {
 			Type:        schema.TypeBool,
-			Description: "Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation",
+			Description: "(Field has overlap with `dynatrace_web_app_custom_errors`) Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation",
 			Optional:    true,
 		},
 		"http_errors": {
 			Type:        schema.TypeList,
-			Description: "An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies",
+			Description: "(Field has overlap with `dynatrace_web_app_request_errors`) An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies",
 			Optional:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(HTTPErrorRules).Schema()},
 		},
 		"custom_errors": {
 			Type:        schema.TypeList,
-			Description: "An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies",
+			Description: "(Field has overlap with `dynatrace_web_app_custom_errors`) An ordered list of HTTP errors.\n\n Rules are evaluated from top to bottom; the first matching rule applies",
 			Optional:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(CustomErrorRules).Schema()},
