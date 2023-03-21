@@ -205,6 +205,7 @@ var ResourceTypes = struct {
 	WebAppRequestErrors                 ResourceType
 	UserSettings                        ResourceType
 	DashboardsGeneral                   ResourceType
+	DashboardsPresets                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -367,6 +368,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_request_errors",
 	"dynatrace_user_settings",
 	"dynatrace_dashboards_general",
+	"dynatrace_dashboards_presets",
 }
 
 type ResourceStatus string

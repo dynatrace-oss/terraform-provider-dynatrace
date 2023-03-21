@@ -3,7 +3,7 @@ resource "dynatrace_dashboards_general" "#name#" {
   default_dashboard_list {
     default_dashboard {
       dashboard = "00000000-0000-0000-0000-000000000000"
-      user_group = "terraform"
+      user_group = "00000000-0000-0000-0000-000000000000"
     }
   }
 }

@@ -297,6 +297,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_request_errors":             resources.NewGeneric(export.ResourceTypes.WebAppRequestErrors).Resource(),
 			"dynatrace_user_settings":                      resources.NewGeneric(export.ResourceTypes.UserSettings).Resource(),
 			"dynatrace_dashboards_general":                 resources.NewGeneric(export.ResourceTypes.DashboardsGeneral).Resource(),
+			"dynatrace_dashboards_presets":                 resources.NewGeneric(export.ResourceTypes.DashboardsPresets).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
