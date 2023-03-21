@@ -1,0 +1,119 @@
+{
+	"allowedScopes": [
+		"user",
+		"userdefaults"
+	],
+	"description": "Set user preferences for display language, timezone, etc.",
+	"displayName": "User Settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Language": {
+			"description": "",
+			"displayName": "Language",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Browser language - default",
+					"value": "auto"
+				},
+				{
+					"displayName": "English",
+					"value": "en"
+				},
+				{
+					"displayName": "日本語 - Japanese",
+					"value": "ja"
+				}
+			],
+			"type": "enum"
+		},
+		"Theme": {
+			"description": "",
+			"displayName": "Theme",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Browser theme - default",
+					"value": "auto"
+				},
+				{
+					"displayName": "Light Theme",
+					"value": "light"
+				},
+				{
+					"displayName": "Dark Theme",
+					"value": "dark"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"language": {
+			"default": "auto",
+			"description": "",
+			"displayName": "Language",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Language"
+			}
+		},
+		"region": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "regionDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "auto",
+			"description": "",
+			"displayName": "Region",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"theme": {
+			"default": "auto",
+			"description": "Page refresh required to view changes",
+			"displayName": "Theme",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Theme"
+			}
+		},
+		"timezone": {
+			"default": "UTC",
+			"description": "",
+			"displayName": "Timezone",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "time_zone"
+		}
+	},
+	"schemaId": "builtin:user-settings",
+	"types": {},
+	"version": "1.1.3"
+}

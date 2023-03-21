@@ -107,6 +107,7 @@ import (
 	httpoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
@@ -755,6 +756,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppRequestErrors: NewResourceDescriptor(
 		webapprequesterrors.Service,
 		Coalesce(Dependencies.Application),
+	),
+	ResourceTypes.UserSettings: NewResourceDescriptor(
+		usersettings.Service,
 	),
 }
 
