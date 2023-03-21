@@ -76,6 +76,6 @@ Required:
 
 Required:
 
-- `name` (String)
-- `scope` (String)
-- `type` (String)
+- `name` (String) Possible values: `account-company-info`, `account-user-management`, `account-viewer`, `tenant-viewer`, `tenant-manage-settings`, `tenant-agent-install`, `tenant-logviewer`, `tenant-view-sensitive-request-data`, `tenant-configure-request-capture-data`, `tenant-replay-sessions-with-masking`, `tenant-replay-sessions-without-masking`, `tenant-manage-security-problems`, `tenant-manage-support-tickets`
+- `scope` (String) If `type` is `account` this attribute should hold the UUID of the account. If `type` is 'tenant` this attribute should hold the ID of the environment (`https://<environmentid>.live.dynatrace.com`). If `type` is `management-zone` this attribute should hold a value like `<managment-zone-id>:<environment-id>. You need to use the attribute `legacy_id` when referring to a resource `dynatrace_management_zone_v2` or a data source `dynatrace_management_zone`.
+- `type` (String) The type of this permission. Possible values are `account`, `tenant`, `management-zone`
