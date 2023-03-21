@@ -90,7 +90,7 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 		},
 		"password": {
 			Type:          schema.TypeString,
-			Description:   "The password of the credential.",
+			Description:   "The password of the credential. Note: Terraform treats an empty string for a value as if the attribute was absent. If you want to set an empty password, use the value `--empty--`.",
 			ConflictsWith: []string{"token"},
 			Sensitive:     true,
 			Optional:      true,
@@ -99,7 +99,7 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 			Type:          schema.TypeString,
 			Description:   "The certificate in the string format.",
 			ConflictsWith: []string{"token", "username"},
-			RequiredWith:  []string{"format", "password"},
+			RequiredWith:  []string{"format"},
 			Optional:      true,
 		},
 		"format": {
@@ -233,6 +233,9 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("password"); ok {
 		me.Password = opt.NewString(value.(string))
 	}
+	if me.Password != nil && *me.Password == "--empty--" {
+		me.Password = opt.NewString("")
+	}
 	if value, ok := decoder.GetOk("username"); ok {
 		me.Username = opt.NewString(value.(string))
 	}
@@ -247,6 +250,9 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	} else if me.Token != nil {
 		me.Type = CredentialsTypes.Token
 	} else if me.Certificate != nil || me.CertificateFormat != nil {
+		if me.Password == nil {
+			me.Password = opt.NewString("")
+		}
 		if value, ok := decoder.GetOk("public"); ok && value.(bool) {
 			me.Type = CredentialsTypes.PublicCertificate
 		} else {
