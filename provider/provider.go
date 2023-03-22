@@ -302,6 +302,7 @@ func Provider() *schema.Provider {
 			"dynatrace_dashboards_presets":                 resources.NewGeneric(export.ResourceTypes.DashboardsPresets).Resource(),
 			"dynatrace_log_processing":                     resources.NewGeneric(export.ResourceTypes.LogProcessing).Resource(),
 			"dynatrace_log_events":                         resources.NewGeneric(export.ResourceTypes.LogEvents).Resource(),
+			"dynatrace_log_timestamp":                      resources.NewGeneric(export.ResourceTypes.LogTimestamp).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

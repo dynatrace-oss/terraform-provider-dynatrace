@@ -1,0 +1,16 @@
+{
+    "config-item-title": "${randomize}",
+    "date-time-pattern": "%m/%d/%Y %I:%M:%S %p",
+    "enabled": false,
+    "matchers": [
+        {
+            "attribute": "container.name",
+            "operator": "MATCHES",
+            "values": [
+                "terraform"
+            ]
+        }
+    ],
+    "scope": "HOST-1234567890000000",
+    "timezone": "America/Detroit"
+}

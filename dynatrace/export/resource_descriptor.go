@@ -52,6 +52,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/timestampconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
@@ -770,6 +771,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DashboardsPresets: NewResourceDescriptor(dashboardspresets.Service),
 	ResourceTypes.LogProcessing:     NewResourceDescriptor(logdpprules.Service),
 	ResourceTypes.LogEvents:         NewResourceDescriptor(logevents.Service),
+	ResourceTypes.LogTimestamp:      NewResourceDescriptor(timestampconfiguration.Service),
 }
 
 var BlackListedResources = []ResourceType{
