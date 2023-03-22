@@ -110,6 +110,7 @@ import (
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
@@ -498,11 +499,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		order.Service,
 		Dependencies.ID(ResourceTypes.RequestNaming),
 	),
-	ResourceTypes.IAMUser:       NewResourceDescriptor(users.Service),
-	ResourceTypes.IAMGroup:      NewResourceDescriptor(groups.Service),
-	ResourceTypes.IAMPermission: NewResourceDescriptor(permissions.Service),
-	ResourceTypes.IAMPolicy:     NewResourceDescriptor(policies.Service),
-	ResourceTypes.DDUPool:       NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMUser:           NewResourceDescriptor(users.Service),
+	ResourceTypes.IAMGroup:          NewResourceDescriptor(groups.Service),
+	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
+	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
+	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
+	ResourceTypes.DDUPool:           NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -776,6 +778,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMGroup,          // not sure whether to migrate
 	ResourceTypes.IAMPermission,     // not sure whether to migrate
 	ResourceTypes.IAMPolicy,         // not sure whether to migrate
+	ResourceTypes.IAMPolicyBindings, // not sure whether to migrate
 
 	// excluding by default
 	ResourceTypes.JSONDashboard, // may replace dynatrace_dashboard in the future

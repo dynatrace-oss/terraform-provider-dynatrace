@@ -1,0 +1,154 @@
+package bindings
+
+import (
+	"encoding/json"
+	"fmt"
+	"strings"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
+	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+)
+
+type BindingServiceClient struct {
+	clientID     string
+	accountID    string
+	clientSecret string
+}
+
+func (me *BindingServiceClient) ClientID() string {
+	return me.clientID
+}
+
+func (me *BindingServiceClient) AccountID() string {
+	return me.accountID
+}
+
+func (me *BindingServiceClient) ClientSecret() string {
+	return me.clientSecret
+}
+
+func NewPolicyService(clientID string, accountID string, clientSecret string) *BindingServiceClient {
+	return &BindingServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+}
+
+func Service(credentials *settings.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+	return &BindingServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+}
+
+func (me *BindingServiceClient) SchemaID() string {
+	return "accounts:iam:bindings"
+}
+
+type PolicyCreateResponse struct {
+	UUID string `json:"uuid"`
+}
+
+func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*settings.Stub, error) {
+	id := joinID(v)
+	var err error
+	if err = me.Update(id, v); err != nil {
+		return nil, err
+	}
+	return &settings.Stub{ID: id, Name: "PolicyBindings-" + id}, nil
+}
+
+func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error {
+	groupID, levelType, levelID, err := splitID(id)
+	if err != nil {
+		return err
+	}
+	var responseBytes []byte
+
+	client := iam.NewIAMClient(me)
+
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200, false); err != nil {
+		return err
+	}
+	if err = json.Unmarshal(responseBytes, &v); err != nil {
+		return err
+	}
+	if levelType == "acount" {
+		v.Account = levelID
+	} else if levelType == "environment" {
+		v.Environment = levelID
+	}
+	v.GroupID = groupID
+	for idx, policyID := range v.PolicyIDs {
+		v.PolicyIDs[idx] = fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
+	}
+	return nil
+}
+
+func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBinding) error {
+	groupID, levelType, levelID, err := splitID(id)
+	if err != nil {
+		return err
+	}
+
+	client := iam.NewIAMClient(me)
+
+	policyIDs := []string{}
+	for _, policyID := range bindings.PolicyIDs {
+		uuid, policyLevelType, policyLevelID, err := policies.SplitID(policyID)
+		if policyLevelID != levelID || policyLevelType != levelType {
+			return fmt.Errorf("The policy %s is defined for %s = %s. It cannot be used within the scope %s = %s", uuid, policyLevelType, policyLevelID, levelType, levelID)
+		}
+		if err == nil {
+			policyIDs = append(policyIDs, uuid)
+		} else {
+			policyIDs = append(policyIDs, policyID)
+		}
+	}
+	bindings.PolicyIDs = policyIDs
+
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, 204, false); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *BindingServiceClient) List() (settings.Stubs, error) {
+	return settings.Stubs{}, nil
+}
+
+func (me *BindingServiceClient) Delete(id string) error {
+	groupID, levelType, levelID, err := splitID(id)
+	if err != nil {
+		return err
+	}
+	var binding bindings.PolicyBinding
+	if err = me.Get(id, &binding); err != nil {
+		return err
+	}
+	for _, policyID := range binding.PolicyIDs {
+		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 204, false); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func splitID(id string) (groupID string, levelType string, levelID string, err error) {
+	parts := strings.Split(id, "#-#")
+	if len(parts) != 3 {
+		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)
+	}
+	return parts[0], parts[1], parts[2], nil
+}
+
+func joinID(binding *bindings.PolicyBinding) string {
+	levelType, levelID := getLevel(binding)
+	return fmt.Sprintf("%s#-#%s#-#%s", binding.GroupID, levelType, levelID)
+}
+
+func getLevel(binding *bindings.PolicyBinding) (string, string) {
+	if len(binding.Account) > 0 {
+		return "account", binding.Account
+	}
+	if len(binding.Environment) > 0 {
+		return "environment", binding.Environment
+	}
+	return "global", "global"
+}

@@ -62,7 +62,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*settings.Stub, error
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
-	uuid, levelType, levelID, err := splitID(id)
+	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 }
 
 func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
-	uuid, levelType, levelID, err := splitID(id)
+	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (me *PolicyServiceClient) List() (settings.Stubs, error) {
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {
-	uuid, levelType, levelID, err := splitID(id)
+	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (me *PolicyServiceClient) Delete(id string) error {
 	return err
 }
 
-func splitID(id string) (uuid string, levelType string, levelID string, err error) {
+func SplitID(id string) (uuid string, levelType string, levelID string, err error) {
 	parts := strings.Split(id, "#-#")
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)

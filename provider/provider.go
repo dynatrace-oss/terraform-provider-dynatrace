@@ -207,6 +207,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_group":                          resources.NewGeneric(export.ResourceTypes.IAMGroup).Resource(),
 			"dynatrace_iam_permission":                     resources.NewGeneric(export.ResourceTypes.IAMPermission).Resource(),
 			"dynatrace_iam_policy":                         resources.NewGeneric(export.ResourceTypes.IAMPolicy).Resource(),
+			"dynatrace_iam_policy_bindings":                resources.NewGeneric(export.ResourceTypes.IAMPolicyBindings).Resource(),
 			"dynatrace_api_token":                          apitokens.Resource(),
 			"dynatrace_custom_tags":                        customtags.Resource(),
 			"dynatrace_pg_anomalies":                       resources.NewGeneric(export.ResourceTypes.ProcessGroupAnomalies).Resource(),
