@@ -804,6 +804,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.DataPrivacy,                  // overlap with ResourceTypes.ApplicationDataPrivacy
 	ResourceTypes.WebAppCustomErrors,           // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
+	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
 }
 
