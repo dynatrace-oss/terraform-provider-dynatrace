@@ -50,6 +50,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
@@ -768,6 +769,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DashboardsGeneral: NewResourceDescriptor(dashboardsgeneral.Service),
 	ResourceTypes.DashboardsPresets: NewResourceDescriptor(dashboardspresets.Service),
 	ResourceTypes.LogProcessing:     NewResourceDescriptor(logdpprules.Service),
+	ResourceTypes.LogEvents:         NewResourceDescriptor(logevents.Service),
 }
 
 var BlackListedResources = []ResourceType{

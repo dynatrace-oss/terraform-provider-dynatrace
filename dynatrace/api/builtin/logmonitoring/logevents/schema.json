@@ -1,0 +1,319 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure log patterns that trigger events for alerting and Davis® analysis. [View Documentation](https://dt-url.net/no02x5g). \nNote that log event detection consumes [Davis® data units](https://dt-url.net/hk03ulj)",
+	"displayName": "Log events",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"EventTypeEnum": {
+			"description": "",
+			"displayName": "Event type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Info",
+					"value": "INFO"
+				},
+				{
+					"displayName": "Error",
+					"value": "ERROR"
+				},
+				{
+					"displayName": "Availability",
+					"value": "AVAILABILITY"
+				},
+				{
+					"displayName": "Slowdown",
+					"value": "SLOWDOWN"
+				},
+				{
+					"displayName": "Resource",
+					"value": "RESOURCE"
+				},
+				{
+					"displayName": "Custom alert",
+					"value": "CUSTOM_ALERT"
+				},
+				{
+					"displayName": "Custom annotation",
+					"value": "CUSTOM_ANNOTATION"
+				},
+				{
+					"displayName": "Custom configuration",
+					"value": "CUSTOM_CONFIGURATION"
+				},
+				{
+					"displayName": "Custom deployment",
+					"value": "CUSTOM_DEPLOYMENT"
+				},
+				{
+					"displayName": "Marked for termination",
+					"value": "MARKED_FOR_TERMINATION"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add log event"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventTemplate": {
+			"description": "",
+			"displayName": "Event template",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/EventTemplate"
+			}
+		},
+		"query": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"minLength": 2,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invisible unicode chars (for example: ZeroWidthSpace) aren't allowed.",
+					"customValidatorId": "invisible-chars-query-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "log-matcher-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Log query",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"summary": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 2,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The textual summary of the log event entry",
+			"displayName": "Summary",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring.analysis",
+		"group:log-monitoring"
+	],
+	"schemaId": "builtin:logmonitoring.log-events",
+	"types": {
+		"EventTemplate": {
+			"description": "",
+			"displayName": "Event template",
+			"documentation": "",
+			"properties": {
+				"davisMerge": {
+					"default": true,
+					"description": "Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.",
+					"displayName": "Allow merge",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "INFO",
+							"property": "eventType",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "boolean"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The description of the event to trigger. Type '{' for placeholder hints.",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"lineCount": "4"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				},
+				"eventType": {
+					"default": "INFO",
+					"description": "The event type to trigger.",
+					"displayName": "Event type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/EventTypeEnum"
+					}
+				},
+				"metadata": {
+					"description": "Set of additional key-value properties to be attached to the triggered event.",
+					"displayName": "Properties",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/MetadataItem"
+						}
+					},
+					"maxObjects": 30,
+					"metadata": {
+						"addItemButton": "Add Property",
+						"itemDisplayName": "New property"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"title": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 2,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The title of the event to trigger. Type '{' for placeholder hints.",
+					"displayName": "Title",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{title}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetadataItem": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Unknown predefined property key.",
+							"customValidatorId": "event-property-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type 'dt.' for key hints.",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_property_key",
+					"type": "text"
+				},
+				"metadataValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type '{' for placeholder hints.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{metadataKey}: {metadataValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "3.2.3"
+}
