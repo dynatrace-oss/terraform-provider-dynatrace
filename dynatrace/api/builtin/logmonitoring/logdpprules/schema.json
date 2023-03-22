@@ -1,0 +1,178 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Logs can be transformed through processing rules using [this syntax](https://dt-url.net/8k03xm2). Note that rules are processed sequentially, making the order important; a different rule order could give different results.",
+	"displayName": "Processing",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"ProcessorDefinition": {
+			"description": "## Processor definition\nAdd a rule definition using our syntax. [In our documentation](https://dt-url.net/8k03xm2) you will find instructions and application [examples](https://dt-url.net/m24305t).",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ProcessorDefinition"
+			}
+		},
+		"RuleTesting": {
+			"description": "## Rule testing\n### 1. Paste a log / JSON sample",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RuleTesting"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Active",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"query": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"minLength": 2,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "log-matcher-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 60,
+					"minLength": 2,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "log-dpp-name-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring.analysis",
+		"group:log-monitoring"
+	],
+	"schemaId": "builtin:logmonitoring.log-dpp-rules",
+	"types": {
+		"ProcessorDefinition": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"rule": {
+					"constraints": [
+						{
+							"maxLength": 50000,
+							"minLength": 2,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "log-dpp-spectx-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Processor definition",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "code/spectx",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RuleTesting": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"sampleLog": {
+					"constraints": [
+						{
+							"maxLength": 80000,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "json-syntax-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "{\n  \"content\":\"\"\n}",
+					"description": "Sample log in JSON format.",
+					"displayName": "Log sample",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Download or paste log for testing"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "code/json",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.13"
+}

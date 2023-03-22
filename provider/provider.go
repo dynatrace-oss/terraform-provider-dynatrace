@@ -300,6 +300,7 @@ func Provider() *schema.Provider {
 			"dynatrace_user_settings":                      resources.NewGeneric(export.ResourceTypes.UserSettings).Resource(),
 			"dynatrace_dashboards_general":                 resources.NewGeneric(export.ResourceTypes.DashboardsGeneral).Resource(),
 			"dynatrace_dashboards_presets":                 resources.NewGeneric(export.ResourceTypes.DashboardsPresets).Resource(),
+			"dynatrace_log_processing":                     resources.NewGeneric(export.ResourceTypes.LogProcessing).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

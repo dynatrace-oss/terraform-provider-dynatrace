@@ -1,0 +1,11 @@
+{
+    "enabled": false,
+    "ProcessorDefinition": {
+      "rule": "PARSE(content,\"LD 'total: ' INT:total '; failed: ' INT:failed\")\n| FIELDS_ADD(failed.percentage: 100.0 * failed / total + '%')\n| FIELDS_REMOVE(total, failed)"
+    },
+    "query": "content=\"terraform\"",
+    "ruleName": "${randomize}",
+    "RuleTesting": {
+      "sampleLog": "{\n  \"content\":\"\"\n}"
+    }
+  }
