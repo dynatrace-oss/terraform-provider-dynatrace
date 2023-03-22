@@ -20,6 +20,7 @@ package settings20
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -213,7 +214,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 
 	if oerr := req.Finish(&objectID); oerr != nil {
 		if me.options != nil && me.options.CreateRetry != nil && !retry {
-			if modifiedPayload := me.options.CreateRetry(v, oerr); (any)(modifiedPayload) != (any)(nil) {
+			if modifiedPayload := me.options.CreateRetry(v, oerr); !reflect.ValueOf(modifiedPayload).IsNil() {
 				return me.create(modifiedPayload, true)
 			}
 		}
