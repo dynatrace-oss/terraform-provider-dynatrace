@@ -1,0 +1,35 @@
+---
+layout: ""
+page_title: dynatrace_user_settings Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_user_settings` covers user settings of an individual user
+---
+
+# dynatrace_user_settings (Resource)
+
+-> This resource utilizes the Settings 2.0 API `builtin:user-settings`. It is scoped for an individual user and requires a personal access token.
+
+## Dynatrace Documentation
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:user-settings`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_user_settings` downloads user settings of the individual user
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+```
+resource "dynatrace_user_settings" "#name#" {
+  language = "en"
+  region   = "auto"
+  scope    = "user-terraform@dynatrace.com"
+  theme    = "auto"
+  timezone = "UTC"
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 
