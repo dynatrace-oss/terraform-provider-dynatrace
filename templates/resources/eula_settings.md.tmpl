@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_eula_settings Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_eula_settings` covers configuration for display of the clickwrap agreement
+---
+
+# dynatrace_eula_settings (Resource)
+
+## Dynatrace Documentation
+
+- Display clickwrap agreement to new users - https://www.dynatrace.com/support/help/manage/access-control/user-management-and-sso/clickwrap-agreement
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:eula-settings`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_eula_settings` downloads existing clickwrap agreement configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/eulasettings/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

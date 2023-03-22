@@ -46,6 +46,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
@@ -774,6 +775,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogEvents:         NewResourceDescriptor(logevents.Service),
 	ResourceTypes.LogTimestamp:      NewResourceDescriptor(timestampconfiguration.Service),
 	ResourceTypes.LogGrail:          NewResourceDescriptor(logsongrailactivate.Service),
+	ResourceTypes.EULASettings:      NewResourceDescriptor(eulasettings.Service),
 }
 
 var BlackListedResources = []ResourceType{
