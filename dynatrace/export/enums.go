@@ -213,6 +213,7 @@ var ResourceTypes = struct {
 	LogTimestamp                        ResourceType
 	LogGrail                            ResourceType
 	EULASettings                        ResourceType
+	APIDetectionRules                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -383,6 +384,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_timestamp",
 	"dynatrace_log_grail",
 	"dynatrace_eula_settings",
+	"dynatrace_api_detection",
 }
 
 type ResourceStatus string

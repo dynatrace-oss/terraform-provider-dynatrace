@@ -36,6 +36,7 @@ import (
 	mobile_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
 	mobile_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
+	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
@@ -776,6 +777,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogTimestamp:      NewResourceDescriptor(timestampconfiguration.Service),
 	ResourceTypes.LogGrail:          NewResourceDescriptor(logsongrailactivate.Service),
 	ResourceTypes.EULASettings:      NewResourceDescriptor(eulasettings.Service),
+	ResourceTypes.APIDetectionRules: NewResourceDescriptor(apidetection.Service),
 }
 
 var BlackListedResources = []ResourceType{

@@ -305,6 +305,7 @@ func Provider() *schema.Provider {
 			"dynatrace_log_timestamp":                      resources.NewGeneric(export.ResourceTypes.LogTimestamp).Resource(),
 			"dynatrace_log_grail":                          resources.NewGeneric(export.ResourceTypes.LogGrail).Resource(),
 			"dynatrace_eula_settings":                      resources.NewGeneric(export.ResourceTypes.EULASettings).Resource(),
+			"dynatrace_api_detection":                      resources.NewGeneric(export.ResourceTypes.APIDetectionRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

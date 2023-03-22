@@ -1,0 +1,238 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "api-detection-rules-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Modern applications use a lot of different frameworks, so stacktraces in method hotspots and exceptions can become quite long. APIs allow you to spot a component and the respective ownership that is responsible for a hotspot or degradation faster.",
+	"displayName": "API detection rules",
+	"documentation": "API detection rules look at a stacktrace frame and classify it based on classes (Java, .NET and PHP) or files (Node.js, PHP and GO) depending on the technology. The rules are executed in order and the first match decides the API. Marking APIs as third party will allow you to focus on non-third party APIs.",
+	"dynatrace": "1",
+	"enums": {
+		"base": {
+			"description": "",
+			"displayName": "Base",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Fully qualified class name (Java, .NET, PHP)",
+					"value": "FQCN"
+				},
+				{
+					"displayName": "File name (Node.js, PHP)",
+					"value": "FILE_NAME"
+				},
+				{
+					"displayName": "Package (Go)",
+					"value": "PACKAGE"
+				}
+			],
+			"type": "enum"
+		},
+		"matcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "begins with",
+					"value": "BEGINS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				}
+			],
+			"type": "enum"
+		},
+		"technology": {
+			"description": "",
+			"displayName": "Technology",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Go",
+					"value": "Go"
+				},
+				{
+					"displayName": "Node.js",
+					"value": "Nodejs"
+				},
+				{
+					"displayName": "PHP",
+					"value": "PHP"
+				},
+				{
+					"displayName": "Java",
+					"value": "Java"
+				},
+				{
+					"displayName": ".NET",
+					"value": "dotNet"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Create API detection rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"apiColor": {
+			"constraints": [
+				{
+					"customMessage": "Please provide a valid color via HEX notation. e.g. #FF0000.",
+					"pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "#00b9cc",
+			"description": "This color will be used to highlight APIs when viewing code level data, such as distributed traces or method hotspots.",
+			"displayName": "Color",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"subType": "color",
+			"type": "text"
+		},
+		"apiName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "MyApi",
+			"description": "",
+			"displayName": "API name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"conditions": {
+			"constraints": [
+				{
+					"customMessage": "Please provide a unique condition.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"pattern",
+						"matcher",
+						"base"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "List of conditions",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/apiRule"
+				}
+			},
+			"maxObjects": 50,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"technology": {
+			"description": "Restrict this rule to a specific technology.",
+			"displayName": "Technology",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/enums/technology"
+			}
+		},
+		"thirdPartyApi": {
+			"default": false,
+			"description": "",
+			"displayName": "This API defines a third party library",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring"
+	],
+	"schemaId": "builtin:apis.detection-rules",
+	"types": {
+		"apiRule": {
+			"description": "",
+			"displayName": "API Rule",
+			"documentation": "",
+			"properties": {
+				"base": {
+					"default": "FQCN",
+					"description": "",
+					"displayName": "Base",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/base"
+					}
+				},
+				"matcher": {
+					"default": "BEGINS_WITH",
+					"description": "",
+					"displayName": "Matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/matcher"
+					}
+				},
+				"pattern": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "com.pattern",
+					"description": "",
+					"displayName": "Pattern",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Matches if the {base} {matcher} ''{pattern}''.",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "3.1.2"
+}
