@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title: dynatrace_log_grail Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_log_grail` covers configuration for log powered by Grail
+---
+
+# dynatrace_log_grail (Resource)
+
+-> This resource is excluded from the default export, please review the Dynatrace documentation below regarding this feature.
+
+## Dynatrace Documentation
+
+- Migration to Log powered by Grail - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-migration-to-grail
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:logmonitoring.logs-on-grail-activate`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_log_grail` downloads log powered by Grail configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+{{ .SchemaMarkdown | trimspace }}
+ 

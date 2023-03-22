@@ -303,6 +303,7 @@ func Provider() *schema.Provider {
 			"dynatrace_log_processing":                     resources.NewGeneric(export.ResourceTypes.LogProcessing).Resource(),
 			"dynatrace_log_events":                         resources.NewGeneric(export.ResourceTypes.LogEvents).Resource(),
 			"dynatrace_log_timestamp":                      resources.NewGeneric(export.ResourceTypes.LogTimestamp).Resource(),
+			"dynatrace_log_grail":                          resources.NewGeneric(export.ResourceTypes.LogGrail).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

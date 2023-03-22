@@ -51,6 +51,7 @@ import (
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/timestampconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
@@ -772,6 +773,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogProcessing:     NewResourceDescriptor(logdpprules.Service),
 	ResourceTypes.LogEvents:         NewResourceDescriptor(logevents.Service),
 	ResourceTypes.LogTimestamp:      NewResourceDescriptor(timestampconfiguration.Service),
+	ResourceTypes.LogGrail:          NewResourceDescriptor(logsongrailactivate.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -802,6 +804,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.DataPrivacy,                  // overlap with ResourceTypes.ApplicationDataPrivacy
 	ResourceTypes.WebAppCustomErrors,           // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
+	ResourceTypes.LogGrail,                     // phased rollout
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
