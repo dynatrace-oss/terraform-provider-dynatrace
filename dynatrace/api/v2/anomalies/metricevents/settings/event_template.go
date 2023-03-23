@@ -65,21 +65,25 @@ func (me *EventTemplate) Schema() map[string]*schema.Schema {
 }
 
 func (me *EventTemplate) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
+	if err := properties.EncodeAll(map[string]any{
 		"title":       me.Title,
 		"description": me.Description,
 		"event_type":  me.EventType,
 		"davis_merge": me.DavisMerge,
-		"metadata":    me.Metadata,
-	})
+	}); err != nil {
+		return err
+	}
+	return properties.EncodeSlice("metadata", me.Metadata)
 }
 
 func (me *EventTemplate) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	if err := decoder.DecodeAll(map[string]any{
 		"title":       &me.Title,
 		"description": &me.Description,
 		"event_type":  &me.EventType,
 		"davis_merge": &me.DavisMerge,
-		"metadata":    &me.Metadata,
-	})
+	}); err != nil {
+		return err
+	}
+	return decoder.DecodeSlice("metadata", &me.Metadata)
 }
