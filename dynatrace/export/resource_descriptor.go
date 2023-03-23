@@ -105,6 +105,7 @@ import (
 	webapprequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/requesterrors"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest"
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
@@ -769,15 +770,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		webapprequesterrors.Service,
 		Coalesce(Dependencies.Application),
 	),
-	ResourceTypes.UserSettings:      NewResourceDescriptor(usersettings.Service),
-	ResourceTypes.DashboardsGeneral: NewResourceDescriptor(dashboardsgeneral.Service),
-	ResourceTypes.DashboardsPresets: NewResourceDescriptor(dashboardspresets.Service),
-	ResourceTypes.LogProcessing:     NewResourceDescriptor(logdpprules.Service),
-	ResourceTypes.LogEvents:         NewResourceDescriptor(logevents.Service),
-	ResourceTypes.LogTimestamp:      NewResourceDescriptor(timestampconfiguration.Service),
-	ResourceTypes.LogGrail:          NewResourceDescriptor(logsongrailactivate.Service),
-	ResourceTypes.EULASettings:      NewResourceDescriptor(eulasettings.Service),
-	ResourceTypes.APIDetectionRules: NewResourceDescriptor(apidetection.Service),
+	ResourceTypes.UserSettings:              NewResourceDescriptor(usersettings.Service),
+	ResourceTypes.DashboardsGeneral:         NewResourceDescriptor(dashboardsgeneral.Service),
+	ResourceTypes.DashboardsPresets:         NewResourceDescriptor(dashboardspresets.Service),
+	ResourceTypes.LogProcessing:             NewResourceDescriptor(logdpprules.Service),
+	ResourceTypes.LogEvents:                 NewResourceDescriptor(logevents.Service),
+	ResourceTypes.LogTimestamp:              NewResourceDescriptor(timestampconfiguration.Service),
+	ResourceTypes.LogGrail:                  NewResourceDescriptor(logsongrailactivate.Service),
+	ResourceTypes.EULASettings:              NewResourceDescriptor(eulasettings.Service),
+	ResourceTypes.APIDetectionRules:         NewResourceDescriptor(apidetection.Service),
+	ResourceTypes.ServiceExternalWebRequest: NewResourceDescriptor(externalwebrequest.Service),
 }
 
 var BlackListedResources = []ResourceType{
