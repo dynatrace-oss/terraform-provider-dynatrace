@@ -591,7 +591,7 @@ func (me *Module) ExecuteImport() (err error) {
 		if me.Environment.Flags.Flat {
 			statement = fmt.Sprintf("%s.%s", me.Type, resource.UniqueName)
 		}
-		// log.Println("terraform", "import", statement, resource.ID)
+		// fmt.Println("terraform", "import", statement, resource.ID, me.Environment.OutputFolder)
 		cmd := exec.Command(
 			exePath,
 			"import",
@@ -615,9 +615,9 @@ func (me *Module) ExecuteImport() (err error) {
 			"DYNATRACE_API_TOKEN=" + me.Environment.Credentials.Token,
 			"DT_CACHE_FOLDER=" + cacheFolder,
 			"CACHE_OFFLINE_MODE=true",
-			"DELETE_CACHE_ON_LAUNCH=false",
+			"DT_CACHE_DELETE_ON_LAUNCH=false",
+			"DT_NO_CACHE_CLEANUP=true",
 			"DT_TERRAFORM_IMPORT=true",
-			"DT_REST_DEBUG_REQUESTS=terraform-provider-dynatrace.http.log",
 		}
 		cmd.Start()
 		if err := cmd.Wait(); err != nil {
