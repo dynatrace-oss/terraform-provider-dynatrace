@@ -113,6 +113,9 @@ func (me *ModelProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 		"samples":            &me.Samples,
 		"dealerting_samples": &me.DealertingSamples,
 	})
+	if me.Type == ModelTypes.AutoAdaptive && me.SignalFluctuation == nil {
+		me.SignalFluctuation = opt.NewFloat64(0)
+	}
 	if me.Type == ModelTypes.Static && me.Threshold == nil {
 		me.Threshold = opt.NewFloat64(0)
 	}

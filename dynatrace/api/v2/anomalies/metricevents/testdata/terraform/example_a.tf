@@ -5,7 +5,7 @@ resource "dynatrace_metric_events" "#name#" {
   summary                    = "sample_name"
   event_template {
     description   = "some description"
-    # davis_merge = false
+    davis_merge = false
     event_type    = "CUSTOM_ALERT"
     title         = "sample_name"
   }
