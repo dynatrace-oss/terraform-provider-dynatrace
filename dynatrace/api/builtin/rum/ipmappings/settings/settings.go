@@ -18,6 +18,7 @@
 package ipmappings
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -90,7 +91,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"city":         &me.City,
 		"country_code": &me.CountryCode,
 		"ip":           &me.Ip,
@@ -99,4 +100,13 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"longitude":    &me.Longitude,
 		"region_code":  &me.RegionCode,
 	})
+	if me.City != nil {
+		if me.Latitude == nil {
+			me.Latitude = opt.NewFloat64(0)
+		}
+		if me.Longitude == nil {
+			me.Longitude = opt.NewFloat64(0)
+		}
+	}
+	return err
 }
