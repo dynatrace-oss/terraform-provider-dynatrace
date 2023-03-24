@@ -8,7 +8,8 @@ resource "dynatrace_service_failure" "#name#" {
       custom_error_rule {
         request_attribute = "00000000-0000-0000-0000-000000000000"
         condition {
-          compare_operation_type = "STRING_EXISTS"
+          compare_operation_type = "STARTS_WITH"
+          case_sensitive = false
         }
       }
     }

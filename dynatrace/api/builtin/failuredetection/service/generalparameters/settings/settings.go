@@ -32,6 +32,15 @@ func (me *Settings) Name() string {
 	return me.ServiceID
 }
 
+func stringInSlice(v string, list []string) bool {
+	for _, s := range list {
+		if s == v {
+			return true
+		}
+	}
+	return false
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {

@@ -18,6 +18,7 @@
 package generalparameters
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -71,11 +72,32 @@ func (me *CompareOperation) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *CompareOperation) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"case_sensitive":         &me.CaseSensitive,
 		"compare_operation_type": &me.CompareOperationType,
 		"double_value":           &me.DoubleValue,
 		"int_value":              &me.IntValue,
 		"text_value":             &me.TextValue,
 	})
+	expectedValues := []string{"STRING_EQUALS", "NOT_STRING_EQUALS", "STARTS_WITH", "NOT_STARTS_WITH", "CONTAINS", "NOT_CONTAINS", "ENDS_WITH", "NOT_ENDS_WITH"}
+	if stringInSlice(me.CompareOperationType, expectedValues) {
+		if me.CaseSensitive == nil {
+			me.CaseSensitive = opt.NewBool(false)
+		}
+		if me.TextValue == nil {
+			me.TextValue = opt.NewString("")
+		}
+	}
+
+	intExpectedValues := []string{"INTEGER_EQUALS", "NOT_INTEGER_EQUALS", "INTEGER_GREATER_THAN", "INTEGER_GREATER_THAN_OR_EQUALS", "INTEGER_LESS_THAN", "INTEGER_LESS_THAN_OR_EQUALS"}
+	if me.IntValue == nil && stringInSlice(me.CompareOperationType, intExpectedValues) {
+		me.IntValue = opt.NewInt(0)
+	}
+
+	doubleExpectedValues := []string{"DOUBLE_EQUALS", "NOT_DOUBLE_EQUALS", "DOUBLE_GREATER_THAN", "DOUBLE_GREATER_THAN_OR_EQUALS", "DOUBLE_LESS_THAN", "DOUBLE_LESS_THAN_OR_EQUALS"}
+	if me.DoubleValue == nil && stringInSlice(me.CompareOperationType, doubleExpectedValues) {
+		me.DoubleValue = opt.NewFloat64(0)
+	}
+
+	return err
 }
