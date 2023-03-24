@@ -63,11 +63,13 @@ func (me *CaptureSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"consider_for_ai": &me.ConsiderForAI,
 		"impact_apdex":    &me.ImpactApdex,
 	})
-	if me.ConsiderForAI == nil && me.Capture {
-		me.ConsiderForAI = opt.NewBool(false)
-	}
-	if me.ImpactApdex == nil && me.Capture {
-		me.ImpactApdex = opt.NewBool(false)
+	if me.Capture {
+		if me.ConsiderForAI == nil {
+			me.ConsiderForAI = opt.NewBool(false)
+		}
+		if me.ImpactApdex == nil {
+			me.ImpactApdex = opt.NewBool(false)
+		}
 	}
 	return err
 }
