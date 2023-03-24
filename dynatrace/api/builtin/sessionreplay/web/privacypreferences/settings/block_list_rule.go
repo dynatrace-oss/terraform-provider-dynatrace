@@ -18,6 +18,7 @@
 package privacypreferences
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -86,10 +87,14 @@ func (me *BlockListRule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *BlockListRule) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"attribute_expression":  &me.AttributeExpression,
 		"css_expression":        &me.CssExpression,
 		"hide_user_interaction": &me.HideUserInteraction,
 		"target":                &me.Target,
 	})
+	if me.HideUserInteraction == nil && me.Target == "ELEMENT" {
+		me.HideUserInteraction = opt.NewBool(false)
+	}
+	return err
 }
