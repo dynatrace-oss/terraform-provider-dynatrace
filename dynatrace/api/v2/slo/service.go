@@ -57,7 +57,7 @@ func (me *service) Get(id string, v *slo.SLO) error {
 		length := 0
 
 		for length == 0 {
-			req = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=id(\"%s\")&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(id)), 200)
+			req = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200)
 			var slos sloList
 			if err = req.Finish(&slos); err != nil {
 				return err
