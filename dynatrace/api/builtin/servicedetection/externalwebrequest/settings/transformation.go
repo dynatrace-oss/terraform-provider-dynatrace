@@ -145,7 +145,7 @@ func (me *Transformation) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.IncludeHexNumbers = opt.NewBool(false)
 	}
 	if me.TakeFromEnd == nil && me.TransformationType == TransformationTypes.TakeSegments {
-		me.IncludeHexNumbers = opt.NewBool(false)
+		me.TakeFromEnd = opt.NewBool(false)
 	}
 	return err
 }
