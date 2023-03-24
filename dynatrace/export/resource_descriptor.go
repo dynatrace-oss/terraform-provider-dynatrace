@@ -106,6 +106,7 @@ import (
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebservice"
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
@@ -780,6 +781,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.EULASettings:              NewResourceDescriptor(eulasettings.Service),
 	ResourceTypes.APIDetectionRules:         NewResourceDescriptor(apidetection.Service),
 	ResourceTypes.ServiceExternalWebRequest: NewResourceDescriptor(externalwebrequest.Service),
+	ResourceTypes.ServiceExternalWebService: NewResourceDescriptor(externalwebservice.Service),
 }
 
 var BlackListedResources = []ResourceType{

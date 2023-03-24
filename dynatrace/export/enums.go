@@ -215,6 +215,7 @@ var ResourceTypes = struct {
 	EULASettings                        ResourceType
 	APIDetectionRules                   ResourceType
 	ServiceExternalWebRequest           ResourceType
+	ServiceExternalWebService           ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -387,6 +388,7 @@ var ResourceTypes = struct {
 	"dynatrace_eula_settings",
 	"dynatrace_api_detection",
 	"dynatrace_service_external_web_request",
+	"dynatrace_service_external_web_service",
 }
 
 type ResourceStatus string

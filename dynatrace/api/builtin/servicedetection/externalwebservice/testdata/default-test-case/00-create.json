@@ -1,0 +1,31 @@
+{
+    "conditions": [
+        {
+            "attribute": "UrlPath",
+            "compareOperationType": "StringContains",
+            "ignoreCase": true,
+            "textValues": [
+                "Terraform"
+            ]
+        }
+    ],
+    "description": "Created by Terraform",
+    "enabled": false,
+    "idContributors": {
+        "detectAsWebRequestService": false,
+        "portForServiceId": true,
+        "urlPath": {
+            "enableIdContributor": true,
+            "serviceIdContributor": {
+                "contributionType": "OverrideValue",
+                "valueOverride": {
+                    "value": "Terraform"
+                }
+            }
+        }
+    },
+    "managementZones": [
+        "000000000000000000"
+    ],
+    "name": "${randomize}"
+}

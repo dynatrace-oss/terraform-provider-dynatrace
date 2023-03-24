@@ -307,6 +307,7 @@ func Provider() *schema.Provider {
 			"dynatrace_eula_settings":                      resources.NewGeneric(export.ResourceTypes.EULASettings).Resource(),
 			"dynatrace_api_detection":                      resources.NewGeneric(export.ResourceTypes.APIDetectionRules).Resource(),
 			"dynatrace_service_external_web_request":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebRequest).Resource(),
+			"dynatrace_service_external_web_service":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebService).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
