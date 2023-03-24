@@ -18,6 +18,7 @@
 package logevents
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -75,11 +76,15 @@ func (me *EventTemplate) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *EventTemplate) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"davis_merge": &me.DavisMerge,
 		"description": &me.Description,
 		"event_type":  &me.EventType,
 		"metadata":    &me.Metadata,
 		"title":       &me.Title,
 	})
+	if me.DavisMerge == nil && me.EventType != EventTypeEnums.Info {
+		me.DavisMerge = opt.NewBool(false)
+	}
+	return err
 }
