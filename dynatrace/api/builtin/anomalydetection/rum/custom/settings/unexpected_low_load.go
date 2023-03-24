@@ -18,6 +18,7 @@
 package custom
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -50,8 +51,12 @@ func (me *UnexpectedLowLoad) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *UnexpectedLowLoad) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"enabled":              &me.Enabled,
 		"threshold_percentage": &me.ThresholdPercentage,
 	})
+	if me.ThresholdPercentage == nil && me.Enabled {
+		me.ThresholdPercentage = opt.NewFloat64(0)
+	}
+	return err
 }
