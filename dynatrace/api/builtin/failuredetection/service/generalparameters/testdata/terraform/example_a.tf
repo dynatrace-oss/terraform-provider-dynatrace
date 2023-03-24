@@ -10,6 +10,7 @@ resource "dynatrace_service_failure" "#name#" {
         condition {
           compare_operation_type = "STARTS_WITH"
           case_sensitive = false
+          text_value = "terraform"
         }
       }
     }
