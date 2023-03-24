@@ -145,6 +145,9 @@ func (me *Condition) UnmarshalHCL(decoder hcl.Decoder) error {
 		"tag_values":             &me.TagValues,
 		"text_values":            &me.TextValues,
 	})
+	if me.IntValue == nil && (me.CompareOperationType == "IntGreaterThan" || me.CompareOperationType == "IntLessThan") {
+		me.IntValue = opt.NewInt(0)
+	}
 	expectedValues := []string{"TagEquals", "TagKeyEquals", "StringEndsWith", "NotStringEndsWith", "StringStartsWith", "NotStringStartsWith", "StringContains", "NotStringContains", "StringEquals", "NotStringEquals"}
 	if me.IgnoreCase == nil && stringInSlice(me.CompareOperationType, expectedValues) {
 		me.IgnoreCase = opt.NewBool(false)
