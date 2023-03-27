@@ -51,7 +51,7 @@ resource "dynatrace_aws_credentials" "#name#" {
 ### Optional
 
 - `label` (String) The name of the credentials
-- `supporting_services_to_monitor` (Block List) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
+- `supporting_services_to_monitor` (Block Set) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
 - `tags_to_monitor` (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 
@@ -80,7 +80,7 @@ Read-Only:
 
 Optional:
 
-- `monitored_metrics` (Block List) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
+- `monitored_metrics` (Block Set) a list of metrics to be monitored for this service (see [below for nested schema](#nestedblock--supporting_services_to_monitor--monitored_metrics))
 - `name` (String) the name of the supporting service
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 
@@ -89,7 +89,7 @@ Optional:
 
 Optional:
 
-- `dimensions` (List of String) a list of metric's dimensions names
+- `dimensions` (Set of String) a list of metric's dimensions names
 - `name` (String) the name of the metric of the supporting service
 - `statistic` (String) the statistic (aggregation) to be used for the metric. AVG_MIN_MAX value is 3 statistics at once: AVERAGE, MINIMUM and MAXIMUM
 - `unknowns` (String) Any attributes that aren't yet supported by this provider

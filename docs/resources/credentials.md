@@ -28,7 +28,7 @@ description: |-
 - `external` (Block List, Max: 1) External Vault Configuration (see [below for nested schema](#nestedblock--external))
 - `format` (String) The certificate format. Possible values are `PEM`, `PKCS12` and `UNKNOWN`.
 - `owner_access_only` (Boolean) The credentials set is available to every user (`false`) or to owner only (`true`)
-- `password` (String, Sensitive) The password of the credential.
+- `password` (String, Sensitive) The password of the credential. Note: Terraform treats an empty string for a value as if the attribute was absent. If you want to set an empty password, use the value `--empty--`.
 - `public` (Boolean) For certificate authentication specifies whether it's public certificate auth (`true`) or not (`false`).
 - `token` (String, Sensitive) Token in the string format. Specifying a token implies `Token Authentication`.
 - `username` (String, Sensitive) The username of the credentials set.

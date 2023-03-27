@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_application_error_rules (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_web_app_custom_errors`, please review the schema for additional information.
+-> Certain field(s) of this resource has overlap with `dynatrace_web_app_request_errors` and `dynatrace_web_app_custom_errors`, please review the schema for additional information.
 
 ## Dynatrace Documentation
 
@@ -26,14 +26,14 @@ The full documentation of the export feature is available [here](https://registr
 
 ### Optional
 
-- `custom_errors` (Block List, Max: 1) An ordered list of HTTP errors.
+- `custom_errors` (Block List, Max: 1) (Field has overlap with `dynatrace_web_app_custom_errors`) An ordered list of HTTP errors.
 
  Rules are evaluated from top to bottom; the first matching rule applies (see [below for nested schema](#nestedblock--custom_errors))
-- `http_errors` (Block List, Max: 1) An ordered list of HTTP errors.
+- `http_errors` (Block List, Max: 1) (Field has overlap with `dynatrace_web_app_request_errors`) An ordered list of HTTP errors.
 
  Rules are evaluated from top to bottom; the first matching rule applies (see [below for nested schema](#nestedblock--http_errors))
-- `ignore_custom_errors_apdex` (Boolean) Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation
-- `ignore_http_errors_apdex` (Boolean) Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation
+- `ignore_custom_errors_apdex` (Boolean) (Field has overlap with `dynatrace_web_app_custom_errors`) Exclude (`true`) or include (`false`) custom errors listed in **customErrorRules** in Apdex calculation
+- `ignore_http_errors_apdex` (Boolean) (Field has overlap with `dynatrace_web_app_request_errors`) Exclude (`true`) or include (`false`) HTTP errors listed in **httpErrorRules** in Apdex calculation
 - `ignore_js_errors_apdex` (Boolean) Exclude (`true`) or include (`false`) JavaScript errors in Apdex calculation
 - `web_application_id` (String) The EntityID of the the WebApplication
 

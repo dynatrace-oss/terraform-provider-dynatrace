@@ -105,6 +105,7 @@ Optional:
 Optional:
 
 - `description` (Block List, Max: 1) Configuration of a matching filter (see [below for nested schema](#nestedblock--filters--filter--custom--description))
+- `metadata` (Block List, Max: 1) Configuration of a matching filter (see [below for nested schema](#nestedblock--filters--filter--custom--metadata))
 - `title` (Block List, Max: 1) Configuration of a matching filter (see [below for nested schema](#nestedblock--filters--filter--custom--title))
 
 <a id="nestedblock--filters--filter--custom--description"></a>
@@ -120,6 +121,31 @@ Optional:
 - `case_sensitive` (Boolean) The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive
 - `enabled` (Boolean) The filter is enabled (`true`) or disabled (`false`)
 - `negate` (Boolean) Reverses the comparison **operator**. For example it turns the **begins with** into **does not begin with**
+
+
+<a id="nestedblock--filters--filter--custom--metadata"></a>
+### Nested Schema for `filters.filter.custom.metadata`
+
+Required:
+
+- `items` (Block List, Min: 1, Max: 1) Define filters for event properties. A maximum of 20 properties is allowed. (see [below for nested schema](#nestedblock--filters--filter--custom--metadata--items))
+
+<a id="nestedblock--filters--filter--custom--metadata--items"></a>
+### Nested Schema for `filters.filter.custom.metadata.items`
+
+Required:
+
+- `filter` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--filters--filter--custom--metadata--items--filter))
+
+<a id="nestedblock--filters--filter--custom--metadata--items--filter"></a>
+### Nested Schema for `filters.filter.custom.metadata.items.filter`
+
+Required:
+
+- `key` (String) Type 'dt.' for key hints.
+- `value` (String) Value
+
+
 
 
 <a id="nestedblock--filters--filter--custom--title"></a>

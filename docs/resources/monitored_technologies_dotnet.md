@@ -23,7 +23,8 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_monitored_technologies_dotnet" "#name#" {
-  enabled = false
+  enabled = true
+  enabled_dot_net_core = false
   host_id = "environment"
 }
 ```
