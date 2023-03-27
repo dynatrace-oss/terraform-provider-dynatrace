@@ -76,7 +76,7 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	if err = json.Unmarshal(responseBytes, &v); err != nil {
 		return err
 	}
-	if levelType == "acount" {
+	if levelType == "account" {
 		v.Account = levelID
 	} else if levelType == "environment" {
 		v.Environment = levelID
