@@ -1,0 +1,87 @@
+---
+layout: ""
+page_title: "dynatrace_policy_bindings Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_policy_bindings` covers binding policies to user groups via Account Management API for Managed Clusters
+---
+
+# dynatrace_policy_bindings (Resource)
+
+## Dynatrace Documentation
+
+- Dynatrace IAM Policy Management - https://www.dynatrace.com/support/help/manage/access-control/user-management-and-sso/manage-groups-and-permissions/iam/iam-policy-mgt
+
+## Prerequisites
+
+
+```terraform
+provider "dynatrace" {
+  dt_cluster_api_token = "######.#########################################################################################"
+  dt_cluster_url = "https://####.######.#####"
+}
+```
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_user_group" "my_group" {
+  name = "my_group"
+}
+
+resource "dynatrace_policy" "env_policy" {
+  name            = "my_policy_valid_for_environment_########-####-####-####-############"
+  environment     = "########-####-####-####-############"
+  statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"string\";"
+}
+
+resource "dynatrace_policy_bindings" "env_bindings" {
+  group       = dynatrace_user_group.my_group.id
+  environment = "########-####-####-####-############"
+  policies    = [dynatrace_policy.env_policy.id]
+}
+
+resource "dynatrace_policy" "cluster_policy" {
+  name            = "my_policy_valid_for_all_environments_in_this_cluster"
+  cluster         = "########-####-####-####-############"
+  statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"string\";"
+}
+
+resource "dynatrace_policy_bindings" "cluster_bindings" {
+  group    = dynatrace_user_group.my_group.id
+  cluster  = "########-####-####-####-############"
+  policies = [dynatrace_policy.cluster_policy.id]
+}
+```
+
+# Policy Bindings to Groups on different levels are required to be specified within separate resources.
+# The following example would be invalid, because policies the policies to be bound to the group are defined for different levels.
+
+# ```terraform
+# resource "dynatrace_user_group" "my_group" {
+#   name = "my_group"
+
+#   permissions {
+#     ...
+#   }
+# }
+
+# resource "dynatrace_policy" "env_policy" {
+#   name            = "my_policy_valid_for_environment_########-####-####-####-############"
+#   environment     = "########-####-####-####-############"
+#   statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"string\";"
+# }
+
+# resource "dynatrace_policy" "cluster_policy" {
+#   name            = "my_policy_valid_for_all_environments_in_this_cluster"
+#   cluster         = "########-####-####-####-############"
+#   statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"string\";"
+# }
+
+# resource "dynatrace_policy_bindings" "bindings" {
+#   group    = dynatrace_user_group.my_group.id
+#   cluster  = "########-####-####-####-############"
+#   policies = [dynatrace_policy.cluster_policy.id, dynatrace_policy.env_policy.id] # INVALID, because `dynatrace_policy.env_policy` is not defined for the cluster level
+# }
+```
+
+{{ .SchemaMarkdown | trimspace }}
