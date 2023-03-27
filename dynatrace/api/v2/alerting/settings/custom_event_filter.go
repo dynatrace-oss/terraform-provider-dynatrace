@@ -24,8 +24,9 @@ import (
 )
 
 type CustomEventFilter struct {
-	Title       *TextFilter `json:"titleFilter,omitempty"`       // Title filter
-	Description *TextFilter `json:"descriptionFilter,omitempty"` // Description filter
+	Title          *TextFilter     `json:"titleFilter,omitempty"`       // Title filter
+	Description    *TextFilter     `json:"descriptionFilter,omitempty"` // Description filter
+	MetadataFilter *MetadataFilter `json:"metadataFilter,omitempty"`    // Property filters
 }
 
 func (me *CustomEventFilter) Schema() map[string]*schema.Schema {
@@ -46,6 +47,14 @@ func (me *CustomEventFilter) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(TextFilter).Schema()},
 		},
+		"metadata": {
+			Type:        schema.TypeList,
+			Description: "Configuration of a matching filter",
+			Optional:    true,
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(MetadataFilter).Schema()},
+		},
 	}
 }
 
@@ -54,6 +63,9 @@ func (me *CustomEventFilter) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if err := properties.Encode("title", me.Title); err != nil {
+		return err
+	}
+	if err := properties.Encode("metadata", me.MetadataFilter); err != nil {
 		return err
 	}
 	return nil
@@ -69,6 +81,12 @@ func (me *CustomEventFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 	if _, ok := decoder.GetOk("title.#"); ok {
 		me.Title = new(TextFilter)
 		if err := me.Title.UnmarshalHCL(hcl.NewDecoder(decoder, "title", 0)); err != nil {
+			return err
+		}
+	}
+	if _, ok := decoder.GetOk("metadata.#"); ok {
+		me.MetadataFilter = new(MetadataFilter)
+		if err := me.MetadataFilter.UnmarshalHCL(hcl.NewDecoder(decoder, "metadata", 0)); err != nil {
 			return err
 		}
 	}
