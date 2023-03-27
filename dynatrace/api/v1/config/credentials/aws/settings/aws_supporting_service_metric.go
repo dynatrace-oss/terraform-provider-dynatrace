@@ -46,7 +46,7 @@ func (assm *AWSSupportingServiceMetric) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"dimensions": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "a list of metric's dimensions names",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
@@ -158,13 +158,11 @@ func (assm *AWSSupportingServiceMetric) UnmarshalHCL(decoder hcl.Decoder) error 
 	if value, ok := decoder.GetOk("statistic"); ok {
 		assm.Statistic = Statistic(value.(string))
 	}
-	if _, ok := decoder.GetOk("dimensions.#"); ok {
+	if err := decoder.Decode("dimensions", &assm.Dimensions); err != nil {
+		return err
+	}
+	if assm.Dimensions == nil {
 		assm.Dimensions = []string{}
-		if dims, ok := decoder.GetOk("dimensions"); ok {
-			for _, dim := range dims.([]any) {
-				assm.Dimensions = append(assm.Dimensions, dim.(string))
-			}
-		}
 	}
 	return nil
 }

@@ -40,12 +40,10 @@ func (assc *AWSSupportingServiceConfig) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"monitored_metrics": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "a list of metrics to be monitored for this service",
 			Optional:    true,
-			Elem: &schema.Resource{
-				Schema: new(AWSSupportingServiceMetric).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(AWSSupportingServiceMetric).Schema()},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
@@ -111,7 +109,7 @@ func (assc *AWSSupportingServiceConfig) MarshalHCL(properties hcl.Properties) er
 	if err := properties.Encode("name", assc.Name); err != nil {
 		return err
 	}
-	if err := properties.Encode("monitored_metrics", assc.MonitoredMetrics); err != nil {
+	if err := properties.EncodeSlice("monitored_metrics", assc.MonitoredMetrics); err != nil {
 		return err
 	}
 	return nil
@@ -134,15 +132,8 @@ func (assc *AWSSupportingServiceConfig) UnmarshalHCL(decoder hcl.Decoder) error 
 	if value, ok := decoder.GetOk("name"); ok {
 		assc.Name = value.(string)
 	}
-	if result, ok := decoder.GetOk("monitored_metrics.#"); ok {
-		assc.MonitoredMetrics = []*AWSSupportingServiceMetric{}
-		for idx := 0; idx < result.(int); idx++ {
-			monitoredMetric := new(AWSSupportingServiceMetric)
-			if err := monitoredMetric.UnmarshalHCL(hcl.NewDecoder(decoder, "monitored_metrics", idx)); err != nil {
-				return err
-			}
-			assc.MonitoredMetrics = append(assc.MonitoredMetrics, monitoredMetric)
-		}
+	if err := decoder.DecodeSlice("monitored_metrics", &assc.MonitoredMetrics); err != nil {
+		return err
 	}
 	return nil
 }

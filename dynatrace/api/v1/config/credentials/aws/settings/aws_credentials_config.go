@@ -79,12 +79,10 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 			},
 		},
 		"supporting_services_to_monitor": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "supporting services to be monitored",
 			Optional:    true,
-			Elem: &schema.Resource{
-				Schema: new(AWSSupportingServiceConfig).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(AWSSupportingServiceConfig).Schema()},
 		},
 		"unknowns": {
 			Type:        schema.TypeString,
@@ -226,7 +224,7 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if err := properties.Encode("supporting_services_to_monitor", awscc.SupportingServicesToMonitor); err != nil {
+	if err := properties.EncodeSlice("supporting_services_to_monitor", awscc.SupportingServicesToMonitor); err != nil {
 		return err
 	}
 	if err := properties.Encode("label", awscc.Label); err != nil {
@@ -269,15 +267,8 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("label"); ok {
 		awscc.Label = value.(string)
 	}
-	if result, ok := decoder.GetOk("supporting_services_to_monitor.#"); ok {
-		awscc.SupportingServicesToMonitor = []*AWSSupportingServiceConfig{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(AWSSupportingServiceConfig)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "supporting_services_to_monitor", idx)); err != nil {
-				return err
-			}
-			awscc.SupportingServicesToMonitor = append(awscc.SupportingServicesToMonitor, entry)
-		}
+	if err := decoder.DecodeSlice("supporting_services_to_monitor", &awscc.SupportingServicesToMonitor); err != nil {
+		return err
 	}
 	if value, ok := decoder.GetOk("tagged_only"); ok {
 		awscc.TaggedOnly = opt.NewBool(value.(bool))
