@@ -89,7 +89,7 @@ Optional:
 
 Optional:
 
-- `dimensions` (Set of String) a list of metric's dimensions names
+- `dimensions` (List of String) a list of metric's dimensions names
 - `name` (String) the name of the metric of the supporting service
 - `statistic` (String) the statistic (aggregation) to be used for the metric. AVG_MIN_MAX value is 3 statistics at once: AVERAGE, MINIMUM and MAXIMUM
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
