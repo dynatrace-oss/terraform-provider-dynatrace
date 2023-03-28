@@ -46,7 +46,7 @@ func (assm *AWSSupportingServiceMetric) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"dimensions": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Description: "a list of metric's dimensions names",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
