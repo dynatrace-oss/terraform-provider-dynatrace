@@ -217,6 +217,7 @@ var ResourceTypes = struct {
 	ServiceExternalWebRequest           ResourceType
 	ServiceExternalWebService           ResourceType
 	ServiceFullWebRequest               ResourceType
+	ServiceFullWebService               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -391,6 +392,7 @@ var ResourceTypes = struct {
 	"dynatrace_service_external_web_request",
 	"dynatrace_service_external_web_service",
 	"dynatrace_service_full_web_request",
+	"dynatrace_service_full_web_service",
 }
 
 type ResourceStatus string
