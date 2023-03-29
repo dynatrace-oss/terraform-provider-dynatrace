@@ -1,0 +1,105 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure allowed URL patterns to fetch external resources such as images. For an image to be uploaded, the configured URL must match one of the specified patterns.",
+	"displayName": "Allowed URL pattern rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"RuleEnum": {
+			"description": "Type of rule",
+			"displayName": "Rule",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Given URL must start with this pattern.",
+					"displayName": "Starts with",
+					"value": "startsWith"
+				},
+				{
+					"description": "Given URL must be an exact match!",
+					"displayName": "Exact",
+					"value": "equals"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"allowlist": {
+			"description": "",
+			"displayName": "List of URL pattern matchers",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/URLPattern"
+				}
+			},
+			"maxObjects": 20,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:dashboards"
+	],
+	"schemaId": "builtin:dashboards.image.allowlist",
+	"types": {
+		"URLPattern": {
+			"description": "",
+			"displayName": "URL pattern",
+			"documentation": "",
+			"properties": {
+				"rule": {
+					"default": "startsWith",
+					"description": "",
+					"displayName": "Rule",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "select",
+					"type": {
+						"$ref": "#/enums/RuleEnum"
+					}
+				},
+				"template": {
+					"constraints": [
+						{
+							"customMessage": "Not a valid HTTP or HTTPS URL prefix.",
+							"pattern": "^https?://\\S+?/\\S*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Pattern",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"searchPattern": "{template}",
+			"summaryPattern": "{rule} ''{template}''",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

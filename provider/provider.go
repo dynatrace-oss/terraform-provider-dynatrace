@@ -314,6 +314,7 @@ func Provider() *schema.Provider {
 			"dynatrace_service_external_web_service":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebService).Resource(),
 			"dynatrace_service_full_web_request":           resources.NewGeneric(export.ResourceTypes.ServiceFullWebRequest).Resource(),
 			"dynatrace_service_full_web_service":           resources.NewGeneric(export.ResourceTypes.ServiceFullWebService).Resource(),
+			"dynatrace_dashboards_allowlist":               resources.NewGeneric(export.ResourceTypes.DashboardsAllowlist).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

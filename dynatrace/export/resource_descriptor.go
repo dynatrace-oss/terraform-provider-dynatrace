@@ -42,6 +42,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
 	dashboardsgeneral "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general"
+	dashboardsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/image/allowlist"
 	dashboardspresets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/presets"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
@@ -786,6 +787,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceExternalWebService: NewResourceDescriptor(externalwebservice.Service),
 	ResourceTypes.ServiceFullWebRequest:     NewResourceDescriptor(fullwebrequest.Service),
 	ResourceTypes.ServiceFullWebService:     NewResourceDescriptor(fullwebservice.Service),
+	ResourceTypes.DashboardsAllowlist:       NewResourceDescriptor(dashboardsallowlist.Service),
 }
 
 var BlackListedResources = []ResourceType{

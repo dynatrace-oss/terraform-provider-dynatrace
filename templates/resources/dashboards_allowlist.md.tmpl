@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_dashboards_allowlist Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_dashboards_allowlist` covers dashboard configuration for allowed URL pattern rules
+---
+
+# dynatrace_dashboards_allowlist (Resource)
+
+## Dynatrace Documentation
+
+- Dashboards - https://www.dynatrace.com/support/help/observe-and-explore/dashboards#expand--add-image-url-to-allowlist--28
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:dashboards.image.allowlist`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_dashboards_allowlist` downloads all existing allowed URL pattern rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/dashboards/image/allowlist/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
