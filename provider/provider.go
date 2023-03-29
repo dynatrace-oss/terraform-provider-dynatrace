@@ -312,6 +312,7 @@ func Provider() *schema.Provider {
 			"dynatrace_api_detection":                      resources.NewGeneric(export.ResourceTypes.APIDetectionRules).Resource(),
 			"dynatrace_service_external_web_request":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebRequest).Resource(),
 			"dynatrace_service_external_web_service":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebService).Resource(),
+			"dynatrace_service_full_web_request":           resources.NewGeneric(export.ResourceTypes.ServiceFullWebRequest).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

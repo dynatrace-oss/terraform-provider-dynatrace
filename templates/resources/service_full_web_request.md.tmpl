@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_service_full_web_request Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_service_full_web_request` covers service detection rules for full web requests
+---
+
+# dynatrace_service_full_web_request (Resource)
+
+## Dynatrace Documentation
+
+- Service detection rules - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-detection-and-naming/customize-service-detection
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:service-detection.full-web-request`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_service_full_web_request` downloads all existing service detection rules for full web requests
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/servicedetection/fullwebrequest/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

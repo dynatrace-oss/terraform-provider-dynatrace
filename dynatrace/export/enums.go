@@ -216,6 +216,7 @@ var ResourceTypes = struct {
 	APIDetectionRules                   ResourceType
 	ServiceExternalWebRequest           ResourceType
 	ServiceExternalWebService           ResourceType
+	ServiceFullWebRequest               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -389,6 +390,7 @@ var ResourceTypes = struct {
 	"dynatrace_api_detection",
 	"dynatrace_service_external_web_request",
 	"dynatrace_service_external_web_service",
+	"dynatrace_service_full_web_request",
 }
 
 type ResourceStatus string
