@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_failure_detection_rules Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_failure_detection_rules` covers configuration for failure detection rules
+---
+
+# dynatrace_failure_detection_rules (Resource)
+
+## Dynatrace Documentation
+
+- Configure service failure detection - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-monitoring-settings/configure-service-failure-detection
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:failure-detection.environment.rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_failure_detection_rules` downloads all existing failure detection rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/failuredetection/environment/rules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

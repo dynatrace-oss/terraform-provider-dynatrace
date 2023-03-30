@@ -182,6 +182,7 @@ import (
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
 
 	envparameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters"
+	envrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/httpparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
@@ -790,6 +791,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceFullWebService:      NewResourceDescriptor(fullwebservice.Service),
 	ResourceTypes.DashboardsAllowlist:        NewResourceDescriptor(dashboardsallowlist.Service),
 	ResourceTypes.FailureDetectionParameters: NewResourceDescriptor(envparameters.Service),
+	ResourceTypes.FailureDetectionRules:      NewResourceDescriptor(envrules.Service),
 }
 
 var BlackListedResources = []ResourceType{

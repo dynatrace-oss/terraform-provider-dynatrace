@@ -1,0 +1,495 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure rules which services certain [failure detection parameters](/ui/settings/builtin:failure-detection.environment.parameters) should apply to. For more information please refer to [Failure detection settings](https://dt-url.net/7v034gp).",
+	"displayName": "Failure detection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"attributes": {
+			"description": "",
+			"displayName": "attributes",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process group name",
+					"value": "PG_NAME"
+				},
+				{
+					"displayName": "Process group tag",
+					"value": "PG_TAG"
+				},
+				{
+					"displayName": "Service management zone",
+					"value": "SERVICE_MANAGEMENT_ZONE"
+				},
+				{
+					"displayName": "Service name",
+					"value": "SERVICE_NAME"
+				},
+				{
+					"displayName": "Service type",
+					"value": "SERVICE_TYPE"
+				},
+				{
+					"displayName": "Service tag",
+					"value": "SERVICE_TAG"
+				}
+			],
+			"type": "enum"
+		},
+		"serviceTypes": {
+			"description": "",
+			"displayName": "serviceTypes",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Web request service",
+					"value": "WebRequest"
+				},
+				{
+					"displayName": "Web service",
+					"value": "WebService"
+				},
+				{
+					"displayName": "Database service",
+					"value": "Database"
+				},
+				{
+					"displayName": "Method",
+					"value": "Method"
+				},
+				{
+					"displayName": "Website",
+					"value": "WebSite"
+				},
+				{
+					"displayName": "Messaging service",
+					"value": "Messaging"
+				},
+				{
+					"displayName": "Mobile service",
+					"value": "Mobile"
+				},
+				{
+					"displayName": "Process",
+					"value": "Process"
+				},
+				{
+					"displayName": "RMI service",
+					"value": "RMI"
+				},
+				{
+					"displayName": "External service",
+					"value": "External"
+				},
+				{
+					"displayName": "Queue listener service",
+					"value": "QueueListener"
+				},
+				{
+					"displayName": "Queue interaction service",
+					"value": "QueueInteraction"
+				},
+				{
+					"displayName": "RPC service",
+					"value": "RemoteCall"
+				},
+				{
+					"displayName": "SaaS vendor service",
+					"value": "SaasVendor"
+				},
+				{
+					"displayName": "AMP service",
+					"value": "AMP"
+				},
+				{
+					"displayName": "Custom application service",
+					"value": "CustomApplication"
+				},
+				{
+					"displayName": "CICS service",
+					"value": "CICS"
+				},
+				{
+					"displayName": "IMS service",
+					"value": "IMS"
+				},
+				{
+					"displayName": "CICS interaction service",
+					"value": "CICSInteraction"
+				},
+				{
+					"displayName": "IMS interaction service",
+					"value": "IMSInteraction"
+				},
+				{
+					"displayName": "Enterprise Service Bus service",
+					"value": "EnterpriseServiceBus"
+				},
+				{
+					"displayName": "z/OS Connect service",
+					"value": "zOSConnect"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add failure detection rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"conditions": {
+			"description": "",
+			"displayName": "Conditions",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/condition"
+				}
+			},
+			"maxObjects": 10,
+			"metadata": {
+				"addItemButton": "Add condition"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Rule description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 150,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"parameterId": {
+			"default": "00000000-0000-0000-0000-000000000000",
+			"description": "",
+			"displayName": "Failure detection parameters",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"uiDefaultValue": "",
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"referencedType": "builtin:failure-detection.environment.parameters",
+			"type": "setting"
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:failure-detection"
+	],
+	"schemaId": "builtin:failure-detection.environment.rules",
+	"types": {
+		"condition": {
+			"description": "",
+			"displayName": "condition",
+			"documentation": "",
+			"properties": {
+				"attribute": {
+					"default": "SERVICE_NAME",
+					"description": "The attribute to be checked.",
+					"displayName": "Attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/attributes"
+					}
+				},
+				"predicate": {
+					"description": "",
+					"displayName": "Condition to check the attribute against",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/predicate"
+					}
+				}
+			},
+			"summaryPattern": "**{attribute}** _{predicate.predicateType|toLowerCase}_ {attribute|enumValue, select, SERVICE_TYPE {{predicate.serviceType}} SERVICE_MANAGEMENT_ZONE {{predicate.managementZones|mgmtZoneDisplayName|join:', '}} PG_TAG {{predicate.tags} {predicate.tagKeys}} SERVICE_TAG {{predicate.tags} {predicate.tagKeys}} other {{predicate.textValues}}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"predicate": {
+			"description": "",
+			"displayName": "predicate",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": false,
+					"description": "",
+					"displayName": "Case sensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"STRING_EQUALS",
+							"STARTS_WITH",
+							"ENDS_WITH",
+							"CONTAINS"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "boolean"
+				},
+				"managementZones": {
+					"description": "",
+					"displayName": "Management zones",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"pattern": "^-?\\d{1,19}$",
+								"type": "PATTERN"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"referencedType": "ManagementZone",
+						"subType": "config",
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add management zone"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"MANAGEMENT_ZONES_CONTAINS_ALL"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "set"
+				},
+				"predicateType": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"../attribute"
+						],
+						"fullContext": true,
+						"identifier": "service_attribute_compare_operation_source",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "STRING_EQUALS",
+					"description": "",
+					"displayName": "Predicate type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"serviceType": {
+					"description": "",
+					"displayName": "Service types",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/serviceTypes"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"SERVICE_TYPE_EQUALS"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "set"
+				},
+				"tagKeys": {
+					"description": "",
+					"displayName": "Tag keys",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"metadata": {
+						"addItemButton": "Add tag key"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"TAG_KEY_EQUALS"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "set"
+				},
+				"tags": {
+					"description": "",
+					"displayName": "Tags (exact match)",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"customValidatorId": "universal-tag-validator",
+								"type": "CUSTOM_VALIDATOR_REF"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"subType": "tag",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"metadata": {
+						"addItemButton": "Add tag"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"TAG_EQUALS"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "set"
+				},
+				"textValues": {
+					"description": "",
+					"displayName": "Names",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10,
+					"metadata": {
+						"addItemButton": "Add value"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"STRING_EQUALS",
+							"STARTS_WITH",
+							"ENDS_WITH",
+							"CONTAINS"
+						],
+						"property": "predicateType",
+						"type": "IN"
+					},
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.5"
+}

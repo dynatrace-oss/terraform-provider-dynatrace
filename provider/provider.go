@@ -316,6 +316,7 @@ func Provider() *schema.Provider {
 			"dynatrace_service_full_web_service":           resources.NewGeneric(export.ResourceTypes.ServiceFullWebService).Resource(),
 			"dynatrace_dashboards_allowlist":               resources.NewGeneric(export.ResourceTypes.DashboardsAllowlist).Resource(),
 			"dynatrace_failure_detection_parameters":       resources.NewGeneric(export.ResourceTypes.FailureDetectionParameters).Resource(),
+			"dynatrace_failure_detection_rules":            resources.NewGeneric(export.ResourceTypes.FailureDetectionRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

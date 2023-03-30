@@ -220,6 +220,7 @@ var ResourceTypes = struct {
 	ServiceFullWebService               ResourceType
 	DashboardsAllowlist                 ResourceType
 	FailureDetectionParameters          ResourceType
+	FailureDetectionRules               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -397,6 +398,7 @@ var ResourceTypes = struct {
 	"dynatrace_service_full_web_service",
 	"dynatrace_dashboards_allowlist",
 	"dynatrace_failure_detection_parameters",
+	"dynatrace_failure_detection_rules",
 }
 
 type ResourceStatus string
