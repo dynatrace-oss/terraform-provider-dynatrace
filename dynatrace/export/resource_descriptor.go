@@ -181,6 +181,7 @@ import (
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
 
+	envparameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/httpparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
@@ -774,20 +775,21 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		webapprequesterrors.Service,
 		Coalesce(Dependencies.Application),
 	),
-	ResourceTypes.UserSettings:              NewResourceDescriptor(usersettings.Service),
-	ResourceTypes.DashboardsGeneral:         NewResourceDescriptor(dashboardsgeneral.Service),
-	ResourceTypes.DashboardsPresets:         NewResourceDescriptor(dashboardspresets.Service),
-	ResourceTypes.LogProcessing:             NewResourceDescriptor(logdpprules.Service),
-	ResourceTypes.LogEvents:                 NewResourceDescriptor(logevents.Service),
-	ResourceTypes.LogTimestamp:              NewResourceDescriptor(timestampconfiguration.Service),
-	ResourceTypes.LogGrail:                  NewResourceDescriptor(logsongrailactivate.Service),
-	ResourceTypes.EULASettings:              NewResourceDescriptor(eulasettings.Service),
-	ResourceTypes.APIDetectionRules:         NewResourceDescriptor(apidetection.Service),
-	ResourceTypes.ServiceExternalWebRequest: NewResourceDescriptor(externalwebrequest.Service),
-	ResourceTypes.ServiceExternalWebService: NewResourceDescriptor(externalwebservice.Service),
-	ResourceTypes.ServiceFullWebRequest:     NewResourceDescriptor(fullwebrequest.Service),
-	ResourceTypes.ServiceFullWebService:     NewResourceDescriptor(fullwebservice.Service),
-	ResourceTypes.DashboardsAllowlist:       NewResourceDescriptor(dashboardsallowlist.Service),
+	ResourceTypes.UserSettings:               NewResourceDescriptor(usersettings.Service),
+	ResourceTypes.DashboardsGeneral:          NewResourceDescriptor(dashboardsgeneral.Service),
+	ResourceTypes.DashboardsPresets:          NewResourceDescriptor(dashboardspresets.Service),
+	ResourceTypes.LogProcessing:              NewResourceDescriptor(logdpprules.Service),
+	ResourceTypes.LogEvents:                  NewResourceDescriptor(logevents.Service),
+	ResourceTypes.LogTimestamp:               NewResourceDescriptor(timestampconfiguration.Service),
+	ResourceTypes.LogGrail:                   NewResourceDescriptor(logsongrailactivate.Service),
+	ResourceTypes.EULASettings:               NewResourceDescriptor(eulasettings.Service),
+	ResourceTypes.APIDetectionRules:          NewResourceDescriptor(apidetection.Service),
+	ResourceTypes.ServiceExternalWebRequest:  NewResourceDescriptor(externalwebrequest.Service),
+	ResourceTypes.ServiceExternalWebService:  NewResourceDescriptor(externalwebservice.Service),
+	ResourceTypes.ServiceFullWebRequest:      NewResourceDescriptor(fullwebrequest.Service),
+	ResourceTypes.ServiceFullWebService:      NewResourceDescriptor(fullwebservice.Service),
+	ResourceTypes.DashboardsAllowlist:        NewResourceDescriptor(dashboardsallowlist.Service),
+	ResourceTypes.FailureDetectionParameters: NewResourceDescriptor(envparameters.Service),
 }
 
 var BlackListedResources = []ResourceType{
