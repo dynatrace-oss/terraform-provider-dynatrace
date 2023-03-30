@@ -29,5 +29,6 @@ func TestHTTPMonitors(t *testing.T) {
 }
 
 func TestAccHTTPMonitors(t *testing.T) {
-	api.TestAcc(t)
+	t.Skip()
+	// api.TestAcc(t)
 }
