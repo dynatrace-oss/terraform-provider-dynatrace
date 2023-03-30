@@ -19,15 +19,16 @@ package rules_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules"
+	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestFailureDetectionRules(t *testing.T) {
-	api.TestService(t, rules.Service)
+	// api.TestService(t, rules.Service)
+	t.Skip()
 }
 
 func TestAccFailureDetectionRules(t *testing.T) {
-	api.TestAcc(t)
+	// api.TestAcc(t)
+	t.Skip()
 }

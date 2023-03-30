@@ -1,7 +1,7 @@
 resource "dynatrace_failure_detection_rules" "#name#" {
   name         = ""
   enabled      = true
-  parameter_id = "vu9U3hXa3q0AAAABADBidWlsdGluOmZhaWx1cmUtZGV0ZWN0aW9uLmVudmlyb25tZW50LnBhcmFtZXRlcnMABnRlbmFudAAGdGVuYW50ACQwYTIwM2UxYy1mYjYxLTMyMDEtOTc1NC00M2NiNDdhMWI1ODG-71TeFdrerQ"
+  parameter_id = "00000000-0000-0000-0000-000000000000"
   conditions {
     condition {
       attribute = "SERVICE_NAME"
