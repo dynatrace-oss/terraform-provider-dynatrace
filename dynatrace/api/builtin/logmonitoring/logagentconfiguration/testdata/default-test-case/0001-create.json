@@ -1,0 +1,18 @@
+{
+  "LAConfigContainerTimezoneHeuristicEnabled": true,
+  "LAConfigContainersLogsDetectionEnabled": true,
+  "LAConfigDateSearchLimit_Bytes": 64,
+  "LAConfigDefaultTimezone": "Local time zone",
+  "LAConfigEventLogQueryTimeout_Sec": 5,
+  "LAConfigIISDetectionEnabled": true,
+  "LAConfigLogScannerLinuxNfsEnabled": true,
+  "LAConfigMaxLgisPerEntityCount": 200,
+  "LAConfigMinBinaryDetectionLimit_Bytes": 512,
+  "LAConfigMonitorOwnLogsEnabled": true,
+  "LAConfigOpenLogFilesDetectionEnabled": true,
+  "LAConfigSeverityDetectionLimit_Bytes": 100,
+  "LAConfigSeverityDetectionLinesLimit": 2,
+  "LAConfigSystemLogsDetectionEnabled": true,
+  "LAConfigUTCAsDefaultContainerTimezone": true,
+  "scope": "HOST-1234567890000000"
+}

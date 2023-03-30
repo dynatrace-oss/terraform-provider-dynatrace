@@ -317,6 +317,7 @@ func Provider() *schema.Provider {
 			"dynatrace_dashboards_allowlist":               resources.NewGeneric(export.ResourceTypes.DashboardsAllowlist).Resource(),
 			"dynatrace_failure_detection_parameters":       resources.NewGeneric(export.ResourceTypes.FailureDetectionParameters).Resource(),
 			"dynatrace_failure_detection_rules":            resources.NewGeneric(export.ResourceTypes.FailureDetectionRules).Resource(),
+			"dynatrace_log_oneagent":                       resources.NewGeneric(export.ResourceTypes.LogOneAgent).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

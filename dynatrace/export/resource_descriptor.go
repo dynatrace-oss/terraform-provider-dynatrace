@@ -52,6 +52,7 @@ import (
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate"
@@ -792,6 +793,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DashboardsAllowlist:        NewResourceDescriptor(dashboardsallowlist.Service),
 	ResourceTypes.FailureDetectionParameters: NewResourceDescriptor(envparameters.Service),
 	ResourceTypes.FailureDetectionRules:      NewResourceDescriptor(envrules.Service),
+	ResourceTypes.LogOneAgent:                NewResourceDescriptor(logagentconfiguration.Service),
 }
 
 var BlackListedResources = []ResourceType{

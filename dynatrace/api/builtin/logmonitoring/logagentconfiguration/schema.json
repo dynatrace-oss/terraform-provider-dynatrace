@@ -1,0 +1,254 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Configure OneAgent options for Dynatrace Log Monitoring",
+	"displayName": "OneAgent",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"LAConfigContainerTimezoneHeuristicEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect container time zones",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.259"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigContainersLogsDetectionEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect logs inside containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigDateSearchLimit_Bytes": {
+			"constraints": [
+				{
+					"maximum": 4096,
+					"minimum": 16,
+					"type": "RANGE"
+				}
+			],
+			"default": 64,
+			"description": "Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
+			"displayName": "Timestamp search limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "bytes"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigDefaultTimezone": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1024,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "logmonitoring.timezone-settings.datasource",
+				"resetValue": "ALWAYS",
+				"useApiSearch": true,
+				"validate": true
+			},
+			"default": "Local time zone",
+			"description": "Default timezone for agent if more specific configurations is not defined.",
+			"displayName": "Default timezone for agents",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.247"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"LAConfigEventLogQueryTimeout_Sec": {
+			"constraints": [
+				{
+					"maximum": 300,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 5,
+			"description": "Defines the maximum timeout value, in seconds, for the query extracting Windows Event Logs",
+			"displayName": "Windows Event Log query timeout",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "seconds"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigIISDetectionEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect IIS logs",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigLogScannerLinuxNfsEnabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Detect logs on Network File Systems (NFS)",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigMaxLgisPerEntityCount": {
+			"constraints": [
+				{
+					"maximum": 10000,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 200,
+			"description": "Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.",
+			"displayName": "Maximum of log group instances per entity limit - count",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigMinBinaryDetectionLimit_Bytes": {
+			"constraints": [
+				{
+					"maximum": 1024,
+					"minimum": 32,
+					"type": "RANGE"
+				}
+			],
+			"default": 512,
+			"description": "Defines the minimum number of bytes in log file required for binary detection.",
+			"displayName": "Minimal log file size to perform binary detection.",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "bytes"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigMonitorOwnLogsEnabled": {
+			"default": false,
+			"description": "Enabling this option may affect your DDU consumption. For more details, see [documentation](https://dt-url.net/hp43ef8).",
+			"displayName": "Allow OneAgent to monitor OneAgent logs",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigOpenLogFilesDetectionEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect open log files",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.237"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigSeverityDetectionLimit_Bytes": {
+			"constraints": [
+				{
+					"maximum": 300,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 100,
+			"description": "Defines the number of characters in every log line (starting from the first character in the line) where severity is searched.",
+			"displayName": "Severity search chars limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "bytes"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigSeverityDetectionLinesLimit": {
+			"constraints": [
+				{
+					"maximum": 5,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 2,
+			"description": "Defines the number of the first lines of every log entry where severity is searched.",
+			"displayName": "Severity search lines limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
+		"LAConfigSystemLogsDetectionEnabled": {
+			"default": true,
+			"description": "(Linux: syslog, message log) (Windows: system, application, security event logs)",
+			"displayName": "Detect system logs",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"LAConfigUTCAsDefaultContainerTimezone": {
+			"default": true,
+			"description": "Deprecated for OneAgent 1.247+",
+			"displayName": "Set UTC as the default time zone for containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring",
+		"group:log-monitoring.ingest-and-processing"
+	],
+	"schemaId": "builtin:logmonitoring.log-agent-configuration",
+	"types": {},
+	"version": "1.1.12"
+}
