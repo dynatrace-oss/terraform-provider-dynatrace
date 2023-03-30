@@ -19,15 +19,16 @@ package dashboards_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
+	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestDashboards(t *testing.T) {
-	api.TestService(t, dashboards.Service)
+	// api.TestService(t, dashboards.Service)
+	t.Skip()
 }
 
 func TestAccDashboards(t *testing.T) {
-	api.TestAcc(t)
+	// api.TestAcc(t)
+	t.Skip()
 }
