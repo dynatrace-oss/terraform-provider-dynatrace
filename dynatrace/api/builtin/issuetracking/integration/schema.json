@@ -1,0 +1,272 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Cannot create a valid URL from the given target and query.",
+			"customValidatorId": "issueTracker-url-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Query any issue-tracking system to pull issue statistics for monitored entities into Dynatrace for release analysis. For details, see [Issue-tracking integration](https://dt-url.net/releasesissuetracker).",
+	"displayName": "Issue-tracking for releases",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"IssueTheme": {
+			"description": "",
+			"displayName": "IssueTheme",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Info",
+					"value": "INFO"
+				},
+				{
+					"displayName": "Error",
+					"value": "ERROR"
+				},
+				{
+					"displayName": "Resolved",
+					"value": "RESOLVED"
+				}
+			],
+			"type": "enum"
+		},
+		"IssueTrackerSystem": {
+			"description": "",
+			"displayName": "IssueTrackerSystem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Jira - deprecated",
+					"value": "JIRA"
+				},
+				{
+					"displayName": "GitHub",
+					"value": "GITHUB"
+				},
+				{
+					"displayName": "GitLab",
+					"value": "GITLAB"
+				},
+				{
+					"displayName": "ServiceNow",
+					"value": "SERVICENOW"
+				},
+				{
+					"displayName": "Jira on-premises",
+					"value": "JIRA_ON_PREMISE"
+				},
+				{
+					"displayName": "Jira cloud",
+					"value": "JIRA_CLOUD"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 20,
+	"metadata": {
+		"addItemButton": "Add issue-tracking query"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"issuelabel": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "Issue Tracker Label",
+			"description": "Set a label to identify these issues, for example, `release_blocker` or `non-critical`",
+			"displayName": "Issue label",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"issuequery": {
+			"constraints": [
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.",
+			"displayName": "Issue query",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"issuetheme": {
+			"default": "INFO",
+			"description": "Select the issue type to be displayed.",
+			"displayName": "Issue type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/IssueTheme"
+			}
+		},
+		"issuetrackersystem": {
+			"default": "JIRA_CLOUD",
+			"description": "Select the issue-tracking system you want to query.",
+			"displayName": "Issue-tracking system",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/IssueTrackerSystem"
+			}
+		},
+		"password": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Password",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"precondition": {
+				"expectedValues": [
+					"JIRA",
+					"JIRA_ON_PREMISE",
+					"SERVICENOW"
+				],
+				"property": "issuetrackersystem",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
+		"token": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"precondition": {
+				"expectedValues": [
+					"JIRA",
+					"GITHUB",
+					"GITLAB",
+					"JIRA_CLOUD"
+				],
+				"property": "issuetrackersystem",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
+		"url": {
+			"constraints": [
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "For Jira, use the base URL (for example, https://jira.yourcompany.com); for GitHub, use the repository URL (for example, https://github.com/org/repo); for GitLab, use the specific project API for a single project (for example, https://gitlab.com/api/v4/projects/:projectId), and the specific group API for a multiple projects (for example, https://gitlab.com/api/v4/groups/:groupId); for ServiceNow, use your company instance URL (for example, https://yourinstance.service-now.com/)",
+			"displayName": "Target URL",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		},
+		"username": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Username",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-automation.releases",
+		"group:cloud-automation"
+	],
+	"schemaId": "builtin:issue-tracking.integration",
+	"types": {
+		"FlagDefaultTrue": {
+			"description": "",
+			"displayName": "FlagDefaultTrue",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "5.5"
+}

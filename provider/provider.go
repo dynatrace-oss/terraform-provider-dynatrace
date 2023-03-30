@@ -318,6 +318,7 @@ func Provider() *schema.Provider {
 			"dynatrace_failure_detection_parameters":       resources.NewGeneric(export.ResourceTypes.FailureDetectionParameters).Resource(),
 			"dynatrace_failure_detection_rules":            resources.NewGeneric(export.ResourceTypes.FailureDetectionRules).Resource(),
 			"dynatrace_log_oneagent":                       resources.NewGeneric(export.ResourceTypes.LogOneAgent).Resource(),
+			"dynatrace_issue_tracking":                     resources.NewGeneric(export.ResourceTypes.IssueTracking).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
