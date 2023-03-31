@@ -18,6 +18,8 @@
 package databases
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -76,4 +78,13 @@ func (me *ResponseTime) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":         &me.Enabled,
 		"fixed_detection": &me.FixedDetection,
 	})
+}
+
+func (me *ResponseTime) HandlePreconditions() error {
+	if me.DetectionMode == nil && me.Enabled {
+		return fmt.Errorf("'detection_mode' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	// ---- AutoDetection *ResponseTimeAuto -> {"preconditions":[{"expectedValue":true,"property":"enabled","type":"EQUALS"},{"expectedValue":"auto","property":"detectionMode","type":"EQUALS"}],"type":"AND"}
+	// ---- FixedDetection *ResponseTimeFixed -> {"preconditions":[{"expectedValue":true,"property":"enabled","type":"EQUALS"},{"expectedValue":"fixed","property":"detectionMode","type":"EQUALS"}],"type":"AND"}
+	return nil
 }
