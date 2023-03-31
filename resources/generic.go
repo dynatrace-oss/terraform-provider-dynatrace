@@ -95,7 +95,7 @@ func (me *Generic) Service(m any) settings.CRUDService[settings.Settings] {
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	sttngs := me.Settings()
-	if err := sttngs.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
+	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	stub, err := me.Service(m).Create(sttngs)
@@ -136,7 +136,7 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	if strings.HasSuffix(d.Id(), "---flawed----") {
 		return me.Create(ctx, d, m)
 	}
-	if err := sttngs.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
+	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := me.Service(m).Update(d.Id(), sttngs); err != nil {

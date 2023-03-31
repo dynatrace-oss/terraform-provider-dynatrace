@@ -17,7 +17,12 @@
 
 package hcl
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"errors"
+	"os"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 // Marshaler has no documentation
 type Marshaler interface {
@@ -30,4 +35,22 @@ type Unmarshaler interface {
 
 type Schemer interface {
 	Schema() map[string]*schema.Schema
+}
+
+type Preconditioner interface {
+	HandlePreconditions() error
+}
+
+func UnmarshalHCL(m Unmarshaler, d Decoder) error {
+	if err := m.UnmarshalHCL(d); err != nil {
+		return err
+	}
+	if os.Getenv("DYNATRACE_PRECONDITIONS") == "true" {
+		if pc, ok := m.(Preconditioner); ok {
+			if err := pc.HandlePreconditions(); err != nil {
+				return errors.New(d.Path() + ": " + err.Error())
+			}
+		}
+	}
+	return nil
 }

@@ -43,6 +43,7 @@ type Decoder interface {
 	DecodeAny(map[string]any) (any, error)
 	DecodeSlice(key string, v any) error
 	// GetStringSet(key string) []string
+	Path() string
 }
 
 type logmin struct {
@@ -78,12 +79,23 @@ func (d *logmin) GetStringSet(key string) []string {
 	return d.parent.GetStringSet(key)
 }
 
+func (d *logmin) Path() string {
+	return d.parent.Path()
+}
+
 type mindecoder struct {
 	parent MinDecoder
 }
 
 func DecoderFrom(m MinDecoder) Decoder {
 	return &logmin{parent: &mindecoder{parent: m}}
+}
+
+func (d *mindecoder) Path() string {
+	if dec, ok := d.parent.(Decoder); ok {
+		return dec.Path()
+	}
+	return ""
 }
 
 func (d *mindecoder) Decode(key string, v any) error {
@@ -146,7 +158,7 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 				hash := resultSet.F(element)
 				entry := reflect.New(elemType.Elem()).Interface()
 				invalid := false
-				if err := entry.(Unmarshaler).UnmarshalHCL(NewDecoder(d, key, hash)); err != nil {
+				if err := UnmarshalHCL(entry.(Unmarshaler), NewDecoder(d, key, hash)); err != nil {
 					if err.Error() != "invalid" {
 						return err
 					} else {
@@ -162,7 +174,7 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 			if result, ok := d.GetOk(fmt.Sprintf("%v.#", key)); ok {
 				for idx := 0; idx < result.(int); idx++ {
 					entry := reflect.New(elemType.Elem()).Interface()
-					if err := entry.(Unmarshaler).UnmarshalHCL(NewDecoder(d, key, idx)); err != nil {
+					if err := UnmarshalHCL(entry.(Unmarshaler), NewDecoder(d, key, idx)); err != nil {
 						return err
 					}
 					vSlice.Set(reflect.Append(vSlice, reflect.ValueOf(entry)))
@@ -203,7 +215,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 						if _, ok := d.GetOk(fmt.Sprintf("%v.#", key)); ok {
 							vTarget = vTarget.Elem()
 							vTarget.Set(newValue)
-							if err := unmarshaler.UnmarshalHCL(NewDecoder(d, key, 0)); err != nil {
+							if err := UnmarshalHCL(unmarshaler, NewDecoder(d, key, 0)); err != nil {
 								return true, err
 							}
 							return true, nil
@@ -215,7 +227,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 	}
 	if unmarshaler, ok := v.(Unmarshaler); ok {
 		if _, ok := d.GetOk(fmt.Sprintf("%v.#", key)); ok {
-			if err := unmarshaler.UnmarshalHCL(NewDecoder(d, key, 0)); err != nil {
+			if err := UnmarshalHCL(unmarshaler, NewDecoder(d, key, 0)); err != nil {
 				return true, err
 			}
 			return true, nil
@@ -481,6 +493,17 @@ type decoder struct {
 	address string
 }
 
+func (d *decoder) Path() string {
+	if dec, ok := d.parent.(Decoder); ok {
+		pp := dec.Path()
+		if len(pp) == 0 {
+			return d.address
+		}
+		return dec.Path() + "." + d.address
+	}
+	return d.address
+}
+
 func (d *decoder) GetStringSet(key string) []string {
 	result := []string{}
 	if value, ok := d.GetOk(key); ok {
@@ -524,6 +547,10 @@ func VoidDecoder() Decoder {
 }
 
 type voidDecoder struct{}
+
+func (d *voidDecoder) Path() string {
+	return ""
+}
 
 func (d *voidDecoder) DecodeAny(m map[string]any) (any, error) {
 	return nil, nil
