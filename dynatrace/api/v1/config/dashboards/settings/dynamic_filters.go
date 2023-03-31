@@ -30,6 +30,7 @@ import (
 // DynamicFilters Dashboard filter configuration of a dashboard
 type DynamicFilters struct {
 	Filters            []string                   `json:"filters,omitempty"`            // A set of all possible global dashboard filters that can be applied to a dashboard \n\nCurrently supported values are: \n\n\tOS_TYPE,\n\tSERVICE_TYPE,\n\tDEPLOYMENT_TYPE,\n\tAPPLICATION_INJECTION_TYPE,\n\tPAAS_VENDOR_TYPE,\n\tDATABASE_VENDOR,\n\tHOST_VIRTUALIZATION_TYPE,\n\tHOST_MONITORING_MODE,\n\tKUBERNETES_CLUSTER,\n\tRELATED_CLOUD_APPLICATION,\n\tRELATED_NAMESPACE,\n\tTAG_KEY:<tagname>
+	GenericTagFilters  GenericTagFilters          `json:"genericTagFilters,omitempty"`  // A set of generic tag filters that can be applied to a dashboard
 	TagSuggestionTypes []string                   `json:"tagSuggestionTypes,omitempty"` // A set of entities applied for tag filter suggestions. You can fetch the list of possible values with the [GET all entity types](https://dt-url.net/dw03s7h)request. \n\nOnly applicable if the **filters** set includes `TAG_KEY:<tagname>`
 	Unknowns           map[string]json.RawMessage `json:"-"`
 }
@@ -42,6 +43,14 @@ func (me *DynamicFilters) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "A set of all possible global dashboard filters that can be applied to a dashboard \n\nCurrently supported values are: \n\n\tOS_TYPE,\n\tSERVICE_TYPE,\n\tDEPLOYMENT_TYPE,\n\tAPPLICATION_INJECTION_TYPE,\n\tPAAS_VENDOR_TYPE,\n\tDATABASE_VENDOR,\n\tHOST_VIRTUALIZATION_TYPE,\n\tHOST_MONITORING_MODE,\n\tKUBERNETES_CLUSTER,\n\tRELATED_CLOUD_APPLICATION,\n\tRELATED_NAMESPACE,\n\tTAG_KEY:<tagname>",
 			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
+		"generic_tag_filters": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MinItems:    0,
+			MaxItems:    1,
+			Description: "A set of generic tag filters that can be applied to a dashboard",
+			Elem:        &schema.Resource{Schema: new(GenericTagFilters).Schema()},
 		},
 		"tag_suggestion_types": {
 			Type:        schema.TypeSet,
@@ -78,6 +87,10 @@ func (me *DynamicFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("tag_suggestion_types", &me.TagSuggestionTypes); err != nil {
 		return err
 	}
+	if err := decoder.Decode("generic_tag_filters", &me.GenericTagFilters); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -91,6 +104,9 @@ func (me *DynamicFilters) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("tag_suggestion_types", me.TagSuggestionTypes); err != nil {
 		return err
 	}
+	if err := properties.Encode("generic_tag_filters", me.GenericTagFilters); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -98,6 +114,7 @@ func (me *DynamicFilters) MarshalJSON() ([]byte, error) {
 	m := xjson.NewProperties(me.Unknowns)
 	m.Marshal("filters", me.Filters)
 	m.Marshal("tagSuggestionTypes", me.TagSuggestionTypes)
+	m.Marshal("genericTagFilters", me.GenericTagFilters)
 	return json.Marshal(m)
 }
 
@@ -110,6 +127,9 @@ func (me *DynamicFilters) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if err := m.Unmarshal("tagSuggestionTypes", &me.TagSuggestionTypes); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("genericTagFilters", &me.GenericTagFilters); err != nil {
 		return err
 	}
 

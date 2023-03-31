@@ -3,7 +3,8 @@
     "dynamicFilters": {
       "filters": [
         "KUBERNETES_CLUSTER"
-      ]
+      ],
+      "genericTagFilters": []
     },
     "hasConsistentColors": true,
     "name": "${randomize}",
