@@ -223,6 +223,7 @@ var ResourceTypes = struct {
 	FailureDetectionRules               ResourceType
 	LogOneAgent                         ResourceType
 	IssueTracking                       ResourceType
+	GeolocationSettings                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -403,6 +404,7 @@ var ResourceTypes = struct {
 	"dynatrace_failure_detection_rules",
 	"dynatrace_log_oneagent",
 	"dynatrace_issue_tracking",
+	"dynatrace_geolocation",
 }
 
 type ResourceStatus string

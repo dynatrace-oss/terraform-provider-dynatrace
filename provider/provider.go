@@ -319,6 +319,7 @@ func Provider() *schema.Provider {
 			"dynatrace_failure_detection_rules":            resources.NewGeneric(export.ResourceTypes.FailureDetectionRules).Resource(),
 			"dynatrace_log_oneagent":                       resources.NewGeneric(export.ResourceTypes.LogOneAgent).Resource(),
 			"dynatrace_issue_tracking":                     resources.NewGeneric(export.ResourceTypes.IssueTracking).Resource(),
+			"dynatrace_geolocation":                        resources.NewGeneric(export.ResourceTypes.GeolocationSettings).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

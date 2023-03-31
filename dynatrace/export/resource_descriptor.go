@@ -49,6 +49,7 @@ import (
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
@@ -796,6 +797,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.FailureDetectionRules:      NewResourceDescriptor(envrules.Service),
 	ResourceTypes.LogOneAgent:                NewResourceDescriptor(logagentconfiguration.Service),
 	ResourceTypes.IssueTracking:              NewResourceDescriptor(issuetracking.Service),
+	ResourceTypes.GeolocationSettings:        NewResourceDescriptor(geosettings.Service),
 }
 
 var BlackListedResources = []ResourceType{

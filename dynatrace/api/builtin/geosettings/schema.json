@@ -1,0 +1,28 @@
+{
+	"allowedScopes": [
+		"environment",
+		"environment-default"
+	],
+	"description": "Settings related to geolocations",
+	"displayName": "Geolocation settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"displayWorldmap": {
+			"default": true,
+			"description": "",
+			"displayName": "Display the world map",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:geo-settings",
+	"types": {},
+	"version": "1.0.1"
+}
