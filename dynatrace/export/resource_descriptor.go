@@ -41,6 +41,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics"
 	dashboardsgeneral "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general"
 	dashboardsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/image/allowlist"
 	dashboardspresets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/presets"
@@ -798,6 +799,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogOneAgent:                NewResourceDescriptor(logagentconfiguration.Service),
 	ResourceTypes.IssueTracking:              NewResourceDescriptor(issuetracking.Service),
 	ResourceTypes.GeolocationSettings:        NewResourceDescriptor(geosettings.Service),
+	ResourceTypes.UserSessionCustomMetrics:   NewResourceDescriptor(custommetrics.Service),
 }
 
 var BlackListedResources = []ResourceType{

@@ -1,0 +1,14 @@
+{
+    "enabled": false,
+    "filters": [
+      {
+        "fieldName": "useraction.application",
+        "operator": "EQUALS",
+        "value": "www.terraform.io"
+      }
+    ],
+    "metricKey": "uscm.TerraformTest",
+    "value": {
+      "type": "COUNTER"
+    }
+  }

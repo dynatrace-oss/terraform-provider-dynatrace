@@ -320,6 +320,7 @@ func Provider() *schema.Provider {
 			"dynatrace_log_oneagent":                       resources.NewGeneric(export.ResourceTypes.LogOneAgent).Resource(),
 			"dynatrace_issue_tracking":                     resources.NewGeneric(export.ResourceTypes.IssueTracking).Resource(),
 			"dynatrace_geolocation":                        resources.NewGeneric(export.ResourceTypes.GeolocationSettings).Resource(),
+			"dynatrace_user_session_metrics":               resources.NewGeneric(export.ResourceTypes.UserSessionCustomMetrics).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
