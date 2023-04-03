@@ -195,7 +195,7 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 		if cc, ok := me.Unknowns["hasConsistentColors"]; ok {
 			json.Unmarshal(cc, &me.HasConsistentColors)
 		}
-		delete(me.Unknowns, "hasConsistentColors")
+		delete(me.Unknowns, "popularity")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -246,6 +246,12 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 func (me *DashboardMetadata) MarshalJSON() ([]byte, error) {
+	if len(me.Unknowns) > 0 {
+		delete(me.Unknowns, "popularity")
+		if len(me.Unknowns) == 0 {
+			me.Unknowns = nil
+		}
+	}
 	m := xjson.NewProperties(me.Unknowns)
 	if err := m.Marshal("name", me.Name); err != nil {
 		return nil, err
