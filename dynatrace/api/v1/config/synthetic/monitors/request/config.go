@@ -49,6 +49,9 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.",
 			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				return true
+			},
 		},
 		"headers": {
 			Type:        schema.TypeList,

@@ -25,10 +25,10 @@ import (
 )
 
 func TestHTTPMonitors(t *testing.T) {
+	t.Skip()
 	api.TestService(t, http.Service)
 }
 
 func TestAccHTTPMonitors(t *testing.T) {
-	t.Skip()
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }
