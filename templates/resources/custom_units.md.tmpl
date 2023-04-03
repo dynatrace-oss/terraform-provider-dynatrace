@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title: dynatrace_custom_units Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_custom_units` covers configuration for custom units
+---
+
+# dynatrace_custom_units (Resource)
+
+## Dynatrace Documentation
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:custom-unit`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_custom_units` downloads all existing custom unit configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/customunit/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

@@ -1,0 +1,141 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Here you can create custom units.",
+	"displayName": "Custom units",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"unitCombinations": {
+			"description": "",
+			"displayName": "Unit combination",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Scalar",
+					"value": "SCALAR"
+				},
+				{
+					"displayName": "Quotient",
+					"value": "QUOTIENT"
+				},
+				{
+					"displayName": "Product",
+					"value": "PRODUCT"
+				},
+				{
+					"displayName": "Power",
+					"value": "POWER"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"newUnitDescription": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Unit description should provide additional information about the new unit",
+			"displayName": "Unit description",
+			"documentation": "E.g: Byte: 8 bits of information",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "text"
+		},
+		"newUnitName": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 63,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Only uppercase and lowercase letters are allowed in units.",
+					"pattern": "^[a-zA-Z]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Unit name has to be unique and is used as identifier.",
+			"displayName": "Unit name",
+			"documentation": "E.g: Byte, Second, BytePerMinute",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": "text"
+		},
+		"newUnitPluralName": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 65,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Only uppercase and lowercase letters are allowed in units.",
+					"pattern": "^[a-zA-Z]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Unit plural name represent the plural form of the unit name.",
+			"displayName": "Unit plural name",
+			"documentation": "E.g: Bytes, Seconds",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "text"
+		},
+		"newUnitSymbol": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 63,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Only uppercase and lowercase letters, as well as / and ^ symbols are allowed in units.",
+					"pattern": "^[a-zA-Z][a-zA-Z\\/\\^]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Unit symbol has to be unique.",
+			"displayName": "Unit symbol",
+			"documentation": "E.g: s, m/s, B/min, bit/s",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics"
+	],
+	"schemaId": "builtin:custom-unit",
+	"types": {},
+	"version": "0.3"
+}
