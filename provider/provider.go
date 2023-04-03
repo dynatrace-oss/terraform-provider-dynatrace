@@ -323,6 +323,7 @@ func Provider() *schema.Provider {
 			"dynatrace_user_session_metrics":               resources.NewGeneric(export.ResourceTypes.UserSessionCustomMetrics).Resource(),
 			"dynatrace_custom_units":                       resources.NewGeneric(export.ResourceTypes.CustomUnits).Resource(),
 			"dynatrace_disk_analytics":                     resources.NewGeneric(export.ResourceTypes.DiskAnalytics).Resource(),
+			"dynatrace_network_traffic":                    resources.NewGeneric(export.ResourceTypes.NetworkTraffic).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

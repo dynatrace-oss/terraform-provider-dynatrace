@@ -1,0 +1,166 @@
+{
+	"allowedScopes": [
+		"HOST"
+	],
+	"description": "OneAgent automatically detects and monitors all of your network traffic, but you can exclude traffic on specific network interfaces or hosts from monitoring.",
+	"displayName": "Exclude network traffic",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"OsTypeEnum": {
+			"description": "",
+			"displayName": "OsTypeEnum",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Any",
+					"value": "OS_TYPE_UNKNOWN"
+				},
+				{
+					"displayName": "AIX",
+					"value": "OS_TYPE_AIX"
+				},
+				{
+					"displayName": "Darwin",
+					"value": "OS_TYPE_DARWIN"
+				},
+				{
+					"displayName": "HPUX",
+					"value": "OS_TYPE_HPUX"
+				},
+				{
+					"displayName": "Linux",
+					"value": "OS_TYPE_LINUX"
+				},
+				{
+					"displayName": "Solaris",
+					"value": "OS_TYPE_SOLARIS"
+				},
+				{
+					"displayName": "Windows",
+					"value": "OS_TYPE_WINDOWS"
+				},
+				{
+					"displayName": "z/OS",
+					"value": "OS_TYPE_ZOS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"excludeIp": {
+			"description": "Providing a host IP address, you will exclude network traffic only in calculating connectivity (other metrics will still be calculated).",
+			"displayName": "Exclude IP",
+			"documentation": "",
+			"items": {
+				"description": "IP address to be excluded",
+				"displayName": "IP address",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/IpAddressForm"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"excludeNic": {
+			"description": "Selecting a network interface, you will exclude all network traffic on that interface from being monitored. You can select from the list below what to not monitor, or input it manually using the \"other one\" option.",
+			"displayName": "Exclude NIC",
+			"documentation": "",
+			"items": {
+				"description": "Network interface to be excluded",
+				"displayName": "Network interface",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/NicForm"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:monitoring"
+	],
+	"schemaId": "builtin:exclude.network.traffic",
+	"types": {
+		"IpAddressForm": {
+			"description": "",
+			"displayName": "IpAddressForm",
+			"documentation": "",
+			"properties": {
+				"ipAddress": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "192.168.0.1",
+					"description": "",
+					"displayName": "IP address",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Exclude traffic from ''{ipAddress}'' in calculating connectivity",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"NicForm": {
+			"description": "",
+			"displayName": "NicForm",
+			"documentation": "",
+			"properties": {
+				"interface": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "interface_name",
+					"description": "",
+					"displayName": "Network interface",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"os": {
+					"default": "OS_TYPE_UNKNOWN",
+					"description": "",
+					"displayName": "Operating system",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/OsTypeEnum"
+					}
+				}
+			},
+			"summaryPattern": "Exclude all traffic on ''{os}'' ''{interface}'' interface",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

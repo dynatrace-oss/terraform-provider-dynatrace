@@ -52,6 +52,7 @@ import (
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
+	networktraffic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
@@ -804,6 +805,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.UserSessionCustomMetrics:   NewResourceDescriptor(custommetrics.Service),
 	ResourceTypes.CustomUnits:                NewResourceDescriptor(customunit.Service),
 	ResourceTypes.DiskAnalytics:              NewResourceDescriptor(diskanalytics.Service),
+	ResourceTypes.NetworkTraffic:             NewResourceDescriptor(networktraffic.Service),
 }
 
 var BlackListedResources = []ResourceType{
