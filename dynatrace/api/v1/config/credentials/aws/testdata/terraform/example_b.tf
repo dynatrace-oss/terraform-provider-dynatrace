@@ -12,7 +12,50 @@ resource "dynatrace_aws_credentials" "#name#" {
     name  = "string"
     value = "string2"
   }
-
+  supporting_services_to_monitor {
+    name = "KinesisFirehose"
+    monitored_metrics {
+      name       = "IncomingBytes"
+      dimensions = ["DeliveryStreamName"]
+      statistic  = "SUM"
+    }
+    monitored_metrics {
+      name       = "IncomingRecords"
+      dimensions = ["DeliveryStreamName"]
+      statistic  = "SUM"
+    }
+  }
+  supporting_services_to_monitor {
+    name = "connect"
+    monitored_metrics {
+      name       = "CallsBreachingConcurrencyQuota"
+      dimensions = ["InstanceId"]
+      statistic  = "SUM"
+    }
+  }
+  supporting_services_to_monitor {
+    name = "logs"
+    monitored_metrics {
+      name       = "IncomingLogEvents"
+      dimensions = ["LogGroupName"]
+      statistic  = "SUM"
+    }
+    monitored_metrics {
+      name       = "IncomingBytes"
+      dimensions = ["LogGroupName"]
+      statistic  = "SUM"
+    }
+    monitored_metrics {
+      name       = "IncomingBytes"
+      dimensions = ["Region"]
+      statistic  = "SUM"
+    }
+    monitored_metrics {
+      name       = "IncomingLogEvents"
+      dimensions = ["Region"]
+      statistic  = "SUM"
+    }
+  }  
   supporting_services_to_monitor {
     name = "polly"
     monitored_metrics {
@@ -64,50 +107,6 @@ resource "dynatrace_aws_credentials" "#name#" {
       name       = "ResponseLatency"
       dimensions = ["Region", "Operation"]
       statistic  = "SAMPLE_COUNT"
-    }
-  }
-  supporting_services_to_monitor {
-    name = "logs"
-    monitored_metrics {
-      name       = "IncomingLogEvents"
-      dimensions = ["LogGroupName"]
-      statistic  = "SUM"
-    }
-    monitored_metrics {
-      name       = "IncomingBytes"
-      dimensions = ["LogGroupName"]
-      statistic  = "SUM"
-    }
-    monitored_metrics {
-      name       = "IncomingBytes"
-      dimensions = ["Region"]
-      statistic  = "SUM"
-    }
-    monitored_metrics {
-      name       = "IncomingLogEvents"
-      dimensions = ["Region"]
-      statistic  = "SUM"
-    }
-  }
-  supporting_services_to_monitor {
-    name = "connect"
-    monitored_metrics {
-      name       = "CallsBreachingConcurrencyQuota"
-      dimensions = ["InstanceId"]
-      statistic  = "SUM"
-    }
-  }
-  supporting_services_to_monitor {
-    name = "KinesisFirehose"
-    monitored_metrics {
-      name       = "IncomingBytes"
-      dimensions = ["DeliveryStreamName"]
-      statistic  = "SUM"
-    }
-    monitored_metrics {
-      name       = "IncomingRecords"
-      dimensions = ["DeliveryStreamName"]
-      statistic  = "SUM"
     }
   }
 }
