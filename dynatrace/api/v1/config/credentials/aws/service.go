@@ -18,9 +18,11 @@
 package aws
 
 import (
+	"fmt"
 	"sync"
 
 	aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -33,6 +35,20 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 	return settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).WithStubs(&settings.Stubs{}).WithMutex(mu.Lock, mu.Unlock),
+		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
+			WithStubs(&settings.Stubs{}).
+			WithMutex(mu.Lock, mu.Unlock).
+			WithOnBeforeUpdate(func(id string, v *aws.AWSCredentialsConfig) error {
+				if v.SupportingServicesManagedInDynatrace {
+					var creds aws.AWSCredentialsConfig
+					client := rest.DefaultClient(credentials.URL, credentials.Token)
+
+					if err := client.Get(fmt.Sprintf("%s/%s", BasePath, "id"), 200).Finish(&creds); err != nil {
+						return err
+					}
+					v.SupportingServicesToMonitor = creds.SupportingServicesToMonitor
+				}
+				return nil
+			}),
 	)
 }
