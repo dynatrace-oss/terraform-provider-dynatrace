@@ -1,0 +1,34 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP"
+	],
+	"description": "This extension allows more detailed visibility on local datastores and their volumes, partitions and raid instances on Linux hosts.",
+	"displayName": "Disk Analytics Extension",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.233"
+	},
+	"multiObject": false,
+	"properties": {
+		"diskDeviceMonitoringExtensionActive": {
+			"default": false,
+			"description": "The Disk Analytics feature requires an extension to be added to your environment. The Disk Analytics extension consumes custom metrics and [Davis data units](https://www.dynatrace.com/support/help/shortlink/metric-cost-calculation).\n\nAfter you have installed the Disk Analytics extension, you can enable the Data Collection in host or host-group level settings. If you enable the Data Collection without adding the extension the data is only visible in the data explorer.\n\nFor details, see [Disk Analytics extension documentation](https://dt-url.net/3a03v9v).",
+			"displayName": "Enable Disk Analytics data collection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:disk.analytics.extension",
+	"types": {},
+	"version": "0.0.8"
+}

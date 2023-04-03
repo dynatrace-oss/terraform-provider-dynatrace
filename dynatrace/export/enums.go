@@ -226,6 +226,7 @@ var ResourceTypes = struct {
 	GeolocationSettings                 ResourceType
 	UserSessionCustomMetrics            ResourceType
 	CustomUnits                         ResourceType
+	DiskAnalytics                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -409,6 +410,7 @@ var ResourceTypes = struct {
 	"dynatrace_geolocation",
 	"dynatrace_user_session_metrics",
 	"dynatrace_custom_units",
+	"dynatrace_disk_analytics",
 }
 
 type ResourceStatus string

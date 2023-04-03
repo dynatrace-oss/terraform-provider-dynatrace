@@ -48,6 +48,7 @@ import (
 	dashboardspresets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/presets"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
+	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
@@ -802,6 +803,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.GeolocationSettings:        NewResourceDescriptor(geosettings.Service),
 	ResourceTypes.UserSessionCustomMetrics:   NewResourceDescriptor(custommetrics.Service),
 	ResourceTypes.CustomUnits:                NewResourceDescriptor(customunit.Service),
+	ResourceTypes.DiskAnalytics:              NewResourceDescriptor(diskanalytics.Service),
 }
 
 var BlackListedResources = []ResourceType{
