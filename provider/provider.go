@@ -327,6 +327,7 @@ func Provider() *schema.Provider {
 			"dynatrace_token_settings":                     resources.NewGeneric(export.ResourceTypes.TokenSettings).Resource(),
 			"dynatrace_extension_execution_remote":         resources.NewGeneric(export.ResourceTypes.ExtensionExecutionRemote).Resource(),
 			"dynatrace_k8s_pvc_anomalies":                  resources.NewGeneric(export.ResourceTypes.K8sPVCAnomalies).Resource(),
+			"dynatrace_user_action_metrics":                resources.NewGeneric(export.ResourceTypes.UserActionCustomMetrics).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

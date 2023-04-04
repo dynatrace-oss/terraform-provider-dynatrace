@@ -231,6 +231,7 @@ var ResourceTypes = struct {
 	TokenSettings                       ResourceType
 	ExtensionExecutionRemote            ResourceType
 	K8sPVCAnomalies                     ResourceType
+	UserActionCustomMetrics             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -419,6 +420,7 @@ var ResourceTypes = struct {
 	"dynatrace_token_settings",
 	"dynatrace_extension_execution_remote",
 	"dynatrace_k8s_pvc_anomalies",
+	"dynatrace_user_action_metrics",
 }
 
 type ResourceStatus string

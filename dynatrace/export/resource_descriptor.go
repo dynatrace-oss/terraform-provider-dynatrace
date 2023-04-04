@@ -130,6 +130,7 @@ import (
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -822,6 +823,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
 	),
+	ResourceTypes.UserActionCustomMetrics: NewResourceDescriptor(useractioncustommetrics.Service),
 }
 
 var BlackListedResources = []ResourceType{

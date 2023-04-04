@@ -1,0 +1,392 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "With user action custom metrics (see [documentation](https://dt-url.net/3i03u3s)), you can extract business-level KPI metrics from user action data. Metrics can then be saved as timeseries and consumed (without interpolation) by your custom charts, alerting mechanisms or the [Metrics REST API](/rest-api-doc/?urls.primaryName=Environment+API+v2#/Metrics).",
+	"displayName": "User action custom metrics",
+	"documentation": "\n\nTo explore collected metrics, go to [Data explorer](/ui/data-explorer).\n\n To create a custom event based on a custom metric, go to [Custom events for alerting](/#settings/anomalydetection/metricevents).",
+	"dynatrace": "1",
+	"enums": {
+		"Operator": {
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "not equal",
+					"value": "NOT_EQUAL"
+				},
+				{
+					"displayName": "is null",
+					"value": "IS_NULL"
+				},
+				{
+					"displayName": "is not null",
+					"value": "IS_NOT_NULL"
+				},
+				{
+					"displayName": "like",
+					"value": "LIKE"
+				},
+				{
+					"displayName": "not like",
+					"value": "NOT_LIKE"
+				},
+				{
+					"displayName": "less than",
+					"value": "LESS_THAN"
+				},
+				{
+					"displayName": "less than or equal to",
+					"value": "LESS_THAN_OR_EQUAL_TO"
+				},
+				{
+					"displayName": "greater than",
+					"value": "GREATER_THAN"
+				},
+				{
+					"displayName": "greater than or equal to",
+					"value": "GREATER_THAN_OR_EQUAL_TO"
+				},
+				{
+					"displayName": "in",
+					"value": "IN"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				}
+			],
+			"type": "enum"
+		},
+		"ValueType": {
+			"description": "",
+			"displayName": "Value Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "user action counter",
+					"value": "COUNTER"
+				},
+				{
+					"displayName": "user action field value",
+					"value": "FIELD"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"dimensions": {
+			"constraints": [
+				{
+					"customMessage": "The dimensions must be unique (case insensitive)",
+					"customValidatorId": "unique-case-insensitive-dimension-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "The metric cannot contain more than 2 high cardinality dimensions",
+					"customValidatorId": "high-cardinality-dimension-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Defines the fields that are used as dimensions. A dimension is a collection of reference information about a metric data point that is of interest to your business. Dimensions are parameters like \"application\", \"type\", \"name\". For example, using \"type\" as a dimension allows you to split chart data based on the user action type.",
+			"displayName": "Add a dimension",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customMessage": "Field must be a valid USQL one",
+						"customValidatorId": "field-name-validator",
+						"type": "CUSTOM_VALIDATOR_REF"
+					},
+					{
+						"customMessage": "Field is not a valid dimension",
+						"customValidatorId": "dimension-field-validator",
+						"type": "CUSTOM_VALIDATOR_REF"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 4,
+			"metadata": {
+				"addItemButton": "Add dimension"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enable custom metric",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"filters": {
+			"constraints": [
+				{
+					"customMessage": "The filters must be unique (case insensitive)",
+					"customValidatorId": "unique-case-insensitive-filter-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Defines the filters for the user action. Filters apply at the moment of extracting the data and only sessions that satisfy the filtering criteria will be used to extract the custom metrics. You will not be able to modify these filters in the metric data explorer. For example, using \"type equals Xhr\" will give you only data from xhr actions, while forcing the rest of user actions of different types to be ignored.",
+			"displayName": "Add a filter",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Filter"
+				}
+			},
+			"maxObjects": 10,
+			"metadata": {
+				"addItemButton": "Add filter"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"metricKey": {
+			"constraints": [
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Metric key must start with 'uacm.' prefix and followed by a non-empty identifier.",
+					"pattern": "^uacm\\..+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "After the prefix, the metric key may contain only alphanumeric characters and underscores ('_'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[^.]+[\\.]?[A-Za-z0-9_]*?$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Metric key",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "uacm."
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"value": {
+			"description": "Defines the type of value to be extracted from the user action. When using **user action counter**, the number of user actions is counted (similar to count(*) when using USQL). When using **user action field value**, the value of a user action field is extracted.",
+			"displayName": "Value type to be extracted",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/MetricValue"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.usql-custom-metrics"
+	],
+	"schemaId": "builtin:user-action-custom-metrics",
+	"types": {
+		"Filter": {
+			"constraints": [
+				{
+					"customValidatorId": "filter-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Filter",
+			"documentation": "",
+			"properties": {
+				"fieldName": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Field must be a valid USQL one",
+							"customValidatorId": "field-name-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"operator": {
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Operator"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"EQUALS",
+							"NOT_EQUAL",
+							"LIKE",
+							"LESS_THAN",
+							"LESS_THAN_OR_EQUAL_TO",
+							"GREATER_THAN",
+							"GREATER_THAN_OR_EQUAL_TO",
+							"NOT_LIKE",
+							"STARTS_WITH"
+						],
+						"property": "operator",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"valueIn": {
+					"description": "",
+					"displayName": "Values",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10,
+					"metadata": {
+						"addItemButton": "Add value"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "IN",
+						"property": "operator",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				}
+			},
+			"summaryPattern": "{fieldName} **{operator}** {value}{valueIn}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetricValue": {
+			"description": "",
+			"displayName": "MetricValueType",
+			"documentation": "",
+			"properties": {
+				"fieldName": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Field must be a valid USQL one",
+							"customValidatorId": "field-name-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Field is not a valid value",
+							"customValidatorId": "value-field-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "FIELD",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"type": {
+					"default": "COUNTER",
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ValueType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}
