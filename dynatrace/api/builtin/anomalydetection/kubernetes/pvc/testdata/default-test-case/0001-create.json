@@ -1,0 +1,19 @@
+{
+    "lowDiskSpaceCritical": {
+      "configuration": {
+        "observationPeriodInMinutes": 5,
+        "samplePeriodInMinutes": 3,
+        "threshold": 100
+      },
+      "enabled": true
+    },
+    "lowDiskSpaceCriticalPercentage": {
+      "configuration": {
+        "observationPeriodInMinutes": 5,
+        "samplePeriodInMinutes": 3,
+        "threshold": 10
+      },
+      "enabled": true
+    },
+    "scope": "KUBERNETES_CLUSTER-1234567890000000"
+  }

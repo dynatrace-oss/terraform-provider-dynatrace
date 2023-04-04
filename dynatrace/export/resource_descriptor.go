@@ -30,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/namespace"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/pvc"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload"
 	custom_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	custom_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
@@ -815,6 +816,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ExtensionExecutionRemote: NewResourceDescriptor(
 		eecremote.Service,
 		Coalesce(Dependencies.EnvironmentActiveGate),
+	),
+	ResourceTypes.K8sPVCAnomalies: NewResourceDescriptor(
+		pvc.Service,
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
 	),
 }
 
