@@ -228,6 +228,7 @@ var ResourceTypes = struct {
 	CustomUnits                         ResourceType
 	DiskAnalytics                       ResourceType
 	NetworkTraffic                      ResourceType
+	TokenSettings                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -413,6 +414,7 @@ var ResourceTypes = struct {
 	"dynatrace_custom_units",
 	"dynatrace_disk_analytics",
 	"dynatrace_network_traffic",
+	"dynatrace_token_settings",
 }
 
 type ResourceStatus string

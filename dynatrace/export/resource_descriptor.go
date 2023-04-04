@@ -126,6 +126,7 @@ import (
 	httpcookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
 	httpoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
@@ -809,6 +810,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CustomUnits:              NewResourceDescriptor(customunit.Service),
 	ResourceTypes.DiskAnalytics:            NewResourceDescriptor(diskanalytics.Service),
 	ResourceTypes.NetworkTraffic:           NewResourceDescriptor(networktraffic.Service),
+	ResourceTypes.TokenSettings:            NewResourceDescriptor(tokensettings.Service),
 }
 
 var BlackListedResources = []ResourceType{

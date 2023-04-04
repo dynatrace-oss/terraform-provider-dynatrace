@@ -324,6 +324,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_units":                       resources.NewGeneric(export.ResourceTypes.CustomUnits).Resource(),
 			"dynatrace_disk_analytics":                     resources.NewGeneric(export.ResourceTypes.DiskAnalytics).Resource(),
 			"dynatrace_network_traffic":                    resources.NewGeneric(export.ResourceTypes.NetworkTraffic).Resource(),
+			"dynatrace_token_settings":                     resources.NewGeneric(export.ResourceTypes.TokenSettings).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
