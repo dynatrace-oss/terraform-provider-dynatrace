@@ -325,6 +325,7 @@ func Provider() *schema.Provider {
 			"dynatrace_disk_analytics":                     resources.NewGeneric(export.ResourceTypes.DiskAnalytics).Resource(),
 			"dynatrace_network_traffic":                    resources.NewGeneric(export.ResourceTypes.NetworkTraffic).Resource(),
 			"dynatrace_token_settings":                     resources.NewGeneric(export.ResourceTypes.TokenSettings).Resource(),
+			"dynatrace_extension_execution_remote":         resources.NewGeneric(export.ResourceTypes.ExtensionExecutionRemote).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

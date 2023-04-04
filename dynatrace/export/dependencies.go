@@ -58,6 +58,7 @@ var Dependencies = struct {
 	HttpCheck                 Dependency
 	K8sCluster                Dependency
 	CloudApplicationNamespace Dependency
+	EnvironmentActiveGate     Dependency
 }{
 	ManagementZone:            &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                  func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -79,6 +80,7 @@ var Dependencies = struct {
 	HttpCheck:                 &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
 	K8sCluster:                &entityds{"KUBERNETES_CLUSTER", "KUBERNETES_CLUSTER-[A-Z0-9]{16}", false},
 	CloudApplicationNamespace: &entityds{"CLOUD_APPLICATION_NAMESPACE", "CLOUD_APPLICATION_NAMESPACE-[A-Z0-9]{16}", false},
+	EnvironmentActiveGate:     &entityds{"ENVIRONMENT_ACTIVE_GATE", "ENVIRONMENT_ACTIVE_GATE-[A-Z0-9]{16}", false},
 }
 
 type mgmzdep struct {

@@ -229,6 +229,7 @@ var ResourceTypes = struct {
 	DiskAnalytics                       ResourceType
 	NetworkTraffic                      ResourceType
 	TokenSettings                       ResourceType
+	ExtensionExecutionRemote            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -415,6 +416,7 @@ var ResourceTypes = struct {
 	"dynatrace_disk_analytics",
 	"dynatrace_network_traffic",
 	"dynatrace_token_settings",
+	"dynatrace_extension_execution_remote",
 }
 
 type ResourceStatus string

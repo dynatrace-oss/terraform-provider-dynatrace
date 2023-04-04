@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_extension_execution_remote Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_extension_execution_remote` covers configuration for Extension Execution Controller configuration for ActiveGate deployment
+---
+
+# dynatrace_extension_execution_remote (Resource)
+
+## Dynatrace Documentation
+
+- Extension Execution Controller - https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts#eec
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:eec.remote`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_extension_execution_remote` downloads all existing Extension Execution Controller configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/eec/remote/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

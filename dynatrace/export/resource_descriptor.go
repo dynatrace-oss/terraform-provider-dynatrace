@@ -51,6 +51,7 @@ import (
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
+	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
 	networktraffic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
@@ -811,6 +812,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DiskAnalytics:            NewResourceDescriptor(diskanalytics.Service),
 	ResourceTypes.NetworkTraffic:           NewResourceDescriptor(networktraffic.Service),
 	ResourceTypes.TokenSettings:            NewResourceDescriptor(tokensettings.Service),
+	ResourceTypes.ExtensionExecutionRemote: NewResourceDescriptor(
+		eecremote.Service,
+		Coalesce(Dependencies.EnvironmentActiveGate),
+	),
 }
 
 var BlackListedResources = []ResourceType{
