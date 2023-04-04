@@ -233,6 +233,7 @@ var ResourceTypes = struct {
 	K8sPVCAnomalies                     ResourceType
 	UserActionCustomMetrics             ResourceType
 	WebAppJavascriptVersion             ResourceType
+	WebAppJavascriptUpdates             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -423,6 +424,7 @@ var ResourceTypes = struct {
 	"dynatrace_k8s_pvc_anomalies",
 	"dynatrace_user_action_metrics",
 	"dynatrace_web_app_javascript_version",
+	"dynatrace_web_app_javascript_updates",
 }
 
 type ResourceStatus string

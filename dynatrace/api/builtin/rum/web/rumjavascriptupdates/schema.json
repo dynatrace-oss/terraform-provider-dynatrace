@@ -1,0 +1,81 @@
+{
+	"allowedScopes": [
+		"APPLICATION",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "No JavaScriptVersion is defined for CUSTOM",
+			"customValidatorId": "rumJavaScriptVersionToCustomValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Environment too new to set Latest IE7-10 supported",
+			"customValidatorId": "rumJavaScriptVersionToLatestIESupportedValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Define the RUM JavaScript version to be used globally (in the global settings) or for a specific web application (in the application settings). In order to profit from RUM JavaScript updates, it is recommended to choose a dynamic version like **Latest stable**, **Previous stable** or **Latest IE7-10** supported. If dynamic versions are not an option for you, choose **Custom** instead. This option refers to a static version defined in the [Custom RUM JavaScript version](/ui/settings/builtin:rum.web.custom-rum-javascript-version) environment settings.",
+	"displayName": "RUM JavaScript updates",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"JavascriptVersion": {
+			"description": "",
+			"displayName": "JavascriptVersion",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Latest stable",
+					"value": "LATEST_STABLE"
+				},
+				{
+					"displayName": "Previous stable",
+					"value": "PREVIOUS_STABLE"
+				},
+				{
+					"displayName": "Latest IE7-10 supported",
+					"value": "LATEST_IE7_10_SUPPORTED"
+				},
+				{
+					"displayName": "Custom",
+					"value": "CUSTOM"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"JavascriptVersion": {
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "rumJavaScriptVersion",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"default": "LATEST_STABLE",
+			"description": "",
+			"displayName": "Choose version",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": {
+				"$ref": "#/enums/JavascriptVersion"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring",
+		"group:rum-injection"
+	],
+	"schemaId": "builtin:rum.web.rum-javascript-updates",
+	"types": {},
+	"version": "1.0.4"
+}

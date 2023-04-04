@@ -116,6 +116,7 @@ import (
 	webapprequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/requesterrors"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptupdates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebservice"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/fullwebrequest"
@@ -826,6 +827,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.UserActionCustomMetrics: NewResourceDescriptor(useractioncustommetrics.Service),
 	ResourceTypes.WebAppJavascriptVersion: NewResourceDescriptor(customrumjavascriptversion.Service),
+	ResourceTypes.WebAppJavascriptUpdates: NewResourceDescriptor(
+		rumjavascriptupdates.Service,
+		Coalesce(Dependencies.Application),
+	),
 }
 
 var BlackListedResources = []ResourceType{

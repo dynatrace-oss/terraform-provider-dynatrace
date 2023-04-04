@@ -329,6 +329,7 @@ func Provider() *schema.Provider {
 			"dynatrace_k8s_pvc_anomalies":                  resources.NewGeneric(export.ResourceTypes.K8sPVCAnomalies).Resource(),
 			"dynatrace_user_action_metrics":                resources.NewGeneric(export.ResourceTypes.UserActionCustomMetrics).Resource(),
 			"dynatrace_web_app_javascript_version":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptVersion).Resource(),
+			"dynatrace_web_app_javascript_updates":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptUpdates).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
