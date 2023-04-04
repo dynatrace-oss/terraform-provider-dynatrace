@@ -798,14 +798,17 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceFullWebService:      NewResourceDescriptor(fullwebservice.Service),
 	ResourceTypes.DashboardsAllowlist:        NewResourceDescriptor(dashboardsallowlist.Service),
 	ResourceTypes.FailureDetectionParameters: NewResourceDescriptor(envparameters.Service),
-	ResourceTypes.FailureDetectionRules:      NewResourceDescriptor(envrules.Service),
-	ResourceTypes.LogOneAgent:                NewResourceDescriptor(logagentconfiguration.Service),
-	ResourceTypes.IssueTracking:              NewResourceDescriptor(issuetracking.Service),
-	ResourceTypes.GeolocationSettings:        NewResourceDescriptor(geosettings.Service),
-	ResourceTypes.UserSessionCustomMetrics:   NewResourceDescriptor(custommetrics.Service),
-	ResourceTypes.CustomUnits:                NewResourceDescriptor(customunit.Service),
-	ResourceTypes.DiskAnalytics:              NewResourceDescriptor(diskanalytics.Service),
-	ResourceTypes.NetworkTraffic:             NewResourceDescriptor(networktraffic.Service),
+	ResourceTypes.FailureDetectionRules: NewResourceDescriptor(
+		envrules.Service,
+		Dependencies.ID(ResourceTypes.FailureDetectionParameters),
+	),
+	ResourceTypes.LogOneAgent:              NewResourceDescriptor(logagentconfiguration.Service),
+	ResourceTypes.IssueTracking:            NewResourceDescriptor(issuetracking.Service),
+	ResourceTypes.GeolocationSettings:      NewResourceDescriptor(geosettings.Service),
+	ResourceTypes.UserSessionCustomMetrics: NewResourceDescriptor(custommetrics.Service),
+	ResourceTypes.CustomUnits:              NewResourceDescriptor(customunit.Service),
+	ResourceTypes.DiskAnalytics:            NewResourceDescriptor(diskanalytics.Service),
+	ResourceTypes.NetworkTraffic:           NewResourceDescriptor(networktraffic.Service),
 }
 
 var BlackListedResources = []ResourceType{
