@@ -1,0 +1,58 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Please choose a valid JavaScript version",
+			"customValidatorId": "customVersionNotNullValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Define a custom RUM JavaScript version to be added to the pool of versions for web applications to choose from.",
+	"displayName": "Custom RUM JavaScript version",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"customJavaScriptVersion": {
+			"constraints": [
+				{
+					"customMessage": "Invalid JavaScript version",
+					"pattern": "^[0-9]{17}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "customJavaScriptVersionDatasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"description": "",
+			"displayName": "Choose custom version",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.web.custom-rum-javascript-version",
+	"types": {},
+	"version": "1.0.2"
+}
