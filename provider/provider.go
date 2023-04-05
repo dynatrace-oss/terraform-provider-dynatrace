@@ -333,6 +333,7 @@ func Provider() *schema.Provider {
 			"dynatrace_opentelemetry_metrics":              resources.NewGeneric(export.ResourceTypes.OpenTelemetryMetrics).Resource(),
 			"dynatrace_activegate_updates":                 resources.NewGeneric(export.ResourceTypes.ActiveGateUpdates).Resource(),
 			"dynatrace_oneagent_default_version":           resources.NewGeneric(export.ResourceTypes.OneAgentDefaultVersion).Resource(),
+			"dynatrace_oneagent_updates":                   resources.NewGeneric(export.ResourceTypes.OneAgentUpdates).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

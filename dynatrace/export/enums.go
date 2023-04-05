@@ -237,6 +237,7 @@ var ResourceTypes = struct {
 	OpenTelemetryMetrics                ResourceType
 	ActiveGateUpdates                   ResourceType
 	OneAgentDefaultVersion              ResourceType
+	OneAgentUpdates                     ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -431,6 +432,7 @@ var ResourceTypes = struct {
 	"dynatrace_opentelemetry_metrics",
 	"dynatrace_activegate_updates",
 	"dynatrace_oneagent_default_version",
+	"dynatrace_oneagent_updates",
 }
 
 type ResourceStatus string

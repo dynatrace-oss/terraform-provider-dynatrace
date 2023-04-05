@@ -1,0 +1,195 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Configure OneAgent update behavior. To learn more about the latest updates, visit [OneAgent release notes](https://dt-url.net/release-notes-oneagent). To configure RUM JavaScript update behaviour, visit [RUM JavaScript updates](/ui/settings/builtin:rum.web.rum-javascript-updates).",
+	"displayName": "OneAgent updates",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"UpdateMode": {
+			"description": "",
+			"displayName": "UpdateMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic updates at earliest convenience",
+					"value": "AUTOMATIC"
+				},
+				{
+					"displayName": "Automatic updates during maintenance windows",
+					"value": "AUTOMATIC_DURING_MW"
+				},
+				{
+					"displayName": "No automatic updates",
+					"value": "MANUAL"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"maintenanceWindows": {
+			"description": "",
+			"displayName": "Maintenance windows",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/maintenanceWindow"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add maintenance window"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "AUTOMATIC_DURING_MW",
+				"property": "updateMode",
+				"type": "EQUALS"
+			},
+			"type": "set"
+		},
+		"revision": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [
+					"targetVersion"
+				],
+				"fullContext": true,
+				"identifier": "OneAgentRevisionDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "latest",
+			"description": "",
+			"displayName": "Revision",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"precondition": {
+							"expectedValues": [
+								"latest",
+								"previous",
+								"older"
+							],
+							"property": "targetVersion",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					{
+						"expectedValues": [
+							"AUTOMATIC",
+							"AUTOMATIC_DURING_MW"
+						],
+						"property": "updateMode",
+						"type": "IN"
+					}
+				],
+				"type": "AND"
+			},
+			"subType": "datasource",
+			"type": "text"
+		},
+		"targetVersion": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "OneAgentAutoUpdateVersionsDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "latest",
+			"description": "",
+			"displayName": "Target version",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"AUTOMATIC",
+					"AUTOMATIC_DURING_MW"
+				],
+				"property": "updateMode",
+				"type": "IN"
+			},
+			"subType": "datasource",
+			"type": "text"
+		},
+		"updateMode": {
+			"default": "AUTOMATIC",
+			"description": "",
+			"displayName": "Update mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/UpdateMode"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:updates"
+	],
+	"schemaId": "builtin:deployment.oneagent.updates",
+	"types": {
+		"maintenanceWindow": {
+			"description": "",
+			"displayName": "maintenanceWindow",
+			"documentation": "",
+			"properties": {
+				"maintenanceWindow": {
+					"default": "00000000-0000-0000-0000-000000000000",
+					"description": "Select a [maintenance window for OneAgent updates](/ui/settings/builtin:deployment.management.update-windows)",
+					"displayName": "Maintenance window",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"referencedType": "builtin:deployment.management.update-windows",
+					"type": "setting"
+				}
+			},
+			"summaryPattern": "{maintenanceWindow}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

@@ -51,6 +51,7 @@ import (
 	activegateupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/activegate/updates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
+	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
@@ -840,6 +841,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.EnvironmentActiveGate),
 	),
 	ResourceTypes.OneAgentDefaultVersion: NewResourceDescriptor(defaultversion.Service),
+	ResourceTypes.OneAgentUpdates: NewResourceDescriptor(
+		oneagentupdates.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+		Dependencies.ID(ResourceTypes.Maintenance),
+	),
 }
 
 var BlackListedResources = []ResourceType{
