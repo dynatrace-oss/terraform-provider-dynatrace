@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_opentelemetry_metrics Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_opentelemetry_metrics` covers configuration for OpenTelemetry metrics
+---
+
+# dynatrace_opentelemetry_metrics (Resource)
+
+## Dynatrace Documentation
+
+- OpenTelemetry metrics - https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/opentelemetry-metrics
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:opentelemetry-metrics`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_opentelemetry_metrics` downloads all existing OpenTelemetry metric configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/opentelemetrymetrics/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

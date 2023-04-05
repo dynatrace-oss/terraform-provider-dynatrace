@@ -86,6 +86,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/nettracer/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/opentelemetrymetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
@@ -831,6 +832,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		rumjavascriptupdates.Service,
 		Coalesce(Dependencies.Application),
 	),
+	ResourceTypes.OpenTelemetryMetrics: NewResourceDescriptor(opentelemetrymetrics.Service),
 }
 
 var BlackListedResources = []ResourceType{

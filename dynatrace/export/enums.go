@@ -234,6 +234,7 @@ var ResourceTypes = struct {
 	UserActionCustomMetrics             ResourceType
 	WebAppJavascriptVersion             ResourceType
 	WebAppJavascriptUpdates             ResourceType
+	OpenTelemetryMetrics                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -425,6 +426,7 @@ var ResourceTypes = struct {
 	"dynatrace_user_action_metrics",
 	"dynatrace_web_app_javascript_version",
 	"dynatrace_web_app_javascript_updates",
+	"dynatrace_opentelemetry_metrics",
 }
 
 type ResourceStatus string

@@ -330,6 +330,7 @@ func Provider() *schema.Provider {
 			"dynatrace_user_action_metrics":                resources.NewGeneric(export.ResourceTypes.UserActionCustomMetrics).Resource(),
 			"dynatrace_web_app_javascript_version":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptVersion).Resource(),
 			"dynatrace_web_app_javascript_updates":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptUpdates).Resource(),
+			"dynatrace_opentelemetry_metrics":              resources.NewGeneric(export.ResourceTypes.OpenTelemetryMetrics).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

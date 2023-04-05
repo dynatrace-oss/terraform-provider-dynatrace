@@ -1,0 +1,205 @@
+{
+	"allowedScopes": [
+		"environment",
+		"environment-default"
+	],
+	"description": "Configure how OpenTelemetry metrics are ingested into Dynatrace via the OTLP endpoint.\n\n**Notes:**\n\n* Changes made to these settings only apply to newly ingested data points. Data points that are already stored in Dynatrace will not change.\n\n* For OpenTelemetry trace/span settings, navigate to: **Settings** \u003e **Server-side service monitoring**.",
+	"displayName": "OpenTelemetry metrics",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"additionalAttributes": {
+			"constraints": [
+				{
+					"customMessage": "Attribute keys must be unique.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"attributeKey"
+					]
+				}
+			],
+			"description": "When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.\n\n**Notes:**\n\n* Modifying this setting (renaming, disabling or removing attributes) will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually.\n\n* Dynatrace does not recommend changing/removing the attributes starting with \"dt.\". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/AdditionalAttributeItem"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"additionalAttributesToDimensionEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Add the resource and scope attributes configured below as dimensions",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"meterNameToDimensionEnabled": {
+			"default": true,
+			"description": "When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.\n\n**Note:** Modifying this setting will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually.",
+			"displayName": "Add Meter name and version as metric dimensions",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"toDropAttributes": {
+			"constraints": [
+				{
+					"customMessage": "Attribute keys must be unique.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"attributeKey"
+					]
+				}
+			],
+			"description": "The attributes defined in the list below will be dropped from all ingested OTLP metrics.\n\nUpon ingest, the *Allow list: resource and scope attributes* above is applied first. Then, the *Deny list: all attributes* below is applied. The deny list therefore applies to all attributes from all sources (data points, scope and resource).\n\n**Notes:**\n\n* Modifying this setting (adding, renaming, disabling or removing attributes) will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually.\n\n* Dynatrace does not recommend including attributes starting with \"dt.\" to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/DropAttributeItem"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics"
+	],
+	"schemaId": "builtin:opentelemetry-metrics",
+	"types": {
+		"AdditionalAttributeItem": {
+			"description": "",
+			"displayName": "Additional attribute",
+			"documentation": "",
+			"properties": {
+				"attributeKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Attribute key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "When enabled, the attribute will be added as a dimension to ingested metrics if present in the OpenTelemetry resource or in the instrumentation scope.",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "Add: {attributeKey}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DropAttributeItem": {
+			"description": "",
+			"displayName": "Deny attribute",
+			"documentation": "",
+			"properties": {
+				"attributeKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Attribute key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "When enabled, the attribute will be dropped on all ingested metrics.",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "Drop: {attributeKey}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"expandable": {
+			"sections": [
+				{
+					"displayName": "Allow list: resource and scope attributes",
+					"expanded": false,
+					"properties": [
+						"additionalAttributesToDimensionEnabled",
+						"additionalAttributes"
+					]
+				},
+				{
+					"displayName": "Deny list: all attributes",
+					"expanded": false,
+					"properties": [
+						"toDropAttributes"
+					]
+				}
+			]
+		}
+	},
+	"version": "1.1"
+}
