@@ -866,10 +866,33 @@ Currently supported values are:
 
 Optional:
 
+- `generic_tag_filters` (Block List, Max: 1) A set of generic tag filters that can be applied to a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters--generic_tag_filters))
 - `tag_suggestion_types` (Set of String) A set of entities applied for tag filter suggestions. You can fetch the list of possible values with the [GET all entity types](https://dt-url.net/dw03s7h)request. 
 
 Only applicable if the **filters** set includes `TAG_KEY:<tagname>`
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+<a id="nestedblock--dashboard_metadata--dynamic_filters--generic_tag_filters"></a>
+### Nested Schema for `dashboard_metadata.dynamic_filters.generic_tag_filters`
+
+Required:
+
+- `filter` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--dashboard_metadata--dynamic_filters--generic_tag_filters--filter))
+
+<a id="nestedblock--dashboard_metadata--dynamic_filters--generic_tag_filters--filter"></a>
+### Nested Schema for `dashboard_metadata.dynamic_filters.generic_tag_filters.filter`
+
+Required:
+
+- `entity_types` (Set of String) Entity types affected by tag
+
+Optional:
+
+- `name` (String) The display name used to identify this generic filter
+- `suggestions_from_entity_type` (String) The entity type for which the suggestions should be provided.
+- `tag_key` (String) The tag key for this filter
+
+
 
 
 <a id="nestedblock--dashboard_metadata--filter"></a>
