@@ -3,7 +3,7 @@ resource "dynatrace_log_sensitive_data_masking" "#name#" {
   enabled = true
   scope   = "environment"
   masking {
-    replacement = "SHA1"
+    type = "SHA1"
     expression  = "FOO"
   }
   matchers {

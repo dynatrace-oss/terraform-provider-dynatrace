@@ -18,13 +18,14 @@
 package sensitivedatamasking
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Masking struct {
 	Expression  string      `json:"expression"` // Maximum one capture group is allowed. If none was given, the whole expression will be treated as a capture group.
-	Replacement string      `json:"replacement"`
+	Replacement *string     `json:"replacement"`
 	Type        MaskingType `json:"type"` // Possible Values: `SHA1`, `STRING`
 }
 
@@ -37,34 +38,36 @@ func (me *Masking) Schema() map[string]*schema.Schema {
 		},
 		"replacement": {
 			Type:        schema.TypeString,
-			Description: "The string to replace the masked expression with. Use `SHA1` if it should to automatically generated every time.",
+			Description: "The string to replace the masked expression with. Irrelevant if `type` is `SHA1`.",
+			Optional:    true,
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `SHA1`, `STRING`",
 			Required:    true,
 		},
 	}
 }
 
 func (me *Masking) MarshalHCL(properties hcl.Properties) error {
-	if me.Type == "SHA1" {
-		me.Replacement = "SHA1"
-	}
 	return properties.EncodeAll(map[string]any{
 		"expression":  me.Expression,
 		"replacement": me.Replacement,
+		"type":        me.Type,
 	})
 }
 
-func (me *Masking) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := decoder.DecodeAll(map[string]any{
-		"expression":  &me.Expression,
-		"replacement": &me.Replacement,
-	}); err != nil {
-		return err
-	}
-	if me.Replacement == "SHA1" {
-		me.Replacement = ""
-		me.Type = "SHA1"
-	} else {
-		me.Type = "STRING"
+func (me *Masking) HandlePreconditions() error {
+	if me.Replacement == nil && string(me.Type) == "STRING" {
+		me.Replacement = opt.NewString("")
 	}
 	return nil
+}
+
+func (me *Masking) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]any{
+		"expression":  &me.Expression,
+		"replacement": &me.Replacement,
+		"type":        &me.Type,
+	})
 }
