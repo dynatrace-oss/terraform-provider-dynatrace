@@ -1,0 +1,339 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Create rules to mask any information you consider to be sensitive. For more details and examples, see [documentation](https://dt-url.net/bc03yti)",
+	"displayName": "Sensitive data masking",
+	"documentation": "Masking is done on OneAgent, and no personal data is sent or stored on Dynatrace server.",
+	"dynatrace": "1",
+	"enums": {
+		"MaskingType": {
+			"description": "",
+			"displayName": "Masking type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "replace with string",
+					"icon": "link-2",
+					"value": "STRING"
+				},
+				{
+					"displayName": "SHA-1",
+					"icon": "keystone",
+					"value": "SHA1"
+				}
+			],
+			"type": "enum"
+		},
+		"MatcherType": {
+			"description": "",
+			"displayName": "Matcher type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process group",
+					"icon": "process",
+					"value": "dt.entity.process_group"
+				},
+				{
+					"displayName": "Log source",
+					"icon": "logfile",
+					"value": "log.source"
+				},
+				{
+					"displayName": "K8s container name",
+					"icon": "kubernetes-container-services",
+					"value": "k8s.container.name"
+				},
+				{
+					"displayName": "K8s namespace name",
+					"icon": "kubernetes-ns",
+					"value": "k8s.namespace.name"
+				},
+				{
+					"displayName": "K8s deployment name",
+					"icon": "kubernetes-deploy",
+					"value": "k8s.deployment.name"
+				},
+				{
+					"displayName": "Container name",
+					"icon": "container",
+					"value": "container.name"
+				},
+				{
+					"displayName": "DT entity container group ID",
+					"icon": "container-registries",
+					"value": "dt.entity.container_group"
+				},
+				{
+					"displayName": "Process technology",
+					"icon": "services",
+					"value": "process.technology"
+				}
+			],
+			"type": "enum"
+		},
+		"Operator": {
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "matches",
+					"value": "MATCHES"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 256,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"minAgentVersion": "1.243"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"config-item-title": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1024,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Active",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"masking": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Masking"
+			}
+		},
+		"matchers": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Matcher"
+				}
+			},
+			"maxObjects": 16,
+			"metadata": {
+				"addItemButton": "Add matcher"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring",
+		"group:log-monitoring.ingest-and-processing"
+	],
+	"schemaId": "builtin:logmonitoring.sensitive-data-masking-settings",
+	"types": {
+		"Masking": {
+			"description": "",
+			"displayName": "Masking rule",
+			"documentation": "",
+			"properties": {
+				"expression": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 2048,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "logMonitoringRegexValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Search expression",
+					"documentation": "Maximum one capture group is allowed. If none was given, the whole expression will be treated as a capture group.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Regular expression",
+						"uiDefaultValue": ""
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"replacement": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 1024,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Field may contain only alphanumeric characters and following signs: -_#*?[]\u003c\u003e()",
+							"pattern": "^[a-zA-Z0-9-_#\\*\\?\\[\\]\u003c\u003e()]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Replacement",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": ""
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "STRING",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"type": {
+					"default": "STRING",
+					"description": "",
+					"displayName": "Masking type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MaskingType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Matcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"properties": {
+				"attribute": {
+					"default": "log.source",
+					"description": "",
+					"displayName": "Attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MatcherType"
+					}
+				},
+				"operator": {
+					"default": "MATCHES",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Operator"
+					}
+				},
+				"values": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"maxLength": 128,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"datasource": {
+							"filterProperties": [
+								"../attribute"
+							],
+							"fullContext": true,
+							"identifier": "logmonitoring.log-storage-settings.datasource",
+							"resetValue": "ALWAYS",
+							"useApiSearch": true,
+							"validate": true
+						},
+						"description": "",
+						"displayName": "Values",
+						"documentation": "",
+						"subType": "datasource",
+						"type": "text"
+					},
+					"maxObjects": 128,
+					"metadata": {
+						"addItemButton": "Add value",
+						"placeholder": "Required",
+						"uiDefaultValue": ""
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{attribute} {operator} any of [{values}]",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"emptyState": {
+				"text": "**Create your first rule**\n\nAdd the first rule to configure sensitive data masking"
+			}
+		}
+	},
+	"version": "1"
+}

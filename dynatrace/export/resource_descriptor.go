@@ -69,6 +69,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
+	sensitivedatamasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/sensitivedatamaskingsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/timestampconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
@@ -802,6 +803,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogTimestamp:               NewResourceDescriptor(timestampconfiguration.Service),
 	ResourceTypes.LogGrail:                   NewResourceDescriptor(logsongrailactivate.Service),
 	ResourceTypes.LogCustomAttribute:         NewResourceDescriptor(logcustomattributes.Service),
+	ResourceTypes.LogSensitiveDataMasking:    NewResourceDescriptor(sensitivedatamasking.Service),
 	ResourceTypes.EULASettings:               NewResourceDescriptor(eulasettings.Service),
 	ResourceTypes.APIDetectionRules:          NewResourceDescriptor(apidetection.Service),
 	ResourceTypes.ServiceExternalWebRequest:  NewResourceDescriptor(externalwebrequest.Service),
