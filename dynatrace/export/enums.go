@@ -212,6 +212,7 @@ var ResourceTypes = struct {
 	LogEvents                           ResourceType
 	LogTimestamp                        ResourceType
 	LogGrail                            ResourceType
+	LogCustomAttribute                  ResourceType
 	EULASettings                        ResourceType
 	APIDetectionRules                   ResourceType
 	ServiceExternalWebRequest           ResourceType
@@ -407,6 +408,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_events",
 	"dynatrace_log_timestamp",
 	"dynatrace_log_grail",
+	"dynatrace_log_custom_attribute",
 	"dynatrace_eula_settings",
 	"dynatrace_api_detection",
 	"dynatrace_service_external_web_request",
