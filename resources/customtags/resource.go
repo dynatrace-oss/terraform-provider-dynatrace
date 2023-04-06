@@ -118,7 +118,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		delConfig.Tags = deleteTags
 		srv := customtags.Service(cfg.Credentials(m))
 		if fullDeleter, ok := srv.(FullDeleter); ok {
-			if err := fullDeleter.DeleteValue(stateConfig); err != nil {
+			if err := fullDeleter.DeleteValue(delConfig); err != nil {
 				return diag.FromErr(err)
 			}
 		}

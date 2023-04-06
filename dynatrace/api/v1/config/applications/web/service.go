@@ -37,7 +37,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*web.Applic
 		&settings.ServiceOptions[*web.Application]{
 			Get:           settings.Path("/api/config/v1/applications/web/%s"),
 			List:          settings.Path("/api/config/v1/applications/web"),
-			CreateConfirm: 20,
+			CreateConfirm: 60,
 			CompleteGet:   LoadKeyUserActions,
 			OnChanged:     SaveKeyUserActions,
 		},
