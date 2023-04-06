@@ -845,7 +845,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		oneagentupdates.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
-		Dependencies.ID(ResourceTypes.Maintenance),
+		Dependencies.ID(ResourceTypes.UpdateWindows),
 	),
 }
 
