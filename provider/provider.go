@@ -34,6 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
 	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestnaming"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
@@ -130,6 +131,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entity":                    entity.DataSource(),
 			"dynatrace_entities":                  entities.DataSource(),
 			"dynatrace_iam_user":                  ds_iam_users.DataSource(),
+			"dynatrace_request_naming":            requestnaming.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
