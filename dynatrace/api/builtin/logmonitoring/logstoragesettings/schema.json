@@ -1,0 +1,243 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace allows you to include and exclude specific log sources for analysis by Dynatrace Log Monitoring.\n\nThe storage configuration is based on rules that use matchers for hierarchy, log path, and process groups. These rules determine the upload of log files known to OneAgent, auto-detected log files, and custom log files defined per process group. For more details and examples, see [documentation](https://dt-url.net/wo43yok).",
+	"displayName": "Log storage configuration",
+	"documentation": "\n\nAdd multiple scopes if you want to include or exclude items based on multiple attributes.",
+	"dynatrace": "1",
+	"enums": {
+		"MatcherType": {
+			"description": "",
+			"displayName": "Matcher type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process group",
+					"icon": "process",
+					"value": "dt.entity.process_group"
+				},
+				{
+					"displayName": "Log source",
+					"icon": "logfile",
+					"value": "log.source"
+				},
+				{
+					"displayName": "Log content",
+					"icon": "filter",
+					"value": "log.content"
+				},
+				{
+					"displayName": "K8s container name",
+					"icon": "kubernetes-container-services",
+					"value": "k8s.container.name"
+				},
+				{
+					"displayName": "K8s namespace name",
+					"icon": "kubernetes-ns",
+					"value": "k8s.namespace.name"
+				},
+				{
+					"displayName": "K8s deployment name",
+					"icon": "kubernetes-deploy",
+					"value": "k8s.deployment.name"
+				},
+				{
+					"displayName": "Container name",
+					"icon": "container",
+					"value": "container.name"
+				},
+				{
+					"displayName": "DT entity container group ID",
+					"icon": "container-registries",
+					"value": "dt.entity.container_group"
+				},
+				{
+					"displayName": "Process technology",
+					"icon": "services",
+					"value": "process.technology"
+				}
+			],
+			"type": "enum"
+		},
+		"Operator": {
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "matches",
+					"icon": "plus-add",
+					"value": "MATCHES"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"minAgentVersion": "1.243"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"config-item-title": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1024,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Active",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"matchers": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Matcher"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add matcher"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"send-to-storage": {
+			"default": true,
+			"description": "",
+			"displayName": "Send to storage",
+			"documentation": "If `true` matching logs will be included in storage. If `false` matching logs will be excluded from storage.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring",
+		"group:log-monitoring.ingest-and-processing"
+	],
+	"schemaId": "builtin:logmonitoring.log-storage-settings",
+	"types": {
+		"Matcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"properties": {
+				"attribute": {
+					"default": "log.source",
+					"description": "",
+					"displayName": "Attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MatcherType"
+					}
+				},
+				"operator": {
+					"default": "MATCHES",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Operator"
+					}
+				},
+				"values": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"maxLength": 1024,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"datasource": {
+							"filterProperties": [
+								"../attribute"
+							],
+							"fullContext": true,
+							"identifier": "logmonitoring.log-storage-settings.datasource",
+							"resetValue": "ALWAYS",
+							"useApiSearch": true,
+							"validate": true
+						},
+						"description": "",
+						"displayName": "Values",
+						"documentation": "",
+						"subType": "datasource",
+						"type": "text"
+					},
+					"maxObjects": 2000,
+					"metadata": {
+						"addItemButton": "Add value",
+						"placeholder": "Required",
+						"uiDefaultValue": ""
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{attribute} matches any of [{values}]",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"emptyState": {
+				"text": "**Create your first rule**\n\nAdd the first rule to start ingesting logs"
+			}
+		}
+	},
+	"version": "1"
+}

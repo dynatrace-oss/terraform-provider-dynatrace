@@ -68,6 +68,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	sensitivedatamasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/sensitivedatamaskingsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/timestampconfiguration"
@@ -850,6 +851,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 		Dependencies.ID(ResourceTypes.UpdateWindows),
+	),
+	ResourceTypes.LogStorage: NewResourceDescriptor(
+		logstoragesettings.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
 	),
 }
 

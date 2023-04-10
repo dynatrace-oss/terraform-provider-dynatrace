@@ -1,0 +1,15 @@
+{
+    "config-item-title": "${randomize}",
+    "enabled": false,
+    "matchers": [
+        {
+            "attribute": "container.name",
+            "operator": "MATCHES",
+            "values": [
+                "TerraformTest"
+            ]
+        }
+    ],
+    "scope": "HOST-1234567890000000",
+    "send-to-storage": false
+}
