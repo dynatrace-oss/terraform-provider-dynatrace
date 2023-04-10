@@ -339,6 +339,7 @@ func Provider() *schema.Provider {
 			"dynatrace_activegate_updates":                 resources.NewGeneric(export.ResourceTypes.ActiveGateUpdates).Resource(),
 			"dynatrace_oneagent_default_version":           resources.NewGeneric(export.ResourceTypes.OneAgentDefaultVersion).Resource(),
 			"dynatrace_oneagent_updates":                   resources.NewGeneric(export.ResourceTypes.OneAgentUpdates).Resource(),
+			"dynatrace_ownership_teams":                    resources.NewGeneric(export.ResourceTypes.OwnershipTeams).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

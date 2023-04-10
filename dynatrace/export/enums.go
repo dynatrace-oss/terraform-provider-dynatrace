@@ -243,6 +243,7 @@ var ResourceTypes = struct {
 	ActiveGateUpdates                   ResourceType
 	OneAgentDefaultVersion              ResourceType
 	OneAgentUpdates                     ResourceType
+	OwnershipTeams                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -441,6 +442,7 @@ var ResourceTypes = struct {
 	"dynatrace_activegate_updates",
 	"dynatrace_oneagent_default_version",
 	"dynatrace_oneagent_updates",
+	"dynatrace_ownership_teams",
 }
 
 type ResourceStatus string
