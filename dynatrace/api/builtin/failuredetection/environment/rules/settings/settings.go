@@ -18,6 +18,7 @@
 package rules
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -32,6 +33,13 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
+	objID := settings.ObjectID{ID: me.ParameterID}
+	if err := objID.Decode(); err != nil {
+		return uuid.NewString()
+	}
+	if len(objID.Key) > 0 {
+		return objID.Key
+	}
 	return uuid.NewString()
 }
 
