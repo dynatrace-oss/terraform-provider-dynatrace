@@ -43,8 +43,36 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*web.Applic
 			CreateConfirm: createConfirmTimeout,
 			CompleteGet:   LoadKeyUserActions,
 			OnChanged:     SaveKeyUserActions,
+			Duplicates:    Duplicates,
 		},
 	)
+}
+
+func Duplicates(service settings.RService[*web.Application], v *web.Application) (*settings.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_web_application") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("Web Application named '%s' already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_web_application") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
 
 func SaveKeyUserActions(client rest.Client, id string, v *web.Application) error {

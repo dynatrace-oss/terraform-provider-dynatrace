@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -47,6 +48,7 @@ func Service(credentials *settings.Credentials, t Type) settings.CRUDService[*No
 			LegacyID:    settings.LegacyObjIDDecode,
 			CreateRetry: UseOAuth2Fix,
 			UpdateRetry: UseOAuth2Fix,
+			Duplicates:  Duplicates,
 		}),
 		&filter{Type: t},
 	)
@@ -58,4 +60,31 @@ func UseOAuth2Fix(v *Notification, err error) *Notification {
 		return v
 	}
 	return nil
+}
+
+func Duplicates(service settings.RService[*Notification], v *Notification) (*settings.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_notification") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("Notification named '%s' already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_notification") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }

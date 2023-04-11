@@ -45,8 +45,36 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*mobile.App
 				v.ApplicationID = nil   // Application ID cannot be changed on existing Mobile Apps
 				return nil
 			},
+			Duplicates: Duplicates,
 		},
 	)
+}
+
+func Duplicates(service settings.RService[*mobile.Application], v *mobile.Application) (*settings.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_mobile_application") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("Mobile Application named '%s' already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_mobile_application") {
+		var err error
+		var stubs settings.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
 
 func LoadKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mobile.Application) error {
