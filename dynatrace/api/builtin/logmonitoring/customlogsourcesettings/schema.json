@@ -1,0 +1,252 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Manually provided log sources which have not been auto-detected. For more details and examples, see [documentation](https://dt-url.net/o9034us)",
+	"displayName": "Custom log source configuration",
+	"documentation": "Custom log sources are provided to OneAgent.",
+	"dynatrace": "1",
+	"enums": {
+		"ContextType": {
+			"description": "",
+			"displayName": "Context type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process group",
+					"icon": "process",
+					"value": "dt.entity.process_group"
+				}
+			],
+			"type": "enum"
+		},
+		"LogSourceType": {
+			"description": "",
+			"displayName": "Custom Log Source type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Log path",
+					"icon": "logfile",
+					"value": "LOG_PATH_PATTERN"
+				},
+				{
+					"displayName": "Windows Event Log",
+					"icon": "logfile",
+					"value": "WINDOWS_EVENT_LOG"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add custom log source",
+		"minAgentVersion": "1.251"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"config-item-title": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 1024,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"context": {
+			"description": "",
+			"displayName": "Log Source context",
+			"documentation": "Define Custom Log Source only within context if provided",
+			"items": {
+				"description": "",
+				"displayName": "Context",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Context"
+				}
+			},
+			"maxObjects": 1,
+			"metadata": {
+				"addItemButton": "Add context",
+				"placeholder": "Optional",
+				"uiDefaultValue": ""
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"custom-log-source": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/CustomLogSource"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Active",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring",
+		"group:log-monitoring.ingest-and-processing"
+	],
+	"schemaId": "builtin:logmonitoring.custom-log-source-settings",
+	"types": {
+		"Context": {
+			"description": "",
+			"displayName": "Context",
+			"documentation": "",
+			"properties": {
+				"attribute": {
+					"default": "dt.entity.process_group",
+					"description": "",
+					"displayName": "Attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ContextType"
+					}
+				},
+				"values": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"maxLength": 1024,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"datasource": {
+							"filterProperties": [
+								"../attribute"
+							],
+							"fullContext": true,
+							"identifier": "logmonitoring.log-storage-settings.datasource",
+							"resetValue": "ALWAYS",
+							"useApiSearch": true,
+							"validate": true
+						},
+						"description": "",
+						"displayName": "Values",
+						"documentation": "",
+						"subType": "datasource",
+						"type": "text"
+					},
+					"maxObjects": 3,
+					"metadata": {
+						"addItemButton": "Add value",
+						"placeholder": "Required",
+						"uiDefaultValue": ""
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{attribute} property is [{values}]",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CustomLogSource": {
+			"description": "",
+			"displayName": "Custom Log Source",
+			"documentation": "",
+			"properties": {
+				"type": {
+					"default": "LOG_PATH_PATTERN",
+					"description": "",
+					"displayName": "Log Source type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/LogSourceType"
+					}
+				},
+				"values": {
+					"description": "",
+					"displayName": "Log source",
+					"documentation": "It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"maxLength": 4096,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "Values",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"placeholder": "Log source name",
+						"uiDefaultValue": ""
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{type} matches any of {values}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"emptyState": {
+				"text": "**Add your first custom log source**\n\nAdd the first custom log source to support what has not been detected automatically"
+			}
+		}
+	},
+	"version": "1"
+}

@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_log_custom_source Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_log_custom_source` covers configuration for custom log source
+---
+
+# dynatrace_log_custom_source (Resource)
+
+## Dynatrace Documentation
+
+- Custom log source (Logs Classic) - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/acquire-log-data/log-custom-source
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:logmonitoring.custom-log-source-settings`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_log_custom_source` downloads all existing custom log source configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/logmonitoring/customlogsourcesettings/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

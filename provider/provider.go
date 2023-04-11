@@ -340,6 +340,7 @@ func Provider() *schema.Provider {
 			"dynatrace_oneagent_default_version":           resources.NewGeneric(export.ResourceTypes.OneAgentDefaultVersion).Resource(),
 			"dynatrace_oneagent_updates":                   resources.NewGeneric(export.ResourceTypes.OneAgentUpdates).Resource(),
 			"dynatrace_ownership_teams":                    resources.NewGeneric(export.ResourceTypes.OwnershipTeams).Resource(),
+			"dynatrace_log_custom_source":                  resources.NewGeneric(export.ResourceTypes.LogCustomSource).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
