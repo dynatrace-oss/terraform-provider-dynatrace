@@ -167,7 +167,7 @@ func (me *readService[T]) storeConfig(id string, v T) error {
 		return err
 	}
 
-	configName := settings.Name(v)
+	configName := settings.Name(v, id)
 	if data, err = json.MarshalIndent(record{ID: id, Name: configName, Value: data}, "", "  "); err != nil {
 		return err
 	}

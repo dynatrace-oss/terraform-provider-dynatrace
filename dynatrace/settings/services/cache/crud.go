@@ -242,7 +242,7 @@ func (me *crudService[T]) storeConfig(id string, name string, v T) error {
 	}
 
 	if len(name) == 0 {
-		name = settings.Name(v)
+		name = settings.Name(v, id)
 	}
 
 	if data, err = json.MarshalIndent(record{ID: id, Name: name, Value: data}, "", "  "); err != nil {

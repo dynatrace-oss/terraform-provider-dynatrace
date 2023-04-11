@@ -37,7 +37,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*management
 
 func Hijack(err error, service settings.RService[*managementzones.ManagementZone], v *managementzones.ManagementZone) (*settings.Stub, error) {
 	if rest.ContainsViolation(err, "Management zone must have a unique name.") {
-		return settings.FindByName(service, settings.Name(v))
+		return settings.FindByName(service, settings.Name(v, ""))
 	}
 	return nil, nil
 }

@@ -40,7 +40,21 @@ var stringType = reflect.ValueOf("").Type()
 var stringPointerType = reflect.ValueOf(opt.NewString("")).Type()
 var stringSliceType = reflect.ValueOf([]string{}).Type()
 
-func Name(v any) string {
+func Name(v any, id string) string {
+	res := name(v, id)
+	if IsValidUUID(res) && len(id) > 0 {
+		if IsValidUUID(id) {
+			return id
+		}
+		objId := ObjectID{ID: id}
+		if err := objId.Decode(); err == nil && len(objId.Key) > 0 {
+			return objId.Key
+		}
+	}
+	return res
+}
+
+func name(v any, id string) string {
 	rv := unref(reflect.ValueOf(v))
 	field := rv.FieldByName("Name")
 	if field.IsValid() && field.Type() == stringType {

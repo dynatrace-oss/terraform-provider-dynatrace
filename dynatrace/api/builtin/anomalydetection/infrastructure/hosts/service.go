@@ -83,7 +83,7 @@ func (me *service) Create(v *hosts.Settings) (*settings.Stub, error) {
 		}
 	}
 
-	itemName := settings.Name(v)
+	itemName := settings.Name(v, objectID[0].ObjectID)
 	stub := &settings.Stub{ID: objectID[0].ObjectID, Name: itemName}
 	return stub, nil
 }

@@ -130,10 +130,10 @@ func (me *service[T]) List() (settings.Stubs, error) {
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
 					if itemName, err = me.options.Name(item.ObjectID, newItem); err != nil {
-						itemName = settings.Name(newItem)
+						itemName = settings.Name(newItem, item.ObjectID)
 					}
 				} else {
-					itemName = settings.Name(newItem)
+					itemName = settings.Name(newItem, item.ObjectID)
 				}
 				stub := &settings.Stub{ID: item.ObjectID, Name: itemName, Value: newItem, LegacyID: settings.GetLegacyID(newItem)}
 				if len(itemName) > 0 {
@@ -233,7 +233,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 		}
 		return nil, oerr
 	}
-	itemName := settings.Name(v)
+	itemName := settings.Name(v, objectID[0].ObjectID)
 	stub := &settings.Stub{ID: objectID[0].ObjectID, Name: itemName}
 	return stub, nil
 }
