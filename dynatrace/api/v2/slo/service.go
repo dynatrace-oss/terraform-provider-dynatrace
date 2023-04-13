@@ -27,8 +27,8 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
@@ -47,33 +47,33 @@ type service struct {
 func (me *service) Get(id string, v *slo.SLO) error {
 	var err error
 
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
 	req := client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
 	if err = req.Finish(v); err != nil {
 		return err
 	}
 
-	numRequiredSuccesses := 10
-	for numRequiredSuccesses > 0 {
-		length := 0
+	// numRequiredSuccesses := 10
+	// for numRequiredSuccesses > 0 {
+	// 	length := 0
 
-		for length == 0 {
-			req = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200)
-			var slos sloList
-			if err = req.Finish(&slos); err != nil {
-				return err
-			}
-			length = len(slos.SLOs)
-			if length == 0 {
-				time.Sleep(time.Second * 2)
-			}
-			for _, stub := range slos.SLOs {
-				v.Timeframe = stub.SLO.Timeframe
-			}
-		}
-		numRequiredSuccesses--
-		time.Sleep(200 * time.Millisecond)
-	}
+	// 	for length == 0 {
+	// 		req = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200)
+	// 		var slos sloList
+	// 		if err = req.Finish(&slos); err != nil {
+	// 			return err
+	// 		}
+	// 		length = len(slos.SLOs)
+	// 		if length == 0 {
+	// 			time.Sleep(time.Second * 2)
+	// 		}
+	// 		for _, stub := range slos.SLOs {
+	// 			v.Timeframe = stub.SLO.Timeframe
+	// 		}
+	// 	}
+	// 	numRequiredSuccesses--
+	// 	time.Sleep(200 * time.Millisecond)
+	// }
 
 	return nil
 }
@@ -97,7 +97,7 @@ type sloListEntry struct {
 func (me *service) List() (api.Stubs, error) {
 	var err error
 
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
 	req := client.Get("/api/v2/slo?pageSize=4000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", 200)
 	var slos sloList
 	if err = req.Finish(&slos); err != nil {
@@ -123,7 +123,7 @@ func (me *service) Create(v *slo.SLO) (*api.Stub, error) {
 
 	var id string
 
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
 	req := client.Post("/api/v2/slo", v, 201).OnResponse(func(resp *http.Response) {
 		location := resp.Header.Get("Location")
 		if len(location) > 0 {
@@ -196,11 +196,11 @@ func (me *service) Create(v *slo.SLO) (*api.Stub, error) {
 }
 
 func (me *service) Update(id string, v *slo.SLO) error {
-	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Put(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
+	return httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID()).Put(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
 }
 
 func (me *service) Delete(id string) error {
-	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Delete(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
+	return httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID()).Delete(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *slo.SLO {

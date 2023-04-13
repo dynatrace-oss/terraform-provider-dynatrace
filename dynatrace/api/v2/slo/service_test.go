@@ -25,11 +25,11 @@ import (
 )
 
 func TestServiceLevelObjectives(t *testing.T) {
-	t.Skip("TODO: check polling mechanism")
+	// t.Skip("TODO: check polling mechanism")
 	api.TestService(t, slo.Service)
 }
 
 func TestAccServiceLevelObjectives(t *testing.T) {
-	t.Skip("TODO: check polling mechanism")
+	// t.Skip("TODO: check polling mechanism")
 	api.TestAcc(t)
 }
