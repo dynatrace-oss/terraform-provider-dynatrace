@@ -59,7 +59,7 @@ func (me KeyUserActions) Equals(other any) bool {
 func (me *KeyUserActions) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"action": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "Configuration of the key user action",
 			Required:    true,
 			MinItems:    1,
