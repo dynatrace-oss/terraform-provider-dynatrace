@@ -162,6 +162,9 @@ func (me *MethodReference) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("argument_types"); ok {
 		me.ArgumentTypes = []string{}
 		for _, e := range value.([]any) {
+			if e == nil {
+				e = ""
+			}
 			me.ArgumentTypes = append(me.ArgumentTypes, e.(string))
 		}
 	}
