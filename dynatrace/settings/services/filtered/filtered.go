@@ -18,6 +18,7 @@
 package filtered
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 )
@@ -32,10 +33,10 @@ type FilterService[T settings.Settings] struct {
 	Filter  Filter[T]
 }
 
-func (me *FilterService[T]) List() (settings.Stubs, error) {
+func (me *FilterService[T]) List() (api.Stubs, error) {
 	var err error
-	var stubs settings.Stubs
-	var filteredStubs settings.Stubs
+	var stubs api.Stubs
+	var filteredStubs api.Stubs
 	if stubs, err = me.Service.List(); err != nil {
 		return nil, err
 	}
@@ -65,7 +66,7 @@ func (me *FilterService[T]) Get(id string, v T) error {
 	return me.Service.Get(id, v)
 }
 
-func (me *FilterService[T]) Create(v T) (*settings.Stub, error) {
+func (me *FilterService[T]) Create(v T) (*api.Stub, error) {
 	return me.Service.Create(v)
 }
 
@@ -78,6 +79,10 @@ func (me *FilterService[T]) Delete(id string) error {
 }
 
 func (me *FilterService[T]) SchemaID() string {
+	return me.Service.SchemaID() + ":" + me.Filter.Suffix()
+}
+
+func (me *FilterService[T]) Name() string {
 	return me.Service.SchemaID() + ":" + me.Filter.Suffix()
 }
 

@@ -18,6 +18,7 @@
 package applications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	applications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/applications/settings"
@@ -33,6 +34,6 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*applicatio
 		credentials,
 		SchemaID,
 		EndpointURL,
-		settings.Stub{ID: StaticID, Name: StaticName},
+		api.Stub{ID: StaticID, Name: StaticName},
 	)
 }

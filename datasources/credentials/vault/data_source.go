@@ -20,8 +20,8 @@ package vault
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings"
@@ -69,7 +69,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 
 	service := export.Service(config.Credentials(m), export.ResourceTypes.Credentials)
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}

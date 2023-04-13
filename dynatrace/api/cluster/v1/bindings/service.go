@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 type BindingServiceClient struct {
@@ -26,13 +26,13 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*settings.Stub, error) {
+func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*api.Stub, error) {
 	id := joinID(v)
 	var err error
 	if err = me.Update(id, v); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: id, Name: "PolicyBindings-" + id}, nil
+	return &api.Stub{ID: id, Name: "PolicyBindings-" + id}, nil
 }
 
 func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error {
@@ -82,8 +82,8 @@ func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBindi
 	return nil
 }
 
-func (me *BindingServiceClient) List() (settings.Stubs, error) {
-	return settings.Stubs{}, nil
+func (me *BindingServiceClient) List() (api.Stubs, error) {
+	return api.Stubs{}, nil
 }
 
 func (me *BindingServiceClient) Delete(id string) error {

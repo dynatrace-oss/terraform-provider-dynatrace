@@ -17,6 +17,8 @@
 
 package settings
 
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+
 type GenericRService[T Settings] struct {
 	Service RService[T]
 }
@@ -28,7 +30,7 @@ func (me *GenericRService[T]) NoCache() bool {
 	return false
 }
 
-func (me *GenericRService[T]) List() (Stubs, error) {
+func (me *GenericRService[T]) List() (api.Stubs, error) {
 	return me.Service.List()
 }
 

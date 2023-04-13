@@ -20,11 +20,11 @@ package alerting
 import (
 	"sort"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	alertingsrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting/settings"
 	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones"
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -82,16 +82,16 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	d.SetId("dynatrace_alerting_profiles")
 	service := cache.Read[*alerting.Profile](alertingsrv.Service(config.Credentials(m)), true)
 	var err error
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}
 	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(config.Credentials(m)), true)
-	var mgmzStubs settings.Stubs
+	var mgmzStubs api.Stubs
 	if mgmzStubs, err = mgmzService.List(); err != nil {
 		return err
 	}
-	mgms := map[string]*settings.Stub{}
+	mgms := map[string]*api.Stub{}
 	for _, mgmzStub := range mgmzStubs {
 		mgms[*mgmzStub.LegacyID] = mgmzStub
 	}

@@ -22,9 +22,11 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	dataprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/dataprivacy/settings"
@@ -36,7 +38,7 @@ const SchemaID = "v1:config:applications:web:data-privacy"
 func Service(credentials *settings.Credentials) settings.CRUDService[*dataprivacy.ApplicationDataPrivacy] {
 	return &service{
 		schemaID:      SchemaID,
-		client:        rest.DefaultClient(credentials.URL, credentials.Token),
+		client:        httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
 		webAppService: cache.CRUD(webservice.Service(credentials), true)}
 }
 
@@ -127,16 +129,16 @@ func (me *service) Validate(v *dataprivacy.ApplicationDataPrivacy) error {
 	return err
 }
 
-func (me *service) Create(v *dataprivacy.ApplicationDataPrivacy) (*settings.Stub, error) {
+func (me *service) Create(v *dataprivacy.ApplicationDataPrivacy) (*api.Stub, error) {
 	if err := me.Update(*v.WebApplicationID, v); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: *v.WebApplicationID + "-data-privacy"}, nil
+	return &api.Stub{ID: *v.WebApplicationID + "-data-privacy"}, nil
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
-	var stubs settings.Stubs
+	var stubs api.Stubs
 
 	if stubs, err = me.webAppService.List(); err != nil {
 		return nil, err
@@ -149,5 +151,9 @@ func (me *service) List() (settings.Stubs, error) {
 }
 
 func (me *service) SchemaID() string {
+	return me.schemaID
+}
+
+func (me *service) Name() string {
 	return me.schemaID
 }

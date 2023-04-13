@@ -17,6 +17,8 @@
 
 package rest
 
+type ClientFactory func(envURL, apiToken, schemaID string) Client
+
 func DefaultClient(envURL string, apiToken string) Client {
 	return &defaultClient{envURL: envURL, apiToken: apiToken}
 }

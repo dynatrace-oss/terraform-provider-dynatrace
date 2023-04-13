@@ -20,6 +20,7 @@ package processgroups
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups/settings"
@@ -36,10 +37,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*processgro
 	)
 }
 
-func Duplicates(service settings.RService[*processgroups.NamingRule], v *processgroups.NamingRule) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*processgroups.NamingRule], v *processgroups.NamingRule) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_processgroup_naming") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -50,7 +51,7 @@ func Duplicates(service settings.RService[*processgroups.NamingRule], v *process
 		}
 	} else if settings.HijackDuplicate("dynatrace_processgroup_naming") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

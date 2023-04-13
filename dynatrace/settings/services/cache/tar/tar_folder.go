@@ -1,4 +1,4 @@
-package cache
+package tar
 
 import (
 	"archive/tar"
@@ -9,14 +9,14 @@ import (
 	"os"
 	"sync"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 )
 
 const bootstrapentry = "__bootstrap__"
 const bootstrapoffset = 512
 const indexentry = "__index__"
 
-type TarFolder struct {
+type Folder struct {
 	mu          sync.Mutex
 	name        string
 	index       tarIndex
@@ -25,23 +25,31 @@ type TarFolder struct {
 }
 
 type indexEntry struct {
-	settings.Stub
+	api.Stub
 	Offset int64
 }
 
 type tarIndex map[string]indexEntry
 
-func NewTarFolder(name string) (*TarFolder, bool, error) {
-	tf := &TarFolder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
+func New(name string) (*Folder, bool, error) {
+	tf := &Folder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
 
 	if fileExists(tf.name) {
 		return tf, true, tf.initExisting()
 	}
 	return tf, false, tf.initNew()
-
 }
 
-func (tf *TarFolder) initNew() error {
+func NewExisting(name string) (*Folder, bool, error) {
+	tf := &Folder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
+
+	if fileExists(tf.name) {
+		return tf, true, tf.initExisting()
+	}
+	return nil, false, nil
+}
+
+func (tf *Folder) initNew() error {
 	file, err := os.OpenFile(tf.name, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		return err
@@ -60,7 +68,7 @@ func (tf *TarFolder) initNew() error {
 	return nil
 }
 
-func (me *TarFolder) initExisting() error {
+func (me *Folder) initExisting() error {
 	file, err := os.OpenFile(me.name, os.O_RDONLY, 0)
 	if err != nil {
 		return err
@@ -94,7 +102,7 @@ func (me *TarFolder) initExisting() error {
 	return nil
 }
 
-func (me *TarFolder) Get(id string) (*settings.Stub, []byte, error) {
+func (me *Folder) Get(id string) (*api.Stub, []byte, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 	idxEntry, found := me.index[id]
@@ -122,10 +130,10 @@ func (me *TarFolder) Get(id string) (*settings.Stub, []byte, error) {
 	return &stub, data, nil
 }
 
-func (me *TarFolder) List() (settings.Stubs, error) {
+func (me *Folder) List() (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
-	stubs := settings.Stubs{}
+	stubs := api.Stubs{}
 	for _, v := range me.index {
 		st := v.Stub
 		stubs = append(stubs, &st)
@@ -133,7 +141,7 @@ func (me *TarFolder) List() (settings.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *TarFolder) Save(stub settings.Stub, data []byte) error {
+func (me *Folder) Save(stub api.Stub, data []byte) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 	file, err := os.OpenFile(me.name, os.O_RDWR, 0644)
@@ -175,7 +183,7 @@ func (me *TarFolder) Save(stub settings.Stub, data []byte) error {
 	return nil
 }
 
-func (tf *TarFolder) write(writer *tar.Writer, name string, data []byte) error {
+func (tf *Folder) write(writer *tar.Writer, name string, data []byte) error {
 	if name != bootstrapentry {
 		name = name + ".json"
 	}
@@ -189,7 +197,7 @@ func (tf *TarFolder) write(writer *tar.Writer, name string, data []byte) error {
 	return writer.Flush()
 }
 
-func (me *TarFolder) writeIndex(writer *tar.Writer) error {
+func (me *Folder) writeIndex(writer *tar.Writer) error {
 	defer writer.Close()
 	data, err := json.MarshalIndent(me.index, "", "\t")
 	if err != nil {
@@ -198,11 +206,11 @@ func (me *TarFolder) writeIndex(writer *tar.Writer) error {
 	return me.write(writer, indexentry, data)
 }
 
-func (me *TarFolder) read(file *os.File) ([]byte, error) {
+func (me *Folder) read(file *os.File) ([]byte, error) {
 	return me.readWith(tar.NewReader(file))
 }
 
-func (me *TarFolder) readWith(reader *tar.Reader) ([]byte, error) {
+func (me *Folder) readWith(reader *tar.Reader) ([]byte, error) {
 	header, err := reader.Next()
 	if err != nil {
 		return nil, err
@@ -225,7 +233,7 @@ func fileExists(path string) bool {
 	return false
 }
 
-func (me *TarFolder) Delete(id string) error {
+func (me *Folder) Delete(id string) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 	if _, found := me.index[id]; found {

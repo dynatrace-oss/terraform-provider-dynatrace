@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -46,11 +47,11 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(config *processgroups.AnomalyDetection) (*settings.Stub, error) {
+func (me *service) Create(config *processgroups.AnomalyDetection) (*api.Stub, error) {
 	if err := me.Update(config.ProcessGroupId, config); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: config.ProcessGroupId + "-anomalydetection", Name: config.ProcessGroupId + "-anomalydetection"}, nil
+	return &api.Stub{ID: config.ProcessGroupId + "-anomalydetection", Name: config.ProcessGroupId + "-anomalydetection"}, nil
 }
 
 // Update TODO: documentation
@@ -99,16 +100,16 @@ func (me *service) Get(id string, v *processgroups.AnomalyDetection) error {
 	return nil
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	srv := cache.Read(entities.Service("PROCESS_GROUP", me.credentials), true)
 	v := new(entitiesSettings.Settings)
 	if err := srv.Get("", v); err != nil {
 		return nil, err
 	}
 
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	for _, entity := range v.Entities {
-		stub := settings.Stub{ID: *entity.EntityId, Name: *entity.DisplayName}
+		stub := api.Stub{ID: *entity.EntityId, Name: *entity.DisplayName}
 		stubs = append(stubs, &stub)
 	}
 

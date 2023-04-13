@@ -17,13 +17,16 @@
 
 package settings20
 
-import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+)
 
 type ServiceOptions[T settings.Settings] struct {
 	LegacyID       func(id string) string
 	Name           func(id string, v T) (string, error)
-	HijackOnCreate func(err error, service settings.RService[T], v T) (*settings.Stub, error)
+	HijackOnCreate func(err error, service settings.RService[T], v T) (*api.Stub, error)
 	CreateRetry    func(v T, err error) T
 	UpdateRetry    func(v T, err error) T
-	Duplicates     func(service settings.RService[T], v T) (*settings.Stub, error)
+	Duplicates     func(service settings.RService[T], v T) (*api.Stub, error)
 }

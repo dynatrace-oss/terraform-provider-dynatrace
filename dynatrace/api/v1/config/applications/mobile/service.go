@@ -22,6 +22,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -50,10 +51,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*mobile.App
 	)
 }
 
-func Duplicates(service settings.RService[*mobile.Application], v *mobile.Application) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*mobile.Application], v *mobile.Application) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_mobile_application") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -64,7 +65,7 @@ func Duplicates(service settings.RService[*mobile.Application], v *mobile.Applic
 		}
 	} else if settings.HijackDuplicate("dynatrace_mobile_application") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

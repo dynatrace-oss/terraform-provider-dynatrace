@@ -26,8 +26,10 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 )
 
 type readService[T settings.Settings] struct {
@@ -35,16 +37,16 @@ type readService[T settings.Settings] struct {
 	service   settings.RService[T]
 	folder    string
 	index     *stubIndex
-	tarFolder *TarFolder
+	tarFolder *tar.Folder
 }
 
 func (me *readService[T]) init() error {
 	if me.index != nil {
 		return nil
 	}
-	me.index = &stubIndex{Stubs: settings.Stubs{}, IDs: map[string]*settings.Stub{}, Complete: false}
+	me.index = &stubIndex{Stubs: api.Stubs{}, IDs: map[string]*api.Stub{}, Complete: false}
 	os.MkdirAll(me.folder, os.ModePerm)
-	tarFolder, complete, err := NewTarFolder(path.Join(me.folder, "data"))
+	tarFolder, complete, err := tar.New(path.Join(me.folder, "data"))
 	if err != nil {
 		return err
 	}
@@ -61,21 +63,21 @@ func (me *readService[T]) init() error {
 	return nil
 }
 
-func (me *readService[T]) List() (settings.Stubs, error) {
+func (me *readService[T]) List() (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
 	return me.list(true)
 }
 
-func (me *readService[T]) ListNoValues() (settings.Stubs, error) {
+func (me *readService[T]) ListNoValues() (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
 	return me.list(false)
 }
 
-func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
+func (me *readService[T]) list(withValues bool) (api.Stubs, error) {
 	if err := me.init(); err != nil {
 		return nil, err
 	}
@@ -98,7 +100,7 @@ func (me *readService[T]) list(withValues bool) (settings.Stubs, error) {
 	}
 
 	var err error
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = me.service.List(); err != nil {
 		return nil, err
 	}
@@ -172,7 +174,7 @@ func (me *readService[T]) storeConfig(id string, v T) error {
 		return err
 	}
 	me.index.Add(id, configName)
-	return me.tarFolder.Save(settings.Stub{ID: id, Name: configName}, data)
+	return me.tarFolder.Save(api.Stub{ID: id, Name: configName}, data)
 }
 
 func (me *readService[T]) loadConfig(id string, v T) (bool, error) {

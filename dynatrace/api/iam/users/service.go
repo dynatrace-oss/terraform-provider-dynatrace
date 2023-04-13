@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
@@ -40,7 +41,12 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*users.User
 func (me *UserServiceClient) SchemaID() string {
 	return "accounts:iam:users"
 }
-func (me *UserServiceClient) Create(user *users.User) (*settings.Stub, error) {
+
+func (me *UserServiceClient) Name() string {
+	return me.SchemaID()
+}
+
+func (me *UserServiceClient) Create(user *users.User) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(me)
@@ -56,7 +62,7 @@ func (me *UserServiceClient) Create(user *users.User) (*settings.Stub, error) {
 		return nil, err
 	}
 
-	return &settings.Stub{ID: user.Email, Name: user.Email}, nil
+	return &api.Stub{ID: user.Email, Name: user.Email}, nil
 }
 
 type GroupStub struct {
@@ -85,7 +91,7 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 	v.Email = email
 	v.Groups = []string{}
 	groupService := groups.NewGroupService(me.clientID, me.accountID, me.clientID)
-	var visibleGroupIDs settings.Stubs
+	var visibleGroupIDs api.Stubs
 	if visibleGroupIDs, err = groupService.List(); err != nil {
 		return err
 	}
@@ -130,7 +136,7 @@ type ListUsersResponse struct {
 	Items []UserStub `json:"items"`
 }
 
-func (me *UserServiceClient) List() (settings.Stubs, error) {
+func (me *UserServiceClient) List() (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
@@ -142,9 +148,9 @@ func (me *UserServiceClient) List() (settings.Stubs, error) {
 	if err = json.Unmarshal(responseBytes, &response); err != nil {
 		return nil, err
 	}
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	for _, item := range response.Items {
-		stubs = append(stubs, &settings.Stub{ID: item.UID, Name: item.Email})
+		stubs = append(stubs, &api.Stub{ID: item.UID, Name: item.Email})
 	}
 	return stubs, nil
 }

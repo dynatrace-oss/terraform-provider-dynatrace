@@ -20,6 +20,7 @@ package services
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services/settings"
@@ -36,10 +37,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*services.N
 	)
 }
 
-func Duplicates(service settings.RService[*services.NamingRule], v *services.NamingRule) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*services.NamingRule], v *services.NamingRule) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_service_naming") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -50,7 +51,7 @@ func Duplicates(service settings.RService[*services.NamingRule], v *services.Nam
 		}
 	} else if settings.HijackDuplicate("dynatrace_service_naming") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

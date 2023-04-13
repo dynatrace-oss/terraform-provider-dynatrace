@@ -22,9 +22,11 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	errors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/errors/settings"
@@ -37,7 +39,7 @@ const SchemaID = "v1:config:applications:web:errors"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*errors.Rules] {
 	return &service{
-		client:        rest.DefaultClient(credentials.URL, credentials.Token),
+		client:        httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
 		webAppService: cache.CRUD(webservice.Service(credentials), true)}
 }
 
@@ -205,16 +207,16 @@ func (me *service) Delete(id string) error {
 	return me.Update(id, &settings)
 }
 
-func (me *service) Create(v *errors.Rules) (*settings.Stub, error) {
+func (me *service) Create(v *errors.Rules) (*api.Stub, error) {
 	if err := me.Update(v.WebApplicationID, v); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: v.WebApplicationID + "-error-rules"}, nil
+	return &api.Stub{ID: v.WebApplicationID + "-error-rules"}, nil
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = me.webAppService.List(); err != nil {
 		return nil, err
 	}
@@ -226,5 +228,9 @@ func (me *service) List() (settings.Stubs, error) {
 }
 
 func (me *service) SchemaID() string {
+	return SchemaID
+}
+
+func (me *service) Name() string {
 	return SchemaID
 }

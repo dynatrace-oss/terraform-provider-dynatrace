@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/filtered"
@@ -62,10 +63,10 @@ func UseOAuth2Fix(v *Notification, err error) *Notification {
 	return nil
 }
 
-func Duplicates(service settings.RService[*Notification], v *Notification) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*Notification], v *Notification) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_notification") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -76,7 +77,7 @@ func Duplicates(service settings.RService[*Notification], v *Notification) (*set
 		}
 	} else if settings.HijackDuplicate("dynatrace_notification") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

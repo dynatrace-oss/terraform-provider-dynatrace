@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -36,7 +37,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
-			WithStubs(&settings.Stubs{}).
+			WithStubs(&api.Stubs{}).
 			WithMutex(mu.Lock, mu.Unlock).
 			WithOnBeforeUpdate(func(id string, v *aws.AWSCredentialsConfig) error {
 				if v.SupportingServicesManagedInDynatrace {

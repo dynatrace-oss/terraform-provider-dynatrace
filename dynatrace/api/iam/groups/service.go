@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -41,7 +42,11 @@ func (me *GroupServiceClient) SchemaID() string {
 	return "accounts:iam:groups"
 }
 
-func (me *GroupServiceClient) Create(group *groups.Group) (*settings.Stub, error) {
+func (me *GroupServiceClient) Name() string {
+	return me.SchemaID()
+}
+
+func (me *GroupServiceClient) Create(group *groups.Group) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -63,7 +68,7 @@ func (me *GroupServiceClient) Create(group *groups.Group) (*settings.Stub, error
 		}
 	}
 
-	return &settings.Stub{ID: groupID, Name: groupName}, nil
+	return &api.Stub{ID: groupID, Name: groupName}, nil
 }
 
 func (me *GroupServiceClient) Update(uuid string, group *groups.Group) error {
@@ -99,7 +104,7 @@ type ListGroupsResponse struct {
 	Items []*ListGroup `json:"items"`
 }
 
-func (me *GroupServiceClient) List() (settings.Stubs, error) {
+func (me *GroupServiceClient) List() (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
@@ -111,15 +116,15 @@ func (me *GroupServiceClient) List() (settings.Stubs, error) {
 	if err = json.Unmarshal(responseBytes, &response); err != nil {
 		return nil, err
 	}
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	for _, elem := range response.Items {
-		stubs = append(stubs, &settings.Stub{ID: elem.UUID, Name: elem.Name})
+		stubs = append(stubs, &api.Stub{ID: elem.UUID, Name: elem.Name})
 	}
 	return stubs, nil
 }
 
 func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
-	var stubs settings.Stubs
+	var stubs api.Stubs
 
 	if stubs, err = me.List(); err != nil {
 		return err

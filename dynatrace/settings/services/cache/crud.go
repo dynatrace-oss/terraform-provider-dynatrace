@@ -26,8 +26,10 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 )
 
 type crudService[T settings.Settings] struct {
@@ -35,16 +37,16 @@ type crudService[T settings.Settings] struct {
 	service   settings.CRUDService[T]
 	folder    string
 	index     *stubIndex
-	tarFolder *TarFolder
+	tarFolder *tar.Folder
 }
 
 func (me *crudService[T]) init() error {
 	if me.index != nil {
 		return nil
 	}
-	me.index = &stubIndex{Stubs: settings.Stubs{}, IDs: map[string]*settings.Stub{}, Complete: false}
+	me.index = &stubIndex{Stubs: api.Stubs{}, IDs: map[string]*api.Stub{}, Complete: false}
 	os.MkdirAll(me.folder, os.ModePerm)
-	tarFolder, complete, err := NewTarFolder(path.Join(me.folder, "data"))
+	tarFolder, complete, err := tar.New(path.Join(me.folder, "data"))
 	if err != nil {
 		return err
 	}
@@ -61,7 +63,7 @@ func (me *crudService[T]) init() error {
 	return nil
 }
 
-func (me *crudService[T]) Create(v T) (*settings.Stub, error) {
+func (me *crudService[T]) Create(v T) (*api.Stub, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -73,7 +75,7 @@ func (me *crudService[T]) Create(v T) (*settings.Stub, error) {
 		return nil, errors.New("modifications not allowed in offline mode")
 	}
 	var err error
-	var stub *settings.Stub
+	var stub *api.Stub
 	if stub, err = me.service.Create(v); err != nil {
 		return nil, err
 	}
@@ -103,21 +105,21 @@ func (me *crudService[T]) Delete(id string) error {
 	return me.tarFolder.Delete(id)
 }
 
-func (me *crudService[T]) List() (settings.Stubs, error) {
+func (me *crudService[T]) List() (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
 	return me.list(true)
 }
 
-func (me *crudService[T]) ListNoValues() (settings.Stubs, error) {
+func (me *crudService[T]) ListNoValues() (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
 	return me.list(false)
 }
 
-func (me *crudService[T]) list(withValues bool) (settings.Stubs, error) {
+func (me *crudService[T]) list(withValues bool) (api.Stubs, error) {
 	if err := me.init(); err != nil {
 		return nil, err
 	}
@@ -144,7 +146,7 @@ func (me *crudService[T]) list(withValues bool) (settings.Stubs, error) {
 	}
 
 	var err error
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = me.service.List(); err != nil {
 		return nil, err
 	}
@@ -249,7 +251,7 @@ func (me *crudService[T]) storeConfig(id string, name string, v T) error {
 		return err
 	}
 	me.index.Add(id, name)
-	return me.tarFolder.Save(settings.Stub{ID: id, Name: name}, data)
+	return me.tarFolder.Save(api.Stub{ID: id, Name: name}, data)
 }
 
 func (me *crudService[T]) notifyGet(id string, name string, v T) error {
@@ -288,12 +290,20 @@ func (me *crudService[T]) SchemaID() string {
 	return me.service.SchemaID() + ":cache"
 }
 
+func (me *crudService[T]) Name() string {
+	return me.service.SchemaID() + ":cache"
+}
+
 var mu sync.Mutex
 
 func CRUD[T settings.Settings](service settings.CRUDService[T], force ...bool) settings.CRUDService[T] {
 	mu.Lock()
 	defer mu.Unlock()
 
+	// when running on local HTTP Cache keeping additional service caches can be detrimental
+	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+		return service
+	}
 	if len(force) == 0 {
 		if mode == ModeDisabled {
 			return service

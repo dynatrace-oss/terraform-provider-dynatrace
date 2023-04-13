@@ -18,8 +18,10 @@
 package order
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order/settings"
 )
@@ -27,15 +29,15 @@ import (
 const SchemaID = "v1:config:service:request-naming:order"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*order.Order] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
 }
 
 type service struct {
 	client rest.Client
 }
 
-func (me *service) List() (settings.Stubs, error) {
-	return settings.Stubs{&settings.Stub{ID: "dynatrace_request_namings", Name: "dynatrace_request_namings"}}, nil
+func (me *service) List() (api.Stubs, error) {
+	return api.Stubs{&api.Stub{ID: "dynatrace_request_namings", Name: "dynatrace_request_namings"}}, nil
 }
 
 func (me *service) Get(id string, v *order.Order) error {
@@ -46,11 +48,15 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(v *order.Order) (*settings.Stub, error) {
+func (me *service) Name() string {
+	return SchemaID
+}
+
+func (me *service) Create(v *order.Order) (*api.Stub, error) {
 	if err := me.client.Put("/api/config/v1/service/requestNaming/order", v, 204).Finish(); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: "dynatrace_request_namings", Name: "dynatrace_request_namings"}, nil
+	return &api.Stub{ID: "dynatrace_request_namings", Name: "dynatrace_request_namings"}, nil
 }
 
 func (me *service) Update(id string, v *order.Order) error {

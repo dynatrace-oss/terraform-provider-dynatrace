@@ -19,10 +19,10 @@ package processgroup
 
 import (
 	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/processgroups"
 	pgsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/processgroups/settings"
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -61,7 +61,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 
 	service := processgroups.Service(config.Credentials(m))
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}

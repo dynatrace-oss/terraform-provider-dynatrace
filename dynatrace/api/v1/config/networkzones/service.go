@@ -22,10 +22,12 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	enable "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones"
 	enablesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/google/uuid"
 
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones/settings"
@@ -34,7 +36,7 @@ import (
 const SchemaID = "v2:environment:network-zones"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token), credentials: credentials}
+	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID), credentials: credentials}
 }
 
 type service struct {
@@ -46,16 +48,16 @@ func (me *service) Get(id string, v *networkzones.NetworkZone) error {
 	return me.client.Get(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
 	var stubList networkzones.NetworkZones
 
 	if err = me.client.Get("/api/v2/networkZones", 200).Finish(&stubList); err != nil {
 		return nil, err
 	}
-	stubs := settings.Stubs{}
+	stubs := api.Stubs{}
 	for _, zone := range stubList.Zones {
-		stubs = append(stubs, &settings.Stub{ID: *zone.ID, Name: *zone.ID})
+		stubs = append(stubs, &api.Stub{ID: *zone.ID, Name: *zone.ID})
 	}
 	return stubs, nil
 }
@@ -64,7 +66,7 @@ func (me *service) Validate(v *networkzones.NetworkZone) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *networkzones.NetworkZone) (*settings.Stub, error) {
+func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
 	var err error
 
 	// id := *v.ID
@@ -83,12 +85,12 @@ func (me *service) Create(v *networkzones.NetworkZone) (*settings.Stub, error) {
 			return me.Create(v)
 		}
 		if strings.Contains(err.Error(), "Creation and modification of network zone is only possible via cluster API.") {
-			return &settings.Stub{ID: id + "---flawed----", Name: id}, nil
+			return &api.Stub{ID: id + "---flawed----", Name: id}, nil
 		}
 		return nil, err
 	}
 
-	return &settings.Stub{ID: id, Name: id}, nil
+	return &api.Stub{ID: id, Name: id}, nil
 }
 
 func (me *service) Update(id string, v *networkzones.NetworkZone) error {
@@ -106,5 +108,9 @@ func (me *service) Delete(id string) error {
 }
 
 func (me *service) SchemaID() string {
+	return SchemaID
+}
+
+func (me *service) Name() string {
 	return SchemaID
 }

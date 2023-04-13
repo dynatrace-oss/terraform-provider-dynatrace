@@ -17,6 +17,8 @@
 
 package settings
 
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+
 type GenericCRUDService[T Settings] struct {
 	Service CRUDService[T]
 }
@@ -28,7 +30,7 @@ func (me *GenericCRUDService[T]) NoCache() bool {
 	return false
 }
 
-func (me *GenericCRUDService[T]) List() (Stubs, error) {
+func (me *GenericCRUDService[T]) List() (api.Stubs, error) {
 	return me.Service.List()
 }
 
@@ -36,7 +38,7 @@ func (me *GenericCRUDService[T]) Get(id string, v Settings) error {
 	return me.Service.Get(id, v.(T))
 }
 
-func (me *GenericCRUDService[T]) Create(v Settings) (*Stub, error) {
+func (me *GenericCRUDService[T]) Create(v Settings) (*api.Stub, error) {
 	return me.Service.Create(v.(T))
 }
 
@@ -57,4 +59,8 @@ func (me *GenericCRUDService[T]) Delete(id string) error {
 
 func (me *GenericCRUDService[T]) SchemaID() string {
 	return me.Service.SchemaID()
+}
+
+func (me *GenericCRUDService[T]) Name() string {
+	return me.Service.Name()
 }

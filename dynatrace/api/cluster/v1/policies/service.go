@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 type PolicyServiceClient struct {
@@ -25,7 +25,7 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *PolicyServiceClient) Create(v *policies.Policy) (*settings.Stub, error) {
+func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	var err error
 	levelType, levelID := getLevel(v)
 
@@ -33,7 +33,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*settings.Stub, error
 	if err = me.client.Post(fmt.Sprintf("/iam/repo/%s/%s/policies", levelType, levelID), v, 201).Finish(&pcr); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
+	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
@@ -65,8 +65,8 @@ func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
 	return nil
 }
 
-func (me *PolicyServiceClient) List() (settings.Stubs, error) {
-	return settings.Stubs{}, nil
+func (me *PolicyServiceClient) List() (api.Stubs, error) {
+	return api.Stubs{}, nil
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {

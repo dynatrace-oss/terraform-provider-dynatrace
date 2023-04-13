@@ -21,10 +21,10 @@ import (
 	"strings"
 
 	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
 	servsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services/settings"
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -73,7 +73,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 
 	service := services.Service(config.Credentials(m))
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}

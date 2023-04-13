@@ -18,20 +18,22 @@
 package settings
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
 type staticService[T Settings] struct {
 	schemaID string
 	client   rest.Client
 	url      string
-	stub     Stub
+	stub     api.Stub
 }
 
-func StaticService[T Settings](credentials *Credentials, schemaID string, url string, stub Stub) Service[T] {
+func StaticService[T Settings](credentials *Credentials, schemaID string, url string, stub api.Stub) Service[T] {
 	return &staticService[T]{
 		schemaID: schemaID,
-		client:   rest.DefaultClient(credentials.URL, credentials.Token),
+		client:   httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
 		url:      url,
 		stub:     stub,
 	}
@@ -41,11 +43,11 @@ func (me *staticService[T]) Get(id string, v T) error {
 	return me.client.Get(me.url, 200).Finish(v)
 }
 
-func (me *staticService[T]) List() (Stubs, error) {
-	return Stubs{&me.stub}, nil
+func (me *staticService[T]) List() (api.Stubs, error) {
+	return api.Stubs{&me.stub}, nil
 }
 
-func (me *staticService[T]) Create(v T) (*Stub, error) {
+func (me *staticService[T]) Create(v T) (*api.Stub, error) {
 	return &me.stub, me.Update(me.stub.ID, v)
 }
 
@@ -62,5 +64,9 @@ func (me *staticService[T]) Update(id string, v T) error {
 }
 
 func (me *staticService[T]) SchemaID() string {
+	return me.schemaID
+}
+
+func (me *staticService[T]) Name() string {
 	return me.schemaID
 }

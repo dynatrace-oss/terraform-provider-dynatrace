@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -45,6 +46,6 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) List() (settings.Stubs, error) {
-	return settings.Stubs{&settings.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
+func (me *service) List() (api.Stubs, error) {
+	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }

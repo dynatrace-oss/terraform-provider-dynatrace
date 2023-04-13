@@ -24,8 +24,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	"net/url"
@@ -39,7 +41,7 @@ func Service[T settings.Settings](credentials *settings.Credentials, schemaID st
 	return &service[T]{
 		schemaID: schemaID,
 		// schemaVersion: schemaVersion,
-		client:  rest.DefaultClient(credentials.URL, credentials.Token),
+		client:  httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
 		options: opts,
 	}
 }
@@ -94,10 +96,10 @@ func (me *service[T]) Get(id string, v T) error {
 	return nil
 }
 
-func (me *service[T]) List() (settings.Stubs, error) {
+func (me *service[T]) List() (api.Stubs, error) {
 	var err error
 
-	stubs := settings.Stubs{}
+	stubs := api.Stubs{}
 	nextPage := true
 
 	var nextPageKey *string
@@ -135,7 +137,7 @@ func (me *service[T]) List() (settings.Stubs, error) {
 				} else {
 					itemName = settings.Name(newItem, item.ObjectID)
 				}
-				stub := &settings.Stub{ID: item.ObjectID, Name: itemName, Value: newItem, LegacyID: settings.GetLegacyID(newItem)}
+				stub := &api.Stub{ID: item.ObjectID, Name: itemName, Value: newItem, LegacyID: settings.GetLegacyID(newItem)}
 				if len(itemName) > 0 {
 					stubs = append(stubs, stub)
 				}
@@ -152,7 +154,7 @@ func (me *service[T]) Validate(v T) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service[T]) Create(v T) (*settings.Stub, error) {
+func (me *service[T]) Create(v T) (*api.Stub, error) {
 	return me.create(v, false)
 }
 
@@ -160,7 +162,7 @@ type Matcher interface {
 	Match(o any) bool
 }
 
-func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
+func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
 		dupStub, dupErr := me.options.Duplicates(me, v)
@@ -178,7 +180,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 	// Upon delete that original state will get reconstructed
 	// Note: Such settings also need to contain a field named `RestoreOnDelete` of type `*string`
 	if matcher, ok := any(v).(Matcher); ok {
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		var err error
 		if stubs, err = me.List(); err != nil {
 			return nil, err
@@ -220,7 +222,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 			}
 		}
 		if me.options != nil && me.options.HijackOnCreate != nil {
-			var hijackedStub *settings.Stub
+			var hijackedStub *api.Stub
 			var hierr error
 			if hijackedStub, hierr = me.options.HijackOnCreate(oerr, me, v); hierr != nil {
 				return nil, hierr
@@ -234,7 +236,7 @@ func (me *service[T]) create(v T, retry bool) (*settings.Stub, error) {
 		return nil, oerr
 	}
 	itemName := settings.Name(v, objectID[0].ObjectID)
-	stub := &settings.Stub{ID: objectID[0].ObjectID, Name: itemName}
+	stub := &api.Stub{ID: objectID[0].ObjectID, Name: itemName}
 	return stub, nil
 }
 

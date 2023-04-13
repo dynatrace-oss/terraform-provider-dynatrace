@@ -3,9 +3,9 @@ package mgmz
 import (
 	"sort"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones"
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -51,7 +51,7 @@ func DataSourceMultiple() *schema.Resource {
 
 func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
 	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(config.Credentials(m)), true)
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	var err error
 	if stubs, err = service.List(); err != nil {
 		return err

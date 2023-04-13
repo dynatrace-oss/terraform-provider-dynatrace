@@ -18,6 +18,7 @@
 package alerting
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -45,7 +46,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	d.SetId("dynatrace_v2_alerting_profiles")
 	service := export.Service(config.Credentials(m), export.ResourceTypes.Alerting)
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}

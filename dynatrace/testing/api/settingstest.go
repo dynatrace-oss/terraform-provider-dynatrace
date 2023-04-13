@@ -24,6 +24,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -108,7 +109,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 					service := createService(&settings.Credentials{URL: envURL, Token: apiToken})
 
 					var err error
-					var stub *settings.Stub
+					var stub *api.Stub
 
 					createSettings := allSettings[0]
 

@@ -19,16 +19,18 @@ package settings
 
 import (
 	"reflect"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 )
 
 type RService[T Settings] interface {
-	List() (Stubs, error)
+	List() (api.Stubs, error)
 	Get(id string, v T) error
 	SchemaID() string
 }
 
-func FindByName[T Settings](service RService[T], name string) (stub *Stub, err error) {
-	var stubs Stubs
+func FindByName[T Settings](service RService[T], name string) (stub *api.Stub, err error) {
+	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return nil, err
 	}
@@ -41,12 +43,13 @@ func FindByName[T Settings](service RService[T], name string) (stub *Stub, err e
 }
 
 type CRUDService[T Settings] interface {
-	List() (Stubs, error)
+	List() (api.Stubs, error)
 	Get(id string, v T) error
 	SchemaID() string
-	Create(v T) (*Stub, error)
+	Create(v T) (*api.Stub, error)
 	Update(id string, v T) error
 	Delete(id string) error
+	Name() string
 }
 
 type Validator[T Settings] interface {

@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	hosts "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -54,7 +55,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(v *hosts.Settings) (*settings.Stub, error) {
+func (me *service) Create(v *hosts.Settings) (*api.Stub, error) {
 	soc := settings20.SettingsObjectCreate{
 		SchemaID:      SchemaID,
 		SchemaVersion: SchemaVersion,
@@ -84,7 +85,7 @@ func (me *service) Create(v *hosts.Settings) (*settings.Stub, error) {
 	}
 
 	itemName := settings.Name(v, objectID[0].ObjectID)
-	stub := &settings.Stub{ID: objectID[0].ObjectID, Name: itemName}
+	stub := &api.Stub{ID: objectID[0].ObjectID, Name: itemName}
 	return stub, nil
 }
 
@@ -133,10 +134,10 @@ func (me *service) Get(id string, v *hosts.Settings) error {
 	return nil
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
 
-	stubs := settings.Stubs{}
+	stubs := api.Stubs{}
 	nextPage := true
 
 	var nextPageKey *string
@@ -164,7 +165,7 @@ func (me *service) List() (settings.Stubs, error) {
 				}
 				settings.SetScope(&newItem, item.Scope)
 				itemName := newItem.Name()
-				stub := &settings.Stub{ID: item.ObjectID, Name: itemName, Value: newItem}
+				stub := &api.Stub{ID: item.ObjectID, Name: itemName, Value: newItem}
 				if len(itemName) > 0 {
 					stubs = append(stubs, stub)
 				}

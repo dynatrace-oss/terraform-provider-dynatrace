@@ -24,6 +24,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -38,7 +39,7 @@ func TestSyntheticLocations(t *testing.T) {
 	}
 	credentials := &settings.Credentials{URL: envURL, Token: apiToken}
 	service := locations.Service(credentials)
-	var stubs settings.Stubs
+	var stubs api.Stubs
 	var err error
 	if stubs, err = service.List(); err != nil {
 		t.Error(err)

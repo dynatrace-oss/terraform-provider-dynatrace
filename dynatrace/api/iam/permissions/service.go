@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -41,7 +42,12 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*permission
 func (me *PermissionServiceClient) SchemaID() string {
 	return "accounts:iam:permissions"
 }
-func (me *PermissionServiceClient) Create(permission *permissions.Permission) (*settings.Stub, error) {
+
+func (me *PermissionServiceClient) Name() string {
+	return me.SchemaID()
+}
+
+func (me *PermissionServiceClient) Create(permission *permissions.Permission) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(me)
@@ -67,7 +73,7 @@ func (me *PermissionServiceClient) Create(permission *permissions.Permission) (*
 		return nil, err
 	}
 
-	return &settings.Stub{ID: payload[0].ToID(permission.GroupID), Name: permission.Name}, nil
+	return &api.Stub{ID: payload[0].ToID(permission.GroupID), Name: permission.Name}, nil
 }
 
 type GetGroupPermissionsResponse struct {
@@ -123,7 +129,7 @@ func (me *PermissionServiceClient) Update(email string, permission *permissions.
 	return errors.New("Permissions are not expected to get updated - only destroy and create are possible")
 }
 
-func (me *PermissionServiceClient) List() (settings.Stubs, error) {
+func (me *PermissionServiceClient) List() (api.Stubs, error) {
 	return nil, errors.New("List not implemented")
 }
 

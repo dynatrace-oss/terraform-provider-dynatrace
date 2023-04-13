@@ -20,6 +20,7 @@ package maintenance
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/maintenance/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -32,10 +33,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*maintenanc
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenance.MaintenanceWindow]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
-func Duplicates(service settings.RService[*maintenance.MaintenanceWindow], v *maintenance.MaintenanceWindow) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*maintenance.MaintenanceWindow], v *maintenance.MaintenanceWindow) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_maintenance") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -46,7 +47,7 @@ func Duplicates(service settings.RService[*maintenance.MaintenanceWindow], v *ma
 		}
 	} else if settings.HijackDuplicate("dynatrace_maintenance") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

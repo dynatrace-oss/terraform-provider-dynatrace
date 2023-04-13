@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 // ServiceClient TODO: documentation
@@ -22,13 +22,13 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(environment *Environment) (*settings.Stub, error) {
+func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
 	var err error
 
 	if len(opt.String(environment.ID)) > 0 {
 		return nil, errors.New("you MUST NOT provide an ID within the Dashboard payload upon creation")
 	}
-	var stub settings.Stub
+	var stub api.Stub
 	if err = cs.client.Post("/environments", environment, 201).Finish(&stub); err != nil {
 		retry := false
 		switch rerr := err.(type) {

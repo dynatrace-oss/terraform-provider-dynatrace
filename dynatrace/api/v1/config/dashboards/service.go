@@ -18,6 +18,7 @@
 package dashboards
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
@@ -39,7 +40,7 @@ func (me *service) NoCache() bool {
 	return true
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	return me.service.List()
 }
 
@@ -72,7 +73,7 @@ func (me *service) Validate(v *dashboards.Dashboard) error {
 	return nil
 }
 
-func (me *service) Create(v *dashboards.Dashboard) (*settings.Stub, error) {
+func (me *service) Create(v *dashboards.Dashboard) (*api.Stub, error) {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -103,5 +104,9 @@ func (me *service) Delete(id string) error {
 }
 
 func (me *service) SchemaID() string {
+	return SchemaID
+}
+
+func (me *service) Name() string {
 	return SchemaID
 }

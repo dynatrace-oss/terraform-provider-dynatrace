@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package settings
+package api
 
 import (
 	"sort"

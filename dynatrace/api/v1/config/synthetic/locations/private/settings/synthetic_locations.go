@@ -17,21 +17,19 @@
 
 package locations
 
-import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-)
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 
 type SyntheticLocations struct {
 	Locations LocationCollectionElements `json:"locations"`
 }
 
-func (me *SyntheticLocations) ToStubs() settings.Stubs {
-	stubs := settings.Stubs{}
+func (me *SyntheticLocations) ToStubs() api.Stubs {
+	stubs := api.Stubs{}
 	if len(me.Locations) == 0 {
 		return stubs
 	}
 	for _, location := range me.Locations {
-		stub := settings.Stub{ID: *location.ID, Name: location.Name}
+		stub := api.Stub{ID: *location.ID, Name: location.Name}
 		stubs = append(stubs, &stub)
 	}
 	return stubs

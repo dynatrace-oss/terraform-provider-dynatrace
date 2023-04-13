@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -50,19 +51,19 @@ func (me *service) SchemaID() string {
 	return "v2:environment:customtags"
 }
 
-func (me *service) List() (settings.Stubs, error) {
-	return settings.Stubs{}, nil
+func (me *service) List() (api.Stubs, error) {
+	return api.Stubs{}, nil
 }
 
 func (me *service) Validate(v *customtags.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *customtags.Settings) (*settings.Stub, error) {
+func (me *service) Create(v *customtags.Settings) (*api.Stub, error) {
 	if err := me.Update(v.EntitySelector, v); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: v.EntitySelector, Name: v.EntitySelector}, nil
+	return &api.Stub{ID: v.EntitySelector, Name: v.EntitySelector}, nil
 }
 
 func (me *service) Update(id string, v *customtags.Settings) error {

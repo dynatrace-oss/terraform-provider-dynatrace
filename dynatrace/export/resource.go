@@ -173,6 +173,7 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
+	// me.SetName(settings.Name(settngs, me.ID))
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
 		me.LegacyID = *legacyID

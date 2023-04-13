@@ -95,7 +95,7 @@ func createJar() *cookiejar.Jar {
 }
 
 type Request interface {
-	Raw() ([]byte, error)
+	// Raw() ([]byte, error)
 	Finish(v ...any) error
 	Expect(codes ...int) Request
 	Payload(any) Request

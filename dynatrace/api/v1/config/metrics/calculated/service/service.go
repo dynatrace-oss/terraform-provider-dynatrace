@@ -23,15 +23,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	mysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
-const SchemaID = "v1:config:calculated-metrics:service"
+const SchemaID = "calculated-metrics-service"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*mysettings.CalculatedServiceMetric] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
 }
 
 type service struct {
@@ -42,11 +44,11 @@ func (me *service) Get(id string, v *mysettings.CalculatedServiceMetric) error {
 	return me.client.Get(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
 
 	req := me.client.Get("/api/config/v1/calculatedMetrics/service", 200)
-	var stubList settings.StubList
+	var stubList api.StubList
 	if err = req.Finish(&stubList); err != nil {
 		return nil, err
 	}
@@ -82,7 +84,7 @@ func (me *service) Validate(v *mysettings.CalculatedServiceMetric) error {
 	return nil
 }
 
-func (me *service) Create(v *mysettings.CalculatedServiceMetric) (*settings.Stub, error) {
+func (me *service) Create(v *mysettings.CalculatedServiceMetric) (*api.Stub, error) {
 	var err error
 
 	client := me.client
@@ -90,7 +92,7 @@ func (me *service) Create(v *mysettings.CalculatedServiceMetric) (*settings.Stub
 	retry := true
 	maxAttempts := 64
 	attempts := 0
-	var stub settings.Stub
+	var stub api.Stub
 
 	for retry {
 		attempts = attempts + 1
@@ -106,14 +108,14 @@ func (me *service) Create(v *mysettings.CalculatedServiceMetric) (*settings.Stub
 			// if strings.Contains(err.Error(), "At least one condition of the following types must be used:") {
 			// 	restErr := err.(rest.Error)
 			// 	if len(restErr.ConstraintViolations) > 0 {
-			// 		return &settings.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
+			// 		return &api.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
 			// 	}
 			// }
 			// if strings.Contains(err.Error(), `{"parameterLocation":"PAYLOAD_BODY","message":"must not be null","path":"metricDefinition.metric"}`) {
-			// 	return &settings.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
+			// 	return &api.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
 			// }
 			// if strings.Contains(err.Error(), `{"parameterLocation":"PAYLOAD_BODY","message":"Please check entityId: there is no such SERVICE in the system","path":"entityId"}`) {
-			// 	return &settings.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
+			// 	return &api.Stub{ID: v.TsmMetricKey + "---flawed----", Name: v.Name}, nil
 			// }
 			return nil, err
 		} else {
@@ -147,5 +149,9 @@ func (me *service) Delete(id string) error {
 }
 
 func (me *service) SchemaID() string {
+	return SchemaID
+}
+
+func (me *service) Name() string {
 	return SchemaID
 }

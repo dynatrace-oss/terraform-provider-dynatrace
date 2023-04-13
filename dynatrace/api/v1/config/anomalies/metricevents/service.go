@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -38,10 +39,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*metriceven
 	)
 }
 
-func Duplicates(service settings.RService[*metricevents.MetricEvent], v *metricevents.MetricEvent) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*metricevents.MetricEvent], v *metricevents.MetricEvent) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_custom_anomalies") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -52,7 +53,7 @@ func Duplicates(service settings.RService[*metricevents.MetricEvent], v *metrice
 		}
 	} else if settings.HijackDuplicate("dynatrace_custom_anomalies") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

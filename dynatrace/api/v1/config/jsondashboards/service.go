@@ -20,6 +20,7 @@ package jsondashboards
 import (
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
@@ -39,12 +40,12 @@ type service struct {
 	service settings.CRUDService[*dashboards.JSONDashboard]
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	stubs, err := me.service.List()
 	if err != nil {
 		return stubs, err
 	}
-	var filteredStubs settings.Stubs
+	var filteredStubs api.Stubs
 	for _, stub := range stubs {
 		if stub.Name != "Config owned by " {
 			filteredStubs = append(filteredStubs, stub)
@@ -64,7 +65,7 @@ func (me *service) Validate(v *dashboards.JSONDashboard) error {
 	return nil
 }
 
-func (me *service) Create(v *dashboards.JSONDashboard) (*settings.Stub, error) {
+func (me *service) Create(v *dashboards.JSONDashboard) (*api.Stub, error) {
 	return me.service.Create(v)
 }
 
@@ -83,4 +84,8 @@ func (me *service) Delete(id string) error {
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
+}
+
+func (me *service) Name() string {
+	return me.service.Name()
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -40,11 +41,15 @@ func (me *PolicyServiceClient) SchemaID() string {
 	return "accounts:iam:policies"
 }
 
+func (me *PolicyServiceClient) Name() string {
+	return me.SchemaID()
+}
+
 type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *PolicyServiceClient) Create(v *policies.Policy) (*settings.Stub, error) {
+func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -58,7 +63,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*settings.Stub, error
 	if err = json.Unmarshal(responseBytes, &pcr); err != nil {
 		return nil, err
 	}
-	return &settings.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
+	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
@@ -98,8 +103,8 @@ func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
 	return nil
 }
 
-func (me *PolicyServiceClient) List() (settings.Stubs, error) {
-	return settings.Stubs{}, nil
+func (me *PolicyServiceClient) List() (api.Stubs, error) {
+	return api.Stubs{}, nil
 	// var err error
 	// var responseBytes []byte
 
@@ -111,9 +116,9 @@ func (me *PolicyServiceClient) List() (settings.Stubs, error) {
 	// if err = json.Unmarshal(responseBytes, &response); err != nil {
 	// 	return nil, err
 	// }
-	// var stubs settings.Stubs
+	// var stubs api.Stubs
 	// for _, item := range response.Items {
-	// 	stubs = append(stubs, &settings.Stub{ID: item.UID, Name: item.Email})
+	// 	stubs = append(stubs, &api.Stub{ID: item.UID, Name: item.Email})
 	// }
 	// return stubs, nil
 }

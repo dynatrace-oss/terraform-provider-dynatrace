@@ -20,6 +20,7 @@ package alerting
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -32,10 +33,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*alerting.P
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*alerting.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
-func Duplicates(service settings.RService[*alerting.Profile], v *alerting.Profile) (*settings.Stub, error) {
+func Duplicates(service settings.RService[*alerting.Profile], v *alerting.Profile) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}
@@ -46,7 +47,7 @@ func Duplicates(service settings.RService[*alerting.Profile], v *alerting.Profil
 		}
 	} else if settings.HijackDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
-		var stubs settings.Stubs
+		var stubs api.Stubs
 		if stubs, err = service.List(); err != nil {
 			return nil, err
 		}

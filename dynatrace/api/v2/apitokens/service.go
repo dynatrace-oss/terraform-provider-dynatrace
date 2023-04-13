@@ -20,6 +20,7 @@ package apitokens
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -52,7 +53,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:api-tokens"
 }
 
-func (me *service) List() (settings.Stubs, error) {
+func (me *service) List() (api.Stubs, error) {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -61,9 +62,9 @@ func (me *service) List() (settings.Stubs, error) {
 	if err = req.Finish(&tokenlist); err != nil {
 		return nil, err
 	}
-	stubs := settings.Stubs{}
+	stubs := api.Stubs{}
 	for _, token := range tokenlist.APITokens {
-		stubs = append(stubs, &settings.Stub{ID: *token.ID, Name: token.Name})
+		stubs = append(stubs, &api.Stub{ID: *token.ID, Name: token.Name})
 	}
 
 	return stubs, nil
@@ -73,7 +74,7 @@ func (me *service) Validate(v *apitokens.APIToken) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *apitokens.APIToken) (*settings.Stub, error) {
+func (me *service) Create(v *apitokens.APIToken) (*api.Stub, error) {
 	var err error
 
 	resultToken := apitokens.APIToken{}
@@ -92,7 +93,7 @@ func (me *service) Create(v *apitokens.APIToken) (*settings.Stub, error) {
 	resultToken.Name = item.Name
 	resultToken.Scopes = item.Scopes
 
-	return &settings.Stub{ID: *resultToken.ID, Name: resultToken.Name, Value: resultToken}, nil
+	return &api.Stub{ID: *resultToken.ID, Name: resultToken.Name, Value: resultToken}, nil
 }
 
 func (me *service) Update(id string, v *apitokens.APIToken) error {

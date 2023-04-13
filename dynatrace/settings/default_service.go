@@ -23,14 +23,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
 func NewCRUDService[T Settings](credentials *Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
 	return &defaultService[T]{
 		schemaID: schemaID,
-		client:   rest.DefaultClient(credentials.URL, credentials.Token),
+		client:   httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
 		options:  options,
 	}
 }
@@ -108,22 +110,22 @@ func (me *defaultService[T]) deleteURL(id string) string {
 	panic("service options must at least contain a function that provides the GET URL")
 }
 
-func (me *defaultService[T]) stubs() RecordStubs {
+func (me *defaultService[T]) stubs() api.RecordStubs {
 	if me.options.Stubs != nil {
 		stubsType := reflect.ValueOf(me.options.Stubs).Type()
 		if stubsType.Kind() == reflect.Pointer {
-			return reflect.New(stubsType.Elem()).Interface().(RecordStubs)
+			return reflect.New(stubsType.Elem()).Interface().(api.RecordStubs)
 		}
 		panic("no pointer")
 	}
-	return &StubList{}
+	return &api.StubList{}
 }
 
 func (me *defaultService[T]) get(id string, v any) error {
 	return me.client.Get(me.getURL(id), 200).Finish(v)
 }
 
-func (me *defaultService[T]) List() (Stubs, error) {
+func (me *defaultService[T]) List() (api.Stubs, error) {
 	var err error
 
 	req := me.client.Get(me.listURL(), 200)
@@ -133,11 +135,11 @@ func (me *defaultService[T]) List() (Stubs, error) {
 	}
 
 	res := stubs.ToStubs()
-	m := map[string]*Stub{}
+	m := map[string]*api.Stub{}
 	for _, stub := range res {
 		m[stub.ID] = stub
 	}
-	res = Stubs{}
+	res = api.Stubs{}
 	for _, stub := range m {
 		res = append(res, stub)
 	}
@@ -159,7 +161,7 @@ func (me *defaultService[T]) Validate(v T) error {
 	return nil
 }
 
-func (me *defaultService[T]) Create(v T) (*Stub, error) {
+func (me *defaultService[T]) Create(v T) (*api.Stub, error) {
 	if me.options != nil && me.options.Lock != nil && me.options.Unlock != nil {
 		me.options.Lock()
 		defer me.options.Unlock()
@@ -203,7 +205,7 @@ func (me *defaultService[T]) Create(v T) (*Stub, error) {
 	return stub, err
 }
 
-func (me *defaultService[T]) create(v T) (*Stub, error) {
+func (me *defaultService[T]) create(v T) (*api.Stub, error) {
 	var err error
 
 	if me.options != nil && me.options.Duplicates != nil {
@@ -219,10 +221,10 @@ func (me *defaultService[T]) create(v T) (*Stub, error) {
 	client := me.client
 	req := client.Post(me.createURL(v), v).Expect(200, 201)
 
-	var stub Stub
+	var stub api.Stub
 	if err = req.Finish(&stub); err != nil {
 		if me.options.HijackOnCreate != nil {
-			var hijackedStub *Stub
+			var hijackedStub *api.Stub
 			if hijackedStub, err = me.options.HijackOnCreate(err, me, v); err != nil {
 				return nil, err
 			}
@@ -236,13 +238,13 @@ func (me *defaultService[T]) create(v T) (*Stub, error) {
 				if err = client.Post(me.createURL(modifiedPayload), modifiedPayload, 200, 201).Finish(&stub); err != nil {
 					return nil, err
 				}
-				return (&Stubs{&stub}).ToStubs()[0], nil
+				return (&api.Stubs{&stub}).ToStubs()[0], nil
 			}
 			return nil, err
 		}
 		return nil, err
 	}
-	return (&Stubs{&stub}).ToStubs()[0], nil
+	return (&api.Stubs{&stub}).ToStubs()[0], nil
 }
 
 func (me *defaultService[T]) onBeforeUpdate(id string, v T) (T, error) {
@@ -311,5 +313,9 @@ func (me *defaultService[T]) Delete(id string) error {
 }
 
 func (me *defaultService[T]) SchemaID() string {
+	return me.schemaID
+}
+
+func (me *defaultService[T]) Name() string {
 	return me.schemaID
 }

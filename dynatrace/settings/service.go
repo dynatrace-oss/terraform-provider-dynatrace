@@ -17,12 +17,15 @@
 
 package settings
 
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+
 type Service[T Settings] interface {
-	List() (Stubs, error)
+	List() (api.Stubs, error)
 	Get(id string, v T) error
-	Create(v T) (*Stub, error)
+	Create(v T) (*api.Stub, error)
 	Update(id string, v T) error
 	Delete(id string) error
 	Validate(v T) error
 	SchemaID() string
+	Name() string
 }

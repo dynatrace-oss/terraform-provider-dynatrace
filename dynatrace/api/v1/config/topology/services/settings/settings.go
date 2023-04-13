@@ -18,8 +18,8 @@
 package service
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -29,10 +29,10 @@ import (
 // Services is a list of short representations of services
 type Services []*Settings
 
-func (me *Services) ToStubs() settings.Stubs {
-	res := []*settings.Stub{}
+func (me *Services) ToStubs() api.Stubs {
+	res := []*api.Stub{}
 	for _, setting := range *me {
-		res = append(res, &settings.Stub{ID: setting.EntityId, Name: setting.DisplayName, Value: setting})
+		res = append(res, &api.Stub{ID: setting.EntityId, Name: setting.DisplayName, Value: setting})
 	}
 	return res
 }

@@ -20,7 +20,7 @@ package dashboards
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 )
 
 // DashboardList is a list of short representations of dashboards
@@ -28,18 +28,18 @@ type DashboardList struct {
 	Dashboards []*DashboardStub `json:"dashboards,omitempty"` // the short representations of the dashboards
 }
 
-func (me *DashboardList) ToStubs() settings.Stubs {
-	stubs := settings.Stubs{}
+func (me *DashboardList) ToStubs() api.Stubs {
+	stubs := api.Stubs{}
 	for _, dbstub := range me.Dashboards {
 		if dbstub.Name == nil {
 			panic(dbstub.ID)
 		}
 		if dbstub.Owner != nil {
 			if *dbstub.Owner != "Dynatrace" {
-				stubs = append(stubs, &settings.Stub{ID: dbstub.ID, Name: fmt.Sprintf("%s owned by %s", *dbstub.Name, *dbstub.Owner)})
+				stubs = append(stubs, &api.Stub{ID: dbstub.ID, Name: fmt.Sprintf("%s owned by %s", *dbstub.Name, *dbstub.Owner)})
 			}
 		} else {
-			stubs = append(stubs, &settings.Stub{ID: dbstub.ID, Name: *dbstub.Name})
+			stubs = append(stubs, &api.Stub{ID: dbstub.ID, Name: *dbstub.Name})
 		}
 	}
 	return stubs

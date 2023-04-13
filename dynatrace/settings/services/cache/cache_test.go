@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 	"github.com/google/uuid"
 )
@@ -22,7 +22,7 @@ var testdata = map[string]string{
 
 func TestTarFolder(t *testing.T) {
 	os.Remove("reini-war-data.tar")
-	folder, _, err := cache.NewTarFolder("reini-war-data")
+	folder, _, err := tar.New("reini-war-data")
 	hide(folder)
 	if err != nil {
 		t.Error(err)
@@ -32,12 +32,12 @@ func TestTarFolder(t *testing.T) {
 		os.Remove("reini-war-data.tar")
 	}()
 	for k, v := range testdata {
-		if err := folder.Save(settings.Stub{ID: k, Name: k}, []byte(v)); err != nil {
+		if err := folder.Save(api.Stub{ID: k, Name: k}, []byte(v)); err != nil {
 			t.Error(err)
 			return
 		}
 	}
-	folder, _, err = cache.NewTarFolder("reini-war-data")
+	folder, _, err = tar.New("reini-war-data")
 	if err != nil {
 		t.Error(err)
 		return

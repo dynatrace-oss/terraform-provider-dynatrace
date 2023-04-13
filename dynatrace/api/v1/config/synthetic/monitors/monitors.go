@@ -20,19 +20,19 @@ package monitors
 import (
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 )
 
 type Monitors struct {
 	Monitors []*MonitorCollectionElement `json:"monitors"` // The list of synthetic monitors
 }
 
-func (me *Monitors) ToStubs() settings.Stubs {
-	stubs := settings.Stubs{}
+func (me *Monitors) ToStubs() api.Stubs {
+	stubs := api.Stubs{}
 	if len(me.Monitors) > 0 {
 		for _, monitor := range me.Monitors {
 			if !strings.Contains(monitor.Name, "synchronizing credentials with") {
-				stubs = append(stubs, &settings.Stub{ID: monitor.EntityID, Name: monitor.Name})
+				stubs = append(stubs, &api.Stub{ID: monitor.EntityID, Name: monitor.Name})
 			}
 		}
 	}
