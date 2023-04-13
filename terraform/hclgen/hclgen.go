@@ -114,6 +114,9 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 	if value == nil {
 		return
 	}
+	if key == "legacy_id" {
+		return
+	}
 	switch v := value.(type) {
 	case string, bool, int, int32, int64, int8, int16, uint, uint32, uint64, uint8, uint16, float32, float64:
 		entry := &primitiveEntry{Key: key, Value: value, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema)}
