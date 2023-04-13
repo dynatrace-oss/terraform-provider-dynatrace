@@ -51,9 +51,14 @@ func (me *Resource) IsReferencedAsDataSource() bool {
 }
 
 func (me *Resource) SetName(name string) *Resource {
+	if me.Name == name {
+		return me
+	}
 	me.Name = name
 	terraformName := toTerraformName(name)
-	me.UniqueName = me.Module.namer.Name(terraformName)
+	if terraformName != me.UniqueName {
+		me.UniqueName = me.Module.namer.Name(terraformName)
+	}
 	me.Status = ResourceStati.Discovered
 	return me
 }
@@ -173,7 +178,7 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
-	// me.SetName(settings.Name(settngs, me.ID))
+	me.SetName(settings.Name(settngs, me.ID))
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
 		me.LegacyID = *legacyID
