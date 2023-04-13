@@ -19,6 +19,7 @@ package export
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -267,6 +268,11 @@ func (me *entityds) DataSourceType() DataSourceType {
 }
 
 func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+	// when running on HTTP Cache no data sources should get replaced
+	// The IDs of these entities are guaranteed to match existing ones
+	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+		return s, []any{}
+	}
 	found := false
 	m1 := regexp.MustCompile(me.Pattern)
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {
