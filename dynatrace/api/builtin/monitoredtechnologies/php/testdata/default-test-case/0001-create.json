@@ -1,5 +1,6 @@
 {
     "enabled": true,
     "enabledFastCGI": false,
+    "enablePhpCliServerInstrumentation": false,
     "hostId": "HOST-1234567890000000"
 }
