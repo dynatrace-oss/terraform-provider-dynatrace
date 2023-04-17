@@ -44,7 +44,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"disk_low_inodes_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(DiskLowInodesDetection).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -52,7 +52,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"disk_low_space_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(DiskLowSpaceDetection).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -60,7 +60,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"disk_slow_writes_and_reads_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(DiskSlowWritesAndReadsDetection).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
