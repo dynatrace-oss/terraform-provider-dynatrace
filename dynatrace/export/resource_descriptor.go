@@ -590,15 +590,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.RUMIPLocations: NewResourceDescriptor(ipmappings.Service),
 	ResourceTypes.CustomAppEnablement: NewResourceDescriptor(
 		rumcustomenablement.Service,
-		Dependencies.ID(ResourceTypes.MobileApplication),
+		Coalesce(Dependencies.MobileApplication),
 	),
 	ResourceTypes.MobileAppEnablement: NewResourceDescriptor(
 		rummobileenablement.Service,
-		Dependencies.ID(ResourceTypes.MobileApplication),
+		Coalesce(Dependencies.MobileApplication),
 	),
 	ResourceTypes.WebAppEnablement: NewResourceDescriptor(
 		rumwebenablement.Service,
-		Dependencies.ID(ResourceTypes.WebApplication),
+		Coalesce(Dependencies.Application),
 	),
 	ResourceTypes.RUMProcessGroup: NewResourceDescriptor(
 		rumprocessgroup.Service,
@@ -633,15 +633,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.SessionReplayWebPrivacy: NewResourceDescriptor(
 		sessionreplaywebprivacy.Service,
-		Dependencies.ID(ResourceTypes.WebApplication),
+		Coalesce(Dependencies.Application),
 	),
 	ResourceTypes.SessionReplayResourceCapture: NewResourceDescriptor(
 		sessionreplayresourcecapture.Service,
-		Dependencies.ID(ResourceTypes.WebApplication),
+		Coalesce(Dependencies.Application),
 	),
 	ResourceTypes.UsabilityAnalytics: NewResourceDescriptor(
 		analytics.Service,
-		Dependencies.ID(ResourceTypes.WebApplication),
+		Coalesce(Dependencies.Application),
 	),
 	ResourceTypes.SyntheticAvailability: NewResourceDescriptor(availability.Service),
 	ResourceTypes.BrowserMonitorOutageHandling: NewResourceDescriptor(
