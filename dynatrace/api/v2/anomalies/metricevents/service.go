@@ -18,6 +18,9 @@
 package metricevents
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	metricevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/metricevents/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -27,5 +30,32 @@ const SchemaID = "builtin:anomaly-detection.metric-events"
 const SchemaVersion = "1.0.3"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*metricevents.MetricEvents] {
-	return settings20.Service[*metricevents.MetricEvents](credentials, SchemaID, SchemaVersion)
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.MetricEvents]{Duplicates: Duplicates})
+}
+
+func Duplicates(service settings.RService[*metricevents.MetricEvents], v *metricevents.MetricEvents) (*api.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_metric_events") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Summary == stub.Name {
+				return nil, fmt.Errorf("Metric event named '%s' already exists", v.Summary)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_metric_events") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Summary == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
