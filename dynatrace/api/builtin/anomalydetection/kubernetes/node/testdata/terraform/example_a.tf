@@ -22,4 +22,7 @@ resource "dynatrace_k8s_node_anomalies" "#name#" {
   readiness_issues {
     enabled = false
   }
+  node_problematic_condition {
+    enabled = false
+  }
 }

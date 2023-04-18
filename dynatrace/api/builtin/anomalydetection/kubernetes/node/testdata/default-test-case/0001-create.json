@@ -20,5 +20,12 @@
             "samplePeriodInMinutes": 3
         },
         "enabled": true
+    },
+    "nodeProblematicCondition": {
+        "configuration": {
+            "observationPeriodInMinutes": 5,
+            "samplePeriodInMinutes": 4
+        },
+        "enabled": true
     }
 }

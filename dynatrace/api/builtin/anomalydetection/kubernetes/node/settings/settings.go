@@ -25,6 +25,7 @@ import (
 type Settings struct {
 	CpuRequestsSaturation    *CpuRequestsSaturation    `json:"cpuRequestsSaturation"`
 	MemoryRequestsSaturation *MemoryRequestsSaturation `json:"memoryRequestsSaturation"`
+	NodeProblematicCondition *NodeProblematicCondition `json:"nodeProblematicCondition"`
 	PodsSaturation           *PodsSaturation           `json:"podsSaturation"`
 	ReadinessIssues          *ReadinessIssues          `json:"readinessIssues"` // Alerts if node has not been available for a given amount of time
 	Scope                    *string                   `json:"-" scope:"scope"` // The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
@@ -40,37 +41,41 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(CpuRequestsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(CpuRequestsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"memory_requests_saturation": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(MemoryRequestsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(MemoryRequestsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"node_problematic_condition": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(NodeProblematicCondition).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"pods_saturation": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(PodsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(PodsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"readiness_issues": {
 			Type:        schema.TypeList,
 			Description: "Alerts if node has not been available for a given amount of time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ReadinessIssues).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ReadinessIssues).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
@@ -85,6 +90,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"cpu_requests_saturation":    me.CpuRequestsSaturation,
 		"memory_requests_saturation": me.MemoryRequestsSaturation,
+		"node_problematic_condition": me.NodeProblematicCondition,
 		"pods_saturation":            me.PodsSaturation,
 		"readiness_issues":           me.ReadinessIssues,
 		"scope":                      me.Scope,
@@ -95,6 +101,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"cpu_requests_saturation":    &me.CpuRequestsSaturation,
 		"memory_requests_saturation": &me.MemoryRequestsSaturation,
+		"node_problematic_condition": &me.NodeProblematicCondition,
 		"pods_saturation":            &me.PodsSaturation,
 		"readiness_issues":           &me.ReadinessIssues,
 		"scope":                      &me.Scope,

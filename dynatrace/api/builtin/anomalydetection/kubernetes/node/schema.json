@@ -36,6 +36,17 @@
 				"$ref": "#/types/MemoryRequestsSaturation"
 			}
 		},
+		"nodeProblematicCondition": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/NodeProblematicCondition"
+			}
+		},
 		"podsSaturation": {
 			"description": "",
 			"displayName": "",
@@ -307,6 +318,109 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"NodeProblematicCondition": {
+			"description": "",
+			"displayName": "NodeProblematicCondition",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/NodeProblematicConditionConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configuration"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect problematic node conditions",
+					"documentation": "Evaluates node conditions 'MemoryPressure', 'DiskPressure', 'PIDPressure', 'OutOfDisk' and 'NetworkUnavailable'",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"NodeProblematicConditionConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "NodeProblematicConditionConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "node has problematic conditions for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"PodsSaturation": {
 			"description": "",
 			"displayName": "PodsSaturation",
@@ -458,7 +572,7 @@
 					"default": false,
 					"description": "",
 					"displayName": "Detect node readiness issues",
-					"documentation": "Evaluates on node condition 'Ready'",
+					"documentation": "Evaluates node condition 'Ready'",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -532,5 +646,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1"
+	"version": "1.2.2"
 }

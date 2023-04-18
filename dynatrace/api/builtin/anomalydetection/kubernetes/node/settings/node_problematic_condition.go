@@ -24,18 +24,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type PodsSaturation struct {
-	Configuration *PodsSaturationConfig `json:"configuration,omitempty"` // Alert if
-	Enabled       bool                  `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
+type NodeProblematicCondition struct {
+	Configuration *NodeProblematicConditionConfig `json:"configuration,omitempty"` // Alert if
+	Enabled       bool                            `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
-func (me *PodsSaturation) Schema() map[string]*schema.Schema {
+func (me *NodeProblematicCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"configuration": {
 			Type:        schema.TypeList,
 			Description: "Alert if",
 			Optional:    true, // precondition
-			Elem:        &schema.Resource{Schema: new(PodsSaturationConfig).Schema()},
+			Elem:        &schema.Resource{Schema: new(NodeProblematicConditionConfig).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -47,14 +47,14 @@ func (me *PodsSaturation) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *PodsSaturation) MarshalHCL(properties hcl.Properties) error {
+func (me *NodeProblematicCondition) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"configuration": me.Configuration,
 		"enabled":       me.Enabled,
 	})
 }
 
-func (me *PodsSaturation) HandlePreconditions() error {
+func (me *NodeProblematicCondition) HandlePreconditions() error {
 	if me.Configuration == nil && me.Enabled {
 		return fmt.Errorf("'configuration' must be specified if 'enabled' is set to '%v'", me.Enabled)
 	}
@@ -64,7 +64,7 @@ func (me *PodsSaturation) HandlePreconditions() error {
 	return nil
 }
 
-func (me *PodsSaturation) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *NodeProblematicCondition) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"configuration": &me.Configuration,
 		"enabled":       &me.Enabled,

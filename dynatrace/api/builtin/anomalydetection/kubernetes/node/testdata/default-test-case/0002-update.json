@@ -30,5 +30,13 @@
             "samplePeriodInMinutes": 4
         },
         "enabled": true
+    },
+    "nodeProblematicCondition": {
+        "configuration": {
+            "observationPeriodInMinutes": 5,
+            "samplePeriodInMinutes": 4,
+            "threshold": 95
+        },
+        "enabled": true
     }
 }
