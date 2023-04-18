@@ -37,6 +37,39 @@
 				"$ref": "#/types/DeploymentStuck"
 			}
 		},
+		"highCpuThrottling": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/HighCpuThrottling"
+			}
+		},
+		"highCpuUsage": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/HighCpuUsage"
+			}
+		},
+		"highMemoryUsage": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/HighMemoryUsage"
+			}
+		},
 		"notAllPodsReady": {
 			"description": "",
 			"displayName": "",
@@ -240,8 +273,8 @@
 				"enabled": {
 					"default": false,
 					"description": "",
-					"displayName": "Detect stuck workloads",
-					"documentation": "",
+					"displayName": "Detect stuck deployments",
+					"documentation": "Evaluates workload condition 'Progressing'",
 					"maxObjects": 1,
 					"metadata": {
 						"minActiveGateVersion": "1.259"
@@ -309,6 +342,378 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighCpuThrottling": {
+			"description": "",
+			"displayName": "HighCpuThrottling",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/HighCpuThrottlingConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect high CPU throttling",
+					"documentation": "The CPU throttling to usage ratio exceeds the specified threshold. Important: This alert uses throttled seconds / used seconds (in millicores) in contrast to Prometheus and Grafana, which use throttled periods / total periods for the throttling ratio.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.261"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighCpuThrottlingConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "HighCpuThrottlingConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 15,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "of CPU usage for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 50,
+					"description": "",
+					"displayName": "amount of CPU throttling is above",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighCpuUsage": {
+			"description": "",
+			"displayName": "HighCpuUsage",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/HighCpuUsageConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect CPU usage saturation",
+					"documentation": "CPU usage is close to limits.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.261"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighCpuUsageConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "HighCpuUsageConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 15,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "of defined CPU limits for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 90,
+					"description": "",
+					"displayName": "amount of utilized workload CPU is above",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighMemoryUsage": {
+			"description": "",
+			"displayName": "HighMemoryUsage",
+			"documentation": "",
+			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/HighMemoryUsageConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect memory usage saturation",
+					"documentation": "Memory usage (working set memory) is close to limits.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.263"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HighMemoryUsageConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "HighMemoryUsageConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 15,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 30,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "of defined memory limits for at least",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"threshold": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 90,
+					"description": "",
+					"displayName": "amount of utilized workload memory is above",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
 					"type": "integer"
 				}
 			},
@@ -449,8 +854,8 @@
 				"enabled": {
 					"default": false,
 					"description": "",
-					"displayName": "Detect pending pods",
-					"documentation": "Number of pods in pending phase",
+					"displayName": "Detect pods stuck in pending",
+					"documentation": "Number of pods in `Pending` phase",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -573,7 +978,7 @@
 					"default": false,
 					"description": "",
 					"displayName": "Detect pods stuck in terminating",
-					"documentation": "",
+					"documentation": "Deleted pods in 'Running' phase",
 					"maxObjects": 1,
 					"metadata": {
 						"minActiveGateVersion": "1.259"
@@ -753,5 +1158,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4"
+	"version": "1.7"
 }

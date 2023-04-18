@@ -44,4 +44,28 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
       sample_period_in_minutes      = 4
     }
   }
+  high_cpu_throttling {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
+  high_cpu_usage {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
+  high_memory_usage {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
 }

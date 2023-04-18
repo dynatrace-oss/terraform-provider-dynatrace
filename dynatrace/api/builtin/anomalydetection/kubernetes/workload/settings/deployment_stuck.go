@@ -18,6 +18,8 @@
 package workload
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,11 +34,10 @@ func (me *DeploymentStuck) Schema() map[string]*schema.Schema {
 		"configuration": {
 			Type:        schema.TypeList,
 			Description: "Alert if",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(DeploymentStuckConfig).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(DeploymentStuckConfig).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -51,6 +52,16 @@ func (me *DeploymentStuck) MarshalHCL(properties hcl.Properties) error {
 		"configuration": me.Configuration,
 		"enabled":       me.Enabled,
 	})
+}
+
+func (me *DeploymentStuck) HandlePreconditions() error {
+	if me.Configuration == nil && me.Enabled {
+		return fmt.Errorf("'configuration' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if me.Configuration != nil && !me.Enabled {
+		return fmt.Errorf("'configuration' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *DeploymentStuck) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -25,6 +25,9 @@ import (
 type Settings struct {
 	ContainerRestarts        *ContainerRestarts        `json:"containerRestarts"`
 	DeploymentStuck          *DeploymentStuck          `json:"deploymentStuck"`
+	HighCpuThrottling        *HighCpuThrottling        `json:"highCpuThrottling"`
+	HighCpuUsage             *HighCpuUsage             `json:"highCpuUsage"`
+	HighMemoryUsage          *HighMemoryUsage          `json:"highMemoryUsage"`
 	NotAllPodsReady          *NotAllPodsReady          `json:"notAllPodsReady"`
 	PendingPods              *PendingPods              `json:"pendingPods"`
 	PodStuckInTerminating    *PodStuckInTerminating    `json:"podStuckInTerminating"`
@@ -42,46 +45,65 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ContainerRestarts).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ContainerRestarts).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"deployment_stuck": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DeploymentStuck).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(DeploymentStuck).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"high_cpu_throttling": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(HighCpuThrottling).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"high_cpu_usage": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(HighCpuUsage).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"high_memory_usage": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(HighMemoryUsage).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"not_all_pods_ready": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(NotAllPodsReady).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(NotAllPodsReady).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"pending_pods": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(PendingPods).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(PendingPods).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"pod_stuck_in_terminating": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(PodStuckInTerminating).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(PodStuckInTerminating).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
@@ -93,10 +115,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(WorkloadWithoutReadyPods).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(WorkloadWithoutReadyPods).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
@@ -105,6 +126,9 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"container_restarts":          me.ContainerRestarts,
 		"deployment_stuck":            me.DeploymentStuck,
+		"high_cpu_throttling":         me.HighCpuThrottling,
+		"high_cpu_usage":              me.HighCpuUsage,
+		"high_memory_usage":           me.HighMemoryUsage,
 		"not_all_pods_ready":          me.NotAllPodsReady,
 		"pending_pods":                me.PendingPods,
 		"pod_stuck_in_terminating":    me.PodStuckInTerminating,
@@ -117,6 +141,9 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"container_restarts":          &me.ContainerRestarts,
 		"deployment_stuck":            &me.DeploymentStuck,
+		"high_cpu_throttling":         &me.HighCpuThrottling,
+		"high_cpu_usage":              &me.HighCpuUsage,
+		"high_memory_usage":           &me.HighMemoryUsage,
 		"not_all_pods_ready":          &me.NotAllPodsReady,
 		"pending_pods":                &me.PendingPods,
 		"pod_stuck_in_terminating":    &me.PodStuckInTerminating,

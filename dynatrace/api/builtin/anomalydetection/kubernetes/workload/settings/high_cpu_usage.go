@@ -24,18 +24,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type PodStuckInTerminating struct {
-	Configuration *PodStuckInTerminatingConfig `json:"configuration,omitempty"` // Alert if
-	Enabled       bool                         `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
+type HighCpuUsage struct {
+	Configuration *HighCpuUsageConfig `json:"configuration,omitempty"` // Alert if
+	Enabled       bool                `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
-func (me *PodStuckInTerminating) Schema() map[string]*schema.Schema {
+func (me *HighCpuUsage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"configuration": {
 			Type:        schema.TypeList,
 			Description: "Alert if",
 			Optional:    true, // precondition
-			Elem:        &schema.Resource{Schema: new(PodStuckInTerminatingConfig).Schema()},
+			Elem:        &schema.Resource{Schema: new(HighCpuUsageConfig).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -47,14 +47,14 @@ func (me *PodStuckInTerminating) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *PodStuckInTerminating) MarshalHCL(properties hcl.Properties) error {
+func (me *HighCpuUsage) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"configuration": me.Configuration,
 		"enabled":       me.Enabled,
 	})
 }
 
-func (me *PodStuckInTerminating) HandlePreconditions() error {
+func (me *HighCpuUsage) HandlePreconditions() error {
 	if me.Configuration == nil && me.Enabled {
 		return fmt.Errorf("'configuration' must be specified if 'enabled' is set to '%v'", me.Enabled)
 	}
@@ -64,7 +64,7 @@ func (me *PodStuckInTerminating) HandlePreconditions() error {
 	return nil
 }
 
-func (me *PodStuckInTerminating) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *HighCpuUsage) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"configuration": &me.Configuration,
 		"enabled":       &me.Enabled,

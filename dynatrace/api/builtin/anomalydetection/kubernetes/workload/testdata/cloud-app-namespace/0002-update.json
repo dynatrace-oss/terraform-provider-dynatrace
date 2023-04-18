@@ -43,5 +43,14 @@
             "samplePeriodInMinutes": 4
         },
         "enabled": true
+    },
+    "highCpuThrottling": {
+        "enabled": false
+    },
+    "highCpuUsage": {
+        "enabled": false
+    },
+    "highMemoryUsage": {
+        "enabled": false
     }
 }
