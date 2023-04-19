@@ -18,6 +18,9 @@
 package customprocessmonitoring
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -27,5 +30,38 @@ const SchemaVersion = "0.4.4"
 const SchemaID = "builtin:process.custom-process-monitoring-rule"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*customprocessmonitoring.Settings] {
-	return settings20.Service[*customprocessmonitoring.Settings](credentials, SchemaID, SchemaVersion)
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
+}
+
+func Duplicates(service settings.RService[*customprocessmonitoring.Settings], v *customprocessmonitoring.Settings) (*api.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_process_monitoring_rule") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			config := stub.Value.(*customprocessmonitoring.Settings)
+			if v.HostGroupID == config.HostGroupID && v.Condition.Item == config.Condition.Item && v.Condition.Operator == config.Condition.Operator {
+				if (v.Condition.Value == nil && config.Condition.Value == nil) || (v.Condition.Value != nil && config.Condition.Value != nil && *v.Condition.Value == *config.Condition.Value) {
+					return nil, fmt.Errorf("Process monitoring rule with condition already exists")
+				}
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_process_monitoring_rule") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			config := stub.Value.(*customprocessmonitoring.Settings)
+			if v.HostGroupID == config.HostGroupID && v.Condition.Item == config.Condition.Item && v.Condition.Operator == config.Condition.Operator {
+				if (v.Condition.Value == nil && config.Condition.Value == nil) || (v.Condition.Value != nil && config.Condition.Value != nil && *v.Condition.Value == *config.Condition.Value) {
+					return stub, nil
+				}
+			}
+		}
+	}
+	return nil, nil
 }
