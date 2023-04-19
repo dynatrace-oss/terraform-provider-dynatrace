@@ -1,6 +1,9 @@
 package export
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type DataSource struct {
 	ID   string
@@ -36,6 +39,12 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_request_naming" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.JSONDashboard:
+		splitName := strings.Split(resource.Name, " owned by ")
+		return fmt.Sprintf(`data "dynatrace_dashboard" "%s" {
+			name = "%s"
+			owner = "%s"
+		}`, resource.UniqueName, splitName[0], splitName[1])
 	default:
 		return ""
 	}

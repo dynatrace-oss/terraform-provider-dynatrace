@@ -1,0 +1,31 @@
+---
+layout: ""
+page_title: "dynatrace_dashboard Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_dashboard` covers queries for dashboards
+---
+
+# dynatrace_dashboard (Data Source)
+
+The `dynatrace_dashboard` data source allows the dashboard ID to be retrieved by its name and owner.
+
+- `name` (String) - The name of the dashboard
+- `owner` (String) - The owner of the dashboard
+
+If multiple services match the given criteria, the first result will be retrieved.
+
+## Example Usage
+
+```terraform
+data "dynatrace_dashboard" "Example" {
+  name = "Terraform"
+  owner = "Hashicorp"
+}
+
+output "id" {
+  value = data.dynatrace_dashboard.Example.id
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}

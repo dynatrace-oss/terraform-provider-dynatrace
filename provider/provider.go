@@ -24,6 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
@@ -132,6 +133,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entities":                  entities.DataSource(),
 			"dynatrace_iam_user":                  ds_iam_users.DataSource(),
 			"dynatrace_request_naming":            requestnaming.DataSource(),
+			"dynatrace_dashboard":                 dashboard.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
