@@ -50,7 +50,7 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 // No documentation available
 type Rule struct {
 	Enabled        bool                         `json:"enabled"`                  // Enabled
-	Type           RuleType                     `json:"type"`                     // Rule type
+	Type           RuleType                     `json:"type"`                     // Possible Values: `DIMENSION`, `ME`, `SELECTOR`
 	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule,omitempty"`  // No documentation available
 	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`  // No documentation available
 	EntitySelector string                       `json:"entitySelector,omitempty"` // Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
@@ -65,7 +65,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Rule type",
+			Description: "Possible Values: `DIMENSION`, `ME`, `SELECTOR`",
 			Required:    true,
 		},
 		"attribute_rule": {
