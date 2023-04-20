@@ -53,6 +53,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_calculated_service_metric" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.MobileApplication:
+		return fmt.Sprintf(`data "dynatrace_mobile_application" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}

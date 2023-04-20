@@ -32,6 +32,7 @@ import (
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mobileapplication"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
 	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
@@ -123,6 +124,7 @@ func Provider() *schema.Provider {
 			"dynatrace_management_zone":           mgmzds.DataSource(),
 			"dynatrace_management_zones":          mgmzds.DataSourceMultiple(),
 			"dynatrace_application":               application.DataSource(),
+			"dynatrace_mobile_application":        mobileapplication.DataSource(),
 			"dynatrace_host":                      host.DataSource(),
 			"dynatrace_process":                   process.DataSource(),
 			"dynatrace_process_group":             processgroup.DataSource(),

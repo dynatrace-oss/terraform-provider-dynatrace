@@ -39,6 +39,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_request_attribute"
 	case ResourceTypes.WebApplication:
 		return "dynatrace_application"
+	case ResourceTypes.MobileApplication:
+		return "dynatrace_mobile_application"
 	case ResourceTypes.RequestNaming:
 		return "dynatrace_request_naming"
 	case ResourceTypes.Dashboard:
