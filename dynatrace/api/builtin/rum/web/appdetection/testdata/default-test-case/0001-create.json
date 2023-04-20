@@ -1,0 +1,5 @@
+{
+    "applicationId": "APPLICATION-1234567890000000",
+    "matcher": "DOMAIN_MATCHES",
+    "pattern": "TerraformTest"
+  }

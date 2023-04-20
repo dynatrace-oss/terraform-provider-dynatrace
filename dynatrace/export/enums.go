@@ -255,6 +255,7 @@ var ResourceTypes = struct {
 	OneAgentUpdates                     ResourceType
 	OwnershipTeams                      ResourceType
 	LogCustomSource                     ResourceType
+	ApplicationDetectionV2              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -455,6 +456,7 @@ var ResourceTypes = struct {
 	"dynatrace_oneagent_updates",
 	"dynatrace_ownership_teams",
 	"dynatrace_log_custom_source",
+	"dynatrace_application_detection_rule_v2",
 }
 
 type ResourceStatus string

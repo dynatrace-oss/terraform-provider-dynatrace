@@ -1,0 +1,118 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define new applications for Real User Monitoring (RUM) using [application detection rules](https://dt-url.net/wb3f0pfr), check how your existing rules map to your applications.\n\n## Define application detection rules\n\nBy default, Dynatrace associates all your monitoring data with a [placeholder application](/#uemapplications/uemappmetrics;uemapplicationId=APPLICATION-EA7C4B59F27D43EB). Define your own detection rules for grouping your monitoring data into distinct applications in Dynatrace.\n\n",
+	"displayName": "Application detection",
+	"documentation": "\n\nIf you haven't done so already, [deploy OneAgent](/#install). After the deployment [RUM](https://dt-url.net/1n2b0prq) is enabled by default for all web applications that are auto-detected by OneAgent. OneAgent [automatically injects](https://dt-url.net/kp5f0p5z) a JavaScript code snippet into the HTML of all the pages of your monitored web applications so that it can capture monitoring data and ensure end-to-end monitoring visibility.\n\n* Rules are applied sequentially, with rules at the top taking priority over lower rules.\n\n* [Not seeing your applications or RUM data?](https://dt-url.net/kl2a0pm4)\n\n* More details on [defining your web application](https://dt-url.net/r63b0pgq).\n\n## Examples\nGiven a set of URLs\u0026#58;\n* http\u0026#58;//www\u0026#46;mybookshop\u0026#46;com/about\n* http\u0026#58;//checkout\u0026#46;mybookshop\u0026#46;com/proceed\n* http\u0026#58;//mybook\u0026#46;shop\u0026#46;com/about/index\u0026#46;php\n* http\u0026#58;//www\u0026#46;this-is-mybookshop\u0026#46;com/about/index\u0026#46;php\n\nThe rule *Domain (host) contains* **mybook** matches against\u0026#58;\n* http\u0026#58;//www\u0026#46;**mybook**shop\u0026#46;com/about\n* http\u0026#58;//checkout\u0026#46;**mybook**shop\u0026#46;com/proceed\n* http\u0026#58;//**mybook**\u0026#46;shop\u0026#46;com/about/index\u0026#46;php\n* http\u0026#58;//www\u0026#46;this-is-**mybook**shop\u0026#46;com/about/index\u0026#46;php\n\nThe rule *Domain (host) ends with* **shop\u0026#46;com** matches against\u0026#58;\n* http\u0026#58;//www\u0026#46;mybook**shop\u0026#46;com**/about\n* http\u0026#58;//checkout\u0026#46;mybook**shop\u0026#46;com**/proceed\n* http\u0026#58;//mybook\u0026#46;**shop\u0026#46;com**/about/index\u0026#46;php\n* http\u0026#58;//www\u0026#46;this-is-mybook**shop\u0026#46;com**/about/index\u0026#46;php\n\nThe rule *Domain (host) equals* **www\u0026#46;mybookshop\u0026#46;com** matches against\u0026#58;\n* http\u0026#58;//**www\u0026#46;mybookshop\u0026#46;com**/about/index\u0026#46;php\n\nThe rule *Domain (host) matches* **mybookshop\u0026#46;com** matches against\u0026#58;\n* http\u0026#58;//www\u0026#46;**mybookshop\u0026#46;com**/about\n* http\u0026#58;//checkout\u0026#46;**mybookshop\u0026#46;com**/proceed\n\nThe rule *Domain (host) starts with* **checkout** matches against\u0026#58;\n* http\u0026#58;//**checkout**\u0026#46;mybookshop\u0026#46;com/proceed\n\nThe rule *URL contains* **mybookshop\u0026#46;com/about** matches against\u0026#58;\n* http\u0026#58;//www\u0026#46;**mybookshop\u0026#46;com/about**\n* http\u0026#58;//www\u0026#46;this-is-**mybookshop\u0026#46;com/about**/index\u0026#46;php\n\nThe rule *URL ends with* **about/index\u0026#46;php** matches against\u0026#58;\n* http\u0026#58;//mybook\u0026#46;shop\u0026#46;com/**about/index\u0026#46;php**\n* http\u0026#58;//www\u0026#46;this-is-mybookshop\u0026#46;com/**about/index\u0026#46;php**\n\nThe rule *URL equals* **http\u0026#58;//www\u0026#46;mybookshop\u0026#46;com/about** matches against\u0026#58;\n* **http\u0026#58;//www\u0026#46;mybookshop\u0026#46;com/about**\n\nThe rule *URL starts with* **http\u0026#58;//www\u0026#46;mybookshop\u0026#46;com** matches against\u0026#58;\n* **http\u0026#58;//www\u0026#46;mybookshop\u0026#46;com**/about",
+	"dynatrace": "1",
+	"enums": {
+		"Matcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Domain (host) contains",
+					"value": "DOMAIN_CONTAINS"
+				},
+				{
+					"displayName": "Domain (host) ends with",
+					"value": "DOMAIN_ENDS_WITH"
+				},
+				{
+					"displayName": "Domain (host) equals",
+					"value": "DOMAIN_EQUALS"
+				},
+				{
+					"displayName": "Domain (host) matches",
+					"value": "DOMAIN_MATCHES"
+				},
+				{
+					"displayName": "Domain (host) starts with",
+					"value": "DOMAIN_STARTS_WITH"
+				},
+				{
+					"displayName": "URL contains",
+					"value": "URL_CONTAINS"
+				},
+				{
+					"displayName": "URL ends with",
+					"value": "URL_ENDS_WITH"
+				},
+				{
+					"displayName": "URL equals",
+					"value": "URL_EQUALS"
+				},
+				{
+					"displayName": "URL starts with",
+					"value": "URL_STARTS_WITH"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"applicationId": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invalid applicationId",
+					"customValidatorId": "rumAppDetectionAppIdValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Select an existing application or create a new one.",
+			"displayName": "Application",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "rum_app_detection_app_picker",
+			"type": "text"
+		},
+		"matcher": {
+			"default": "DOMAIN_MATCHES",
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Matcher"
+			}
+		},
+		"pattern": {
+			"constraints": [
+				{
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Pattern",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.web.app-detection",
+	"types": {},
+	"version": "2.0.1"
+}

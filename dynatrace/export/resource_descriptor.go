@@ -118,6 +118,7 @@ import (
 	rumproviderbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customrumjavascriptversion"
@@ -861,6 +862,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OwnershipTeams:  NewResourceDescriptor(teams.Service),
 	ResourceTypes.LogCustomSource: NewResourceDescriptor(customlogsourcesettings.Service),
+	ResourceTypes.ApplicationDetectionV2: NewResourceDescriptor(
+		appdetection.Service,
+		Coalesce(Dependencies.Application),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -893,6 +898,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
+	ResourceTypes.ApplicationDetectionV2,       //overlap with ResourceTypes.ApplicationDetection
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
