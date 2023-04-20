@@ -47,6 +47,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_dashboard"
 	case ResourceTypes.SLO:
 		return "dynatrace_slo"
+	case ResourceTypes.CalculatedServiceMetric:
+		return "dynatrace_calculated_service_metric"
 	}
 	return ""
 }
