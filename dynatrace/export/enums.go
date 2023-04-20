@@ -45,6 +45,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_dashboard"
 	case ResourceTypes.JSONDashboard:
 		return "dynatrace_dashboard"
+	case ResourceTypes.SLO:
+		return "dynatrace_slo"
 	}
 	return ""
 }

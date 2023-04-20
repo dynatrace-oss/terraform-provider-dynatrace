@@ -45,6 +45,10 @@ func AsDataSource(resource *Resource) string {
 			name = "%s"
 			owner = "%s"
 		}`, resource.UniqueName, splitName[0], splitName[1])
+	case ResourceTypes.SLO:
+		return fmt.Sprintf(`data "dynatrace_slo" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}

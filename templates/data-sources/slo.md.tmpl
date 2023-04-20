@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_slo Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_slo` covers queries for dashboards
+---
+
+# dynatrace_slo (Data Source)
+
+The `dynatrace_slo` data source allows the SLO ID to be retrieved by its name.
+
+- `name` (String) - The name of the SLO
+
+If multiple services match the given criteria, the first result will be retrieved.
+
+## Example Usage
+
+```terraform
+data "dynatrace_slo" "Example" {
+  name = "Terraform"
+}
+
+output "id" {
+  value = data.dynatrace_slo.Example.id
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}
