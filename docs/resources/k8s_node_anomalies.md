@@ -46,6 +46,9 @@ resource "dynatrace_k8s_node_anomalies" "#name#" {
   readiness_issues {
     enabled = false
   }
+  node_problematic_condition {
+    enabled = false
+  }
 }
 ```
 
@@ -56,6 +59,7 @@ resource "dynatrace_k8s_node_anomalies" "#name#" {
 
 - `cpu_requests_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--cpu_requests_saturation))
 - `memory_requests_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--memory_requests_saturation))
+- `node_problematic_condition` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--node_problematic_condition))
 - `pods_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pods_saturation))
 - `readiness_issues` (Block List, Min: 1, Max: 1) Alerts if node has not been available for a given amount of time (see [below for nested schema](#nestedblock--readiness_issues))
 
@@ -108,6 +112,27 @@ Required:
 - `observation_period_in_minutes` (Number) within the last
 - `sample_period_in_minutes` (Number) of node memory capacity for at least
 - `threshold` (Number) amount of requested memory is higher than
+
+
+
+<a id="nestedblock--node_problematic_condition"></a>
+### Nested Schema for `node_problematic_condition`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `configuration` (Block List, Max: 1) Alert if (see [below for nested schema](#nestedblock--node_problematic_condition--configuration))
+
+<a id="nestedblock--node_problematic_condition--configuration"></a>
+### Nested Schema for `node_problematic_condition.configuration`
+
+Required:
+
+- `observation_period_in_minutes` (Number) within the last
+- `sample_period_in_minutes` (Number) node has problematic conditions for at least
 
 
 

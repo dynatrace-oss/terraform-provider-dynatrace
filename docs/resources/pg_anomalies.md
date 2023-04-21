@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_pg_anomalies (Resource)
 
+The API utilized for this resource is flawed, please use [dynatrace_pg_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/pg_alerting) instead.
+
 ## Dynatrace Documentation
 
 - Process groups - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups 
@@ -23,7 +25,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_pg_anomalies" "#name#" {
-  pg_id = "PROCESS_GROUP-XXXXXXXXXXXXXXXX"
+  process_group = "PROCESS_GROUP-XXXXXXXXXXXXXXXX"
   availability {
     method            = "MINIMUM_THRESHOLD"
     minimum_threshold = 5

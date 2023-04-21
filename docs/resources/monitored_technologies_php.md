@@ -37,6 +37,7 @@ resource "dynatrace_monitored_technologies_php" "#name#" {
 
 ### Optional
 
+- `enable_php_cli_server` (Boolean) Requires enabled PHP monitoring and Dynatrace OneAgent version 1.261 or later
 - `enabled_fast_cgi` (Boolean) Requires PHP monitoring enabled and from Dynatrace OneAgent version 1.191 it's ignored and permanently enabled
 - `host_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 

@@ -57,12 +57,15 @@ resource "dynatrace_disk_specific_anomalies_v2" "#name#" {
 ### Required
 
 - `disk_id` (String) The id for the disk anomaly detection
-- `disk_low_inodes_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_low_inodes_detection))
-- `disk_low_space_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_low_space_detection))
-- `disk_slow_writes_and_reads_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_slow_writes_and_reads_detection))
 - `override_disk_low_space_detection` (Boolean) Override low disk space detection settings
 - `override_low_inodes_detection` (Boolean) Override low inodes detection settings
 - `override_slow_writes_and_reads_detection` (Boolean) Override slow writes and reads detection settings
+
+### Optional
+
+- `disk_low_inodes_detection` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_low_inodes_detection))
+- `disk_low_space_detection` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_low_space_detection))
+- `disk_slow_writes_and_reads_detection` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--disk_slow_writes_and_reads_detection))
 
 ### Read-Only
 

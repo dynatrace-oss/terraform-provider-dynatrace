@@ -35,6 +35,11 @@ resource "dynatrace_pg_alerting" "#name#" {
 
 ### Required
 
+- `enabled` (Boolean) Enable process group availability monitoring
+- `process_group` (String) The process group ID for availability monitoring
+
+### Optional
+
 - `alerting_mode` (String) **if any process becomes unavailable:**
 Dynatrace will open a new problem if a single process in this group shuts down or crashes. 
 
@@ -44,11 +49,6 @@ Dynatrace tracks the number of process instances that comprise this process grou
  Details of the related impact on service requests will be included in the problem summary.
 
 **Note:** If a process is intentionally shutdown or retired while this setting is active, you'll need to manually close the problem.
-- `enabled` (Boolean) Enable process group availability monitoring
-- `process_group` (String) The process group ID for availability monitoring
-
-### Optional
-
 - `minimum_instance_threshold` (Number) Open a new problem if the number of active process instances in the group is fewer than:
 
 ### Read-Only

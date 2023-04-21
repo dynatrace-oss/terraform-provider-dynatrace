@@ -68,6 +68,30 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
       sample_period_in_minutes      = 4
     }
   }
+  high_cpu_throttling {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
+  high_cpu_usage {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
+  high_memory_usage {
+    enabled = true
+    configuration {
+      observation_period_in_minutes = 6
+      sample_period_in_minutes      = 4
+      threshold                     = 2
+    }
+  }
 }
 ```
 
@@ -78,6 +102,9 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
 
 - `container_restarts` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--container_restarts))
 - `deployment_stuck` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--deployment_stuck))
+- `high_cpu_throttling` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_cpu_throttling))
+- `high_cpu_usage` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_cpu_usage))
+- `high_memory_usage` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_memory_usage))
 - `not_all_pods_ready` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--not_all_pods_ready))
 - `pending_pods` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pending_pods))
 - `pod_stuck_in_terminating` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pod_stuck_in_terminating))
@@ -131,6 +158,72 @@ Required:
 
 - `observation_period_in_minutes` (Number) within the last
 - `sample_period_in_minutes` (Number) workload stops progressing for at least
+
+
+
+<a id="nestedblock--high_cpu_throttling"></a>
+### Nested Schema for `high_cpu_throttling`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `configuration` (Block List, Max: 1) Alert if (see [below for nested schema](#nestedblock--high_cpu_throttling--configuration))
+
+<a id="nestedblock--high_cpu_throttling--configuration"></a>
+### Nested Schema for `high_cpu_throttling.configuration`
+
+Required:
+
+- `observation_period_in_minutes` (Number) within the last
+- `sample_period_in_minutes` (Number) of CPU usage for at least
+- `threshold` (Number) amount of CPU throttling is above
+
+
+
+<a id="nestedblock--high_cpu_usage"></a>
+### Nested Schema for `high_cpu_usage`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `configuration` (Block List, Max: 1) Alert if (see [below for nested schema](#nestedblock--high_cpu_usage--configuration))
+
+<a id="nestedblock--high_cpu_usage--configuration"></a>
+### Nested Schema for `high_cpu_usage.configuration`
+
+Required:
+
+- `observation_period_in_minutes` (Number) within the last
+- `sample_period_in_minutes` (Number) of defined CPU limits for at least
+- `threshold` (Number) amount of utilized workload CPU is above
+
+
+
+<a id="nestedblock--high_memory_usage"></a>
+### Nested Schema for `high_memory_usage`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `configuration` (Block List, Max: 1) Alert if (see [below for nested schema](#nestedblock--high_memory_usage--configuration))
+
+<a id="nestedblock--high_memory_usage--configuration"></a>
+### Nested Schema for `high_memory_usage.configuration`
+
+Required:
+
+- `observation_period_in_minutes` (Number) within the last
+- `sample_period_in_minutes` (Number) of defined memory limits for at least
+- `threshold` (Number) amount of utilized workload memory is above
 
 
 

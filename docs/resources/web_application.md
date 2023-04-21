@@ -710,7 +710,7 @@ Optional:
 
 Required:
 
-- `action` (Block List, Min: 1) Configuration of the key user action (see [below for nested schema](#nestedblock--key_user_actions--action))
+- `action` (Block Set, Min: 1) Configuration of the key user action (see [below for nested schema](#nestedblock--key_user_actions--action))
 
 <a id="nestedblock--key_user_actions--action"></a>
 ### Nested Schema for `key_user_actions.action`
