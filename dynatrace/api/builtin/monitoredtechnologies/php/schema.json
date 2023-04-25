@@ -11,6 +11,21 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"enablePhpCliServerInstrumentation": {
+			"default": false,
+			"description": "Requires enabled PHP monitoring and Dynatrace OneAgent version 1.261 or later",
+			"displayName": "Monitor PHP CLI web server",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
 		"enabled": {
 			"default": true,
 			"description": "",
@@ -39,5 +54,5 @@
 	},
 	"schemaId": "builtin:monitored-technologies.php",
 	"types": {},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }
