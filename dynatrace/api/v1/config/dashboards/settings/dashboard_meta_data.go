@@ -41,7 +41,7 @@ type DashboardMetadata struct {
 	ValidFilterKeys     []string                   `json:"validFilterKeys,omitempty"`     // a set of all possible global dashboard filters that can be applied to dashboard
 	DynamicFilters      *DynamicFilters            `json:"dynamicFilters,omitempty"`      // Dashboard filter configuration of a dashboard
 	HasConsistentColors *bool                      `json:"hasConsistentColors,omitempty"` // the dashboard is a preset (`true`)
-	TilesNameSize       *int                       `json:"tilesNameSize,omitempty"`       // no documentation available
+	TilesNameSize       *string                    `json:"tilesNameSize,omitempty"`       // no documentation available
 	Unknowns            map[string]json.RawMessage `json:"-"`
 }
 
@@ -108,7 +108,7 @@ func (me *DashboardMetadata) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"tiles_name_size": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeString,
 			Description: "No documentation available",
 			Optional:    true,
 		},
@@ -201,7 +201,7 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("tiles_name_size"); ok {
-		me.TilesNameSize = opt.NewInt(value.(int))
+		me.TilesNameSize = opt.NewString(value.(string))
 	}
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
@@ -295,16 +295,16 @@ func (me *DashboardMetadata) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if err := m.Unmarshal("name", &me.Name); err != nil {
-		return nil
+		return err
 	}
 	if err := m.Unmarshal("tilesNameSize", &me.TilesNameSize); err != nil {
-		return nil
+		return err
 	}
 	// if err := m.Unmarshal("shared", &me.Shared); err != nil {
 	// 	return nil
 	// }
 	if err := m.Unmarshal("owner", &me.Owner); err != nil {
-		return nil
+		return err
 	}
 	// if err := m.Unmarshal("sharingDetails", &me.SharingDetails); err != nil {
 	// 	return nil
