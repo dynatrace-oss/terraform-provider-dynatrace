@@ -18,6 +18,9 @@
 package relation
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	relation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -27,5 +30,34 @@ const SchemaVersion = "1.0.34"
 const SchemaID = "builtin:monitoredentities.generic.relation"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*relation.Settings] {
-	return settings20.Service[*relation.Settings](credentials, SchemaID, SchemaVersion)
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*relation.Settings]{Duplicates: Duplicates})
+}
+
+func Duplicates(service settings.RService[*relation.Settings], v *relation.Settings) (*api.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_generic_relationships") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			config := stub.Value.(*relation.Settings)
+			if v.FromType == config.FromType && v.ToType == config.ToType {
+				return nil, fmt.Errorf("Generic relationship with source/destination type already exists")
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_generic_relationships") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			config := stub.Value.(*relation.Settings)
+			if v.FromType == config.FromType && v.ToType == config.ToType {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
