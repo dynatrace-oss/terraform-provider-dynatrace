@@ -27,7 +27,7 @@ import (
 type Config struct {
 	UserAgent            *string `json:"userAgent,omitempty"`                     // The User agent of the request
 	AcceptAnyCertificate *bool   `json:"acceptAnyCertificate,omitempty"`          // If set to `false`, then the monitor fails with invalid SSL certificates.\n\nIf not set, the `false` option is used
-	FollowRedirects      *bool   `json:"followRedirects,omitempty"`               // If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.
+	FollowRedirects      bool    `json:"followRedirects"`                         // If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.
 	RequestHeaders       Headers `json:"requestHeaders,omitempty"`                // By default, only the `User-Agent` header is set.\n\nYou can't set or modify this header here. Use the `userAgent` field for that.
 	ClientCertificate    *string `json:"certStoreId,omitempty"`                   // The client certificate, if applicable - eg. CREDENTIALS_VAULT-XXXXXXXXXXXXXXXX
 	SensitiveData        *bool   `json:"shouldNotPersistSensitiveData,omitempty"` // Option not to store and display request and response bodies and header values in execution details, `true` or `false`. If not set, `false`.
@@ -49,9 +49,6 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.",
 			Optional:    true,
-			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-				return true
-			},
 		},
 		"headers": {
 			Type:        schema.TypeList,
@@ -85,14 +82,8 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if me.FollowRedirects != nil && *me.FollowRedirects {
-		if err := properties.Encode("follow_redirects", me.FollowRedirects); err != nil {
-			return err
-		}
-	} else {
-		if err := properties.Encode("follow_redirects", false); err != nil {
-			return err
-		}
+	if err := properties.Encode("follow_redirects", me.FollowRedirects); err != nil {
+		return err
 	}
 	if err := properties.Encode("headers", me.RequestHeaders); err != nil {
 		return err
