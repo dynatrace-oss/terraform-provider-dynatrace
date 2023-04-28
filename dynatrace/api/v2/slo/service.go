@@ -125,6 +125,12 @@ func (me *service) Create(v *slo.SLO) (*api.Stub, error) {
 
 	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
 	req := client.Post("/api/v2/slo", v, 201).OnResponse(func(resp *http.Response) {
+		if resp == nil {
+			return
+		}
+		if resp.Header == nil {
+			return
+		}
 		location := resp.Header.Get("Location")
 		if len(location) > 0 {
 			parts := strings.Split(location, "/")
