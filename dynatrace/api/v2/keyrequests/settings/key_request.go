@@ -25,7 +25,7 @@ import (
 
 // KeyRequest has no documentation
 type KeyRequest struct {
-	Names     []string `json:"keyRequestNames"`
+	Names     []string `json:"keyRequestNames,omitempty"`
 	ServiceID string   `json:"-" scope:"serviceId"`
 }
 
