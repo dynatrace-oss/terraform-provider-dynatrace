@@ -1263,7 +1263,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/builtin/cloud/kubernetes
+        run: go test -v ./dynatrace/api/builtin/cloud/kubernetes
       # - name: TestLogCustomSource
       #   env:
       #     GOPROXY: "https://proxy.golang.org"
