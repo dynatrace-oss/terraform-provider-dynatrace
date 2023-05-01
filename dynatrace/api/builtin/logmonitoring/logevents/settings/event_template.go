@@ -27,7 +27,7 @@ type EventTemplate struct {
 	DavisMerge  *bool         `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
 	Description string        `json:"description"`          // The description of the event to trigger.
 	EventType   EventTypeEnum `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`
-	Metadata    MetadataItems `json:"metadata"`             // Set of additional key-value properties to be attached to the triggered event.
+	Metadata    MetadataItems `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
 	Title       string        `json:"title"`                // The title of the event to trigger.
 }
 
