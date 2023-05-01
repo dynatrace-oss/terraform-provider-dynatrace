@@ -39,6 +39,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
+	kubernetesv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
@@ -866,6 +867,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		appdetection.Service,
 		Coalesce(Dependencies.Application),
 	),
+	ResourceTypes.Kubernetes: NewResourceDescriptor(
+		kubernetesv2.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -899,6 +904,8 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
 	ResourceTypes.ApplicationDetectionV2,       //overlap with ResourceTypes.ApplicationDetection
+
+	ResourceTypes.KubernetesCredentials, //overlap with Settings 2.0 ResourceTypes.Kubernetes
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

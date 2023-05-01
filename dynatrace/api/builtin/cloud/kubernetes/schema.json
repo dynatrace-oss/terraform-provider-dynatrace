@@ -1,0 +1,461 @@
+{
+	"allowedScopes": [
+		"KUBERNETES_CLUSTER"
+	],
+	"description": "Connect to Kubernetes or OpenShift for enhanced observability. Learn more about Kubernetes or OpenShift in our documentation.",
+	"displayName": "Monitoring settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"reloadUiContext": "enabled"
+	},
+	"multiObject": false,
+	"properties": {
+		"activeGateGroup": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "activeGateGroup",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"description": "",
+			"displayName": "ActiveGate Group",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"precondition": {
+				"expectedValue": false,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"subType": "datasource",
+			"type": "text"
+		},
+		"authToken": {
+			"constraints": [
+				{
+					"customMessage": "Please enter the bearer token of your endpoint.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 2000,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Create a bearer token for [Kubernetes](https://dt-url.net/og43szq \"Kubernetes\") or [OpenShift](https://dt-url.net/7l43xtp \"OpenShift\").",
+			"displayName": "Kubernetes Bearer Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"type": "secret"
+		},
+		"certificateCheckEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Require valid certificates for communication with API server (recommended)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.187"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"cloudApplicationPipelineEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor Kubernetes namespaces, services, workloads, and pods",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.219"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"clusterId": {
+			"constraints": [
+				{
+					"customMessage": "Please enter the external Kubernetes cluster ID.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "This ID is invalid, it must match this pattern: \"[a-zA-Z0-9]+([-][a-zA-Z0-9]+)*\" (example: '550e8400-e29b-11d4-a716-446655440000')",
+					"pattern": "^[a-zA-Z0-9]+?([\\-][a-zA-Z0-9]+?)*$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "This Kubernetes cluster ID is already being used.",
+					"customValidatorId": "kubernetes-unique-cluster-id",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Kubernetes cluster ID",
+			"documentation": "Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"clusterIdEnabled": {
+			"default": false,
+			"description": "For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).",
+			"displayName": "Connect containerized ActiveGate to local Kubernetes API endpoint",
+			"documentation": "Enable this toggle when the ActiveGate is deployed to the same Kubernetes clusters you want to monitor. Disable it if you want to monitor a different Kubernetes cluster.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.229"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"endpointUrl": {
+			"constraints": [
+				{
+					"customMessage": "Kubernetes API URL Target must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").",
+			"displayName": "Kubernetes API URL Target",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"subType": "url",
+			"type": "text"
+		},
+		"eventPatterns": {
+			"description": "Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).",
+			"displayName": "Events field selectors",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/EventComplexType"
+				}
+			},
+			"maxObjects": 20,
+			"metadata": {
+				"addItemButton": "Add events field selector",
+				"itemDisplayName": "Event"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "filterEvents",
+				"type": "EQUALS"
+			},
+			"type": "list"
+		},
+		"eventProcessingActive": {
+			"default": false,
+			"description": "",
+			"displayName": "Monitor events",
+			"documentation": "All events are monitored by default unless event filters are specified.\n\nKubernetes events are subject to Davis data units (DDU) licensing.\nSee [DDUs for events](https://dt-url.net/5n03vcu) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.187"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"filterEvents": {
+			"default": false,
+			"description": "",
+			"displayName": "Filter events",
+			"documentation": "Include only events specified by Events Field Selectors ",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.187"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "eventProcessingActive",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"hostnameVerificationEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Verify hostname in certificate against Kubernetes API URL",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.209"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "clusterIdEnabled",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"includeAllFdiEvents": {
+			"default": false,
+			"description": "For a list of included events, see the [documentation](https://dt-url.net/l61d02no).",
+			"displayName": "Include important events",
+			"documentation": "Automatically include all events that are relevant for Davis",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.209"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "filterEvents",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"label": {
+			"constraints": [
+				{
+					"customMessage": "Name must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"openMetricsBuiltinEnabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Monitor workload resource metrics",
+			"documentation": "The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.261"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"openMetricsPipelineEnabled": {
+			"default": false,
+			"description": "For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).",
+			"displayName": "Monitor annotated Prometheus exporters",
+			"documentation": "Prometheus metrics in Kubernetes environments are subject to Davis data units (DDU) licensing.\nSee [Monitoring consumption](https://dt-url.net/k8smpm) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.201"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"pvcMonitoringEnabled": {
+			"default": false,
+			"description": "To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.",
+			"displayName": "Monitor persistent volume claims",
+			"documentation": "The persistent volume claims feature is based on custom metrics and is therefore subject to Davis data units (DDU) licensing.\nSee [DDUs for custom metrics](https://dt-url.net/k8smcc) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.239"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:cloud.kubernetes",
+	"types": {
+		"EventComplexType": {
+			"description": "",
+			"displayName": "Event",
+			"documentation": "",
+			"properties": {
+				"active": {
+					"default": true,
+					"description": "",
+					"displayName": "Activate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"label": {
+					"constraints": [
+						{
+							"customMessage": "Specify the events field selector name.",
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "No leading or trailing whitespaces are allowed.",
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Node events",
+					"description": "",
+					"displayName": "Field selector name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"itemDisplayName": "Event"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"pattern": {
+					"constraints": [
+						{
+							"customMessage": "Specify the events field selector.",
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "This event selector is invalid, it should match this pattern: \"key(=|!=)value[,key(=|!=)value]{0,9}\" (The maximum number of selectors in chained expressions is 10)",
+							"pattern": "^[\\w\\.]{1,1024}((=){1,2}|(!=))[^,!=]{0,256}(,[\\w\\.]{1,1024}?((=){1,2}|(!=))[^,!=]{0,256}){0,9}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "involvedObject.kind=Node",
+					"description": "",
+					"displayName": "Field selector expression",
+					"documentation": "The set of allowed characters for this field has been extended with ActiveGate version 1.259. For more details, see the [documentation](https://dt-url.net/7h23wuk#set-up-event-field-selectors).",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{label}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FlagDefaultTrue": {
+			"description": "",
+			"displayName": "FlagDefaultTrue",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Monitoring Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "2.5"
+}
