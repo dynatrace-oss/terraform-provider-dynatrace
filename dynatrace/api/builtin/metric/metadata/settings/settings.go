@@ -24,12 +24,12 @@ import (
 
 type Settings struct {
 	Description       *string            `json:"description,omitempty"`       // Description
-	Dimensions        Dimensions         `json:"dimensions"`                  // Define metadata per metric dimension.
+	Dimensions        Dimensions         `json:"dimensions,omitempty"`        // Define metadata per metric dimension.
 	DisplayName       *string            `json:"displayName,omitempty"`       // Display name
 	MetricProperties  *MetricProperties  `json:"metricProperties,omitempty"`  // Metric properties
 	MetricID          string             `json:"-" scope:"metricId"`          // The scope of this setting (metric)
 	SourceEntityType  *string            `json:"sourceEntityType,omitempty"`  // Specifies which entity dimension should be used as the primary dimension. The property can only be configured for metrics ingested with the Metrics API.
-	Tags              []string           `json:"tags"`                        // Tags
+	Tags              []string           `json:"tags,omitempty"`              // Tags
 	Unit              string             `json:"unit"`                        // Unit
 	UnitDisplayFormat *UnitDisplayFormat `json:"unitDisplayFormat,omitempty"` // The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\nBinary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\nDecimal: 1 MB = 1000 kB = 1,000,000 bytes\n\nIf not set, the decimal system is used.
 }
