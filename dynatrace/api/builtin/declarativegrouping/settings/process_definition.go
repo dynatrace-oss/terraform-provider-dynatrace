@@ -48,7 +48,7 @@ type ProcessDefinition struct {
 	ID               string              `json:"id"`               // Process group identifier
 	ProcessGroupName string              `json:"processGroupName"` // This identifier is used by Dynatrace to recognize this process group.
 	Report           ReportItem          `json:"report"`           // Possible Values: `Never`, `Always`, `HighResourceUsage`
-	Rules            DetectionConditions `json:"rules"`            // Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it.
+	Rules            DetectionConditions `json:"rules,omitempty"`  // Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it.
 }
 
 func (me *ProcessDefinition) Schema() map[string]*schema.Schema {
@@ -71,11 +71,10 @@ func (me *ProcessDefinition) Schema() map[string]*schema.Schema {
 		"rules": {
 			Type:        schema.TypeList,
 			Description: "Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DetectionConditions).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(DetectionConditions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

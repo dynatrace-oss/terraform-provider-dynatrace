@@ -23,10 +23,10 @@ import (
 )
 
 type Settings struct {
-	Detection ProcessDefinitions `json:"detection"`       // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
-	Enabled   bool               `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Name      string             `json:"name"`            // Monitored technology name
-	Scope     *string            `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Detection ProcessDefinitions `json:"detection,omitempty"` // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
+	Enabled   bool               `json:"enabled"`             // This setting is enabled (`true`) or disabled (`false`)
+	Name      string             `json:"name"`                // Monitored technology name
+	Scope     *string            `json:"-" scope:"scope"`     // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -34,11 +34,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"detection": {
 			Type:        schema.TypeList,
 			Description: "Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ProcessDefinitions).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(ProcessDefinitions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
