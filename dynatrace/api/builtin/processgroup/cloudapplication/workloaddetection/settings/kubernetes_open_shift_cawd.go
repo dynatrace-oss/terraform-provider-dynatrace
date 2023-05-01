@@ -23,8 +23,8 @@ import (
 )
 
 type KubernetesOpenShiftCAWD struct {
-	Enabled bool            `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
-	Filters FilterComplexes `json:"filters"` // Define rules to merge similar Kubernetes workloads into process groups. \n\n You can use workload properties like namespace name, base pod name or container name as well as the [environment variables DT_RELEASE_STAGE and DT_RELEASE_PRODUCT](https://dt-url.net/sb02v2a) for grouping processes of similar workloads. The first applicable rule will be applied. If no rule matches, “Namespace name” + “Base pod name” + “Container name” is used as fallback.
+	Enabled bool            `json:"enabled"`           // This setting is enabled (`true`) or disabled (`false`)
+	Filters FilterComplexes `json:"filters,omitempty"` // Define rules to merge similar Kubernetes workloads into process groups. \n\n You can use workload properties like namespace name, base pod name or container name as well as the [environment variables DT_RELEASE_STAGE and DT_RELEASE_PRODUCT](https://dt-url.net/sb02v2a) for grouping processes of similar workloads. The first applicable rule will be applied. If no rule matches, “Namespace name” + “Base pod name” + “Container name” is used as fallback.
 }
 
 func (me *KubernetesOpenShiftCAWD) Schema() map[string]*schema.Schema {
@@ -37,11 +37,10 @@ func (me *KubernetesOpenShiftCAWD) Schema() map[string]*schema.Schema {
 		"filters": {
 			Type:        schema.TypeList,
 			Description: "Define rules to merge similar Kubernetes workloads into process groups. \n\n You can use workload properties like namespace name, base pod name or container name as well as the [environment variables DT_RELEASE_STAGE and DT_RELEASE_PRODUCT](https://dt-url.net/sb02v2a) for grouping processes of similar workloads. The first applicable rule will be applied. If no rule matches, “Namespace name” + “Base pod name” + “Container name” is used as fallback.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(FilterComplexes).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(FilterComplexes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
