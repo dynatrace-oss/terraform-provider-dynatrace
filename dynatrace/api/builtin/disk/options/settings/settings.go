@@ -23,9 +23,9 @@ import (
 )
 
 type Settings struct {
-	Exclusions DiskComplexes `json:"exclusions"`      // OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.
-	NfsShowAll bool          `json:"nfsShowAll"`      // When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later
-	Scope      *string       `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Exclusions DiskComplexes `json:"exclusions,omitempty"` // OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.
+	NfsShowAll bool          `json:"nfsShowAll"`           // When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later
+	Scope      *string       `json:"-" scope:"scope"`      // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Name() string {
@@ -37,11 +37,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"exclusions": {
 			Type:        schema.TypeList,
 			Description: "OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DiskComplexes).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(DiskComplexes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"nfs_show_all": {
 			Type:        schema.TypeBool,
