@@ -23,7 +23,7 @@ import (
 )
 
 type Settings struct {
-	ErrorRules RequestErrorRules `json:"errorRules"`
+	ErrorRules RequestErrorRules `json:"errorRules,omitempty"`
 	Scope      string            `json:"-" scope:"scope"` // The scope of this setting (MOBILE_APPLICATION, CUSTOM_APPLICATION)
 }
 
@@ -36,11 +36,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"error_rules": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(RequestErrorRules).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(RequestErrorRules).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
