@@ -29,7 +29,7 @@ import (
 // QueueManager TODO: documentation
 type QueueManager struct {
 	Name          string        `json:"name"`
-	Clusters      []string      `json:"clusters"`
+	Clusters      []string      `json:"clusters,omitempty"`
 	AliasQueues   AliasQueues   `json:"aliasQueues,omitempty"`
 	RemoteQueues  RemoteQueues  `json:"remoteQueues,omitempty"`
 	ClusterQueues ClusterQueues `json:"clusterQueues,omitempty"`
