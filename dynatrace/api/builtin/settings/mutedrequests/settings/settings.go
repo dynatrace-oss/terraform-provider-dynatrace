@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	MutedRequestNames []string `json:"mutedRequestNames"`   // Muted request names
-	ServiceID         string   `json:"-" scope:"serviceId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	MutedRequestNames []string `json:"mutedRequestNames,omitempty"` // Muted request names
+	ServiceID         string   `json:"-" scope:"serviceId"`         // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 }
 
 func (me *Settings) Name() string {
@@ -36,9 +36,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"muted_request_names": {
 			Type:        schema.TypeSet,
 			Description: "Muted request names",
-			Required:    true,
-
-			Elem: &schema.Schema{Type: schema.TypeString},
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"service_id": {
 			Type:        schema.TypeString,
