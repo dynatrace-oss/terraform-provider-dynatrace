@@ -23,9 +23,9 @@ import (
 )
 
 type Settings struct {
-	Enabled    bool             `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Scope      string           `json:"-" scope:"scope"` // The scope of this setting (HTTP_CHECK)
-	Thresholds ThresholdEntries `json:"thresholds"`      // Performance thresholds
+	Enabled    bool             `json:"enabled"`              // This setting is enabled (`true`) or disabled (`false`)
+	Scope      string           `json:"-" scope:"scope"`      // The scope of this setting (HTTP_CHECK)
+	Thresholds ThresholdEntries `json:"thresholds,omitempty"` // Performance thresholds
 }
 
 func (me *Settings) Name() string {
@@ -48,10 +48,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Performance thresholds",
 			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(ThresholdEntries).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ThresholdEntries).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
