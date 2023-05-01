@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Dynatrace automatically traces CICS and IMS transactions when they are called by already-monitored services. Transactions that start on the mainframe, on a terminal, or are called by unmonitored services need to be explicitly listed in order to be monitored.\n\nAdd CICS transactions that start on a terminal (e.g., IBM 3270 green screen terminal) to the CICS terminal transaction start filter. Add all other transactions to the CICS and IMS transaction start filters.\n\nNote that traces started using the transaction filters will never be linked to a previous trace, regardless of how the transaction was initiated.",
+	"description": "Dynatrace automatically traces CICS and IMS transactions when monitored services call them. Transactions that originate on the mainframe, on a terminal, or are called by unmonitored services must be explicitly listed to be monitored.\n\nAdd CICS and IMS transactions originating on a terminal (e.g., IBM 3270 green screen terminal) to the terminal transaction start filter. Add all other transactions to the transaction start filters.\n\nNote that traces started using the transaction filters will never be linked to a previous trace, regardless of how the transaction was initiated.",
 	"displayName": "Transaction start filters",
 	"documentation": "",
 	"dynatrace": "1",
@@ -62,6 +62,32 @@
 			"nullable": false,
 			"type": "set"
 		},
+		"includedImsTerminalTransactionIds": {
+			"description": "",
+			"displayName": "IMS terminal transaction start filter",
+			"documentation": "You can use * as wildcard. For example use A* to trace all transaction IDs that start with A.",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 8,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "IMS terminal transaction ID",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "IMS: Add transaction ID"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
 		"includedImsTransactionIds": {
 			"description": "",
 			"displayName": "IMS transaction start filter",
@@ -94,5 +120,5 @@
 	],
 	"schemaId": "builtin:mainframe.txstartfilters",
 	"types": {},
-	"version": "1.1"
+	"version": "1.2"
 }

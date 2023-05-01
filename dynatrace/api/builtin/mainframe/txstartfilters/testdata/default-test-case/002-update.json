@@ -7,5 +7,8 @@
     ],
     "includedImsTransactionIds": [
         "FAKE"
+    ],
+    "includedImsTerminalTransactionIds": [
+        "DTAX", "ETAX"
     ]
 }
