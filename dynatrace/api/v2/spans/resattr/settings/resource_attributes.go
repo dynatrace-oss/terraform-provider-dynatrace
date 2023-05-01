@@ -28,7 +28,7 @@ import (
 
 // ResourceAttributes has no documentation
 type ResourceAttributes struct {
-	AttributeKeys AttributeKeys `json:"attributeKeys"`
+	AttributeKeys AttributeKeys `json:"attributeKeys,omitempty"`
 }
 
 func (me *ResourceAttributes) Name() string {
