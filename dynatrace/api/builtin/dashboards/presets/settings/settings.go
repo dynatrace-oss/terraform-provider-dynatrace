@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	DashboardPresetsList   DashboardPresetsList `json:"dashboardPresetsList"`   // Show selected preset to respective user group only.
-	EnableDashboardPresets bool                 `json:"enableDashboardPresets"` // Dashboard presets are visible to all users by default. For a pristine environment you may disable them entirely or opt to manually limit visibility to selected user groups.
+	DashboardPresetsList   DashboardPresetsList `json:"dashboardPresetsList,omitempty"` // Show selected preset to respective user group only.
+	EnableDashboardPresets bool                 `json:"enableDashboardPresets"`         // Dashboard presets are visible to all users by default. For a pristine environment you may disable them entirely or opt to manually limit visibility to selected user groups.
 }
 
 func (me *Settings) Name() string {
@@ -36,11 +36,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"dashboard_presets_list": {
 			Type:        schema.TypeList,
 			Description: "Show selected preset to respective user group only.",
-			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DashboardPresetsList).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(DashboardPresetsList).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"enable_dashboard_presets": {
 			Type:        schema.TypeBool,
