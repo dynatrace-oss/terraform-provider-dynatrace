@@ -39,6 +39,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
+	cloudfoundryv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/cloudfoundry"
 	kubernetesv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
@@ -871,6 +872,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesv2.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
+	ResourceTypes.CloudFoundry: NewResourceDescriptor(cloudfoundryv2.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -903,9 +905,10 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
-	ResourceTypes.ApplicationDetectionV2,       //overlap with ResourceTypes.ApplicationDetection
+	ResourceTypes.ApplicationDetectionV2,       // overlap with ResourceTypes.ApplicationDetection
 
-	ResourceTypes.KubernetesCredentials, //overlap with Settings 2.0 ResourceTypes.Kubernetes
+	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
+	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

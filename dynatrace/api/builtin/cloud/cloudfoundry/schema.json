@@ -1,0 +1,224 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Use this page to connect your Cloud Foundry foundation to Dynatrace for monitoring. Please have your Cloud Foundry API target URL, your authentication endpoint and your Cloud Foundry username and password ready.\\\n\\\nNo additional DDUs will be consumed by using this integration.",
+	"displayName": "Cloud Foundry",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Connect new foundation"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"activeGateGroup": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": true,
+				"identifier": "cloudFoundryActiveGateGroup",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": false
+			},
+			"description": "",
+			"displayName": "ActiveGate group",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"apiUrl": {
+			"constraints": [
+				{
+					"customMessage": "Cloud Foundry API Target must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Cloud Foundry API Target",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, https://api.run.pivotal.io/"
+			},
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"label": {
+			"constraints": [
+				{
+					"customMessage": "Name must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name this connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, Dynatrace integration"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"loginUrl": {
+			"constraints": [
+				{
+					"customMessage": "Cloud Foundry Authentication Endpoint must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Cloud Foundry Authentication Endpoint",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, https://login.run.pivotal.io/"
+			},
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		},
+		"password": {
+			"constraints": [
+				{
+					"customMessage": "Password must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Cloud Foundry Password",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Password"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"username": {
+			"constraints": [
+				{
+					"customMessage": "Username must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Cloud Foundry Username",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Username"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-and-virtualization"
+	],
+	"schemaId": "builtin:cloud.cloudfoundry",
+	"types": {},
+	"version": "1.0.4"
+}

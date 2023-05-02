@@ -1,0 +1,9 @@
+{
+  "activeGateGroup": "Terraform",
+  "apiUrl": "https://www.${randomize}.com",
+  "enabled": true,
+  "label": "${randomize}",
+  "loginUrl": "https://www.${randomize}.com",
+  "password": "#######",
+  "username": "terraform"
+}

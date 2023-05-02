@@ -349,6 +349,7 @@ func Provider() *schema.Provider {
 			"dynatrace_log_custom_source":                  resources.NewGeneric(export.ResourceTypes.LogCustomSource).Resource(),
 			"dynatrace_application_detection_rule_v2":      resources.NewGeneric(export.ResourceTypes.ApplicationDetectionV2).Resource(),
 			"dynatrace_kubernetes":                         resources.NewGeneric(export.ResourceTypes.Kubernetes).Resource(),
+			"dynatrace_cloud_foundry":                      resources.NewGeneric(export.ResourceTypes.CloudFoundry).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

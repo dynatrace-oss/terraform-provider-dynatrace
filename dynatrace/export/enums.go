@@ -257,6 +257,7 @@ var ResourceTypes = struct {
 	LogCustomSource                     ResourceType
 	ApplicationDetectionV2              ResourceType
 	Kubernetes                          ResourceType
+	CloudFoundry                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -459,6 +460,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_custom_source",
 	"dynatrace_application_detection_rule_v2",
 	"dynatrace_kubernetes",
+	"dynatrace_cloud_foundry",
 }
 
 type ResourceStatus string
