@@ -1,0 +1,64 @@
+{
+    "droppedPacketsDetection": {
+      "customThresholds": {
+        "droppedPacketsPerSecond": 4
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "esxiHighCpuDetection": {
+      "customThresholds": {
+        "cpuPeakPercentage": 94,
+        "cpuUsagePercentage": 84,
+        "vmCpuReadyPercentage": 14
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "esxiHighMemoryDetection": {
+      "customThresholds": {
+        "compressionDecompressionRate": 104
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "guestCpuLimitDetection": {
+      "customThresholds": {
+        "hostCpuUsagePercentage": 74,
+        "vmCpuReadyPercentage": 13,
+        "vmCpuUsagePercentage": 94
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "lowDatastoreSpaceDetection": {
+      "customThresholds": {
+        "freeSpacePercentage": 4
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "overloadedStorageDetection": {
+      "customThresholds": {
+        "commandAbortsNumber": 4
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "slowPhysicalStorageDetection": {
+      "customThresholds": {
+        "avgReadWriteLatency": 204,
+        "peakReadWriteLatency": 304
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    },
+    "undersizedStorageDetection": {
+      "customThresholds": {
+        "averageQueueCommandLatency": 14,
+        "peakQueueCommandLatency": 153
+      },
+      "detectionMode": "custom",
+      "enabled": true
+    }
+  }

@@ -1,0 +1,910 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace automatically detects infrastructure-related performance anomalies such as high CPU saturation, memory outages, and low disk-space conditions. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for infrastructure components.",
+	"displayName": "Anomaly detection for VMware",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Based on custom settings",
+					"value": "custom"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"droppedPacketsDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DroppedPacketsDetectionConfig"
+			}
+		},
+		"esxiHighCpuDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/EsxiHighCpuDetectionConfig"
+			}
+		},
+		"esxiHighMemoryDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/EsxiHighMemoryDetectionConfig"
+			}
+		},
+		"guestCpuLimitDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/GuestCPULimitDetectionConfig"
+			}
+		},
+		"lowDatastoreSpaceDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/LowDatastoreSpaceDetectionConfig"
+			}
+		},
+		"overloadedStorageDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/OverloadedStorageDetectionConfig"
+			}
+		},
+		"slowPhysicalStorageDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SlowPhysicalStorageDetectionConfig"
+			}
+		},
+		"undersizedStorageDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/UndersizedStorageDetectionConfig"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection.infrastructure",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.infrastructure-vmware",
+	"types": {
+		"DroppedPacketsDetectionConfig": {
+			"description": "",
+			"displayName": "High number of dropped packets",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DroppedPacketsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high number of dropped packets",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DroppedPacketsDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "DroppedPacketsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"droppedPacketsPerSecond": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Receive/transmit dropped packets rate on NIC is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "packets/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EsxiHighCpuDetectionConfig": {
+			"description": "",
+			"displayName": "High CPU saturation on ESXi host",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **all three** conditions are met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/EsxiHighCpuDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high CPU saturation on ESXi host",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EsxiHighCpuDetectionThresholds": {
+			"description": "Alert if **all three** conditions are met in 3 out of 5 samples",
+			"displayName": "EsxiHighCpuDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"cpuPeakPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 95,
+					"description": "",
+					"displayName": "At least one peak occurred when Hypervisor CPU usage was higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"cpuUsagePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 85,
+					"description": "",
+					"displayName": "CPU usage is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"vmCpuReadyPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 15,
+					"description": "",
+					"displayName": "VM CPU ready is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EsxiHighMemoryDetectionConfig": {
+			"description": "",
+			"displayName": "Memory saturation on ESXi host",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/EsxiHighMemoryDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect memory saturation on ESXi host",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EsxiHighMemoryDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "EsxiHighMemoryDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"compressionDecompressionRate": {
+					"constraints": [
+						{
+							"maximum": 1000000,
+							"minimum": 0.01,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "ESXi host swap IN/OUT or compression/decompression rate is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "kB/s"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GuestCPULimitDetectionConfig": {
+			"description": "",
+			"displayName": "Guest CPU limit reached",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **all three** conditions are met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/GuestCPULimitDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect guest CPU limit reached",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GuestCPULimitDetectionThresholds": {
+			"description": "Alert if **all three** conditions are met in 3 out of 5 samples",
+			"displayName": "GuestCPULimitDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"hostCpuUsagePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 75,
+					"description": "",
+					"displayName": "Hypervisor CPU usage is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"vmCpuReadyPercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "VM CPU ready is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"vmCpuUsagePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 99,
+					"description": "",
+					"displayName": "VM CPU usage (VM CPU Usage Mhz / VM CPU limit in Mhz) is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"LowDatastoreSpaceDetectionConfig": {
+			"description": "",
+			"displayName": "Low datastore space",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 1 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/LowDatastoreSpaceDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect low datastore space",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"LowDatastoreSpaceDetectionThresholds": {
+			"description": "Alert if the condition is met in 1 out of 5 samples",
+			"displayName": "LowDatastoreSpaceDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"freeSpacePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 2,
+					"description": "",
+					"displayName": "Datastore free space is lower than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OverloadedStorageDetectionConfig": {
+			"description": "",
+			"displayName": "Overloaded storage on physical storage device",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/OverloadedStorageDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect overloaded storage on physical storage device",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OverloadedStorageDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "OverloadedStorageDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"commandAbortsNumber": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Number of command aborts is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowPhysicalStorageDetectionConfig": {
+			"description": "",
+			"displayName": "Physical storage device running slow",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **any** condition is met in 4 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SlowPhysicalStorageDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect physical storage device running slow",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SlowPhysicalStorageDetectionThresholds": {
+			"description": "Alert if **any** condition is met in 4 out of 5 samples",
+			"displayName": "SlowPhysicalStorageDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"avgReadWriteLatency": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 200,
+					"description": "",
+					"displayName": "Read/write latency is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"peakReadWriteLatency": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 300,
+					"description": "",
+					"displayName": "Peak value for read/write latency is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"UndersizedStorageDetectionConfig": {
+			"description": "",
+			"displayName": "Undersized storage device",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **any** condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/UndersizedStorageDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect undersized storage device",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"UndersizedStorageDetectionThresholds": {
+			"description": "Alert if **any** condition is met in 3 out of 5 samples",
+			"displayName": "UndersizedStorageDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"averageQueueCommandLatency": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Average queue command latency is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"peakQueueCommandLatency": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 150,
+					"description": "",
+					"displayName": "Peak queue command latency is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}

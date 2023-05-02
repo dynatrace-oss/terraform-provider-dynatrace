@@ -29,6 +29,7 @@ import (
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
 	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts"
+	vmware_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/vmware"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/namespace"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node"
@@ -879,7 +880,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		diskrules.Service,
 		Coalesce(Dependencies.HostGroup),
 	),
-	ResourceTypes.AWSAnomalies: NewResourceDescriptor(aws_anomalies.Service),
+	ResourceTypes.AWSAnomalies:    NewResourceDescriptor(aws_anomalies.Service),
+	ResourceTypes.VMwareAnomalies: NewResourceDescriptor(vmware_anomalies.Service),
 }
 
 var BlackListedResources = []ResourceType{
