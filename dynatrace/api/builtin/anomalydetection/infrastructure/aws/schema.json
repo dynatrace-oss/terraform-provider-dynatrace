@@ -1,0 +1,818 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace automatically detects infrastructure-related performance anomalies such as high CPU saturation, memory outages, and low disk-space conditions. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for infrastructure components.",
+	"displayName": "Anomaly detection for AWS",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"detectionMode": {
+			"description": "",
+			"displayName": "Detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic",
+					"value": "auto"
+				},
+				{
+					"displayName": "Based on custom settings",
+					"value": "custom"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"ec2CandidateHighCpuDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Ec2CandidateHighCpuDetectionConfig"
+			}
+		},
+		"elbHighConnectionErrorsDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ElbHighConnectionErrorsDetectionConfig"
+			}
+		},
+		"lambdaHighErrorRateDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/LambdaHighErrorRateDetectionConfig"
+			}
+		},
+		"rdsHighCpuDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RdsHighCpuDetectionConfig"
+			}
+		},
+		"rdsHighMemoryDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RdsHighMemoryDetectionConfig"
+			}
+		},
+		"rdsHighWriteReadLatencyDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RdsHighWriteReadLatencyDetectionConfig"
+			}
+		},
+		"rdsLowStorageDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RdsLowStorageDetectionConfig"
+			}
+		},
+		"rdsRestartsSequenceDetection": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RdsRestartsSequenceDetectionConfig"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection.infrastructure",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.infrastructure-aws",
+	"types": {
+		"Ec2CandidateHighCpuDetectionConfig": {
+			"description": "",
+			"displayName": "High CPU saturation on EC2 monitoring candidate",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/Ec2CandidateHighCpuDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high CPU saturation on EC2 monitoring candidate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Ec2CandidateHighCpuDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "Ec2CandidateHighCpuDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"cpuUsage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 95,
+					"description": "",
+					"displayName": "CPU usage is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ElbHighConnectionErrorsDetectionConfig": {
+			"description": "",
+			"displayName": "High number of backend connection errors on ELB",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ElbHighConnectionErrorsDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high number of backend connection errors on ELB",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ElbHighConnectionErrorsDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "ElbHighConnectionErrorsDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"connectionErrorsPerMinute": {
+					"constraints": [
+						{
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "Number of backend connection errors is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"LambdaHighErrorRateDetectionConfig": {
+			"description": "",
+			"displayName": "AWS Lambda high error rate",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/LambdaHighErrorRateDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect AWS Lambda high error rate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"LambdaHighErrorRateDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "LambdaHighErrorRateDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"failedInvocationsRate": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Failed invocations rate is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighCpuDetectionConfig": {
+			"description": "",
+			"displayName": "High CPU utilization on RDS",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/RdsHighCpuDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high CPU utilization on RDS",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighCpuDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "RdsHighCpuDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"cpuUsage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 95,
+					"description": "",
+					"displayName": "CPU usage is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighMemoryDetectionConfig": {
+			"description": "",
+			"displayName": "RDS running out of memory",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if **both** conditions is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/RdsHighMemoryDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect RDS running out of memory",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighMemoryDetectionThresholds": {
+			"description": "Alert if **both** conditions is met in 3 out of 5 samples",
+			"displayName": "RdsHighMemoryDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"freeMemory": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0.01,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "Freeable memory is lower than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "MB"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"swapUsage": {
+					"constraints": [
+						{
+							"maximum": 1000,
+							"minimum": 0.01,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Swap usage is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "GB"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighWriteReadLatencyDetectionConfig": {
+			"description": "",
+			"displayName": "High RDS write/read latency",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/RdsHighWriteReadLatencyDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect high RDS write/read latency",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsHighWriteReadLatencyDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "RdsHighWriteReadLatencyDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"readWriteLatency": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 200,
+					"description": "",
+					"displayName": "Read/write latency is higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsLowStorageDetectionConfig": {
+			"description": "",
+			"displayName": "Low free storage space on RDS",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 3 out of 5 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/RdsLowStorageDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect low free storage space on RDS",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsLowStorageDetectionThresholds": {
+			"description": "Alert if the condition is met in 3 out of 5 samples",
+			"displayName": "RdsLowStorageDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"freeStoragePercentage": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Free storage space divided by allocated storage is lower than",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "percentage",
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsRestartsSequenceDetectionConfig": {
+			"description": "",
+			"displayName": "Restarts sequence on RDS",
+			"documentation": "",
+			"properties": {
+				"customThresholds": {
+					"description": "Alert if the condition is met in 2 out of 20 samples",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "detectionMode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/RdsRestartsSequenceDetectionThresholds"
+					}
+				},
+				"detectionMode": {
+					"default": "auto",
+					"description": "",
+					"displayName": "Detection mode",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/detectionMode"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Detect restarts sequence on RDS",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RdsRestartsSequenceDetectionThresholds": {
+			"description": "Alert if the condition is met in 2 out of 20 samples",
+			"displayName": "RdsRestartsSequenceDetectionThresholds",
+			"documentation": "",
+			"properties": {
+				"restartsPerMinute": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Number of restarts per minute is equal or higher than",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "/min"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

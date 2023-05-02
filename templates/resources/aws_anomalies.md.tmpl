@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_aws_anomalies Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_aws_anomalies` covers configuration for AWS anomaly detection
+---
+
+# dynatrace_aws_anomalies (Resource)
+
+## Dynatrace Documentation
+
+- Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/platform/davis-ai/anomaly-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:anomaly-detection.infrastructure-aws`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_aws_anomalies` downloads all existing AWS anomaly detection configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/anomalydetection/infrastructure/aws/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

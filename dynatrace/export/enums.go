@@ -259,6 +259,7 @@ var ResourceTypes = struct {
 	Kubernetes                          ResourceType
 	CloudFoundry                        ResourceType
 	DiskAnomalyDetectionRules           ResourceType
+	AWSAnomalies                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_custom_service",
@@ -463,6 +464,7 @@ var ResourceTypes = struct {
 	"dynatrace_kubernetes",
 	"dynatrace_cloud_foundry",
 	"dynatrace_disk_anomaly_rules",
+	"dynatrace_aws_anomalies",
 }
 
 type ResourceStatus string
