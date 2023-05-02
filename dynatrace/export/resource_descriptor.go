@@ -24,6 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/diskrules"
 	disk_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	disk_specific_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
 	host_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts"
@@ -873,6 +874,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.CloudFoundry: NewResourceDescriptor(cloudfoundryv2.Service),
+	ResourceTypes.DiskAnomalyDetectionRules: NewResourceDescriptor(
+		diskrules.Service,
+		Coalesce(Dependencies.HostGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -909,6 +914,7 @@ var BlackListedResources = []ResourceType{
 
 	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
 	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
+	ResourceTypes.DiskEventAnomalies,      // overlap with Settings 2.0 ResourceTypes.DiskAnomalyDetectionRules
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

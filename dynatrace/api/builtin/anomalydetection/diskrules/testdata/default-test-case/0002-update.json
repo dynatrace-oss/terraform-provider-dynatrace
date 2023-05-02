@@ -1,0 +1,15 @@
+{
+  "diskNameFilter": {
+    "operator": "CONTAINS",
+    "value": "${ranmdomize}"
+  },
+  "enabled": true,
+  "hostGroupId": "environment",
+  "metric": "LOW_DISK_SPACE",
+  "name": "${ranmdomize}",
+  "sampleLimit": {
+    "samples": 3,
+    "violatingSamples": 3
+  },
+  "thresholdPercent": 10
+}

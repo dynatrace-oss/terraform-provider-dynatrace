@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_disk_anomaly_rules Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_disk_anomaly_rules` covers configuration for disk anomaly detection rules 
+---
+
+# dynatrace_disk_anomaly_rules (Resource)
+
+## Dynatrace Documentation
+
+- Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:anomaly-detection.disk-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_disk_anomaly_rules` downloads all existing disk anomaly detection rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/anomalydetection/diskrules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

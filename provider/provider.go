@@ -350,6 +350,7 @@ func Provider() *schema.Provider {
 			"dynatrace_application_detection_rule_v2":      resources.NewGeneric(export.ResourceTypes.ApplicationDetectionV2).Resource(),
 			"dynatrace_kubernetes":                         resources.NewGeneric(export.ResourceTypes.Kubernetes).Resource(),
 			"dynatrace_cloud_foundry":                      resources.NewGeneric(export.ResourceTypes.CloudFoundry).Resource(),
+			"dynatrace_disk_anomaly_rules":                 resources.NewGeneric(export.ResourceTypes.DiskAnomalyDetectionRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

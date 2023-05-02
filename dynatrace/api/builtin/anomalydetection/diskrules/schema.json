@@ -1,0 +1,323 @@
+{
+	"allowedScopes": [
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace automatically detects infrastructure-related performance anomalies such as low disk-space conditions. Use these settings (and the [Infrastructure settings](/ui/settings/builtin:anomaly-detection.infrastructure-disks \"Visit Infrastructure anomaly detection settings\")) to configure detection sensitivity, set alert thresholds, or disable alerting for disks.",
+	"displayName": "Disk anomaly detection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"DiskMetric": {
+			"description": "",
+			"displayName": "DiskMetric",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "low disk space",
+					"value": "LOW_DISK_SPACE"
+				},
+				{
+					"displayName": "low number of inodes available",
+					"value": "LOW_INODES"
+				},
+				{
+					"displayName": "read time exceeding",
+					"value": "READ_TIME_EXCEEDING"
+				},
+				{
+					"displayName": "write time exceeding",
+					"value": "WRITE_TIME_EXCEEDING"
+				}
+			],
+			"type": "enum"
+		},
+		"DiskNameFilterOperator": {
+			"description": "",
+			"displayName": "DiskNameFilterOperator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "does not start with",
+					"value": "DOES_NOT_START_WITH"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"diskNameFilter": {
+			"description": "Only apply to disks whose name matches",
+			"displayName": "Disk name filter",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DiskNameFilter"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"metric": {
+			"default": "LOW_DISK_SPACE",
+			"description": "",
+			"displayName": "Metric to alert on",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/DiskMetric"
+			}
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"sampleLimit": {
+			"description": "Only alert if the threshold was violated in at least *n* of the last *m* samples",
+			"displayName": "Sample limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SampleLimit"
+			}
+		},
+		"tagFilters": {
+			"description": "Only apply to hosts that have the following tags",
+			"displayName": "Host filter",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"customValidatorId": "universal-tag-validator",
+						"type": "CUSTOM_VALIDATOR_REF"
+					},
+					{
+						"maxLength": 500,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"subType": "tag",
+				"type": "text"
+			},
+			"maxObjects": 3,
+			"metadata": {
+				"addItemButton": "Add tag"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"thresholdMilliseconds": {
+			"constraints": [
+				{
+					"maximum": 1000,
+					"type": "RANGE"
+				}
+			],
+			"default": 100,
+			"description": "",
+			"displayName": "Alert if higher than",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "ms"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"READ_TIME_EXCEEDING",
+					"WRITE_TIME_EXCEEDING"
+				],
+				"property": "metric",
+				"type": "IN"
+			},
+			"type": "float"
+		},
+		"thresholdPercent": {
+			"constraints": [
+				{
+					"maximum": 100,
+					"type": "RANGE"
+				}
+			],
+			"default": 10,
+			"description": "",
+			"displayName": "Alert if lower than",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"LOW_DISK_SPACE",
+					"LOW_INODES"
+				],
+				"property": "metric",
+				"type": "IN"
+			},
+			"subType": "percentage",
+			"type": "float"
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection.infrastructure",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.disk-rules",
+	"types": {
+		"DiskNameFilter": {
+			"description": "",
+			"displayName": "DiskNameFilter",
+			"documentation": "",
+			"properties": {
+				"operator": {
+					"default": "CONTAINS",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/DiskNameFilterOperator"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Matching text",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SampleLimit": {
+			"constraints": [
+				{
+					"properties": [
+						"violatingSamples",
+						"samples"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "SampleLimit",
+			"documentation": "",
+			"properties": {
+				"samples": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 3,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "... within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "samples"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "Minimum number of violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "samples"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}
