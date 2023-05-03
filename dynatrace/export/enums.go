@@ -70,6 +70,7 @@ var ResourceTypes = struct {
 	MaintenanceWindow                   ResourceType
 	ManagementZone                      ResourceType
 	SLO                                 ResourceType
+	SLOV2                               ResourceType
 	SpanAttribute                       ResourceType
 	SpanCaptureRule                     ResourceType
 	SpanContextPropagation              ResourceType
@@ -276,6 +277,7 @@ var ResourceTypes = struct {
 	"dynatrace_maintenance_window",
 	"dynatrace_management_zone",
 	"dynatrace_slo",
+	"dynatrace_slo_v2",
 	"dynatrace_span_attribute",
 	"dynatrace_span_capture_rule",
 	"dynatrace_span_context_propagation",

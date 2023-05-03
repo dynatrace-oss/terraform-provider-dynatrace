@@ -353,6 +353,7 @@ func Provider() *schema.Provider {
 			"dynatrace_disk_anomaly_rules":                 resources.NewGeneric(export.ResourceTypes.DiskAnomalyDetectionRules).Resource(),
 			"dynatrace_aws_anomalies":                      resources.NewGeneric(export.ResourceTypes.AWSAnomalies).Resource(),
 			"dynatrace_vmware_anomalies":                   resources.NewGeneric(export.ResourceTypes.VMwareAnomalies).Resource(),
+			"dynatrace_slo_v2":                             resources.NewGeneric(export.ResourceTypes.SLOV2).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

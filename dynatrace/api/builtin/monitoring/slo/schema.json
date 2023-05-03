@@ -1,0 +1,308 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Warning must be larger than the target",
+			"properties": [
+				"targetWarning",
+				"targetSuccess"
+			],
+			"type": "GREATER_THAN"
+		}
+	],
+	"description": "Define custom [Service-level objectives](https://dt-url.net/slos) (SLOs) to assist in fulfilling your organization’s service-level agreements. Create up to 10000 custom SLOs for this Dynatrace environment.",
+	"displayName": "Service-level objective definitions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"SloEvaluationType": {
+			"description": "",
+			"displayName": "SloEvaluationType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Aggregate",
+					"value": "AGGREGATE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 10000,
+	"metadata": {
+		"addItemButton": "Add new SLO"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"customDescription": {
+			"constraints": [
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "The description of the SLO",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"errorBudgetBurnRate": {
+			"description": "### Error budget burn rate",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ErrorBudgetBurnRate"
+			}
+		},
+		"evaluationType": {
+			"default": "AGGREGATE",
+			"description": "Select \"Aggregate\" to have the measurements of this success metric aggregated into a single percentage-rate metric.",
+			"displayName": "Evaluation type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/SloEvaluationType"
+			}
+		},
+		"evaluationWindow": {
+			"constraints": [
+				{
+					"maxLength": 50,
+					"minLength": 3,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Given SLO timeframe is invalid.",
+					"customValidatorId": "slo-timeframe-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "-1w",
+			"description": "Define the timeframe during which the SLO is to be evaluated. For the timeframe you can enter expressions like -1h (last hour), -1w (last week) or complex expressions like -2d to now (last two days), -1d/d to now/d (beginning of yesterday to beginning of today).",
+			"displayName": "Timeframe during which the SLO is to be evaluated",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"filter": {
+			"constraints": [
+				{
+					"maxLength": 1000,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Given filter is invalid.",
+					"customValidatorId": "slo-entity-selector-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Set a filter parameter (entitySelector) on any GET call to evaluate this SLO against specific services only (for example, type(\"SERVICE\")).  For details, see the [Entity Selector documentation](https://dt-url.net/entityselector).",
+			"displayName": "Entity selector",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Optional for admins"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"metricExpression": {
+			"constraints": [
+				{
+					"customMessage": "Metric selector is invalid.",
+					"customValidatorId": "slo-metric-selector-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 5000,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Leading and trailing whitespaces are not allowed.",
+					"type": "TRIMMED"
+				}
+			],
+			"default": "",
+			"description": "For details, see the [Metrics page](/ui/metrics \"Metrics page\").",
+			"displayName": "Define the metric expression that measures the success rate of this SLO",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "metric-no-validator",
+			"type": "text"
+		},
+		"metricName": {
+			"constraints": [
+				{
+					"maxLength": 220,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "slo-metric-name-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "new_slo",
+			"description": "",
+			"displayName": "Metric name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "New SLO",
+			"description": "",
+			"displayName": "SLO name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"targetSuccess": {
+			"constraints": [
+				{
+					"maximum": 100,
+					"minimum": 0,
+					"type": "RANGE"
+				}
+			],
+			"default": 99.98,
+			"description": "Set the target value of the SLO. A percentage below this value indicates a failure.",
+			"displayName": "Target percentage",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "percentage",
+			"type": "float"
+		},
+		"targetWarning": {
+			"constraints": [
+				{
+					"maximum": 100,
+					"minimum": 0,
+					"type": "RANGE"
+				}
+			],
+			"default": 99.99,
+			"description": "Set the warning value of the SLO. At the warning state the SLO is fulfilled. However, it is getting close to a failure.",
+			"displayName": "Warning percentage",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "percentage",
+			"type": "float"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-automation.monitoring.slo",
+		"group:cloud-automation"
+	],
+	"schemaId": "builtin:monitoring.slo",
+	"types": {
+		"ErrorBudgetBurnRate": {
+			"description": "",
+			"displayName": "ErrorBudgetBurnRate",
+			"documentation": "",
+			"properties": {
+				"burnRateVisualizationEnabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Burn rate visualization enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fastBurnThreshold": {
+					"constraints": [
+						{
+							"minimum": 1.01,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "The threshold defines when a burn rate is marked as fast-burning (high-emergency). Burn rates lower than this threshold (and greater than 1) are highlighted as slow-burn (low-emergency).",
+					"displayName": "Fast-burn threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "burnRateVisualizationEnabled",
+						"type": "EQUALS"
+					},
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FlagDefaultTrue": {
+			"description": "",
+			"displayName": "FlagDefaultTrue",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "6.0.11"
+}

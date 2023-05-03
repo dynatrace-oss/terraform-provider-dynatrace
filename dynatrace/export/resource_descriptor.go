@@ -95,6 +95,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
+	slov2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/nettracer/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
@@ -895,6 +896,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.AWSAnomalies:    NewResourceDescriptor(aws_anomalies.Service),
 	ResourceTypes.VMwareAnomalies: NewResourceDescriptor(vmware_anomalies.Service),
+	ResourceTypes.SLOV2: NewResourceDescriptor(
+		slov2.Service,
+		Dependencies.ManagementZone,
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -932,6 +939,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
 	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
 	ResourceTypes.DiskEventAnomalies,      // overlap with Settings 2.0 ResourceTypes.DiskAnomalyDetectionRules
+	ResourceTypes.SLO,                     // overlap with Settings 2.0 ResourceTypes.SLOV2
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
