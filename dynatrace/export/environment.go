@@ -317,6 +317,11 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 				return err
 			}
 		}
+		if len(module.GetResourcesReferencedFromOtherModules()) == 0 {
+			if err = module.PurgeFolder(); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -414,6 +419,9 @@ func (me *Environment) WriteMainFile() error {
 			continue
 		}
 		if me.Module(resourceType).Descriptor.Parent != nil {
+			continue
+		}
+		if len(me.Module(resourceType).GetResourcesReferencedFromOtherModules()) == 0 {
 			continue
 		}
 		mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resourceType.Trim()))
