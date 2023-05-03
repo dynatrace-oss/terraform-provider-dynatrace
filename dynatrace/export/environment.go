@@ -190,6 +190,10 @@ func (me *Environment) Finish() (err error) {
 	if err = me.WriteProviderFiles(); err != nil {
 		return err
 	}
+	// for _, module := range me.Modules {
+	// 	fmt.Println(module.Type, len(module.GetPostProcessedResources()))
+	// }
+
 	if err = me.RemoveNonReferencedModules(); err != nil {
 		return err
 	}
@@ -317,7 +321,7 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 				return err
 			}
 		}
-		if len(module.GetResourcesReferencedFromOtherModules()) == 0 {
+		if len(module.GetPostProcessedResources()) == 0 {
 			if err = module.PurgeFolder(); err != nil {
 				return err
 			}
@@ -421,7 +425,7 @@ func (me *Environment) WriteMainFile() error {
 		if me.Module(resourceType).Descriptor.Parent != nil {
 			continue
 		}
-		if len(me.Module(resourceType).GetResourcesReferencedFromOtherModules()) == 0 {
+		if len(me.Module(resourceType).GetPostProcessedResources()) == 0 {
 			continue
 		}
 		mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resourceType.Trim()))

@@ -430,6 +430,16 @@ func (me *Module) GetNonPostProcessedResources() []*Resource {
 	return resources
 }
 
+func (me *Module) GetPostProcessedResources() []*Resource {
+	resources := []*Resource{}
+	for _, resource := range me.Resources {
+		if resource.Status == ResourceStati.PostProcessed {
+			resources = append(resources, resource)
+		}
+	}
+	return resources
+}
+
 func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 	if shutdown.System.Stopped() {
 		return nil
