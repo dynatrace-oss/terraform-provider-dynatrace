@@ -205,6 +205,7 @@ func (me *Module) WriteProviderFile() (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
+	fmt.Println("- " + me.Type)
 	if err = me.MkdirAll(false); err != nil {
 		return err
 	}
@@ -257,7 +258,7 @@ func (me *Module) WriteVariablesFile() (err error) {
 	if len(referencedResourceTypes) == 0 {
 		return nil
 	}
-
+	fmt.Println("- " + me.Type)
 	var variablesFile *os.File
 	if variablesFile, err = me.CreateFile("___variables___.tf"); err != nil {
 		return err
@@ -298,7 +299,7 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	if me.Environment.Flags.Flat {
 		return nil
 	}
-
+	fmt.Println("- " + me.Type)
 	var datasourcesFile *os.File
 	if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
 		return err

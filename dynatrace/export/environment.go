@@ -132,16 +132,24 @@ func (me *Environment) PostProcess() error {
 			reslist = append(reslist, resource)
 			m[resource.Type] = reslist
 		}
+		const ClearLine = "\033[2K"
 		for k, reslist := range m {
-			fmt.Println("- " + k)
-			for _, resource := range reslist {
+			fmt.Printf("- %s (0 of %d)", k, len(reslist))
+			for idx, resource := range reslist {
 				if shutdown.System.Stopped() {
 					return nil
 				}
 				if err := resource.PostProcess(); err != nil {
 					return err
 				}
+				fmt.Print(ClearLine)
+				fmt.Print("\r")
+				fmt.Printf("- %s (%d of %d)", k, idx+1, len(reslist))
+
 			}
+			fmt.Print(ClearLine)
+			fmt.Print("\r")
+			fmt.Printf("- %s\n", k)
 		}
 
 		resources = me.GetNonPostProcessedResources()
@@ -266,6 +274,8 @@ func (me *Environment) GetChildResources() []*Resource {
 }
 
 func (me *Environment) WriteDataSourceFiles() (err error) {
+	fmt.Println("Writing ___datasources___.tf")
+
 	if me.Flags.Flat {
 		dataSources := map[string]*DataSource{}
 		for _, module := range me.Modules {
@@ -306,6 +316,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 	if me.Flags.Flat {
 		return nil
 	}
+	fmt.Println("Writing ___resources___.tf")
 	for _, module := range me.Modules {
 		if err = module.WriteResourcesFile(); err != nil {
 			return err
@@ -331,6 +342,8 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 }
 
 func (me *Environment) WriteProviderFiles() (err error) {
+	fmt.Println("Writing ___providers___.tf")
+
 	var outputFile *os.File
 	if outputFile, err = me.CreateFile("___providers___.tf"); err != nil {
 		return err
@@ -374,6 +387,7 @@ func (me *Environment) WriteProviderFiles() (err error) {
 }
 
 func (me *Environment) WriteVariablesFiles() (err error) {
+	fmt.Println("Writing ___variables___.tf")
 	for _, module := range me.Modules {
 		if err = module.WriteVariablesFile(); err != nil {
 			return err
@@ -402,6 +416,8 @@ func (me *Environment) WriteMainFile() error {
 	if me.Flags.Flat {
 		return nil
 	}
+	fmt.Println("Writing main.tf")
+
 	var err error
 	var mainFile *os.File
 	if mainFile, err = os.Create(path.Join(me.OutputFolder, "main.tf")); err != nil {
