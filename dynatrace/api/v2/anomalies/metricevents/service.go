@@ -30,7 +30,7 @@ const SchemaID = "builtin:anomaly-detection.metric-events"
 const SchemaVersion = "1.0.3"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*metricevents.MetricEvents] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.MetricEvents]{Duplicates: Duplicates})
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.MetricEvents]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
 func Duplicates(service settings.RService[*metricevents.MetricEvents], v *metricevents.MetricEvents) (*api.Stub, error) {

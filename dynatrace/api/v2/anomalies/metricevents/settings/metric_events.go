@@ -30,7 +30,7 @@ type MetricEvents struct {
 	ModelProperties         *ModelProperties `json:"modelProperties"`                   // The model properties of the metric event entry
 	EventTemplate           *EventTemplate   `json:"eventTemplate"`                     // The event template of the metric event entry
 	EventEntityDimensionKey *string          `json:"eventEntityDimensionKey,omitempty"` // Controls the preferred entity type used for triggered events.
-	LegacyId                *string          `json:"legacyId,omitempty"`                // The legacy id of the metric event entry
+	LegacyID                *string          `json:"-"`                                 // The legacy id of the metric event entry
 }
 
 func (me *MetricEvents) Name() string {
@@ -82,6 +82,7 @@ func (me *MetricEvents) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The legacy id of the metric event entry",
 			Optional:    true,
+			Computed:    true,
 		},
 	}
 }
@@ -94,7 +95,7 @@ func (me *MetricEvents) MarshalHCL(properties hcl.Properties) error {
 		"model_properties":           me.ModelProperties,
 		"event_template":             me.EventTemplate,
 		"event_entity_dimension_key": me.EventEntityDimensionKey,
-		"legacy_id":                  me.LegacyId,
+		"legacy_id":                  me.LegacyID,
 	})
 }
 
@@ -106,6 +107,6 @@ func (me *MetricEvents) UnmarshalHCL(decoder hcl.Decoder) error {
 		"model_properties":           &me.ModelProperties,
 		"event_template":             &me.EventTemplate,
 		"event_entity_dimension_key": &me.EventEntityDimensionKey,
-		"legacy_id":                  &me.LegacyId,
+		"legacy_id":                  &me.LegacyID,
 	})
 }
