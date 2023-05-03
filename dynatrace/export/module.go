@@ -244,6 +244,9 @@ func (me *Module) WriteVariablesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
+	if me.Descriptor.Parent != nil {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}
@@ -287,6 +290,9 @@ func (me *Module) WriteVariablesFile() (err error) {
 
 func (me *Module) WriteDataSourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
+		return nil
+	}
+	if me.Descriptor.Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -346,6 +352,9 @@ func (me *Module) WriteResourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
+	if me.Descriptor.Parent != nil {
+		return nil
+	}
 	if me.Environment.Flags.Flat {
 		return nil
 	}
@@ -399,6 +408,16 @@ func (me *Module) RefersTo(resource *Resource) bool {
 		}
 	}
 	return false
+}
+
+func (me *Module) GetChildResources() []*Resource {
+	resources := []*Resource{}
+	for _, resource := range me.Resources {
+		if resource.Status == ResourceStati.PostProcessed && resource.Parent != nil {
+			resources = append(resources, resource)
+		}
+	}
+	return resources
 }
 
 func (me *Module) GetNonPostProcessedResources() []*Resource {

@@ -146,6 +146,27 @@ func (me *Environment) PostProcess() error {
 
 		resources = me.GetNonPostProcessedResources()
 	}
+
+	for _, resource := range me.GetChildResources() {
+
+		var parentBytes []byte
+		var childBytes []byte
+		var err error
+		if parentBytes, err = resource.Parent.ReadFile(); err != nil {
+			return err
+		}
+		if childBytes, err = resource.ReadFile(); err != nil {
+			return err
+		}
+		var parentFile *os.File
+		if parentFile, err = resource.Parent.CreateFile(); err != nil {
+			return err
+		}
+		defer parentFile.Close()
+		parentFile.Write(parentBytes)
+		parentFile.Write([]byte("\n\n"))
+		parentFile.Write(childBytes)
+	}
 	return nil
 }
 
@@ -230,6 +251,16 @@ func (me *Environment) GetNonPostProcessedResources() []*Resource {
 	return resources
 }
 
+func (me *Environment) GetChildResources() []*Resource {
+	resources := []*Resource{}
+	for _, module := range me.Modules {
+		if module.Descriptor.Parent != nil {
+			resources = append(resources, module.GetChildResources()...)
+		}
+	}
+	return resources
+}
+
 func (me *Environment) WriteDataSourceFiles() (err error) {
 	if me.Flags.Flat {
 		dataSources := map[string]*DataSource{}
@@ -281,7 +312,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 
 func (me *Environment) RemoveNonReferencedModules() (err error) {
 	for _, module := range me.Modules {
-		if module.IsReferencedAsDataSource() {
+		if module.IsReferencedAsDataSource() || module.Descriptor.Parent != nil {
 			if err = module.PurgeFolder(); err != nil {
 				return err
 			}
@@ -380,6 +411,9 @@ func (me *Environment) WriteMainFile() error {
 	for _, sResourceType := range sResourceTypes {
 		resourceType := ResourceType(sResourceType)
 		if me.Module(resourceType).IsReferencedAsDataSource() {
+			continue
+		}
+		if me.Module(resourceType).Descriptor.Parent != nil {
 			continue
 		}
 		mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resourceType.Trim()))

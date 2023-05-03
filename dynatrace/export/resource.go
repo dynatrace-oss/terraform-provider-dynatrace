@@ -44,6 +44,7 @@ type Resource struct {
 	DataSourceReferences []*DataSource
 	OutputFileAbs        string
 	Flawed               bool
+	Parent               *Resource
 }
 
 func (me *Resource) IsReferencedAsDataSource() bool {
@@ -312,6 +313,7 @@ func (me *Resource) PostProcess() error {
 					if err = typedItem.Download(); err != nil {
 						return err
 					}
+					me.Parent = typedItem
 					me.ResourceReferences = append(me.ResourceReferences, typedItem)
 				case *DataSource:
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)

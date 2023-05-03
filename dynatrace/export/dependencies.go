@@ -42,6 +42,7 @@ var Dependencies = struct {
 	ManagementZone            Dependency
 	LegacyID                  func(resourceType ResourceType) Dependency
 	ID                        func(resourceType ResourceType) Dependency
+	ResourceID                func(resourceType ResourceType) Dependency
 	ServiceMethod             Dependency
 	Service                   Dependency
 	HostGroup                 Dependency
@@ -64,6 +65,7 @@ var Dependencies = struct {
 	ManagementZone:            &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:                  func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
 	ID:                        func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
+	ResourceID:                func(resourceType ResourceType) Dependency { return &resourceIDDep{resourceType} },
 	ServiceMethod:             &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
 	Service:                   &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
 	HostGroup:                 &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
@@ -247,6 +249,56 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 			found = true
 		}
 		if found {
+			resources = append(resources, resource)
+		}
+	}
+	return s, resources
+}
+
+type resourceIDDep struct {
+	resourceType ResourceType
+}
+
+func (me *resourceIDDep) ResourceType() ResourceType {
+	return me.resourceType
+}
+
+func (me *resourceIDDep) DataSourceType() DataSourceType {
+	return ""
+}
+
+func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+	replacePattern := "${%s.%s.id}"
+	resources := []any{}
+	for id, resource := range environment.Module(me.resourceType).Resources {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+		if resource.Type == replacingIn {
+			replacePattern = "${%s.%s.id}"
+		} else {
+			if resource.IsReferencedAsDataSource() {
+				resOrDsType = func() string {
+					return string(me.resourceType.AsDataSource())
+				}
+				replacePattern = "${data.%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${data.%s.%s.id}"
+				}
+			} else {
+				replacePattern = "${%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${%s.%s.id}"
+				}
+			}
+		}
+		found := false
+		if strings.Contains(s, id) {
+			s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
+			found = true
+		}
+		if found {
+
 			resources = append(resources, resource)
 		}
 	}

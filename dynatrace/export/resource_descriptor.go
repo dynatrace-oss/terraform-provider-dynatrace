@@ -246,6 +246,17 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Cr
 	}
 }
 
+func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
+	return ResourceDescriptor{
+		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+		},
+		protoType:    newSettings(fn),
+		Dependencies: dependencies,
+		Parent:       &parent,
+	}
+}
+
 func newSettings[T settings.Settings](sfn func(credentials *settings.Credentials) settings.CRUDService[T]) T {
 	var proto T
 	return reflect.New(reflect.TypeOf(proto).Elem()).Interface().(T)
@@ -256,6 +267,7 @@ type ResourceDescriptor struct {
 	Service      func(credentials *settings.Credentials) settings.CRUDService[settings.Settings]
 	protoType    settings.Settings
 	except       func(id string, name string) bool
+	Parent       *ResourceType
 }
 
 func (me ResourceDescriptor) Specify(t notifications.Type) ResourceDescriptor {
@@ -380,9 +392,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
 	),
-	ResourceTypes.DashboardSharing: NewResourceDescriptor(
+	ResourceTypes.DashboardSharing: NewChildResourceDescriptor(
 		sharing.Service,
-		Dependencies.ID(ResourceTypes.JSONDashboard),
+		ResourceTypes.JSONDashboard,
+		Dependencies.ResourceID(ResourceTypes.JSONDashboard),
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),
