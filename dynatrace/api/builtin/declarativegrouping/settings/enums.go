@@ -36,7 +36,7 @@ var ReportItems = struct {
 	Highresourceusage ReportItem
 	Never             ReportItem
 }{
-	"Always",
-	"HighResourceUsage",
-	"Never",
+	"always",
+	"highResourceUsage",
+	"never",
 }
