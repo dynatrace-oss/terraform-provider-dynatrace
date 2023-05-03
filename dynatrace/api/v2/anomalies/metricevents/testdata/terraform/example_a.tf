@@ -1,7 +1,6 @@
 resource "dynatrace_metric_events" "#name#" {
   enabled                    = true
   event_entity_dimension_key = "dt.entity.host"
-  legacy_id                  = "a848e7e2-7501-4025-9325-e08c259abf46"
   summary                    = "sample_name"
   event_template {
     description   = "some description"
