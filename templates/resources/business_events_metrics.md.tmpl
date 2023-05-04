@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_business_events_metrics Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_business_events_metrics` covers configuration for business event metric extraction
+---
+
+# dynatrace_business_events_metrics (Resource)
+
+## Dynatrace Documentation
+
+- Business event metric extraction - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-metric-extraction
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents-processing-metrics.rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_business_events_metrics` downloads all existing business event metric extractions
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/bizevents/processing/metrics/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

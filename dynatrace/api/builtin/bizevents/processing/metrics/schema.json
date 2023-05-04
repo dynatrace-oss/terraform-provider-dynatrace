@@ -1,0 +1,224 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "Measure cannot be changed, please create a new metric instead.",
+			"customValidatorId": "measure-not-changed-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "With [business event metrics](https://dt-url.net/m3034if), you can use queries to create custom alerts representing specific business event occurrences or attribute values.\n\n Note:\n- Newly defined business event metrics can only be applied to Business Event data ingested after metric creation.\n- Business Event metrics consume DDUs.\n\nFor complete details on pricing, visit [DDUs for custom metrics](https://dt-url.net/vg43xi8).",
+	"displayName": "Business event metric extraction",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Measure": {
+			"description": "",
+			"displayName": "Measure",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Occurrence of business event records",
+					"value": "OCCURRENCE"
+				},
+				{
+					"displayName": "Attribute value",
+					"value": "ATTRIBUTE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add business event metric"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"dimensions": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customMessage": "Dimension may contain only alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+						"pattern": "^[.a-zA-Z0-9_\\-]+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "A hyphen cannot be the first character of a part.",
+						"pattern": "^((?!\\.-).)+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "span_id cannot be a dimension",
+						"pattern": "^(?!span_id$).+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "trace_id cannot be a dimension",
+						"pattern": "^(?!trace_id$).+$",
+						"type": "PATTERN"
+					}
+				],
+				"description": "",
+				"displayName": "Dimension",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 50,
+			"metadata": {
+				"addItemButton": "Add dimension"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"key": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The metric key must begin with the 'bizevents.' prefix.",
+					"pattern": "^bizevents\\..+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "The metric key must contain at least two, non-empty parts separated by a dot.",
+					"pattern": "^[^.]+(\\.[^.]+?)+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Key may contain only alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.A-Za-z0-9_\\-]+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "A hyphen cannot be the first character of a part.",
+					"pattern": "^((?!\\.-).)+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "bizevents.",
+			"description": "",
+			"displayName": "Key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"matcher": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invalid DQL query",
+					"customValidatorId": "bizevents-dql-query-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "[See our documentation](https://dt-url.net/bp234rv)",
+			"displayName": "Matcher (DQL)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"measure": {
+			"default": "OCCURRENCE",
+			"description": "",
+			"displayName": "Measure",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Measure"
+			}
+		},
+		"measureAttribute": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Attribute may contain only alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.a-zA-Z0-9_\\-]+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "A hyphen cannot be the first character of a part.",
+					"pattern": "^((?!\\.-).)+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "span_id cannot be a dimension",
+					"pattern": "^(?!span_id$).+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "trace_id cannot be a dimension",
+					"pattern": "^(?!trace_id$).+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Attribute",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ATTRIBUTE",
+				"property": "measure",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:business-analytics",
+		"group:business-analytics.ingest-pipeline"
+	],
+	"schemaId": "builtin:bizevents-processing-metrics.rule",
+	"types": {},
+	"version": "1.0.1"
+}
