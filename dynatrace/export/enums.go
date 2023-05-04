@@ -264,6 +264,7 @@ var ResourceTypes = struct {
 	DiskAnomalyDetectionRules           ResourceType
 	AWSAnomalies                        ResourceType
 	VMwareAnomalies                     ResourceType
+	BusinessEventsOneAgent              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -473,6 +474,7 @@ var ResourceTypes = struct {
 	"dynatrace_disk_anomaly_rules",
 	"dynatrace_aws_anomalies",
 	"dynatrace_vmware_anomalies",
+	"dynatrace_business_events_oneagent",
 }
 
 type ResourceStatus string

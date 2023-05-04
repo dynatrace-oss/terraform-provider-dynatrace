@@ -1,0 +1,65 @@
+{
+  "enabled": true,
+  "event": {
+    "category": {
+      "sourceType": "request.path"
+    },
+    "data": [
+      {
+        "name": "req content-type",
+        "source": {
+          "path": "content-type",
+          "sourceType": "request.headers"
+        }
+      },
+      {
+        "name": "rsbody",
+        "source": {
+          "path": "*",
+          "sourceType": "response.body"
+        }
+      },
+      {
+        "name": "query",
+        "source": {
+          "path": "match",
+          "sourceType": "request.parameters"
+        }
+      },
+      {
+        "name": "technology",
+        "source": {
+          "source": "java",
+          "sourceType": "constant.string"
+        }
+      },
+      {
+        "name": "res content-type",
+        "source": {
+          "path": "content-type",
+          "sourceType": "response.headers"
+        }
+      }
+    ],
+    "provider": {
+      "source": "www.easytravel.com",
+      "sourceType": "constant.string"
+    },
+    "type": {
+      "source": "com.easytravel.search-locations",
+      "sourceType": "constant.string"
+    }
+  },
+  "ruleName": "${randomize}",
+  "scope": "environment",
+  "triggers": [
+    {
+      "caseSensitive": false,
+      "source": {
+        "dataSource": "request.path"
+      },
+      "type": "STARTS_WITH",
+      "value": "/easytravel/rest/locations"
+    }
+  ]
+}

@@ -356,6 +356,7 @@ func Provider() *schema.Provider {
 			"dynatrace_vmware_anomalies":                   resources.NewGeneric(export.ResourceTypes.VMwareAnomalies).Resource(),
 			"dynatrace_slo_v2":                             resources.NewGeneric(export.ResourceTypes.SLOV2).Resource(),
 			"dynatrace_autotag_v2":                         resources.NewGeneric(export.ResourceTypes.AutoTagV2).Resource(),
+			"dynatrace_business_events_oneagent":           resources.NewGeneric(export.ResourceTypes.BusinessEventsOneAgent).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
