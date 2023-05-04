@@ -1,0 +1,282 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "bizevents-spectx-query-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Incoming business events can be transformed through processing rules using [this syntax](https://dt-url.net/pz030w5). Note that rules are processed sequentially, making the order important; a different rule order could give different results.",
+	"displayName": "Business event processing",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"TransformationFieldType": {
+			"description": "",
+			"displayName": "TransformationFieldType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "string",
+					"value": "STRING"
+				},
+				{
+					"displayName": "boolean",
+					"value": "BOOLEAN"
+				},
+				{
+					"displayName": "integer",
+					"value": "INT"
+				},
+				{
+					"displayName": "long",
+					"value": "LONG"
+				},
+				{
+					"displayName": "double",
+					"value": "DOUBLE"
+				},
+				{
+					"displayName": "duration",
+					"value": "DURATION"
+				},
+				{
+					"displayName": "timestamp",
+					"value": "TIMESTAMP"
+				},
+				{
+					"displayName": "ipaddr",
+					"value": "IPADDR"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"RuleTesting": {
+			"description": "## Rule testing\n### 1. Paste an event sample",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RuleTesting"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"matcher": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invalid DQL query",
+					"customValidatorId": "bizevents-dql-query-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "[See our documentation](https://dt-url.net/bp234rv)",
+			"displayName": "Matcher (DQL)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 4,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"script": {
+			"constraints": [
+				{
+					"maxLength": 50000,
+					"minLength": 2,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "[See our documentation](https://dt-url.net/pz030w5)",
+			"displayName": "Processor definition",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "code/spectx",
+			"type": "text"
+		},
+		"transformationFields": {
+			"description": "",
+			"displayName": "Transformation fields",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/TransformationField"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:business-analytics",
+		"group:business-analytics.ingest-pipeline"
+	],
+	"schemaId": "builtin:bizevents-processing-pipelines.rule",
+	"types": {
+		"RuleTesting": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"sampleEvent": {
+					"constraints": [
+						{
+							"maxLength": 80000,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "json-syntax-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "{\n\t\"id\": \"OR-838475\",\n\t\"paymentType\": \"paypal\",\n\t\"plannedDeliveryDate\": \"01.01.2021\",\n\t\"total\": 234\n}",
+					"description": "Sample event to use for the test run. Only JSON format is supported.",
+					"displayName": "Event sample",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Insert sample event for testing"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "code/json",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"TransformationField": {
+			"description": "",
+			"displayName": "TransformationField",
+			"documentation": "",
+			"properties": {
+				"array": {
+					"default": false,
+					"description": "",
+					"displayName": "Is Array",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"name": {
+					"constraints": [
+						{
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"optional": {
+					"default": false,
+					"description": "",
+					"displayName": "Optional",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"readonly": {
+					"default": true,
+					"description": "",
+					"displayName": "Read-only",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"type": {
+					"default": "STRING",
+					"description": "",
+					"displayName": "Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/TransformationFieldType"
+					}
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.6"
+}

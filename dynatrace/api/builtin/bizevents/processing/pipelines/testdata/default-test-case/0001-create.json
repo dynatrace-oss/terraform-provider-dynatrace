@@ -1,0 +1,18 @@
+{
+    "enabled": true,
+    "matcher": "matchesValue(event.type, \"com.easytrade.deposit-money\")",
+    "ruleName": "${randomize}",
+    "RuleTesting": {
+        "sampleEvent": "{\n\t\"id\": \"OR-838475\",\n\t\"paymentType\": \"paypal\",\n\t\"plannedDeliveryDate\": \"01.01.2021\",\n\t\"total\": 234\n}"
+    },
+    "script": "FIELDS_ADD(cvv: SHA1(cvv))",
+    "transformationFields": [
+        {
+            "array": false,
+            "name": "cvv",
+            "optional": false,
+            "readonly": false,
+            "type": "STRING"
+        }
+    ]
+}

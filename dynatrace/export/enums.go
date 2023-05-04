@@ -267,6 +267,7 @@ var ResourceTypes = struct {
 	BusinessEventsOneAgent              ResourceType
 	BusinessEventsBuckets               ResourceType
 	BusinessEventsMetrics               ResourceType
+	BusinessEventsProcessing            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -479,6 +480,7 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_oneagent",
 	"dynatrace_business_events_buckets",
 	"dynatrace_business_events_metrics",
+	"dynatrace_business_events_processing",
 }
 
 type ResourceStatus string
