@@ -29,9 +29,10 @@ type RuleTesting struct {
 func (me *RuleTesting) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"sample_log": {
-			Type:        schema.TypeString,
-			Description: "Sample log in JSON format.",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Sample log in JSON format.",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 	}
 }
