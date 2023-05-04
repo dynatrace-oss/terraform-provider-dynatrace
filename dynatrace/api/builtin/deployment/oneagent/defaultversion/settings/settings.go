@@ -58,7 +58,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if me.Revision == nil && !slices.Contains([]string{"latest"}, string(me.DefaultVersion)) {
-		return fmt.Errorf("'revision' must be specified if 'default_version' is set to '%v'", me.DefaultVersion)
+		return fmt.Errorf("'revision' must be specified if 'default_version' is not set to '%v'", me.DefaultVersion)
 	}
 	return nil
 }
