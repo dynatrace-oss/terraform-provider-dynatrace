@@ -794,11 +794,11 @@ func (me *Module) ExecuteImportV2(fs afero.Fs, seedType string) (stateObject int
 	waitGroup.Wait()
 
 	if shutdown.System.Stopped() {
-		return nil, fmt.Errorf("Import was stopped", errs)
+		return nil, fmt.Errorf("Import was stopped: %v", errs)
 	}
 
 	if len(errs) >= 1 {
-		return nil, fmt.Errorf("Error during state import", errs)
+		return nil, fmt.Errorf("Error during state import: %v", errs)
 	}
 
 	fmt.Print(ClearLine)

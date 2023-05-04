@@ -546,11 +546,11 @@ func (me *Environment) executeImportV2() error {
 	close(channel)
 	waitGroup.Wait()
 	if shutdown.System.Stopped() {
-		return errors.New("import was stopped")
+		return fmt.Errorf("Import was stopped: %v", errs)
 	}
 
 	if len(errs) >= 1 {
-		return fmt.Errorf("Error during state import", errs)
+		return fmt.Errorf("Error during state import: %v", errs)
 	}
 
 	bytes, err := json.MarshalIndent(newStateObject, "", "  ")
