@@ -1,0 +1,6 @@
+{
+  "bucketName": "default_logs",
+  "enabled": true,
+  "matcher": "*",
+  "ruleName": "default"
+}

@@ -1,0 +1,110 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Logs in Dynatrace can be stored in different buckets. The first user-defined rule that matches will assign the bucket. If none matches, the default one will be used.",
+	"displayName": "Log buckets",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"bucketName": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "bucket-configuration-data-source",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "default_logs_drop",
+			"description": "A 'bucket' is the length of time your logs will be stored. Select the bucket that's best for you.",
+			"displayName": "Bucket",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"autoSelectFirst": "enabled",
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"matcher": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invalid DQL query",
+					"customValidatorId": "log-bucket-matcher-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Matcher (DQL)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 4,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring.analysis",
+		"group:log-monitoring"
+	],
+	"schemaId": "builtin:logmonitoring.log-buckets-rules",
+	"types": {},
+	"version": "1.0.3"
+}

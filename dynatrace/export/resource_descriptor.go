@@ -70,6 +70,7 @@ import (
 	issuetracking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
 	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
@@ -828,6 +829,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogGrail:                   NewResourceDescriptor(logsongrailactivate.Service),
 	ResourceTypes.LogCustomAttribute:         NewResourceDescriptor(logcustomattributes.Service),
 	ResourceTypes.LogSensitiveDataMasking:    NewResourceDescriptor(sensitivedatamasking.Service),
+	ResourceTypes.LogBuckets:                 NewResourceDescriptor(logbucketsrules.Service),
 	ResourceTypes.EULASettings:               NewResourceDescriptor(eulasettings.Service),
 	ResourceTypes.APIDetectionRules:          NewResourceDescriptor(apidetection.Service),
 	ResourceTypes.ServiceExternalWebRequest:  NewResourceDescriptor(externalwebrequest.Service),

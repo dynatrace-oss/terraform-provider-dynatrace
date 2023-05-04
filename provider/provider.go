@@ -319,6 +319,7 @@ func Provider() *schema.Provider {
 			"dynatrace_log_custom_attribute":               resources.NewGeneric(export.ResourceTypes.LogCustomAttribute).Resource(),
 			"dynatrace_log_sensitive_data_masking":         resources.NewGeneric(export.ResourceTypes.LogSensitiveDataMasking).Resource(),
 			"dynatrace_log_storage":                        resources.NewGeneric(export.ResourceTypes.LogStorage).Resource(),
+			"dynatrace_log_buckets":                        resources.NewGeneric(export.ResourceTypes.LogBuckets).Resource(),
 			"dynatrace_eula_settings":                      resources.NewGeneric(export.ResourceTypes.EULASettings).Resource(),
 			"dynatrace_api_detection":                      resources.NewGeneric(export.ResourceTypes.APIDetectionRules).Resource(),
 			"dynatrace_service_external_web_request":       resources.NewGeneric(export.ResourceTypes.ServiceExternalWebRequest).Resource(),

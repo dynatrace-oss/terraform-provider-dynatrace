@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_log_buckets Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_log_buckets` covers configuration for log buckets
+---
+
+# dynatrace_log_buckets (Resource)
+
+## Dynatrace Documentation
+
+- Log buckets and retention - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-log-buckets-and-retention
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:logmonitoring.log-buckets-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_log_buckets` downloads all existing log bucket configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/logmonitoring/logbucketsrules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

@@ -229,6 +229,7 @@ var ResourceTypes = struct {
 	LogCustomAttribute                  ResourceType
 	LogSensitiveDataMasking             ResourceType
 	LogStorage                          ResourceType
+	LogBuckets                          ResourceType
 	EULASettings                        ResourceType
 	APIDetectionRules                   ResourceType
 	ServiceExternalWebRequest           ResourceType
@@ -437,6 +438,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_custom_attribute",
 	"dynatrace_log_sensitive_data_masking",
 	"dynatrace_log_storage",
+	"dynatrace_log_buckets",
 	"dynatrace_eula_settings",
 	"dynatrace_api_detection",
 	"dynatrace_service_external_web_request",
