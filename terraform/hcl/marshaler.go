@@ -19,7 +19,6 @@ package hcl
 
 import (
 	"errors"
-	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,11 +44,9 @@ func UnmarshalHCL(m Unmarshaler, d Decoder) error {
 	if err := m.UnmarshalHCL(d); err != nil {
 		return err
 	}
-	if os.Getenv("DYNATRACE_PRECONDITIONS") == "true" {
-		if pc, ok := m.(Preconditioner); ok {
-			if err := pc.HandlePreconditions(); err != nil {
-				return errors.New(d.Path() + ": " + err.Error())
-			}
+	if pc, ok := m.(Preconditioner); ok {
+		if err := pc.HandlePreconditions(); err != nil {
+			return errors.New(d.Path() + ": " + err.Error())
 		}
 	}
 	return nil
