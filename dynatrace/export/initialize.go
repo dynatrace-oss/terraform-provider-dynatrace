@@ -141,6 +141,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
 	flat := flag.Bool("flat", false, "prevent creating a module structure")
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
+	importStateV2 := flag.Bool("import-state-v2", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 
 	flag.Parse()
@@ -153,6 +154,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		FlagPreviewOnly:     *preview,
 		Flat:                *flat,
 		ImportState:         *importState,
+		ImportStateV2:       *importStateV2,
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
 	}, flag.Args()
@@ -183,6 +185,7 @@ type Flags struct {
 	FlagPreviewOnly     bool
 	Flat                bool
 	ImportState         bool
+	ImportStateV2       bool
 	Exclude             bool
 	DataSources         bool
 }

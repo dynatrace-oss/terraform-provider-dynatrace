@@ -34,9 +34,10 @@ func (me *Settings) Name() string {
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"metric_selector": {
-			Type:        schema.TypeString,
-			Description: "Query",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Query",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 		"metric_id": {
 			Type:        schema.TypeString,

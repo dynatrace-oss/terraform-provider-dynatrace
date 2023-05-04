@@ -51,9 +51,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MaxItems: 1,
 		},
 		"query": {
-			Type:        schema.TypeString,
-			Description: "Matcher",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Matcher",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 		"rule_name": {
 			Type:        schema.TypeString,
