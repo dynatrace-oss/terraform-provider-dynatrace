@@ -29,9 +29,10 @@ type ProcessorDefinition struct {
 func (me *ProcessorDefinition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"rule": {
-			Type:        schema.TypeString,
-			Description: "Processor definition",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Processor definition",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 	}
 }

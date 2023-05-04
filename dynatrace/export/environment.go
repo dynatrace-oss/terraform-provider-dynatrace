@@ -18,9 +18,12 @@
 package export
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 	"sort"
 	"sync"
 
@@ -30,6 +33,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
+	"github.com/spf13/afero"
 )
 
 type Environment struct {
@@ -466,13 +470,118 @@ func (me *Environment) WriteMainFile() error {
 }
 
 func (me *Environment) ExecuteImport() error {
-	if !me.Flags.ImportState {
-		return nil
+	if me.Flags.ImportState {
+		return me.executeImportV1()
 	}
+	if me.Flags.ImportStateV2 {
+		return me.executeImportV2()
+	}
+
+	return nil
+}
+
+func (me *Environment) executeImportV1() error {
 	for _, module := range me.Modules {
-		if err := module.ExecuteImport(); err != nil {
+		if shutdown.System.Stopped() {
+			return errors.New("Import was stopped")
+		}
+		if err := module.ExecuteImportV1(); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (me *Environment) executeImportV2() error {
+	itemCount := len(me.Modules)
+	fmt.Printf("Importing %d Modules", itemCount)
+	channel := make(chan *Module, itemCount)
+	mutex := sync.Mutex{}
+	waitGroup := sync.WaitGroup{}
+	maxThreads := 10
+	if maxThreads > itemCount {
+		maxThreads = itemCount
+	}
+	waitGroup.Add(maxThreads)
+	errs := []error{}
+	fs := afero.NewOsFs()
+	var newStateObject interface{}
+
+	processModule := func(module *Module) {
+		stateObject, err := module.ExecuteImportV2(fs, "")
+		if err != nil {
+			mutex.Lock()
+			errs = append(errs, err)
+			mutex.Unlock()
+			return
+		}
+		mutex.Lock()
+		newStateObject = updateState(newStateObject, stateObject)
+		mutex.Unlock()
+	}
+
+	for i := 0; i < maxThreads; i++ {
+
+		go func() {
+
+			for {
+				module, ok := <-channel
+				if shutdown.System.Stopped() {
+					ok = false
+				}
+				if !ok {
+					waitGroup.Done()
+					return
+				}
+				processModule(module)
+			}
+		}()
+
+	}
+
+	for _, module := range me.Modules {
+		channel <- module
+	}
+
+	close(channel)
+	waitGroup.Wait()
+	if shutdown.System.Stopped() {
+		return errors.New("import was stopped")
+	}
+
+	if len(errs) >= 1 {
+		return fmt.Errorf("Error during state import", errs)
+	}
+
+	bytes, err := json.MarshalIndent(newStateObject, "", "  ")
+	if err != nil {
+		return err
+	}
+	filename := fmt.Sprint(filepath.Join(me.OutputFolder, "terraform.tfstate"))
+	err = afero.WriteFile(fs, filename, bytes, 0664)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func updateState(newStateObject interface{}, stateObject interface{}) interface{} {
+	if stateObject == nil {
+		return newStateObject
+	}
+
+	if newStateObject == nil {
+		newStateObject = stateObject
+	} else {
+		serialValue := stateObject.(map[string]interface{})["serial"].(float64)
+		newSerialValue := newStateObject.(map[string]interface{})["serial"].(float64)
+		newStateObject.(map[string]interface{})["serial"] = (serialValue + newSerialValue)
+
+		newStateObject.(map[string]interface{})["resources"] = append(
+			newStateObject.(map[string]interface{})["resources"].([]interface{}),
+			stateObject.(map[string]interface{})["resources"].([]interface{})...,
+		)
+	}
+	return newStateObject
 }

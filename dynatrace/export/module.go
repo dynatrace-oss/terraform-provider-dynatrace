@@ -34,6 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
+	"github.com/spf13/afero"
 )
 
 type Module struct {
@@ -588,7 +589,7 @@ func (me *Module) Discover() error {
 	return nil
 }
 
-func (me *Module) ExecuteImport() (err error) {
+func (me *Module) ExecuteImportV1() (err error) {
 	if !me.Environment.Flags.ImportState {
 		return nil
 	}
@@ -598,7 +599,7 @@ func (me *Module) ExecuteImport() (err error) {
 	referencedResourceTypes := me.GetReferencedResourceTypes()
 	if len(referencedResourceTypes) > 0 {
 		for _, resourceType := range referencedResourceTypes {
-			if err := me.Environment.Module(resourceType).ExecuteImport(); err != nil {
+			if err := me.Environment.Module(resourceType).ExecuteImportV1(); err != nil {
 				return err
 			}
 		}
@@ -665,6 +666,163 @@ func (me *Module) ExecuteImport() (err error) {
 	fmt.Printf("  - %s\n", me.Type)
 	me.Status = ModuleStati.Imported
 	return nil
+}
+
+func (me *Module) ExecuteImportV2(fs afero.Fs, seedType string) (stateObject interface{}, err error) {
+	if !me.Environment.Flags.ImportStateV2 {
+		return nil, nil
+	}
+	if me.Status.IsOneOf(ModuleStati.Imported, ModuleStati.Erronous, ModuleStati.Untouched) {
+		return nil, nil
+	}
+	/*
+		referencedResourceTypes := me.GetReferencedResourceTypes()
+		if len(referencedResourceTypes) > 0 {
+			for _, resourceType := range referencedResourceTypes {
+				_, err := me.Environment.Module(resourceType).ExecuteImportV2(fs, seedType+me.Type.Trim())
+				if err != nil {
+					return nil, err
+				}
+			}
+		}
+	*/
+	length := 0
+	for _, resource := range me.Resources {
+		if !resource.Status.IsOneOf(ResourceStati.PostProcessed) {
+			continue
+		}
+		length++
+	}
+	fmt.Printf("  - %s (0 of %d)", me.Type, length)
+	exePath, _ := exec.LookPath("terraform")
+	const ClearLine = "\033[2K"
+
+	itemCount := len(me.Resources)
+	channel := make(chan *Resource, itemCount)
+	mutex := sync.Mutex{}
+	waitGroup := sync.WaitGroup{}
+	maxThreads := 10
+	if maxThreads > itemCount {
+		maxThreads = itemCount
+	}
+	waitGroup.Add(maxThreads)
+	errs := []error{}
+
+	idx := -1
+
+	getStateFileName := func(stateIdx int) string {
+		return fmt.Sprintf("%s%s%s%s%v%s", "state-", seedType, me.Type.Trim(), "-", stateIdx, ".tfstate")
+	}
+	fmt.Print("Exporting without offline mode for a more complete export, will need to fix some issues are go back to offline mode, see this env var: CACHE_OFFLINE_MODE")
+
+	processResource := func(resource *Resource, curIdx int) {
+		if !resource.Status.IsOneOf(ResourceStati.PostProcessed) {
+			return
+		}
+		statement := fmt.Sprintf("module.%s.%s.%s", me.Type.Trim(), me.Type, resource.UniqueName)
+		if me.Environment.Flags.Flat {
+			statement = fmt.Sprintf("%s.%s", me.Type, resource.UniqueName)
+		}
+		// fmt.Println("terraform", "import", statement, resource.ID, me.Environment.OutputFolder)
+		cmd := exec.Command(
+			exePath,
+			"import",
+			"-lock=false",
+			"-input=false",
+			"-no-color",
+			fmt.Sprintf("%s%s", "-state=", getStateFileName(curIdx)),
+			statement,
+			resource.ID,
+		)
+		var outb, errb bytes.Buffer
+		cmd.Stdout = &outb
+		cmd.Stderr = &errb
+		cmd.Dir = me.Environment.OutputFolder
+		var cacheFolder string
+		if cacheFolder, err = filepath.Abs(cache.GetCacheFolder()); err != nil {
+			mutex.Lock()
+			errs = append(errs, err)
+			mutex.Unlock()
+			return
+		}
+		cmd.Env = []string{
+			// "TF_LOG_PROVIDER=INFO",
+			"DYNATRACE_ENV_URL=" + me.Environment.Credentials.URL,
+			"DYNATRACE_API_TOKEN=" + me.Environment.Credentials.Token,
+			"DT_CACHE_FOLDER=" + cacheFolder,
+			// "CACHE_OFFLINE_MODE=true",
+			"DT_CACHE_DELETE_ON_LAUNCH=false",
+			"DT_NO_CACHE_CLEANUP=true",
+			"DT_TERRAFORM_IMPORT=true",
+		}
+		cmd.Start()
+		if err := cmd.Wait(); err != nil {
+			fmt.Println("out:", outb.String())
+			fmt.Println("err:", errb.String())
+		}
+		fmt.Print(ClearLine)
+		fmt.Print("\r")
+		fmt.Printf("  - %s (%d of %d)", me.Type, curIdx, length)
+	}
+
+	for i := 0; i < maxThreads; i++ {
+
+		go func() {
+
+			for {
+				resource, ok := <-channel
+				if shutdown.System.Stopped() {
+					ok = false
+				}
+				if !ok {
+					waitGroup.Done()
+					return
+				}
+				mutex.Lock()
+				idx++
+				mutex.Unlock()
+				processResource(resource, idx)
+			}
+		}()
+
+	}
+	for _, resource := range me.Resources {
+		channel <- resource
+	}
+
+	close(channel)
+	waitGroup.Wait()
+
+	if shutdown.System.Stopped() {
+		return nil, fmt.Errorf("Import was stopped", errs)
+	}
+
+	if len(errs) >= 1 {
+		return nil, fmt.Errorf("Error during state import", errs)
+	}
+
+	fmt.Print(ClearLine)
+	fmt.Print("\r")
+	fmt.Printf("  - %s\n", me.Type)
+	me.Status = ModuleStati.Imported
+
+	var newStateObject interface{}
+
+	for i := 0; i < itemCount; i++ {
+		fileName := fmt.Sprint(filepath.Join(me.Environment.OutputFolder, getStateFileName(i)))
+		rawData, err := afero.ReadFile(fs, fileName)
+		if err != nil {
+			fmt.Print("CC ERROR FINDING FILE WHEN IMPORTING: ", fileName)
+			return nil, nil
+			//return err
+		}
+		var stateObject interface{}
+		json.Unmarshal(rawData, &stateObject)
+
+		newStateObject = updateState(newStateObject, stateObject)
+	}
+
+	return newStateObject, nil
 }
 
 func hide(v any) {}

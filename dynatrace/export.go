@@ -75,7 +75,7 @@ func runExport() (err error) {
 		fmt.Println("Executing 'terraform init'")
 		defer func() {
 			cmd.Wait()
-			if environment.Flags.ImportState {
+			if environment.Flags.ImportState || environment.Flags.ImportStateV2 {
 				fmt.Println("Importing Resources into Terraform State ...")
 				if err = environment.ExecuteImport(); err != nil {
 					return
