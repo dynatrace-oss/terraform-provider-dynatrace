@@ -94,10 +94,10 @@ func (me *MatcherComplex) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MatcherComplex) HandlePreconditions() error {
-	if me.CaseSensitive == nil && slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
+	if me.CaseSensitive == nil && !slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
 		me.CaseSensitive = opt.NewBool(false)
 	}
-	if me.Value == nil && slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
+	if me.Value == nil && !slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
 		return fmt.Errorf("'value' must be specified if 'type' is set to '%v'", me.Type)
 	}
 	return nil
