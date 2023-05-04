@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_autotag_v2 Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_autotag_v2` covers configuration for automatically applied tags
+---
+
+# dynatrace_autotag_v2 (Resource)
+
+## Dynatrace Documentation
+
+- Define and apply tags - https://www.dynatrace.com/support/help/how-to-use-dynatrace/tags-and-metadata/setup/how-to-define-tags
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:tags.auto-tagging`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_autotag_v2` downloads all existing automatically applied tags
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/tags/autotagging/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

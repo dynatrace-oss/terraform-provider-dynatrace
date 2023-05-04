@@ -146,6 +146,7 @@ import (
 	httpcookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
 	httpoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
@@ -902,6 +903,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 	),
+	ResourceTypes.AutoTagV2: NewResourceDescriptor(
+		autotagging.Service,
+		Coalesce(Dependencies.Service),
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.ProcessGroupInstance),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -940,6 +949,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
 	ResourceTypes.DiskEventAnomalies,      // overlap with Settings 2.0 ResourceTypes.DiskAnomalyDetectionRules
 	ResourceTypes.SLO,                     // overlap with Settings 2.0 ResourceTypes.SLOV2
+	ResourceTypes.AutoTag,                 // overlap with Settings 2.0 ResourceTypes.AutoTagV2
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

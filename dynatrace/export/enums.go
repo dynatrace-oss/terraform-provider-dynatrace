@@ -57,6 +57,7 @@ func (me ResourceType) AsDataSource() string {
 
 var ResourceTypes = struct {
 	AutoTag                             ResourceType
+	AutoTagV2                           ResourceType
 	CustomService                       ResourceType
 	RequestAttribute                    ResourceType
 	ApplicationAnomalies                ResourceType
@@ -264,6 +265,7 @@ var ResourceTypes = struct {
 	VMwareAnomalies                     ResourceType
 }{
 	"dynatrace_autotag",
+	"dynatrace_autotag_v2",
 	"dynatrace_custom_service",
 	"dynatrace_request_attribute",
 	"dynatrace_application_anomalies",
