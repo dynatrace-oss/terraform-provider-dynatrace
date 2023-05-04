@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_business_events_buckets Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_business_events_buckets` covers configuration for business event bucket assignment
+---
+
+# dynatrace_business_events_buckets (Resource)
+
+## Dynatrace Documentation
+
+- Business event bucket assignment - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-bucket-assignment
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents-processing-buckets.rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_business_events_buckets` downloads all existing business event bucket assignments
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/bizevents/processing/buckets/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

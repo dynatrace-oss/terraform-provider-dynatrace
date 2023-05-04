@@ -1,0 +1,110 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Business events can be stored in different buckets. The first user-defined rule that matches will determine bucket assignment. If no rules match, the default bucket will be used.\n\nLearn more by visiting [our documentation](https://dt-url.net/4c034xt).",
+	"displayName": "Business event bucket assignment",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"bucketName": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "bucket-configuration-data-source",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "default_events_drop",
+			"description": "Events will be stored in the selected bucket. Analyze bucket contents in the [log \u0026 event viewer.](/ui/logs-events?advancedQueryMode=true\u0026query=fetch+bizevents)",
+			"displayName": "Bucket",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"autoSelectFirst": "enabled",
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"matcher": {
+			"constraints": [
+				{
+					"maxLength": 1500,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Invalid DQL query",
+					"customValidatorId": "bizevents-dql-query-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "[See our documentation](https://dt-url.net/bp234rv)",
+			"displayName": "Matcher (DQL)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "multiline",
+			"type": "text"
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 4,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:business-analytics",
+		"group:business-analytics.ingest-pipeline"
+	],
+	"schemaId": "builtin:bizevents-processing-buckets.rule",
+	"types": {},
+	"version": "1.0.3"
+}
