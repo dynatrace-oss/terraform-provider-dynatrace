@@ -25,12 +25,13 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func UniqueDataSource() *schema.Resource {
 	return &schema.Resource{
-		Read:   UniqueDataSourceRead,
+		Read:   logging.EnableDS(UniqueDataSourceRead),
 		Schema: new(locsettings.SyntheticLocation).Schema(),
 	}
 }

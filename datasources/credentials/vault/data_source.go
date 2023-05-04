@@ -23,6 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -30,7 +31,7 @@ import (
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceRead,
+		Read: logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:        schema.TypeString,

@@ -27,12 +27,13 @@ import (
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceRead,
+		Read: logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"profiles": {
 				Type:     schema.TypeMap,

@@ -79,6 +79,13 @@ func Enable(fn func(context.Context, *schema.ResourceData, any) diag.Diagnostics
 	}
 }
 
+func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.ResourceData, any) error {
+	return func(d *schema.ResourceData, m any) error {
+		log.SetOutput(odl)
+		return fn(d, m)
+	}
+}
+
 func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
 	return func(v any) int {
 		log.SetOutput(odl)

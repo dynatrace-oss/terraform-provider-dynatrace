@@ -8,6 +8,7 @@ import (
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -15,7 +16,7 @@ const staticID = "46465fe6-70cb-4564-864f-c3344caae5c0"
 
 func DataSourceMultiple() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceReadMultiple,
+		Read: logging.EnableDS(DataSourceReadMultiple),
 		Schema: map[string]*schema.Schema{
 			"values": {
 				Type:     schema.TypeList,
