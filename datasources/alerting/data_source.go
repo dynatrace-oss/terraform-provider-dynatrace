@@ -114,7 +114,10 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		}
 		var mgmzID string
 		if mgmzLegacyID != nil {
-			mgmzID = mgms[*mgmzLegacyID].ID
+			if mgmzStub, ok := mgms[*mgmzLegacyID]; ok && mgmzStub != nil {
+				mgmzID = mgmzStub.ID
+			}
+
 		}
 		m := map[string]any{
 			"id":                        stub.ID,
