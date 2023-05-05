@@ -37,11 +37,11 @@ resource "dynatrace_session_replay_resource_capture" "#name#" {
 ### Required
 
 - `enable_resource_capturing` (Boolean) (Field has overlap with `dynatrace_web_application`) When turned on, all CSS resources from all sessions are captured. For details, see [Resource capture](https://dt-url.net/sr-resource-capturing).
-- `resource_capture_url_exclusion_pattern_list` (Set of String) (Field has overlap with `dynatrace_web_application`) Add exclusion rules to avoid the capture of resources from certain pages.
 
 ### Optional
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `resource_capture_url_exclusion_pattern_list` (Set of String) (Field has overlap with `dynatrace_web_application`) Add exclusion rules to avoid the capture of resources from certain pages.
 
 ### Read-Only
 

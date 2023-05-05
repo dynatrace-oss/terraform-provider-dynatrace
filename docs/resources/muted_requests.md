@@ -33,8 +33,11 @@ resource "dynatrace_muted_requests" "#name#" {
 
 ### Required
 
-- `muted_request_names` (Set of String) Muted request names
 - `service_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+
+### Optional
+
+- `muted_request_names` (Set of String) Muted request names
 
 ### Read-Only
 

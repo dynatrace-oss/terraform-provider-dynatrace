@@ -161,9 +161,12 @@ resource "dynatrace_web_app_request_errors" "#name#" {
 
 ### Required
 
-- `error_rules` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_error_rules`) (see [below for nested schema](#nestedblock--error_rules))
 - `ignore_request_errors_in_apdex_calculation` (Boolean) (Field has overlap with `dynatrace_application_error_rules`) This setting overrides Apdex settings for individual rules listed below
 - `scope` (String) The scope of this setting (APPLICATION)
+
+### Optional
+
+- `error_rules` (Block List, Max: 1) (Field has overlap with `dynatrace_application_error_rules`) (see [below for nested schema](#nestedblock--error_rules))
 
 ### Read-Only
 

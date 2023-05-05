@@ -153,12 +153,9 @@ Required:
 - `high_cpu_saturation_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_cpu_saturation_detection))
 - `high_gc_activity_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_gc_activity_detection))
 - `high_memory_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_memory_detection))
+- `high_system_load_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection))
 - `out_of_memory_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_memory_detection))
 - `out_of_threads_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_threads_detection))
-
-Optional:
-
-- `high_system_load_detection` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection))
 
 <a id="nestedblock--host--connection_lost_detection"></a>
 ### Nested Schema for `host.connection_lost_detection`
@@ -275,6 +272,39 @@ Required:
 
 
 
+<a id="nestedblock--host--high_system_load_detection"></a>
+### Nested Schema for `host.high_system_load_detection`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds))
+- `detection_mode` (String) Possible Values: `Auto`, `Custom`
+
+<a id="nestedblock--host--high_system_load_detection--custom_thresholds"></a>
+### Nested Schema for `host.high_system_load_detection.custom_thresholds`
+
+Required:
+
+- `event_thresholds` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds))
+- `system_load` (Number) Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples
+
+<a id="nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds"></a>
+### Nested Schema for `host.high_system_load_detection.custom_thresholds.event_thresholds`
+
+Required:
+
+- `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
+- `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
+
+
+
+
 <a id="nestedblock--host--out_of_memory_detection"></a>
 ### Nested Schema for `host.out_of_memory_detection`
 
@@ -330,39 +360,6 @@ Required:
 
 <a id="nestedblock--host--out_of_threads_detection--custom_thresholds--event_thresholds"></a>
 ### Nested Schema for `host.out_of_threads_detection.custom_thresholds.event_thresholds`
-
-Required:
-
-- `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
-- `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
-- `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
-
-
-
-
-<a id="nestedblock--host--high_system_load_detection"></a>
-### Nested Schema for `host.high_system_load_detection`
-
-Required:
-
-- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-
-Optional:
-
-- `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds))
-- `detection_mode` (String) Possible Values: `Auto`, `Custom`
-
-<a id="nestedblock--host--high_system_load_detection--custom_thresholds"></a>
-### Nested Schema for `host.high_system_load_detection.custom_thresholds`
-
-Required:
-
-- `event_thresholds` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds))
-- `system_load` (Number) Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples
-
-<a id="nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds"></a>
-### Nested Schema for `host.high_system_load_detection.custom_thresholds.event_thresholds`
 
 Required:
 

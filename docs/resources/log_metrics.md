@@ -37,7 +37,6 @@ resource "dynatrace_log_metrics" "#name#" {
 
 ### Required
 
-- `dimensions` (Set of String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `key` (String) Metric key
 - `measure` (String) Possible Values: `OCCURRENCE`, `ATTRIBUTE`
@@ -45,6 +44,7 @@ resource "dynatrace_log_metrics" "#name#" {
 
 ### Optional
 
+- `dimensions` (Set of String) no documentation available
 - `measure_attribute` (String) Attribute
 
 ### Read-Only

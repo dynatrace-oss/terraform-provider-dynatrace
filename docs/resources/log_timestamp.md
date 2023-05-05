@@ -46,11 +46,11 @@ resource "dynatrace_log_timestamp" "#name#" {
 - `config_item_title` (String) Name
 - `date_time_pattern` (String) Date-time pattern
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `matchers` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--matchers))
 - `timezone` (String) Timezone
 
 ### Optional
 
+- `matchers` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--matchers))
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only

@@ -48,11 +48,11 @@ resource "dynatrace_session_replay_web_privacy" "#name#" {
 
 - `enable_opt_in_mode` (Boolean) (Field has overlap with `dynatrace_application_data_privacy`) When [Session Replay opt-in mode](https://dt-url.net/sr-opt-in-mode) is turned on, Session Replay is deactivated until explicitly activated via an API call.
 - `masking_presets` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_data_privacy`) To protect your end users' privacy, select or customize [predefined masking options](https://dt-url.net/sr-masking-preset-options) that suit your content recording and playback requirements. (see [below for nested schema](#nestedblock--masking_presets))
-- `url_exclusion_pattern_list` (Set of String) (Field has overlap with `dynatrace_application_data_privacy`) Exclude webpages or views from Session Replay recording by adding [URL exclusion rules](https://dt-url.net/sr-url-exclusion)
 
 ### Optional
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `url_exclusion_pattern_list` (Set of String) (Field has overlap with `dynatrace_application_data_privacy`) Exclude webpages or views from Session Replay recording by adding [URL exclusion rules](https://dt-url.net/sr-url-exclusion)
 
 ### Read-Only
 

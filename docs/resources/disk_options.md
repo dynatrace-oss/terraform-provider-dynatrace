@@ -41,11 +41,11 @@ resource "dynatrace_disk_options" "#name#" {
 
 ### Required
 
-- `exclusions` (Block List, Min: 1, Max: 1) OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list. (see [below for nested schema](#nestedblock--exclusions))
 - `nfs_show_all` (Boolean) When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later
 
 ### Optional
 
+- `exclusions` (Block List, Max: 1) OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list. (see [below for nested schema](#nestedblock--exclusions))
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only

@@ -40,8 +40,11 @@ resource "dynatrace_mobile_app_request_errors" "#name#" {
 
 ### Required
 
-- `error_rules` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--error_rules))
 - `scope` (String) The scope of this setting (MOBILE_APPLICATION, CUSTOM_APPLICATION)
+
+### Optional
+
+- `error_rules` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--error_rules))
 
 ### Read-Only
 

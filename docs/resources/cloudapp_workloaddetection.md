@@ -94,7 +94,10 @@ Required:
 Required:
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `filters` (Block List, Min: 1, Max: 1) Define rules to merge similar Kubernetes workloads into process groups. 
+
+Optional:
+
+- `filters` (Block List, Max: 1) Define rules to merge similar Kubernetes workloads into process groups. 
 
  You can use workload properties like namespace name, base pod name or container name as well as the [environment variables DT_RELEASE_STAGE and DT_RELEASE_PRODUCT](https://dt-url.net/sb02v2a) for grouping processes of similar workloads. The first applicable rule will be applied. If no rule matches, “Namespace name” + “Base pod name” + “Container name” is used as fallback. (see [below for nested schema](#nestedblock--kubernetes--filters))
 

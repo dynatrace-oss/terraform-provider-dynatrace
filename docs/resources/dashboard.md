@@ -838,7 +838,7 @@ Optional:
 - `shared` (Boolean, Deprecated) the dashboard is shared (`true`) or private (`false`)
 - `sharing_details` (Block List, Max: 1, Deprecated) represents sharing configuration of a dashboard (see [below for nested schema](#nestedblock--dashboard_metadata--sharing_details))
 - `tags` (Set of String) a set of tags assigned to the dashboard
-- `tiles_name_size` (Number) No documentation available
+- `tiles_name_size` (String) No documentation available
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 - `valid_filter_keys` (Set of String) a set of all possible global dashboard filters that can be applied to dashboard
 

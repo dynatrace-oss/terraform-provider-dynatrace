@@ -81,18 +81,39 @@ Required:
 
 Required:
 
-- `attributes` (Block List, Min: 1, Max: 1) All attribute extraction rules will be applied and found attributes will be added to the extracted type. (see [below for nested schema](#nestedblock--rules--rule--attributes))
 - `id_pattern` (String) ID patterns are comprised of static text and placeholders referring to dimensions in the ingest data. An ID pattern **must** contain at least one placeholder to ensure that different entities will be created.. Take care that the pattern results in the same ID for the same entity. For example, using timestamp or counter-like dimensions as part of the ID would lead to the creation of new entities for each ingest data and is strongly discouraged!
 
 Each dimension key referred to by an identifier placeholder must be present in order to extract an entity. If any dimension key referred to in the identifier is missing, the rule will not be considered for evaluation. If you have cases where you still want to extract the same entity type but have differently named keys, consider creating multiple rules extracting the same entity type. In this case take care that each ID pattern evaluates to the same value if the same entity should be extracted.
-- `required_dimensions` (Block List, Min: 1, Max: 1) In addition to the dimensions already referred to in the ID pattern, you may specify additional dimensions which must be present in order to evaluate this rule. (see [below for nested schema](#nestedblock--rules--rule--required_dimensions))
 - `sources` (Block List, Min: 1, Max: 1) Specify all sources which should be evaluated for this rule. A rule is evaluated if any of the specified source filters match. (see [below for nested schema](#nestedblock--rules--rule--sources))
 
 Optional:
 
+- `attributes` (Block List, Max: 1) All attribute extraction rules will be applied and found attributes will be added to the extracted type. (see [below for nested schema](#nestedblock--rules--rule--attributes))
 - `icon_pattern` (String) Define a pattern which is used to set the icon attribute of the entity. The extracted values must reference barista icon ids. You may define placeholders referencing data source dimensions.
 - `instance_name_pattern` (String) Define a pattern which is used to set the name attribute of the entity. You may define placeholders referencing data source dimensions.
+- `required_dimensions` (Block List, Max: 1) In addition to the dimensions already referred to in the ID pattern, you may specify additional dimensions which must be present in order to evaluate this rule. (see [below for nested schema](#nestedblock--rules--rule--required_dimensions))
 - `role` (String) If you want to extract multiple entities of the same type from a single ingest line you need to define multiple rules with different roles.
+
+<a id="nestedblock--rules--rule--sources"></a>
+### Nested Schema for `rules.rule.sources`
+
+Required:
+
+- `source` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--rules--rule--sources--source))
+
+<a id="nestedblock--rules--rule--sources--source"></a>
+### Nested Schema for `rules.rule.sources.source`
+
+Required:
+
+- `source_type` (String) Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+
+Optional:
+
+- `condition` (String) Specify a filter that needs to match in order for the extraction to happen.. Three different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', `$prefix(value)` will ensure that the source begins with exactly 'value', '$exists()' will ensure that any source with matching dimension filter exists.
+If your value contains the characters '(', ')' or '\~', you need to escape them by adding a '\~' in front of them.
+
+
 
 <a id="nestedblock--rules--rule--attributes"></a>
 ### Nested Schema for `rules.rule.attributes`
@@ -132,25 +153,4 @@ Required:
 Optional:
 
 - `value_pattern` (String) A dimension value pattern which needs to exist in the ingest data to match this filter.
-
-
-
-<a id="nestedblock--rules--rule--sources"></a>
-### Nested Schema for `rules.rule.sources`
-
-Required:
-
-- `source` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--rules--rule--sources--source))
-
-<a id="nestedblock--rules--rule--sources--source"></a>
-### Nested Schema for `rules.rule.sources.source`
-
-Required:
-
-- `source_type` (String) Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
-
-Optional:
-
-- `condition` (String) Specify a filter that needs to match in order for the extraction to happen.. Three different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', `$prefix(value)` will ensure that the source begins with exactly 'value', '$exists()' will ensure that any source with matching dimension filter exists.
-If your value contains the characters '(', ')' or '\~', you need to escape them by adding a '\~' in front of them.
  

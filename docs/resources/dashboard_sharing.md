@@ -69,4 +69,8 @@ Required:
 - `management_zones` (Set of String) A list of management zones that can display data on the publicly shared dashboard. 
 
 Specify management zone IDs here. For each management zone you specify Dynatrace generates an access link. To share the dashboard with its default management zone, use the `default` value
+
+Read-Only:
+
+- `urls` (Map of String) A list of URLs for anonymous access to the dashboard indexed by management zone name
  

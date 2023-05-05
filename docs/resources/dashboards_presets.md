@@ -38,8 +38,11 @@ resource "dynatrace_dashboards_presets" "#name#" {
 
 ### Required
 
-- `dashboard_presets_list` (Block List, Min: 1, Max: 1) Show selected preset to respective user group only. (see [below for nested schema](#nestedblock--dashboard_presets_list))
 - `enable_dashboard_presets` (Boolean) Dashboard presets are visible to all users by default. For a pristine environment you may disable them entirely or opt to manually limit visibility to selected user groups.
+
+### Optional
+
+- `dashboard_presets_list` (Block List, Max: 1) Show selected preset to respective user group only. (see [below for nested schema](#nestedblock--dashboard_presets_list))
 
 ### Read-Only
 
