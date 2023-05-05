@@ -43,13 +43,26 @@ func (me *AnonymousAccess) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "A list of management zones that can display data on the publicly shared dashboard. \n\nSpecify management zone IDs here. For each management zone you specify Dynatrace generates an access link. To share the dashboard with its default management zone, use the `default` value",
 		},
+		"urls": {
+			Type:        schema.TypeMap,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "A list of URLs for anonymous access to the dashboard indexed by management zone name",
+		},
 	}
 }
 
 func (me *AnonymousAccess) MarshalHCL(properties hcl.Properties) error {
-	return properties.Encode("management_zones", me.ManagementZoneIDs)
+	if err := properties.Encode("management_zones", me.ManagementZoneIDs); err != nil {
+		return err
+	}
+	properties["urls"] = me.URLs
+	return nil
 }
 
 func (me *AnonymousAccess) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.Decode("management_zones", &me.ManagementZoneIDs)
+	if err := decoder.Decode("management_zones", &me.ManagementZoneIDs); err != nil {
+		return err
+	}
+	return nil
 }
