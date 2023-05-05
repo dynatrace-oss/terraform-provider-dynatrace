@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -73,59 +74,73 @@ func (me *iamClient) DELETE(url string, expectedResponseCode int, forceNewBearer
 }
 
 func (me *iamClient) request(url string, method string, expectedResponseCode int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
-	var err error
-	var httpRequest *http.Request
-	var httpResponse *http.Response
-	var responseBytes []byte
-	var requestBody []byte
 
-	rest.Logger.Println(method, url)
+	num504Retries := 0
 
-	if requestBody, err = json.Marshal(payload); err != nil {
-		return nil, err
-	}
-	if payload != nil {
-		rest.Logger.Println("  ", string(requestBody))
-	}
+	for {
+		var err error
+		var httpRequest *http.Request
+		var httpResponse *http.Response
+		var responseBytes []byte
+		var requestBody []byte
 
-	var body io.Reader
+		rest.Logger.Println(method, url)
 
-	if payload != nil {
-		body = bytes.NewReader(requestBody)
-	}
-
-	if httpRequest, err = http.NewRequest(method, url, body); err != nil {
-		return nil, err
-	}
-
-	if err = me.authenticate(httpRequest, forceNewBearer); err != nil {
-		return nil, err
-	}
-
-	for k, v := range headers {
-		httpRequest.Header.Add(k, v)
-	}
-
-	if httpResponse, err = http.DefaultClient.Do(httpRequest); err != nil {
-		return nil, err
-	}
-
-	if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
-		return nil, err
-	}
-	rest.Logger.Println("  ", httpResponse.StatusCode, string(responseBytes))
-
-	if httpResponse.StatusCode != expectedResponseCode {
-		var iamErr IAMError
-		if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
-			if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
-				return me.request(url, method, expectedResponseCode, true, payload, headers)
-			}
-			return nil, iamErr
-		} else {
-			return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCode)
+		if requestBody, err = json.Marshal(payload); err != nil {
+			return nil, err
 		}
-	}
+		if payload != nil {
+			rest.Logger.Println("  ", string(requestBody))
+		}
 
-	return responseBytes, nil
+		var body io.Reader
+
+		if payload != nil {
+			body = bytes.NewReader(requestBody)
+		}
+
+		if httpRequest, err = http.NewRequest(method, url, body); err != nil {
+			return nil, err
+		}
+
+		if err = me.authenticate(httpRequest, forceNewBearer); err != nil {
+			return nil, err
+		}
+
+		for k, v := range headers {
+			httpRequest.Header.Add(k, v)
+		}
+
+		if httpResponse, err = http.DefaultClient.Do(httpRequest); err != nil {
+			return nil, err
+		}
+
+		if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
+			return nil, err
+		}
+		rest.Logger.Println("  ", httpResponse.StatusCode, string(responseBytes))
+
+		if httpResponse.StatusCode == 504 {
+			num504Retries++
+			if num504Retries > 5 {
+				return nil, fmt.Errorf("response code %d (expected: %d)", 504, expectedResponseCode)
+			}
+			time.Sleep(time.Second)
+			continue
+		}
+
+		if httpResponse.StatusCode != expectedResponseCode {
+			var iamErr IAMError
+			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
+				if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
+					return me.request(url, method, expectedResponseCode, true, payload, headers)
+				}
+				return nil, iamErr
+			} else {
+				return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCode)
+			}
+		}
+
+		return responseBytes, nil
+	}
 }
