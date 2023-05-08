@@ -1,0 +1,88 @@
+{
+	"allowedScopes": [
+		"APPLICATION_METHOD",
+		"APPLICATION"
+	],
+	"description": "Set the Tolerating and Frustrated performance thresholds to [refine the Apdex calculations](https://dt-url.net/apdex-thresholds) for this application.\n\nThe key performance metric for custom actions is always **User action duration**.",
+	"displayName": "Apdex configuration for custom actions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"thresholds": {
+			"description": "",
+			"displayName": "User action duration thresholds",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Thresholds"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-kpm-settings",
+		"group:rum-settings"
+	],
+	"schemaId": "builtin:rum.web.key-performance-metric-custom-actions",
+	"types": {
+		"Thresholds": {
+			"constraints": [
+				{
+					"properties": [
+						"frustratingThresholdSeconds",
+						"toleratedThresholdSeconds"
+					],
+					"type": "GREATER_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "Thresholds",
+			"documentation": "",
+			"properties": {
+				"frustratingThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 240,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 12,
+					"description": "If **User action duration** is above this value, the action is assigned to the Frustrated performance zone.",
+					"displayName": "Frustrated threshold [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"toleratedThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "If **User action duration** is below this value, the action is assigned to the Satisfied performance zone.",
+					"displayName": "Tolerating threshold [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.8"
+}

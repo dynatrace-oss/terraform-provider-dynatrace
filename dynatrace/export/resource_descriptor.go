@@ -134,6 +134,7 @@ import (
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customrumjavascriptversion"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/customactions"
 	webapprequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/requesterrors"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
@@ -925,6 +926,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.BusinessEventsBuckets:    NewResourceDescriptor(bizevents_buckets.Service),
 	ResourceTypes.BusinessEventsMetrics:    NewResourceDescriptor(bizevents_metrics.Service),
 	ResourceTypes.BusinessEventsProcessing: NewResourceDescriptor(bizevents_processing.Service),
+	ResourceTypes.WebAppKeyPerformanceCustom: NewResourceDescriptor(
+		customactions.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -950,6 +955,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.CustomAppEnablement,          // overlap with ResourceTypes.MobileApplication
 	ResourceTypes.SessionReplayWebPrivacy,      // overlap with ResourceTypes.ApplicationDataPrivacy
 	ResourceTypes.SessionReplayResourceCapture, // overlap with ResourceTypes.WebApplication
+	ResourceTypes.WebAppKeyPerformanceCustom,   // overlap with ResourceTypes.WebApplication
 	ResourceTypes.BrowserMonitorOutageHandling, // overlap with ResourceTypes.BrowserMonitor
 	ResourceTypes.HttpMonitorOutageHandling,    // overlap with ResourceTypes.HTTPMonitor
 	ResourceTypes.DataPrivacy,                  // overlap with ResourceTypes.ApplicationDataPrivacy

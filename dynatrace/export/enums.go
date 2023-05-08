@@ -268,6 +268,7 @@ var ResourceTypes = struct {
 	BusinessEventsBuckets               ResourceType
 	BusinessEventsMetrics               ResourceType
 	BusinessEventsProcessing            ResourceType
+	WebAppKeyPerformanceCustom          ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -481,6 +482,7 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_buckets",
 	"dynatrace_business_events_metrics",
 	"dynatrace_business_events_processing",
+	"dynatrace_web_app_key_performance_custom",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

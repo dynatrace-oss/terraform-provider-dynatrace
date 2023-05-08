@@ -1,0 +1,7 @@
+{
+    "scope": "APPLICATION_METHOD-1234567890000000",
+    "thresholds": {
+        "frustratingThresholdSeconds": 12,
+        "toleratedThresholdSeconds": 3
+    }
+}

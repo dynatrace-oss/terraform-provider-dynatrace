@@ -41,7 +41,7 @@ type Application struct {
 	XHRActionKeyPerformanceMetric    XHRActionKeyPerformanceMetric  `json:"xhrActionKeyPerformanceMetric"`    // The key performance metric of XHR actions
 	LoadActionApdexSettings          *ApdexSettings                 `json:"loadActionApdexSettings"`          // Defines the Load Action Apdex settings of an application
 	XHRActionApdexSettings           *ApdexSettings                 `json:"xhrActionApdexSettings"`           // Defines the XHR Action Apdex settings of an application
-	CustomActionApdexSettings        *ApdexSettings                 `json:"customActionApdexSettings"`        // Defines the Custom Action Apdex settings of an application
+	CustomActionApdexSettings        *ApdexSettings                 `json:"customActionApdexSettings"`        // (Field has overlap with `dynatrace_web_app_key_performance_custom`) Defines the Custom Action Apdex settings of an application
 	WaterfallSettings                *WaterfallSettings             `json:"waterfallSettings"`                // These settings influence the monitoring data you receive for 3rd party, CDN, and 1st party resources
 	MonitoringSettings               *MonitoringSettings            `json:"monitoringSettings"`               // Real user monitoring settings
 	UserTags                         UserTags                       `json:"userTags"`                         // User tags settings
