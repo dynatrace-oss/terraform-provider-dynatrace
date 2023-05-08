@@ -106,6 +106,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/opentelemetrymetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
+	ownership_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
@@ -940,6 +941,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		xhractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.OwnershipConfig: NewResourceDescriptor(ownership_config.Service),
 }
 
 var BlackListedResources = []ResourceType{

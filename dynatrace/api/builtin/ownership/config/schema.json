@@ -1,0 +1,107 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure keys for ownership metadata and tags.",
+	"displayName": "Configure ownership",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"ownershipIdentifiers": {
+			"constraints": [
+				{
+					"customMessage": "There is already an ownership-identifier with this key.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"key"
+					]
+				}
+			],
+			"description": "Tags and metadata are key-value pairs. Define keys for tags and metadata that are considered for ownership. If a tag or any metadata starts with a key defined below, the value of the tag or metadata is considered a team identifier.",
+			"displayName": "Keys for ownership metadata and tags",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/OwnershipIdentifier"
+				}
+			},
+			"maxObjects": 5,
+			"metadata": {
+				"addItemButton": "Add key"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list",
+			"uiCustomization": {
+				"table": {
+					"columns": [
+						{
+							"builtinColumnRef": "summary",
+							"displayName": "Key"
+						}
+					]
+				}
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:ownership"
+	],
+	"schemaId": "builtin:ownership.config",
+	"types": {
+		"OwnershipIdentifier": {
+			"description": "",
+			"displayName": "OwnershipIdentifier",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"key": {
+					"constraints": [
+						{
+							"maxLength": 63,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "The Ownership identifier key field can not contain special characters or blank spaces and it must start and end with a letter.",
+							"customValidatorId": "ownership-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key for ownership metadata and tags",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

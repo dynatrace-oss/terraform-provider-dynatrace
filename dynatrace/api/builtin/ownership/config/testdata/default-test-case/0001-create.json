@@ -1,0 +1,12 @@
+{
+    "ownershipIdentifiers": [
+      {
+        "enabled": true,
+        "key": "dt.owner"
+      },
+      {
+        "enabled": true,
+        "key": "owner"
+      }
+    ]
+  }

@@ -347,6 +347,7 @@ func Provider() *schema.Provider {
 			"dynatrace_oneagent_default_version":           resources.NewGeneric(export.ResourceTypes.OneAgentDefaultVersion).Resource(),
 			"dynatrace_oneagent_updates":                   resources.NewGeneric(export.ResourceTypes.OneAgentUpdates).Resource(),
 			"dynatrace_ownership_teams":                    resources.NewGeneric(export.ResourceTypes.OwnershipTeams).Resource(),
+			"dynatrace_ownership_config":                   resources.NewGeneric(export.ResourceTypes.OwnershipConfig).Resource(),
 			"dynatrace_log_custom_source":                  resources.NewGeneric(export.ResourceTypes.LogCustomSource).Resource(),
 			"dynatrace_application_detection_rule_v2":      resources.NewGeneric(export.ResourceTypes.ApplicationDetectionV2).Resource(),
 			"dynatrace_kubernetes":                         resources.NewGeneric(export.ResourceTypes.Kubernetes).Resource(),

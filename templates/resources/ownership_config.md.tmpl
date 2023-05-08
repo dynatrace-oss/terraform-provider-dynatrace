@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_ownership_config Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_ownership_config` covers configuration for ownership
+---
+
+# dynatrace_ownership_config (Resource)
+
+## Dynatrace Documentation
+
+- Ownership - https://www.dynatrace.com/support/help/manage/ownership
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:ownership.config`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_ownership_config` downloads all existing ownership configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/ownership/config/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

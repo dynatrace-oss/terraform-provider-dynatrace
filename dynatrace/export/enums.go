@@ -257,6 +257,7 @@ var ResourceTypes = struct {
 	OneAgentDefaultVersion              ResourceType
 	OneAgentUpdates                     ResourceType
 	OwnershipTeams                      ResourceType
+	OwnershipConfig                     ResourceType
 	LogCustomSource                     ResourceType
 	ApplicationDetectionV2              ResourceType
 	Kubernetes                          ResourceType
@@ -473,6 +474,7 @@ var ResourceTypes = struct {
 	"dynatrace_oneagent_default_version",
 	"dynatrace_oneagent_updates",
 	"dynatrace_ownership_teams",
+	"dynatrace_ownership_config",
 	"dynatrace_log_custom_source",
 	"dynatrace_application_detection_rule_v2",
 	"dynatrace_kubernetes",
