@@ -282,6 +282,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		switch rv.Kind() {
 		case reflect.String:
 			e.eval(key, fmt.Sprintf("%v", v), breadCrumbs, schema)
+		case reflect.Map:
 		default:
 			panic(fmt.Sprintf(">>>>> [%v] type %T not supported yet\n", key, v))
 		}
