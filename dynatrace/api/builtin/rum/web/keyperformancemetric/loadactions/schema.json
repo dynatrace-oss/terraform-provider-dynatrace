@@ -1,0 +1,233 @@
+{
+	"allowedScopes": [
+		"APPLICATION_METHOD",
+		"APPLICATION"
+	],
+	"constraints": [
+		{
+			"customMessage": "The thresholds are not within the correct limits. The key performance metric \"Cumulative layout shift\" requires thresholds between 0 and 10, all other metrics can range between 0.1 and 240 [sec].",
+			"customValidatorId": "kpmLoadActionsThresholdValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Select a key performance metric and set the Tolerating and Frustrated performance thresholds to [refine the Apdex calculations](https://dt-url.net/apdex-thresholds) for this application.",
+	"displayName": "Apdex configuration for load actions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"LoadKpm": {
+			"description": "",
+			"displayName": "LoadKpm",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "User action duration",
+					"value": "USER_ACTION_DURATION"
+				},
+				{
+					"displayName": "Visually complete",
+					"value": "VISUALLY_COMPLETE"
+				},
+				{
+					"displayName": "Speed index",
+					"value": "SPEED_INDEX"
+				},
+				{
+					"displayName": "DOM interactive",
+					"value": "DOM_INTERACTIVE"
+				},
+				{
+					"displayName": "Load event end",
+					"value": "LOAD_EVENT_END"
+				},
+				{
+					"displayName": "Load event start",
+					"value": "LOAD_EVENT_START"
+				},
+				{
+					"displayName": "HTML downloaded",
+					"value": "RESPONSE_END"
+				},
+				{
+					"displayName": "Time to first byte",
+					"value": "RESPONSE_START"
+				},
+				{
+					"displayName": "First input delay",
+					"value": "FIRST_INPUT_DELAY"
+				},
+				{
+					"displayName": "Largest contentful paint",
+					"value": "LARGEST_CONTENTFUL_PAINT"
+				},
+				{
+					"displayName": "Cumulative layout shift",
+					"value": "CUMULATIVE_LAYOUT_SHIFT"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"fallbackThresholds": {
+			"description": "If the selected key performance metric is not detected, the **User action duration** metric is used instead.",
+			"displayName": "Fallback metric thresholds",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"precondition": {
+					"expectedValue": "USER_ACTION_DURATION",
+					"property": "kpm",
+					"type": "EQUALS"
+				},
+				"type": "NOT"
+			},
+			"type": {
+				"$ref": "#/types/FallbackThresholds"
+			}
+		},
+		"kpm": {
+			"default": "VISUALLY_COMPLETE",
+			"description": "",
+			"displayName": "Key performance metric",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/LoadKpm"
+			}
+		},
+		"thresholds": {
+			"description": "Set the Tolerating and Frustrated performance thresholds for this action type.",
+			"displayName": "Key performance metric thresholds",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Thresholds"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-kpm-settings",
+		"group:rum-settings"
+	],
+	"schemaId": "builtin:rum.web.key-performance-metric-load-actions",
+	"types": {
+		"FallbackThresholds": {
+			"constraints": [
+				{
+					"properties": [
+						"frustratingFallbackThresholdSeconds",
+						"toleratedFallbackThresholdSeconds"
+					],
+					"type": "GREATER_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "FallbackThresholds",
+			"documentation": "",
+			"properties": {
+				"frustratingFallbackThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 240,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 12,
+					"description": "If **User action duration** is above this value, the action is assigned to the Frustrated performance zone.",
+					"displayName": "Frustrated threshold [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"toleratedFallbackThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "If **User action duration** is below this value, the action is assigned to the Satisfied performance zone.",
+					"displayName": "Tolerating threshold [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Thresholds": {
+			"constraints": [
+				{
+					"properties": [
+						"frustratingThresholdSeconds",
+						"toleratedThresholdSeconds"
+					],
+					"type": "GREATER_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "Thresholds",
+			"documentation": "",
+			"properties": {
+				"frustratingThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 240,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 12,
+					"description": "If the key performance metric is above this value, the action is assigned to the Frustrated performance zone.",
+					"displayName": "Frustrated threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"toleratedThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "If the key performance metric is below this value, the action is assigned to the Satisfied performance zone.",
+					"displayName": "Tolerating threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.7"
+}

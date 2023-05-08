@@ -1,0 +1,12 @@
+{
+    "fallbackThresholds": {
+      "frustratingFallbackThresholdSeconds": 12,
+      "toleratedFallbackThresholdSeconds": 3
+    },
+    "kpm": "VISUALLY_COMPLETE",
+    "scope": "APPLICATION-1234567890000000",
+    "thresholds": {
+      "frustratingThresholdSeconds": 12,
+      "toleratedThresholdSeconds": 3
+    }
+  }
