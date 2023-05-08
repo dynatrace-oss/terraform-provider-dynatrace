@@ -66,6 +66,21 @@ func Initialize() (environment *Environment, err error) {
 			delete(resArgs, key)
 		}
 	} else {
+
+		for _, idx := range tailArgs {
+			key, id := ValidateResource(idx)
+			if len(key) == 0 {
+				return nil, fmt.Errorf("unknown resource `%s`", idx)
+			}
+
+			for _, child := range ResourceType(key).GetChildren() {
+				if len(id) == 0 {
+					tailArgs = append(tailArgs, string(child))
+				} else {
+					tailArgs = append(tailArgs, string(child)+"="+id)
+				}
+			}
+		}
 		for _, idx := range tailArgs {
 			key, id := ValidateResource(idx)
 			if len(key) == 0 {

@@ -483,6 +483,16 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_processing",
 }
 
+func (me ResourceType) GetChildren() []ResourceType {
+	res := []ResourceType{}
+	for k, v := range AllResources {
+		if v.Parent != nil && (string(*v.Parent) == string(me)) {
+			res = append(res, k)
+		}
+	}
+	return res
+}
+
 type ResourceStatus string
 
 func (me ResourceStatus) IsOneOf(stati ...ResourceStatus) bool {
