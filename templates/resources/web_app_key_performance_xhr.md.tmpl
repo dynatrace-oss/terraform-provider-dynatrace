@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_web_app_key_performance_xhr Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_web_app_key_performance_xhr` covers apdex threshold configuration for XHR actions
+
+---
+
+# dynatrace_web_app_key_performance_xhr (Resource)
+
+-> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_web_application`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+
+## Dynatrace Documentation
+
+- Adjust Apdex settings for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/additional-configuration/configure-apdex-web
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.web.key-performance-metric-xhr-actions`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_web_app_key_performance_xhr` downloads all existing apdex threshold configuration for XHR actions
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/web/keyperformancemetric/xhractions/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

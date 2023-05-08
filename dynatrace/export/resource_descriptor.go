@@ -136,6 +136,7 @@ import (
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/customactions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/loadactions"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/xhractions"
 	webapprequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/requesterrors"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
@@ -933,6 +934,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.WebAppKeyPerformanceLoad: NewResourceDescriptor(
 		loadactions.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.WebAppKeyPerformanceXHR: NewResourceDescriptor(
+		xhractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 }
