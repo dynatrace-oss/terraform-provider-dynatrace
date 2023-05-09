@@ -39,48 +39,48 @@ func Coalesce(d Dependency) Dependency {
 }
 
 var Dependencies = struct {
-	ManagementZone          Dependency
-	LegacyID                func(resourceType ResourceType) Dependency
-	ID                      func(resourceType ResourceType) Dependency
-	ResourceID              func(resourceType ResourceType) Dependency
-	ServiceMethod           Dependency
-	Service                 Dependency
-	HostGroup               Dependency
-	Host                    Dependency
-	Disk                    Dependency
-	ProcessGroup            Dependency
-	ProcessGroupInstance    Dependency
-	RequestAttribute        Dependency
-	CustomApplication       Dependency
-	MobileApplication       Dependency
+	ManagementZone       Dependency
+	LegacyID             func(resourceType ResourceType) Dependency
+	ID                   func(resourceType ResourceType) Dependency
+	ResourceID           func(resourceType ResourceType) Dependency
+	ServiceMethod        Dependency
+	Service              Dependency
+	HostGroup            Dependency
+	Host                 Dependency
+	Disk                 Dependency
+	ProcessGroup         Dependency
+	ProcessGroupInstance Dependency
+	RequestAttribute     Dependency
+	// CustomApplication    Dependency
+	// MobileApplication       Dependency
 	DeviceApplicationMethod Dependency
 	// Application               Dependency
-	ApplicationMethod         Dependency
-	SyntheticTest             Dependency
-	HttpCheck                 Dependency
+	ApplicationMethod Dependency
+	// SyntheticTest             Dependency
+	// HttpCheck                 Dependency
 	K8sCluster                Dependency
 	CloudApplicationNamespace Dependency
 	EnvironmentActiveGate     Dependency
 }{
-	ManagementZone:          &mgmzdep{ResourceTypes.ManagementZoneV2},
-	LegacyID:                func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
-	ID:                      func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
-	ResourceID:              func(resourceType ResourceType) Dependency { return &resourceIDDep{resourceType} },
-	ServiceMethod:           &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
-	Service:                 &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
-	HostGroup:               &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
-	Host:                    &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},
-	Disk:                    &entityds{"DISK", "DISK-[A-Z0-9]{16}", false},
-	ProcessGroup:            &entityds{"PROCESS_GROUP", "PROCESS_GROUP-[A-Z0-9]{16}", false},
-	ProcessGroupInstance:    &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
-	RequestAttribute:        &reqAttName{ResourceTypes.RequestAttribute},
-	CustomApplication:       &entityds{"CUSTOM_APPLICATION", "CUSTOM_APPLICATION-[A-Z0-9]{16}", false},
-	MobileApplication:       &entityds{"MOBILE_APPLICATION", "MOBILE_APPLICATION-[A-Z0-9]{16}", false},
+	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
+	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
+	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
+	ResourceID:           func(resourceType ResourceType) Dependency { return &resourceIDDep{resourceType} },
+	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
+	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
+	HostGroup:            &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
+	Host:                 &entityds{"HOST", "HOST-[A-Z0-9]{16}", false},
+	Disk:                 &entityds{"DISK", "DISK-[A-Z0-9]{16}", false},
+	ProcessGroup:         &entityds{"PROCESS_GROUP", "PROCESS_GROUP-[A-Z0-9]{16}", false},
+	ProcessGroupInstance: &entityds{"PROCESS_GROUP_INSTANCE", "PROCESS_GROUP_INSTANCE-[A-Z0-9]{16}", false},
+	RequestAttribute:     &reqAttName{ResourceTypes.RequestAttribute},
+	// CustomApplication:    &entityds{"CUSTOM_APPLICATION", "CUSTOM_APPLICATION-[A-Z0-9]{16}", false},
+	// MobileApplication:       &entityds{"MOBILE_APPLICATION", "MOBILE_APPLICATION-[A-Z0-9]{16}", false},
 	DeviceApplicationMethod: &entityds{"DEVICE_APPLICATION_METHOD", "DEVICE_APPLICATION_METHOD-[A-Z0-9]{16}", false},
 	// Application:               &entityds{"APPLICATION", "APPLICATION-[A-Z0-9]{16}", false},
-	ApplicationMethod:         &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
-	SyntheticTest:             &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
-	HttpCheck:                 &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
+	ApplicationMethod: &entityds{"APPLICATION_METHOD", "APPLICATION_METHOD-[A-Z0-9]{16}", false},
+	// SyntheticTest:             &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
+	// HttpCheck:                 &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
 	K8sCluster:                &entityds{"KUBERNETES_CLUSTER", "KUBERNETES_CLUSTER-[A-Z0-9]{16}", false},
 	CloudApplicationNamespace: &entityds{"CLOUD_APPLICATION_NAMESPACE", "CLOUD_APPLICATION_NAMESPACE-[A-Z0-9]{16}", false},
 	EnvironmentActiveGate:     &entityds{"ENVIRONMENT_ACTIVE_GATE", "ENVIRONMENT_ACTIVE_GATE-[A-Z0-9]{16}", false},

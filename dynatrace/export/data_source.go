@@ -57,6 +57,17 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_mobile_application" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.HTTPMonitor:
+		return fmt.Sprintf(`data "dynatrace_entity" "%s" {
+			type = "HTTP_CHECK"
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.BrowserMonitor:
+		return fmt.Sprintf(`data "dynatrace_entity" "%s" {
+			type = "SYNTHETIC_TEST"
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
+
 	default:
 		return ""
 	}

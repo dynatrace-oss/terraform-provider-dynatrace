@@ -202,9 +202,6 @@ func (me *Environment) Finish() (err error) {
 	if err = me.WriteProviderFiles(); err != nil {
 		return err
 	}
-	// for _, module := range me.Modules {
-	// 	fmt.Println(module.Type, len(module.GetPostProcessedResources()))
-	// }
 
 	if err = me.RemoveNonReferencedModules(); err != nil {
 		return err
