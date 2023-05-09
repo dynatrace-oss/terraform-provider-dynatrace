@@ -311,16 +311,18 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.Alerting),
 	).Specify(notifications.Types.AnsibleTower),
 	ResourceTypes.ApplicationAnomalies: NewResourceDescriptor(application_anomalies.Service),
-	ResourceTypes.ApplicationDataPrivacy: NewResourceDescriptor(
+	ResourceTypes.ApplicationDataPrivacy: NewChildResourceDescriptor(
 		dataprivacy.Service,
+		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.ApplicationDetection: NewResourceDescriptor(
 		detection.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.ApplicationErrorRules: NewResourceDescriptor(
+	ResourceTypes.ApplicationErrorRules: NewChildResourceDescriptor(
 		errors.Service,
+		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.AutoTag: NewResourceDescriptor(
@@ -380,9 +382,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		mobile_app_crash_rate.Service,
 		Coalesce(Dependencies.MobileApplication),
 	),
-	ResourceTypes.WebAppAnomalies: NewResourceDescriptor(
+	ResourceTypes.WebAppAnomalies: NewChildResourceDescriptor(
 		web_app_anomalies.Service,
-		Coalesce(Dependencies.Application),
+		ResourceTypes.WebApplication,
+		Dependencies.ID(ResourceTypes.WebApplication),
 		Coalesce(Dependencies.ApplicationMethod),
 	),
 	ResourceTypes.CustomService: NewResourceDescriptor(customservices.Service),
@@ -628,7 +631,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.WebAppEnablement: NewResourceDescriptor(
 		rumwebenablement.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.RUMProcessGroup: NewResourceDescriptor(
 		rumprocessgroup.Service,
@@ -663,15 +666,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.SessionReplayWebPrivacy: NewResourceDescriptor(
 		sessionreplaywebprivacy.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.SessionReplayResourceCapture: NewResourceDescriptor(
 		sessionreplayresourcecapture.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.UsabilityAnalytics: NewResourceDescriptor(
+	ResourceTypes.UsabilityAnalytics: NewChildResourceDescriptor(
 		analytics.Service,
-		Coalesce(Dependencies.Application),
+		ResourceTypes.WebApplication,
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.SyntheticAvailability: NewResourceDescriptor(availability.Service),
 	ResourceTypes.BrowserMonitorOutageHandling: NewResourceDescriptor(
@@ -755,7 +759,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SLONormalization:       NewResourceDescriptor(normalization.Service),
 	ResourceTypes.DataPrivacy: NewResourceDescriptor(
 		privacy.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.ServiceFailure: NewResourceDescriptor(
 		generalparameters.Service,
@@ -822,11 +826,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.RemoteEnvironments: NewResourceDescriptor(environment.Service),
 	ResourceTypes.WebAppCustomErrors: NewResourceDescriptor(
 		webappcustomerrors.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.WebAppRequestErrors: NewResourceDescriptor(
 		webapprequesterrors.Service,
-		Coalesce(Dependencies.Application),
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.UserSettings:               NewResourceDescriptor(usersettings.Service),
 	ResourceTypes.DashboardsGeneral:          NewResourceDescriptor(dashboardsgeneral.Service),
@@ -869,9 +873,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.UserActionCustomMetrics: NewResourceDescriptor(useractioncustommetrics.Service),
 	ResourceTypes.WebAppJavascriptVersion: NewResourceDescriptor(customrumjavascriptversion.Service),
-	ResourceTypes.WebAppJavascriptUpdates: NewResourceDescriptor(
+	ResourceTypes.WebAppJavascriptUpdates: NewChildResourceDescriptor(
 		rumjavascriptupdates.Service,
-		Coalesce(Dependencies.Application),
+		ResourceTypes.WebApplication,
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.OpenTelemetryMetrics: NewResourceDescriptor(opentelemetrymetrics.Service),
 	ResourceTypes.ActiveGateUpdates: NewResourceDescriptor(
@@ -892,9 +897,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OwnershipTeams:  NewResourceDescriptor(teams.Service),
 	ResourceTypes.LogCustomSource: NewResourceDescriptor(customlogsourcesettings.Service),
-	ResourceTypes.ApplicationDetectionV2: NewResourceDescriptor(
+	ResourceTypes.ApplicationDetectionV2: NewChildResourceDescriptor(
 		appdetection.Service,
-		Coalesce(Dependencies.Application),
+		ResourceTypes.WebApplication,
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.Kubernetes: NewResourceDescriptor(
 		kubernetesv2.Service,
@@ -975,7 +981,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
-	ResourceTypes.ApplicationDetectionV2,       // overlap with ResourceTypes.ApplicationDetection
+	ResourceTypes.ApplicationDetection,         // overlap with ResourceTypes.ApplicationDetection
 
 	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
 	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
