@@ -5,6 +5,6 @@
         "enabled": true
     },
     "sessionReplay": {
-        "enabled": true
+        "onCrash": true
     }
 }

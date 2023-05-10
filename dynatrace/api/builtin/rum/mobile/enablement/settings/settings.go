@@ -22,14 +22,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type Settings struct {
-	ApplicationID *string        `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-	Rum           *Rum           `json:"rum"`                     // Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.
-	SessionReplay *SessionReplay `json:"sessionReplay"`           // [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).
-}
-
 func (me *Settings) Name() string {
 	return *me.ApplicationID
+}
+
+type Settings struct {
+	ApplicationID *string        `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	Rum           *Rum           `json:"rum"`                     // (Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.
+	SessionReplay *SessionReplay `json:"sessionReplay"`           // (Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -42,21 +42,19 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"rum": {
 			Type:        schema.TypeList,
-			Description: "Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
+			Description: "(Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(Rum).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(Rum).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"session_replay": {
 			Type:        schema.TypeList,
-			Description: "[Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
+			Description: "(Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(SessionReplay).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(SessionReplay).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

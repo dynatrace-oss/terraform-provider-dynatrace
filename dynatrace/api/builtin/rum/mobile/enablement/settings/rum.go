@@ -23,7 +23,7 @@ import (
 )
 
 type Rum struct {
-	CostAndTrafficControl int  `json:"costAndTrafficControl"` // (Field has overlap with `dynatrace_mobile_application`) Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
+	CostAndTrafficControl int  `json:"costAndTrafficControl"` // Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
 	Enabled               bool `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
 }
 
@@ -31,7 +31,7 @@ func (me *Rum) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cost_and_traffic_control": {
 			Type:        schema.TypeInt,
-			Description: "(Field has overlap with `dynatrace_mobile_application`) Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.",
+			Description: "Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.",
 			Required:    true,
 		},
 		"enabled": {

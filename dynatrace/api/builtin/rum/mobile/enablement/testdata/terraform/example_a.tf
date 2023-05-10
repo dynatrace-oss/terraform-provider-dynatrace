@@ -4,6 +4,6 @@ resource "dynatrace_mobile_app_enablement" "#name#" {
     cost_and_traffic_control = 25
   }
   session_replay {
-    enabled = false
+    on_crash = false
   }
 }

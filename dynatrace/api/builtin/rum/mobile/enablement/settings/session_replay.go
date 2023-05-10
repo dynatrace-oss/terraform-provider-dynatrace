@@ -23,14 +23,14 @@ import (
 )
 
 type SessionReplay struct {
-	Enabled bool `json:"enabled"` // (Field has overlap with `dynatrace_mobile_application`) This setting is enabled (`true`) or disabled (`false`)
+	OnCrash bool `json:"onCrash"` // Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
 }
 
 func (me *SessionReplay) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"enabled": {
+		"on_crash": {
 			Type:        schema.TypeBool,
-			Description: "(Field has overlap with `dynatrace_mobile_application`) This setting is enabled (`true`) or disabled (`false`)",
+			Description: "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).",
 			Required:    true,
 		},
 	}
@@ -38,12 +38,12 @@ func (me *SessionReplay) Schema() map[string]*schema.Schema {
 
 func (me *SessionReplay) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled": me.Enabled,
+		"on_crash": me.OnCrash,
 	})
 }
 
 func (me *SessionReplay) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled": &me.Enabled,
+		"on_crash": &me.OnCrash,
 	})
 }

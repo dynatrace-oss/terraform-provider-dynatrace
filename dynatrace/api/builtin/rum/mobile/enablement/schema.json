@@ -97,7 +97,7 @@
 			"displayName": "sessionReplay",
 			"documentation": "",
 			"properties": {
-				"enabled": {
+				"onCrash": {
 					"default": true,
 					"description": "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
 					"displayName": "Enable Session Replay on crashes",
@@ -114,5 +114,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1.6"
+	"version": "2"
 }
