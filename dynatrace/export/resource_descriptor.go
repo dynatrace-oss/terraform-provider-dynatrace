@@ -992,7 +992,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
 	ResourceTypes.UserSettings,                 // requires personal token
 	ResourceTypes.LogGrail,                     // phased rollout
-	ResourceTypes.ApplicationDetection,         // overlap with ResourceTypes.ApplicationDetection
+	ResourceTypes.ApplicationDetectionV2,       // overlap with ResourceTypes.ApplicationDetection
 
 	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
 	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
