@@ -350,7 +350,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		calculated_service_metrics.Service,
 		Dependencies.ManagementZone,
 		Dependencies.RequestAttribute,
-		Dependencies.ManagementZone,
 		Dependencies.Service,
 		Dependencies.Host,
 		Dependencies.HostGroup,
