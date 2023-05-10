@@ -30,6 +30,17 @@ import (
 
 func Initialize() (environment *Environment, err error) {
 	flags, tailArgs := createFlags()
+	if flags.FlagMigrationOutput && flags.FollowReferences {
+		return nil, errors.New("-ref and -migrate are mutually exclusive")
+	}
+	if flags.FlagMigrationOutput {
+		flags.FollowReferences = true
+		flags.PersistIDs = true
+		if flags.DataSources {
+			flags.Flat = true
+		}
+	}
+	fmt.Println(">>", "flags.Flat", flags.Flat)
 	if err = ConfigureRESTLog(); err != nil {
 		return nil, errors.New("unable to configure log file for REST activity: " + err.Error())
 	}
@@ -66,8 +77,9 @@ func Initialize() (environment *Environment, err error) {
 			delete(resArgs, key)
 		}
 	} else {
-
+		effectiveTailArgs := []string{}
 		for _, idx := range tailArgs {
+			effectiveTailArgs = append(effectiveTailArgs, idx)
 			key, id := ValidateResource(idx)
 			if len(key) == 0 {
 				return nil, fmt.Errorf("unknown resource `%s`", idx)
@@ -75,13 +87,16 @@ func Initialize() (environment *Environment, err error) {
 
 			for _, child := range ResourceType(key).GetChildren() {
 				if len(id) == 0 {
-					tailArgs = append(tailArgs, string(child))
+					effectiveTailArgs = append(effectiveTailArgs, string(child))
 				} else {
-					tailArgs = append(tailArgs, string(child)+"="+id)
+					effectiveTailArgs = append(effectiveTailArgs, string(child)+"="+id)
 				}
 			}
+			if flags.FlagMigrationOutput && flags.DataSources {
+				break
+			}
 		}
-		for _, idx := range tailArgs {
+		for _, idx := range effectiveTailArgs {
 			key, id := ValidateResource(idx)
 			if len(key) == 0 {
 				return nil, fmt.Errorf("unknown resource `%s`", idx)
@@ -147,10 +162,10 @@ func Initialize() (environment *Environment, err error) {
 
 func createFlags() (flags Flags, tailArgs []string) {
 	flag.Bool("export", true, "")
-	refArg := flag.Bool("ref", false, "enable data sources and dependencies")
+	refArg := flag.Bool("ref", false, "enable data sources and dependencies. mutually exclusive with -migrate")
 	dataSourceArg := flag.Bool("datasources", false, "when resolving dependencies eligible resources will be referred as data sources")
 	comIdArg := flag.Bool("id", false, "enable commented ids")
-	migrateArg := flag.Bool("migrate", false, "enable migration output")
+	migrateArg := flag.Bool("migrate", false, "enable migration output. mutually exclusive with -ref")
 	verbose := flag.Bool("v", false, "enable verbose logging")
 	linkArg := flag.Bool("link", false, "enable hard links for .requires_attention and .flawed")
 	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
@@ -160,6 +175,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 
 	flag.Parse()
+
 	return Flags{
 		FollowReferences:    *refArg,
 		PersistIDs:          *comIdArg,

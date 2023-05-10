@@ -328,6 +328,9 @@ func (me *entityds) Replace(environment *Environment, s string, replacingIn Reso
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
 		return s, []any{}
 	}
+	if environment.Flags.FlagMigrationOutput {
+		return s, []any{}
+	}
 	found := false
 	m1 := regexp.MustCompile(me.Pattern)
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {

@@ -202,7 +202,6 @@ func (me *Environment) Finish() (err error) {
 	if err = me.WriteProviderFiles(); err != nil {
 		return err
 	}
-
 	if err = me.RemoveNonReferencedModules(); err != nil {
 		return err
 	}
@@ -302,6 +301,19 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 				return err
 			}
 		}
+		dsm := map[string]string{}
+		for _, module := range me.Modules {
+			mdsm, err := module.ProvideDataSources()
+			if err != nil {
+				return err
+			}
+			for k, v := range mdsm {
+				dsm[k] = v
+			}
+		}
+		for _, ds := range dsm {
+			datasourcesFile.Write([]byte("\n" + ds))
+		}
 
 		return nil
 	}
@@ -327,16 +339,20 @@ func (me *Environment) WriteResourceFiles() (err error) {
 }
 
 func (me *Environment) RemoveNonReferencedModules() (err error) {
-	for _, module := range me.Modules {
+	for k, module := range me.Modules {
 		if module.IsReferencedAsDataSource() || module.Descriptor.Parent != nil {
 			if err = module.PurgeFolder(); err != nil {
 				return err
 			}
+			delete(me.Modules, k)
+			return nil
 		}
 		if len(module.GetPostProcessedResources()) == 0 {
 			if err = module.PurgeFolder(); err != nil {
 				return err
 			}
+			delete(me.Modules, k)
+			return nil
 		}
 	}
 	return nil

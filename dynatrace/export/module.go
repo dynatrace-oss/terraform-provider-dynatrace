@@ -301,10 +301,7 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 		return nil
 	}
 	fmt.Println("- " + me.Type)
-	var datasourcesFile *os.File
-	if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
-		return err
-	}
+	buf := new(bytes.Buffer)
 	dsm := map[string]string{}
 	for _, v := range me.Resources {
 		for _, referencedResource := range v.ResourceReferences {
@@ -314,12 +311,8 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 		}
 	}
 	for ds := range dsm {
-		datasourcesFile.Write([]byte("\n" + ds))
+		buf.Write([]byte("\n" + ds))
 	}
-	defer func() {
-		datasourcesFile.Close()
-		format(datasourcesFile.Name(), true)
-	}()
 	dataSourceIDs := []string{}
 	for dataSourceID := range me.DataSources {
 		dataSourceIDs = append(dataSourceIDs, dataSourceID)
@@ -329,7 +322,7 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 		dataSource := me.DataSources[dataSourceID]
 		dataSourceName := dataSource.Name
 		dd, _ := json.Marshal(dataSourceName)
-		if _, err = datasourcesFile.WriteString(fmt.Sprintf(`
+		if _, err = buf.WriteString(fmt.Sprintf(`
 		data "dynatrace_entity" "%s" {
 			type = "%s"
 			name = %s
@@ -337,15 +330,68 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 			return err
 		}
 	}
+	data := buf.Bytes()
+	if len(data) > 0 {
+		var datasourcesFile *os.File
+		if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
+			return err
+		}
+		if _, err := datasourcesFile.Write(data); err != nil {
+			return err
+		}
+		defer func() {
+			datasourcesFile.Close()
+			format(datasourcesFile.Name(), true)
+		}()
+	}
+
 	return nil
 }
 
-func (me *Module) PurgeFolder() (err error) {
-	if err = os.RemoveAll(me.GetFolder()); err != nil {
-		return err
+func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
+	if me.IsReferencedAsDataSource() {
+		return map[string]string{}, nil
 	}
-	if err = os.RemoveAll(me.GetAttentionFolder()); err != nil {
-		return err
+	if me.Descriptor.Parent != nil {
+		return map[string]string{}, nil
+	}
+	dsm = map[string]string{}
+	for _, v := range me.Resources {
+		for _, referencedResource := range v.ResourceReferences {
+			if asDS := AsDataSource(referencedResource); len(asDS) > 0 {
+				dsm[string(referencedResource.Type)+"."+referencedResource.ID] = asDS
+			}
+		}
+	}
+	dataSourceIDs := []string{}
+	for dataSourceID := range me.DataSources {
+		dataSourceIDs = append(dataSourceIDs, dataSourceID)
+	}
+	sort.Strings(dataSourceIDs)
+	for _, dataSourceID := range dataSourceIDs {
+		dataSource := me.DataSources[dataSourceID]
+		dataSourceName := dataSource.Name
+		dd, _ := json.Marshal(dataSourceName)
+		dsm["dynatrace_entity."+dataSource.Type+"."+string(dd)] = fmt.Sprintf(`data "dynatrace_entity" "%s" {
+			type = "%s"
+			name = %s
+		}`, dataSourceID, dataSource.Type, string(dd))
+	}
+	return dsm, nil
+}
+
+func (me *Module) PurgeFolder() (err error) {
+	if me.Environment.Flags.Flat {
+		for _, resource := range me.Resources {
+			os.Remove(resource.GetFile())
+		}
+	} else {
+		if err = os.RemoveAll(me.GetFolder()); err != nil {
+			return err
+		}
+		if err = os.RemoveAll(me.GetAttentionFolder()); err != nil {
+			return err
+		}
 	}
 	return nil
 }
