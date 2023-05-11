@@ -234,7 +234,7 @@ func (me *defaultService[T]) create(v T) (*api.Stub, error) {
 				return nil, err
 			}
 		} else if me.options.CreateRetry != nil {
-			if modifiedPayload := me.options.CreateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
+			if modifiedPayload := me.options.CreateRetry(v, err); fmt.Sprintf("%v", modifiedPayload) != "<nil>" {
 				if err = client.Post(me.createURL(modifiedPayload), modifiedPayload, 200, 201).Finish(&stub); err != nil {
 					return nil, err
 				}
