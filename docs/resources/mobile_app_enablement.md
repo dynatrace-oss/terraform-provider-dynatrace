@@ -40,8 +40,8 @@ resource "dynatrace_mobile_app_enablement" "#name#" {
 
 ### Required
 
-- `rum` (Block List, Min: 1, Max: 1) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience. (see [below for nested schema](#nestedblock--rum))
-- `session_replay` (Block List, Min: 1, Max: 1) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj). (see [below for nested schema](#nestedblock--session_replay))
+- `rum` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience. (see [below for nested schema](#nestedblock--rum))
+- `session_replay` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj). (see [below for nested schema](#nestedblock--session_replay))
 
 ### Optional
 
@@ -56,7 +56,7 @@ resource "dynatrace_mobile_app_enablement" "#name#" {
 
 Required:
 
-- `cost_and_traffic_control` (Number) (Field has overlap with `dynatrace_mobile_application`) Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
+- `cost_and_traffic_control` (Number) Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 
@@ -65,5 +65,5 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) (Field has overlap with `dynatrace_mobile_application`) This setting is enabled (`true`) or disabled (`false`)
+- `on_crash` (Boolean) Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
  

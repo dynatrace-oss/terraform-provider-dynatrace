@@ -361,9 +361,9 @@ func Provider() *schema.Provider {
 			"dynatrace_business_events_buckets":            resources.NewGeneric(export.ResourceTypes.BusinessEventsBuckets).Resource(),
 			"dynatrace_business_events_metrics":            resources.NewGeneric(export.ResourceTypes.BusinessEventsMetrics).Resource(),
 			"dynatrace_business_events_processing":         resources.NewGeneric(export.ResourceTypes.BusinessEventsProcessing).Resource(),
-			"dynatrace_web_app_key_performance_custom":     resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceCustom).Resource(),
-			"dynatrace_web_app_key_performance_load":       resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceLoad).Resource(),
-			"dynatrace_web_app_key_performance_xhr":        resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceXHR).Resource(),
+			// "dynatrace_web_app_key_performance_custom":     resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceCustom).Resource(),
+			// "dynatrace_web_app_key_performance_load":       resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceLoad).Resource(),
+			// "dynatrace_web_app_key_performance_xhr":        resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceXHR).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
