@@ -998,6 +998,10 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.DiskEventAnomalies,      // overlap with Settings 2.0 ResourceTypes.DiskAnomalyDetectionRules
 	ResourceTypes.SLO,                     // overlap with Settings 2.0 ResourceTypes.SLOV2
 	ResourceTypes.AutoTag,                 // overlap with Settings 2.0 ResourceTypes.AutoTagV2
+
+	ResourceTypes.WebAppKeyPerformanceCustom, // schema removed
+	ResourceTypes.WebAppKeyPerformanceLoad,   // schema removed
+	ResourceTypes.WebAppKeyPerformanceXHR,    // schema removed
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
