@@ -27,5 +27,5 @@ const SchemaVersion = "6.0.11"
 const SchemaID = "builtin:monitoring.slo"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*slo.Settings] {
-	return settings20.Service[*slo.Settings](credentials, SchemaID, SchemaVersion)
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*slo.Settings]{LegacyID: settings.LegacyObjIDDecode})
 }

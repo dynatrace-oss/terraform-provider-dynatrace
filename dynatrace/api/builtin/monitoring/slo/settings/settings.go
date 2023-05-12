@@ -34,6 +34,7 @@ type Settings struct {
 	Name                string               `json:"name"`                        // SLO name
 	TargetSuccess       float64              `json:"targetSuccess"`               // Set the target value of the SLO. A percentage below this value indicates a failure.
 	TargetWarning       float64              `json:"targetWarning"`               // Set the warning value of the SLO. At the warning state the SLO is fulfilled. However, it is getting close to a failure.
+	LegacyID            *string              `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -96,6 +97,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Set the warning value of the SLO. At the warning state the SLO is fulfilled. However, it is getting close to a failure.",
 			Required:    true,
 		},
+		"legacy_id": {
+			Type:        schema.TypeString,
+			Description: "The ID of this setting when referred to by the Config REST API V1",
+			Computed:    true,
+			Optional:    true,
+		},
 	}
 }
 
@@ -112,6 +119,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"name":                   me.Name,
 		"target_success":         me.TargetSuccess,
 		"target_warning":         me.TargetWarning,
+		"legacy_id":              me.LegacyID,
 	})
 }
 
@@ -128,5 +136,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"name":                   &me.Name,
 		"target_success":         &me.TargetSuccess,
 		"target_warning":         &me.TargetWarning,
+		"legacy_id":              &me.LegacyID,
 	})
 }
