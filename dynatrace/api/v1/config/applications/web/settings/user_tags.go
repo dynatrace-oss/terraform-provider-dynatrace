@@ -18,6 +18,10 @@
 package web
 
 import (
+	"sync"
+	"sync/atomic"
+	"time"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -61,9 +65,15 @@ type UserTag struct {
 func (me *UserTag) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {
+			Type:             schema.TypeInt,
+			Description:      "A unique ID among all userTags and properties of this application. Minimum value is 1.",
+			Optional:         true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
+		},
+		"unique_id": {
 			Type:        schema.TypeInt,
 			Description: "A unique ID among all userTags and properties of this application. Minimum value is 1.",
-			Required:    true,
+			Computed:    true,
 		},
 		"metadata_id": {
 			Type:        schema.TypeInt,
@@ -90,7 +100,7 @@ func (me *UserTag) Schema() map[string]*schema.Schema {
 
 func (me *UserTag) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"id":                            me.UniqueID,
+		"unique_id":                     me.UniqueID,
 		"metadata_id":                   me.MetaDataID,
 		"cleanup_rule":                  me.CleanUpRule,
 		"server_side_request_attribute": me.ServerSideRequestAttribute,
@@ -99,11 +109,34 @@ func (me *UserTag) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *UserTag) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	if err := decoder.DecodeAll(map[string]any{
 		"id":                            &me.UniqueID,
 		"metadata_id":                   &me.MetaDataID,
 		"cleanup_rule":                  &me.CleanUpRule,
 		"server_side_request_attribute": &me.ServerSideRequestAttribute,
 		"ignore_case":                   &me.IgnoreCase,
-	})
+	}); err != nil {
+		return err
+	}
+	if vUniqueID, ok := decoder.GetOk("unique_id"); ok {
+		me.UniqueID = int32(vUniqueID.(int))
+	} else {
+		me.UniqueID = UniqueID()
+	}
+	return nil
+}
+
+var lock sync.Mutex
+var lastUniqueID atomic.Int32
+
+func UniqueID() int32 {
+	lock.Lock()
+	defer lock.Unlock()
+	uniqueID := int32(time.Now().Unix())
+	for uniqueID == lastUniqueID.Load() {
+		time.Sleep(time.Second)
+		uniqueID = int32(time.Now().Unix())
+	}
+	lastUniqueID.Store(uniqueID)
+	return uniqueID
 }
