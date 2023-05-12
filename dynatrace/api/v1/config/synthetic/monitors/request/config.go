@@ -26,7 +26,7 @@ import (
 // Config contains the setup of the monitor
 type Config struct {
 	UserAgent            *string `json:"userAgent,omitempty"`                     // The User agent of the request
-	AcceptAnyCertificate *bool   `json:"acceptAnyCertificate,omitempty"`          // If set to `false`, then the monitor fails with invalid SSL certificates.\n\nIf not set, the `false` option is used
+	AcceptAnyCertificate bool    `json:"acceptAnyCertificate"`                    // If set to `false`, then the monitor fails with invalid SSL certificates.\n\nIf not set, the `false` option is used
 	FollowRedirects      bool    `json:"followRedirects"`                         // If set to `false`, redirects are reported as successful requests with response code 3xx.\n\nIf not set, the `false` option is used.
 	RequestHeaders       Headers `json:"requestHeaders,omitempty"`                // By default, only the `User-Agent` header is set.\n\nYou can't set or modify this header here. Use the `userAgent` field for that.
 	ClientCertificate    *string `json:"certStoreId,omitempty"`                   // The client certificate, if applicable - eg. CREDENTIALS_VAULT-XXXXXXXXXXXXXXXX
@@ -77,10 +77,8 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if me.AcceptAnyCertificate != nil && *me.AcceptAnyCertificate {
-		if err := properties.Encode("accept_any_certificate", me.AcceptAnyCertificate); err != nil {
-			return err
-		}
+	if err := properties.Encode("accept_any_certificate", me.AcceptAnyCertificate); err != nil {
+		return err
 	}
 	if err := properties.Encode("follow_redirects", me.FollowRedirects); err != nil {
 		return err
