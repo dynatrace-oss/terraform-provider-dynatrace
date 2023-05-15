@@ -39,7 +39,7 @@ type service struct {
 
 func (me *service) Get(selector string, v *customtags.Settings) (err error) {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Get(fmt.Sprintf("/api/v2/tags?entitySelector=%s", url.QueryEscape(selector)), 200).Finish(v); err != nil {
+	if err = client.Get(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
 	}
 	v.EntitySelector = selector
@@ -71,7 +71,7 @@ func (me *service) Update(id string, v *customtags.Settings) error {
 
 	var settingsObj customtags.Settings
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post(fmt.Sprintf("/api/v2/tags?entitySelector=%s", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
+	if err = client.Post(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
 		return err
 	}
 	v.MatchedEntities = settingsObj.MatchedEntities
