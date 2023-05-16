@@ -51,7 +51,7 @@ type onDemandWriter struct {
 
 func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 	if odw.file == nil {
-		if odw.file, err = os.OpenFile(odw.logFileName, os.O_TRUNC|os.O_CREATE, os.ModePerm); err != nil {
+		if odw.file, err = os.OpenFile(odw.logFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, os.ModePerm); err != nil {
 			return 0, err
 		}
 	}
