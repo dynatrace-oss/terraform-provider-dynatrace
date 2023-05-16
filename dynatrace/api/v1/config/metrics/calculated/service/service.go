@@ -30,7 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
-const SchemaID = "calculated-metrics-service"
+const SchemaID = "v1:config:calculated-metrics-service"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*mysettings.CalculatedServiceMetric] {
 	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
