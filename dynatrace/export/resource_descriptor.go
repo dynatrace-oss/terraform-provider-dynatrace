@@ -1002,6 +1002,26 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppKeyPerformanceCustom, // schema removed
 	ResourceTypes.WebAppKeyPerformanceLoad,   // schema removed
 	ResourceTypes.WebAppKeyPerformanceXHR,    // schema removed
+
+	// Child Resources - to be pulled implicitly via their parent resources
+	ResourceTypes.ApplicationDataPrivacy,
+	ResourceTypes.ApplicationDetectionV2,
+	ResourceTypes.ApplicationErrorRules,
+	ResourceTypes.WebAppAnomalies,
+	ResourceTypes.WebAppJavascriptUpdates,
+	ResourceTypes.UsabilityAnalytics,
+	ResourceTypes.CustomAppAnomalies,
+	ResourceTypes.CustomAppCrashRate,
+	ResourceTypes.MobileAppAnomalies,
+	ResourceTypes.MobileAppCrashRate,
+	ResourceTypes.DashboardSharing,
+	ResourceTypes.CustomAppEnablement,
+	ResourceTypes.MobileAppEnablement,
+	ResourceTypes.MobileAppRequestErrors,
+	ResourceTypes.BrowserMonitorPerformanceThresholds,
+	ResourceTypes.HttpMonitorPerformanceThresholds,
+	ResourceTypes.HttpMonitorCookies,
+	ResourceTypes.HttpMonitorOutageHandling,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
