@@ -20,6 +20,7 @@ package export
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
 
 type ReplaceFunc func(s string, cnt int) string
@@ -38,12 +39,13 @@ type UniqueNamer interface {
 }
 
 func NewUniqueNamer() UniqueNamer {
-	return &nameCounter{m: map[string]int{}}
+	return &nameCounter{m: map[string]int{}, mutex: new(sync.Mutex)}
 }
 
 type nameCounter struct {
 	m       map[string]int
 	replace ReplaceFunc
+	mutex   *sync.Mutex
 }
 
 func (me *nameCounter) Replace(replace ReplaceFunc) UniqueNamer {
@@ -52,6 +54,8 @@ func (me *nameCounter) Replace(replace ReplaceFunc) UniqueNamer {
 }
 
 func (me *nameCounter) Name(name string) string {
+	me.mutex.Lock()
+	defer me.mutex.Unlock()
 	cnt, found := me.m[strings.ToLower(name)]
 	if !found {
 		me.m[strings.ToLower(name)] = 0

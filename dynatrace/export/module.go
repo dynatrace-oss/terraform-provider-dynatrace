@@ -145,7 +145,11 @@ func (me *Module) Resource(id string) *Resource {
 	return res
 }
 
+var mkdirMutex = new(sync.Mutex)
+
 func (me *Module) MkdirAll(flawed bool) error {
+	mkdirMutex.Lock()
+	defer mkdirMutex.Unlock()
 	if flawed {
 		return os.MkdirAll(me.GetFlawedFolder(), os.ModePerm)
 	}
