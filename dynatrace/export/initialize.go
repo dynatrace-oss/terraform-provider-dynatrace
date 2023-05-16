@@ -40,7 +40,6 @@ func Initialize() (environment *Environment, err error) {
 			flags.Flat = true
 		}
 	}
-	fmt.Println(">>", "flags.Flat", flags.Flat)
 	if err = ConfigureRESTLog(); err != nil {
 		return nil, errors.New("unable to configure log file for REST activity: " + err.Error())
 	}
