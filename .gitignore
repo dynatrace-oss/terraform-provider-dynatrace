@@ -1,6 +1,7 @@
 
 apply.cmd
 main.tf
+terraform-provider-dynatrace
 terraform-provider-dynatrace.exe
 terraform-provider-dynatrace.log
 download.cmd
@@ -8,6 +9,7 @@ playground/*
 configuration/*
 configuration_playground/*
 export.cmd
+export.sh
 tf2json.cmd
 configuration-*/*
 terraform-provider-dynatrace.http.log
