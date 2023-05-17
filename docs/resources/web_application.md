@@ -1014,14 +1014,15 @@ Required:
 <a id="nestedblock--user_tags--tag"></a>
 ### Nested Schema for `user_tags.tag`
 
-Required:
-
-- `id` (Number) A unique ID among all userTags and properties of this application. Minimum value is 1.
-
 Optional:
 
 - `cleanup_rule` (String) Cleanup rule expression of the userTag
+- `id` (Number) A unique ID among all userTags and properties of this application. Minimum value is 1. Do not set that attribute anymore - terraform will handle it. Kept for backwards compatibility
 - `ignore_case` (Boolean) If `true`, the value of this tag will always be stored in lower case. Defaults to `false`.
 - `metadata_id` (Number) If it's of type metaData, metaData id of the userTag
 - `server_side_request_attribute` (String) The ID of the RrequestAttribute for the userTag
+
+Read-Only:
+
+- `unique_id` (Number) A unique ID among all userTags and properties of this application. Minimum value is 1.
  

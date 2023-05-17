@@ -58,6 +58,7 @@ resource "dynatrace_slo_v2" "#name#" {
 ### Optional
 
 - `custom_description` (String) The description of the SLO
+- `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
 
 ### Read-Only
 
