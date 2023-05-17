@@ -97,8 +97,49 @@ func resOpt(bc string, sch map[string]*schema.Schema) bool {
 	// 	}
 }
 
+func resComputed(bc string, sch map[string]*schema.Schema) bool {
+	bc = strings.TrimPrefix(bc, ".")
+	if strings.Contains(bc, ".") {
+		idx := strings.Index(bc, ".")
+		return resComputed0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
+	}
+	return resComputed0(bc, "", sch[bc])
+}
+
+func resComputed0(key string, bc string, sch *schema.Schema) bool {
+	if sch == nil {
+		return false
+	}
+	switch sch.Type {
+	case schema.TypeBool:
+		return sch.Computed
+	case schema.TypeInt:
+		return sch.Computed
+	case schema.TypeFloat:
+		return sch.Computed
+	case schema.TypeString:
+		return sch.Computed
+	case schema.TypeList:
+		switch v := sch.Elem.(type) {
+		case *schema.Resource:
+			return resComputed(bc, v.Schema)
+		default:
+			return sch.Computed
+		}
+
+	case schema.TypeMap:
+		return false
+	case schema.TypeSet:
+		return false
+	default:
+		return false
+
+	}
+}
+
 type exportEntry interface {
 	Write(w *hclwrite.Body, indent string) error
+	IsComputed() bool
 	IsOptional() bool
 	IsDefault() bool
 	IsLessThan(other exportEntry) bool
@@ -117,15 +158,19 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 	if key == "legacy_id" {
 		return
 	}
+	if resComputed(breadCrumbs, schema) {
+		fmt.Println(breadCrumbs, "COMPUTED")
+		return
+	}
 	switch v := value.(type) {
 	case string, bool, int, int32, int64, int8, int16, uint, uint32, uint64, uint8, uint16, float32, float64:
-		entry := &primitiveEntry{Key: key, Value: value, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: value, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case *string, *bool, *int, *int32, *int64, *int8, *int16, *uint, *uint32, *uint64, *uint8, *uint16, *float32, *float64:
 		if v == nil {
 			return
 		}
-		entry := &primitiveEntry{Key: key, Value: v, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: v, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case []any:
 		if len(v) == 0 {
@@ -175,7 +220,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 			for _, elem := range v {
 				vs = append(vs, elem.(int32))
 			}
-			entry := &primitiveEntry{Key: key, Value: vs}
+			entry := &primitiveEntry{Key: key, Value: vs, Computed: resComputed(breadCrumbs, schema)}
 			*e = append(*e, entry)
 		case int64:
 			vs := []int64{}
@@ -254,19 +299,19 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		if len(v) == 0 {
 			return
 		}
-		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case hcl.StringSet:
 		if len(v) == 0 {
 			return
 		}
-		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case []float64:
 		if len(v) == 0 {
 			return
 		}
-		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case map[string]any:
 		if len(v) == 0 {
@@ -274,7 +319,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		}
 		entry := &resourceEntry{Key: key, Entries: exportEntries{}}
 		for xk, xv := range v {
-			entry.Entries = append(entry.Entries, &primitiveEntry{Key: xk, Value: xv, Optional: resOpt(breadCrumbs, schema)})
+			entry.Entries = append(entry.Entries, &primitiveEntry{Key: xk, Value: xv, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)})
 		}
 		*e = append(*e, entry)
 	default:
@@ -345,16 +390,18 @@ func (me *HCLGen) export(m map[string]any, schema map[string]*schema.Schema, w i
 	)
 	body := bs.Body()
 	for _, entry := range ents {
-		if !(entry.IsOptional() && entry.IsDefault()) {
-			if err := entry.Write(body, "  "); err != nil {
-				return err
-			}
-		} else {
-			body.AppendUnstructuredTokens(hclwrite.Tokens{
-				&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
-			})
-			if err := entry.Write(body, "  "); err != nil {
-				return err
+		if !entry.IsComputed() {
+			if !(entry.IsOptional() && entry.IsDefault()) {
+				if err := entry.Write(body, "  "); err != nil {
+					return err
+				}
+			} else {
+				body.AppendUnstructuredTokens(hclwrite.Tokens{
+					&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
+				})
+				if err := entry.Write(body, "  "); err != nil {
+					return err
+				}
 			}
 		}
 	}

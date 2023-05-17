@@ -37,6 +37,10 @@ func (me *resourceEntry) IsOptional() bool {
 	return false
 }
 
+func (me *resourceEntry) IsComputed() bool {
+	return false
+}
+
 func (me *resourceEntry) IsDefault() bool {
 	return false
 }
@@ -57,16 +61,18 @@ func (me *resourceEntry) Write(w *hclwrite.Body, indent string) error {
 
 	sort.SliceStable(me.Entries, me.Entries.Less)
 	for _, entry := range me.Entries {
-		if !(entry.IsOptional() && entry.IsDefault()) {
-			if err := entry.Write(body, indent+"  "); err != nil {
-				return err
-			}
-		} else {
-			body.AppendUnstructuredTokens(hclwrite.Tokens{
-				&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
-			})
-			if err := entry.Write(body, indent+"  "); err != nil {
-				return err
+		if !entry.IsComputed() {
+			if !(entry.IsOptional() && entry.IsDefault()) {
+				if err := entry.Write(body, indent+"  "); err != nil {
+					return err
+				}
+			} else {
+				body.AppendUnstructuredTokens(hclwrite.Tokens{
+					&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
+				})
+				if err := entry.Write(body, indent+"  "); err != nil {
+					return err
+				}
 			}
 		}
 	}

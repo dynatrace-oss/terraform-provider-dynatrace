@@ -36,6 +36,7 @@ type primitiveEntry struct {
 	Indent      string
 	Key         string
 	Optional    bool
+	Computed    bool
 	BreadCrumbs string
 	Value       any
 }
@@ -194,6 +195,10 @@ func escapeQuotedStringLit0(s string) []byte {
 
 func (me *primitiveEntry) IsOptional() bool {
 	return me.Optional
+}
+
+func (me *primitiveEntry) IsComputed() bool {
+	return me.Computed
 }
 
 func (me *primitiveEntry) IsDefault() bool {
