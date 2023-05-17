@@ -51,6 +51,9 @@ type ListV1 struct {
 }
 
 func (me *ListV1) Finish(v any) error {
+	if me.SchemaID == "synthetic-monitor" {
+		fmt.Println(me.SchemaID)
+	}
 	stubList := &api.StubList{Values: []*api.Stub{}}
 
 	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/" + strings.ReplaceAll(me.SchemaID, ":", ""))
@@ -72,6 +75,86 @@ func (me *ListV1) Finish(v any) error {
 	if err != nil {
 		return err
 	}
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	return nil
+}
+
+type ListMonitorsV1 struct {
+	Prefix string
+}
+
+func (me *ListMonitorsV1) Finish(v any) error {
+	stubList := &api.StubList{Values: []*api.Stub{}}
+
+	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/synthetic-monitor")
+	if err != nil {
+		return err
+	}
+
+	if tarFolder != nil {
+		stubs, err := tarFolder.List()
+		if err != nil {
+			return err
+		}
+
+		for _, stub := range stubs {
+			if strings.HasPrefix(stub.ID, me.Prefix) {
+				stubList.Values = append(stubList.Values, stub)
+			}
+		}
+	}
+
+	monitors := []any{}
+	if stubList != nil && len(stubList.Values) > 0 {
+		for _, stub := range stubList.Values {
+			monitors = append(monitors, map[string]any{"entityId": stub.ID, "name": stub.Name})
+		}
+	}
+	data, err := json.Marshal(map[string]any{"monitors": monitors})
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	return nil
+}
+
+type ListPrivateSyntheticLocationsV1 struct{}
+
+func (me *ListPrivateSyntheticLocationsV1) Finish(v any) error {
+	stubList := &api.StubList{Values: []*api.Stub{}}
+
+	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/synthetic-location")
+	if err != nil {
+		return err
+	}
+
+	if tarFolder != nil {
+		stubs, err := tarFolder.List()
+		if err != nil {
+			return err
+		}
+
+		for _, stub := range stubs {
+			stubList.Values = append(stubList.Values, stub)
+		}
+	}
+
+	locations := []any{}
+	if stubList != nil && len(stubList.Values) > 0 {
+		for _, stub := range stubList.Values {
+			locations = append(locations, map[string]any{"entityId": stub.ID, "name": stub.Name})
+		}
+	}
+	data, err := json.Marshal(map[string]any{"locations": locations})
+	if err != nil {
+		return err
+	}
+
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}

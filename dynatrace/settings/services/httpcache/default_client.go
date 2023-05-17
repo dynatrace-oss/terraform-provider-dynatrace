@@ -57,6 +57,12 @@ var REGEX_REQUEST_NAMING_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/r
 var REGEX_REQUEST_NAMING_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestNaming\/([^\/]*)$`)
 var REGEX_REQUEST_SLO_LIST, _ = regexp.Compile(`\/api\/v2\/slo\?pageSize`)
 var REGEX_REQUEST_SLO_GET, _ = regexp.Compile(`\/api\/v2\/slo\/([^\/]*)$`)
+var REGEX_BROWSER_MONITOR_LIST, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\?type=BROWSER$`)
+var REGEX_MONITOR_GET, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\/([^\/]*)$`)
+var REGEX_HTTP_MONITOR_LIST, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\?type=HTTP$`)
+var REGEX_PRIVATE_SYNTHETIC_LOCATIONS_LIST, _ = regexp.Compile(`\/api\/v1\/synthetic\/locations\?type=PRIVATE$`)
+var REGEX_PRIVATE_SYNTHETIC_LOCATIONS_GET, _ = regexp.Compile(`\/api\/v1\/synthetic\/locations\/([^\/]*)$`)
+var REGEX_CREDENTIALS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/credentials$`)
 
 func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	if m := REGEX_SETTINGS_20_LIST.FindStringSubmatch(url); len(m) == 2 {
@@ -119,7 +125,20 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return &ListSLORequest{SchemaID: "slo"}
 	} else if m := REGEX_REQUEST_SLO_GET.FindStringSubmatch(url); len(m) == 2 {
 		return &GetSLORequest{SchemaID: "slo", ID: m[1]}
+	} else if m := REGEX_BROWSER_MONITOR_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return Request(&ListMonitorsV1{"SYNTHETIC_TEST-"})
+	} else if m := REGEX_HTTP_MONITOR_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return Request(&ListMonitorsV1{"HTTP_CHECK-"})
+	} else if m := REGEX_MONITOR_GET.FindStringSubmatch(url); len(m) == 2 {
+		return Get("synthetic-monitor", m[1])
+	} else if m := REGEX_PRIVATE_SYNTHETIC_LOCATIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return Request(&ListPrivateSyntheticLocationsV1{})
+	} else if m := REGEX_PRIVATE_SYNTHETIC_LOCATIONS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return Get("synthetic-location", m[1])
+	} else if m := REGEX_CREDENTIALS_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return EmptyList("v1:config:credentials")
 	}
+
 	if STRICT_CACHE {
 		return &rest.StriclyForbidden{Method: "GET", URL: url}
 	}
