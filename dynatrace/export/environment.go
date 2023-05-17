@@ -436,6 +436,9 @@ func (me *Environment) WriteMainFile() error {
 	fmt.Println("Writing main.tf")
 
 	var err error
+
+	os.MkdirAll(me.OutputFolder, os.ModePerm)
+
 	var mainFile *os.File
 	if mainFile, err = os.Create(path.Join(me.OutputFolder, "main.tf")); err != nil {
 		return err
