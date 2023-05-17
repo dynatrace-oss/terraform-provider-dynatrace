@@ -63,7 +63,7 @@ func runExport() (err error) {
 	exePath, _ := exec.LookPath("terraform")
 	cmd := exec.Command(exePath, "init", "-no-color")
 	cmd.Dir = environment.OutputFolder
-	outs, err := cmd.StdoutPipe()
+	outs, err := cmd.StderrPipe()
 	if err != nil {
 		return err
 	}
