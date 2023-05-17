@@ -66,7 +66,7 @@ func (me *UserTag) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {
 			Type:             schema.TypeInt,
-			Description:      "A unique ID among all userTags and properties of this application. Minimum value is 1.",
+			Description:      "A unique ID among all userTags and properties of this application. Minimum value is 1. Do not set that attribute anymore - terraform will handle it. Kept for backwards compatibility",
 			Optional:         true,
 			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
