@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings/externalvault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings/externalvault"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 

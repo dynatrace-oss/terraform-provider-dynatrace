@@ -23,13 +23,13 @@ import (
 	"strings"
 	"sync"
 
-	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings"
+	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-const SchemaID = "v1:config:credentials"
-const BasePath = "/api/config/v1/credentials"
+const SchemaID = "v2:environment:credentials"
+const BasePath = "/api/v2/credentials"
 
 var mu sync.Mutex
 
