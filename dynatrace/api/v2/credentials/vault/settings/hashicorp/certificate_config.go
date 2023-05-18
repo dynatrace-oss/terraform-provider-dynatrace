@@ -17,7 +17,7 @@
 
 package hashicorp
 
-import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/vault/settings/externalvault"
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings/externalvault"
 
 type CertificateConfig struct {
 	externalvault.Config
