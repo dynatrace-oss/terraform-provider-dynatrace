@@ -19,25 +19,46 @@ package metricevents
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+type MetadataItems []*MetadataItem
+
+func (me *MetadataItems) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"item": {
+			Type:        schema.TypeSet,
+			Required:    true,
+			MinItems:    1,
+			Description: "",
+			Elem:        &schema.Resource{Schema: new(MetadataItem).Schema()},
+		},
+	}
+}
+
+func (me MetadataItems) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeSlice("item", me)
+}
+
+func (me *MetadataItems) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeSlice("item", me)
+}
+
 type MetadataItem struct {
-	MetadataKey   string `json:"metadataKey"`   // The key of the metadata item
-	MetadataValue string `json:"metadataValue"` // The value of the metadata item
+	MetadataKey   string `json:"metadataKey"` // Type 'dt.' for key hints.
+	MetadataValue string `json:"metadataValue"`
 }
 
 func (me *MetadataItem) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"metadata_key": {
 			Type:        schema.TypeString,
-			Description: "The key of the metadata item",
+			Description: "Type 'dt.' for key hints.",
 			Required:    true,
 		},
 		"metadata_value": {
 			Type:        schema.TypeString,
-			Description: "The value of the metadata item",
+			Description: "no documentation available",
 			Required:    true,
 		},
 	}

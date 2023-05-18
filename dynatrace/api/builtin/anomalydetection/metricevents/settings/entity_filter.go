@@ -19,42 +19,42 @@ package metricevents
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type EntityFilter struct {
+	Conditions   EntityFilterConditions `json:"conditions,omitempty"`
 	DimensionKey *string                `json:"dimensionKey,omitempty"` // Dimension key of entity type to filter
-	Conditions   EntityFilterConditions `json:"conditions,omitempty"`   // Conditions of entity type to filter
 }
 
 func (me *EntityFilter) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"conditions": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(EntityFilterConditions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"dimension_key": {
 			Type:        schema.TypeString,
 			Description: "Dimension key of entity type to filter",
-			Optional:    true,
-		},
-		"conditions": {
-			Type:        schema.TypeList,
-			Description: "Conditions of entity type to filter",
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(EntityFilterConditions).Schema()},
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 	}
 }
 
 func (me *EntityFilter) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"dimension_key": me.DimensionKey,
 		"conditions":    me.Conditions,
+		"dimension_key": me.DimensionKey,
 	})
 }
 
 func (me *EntityFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"dimension_key": &me.DimensionKey,
 		"conditions":    &me.Conditions,
+		"dimension_key": &me.DimensionKey,
 	})
 }

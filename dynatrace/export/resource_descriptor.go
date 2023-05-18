@@ -35,6 +35,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/pvc"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/metricevents"
 	custom_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	custom_app_crash_rate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
 	mobile_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
@@ -174,7 +175,6 @@ import (
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/metricevents"
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
@@ -462,7 +462,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.ManagementZoneV2: NewResourceDescriptor(v2managementzones.Service),
-	ResourceTypes.MetricEvents:     NewResourceDescriptor(metricevents.Service),
+	ResourceTypes.MetricEvents: NewResourceDescriptor(
+		metricevents.Service,
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+	),
 	ResourceTypes.MobileApplication: NewResourceDescriptor(
 		mobile.Service,
 		Dependencies.ID(ResourceTypes.RequestAttribute),
@@ -925,7 +928,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.VMwareAnomalies: NewResourceDescriptor(vmware_anomalies.Service),
 	ResourceTypes.SLOV2: NewResourceDescriptor(
 		slov2.Service,
-		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 	),
@@ -965,6 +967,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.ManagementZone,    // legacy
 	ResourceTypes.Notification,      // legacy
 	ResourceTypes.AlertingProfile,   // legacy
+	ResourceTypes.CustomAnomalies,   // legacy
 	ResourceTypes.Dashboard,         // taken care of dynatrace_json_dashboard
 	ResourceTypes.IAMUser,           // not sure whether to migrate
 	ResourceTypes.IAMGroup,          // not sure whether to migrate

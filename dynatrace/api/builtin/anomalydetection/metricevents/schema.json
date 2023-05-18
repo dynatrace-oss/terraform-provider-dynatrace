@@ -1,0 +1,1322 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "metric-event-model-type-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "metric-event-alert-on-missing-data-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "metric-event-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "metric-event-dimension-filter-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Metric event configurations are used to automatically detect anomalies in metric timeseries by using thresholds or baselines.",
+	"displayName": "Metric events",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Aggregation": {
+			"description": "",
+			"displayName": "Aggregation",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Minimum",
+					"value": "MIN"
+				},
+				{
+					"displayName": "Maximum",
+					"value": "MAX"
+				},
+				{
+					"displayName": "Sum",
+					"value": "SUM"
+				},
+				{
+					"displayName": "Count",
+					"value": "COUNT"
+				},
+				{
+					"displayName": "Average",
+					"value": "AVG"
+				},
+				{
+					"displayName": "Value",
+					"value": "VALUE"
+				},
+				{
+					"displayName": "Median",
+					"value": "MEDIAN"
+				},
+				{
+					"displayName": "90th Percentile",
+					"value": "PERCENTILE90"
+				}
+			],
+			"type": "enum"
+		},
+		"AlertCondition": {
+			"description": "",
+			"displayName": "AlertCondition",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Alert if metric is above",
+					"value": "ABOVE"
+				},
+				{
+					"displayName": "Alert if metric is below",
+					"value": "BELOW"
+				},
+				{
+					"displayName": "Alert if metric is outside",
+					"value": "OUTSIDE"
+				}
+			],
+			"type": "enum"
+		},
+		"DimensionFilterOperator": {
+			"description": "",
+			"displayName": "DimensionFilterOperator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"displayName": "contains (case sensitive)",
+					"value": "CONTAINS_CASE_SENSITIVE"
+				},
+				{
+					"displayName": "does not contain (case sensitive)",
+					"value": "DOES_NOT_CONTAIN_CASE_SENSITIVE"
+				}
+			],
+			"type": "enum"
+		},
+		"EntityFilterOperator": {
+			"description": "",
+			"displayName": "EntityFilterOperator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"displayName": "contains (case sensitive)",
+					"value": "CONTAINS_CASE_SENSITIVE"
+				},
+				{
+					"displayName": "does not contain (case sensitive)",
+					"value": "DOES_NOT_CONTAIN_CASE_SENSITIVE"
+				},
+				{
+					"displayName": "contains (case insensitive)",
+					"value": "CONTAINS_CASE_INSENSITIVE"
+				},
+				{
+					"displayName": "does not contain (case insensitive)",
+					"value": "DOES_NOT_CONTAIN_CASE_INSENSITIVE"
+				}
+			],
+			"type": "enum"
+		},
+		"EntityFilterType": {
+			"description": "",
+			"displayName": "EntityFilterType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Name",
+					"value": "NAME"
+				},
+				{
+					"displayName": "Entity",
+					"value": "ENTITY_ID"
+				},
+				{
+					"displayName": "Management zone",
+					"value": "MANAGEMENT_ZONE"
+				},
+				{
+					"displayName": "Tag",
+					"value": "TAG"
+				},
+				{
+					"displayName": "Host name",
+					"value": "HOST_NAME"
+				},
+				{
+					"displayName": "Host group name",
+					"value": "HOST_GROUP_NAME"
+				},
+				{
+					"displayName": "Process group name",
+					"value": "PROCESS_GROUP_NAME"
+				},
+				{
+					"displayName": "Process group entity",
+					"value": "PROCESS_GROUP_ID"
+				},
+				{
+					"displayName": "Custom device group name",
+					"value": "CUSTOM_DEVICE_GROUP_NAME"
+				}
+			],
+			"type": "enum"
+		},
+		"EventTypeEnum": {
+			"description": "",
+			"displayName": "Event type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Info",
+					"value": "INFO"
+				},
+				{
+					"displayName": "Error",
+					"value": "ERROR"
+				},
+				{
+					"displayName": "Availability",
+					"value": "AVAILABILITY"
+				},
+				{
+					"displayName": "Slowdown",
+					"value": "SLOWDOWN"
+				},
+				{
+					"displayName": "Resource",
+					"value": "RESOURCE"
+				},
+				{
+					"displayName": "Custom alert",
+					"value": "CUSTOM_ALERT"
+				},
+				{
+					"displayName": "Custom annotation",
+					"value": "CUSTOM_ANNOTATION"
+				},
+				{
+					"displayName": "Custom configuration",
+					"value": "CUSTOM_CONFIGURATION"
+				},
+				{
+					"displayName": "Custom deployment",
+					"value": "CUSTOM_DEPLOYMENT"
+				},
+				{
+					"displayName": "Marked for termination",
+					"value": "MARKED_FOR_TERMINATION"
+				}
+			],
+			"type": "enum"
+		},
+		"ModelType": {
+			"description": "",
+			"displayName": "ModelType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Static threshold",
+					"value": "STATIC_THRESHOLD"
+				},
+				{
+					"displayName": "Auto-adaptive threshold",
+					"value": "AUTO_ADAPTIVE_THRESHOLD"
+				},
+				{
+					"displayName": "Seasonal baseline",
+					"value": "SEASONAL_BASELINE"
+				}
+			],
+			"type": "enum"
+		},
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Metric key",
+					"value": "METRIC_KEY"
+				},
+				{
+					"displayName": "Metric selector",
+					"value": "METRIC_SELECTOR"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 10000,
+	"metadata": {
+		"addItemButton": "Add metric event"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventEntityDimensionKey": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [
+					"queryDefinition/metricSelector",
+					"queryDefinition/metricKey",
+					"queryDefinition/type"
+				],
+				"fullContext": true,
+				"identifier": "entityDimensionsDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": true,
+				"validate": false
+			},
+			"description": "Controls the preferred entity type used for triggered events.",
+			"displayName": "Dimension key of entity for events",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Automatic",
+				"useCombobox": "enabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"eventTemplate": {
+			"description": "",
+			"displayName": "Event template",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/EventTemplate"
+			}
+		},
+		"legacyId": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Config id",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": true,
+			"type": "text"
+		},
+		"modelProperties": {
+			"description": "",
+			"displayName": "Monitoring strategy",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ModelProperties"
+			},
+			"uiCustomization": {
+				"expandable": {
+					"sections": [
+						{
+							"displayName": "Advanced model properties",
+							"properties": [
+								"violatingSamples",
+								"samples",
+								"dealertingSamples"
+							]
+						}
+					]
+				}
+			}
+		},
+		"queryDefinition": {
+			"description": "",
+			"displayName": "Query definition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/QueryDefinition"
+			},
+			"uiCustomization": {
+				"expandable": {
+					"sections": [
+						{
+							"displayName": "Advanced query definition",
+							"properties": [
+								"queryOffset"
+							]
+						}
+					]
+				}
+			}
+		},
+		"summary": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 2,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The textual summary of the metric event entry",
+			"displayName": "Summary",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.metric-events",
+	"types": {
+		"DimensionFilter": {
+			"constraints": [
+				{
+					"customValidatorId": "metric-event-dimension-filter-values-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "DimensionFilter",
+			"documentation": "",
+			"properties": {
+				"dimensionKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": true,
+						"identifier": "dimensionFilterKeyDataSource",
+						"resetValue": "ALWAYS",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Dimension key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"dimensionValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"dimensionKey"
+						],
+						"fullContext": true,
+						"identifier": "dimensionFilterValueDataSource",
+						"resetValue": "ALWAYS",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Dimension value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"operator": {
+					"datasource": {
+						"filterProperties": [
+							"dimensionKey"
+						],
+						"fullContext": true,
+						"identifier": "dimensionFilterOperatorDataSource",
+						"resetValue": "ALWAYS",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DimensionFilterOperator"
+					}
+				}
+			},
+			"summaryPattern": "{dimensionKey} {operator} {dimensionValue|meDisplayName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EntityFilter": {
+			"constraints": [
+				{
+					"customValidatorId": "metric-event-entity-filter-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "EntityFilter",
+			"documentation": "",
+			"properties": {
+				"conditions": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/EntityFilterCondition"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add entity filter"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"dimensionKey": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": true,
+						"identifier": "entityDimensionsDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"description": "Dimension key of entity type to filter",
+					"displayName": "Dimension key of entity type",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Automatic",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EntityFilterCondition": {
+			"constraints": [
+				{
+					"customValidatorId": "metric-event-entity-filter-values-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "EntityFilterCondition",
+			"documentation": "",
+			"properties": {
+				"operator": {
+					"datasource": {
+						"filterProperties": [
+							"type"
+						],
+						"fullContext": true,
+						"identifier": "metricEventFilterConditionOperatorDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/EntityFilterOperator"
+					}
+				},
+				"type": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": true,
+						"identifier": "metricEventFilterConditionTypeDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "ENTITY_ID",
+					"description": "",
+					"displayName": "Filter type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/EntityFilterType"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"type",
+							"operator"
+						],
+						"fullContext": true,
+						"identifier": "metricEventFilterConditionValueDataSource",
+						"resetValue": "ALWAYS",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{type} {operator} {value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventTemplate": {
+			"description": "",
+			"displayName": "Event template",
+			"documentation": "",
+			"properties": {
+				"davisMerge": {
+					"default": true,
+					"description": "Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.",
+					"displayName": "Allow merge",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "INFO",
+							"property": "eventType",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "boolean"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"type": "LENGTH"
+						}
+					],
+					"default": "The {metricname} value was {alert_condition} normal behavior.",
+					"description": "The description of the event to trigger. Type '{' for placeholder hints.",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"lineCount": "4"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				},
+				"eventType": {
+					"default": "CUSTOM_ALERT",
+					"description": "The event type to trigger.",
+					"displayName": "Event type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/EventTypeEnum"
+					}
+				},
+				"metadata": {
+					"description": "Set of additional key-value properties to be attached to the triggered event.",
+					"displayName": "Properties",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/MetadataItem"
+						}
+					},
+					"maxObjects": 30,
+					"metadata": {
+						"addItemButton": "Add Property",
+						"itemDisplayName": "New property"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"title": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 2,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The title of the event to trigger. Type '{' for placeholder hints.",
+					"displayName": "Title",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{title}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetadataItem": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Unknown predefined property key.",
+							"customValidatorId": "event-property-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type 'dt.' for key hints.",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_property_key",
+					"type": "text"
+				},
+				"metadataValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type '{' for placeholder hints.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{metadataKey}: {metadataValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ModelProperties": {
+			"constraints": [
+				{
+					"customValidatorId": "metric-event-alerting-model-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "ModelProperties",
+			"documentation": "",
+			"properties": {
+				"alertCondition": {
+					"datasource": {
+						"filterProperties": [
+							"type"
+						],
+						"fullContext": true,
+						"identifier": "alertConditionDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "ABOVE",
+					"description": "",
+					"displayName": "Alert condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/AlertCondition"
+					}
+				},
+				"alertOnNoData": {
+					"default": false,
+					"description": "The ability to set an alert on missing data in a metric. When enabled, missing data samples will contribute as violating samples defined in advanced model properties. We recommend to not alert on missing data for sparse timeseries as this leads to alert spam.",
+					"displayName": "Alert on missing data",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 3,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "The number of one-minute samples within the evaluation window that must go back to normal to close the event.",
+					"displayName": "Dealerting samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samples": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 3,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "The number of one-minute samples that form the sliding evaluation window.",
+					"displayName": "Sliding window",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"signalFluctuation": {
+					"constraints": [
+						{
+							"maximum": 10,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "Controls how many times the signal fluctuation is added to the baseline to produce the actual threshold for alerting",
+					"displayName": "Number of signal fluctuations",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "AUTO_ADAPTIVE_THRESHOLD",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "float"
+				},
+				"threshold": {
+					"default": 1,
+					"description": "Raise an event if this value is violated",
+					"displayName": "Threshold",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "STATIC_THRESHOLD",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "float"
+				},
+				"tolerance": {
+					"constraints": [
+						{
+							"maximum": 10,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 4,
+					"description": "Controls the width of the confidence band and larger values lead to a less sensitive model",
+					"displayName": "Tolerance",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "SEASONAL_BASELINE",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "float"
+				},
+				"type": {
+					"datasource": {
+						"filterProperties": [
+							"../queryDefinition/type"
+						],
+						"fullContext": true,
+						"identifier": "modelTypeDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "STATIC_THRESHOLD",
+					"description": "Metric-key-based query definitions only support static thresholds.",
+					"displayName": "Model type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/ModelType"
+					}
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "The number of one-minute samples within the evaluation window that must violate to trigger an event.",
+					"displayName": "Violating samples",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"QueryDefinition": {
+			"description": "",
+			"displayName": "QueryDefinition",
+			"documentation": "",
+			"properties": {
+				"aggregation": {
+					"datasource": {
+						"filterProperties": [
+							"metricKey"
+						],
+						"fullContext": true,
+						"identifier": "aggregationDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "AVG",
+					"description": "",
+					"displayName": "Aggregation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "METRIC_KEY",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/Aggregation"
+					}
+				},
+				"dimensionFilter": {
+					"description": "",
+					"displayName": "Dimension filter",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/DimensionFilter"
+						}
+					},
+					"maxObjects": 50,
+					"metadata": {
+						"addItemButton": "Add dimension filter"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "METRIC_KEY",
+								"property": "type",
+								"type": "EQUALS"
+							},
+							{
+								"precondition": {
+									"property": "metricKey",
+									"type": "NULL"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "list"
+				},
+				"entityFilter": {
+					"description": "Use rule-based filters to define the scope this event monitors.",
+					"displayName": "Entities",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "METRIC_KEY",
+								"property": "type",
+								"type": "EQUALS"
+							},
+							{
+								"precondition": {
+									"property": "metricKey",
+									"type": "NULL"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/EntityFilter"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Advanced dimension definition",
+									"properties": [
+										"dimensionKey"
+									]
+								}
+							]
+						}
+					}
+				},
+				"managementZone": {
+					"constraints": [
+						{
+							"maxLength": 21,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "managementZoneDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"description": "",
+					"displayName": "Management zone",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"placeholder": "Optional for admins",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "METRIC_KEY",
+								"property": "type",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "METRIC_SELECTOR",
+								"property": "type",
+								"type": "EQUALS"
+							}
+						],
+						"type": "OR"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": true,
+						"identifier": "metricKeyDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"placeholder": "Required",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "METRIC_KEY",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"metricSelector": {
+					"constraints": [
+						{
+							"customValidatorId": "metric-event-selector-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 10000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "To learn more, visit [Metric Selector](https://dt-url.net/metselad)",
+					"displayName": "Metric selector",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "METRIC_SELECTOR",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"subType": "metric-no-validator",
+					"type": "text"
+				},
+				"queryOffset": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"description": "Minute offset of sliding evaluation window for metrics with latency",
+					"displayName": "Query offset",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "integer"
+				},
+				"type": {
+					"default": "METRIC_KEY",
+					"description": "",
+					"displayName": "Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Type"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.13"
+}

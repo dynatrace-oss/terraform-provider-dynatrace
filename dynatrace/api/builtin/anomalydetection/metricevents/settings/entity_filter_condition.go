@@ -19,31 +19,25 @@ package metricevents
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type EntityFilterConditions []*EntityFilterCondition // Entity filter conditions
+type EntityFilterConditions []*EntityFilterCondition
 
 func (me *EntityFilterConditions) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeSet,
-			Optional:    true,
+			Required:    true,
 			MinItems:    1,
-			Description: "Entity filter conditions",
+			Description: "",
 			Elem:        &schema.Resource{Schema: new(EntityFilterCondition).Schema()},
 		},
 	}
 }
 
 func (me EntityFilterConditions) MarshalHCL(properties hcl.Properties) error {
-	if len(me) > 0 {
-		if err := properties.EncodeSlice("condition", me); err != nil {
-			return err
-		}
-	}
-	return nil
+	return properties.EncodeSlice("condition", me)
 }
 
 func (me *EntityFilterConditions) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -64,26 +58,26 @@ func (me *EntityFilterConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type EntityFilterCondition struct {
-	Type     EntityFilterType     `json:"type"`
-	Operator EntityFilterOperator `json:"operator"`
+	Operator EntityFilterOperator `json:"operator"` // Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+	Type     EntityFilterType     `json:"type"`     // Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
 	Value    string               `json:"value"`
 }
 
 func (me *EntityFilterCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"type": {
-			Type:        schema.TypeString,
-			Description: "",
-			Required:    true,
-		},
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
+			Required:    true,
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "no documentation available",
 			Required:    true,
 		},
 	}
@@ -91,16 +85,16 @@ func (me *EntityFilterCondition) Schema() map[string]*schema.Schema {
 
 func (me *EntityFilterCondition) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"type":     me.Type,
 		"operator": me.Operator,
+		"type":     me.Type,
 		"value":    me.Value,
 	})
 }
 
 func (me *EntityFilterCondition) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"type":     &me.Type,
 		"operator": &me.Operator,
+		"type":     &me.Type,
 		"value":    &me.Value,
 	})
 }

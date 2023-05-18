@@ -19,31 +19,25 @@ package metricevents
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type DimensionFilters []*DimensionFilter // Dimension filter definitions
+type DimensionFilters []*DimensionFilter
 
 func (me *DimensionFilters) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"filter": {
 			Type:        schema.TypeSet,
-			Optional:    true,
+			Required:    true,
 			MinItems:    1,
-			Description: "Dimension filter definitions",
+			Description: "",
 			Elem:        &schema.Resource{Schema: new(DimensionFilter).Schema()},
 		},
 	}
 }
 
 func (me DimensionFilters) MarshalHCL(properties hcl.Properties) error {
-	if len(me) > 0 {
-		if err := properties.EncodeSlice("filter", me); err != nil {
-			return err
-		}
-	}
-	return nil
+	return properties.EncodeSlice("filter", me)
 }
 
 func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -64,21 +58,27 @@ func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type DimensionFilter struct {
-	DimensionKey   string `json:"dimensionKey"`   // The key of the dimension filter
-	DimensionValue string `json:"dimensionValue"` // The value of the dimension filter
+	DimensionKey   string                   `json:"dimensionKey"`       // Dimension key
+	DimensionValue string                   `json:"dimensionValue"`     // Dimension value
+	Operator       *DimensionFilterOperator `json:"operator,omitempty"` // Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
 }
 
 func (me *DimensionFilter) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"dimension_key": {
 			Type:        schema.TypeString,
-			Description: "The key of the dimension filter",
+			Description: "Dimension key",
 			Required:    true,
 		},
 		"dimension_value": {
 			Type:        schema.TypeString,
-			Description: "The value of the dimension filter",
+			Description: "Dimension value",
 			Required:    true,
+		},
+		"operator": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
+			Optional:    true, // nullable
 		},
 	}
 }
@@ -87,6 +87,7 @@ func (me *DimensionFilter) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"dimension_key":   me.DimensionKey,
 		"dimension_value": me.DimensionValue,
+		"operator":        me.Operator,
 	})
 }
 
@@ -94,5 +95,6 @@ func (me *DimensionFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"dimension_key":   &me.DimensionKey,
 		"dimension_value": &me.DimensionValue,
+		"operator":        &me.Operator,
 	})
 }

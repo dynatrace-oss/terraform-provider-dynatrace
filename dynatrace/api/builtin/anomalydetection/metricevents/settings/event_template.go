@@ -20,47 +20,46 @@ package metricevents
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type EventTemplate struct {
-	Title       string          `json:"title"`                // The title of the event to trigger.
-	Description string          `json:"description"`          // The description of the event to trigger.
-	EventType   EventTypeEnum   `json:"eventType"`            // The event type to trigger.
-	DavisMerge  *bool           `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-	Metadata    []*MetadataItem `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
+	DavisMerge  *bool         `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
+	Description string        `json:"description"`          // The description of the event to trigger.
+	EventType   EventTypeEnum `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`
+	Metadata    MetadataItems `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
+	Title       string        `json:"title"`                // The title of the event to trigger.
 }
 
 func (me *EventTemplate) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"title": {
-			Type:        schema.TypeString,
-			Description: "The title of the event to trigger.",
-			Required:    true,
-		},
-		"description": {
-			Type:             schema.TypeString,
-			Description:      "The description of the event to trigger.",
-			Required:         true,
-			DiffSuppressFunc: hcl.SuppressEOT,
-		},
-		"event_type": {
-			Type:        schema.TypeString,
-			Description: "The event type to trigger.",
-			Required:    true,
-		},
 		"davis_merge": {
 			Type:        schema.TypeBool,
 			Description: "Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.",
-			Optional:    true,
+			Optional:    true, // precondition
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Description: "The description of the event to trigger.",
+			Required:    true,
+		},
+		"event_type": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`",
+			Required:    true,
 		},
 		"metadata": {
 			Type:        schema.TypeList,
 			Description: "Set of additional key-value properties to be attached to the triggered event.",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
 			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(MetadataItem).Schema()},
-			Optional:    true,
+			MaxItems:    1,
+		},
+		"title": {
+			Type:        schema.TypeString,
+			Description: "The title of the event to trigger.",
+			Required:    true,
 		},
 	}
 }
@@ -77,6 +76,13 @@ func (me *EventTemplate) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeSlice("metadata", me.Metadata)
 }
 
+func (me *EventTemplate) HandlePreconditions() error {
+	if me.DavisMerge == nil && (string(me.EventType) != "INFO") {
+		me.DavisMerge = opt.NewBool(false)
+	}
+	return nil
+}
+
 func (me *EventTemplate) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeAll(map[string]any{
 		"title":       &me.Title,
@@ -85,9 +91,6 @@ func (me *EventTemplate) UnmarshalHCL(decoder hcl.Decoder) error {
 		"davis_merge": &me.DavisMerge,
 	}); err != nil {
 		return err
-	}
-	if me.DavisMerge == nil && me.EventType != EventTypeEnums.Info {
-		me.DavisMerge = opt.NewBool(false)
 	}
 	return decoder.DecodeSlice("metadata", &me.Metadata)
 }

@@ -3,8 +3,7 @@
   "summary": "${randomize}",
   "queryDefinition": {
     "type": "METRIC_SELECTOR",
-    "metricSelector": "builtin:cloud.azure.appGateway.backend.settings.traffic.requests.failed:filter(existsKey(\"dt.entity.azure_application_gateway\"),not(remainder(\"dt.entity.azure_application_gateway\")),not(remainder(\"BackendSettingsPool\"))):value",
-    "metricKey": ""
+    "metricSelector": "builtin:cloud.azure.appGateway.backend.settings.traffic.requests.failed:filter(existsKey(\"dt.entity.azure_application_gateway\"),not(remainder(\"dt.entity.azure_application_gateway\")),not(remainder(\"BackendSettingsPool\"))):value"
   },
   "modelProperties": {
     "type": "AUTO_ADAPTIVE_THRESHOLD",
