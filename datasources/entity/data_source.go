@@ -31,8 +31,21 @@ func DataSource() *schema.Resource {
 	return &schema.Resource{
 		Read: logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
-			"type": {Type: schema.TypeString, Required: true},
-			"name": {Type: schema.TypeString, Required: true},
+			"type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				RequiredWith: []string{"type", "name"},
+			},
+			"name": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				RequiredWith: []string{"type", "name"},
+			},
+			"entity_selector": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"type", "name"},
+			},
 		},
 	}
 }
@@ -46,20 +59,28 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if v, ok := d.GetOk("type"); ok {
 		entityType = v.(string)
 	}
+	var entitySelector string
+	if v, ok := d.GetOk("entity_selector"); ok {
+		entitySelector = v.(string)
+	}
 
 	var settings entities.Settings
-	service := cache.Read(srv.Service(entityType, config.Credentials(m)), true)
+	service := cache.Read(srv.Service(entityType, entitySelector, config.Credentials(m)), true)
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}
 	d.SetId(service.SchemaID())
 	if len(settings.Entities) != 0 {
-		for _, entity := range settings.Entities {
-			if name == *entity.DisplayName {
-				d.SetId(*entity.EntityId)
-				return nil
+		if len(name) > 0 {
+			for _, entity := range settings.Entities {
+				if name == *entity.DisplayName {
+					d.SetId(*entity.EntityId)
+					return nil
+				}
 			}
 		}
+		d.SetId(*settings.Entities[0].EntityId)
+		return nil
 	}
 	d.SetId("")
 	return nil

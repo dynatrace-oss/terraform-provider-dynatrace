@@ -31,19 +31,26 @@ import (
 
 const SchemaID = "v2:environment:entities"
 
-func Service(entityType string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
-	return &service{entityType: entityType, client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(entityType string, entitySelector string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
+	return &service{entityType: entityType, entitySelector: entitySelector, client: rest.DefaultClient(credentials.URL, credentials.Token)}
 }
 
 type service struct {
-	client     rest.Client
-	entityType string
+	client         rest.Client
+	entityType     string
+	entitySelector string
 }
 
 func (me *service) Get(id string, v *entities.Settings) (err error) {
 	var dataObj entities.Settings
-	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&entitySelector=type("%s")&fields=tags`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
-		return err
+	if len(me.entitySelector) > 0 {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&entitySelector=%s&fields=tags`, url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
+			return err
+		}
+	} else {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&entitySelector=type("%s")&fields=tags`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
+			return err
+		}
 	}
 	if shutdown.System.Stopped() {
 		return nil
