@@ -20,7 +20,7 @@ package customtags
 import (
 	"context"
 	"encoding/json"
-	"log"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
@@ -119,7 +119,9 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		srv := customtags.Service(cfg.Credentials(m))
 		if fullDeleter, ok := srv.(FullDeleter); ok {
 			if err := fullDeleter.DeleteValue(delConfig); err != nil {
-				return diag.FromErr(err)
+				if !strings.HasPrefix(err.Error(), "Unable to find tag") {
+					return diag.FromErr(err)
+				}
 			}
 		}
 	}
@@ -202,14 +204,17 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	srv := customtags.Service(cfg.Credentials(m))
 	if fullDeleter, ok := srv.(FullDeleter); ok {
 		if err := fullDeleter.DeleteValue(stateConfig); err != nil {
+			if strings.HasPrefix(err.Error(), "Unable to find tag") {
+				return diag.Diagnostics{}
+			}
 			return diag.FromErr(err)
 		}
 	}
 
-	responseConfig := new(settings.Settings)
-	srv.Get(stateConfig.EntitySelector, responseConfig)
-	dd, _ := json.Marshal(responseConfig)
-	log.Println(string(dd))
+	// responseConfig := new(settings.Settings)
+	// srv.Get(stateConfig.EntitySelector, responseConfig)
+	// dd, _ := json.Marshal(responseConfig)
+	// log.Println(string(dd))
 
 	return diag.Diagnostics{}
 }

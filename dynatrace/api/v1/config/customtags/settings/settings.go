@@ -36,6 +36,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Specifies the entities where you want to update tags",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"tags": {
 			Type:        schema.TypeList,
