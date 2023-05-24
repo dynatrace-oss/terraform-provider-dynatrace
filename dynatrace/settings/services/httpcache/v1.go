@@ -6,14 +6,16 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 )
 
 type GetV1 struct {
-	SchemaID string
-	ID       string
+	SchemaID        string
+	ServiceSchemaID string
+	ID              string
 }
 
 func (me *GetV1) Finish(v any) error {
@@ -32,7 +34,8 @@ func (me *GetV1) Finish(v any) error {
 		}
 		wrapper := struct {
 			Downloaded struct {
-				Value json.RawMessage `json:"value"`
+				ClassidID string          `json:"classicId,omitempty"`
+				Value     json.RawMessage `json:"value"`
 			} `json:"downloaded"`
 		}{}
 		if err := json.Unmarshal(data, &wrapper); err != nil {
@@ -41,6 +44,12 @@ func (me *GetV1) Finish(v any) error {
 		if err := json.Unmarshal(wrapper.Downloaded.Value, &v); err != nil {
 			return err
 		}
+
+		address.AddToOriginal(address.AddressOriginal{
+			TerraformSchemaID: me.ServiceSchemaID,
+			OriginalID:        wrapper.Downloaded.ClassidID,
+			OriginalSchemaID:  me.SchemaID,
+		})
 		return nil
 	}
 	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}

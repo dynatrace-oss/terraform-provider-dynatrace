@@ -24,7 +24,13 @@ import (
 	"unicode"
 )
 
+// To speed things up when using Dynatrace Config Manager
+var HCL_NO_FORMAT = os.Getenv("DYNATRACE_HCL_NO_FORMAT") == "true"
+
 func format(name string, force bool) {
+	if HCL_NO_FORMAT {
+		return
+	}
 	if force || os.Getenv("DYNATRACE_FORMAT_HCL_FILES") == "true" {
 		exePath, _ := exec.LookPath("terraform.exe")
 		// log.Println(exePath, "fmt", name)

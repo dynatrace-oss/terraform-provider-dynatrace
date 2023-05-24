@@ -24,6 +24,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 )
 
@@ -85,6 +86,9 @@ func runExport() (err error) {
 
 		go readStuff(bufio.NewScanner(outs))
 	}
+
+	address.SaveOriginalMap(environment.OutputFolder)
+	address.SaveCompletedMap(environment.OutputFolder)
 
 	return nil
 }
