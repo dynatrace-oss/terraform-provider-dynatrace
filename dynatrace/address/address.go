@@ -19,11 +19,15 @@ package address
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sync"
 
 	"github.com/spf13/afero"
 )
+
+// To speed things up when using Dynatrace Config Manager
+var BUILD_ADDRESS_FILES = os.Getenv("DYNATRACE_BUILD_ADDRESS_FILES") == "true"
 
 type AddressOriginal struct {
 	TerraformSchemaID string
@@ -59,6 +63,10 @@ func NewAddressMap() *AddressMap {
 }
 
 func (al *AddressMap) AddToAddressMap(a Address) {
+	if !BUILD_ADDRESS_FILES {
+		return
+	}
+
 	key := a.getKey()
 	al.mutex.Lock()
 	value, found := al.addresses[key]
@@ -70,6 +78,10 @@ func (al *AddressMap) AddToAddressMap(a Address) {
 }
 
 func SaveAddressMap(addresses interface{}, OutputFolder string, filename string) error {
+	if !BUILD_ADDRESS_FILES {
+		return nil
+	}
+
 	fs := afero.NewOsFs()
 	bytes, err := json.MarshalIndent(addresses, "", "  ")
 	if err != nil {
