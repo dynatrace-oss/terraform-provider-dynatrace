@@ -65,6 +65,10 @@ var REGEX_PRIVATE_SYNTHETIC_LOCATIONS_GET, _ = regexp.Compile(`\/api\/v1\/synthe
 var REGEX_CREDENTIALS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/credentials$`)
 
 func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
+	doGet := func(modSchemaID string, id string) rest.Request {
+		return Get(modSchemaID, id, me.schemaID)
+	}
+
 	if m := REGEX_SETTINGS_20_LIST.FindStringSubmatch(url); len(m) == 2 {
 		return &ListSettings20Request{SchemaID: me.schemaID}
 	} else if m := REGEX_SETTINGS_20_GET.FindStringSubmatch(url); len(m) == 2 {
@@ -72,7 +76,7 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	} else if m := REGEX_APPLICATIONS_MOBILE_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("application-mobile")
 	} else if m := REGEX_APPLICATIONS_MOBILE_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("application-mobile", m[1])
+		return doGet("application-mobile", m[1])
 	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return EmptyList(me.schemaID + ":" + "key-user-actions")
 	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST.FindStringSubmatch(url); len(m) == 1 {
@@ -80,7 +84,7 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	} else if m := REGEX_APPLICATIONS_WEB_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("application-web")
 	} else if m := REGEX_APPLICATIONS_WEB_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("application-web", m[1])
+		return doGet("application-web", m[1])
 	} else if m := REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return EmptyList(me.schemaID + ":" + "key-user-actions")
 	} else if m := REGEX_APPLICATIONS_WEB_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST.FindStringSubmatch(url); len(m) == 1 {
@@ -88,53 +92,53 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-nodejs")
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("custom-service-nodejs", m[1])
+		return doGet("custom-service-nodejs", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_DOTNET_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-dotnet")
 	} else if m := REGEX_CUSTOM_SERVICE_DOTNET_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("custom-service-dotnet", m[1])
+		return doGet("custom-service-dotnet", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_GOLANG_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-go")
 	} else if m := REGEX_CUSTOM_SERVICE_GOLANG_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("custom-service-go", m[1])
+		return doGet("custom-service-go", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_JAVA_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-java")
 	} else if m := REGEX_CUSTOM_SERVICE_JAVA_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("custom-service-java", m[1])
+		return doGet("custom-service-java", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_PHP_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-php")
 	} else if m := REGEX_CUSTOM_SERVICE_PHP_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("custom-service-php", m[1])
+		return doGet("custom-service-php", m[1])
 	} else if m := REGEX_CALCULATED_METRICS_SERVICE_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("calculated-metrics-service")
 	} else if m := REGEX_CALCULATED_METRICS_SERVICE_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("calculated-metrics-service", m[1])
+		return doGet("calculated-metrics-service", m[1])
 	} else if m := REGEX_REQUEST_ATTRIBUTES_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("request-attributes")
 	} else if m := REGEX_REQUEST_ATTRIBUTES_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("request-attributes", m[1])
+		return doGet("request-attributes", m[1])
 	} else if m := REGEX_CONDITIONAL_NAMING_HOST_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("conditional-naming-host")
 	} else if m := REGEX_CONDITIONAL_NAMING_HOST_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("conditional-naming-host", m[1])
+		return doGet("conditional-naming-host", m[1])
 	} else if m := REGEX_REQUEST_NAMING_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("request-naming-service")
 	} else if m := REGEX_REQUEST_NAMING_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("request-naming-service", m[1])
+		return doGet("request-naming-service", m[1])
 	} else if m := REGEX_REQUEST_SLO_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return &ListSLORequest{SchemaID: "slo"}
 	} else if m := REGEX_REQUEST_SLO_GET.FindStringSubmatch(url); len(m) == 2 {
-		return &GetSLORequest{SchemaID: "slo", ID: m[1]}
+		return &GetSLORequest{SchemaID: "slo", ID: m[1], ServiceSchemaID: me.schemaID}
 	} else if m := REGEX_BROWSER_MONITOR_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return Request(&ListMonitorsV1{"SYNTHETIC_TEST-"})
 	} else if m := REGEX_HTTP_MONITOR_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return Request(&ListMonitorsV1{"HTTP_CHECK-"})
 	} else if m := REGEX_MONITOR_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("synthetic-monitor", m[1])
+		return doGet("synthetic-monitor", m[1])
 	} else if m := REGEX_PRIVATE_SYNTHETIC_LOCATIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return Request(&ListPrivateSyntheticLocationsV1{})
 	} else if m := REGEX_PRIVATE_SYNTHETIC_LOCATIONS_GET.FindStringSubmatch(url); len(m) == 2 {
-		return Get("synthetic-location", m[1])
+		return doGet("synthetic-location", m[1])
 	} else if m := REGEX_CREDENTIALS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return EmptyList("v1:config:credentials")
 	}

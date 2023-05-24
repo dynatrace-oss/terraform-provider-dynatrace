@@ -499,7 +499,7 @@ func (me *Environment) ExecuteImport() error {
 func (me *Environment) executeImportV1() error {
 	for _, module := range me.Modules {
 		if shutdown.System.Stopped() {
-			return errors.New("Import was stopped")
+			return errors.New("import was stopped")
 		}
 		if err := module.ExecuteImportV1(); err != nil {
 			return err
@@ -508,68 +508,38 @@ func (me *Environment) executeImportV1() error {
 	return nil
 }
 
+type state struct {
+	Version           int         `json:"version"`
+	Terraform_version string      `json:"terraform_version"`
+	Serial            int         `json:"serial"`
+	Lineage           string      `json:"lineage"`
+	Outputs           interface{} `json:"outputs"`
+	Resources         resources   `json:"resources"`
+	CheckResults      interface{} `json:"check_results"`
+}
+
 func (me *Environment) executeImportV2() error {
-	itemCount := len(me.Modules)
-	fmt.Printf("Importing %d Modules", itemCount)
-	channel := make(chan *Module, itemCount)
-	mutex := sync.Mutex{}
-	waitGroup := sync.WaitGroup{}
-	maxThreads := 10
-	if maxThreads > itemCount {
-		maxThreads = itemCount
-	}
-	waitGroup.Add(maxThreads)
-	errs := []error{}
 	fs := afero.NewOsFs()
-	var newStateObject interface{}
 
-	processModule := func(module *Module) {
-		stateObject, err := module.ExecuteImportV2(fs, "")
-		if err != nil {
-			mutex.Lock()
-			errs = append(errs, err)
-			mutex.Unlock()
-			return
-		}
-		mutex.Lock()
-		newStateObject = updateState(newStateObject, stateObject)
-		mutex.Unlock()
-	}
-
-	for i := 0; i < maxThreads; i++ {
-
-		go func() {
-
-			for {
-				module, ok := <-channel
-				if shutdown.System.Stopped() {
-					ok = false
-				}
-				if !ok {
-					waitGroup.Done()
-					return
-				}
-				processModule(module)
-			}
-		}()
-
+	state := state{
+		Version:           4,
+		Terraform_version: "1.4.5",
+		Serial:            0,
+		Lineage:           "CREATED_BY_DYNATRACE",
+		Outputs:           nil,
+		Resources:         resources{},
+		CheckResults:      nil,
 	}
 
 	for _, module := range me.Modules {
-		channel <- module
+		resList, err := module.ExecuteImportV2(fs)
+		if err != nil {
+			return err
+		}
+		state.Resources = append(state.Resources, resList...)
 	}
 
-	close(channel)
-	waitGroup.Wait()
-	if shutdown.System.Stopped() {
-		return fmt.Errorf("Import was stopped: %v", errs)
-	}
-
-	if len(errs) >= 1 {
-		return fmt.Errorf("Error during state import: %v", errs)
-	}
-
-	bytes, err := json.MarshalIndent(newStateObject, "", "  ")
+	bytes, err := json.MarshalIndent(state, "", "  ")
 	if err != nil {
 		return err
 	}

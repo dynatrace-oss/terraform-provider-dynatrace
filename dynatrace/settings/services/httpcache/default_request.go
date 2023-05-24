@@ -19,8 +19,8 @@ func EmptyList(schemaID string) rest.Request {
 	return Request(&NonSupportedV1{schemaID})
 }
 
-func Get(schemaID string, id string) rest.Request {
-	return Request(&GetV1{SchemaID: schemaID, ID: id})
+func Get(schemaID string, id string, serviceSchemaID string) rest.Request {
+	return Request(&GetV1{SchemaID: schemaID, ID: id, ServiceSchemaID: serviceSchemaID})
 }
 
 type request struct {
