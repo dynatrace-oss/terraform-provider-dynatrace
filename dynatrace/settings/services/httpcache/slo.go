@@ -7,14 +7,16 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 )
 
 type GetSLORequest struct {
-	SchemaID string
-	ID       string
+	SchemaID        string
+	ServiceSchemaID string
+	ID              string
 }
 
 func (me *GetSLORequest) Raw() ([]byte, error) {
@@ -42,7 +44,8 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 		}
 		wrapper := struct {
 			Downloaded struct {
-				Value json.RawMessage `json:"value"`
+				ClassidID string          `json:"classicId,omitempty"`
+				Value     json.RawMessage `json:"value"`
 			} `json:"downloaded"`
 		}{}
 
@@ -52,6 +55,12 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 		if err := json.Unmarshal(wrapper.Downloaded.Value, &v); err != nil {
 			return err
 		}
+
+		address.AddToOriginal(address.AddressOriginal{
+			TerraformSchemaID: me.ServiceSchemaID,
+			OriginalID:        wrapper.Downloaded.ClassidID,
+			OriginalSchemaID:  me.SchemaID,
+		})
 		return nil
 	}
 	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}

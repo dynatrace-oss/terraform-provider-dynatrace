@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -184,6 +185,17 @@ func (me *Resource) Download() error {
 	if legacyID != nil {
 		me.LegacyID = *legacyID
 	}
+
+	idOnly, _, _ := settings.SplitID(me.ID)
+	address.AddToComplete(address.AddressComplete{
+		AddressOriginal: address.AddressOriginal{
+			TerraformSchemaID: service.SchemaID(),
+			OriginalID:        idOnly,
+		},
+		UniqueName:  me.UniqueName,
+		Type:        string(me.Type),
+		TrimmedType: me.Type.Trim(),
+	})
 	comments := settings.FillDemoValues(settngs)
 	comments = append(comments, settings.Validate(settngs)...)
 
