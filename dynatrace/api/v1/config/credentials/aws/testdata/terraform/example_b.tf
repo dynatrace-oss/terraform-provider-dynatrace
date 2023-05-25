@@ -4,9 +4,10 @@ resource "dynatrace_aws_credentials" "#name#" {
   tagged_only    = true
 
   authentication_data {
-    access_key = "########05"
-    secret_key = "########17"
+    account_id = "246186168471"
+    iam_role   = "Dynatrace_monitoring_role_demo1"
   }
+
 
   tags_to_monitor {
     name  = "string"
@@ -55,7 +56,7 @@ resource "dynatrace_aws_credentials" "#name#" {
       dimensions = ["Region"]
       statistic  = "SUM"
     }
-  }  
+  }
   supporting_services_to_monitor {
     name = "polly"
     monitored_metrics {
