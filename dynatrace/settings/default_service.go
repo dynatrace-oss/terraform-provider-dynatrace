@@ -277,7 +277,22 @@ func (me *defaultService[T]) Update(id string, v T) error {
 }
 
 func (me *defaultService[T]) update(id string, v T) error {
-	return me.client.Put(me.updateURL(id, v), v, 204).Finish()
+	var err error
+	// some endpoints respond back initially with an internal server error
+	// We're re-trying at least two more times before the update fails for good
+	var retries = 3
+	for retries > 0 {
+		err = me.client.Put(me.updateURL(id, v), v, 204).Finish()
+		if err != nil {
+			if strings.Contains(err.Error(), "Internal Server Error occurred. It has been logged and will be investigated") {
+				retries--
+			} else {
+				return err
+			}
+		}
+		return nil
+	}
+	return err
 }
 
 func (me *defaultService[T]) Delete(id string) error {
