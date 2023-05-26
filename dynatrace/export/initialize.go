@@ -36,9 +36,6 @@ func Initialize() (environment *Environment, err error) {
 	if flags.FlagMigrationOutput {
 		flags.FollowReferences = true
 		flags.PersistIDs = true
-		if flags.DataSources {
-			flags.Flat = true
-		}
 	}
 	if err = ConfigureRESTLog(); err != nil {
 		return nil, errors.New("unable to configure log file for REST activity: " + err.Error())
