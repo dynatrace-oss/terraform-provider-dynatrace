@@ -20,6 +20,5 @@
     "eventType": "ERROR",
     "davisMerge": true
   },
-  "eventEntityDimensionKey": "dt.entity.azure_application_gateway",
-  "legacyId": "builtin:cloud.azure.appGateway.backend.settings.traffic.requests.failed_alert"
+  "eventEntityDimensionKey": "dt.entity.azure_application_gateway"
 }
