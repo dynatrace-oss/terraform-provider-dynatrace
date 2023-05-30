@@ -316,8 +316,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.ApplicationDetection: NewResourceDescriptor(
+	ResourceTypes.ApplicationDetection: NewChildResourceDescriptor(
 		detection.Service,
+		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.ApplicationErrorRules: NewChildResourceDescriptor(
@@ -910,9 +911,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OwnershipTeams:  NewResourceDescriptor(teams.Service),
 	ResourceTypes.LogCustomSource: NewResourceDescriptor(customlogsourcesettings.Service),
-	ResourceTypes.ApplicationDetectionV2: NewChildResourceDescriptor(
+	ResourceTypes.ApplicationDetectionV2: NewResourceDescriptor(
 		appdetection.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.Kubernetes: NewResourceDescriptor(
@@ -1008,7 +1008,7 @@ var BlackListedResources = []ResourceType{
 
 	// Child Resources - to be pulled implicitly via their parent resources
 	ResourceTypes.ApplicationDataPrivacy,
-	ResourceTypes.ApplicationDetectionV2,
+	ResourceTypes.ApplicationDetection,
 	ResourceTypes.ApplicationErrorRules,
 	ResourceTypes.WebAppAnomalies,
 	ResourceTypes.WebAppJavascriptUpdates,
