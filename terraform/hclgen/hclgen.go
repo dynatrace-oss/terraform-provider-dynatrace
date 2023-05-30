@@ -159,7 +159,6 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		return
 	}
 	if resComputed(breadCrumbs, schema) {
-		fmt.Println(breadCrumbs, "COMPUTED")
 		return
 	}
 	switch v := value.(type) {
