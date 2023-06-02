@@ -467,16 +467,16 @@ func (me *Environment) WriteMainFile() error {
 		mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resourceType.Trim()))
 		module := me.Module(resourceType)
 		mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", module.GetFolder(true)))
-		referencedResourceTypes := module.GetReferencedResourceTypes()
-		if len(referencedResourceTypes) > 0 {
-			for _, referencedResourceType := range referencedResourceTypes {
-				if me.Module(referencedResourceType).IsReferencedAsDataSource() {
+		referencedResources := module.GetResourceReferences()
+		if len(referencedResources) > 0 {
+			for _, referencedResource := range referencedResources {
+				if me.Module(referencedResource.Type).IsReferencedAsDataSource() {
 					continue
 				}
-				if referencedResourceType == resourceType {
+				if referencedResource.Type == resourceType {
 					continue
 				}
-				mainFile.WriteString(fmt.Sprintf("  %s = module.%s.resources\n", referencedResourceType, referencedResourceType.Trim()))
+				mainFile.WriteString(fmt.Sprintf("  %s_%s = module.%s.resources_%s\n", referencedResource.Type, referencedResource.UniqueName, referencedResource.Type.Trim(), referencedResource.UniqueName))
 
 			}
 		}

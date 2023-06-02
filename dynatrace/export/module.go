@@ -259,8 +259,8 @@ func (me *Module) WriteVariablesFile() (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
-	referencedResourceTypes := me.GetReferencedResourceTypes()
-	if len(referencedResourceTypes) == 0 {
+	referencedResources := me.GetResourceReferences()
+	if len(referencedResources) == 0 {
 		return nil
 	}
 	fmt.Println("- " + me.Type)
@@ -271,22 +271,28 @@ func (me *Module) WriteVariablesFile() (err error) {
 	defer func() {
 		variablesFile.Close()
 
-		exePath, _ := exec.LookPath("terraform.exe")
-		cmd := exec.Command(exePath, "fmt", variablesFile.Name())
-		cmd.Start()
-		cmd.Wait()
+			exePath, _ := exec.LookPath("terraform.exe")
+			cmd := exec.Command(exePath, "fmt", variablesFile.Name())
+			cmd.Start()
+			cmd.Wait()
 	}()
 
-	sort.Slice(referencedResourceTypes, func(i, j int) bool {
-		return referencedResourceTypes[i] < referencedResourceTypes[j]
+	sort.Slice(referencedResources, func(i, j int) bool {
+		if referencedResources[i].UniqueName == referencedResources[j].UniqueName {
+			return referencedResources[i].UniqueName < referencedResources[j].UniqueName
+		}
+		return referencedResources[i].UniqueName < referencedResources[j].UniqueName
 	})
-	for _, resourceType := range referencedResourceTypes {
-		if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
-			if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
+	for _, resource := range referencedResources {
+		if resource.Type == me.Type {
+			continue
+		}
+		if !me.Environment.Module(resource.Type).IsReferencedAsDataSource() {
+			if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s_%s" {
 				type = any
 			}
 			
-			`, resourceType)); err != nil {
+			`, resource.Type, resource.UniqueName)); err != nil {
 				return err
 			}
 		}
@@ -427,22 +433,25 @@ func (me *Module) WriteResourcesFile() (err error) {
 		format(resourcesFile.Name(), true)
 	}()
 
-	if _, err = resourcesFile.WriteString(`output "resources" {
-  value = {
-  `); err != nil {
-		return err
-	}
-
 	for _, resource := range referencedResources {
-		if _, err = resourcesFile.WriteString(fmt.Sprintf(`  %s = %s.%s
-  `, resource.UniqueName, resource.Type, resource.UniqueName)); err != nil {
+
+		if _, err = resourcesFile.WriteString(fmt.Sprintf(`output "resources_%s" {
+	  value = {
+	  `, resource.UniqueName)); err != nil {
 			return err
 		}
+
+		if _, err = resourcesFile.WriteString(fmt.Sprintf(`  value = %s.%s
+  `, resource.Type, resource.UniqueName)); err != nil {
+			return err
+		}
+
+		if _, err = resourcesFile.WriteString(`}
 	}
-	if _, err = resourcesFile.WriteString(`}
-}
-	`); err != nil {
-		return err
+		
+`); err != nil {
+			return err
+		}
 	}
 	return nil
 }

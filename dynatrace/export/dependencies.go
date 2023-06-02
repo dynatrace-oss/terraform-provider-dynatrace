@@ -166,7 +166,7 @@ func (me *legacyID) DataSourceType() DataSourceType {
 }
 
 func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s.%s.legacy_id}"
+	replacePattern := "${var.%s_%s.value.legacy_id}"
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.legacy_id}"
 	}
@@ -184,7 +184,7 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 				replacePattern = "${data.%s.%s.legacy_id}"
 			}
 		} else {
-			replacePattern = "${var.%s.%s.legacy_id}"
+			replacePattern = "${var.%s_%s.value.legacy_id}"
 			if environment.Flags.Flat {
 				replacePattern = "${%s.%s.legacy_id}"
 			}
@@ -219,7 +219,7 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	childDescriptor := environment.Module(replacingIn).Descriptor
 	isParent := childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
-	replacePattern := "${var.%s.%s.id}"
+	replacePattern := "${var.%s_%s.value.id}"
 	if environment.Flags.Flat || isParent {
 		replacePattern = "${%s.%s.id}"
 	}
@@ -240,7 +240,7 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 					replacePattern = "${data.%s.%s.id}"
 				}
 			} else {
-				replacePattern = "${var.%s.%s.id}"
+				replacePattern = "${var.%s_%s.value.id}"
 				if environment.Flags.Flat || isParent {
 					replacePattern = "${%s.%s.id}"
 				}
