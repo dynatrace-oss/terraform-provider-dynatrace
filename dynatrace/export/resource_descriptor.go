@@ -312,19 +312,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.Alerting),
 	).Specify(notifications.Types.AnsibleTower),
 	ResourceTypes.ApplicationAnomalies: NewResourceDescriptor(application_anomalies.Service),
-	ResourceTypes.ApplicationDataPrivacy: NewChildResourceDescriptor(
+	ResourceTypes.ApplicationDataPrivacy: NewResourceDescriptor(
 		dataprivacy.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.ApplicationDetection: NewChildResourceDescriptor(
+	ResourceTypes.ApplicationDetection: NewResourceDescriptor(
 		detection.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.ApplicationErrorRules: NewChildResourceDescriptor(
+	ResourceTypes.ApplicationErrorRules: NewResourceDescriptor(
 		errors.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.AutoTag: NewResourceDescriptor(
@@ -366,31 +363,26 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	).Except(func(id string, name string) bool {
 		return strings.HasPrefix(id, "builtin:") || strings.HasPrefix(id, "ruxit.") || strings.HasPrefix(id, "dynatrace.") || strings.HasPrefix(id, "custom.remote.python.") || strings.HasPrefix(id, "custom.python.")
 	}),
-	ResourceTypes.CustomAppAnomalies: NewChildResourceDescriptor(
+	ResourceTypes.CustomAppAnomalies: NewResourceDescriptor(
 		custom_app_anomalies.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 		Coalesce(Dependencies.DeviceApplicationMethod),
 	),
-	ResourceTypes.CustomAppCrashRate: NewChildResourceDescriptor(
+	ResourceTypes.CustomAppCrashRate: NewResourceDescriptor(
 		custom_app_crash_rate.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
-	ResourceTypes.MobileAppAnomalies: NewChildResourceDescriptor(
+	ResourceTypes.MobileAppAnomalies: NewResourceDescriptor(
 		mobile_app_anomalies.Service,
-		ResourceTypes.MobileApplication,
 		Coalesce(Dependencies.DeviceApplicationMethod),
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
-	ResourceTypes.MobileAppCrashRate: NewChildResourceDescriptor(
+	ResourceTypes.MobileAppCrashRate: NewResourceDescriptor(
 		mobile_app_crash_rate.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
-	ResourceTypes.WebAppAnomalies: NewChildResourceDescriptor(
+	ResourceTypes.WebAppAnomalies: NewResourceDescriptor(
 		web_app_anomalies.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Coalesce(Dependencies.ApplicationMethod),
 	),
@@ -630,14 +622,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ProcessGroup),
 	),
 	ResourceTypes.RUMIPLocations: NewResourceDescriptor(ipmappings.Service),
-	ResourceTypes.CustomAppEnablement: NewChildResourceDescriptor(
+	ResourceTypes.CustomAppEnablement: NewResourceDescriptor(
 		rumcustomenablement.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
-	ResourceTypes.MobileAppEnablement: NewChildResourceDescriptor(
+	ResourceTypes.MobileAppEnablement: NewResourceDescriptor(
 		rummobileenablement.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 	ResourceTypes.WebAppEnablement: NewResourceDescriptor(
@@ -663,19 +653,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.ProcessGroupSimpleDetection: NewResourceDescriptor(processgroupsimpledetection.Service),
 	ResourceTypes.LogMetrics:                  NewResourceDescriptor(schemalesslogmetric.Service),
-	ResourceTypes.BrowserMonitorPerformanceThresholds: NewChildResourceDescriptor(
+	ResourceTypes.BrowserMonitorPerformanceThresholds: NewResourceDescriptor(
 		browserperformancethresholds.Service,
-		ResourceTypes.BrowserMonitor,
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
 	),
-	ResourceTypes.HttpMonitorPerformanceThresholds: NewChildResourceDescriptor(
+	ResourceTypes.HttpMonitorPerformanceThresholds: NewResourceDescriptor(
 		httpperformancethresholds.Service,
-		ResourceTypes.HTTPMonitor,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
 	),
-	ResourceTypes.HttpMonitorCookies: NewChildResourceDescriptor(
+	ResourceTypes.HttpMonitorCookies: NewResourceDescriptor(
 		httpcookies.Service,
-		ResourceTypes.HTTPMonitor,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
 	),
 	ResourceTypes.SessionReplayWebPrivacy: NewResourceDescriptor(
@@ -686,20 +673,17 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		sessionreplayresourcecapture.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.UsabilityAnalytics: NewChildResourceDescriptor(
+	ResourceTypes.UsabilityAnalytics: NewResourceDescriptor(
 		analytics.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.SyntheticAvailability: NewResourceDescriptor(availability.Service),
-	ResourceTypes.BrowserMonitorOutageHandling: NewChildResourceDescriptor(
+	ResourceTypes.BrowserMonitorOutageHandling: NewResourceDescriptor(
 		browseroutagehandling.Service,
-		ResourceTypes.BrowserMonitor,
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
 	),
-	ResourceTypes.HttpMonitorOutageHandling: NewChildResourceDescriptor(
+	ResourceTypes.HttpMonitorOutageHandling: NewResourceDescriptor(
 		httpoutagehandling.Service,
-		ResourceTypes.HTTPMonitor,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
 	),
 	ResourceTypes.CloudAppWorkloadDetection:      NewResourceDescriptor(workloaddetection.Service),
@@ -755,9 +739,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.RUMHostHeaders:     NewResourceDescriptor(hostheaders.Service),
 	ResourceTypes.RUMIPDetermination: NewResourceDescriptor(ipdetermination.Service),
-	ResourceTypes.MobileAppRequestErrors: NewChildResourceDescriptor(
+	ResourceTypes.MobileAppRequestErrors: NewResourceDescriptor(
 		mobilerequesterrors.Service,
-		ResourceTypes.MobileApplication,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 	ResourceTypes.TransactionStartFilters: NewResourceDescriptor(txstartfilters.Service),
@@ -889,9 +872,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.UserActionCustomMetrics: NewResourceDescriptor(useractioncustommetrics.Service),
 	ResourceTypes.WebAppJavascriptVersion: NewResourceDescriptor(customrumjavascriptversion.Service),
-	ResourceTypes.WebAppJavascriptUpdates: NewChildResourceDescriptor(
+	ResourceTypes.WebAppJavascriptUpdates: NewResourceDescriptor(
 		rumjavascriptupdates.Service,
-		ResourceTypes.WebApplication,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.OpenTelemetryMetrics: NewResourceDescriptor(opentelemetrymetrics.Service),
@@ -1007,26 +989,6 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppKeyPerformanceCustom, // schema removed
 	ResourceTypes.WebAppKeyPerformanceLoad,   // schema removed
 	ResourceTypes.WebAppKeyPerformanceXHR,    // schema removed
-
-	// Child Resources - to be pulled implicitly via their parent resources
-	ResourceTypes.ApplicationDataPrivacy,
-	ResourceTypes.ApplicationDetection,
-	ResourceTypes.ApplicationErrorRules,
-	ResourceTypes.WebAppAnomalies,
-	ResourceTypes.WebAppJavascriptUpdates,
-	ResourceTypes.UsabilityAnalytics,
-	ResourceTypes.CustomAppAnomalies,
-	ResourceTypes.CustomAppCrashRate,
-	ResourceTypes.MobileAppAnomalies,
-	ResourceTypes.MobileAppCrashRate,
-	ResourceTypes.DashboardSharing,
-	ResourceTypes.CustomAppEnablement,
-	ResourceTypes.MobileAppEnablement,
-	ResourceTypes.MobileAppRequestErrors,
-	ResourceTypes.BrowserMonitorPerformanceThresholds,
-	ResourceTypes.HttpMonitorPerformanceThresholds,
-	ResourceTypes.HttpMonitorCookies,
-	ResourceTypes.HttpMonitorOutageHandling,
 
 	// Not included in export - to be discussed
 	ResourceTypes.AzureService,
