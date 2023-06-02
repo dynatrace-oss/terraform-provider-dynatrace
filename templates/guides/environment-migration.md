@@ -42,6 +42,8 @@ Windows: `terraform-provider-dynatrace.exe -export -migrate`
 
 Linux: `terraform-provider-dynatrace -export -migrate`
 
+-> The `dynatrace_json_dashboard` resource and the account manangement API resources are excluded by default, please use the iterative method to export/apply after running the bulk migration.
+
 ### Iterative Migration
 The iterative approach is useful in scenarios where you would like to migrate configuration by resource group or to an environment with existing configuration. 
 

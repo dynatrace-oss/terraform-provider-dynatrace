@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_iam_group (Resource)
 
+-> This resource is excluded by default in the export utility since it is part of the account management API.
+
 ## Dynatrace Documentation
 
 - Dynatrace IAM - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_application_detection_rule_v2 (Resource)
 
+-> This resource does not handle ordering of rules. If ordering is required, please use [dynatrace_application_detection_rule](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/application_detection_rule) instead.
+
 ## Dynatrace Documentation
 
 - Check application detection rules - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/additional-configuration/application-detection-rules

@@ -964,6 +964,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.HostAnomalies,           // Replaced by dynatrace_host_anomalies_v2
 	ResourceTypes.KubernetesCredentials,   // Replaced by dynatrace_kubernetes
 	ResourceTypes.ManagementZone,          // Replaced by dynatrace_management_zone_v2
+	ResourceTypes.ProcessGroupAnomalies,   // Replaced by dynatrace_pg_alerting
 	ResourceTypes.ServiceAnomalies,        // Replaced by dynatrace_service_anomalies_v2
 	ResourceTypes.SLO,                     // Replaced by dynatrace_slo_v2
 
@@ -985,9 +986,8 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
 
-	ResourceTypes.JSONDashboard,         // Excluded due to the potential of a large amount of dashboards
-	ResourceTypes.DashboardSharing,      // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
-	ResourceTypes.ProcessGroupAnomalies, // Excluded since there could be 100k+ process groups
+	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
+	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
 
 	ResourceTypes.UserSettings, // Excluded since it requires a personal token
 

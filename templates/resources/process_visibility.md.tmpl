@@ -7,7 +7,6 @@ description: |-
 
 # dynatrace_process_visibility (Resource)
 
-
 ## Dynatrace Documentation
 
 - Process instance snapshots - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/monitoring/host-monitoring#snapshots

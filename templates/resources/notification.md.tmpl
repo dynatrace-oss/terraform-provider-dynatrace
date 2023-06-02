@@ -7,6 +7,9 @@ description: |-
 
 # dynatrace_notification (Resource)
 
+-> This resource API endpoint has been deprecated, please use dynatrace_{notificationtype}_notification instead. 
+For example, for email notifications use [dynatrace_email_notification](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/email_notification).
+
 ## Dynatrace Documentation
 
 - Integrations - https://www.dynatrace.com/support/help/setup-and-configuration/integrations

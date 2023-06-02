@@ -2,22 +2,20 @@
 layout: ""
 page_title: "dynatrace_application Data Source - terraform-provider-dynatrace"
 description: |-
-  The data source `dynatrace_application` covers queries for the ID of an application based on name and tags / tag-value pairs
+  The data source `dynatrace_application` covers queries for the ID of an application based on name
 ---
 
 # dynatrace_application (Data Source)
 
-The application data source allows the application ID to be retrieved by its name and optionally tags / tag-value pairs.
+The application data source allows the application ID to be retrieved by its name.
 
 - `name` queries for all applications with the specified name
-- `tags` (optional) refers to the tags that need to be present for the application (inclusive)
 
 ## Example Usage
 
 ```terraform
 data "dynatrace_application" "Test" {
   name = "Example"
-  tags = ["TerraformKeyTest","TerraformKeyValueTest=TestValue"]
 }
 
 resource "dynatrace_application_detection_rule" "#name#" {

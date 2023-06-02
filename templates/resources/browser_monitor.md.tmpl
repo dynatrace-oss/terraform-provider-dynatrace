@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_browser_monitor (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_browser_monitor_outage`, please review the schema for additional information.
-
 ## Dynatrace Documentation
 
 - Synthetic Monitoring - Browser monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#browser-monitors

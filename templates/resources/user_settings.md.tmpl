@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_user_settings (Resource)
 
--> This resource utilizes the Settings 2.0 API `builtin:user-settings`. It is scoped for an individual user and requires a personal access token.
+-> This resource is excluded by default in the export utility since it is scoped for an individual user and requires a personal access token.
 
 ## Dynatrace Documentation
 

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_service (Data Source)
 
+-> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `SERVICE` instead.
+
 The service data source allows the service ID to be retrieved by its name and optionally tags / tag-value pairs.
 
 - `name` queries for all services with the specified name

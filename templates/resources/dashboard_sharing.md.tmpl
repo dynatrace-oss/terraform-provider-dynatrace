@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_dashboard_sharing (Resource)
 
+-> This is a child resource of [dynatrace_json_dashboard](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/json_dashboard), therefore it is automatically retrieved with the dashboard. 
+
 ## Dynatrace Documentation
 
 - Share Dynatrace dashboards - https://www.dynatrace.com/support/help/how-to-use-dynatrace/dashboards-and-charts/dashboards/share-dashboards

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_host_anomalies (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_host_anomalies_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/host_anomalies_v2) instead.
+
 ## Dynatrace Documentation
 
 - Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure
