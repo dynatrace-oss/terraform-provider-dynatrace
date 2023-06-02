@@ -20,6 +20,7 @@ package entities
 import (
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
+	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -37,8 +38,7 @@ func DataSource() *schema.Resource {
 			},
 			"entities": {
 				Type:     schema.TypeList,
-				MaxItems: 1,
-				Elem:     &schema.Resource{Schema: new(entities.Entities).Schema()},
+				Elem:     &schema.Resource{Schema: new(entity.Entity).Schema()},
 				Optional: true,
 				Computed: true,
 			},
@@ -60,11 +60,11 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	d.SetId(service.SchemaID())
 	if len(settings.Entities) != 0 {
 		marshalled := hcl.Properties{}
-		err := settings.MarshalHCL(marshalled)
+		err := marshalled.Encode("settings", &settings)
 		if err != nil {
 			return err
 		}
-		d.Set("entities", marshalled["entities"])
+		d.Set("entities", marshalled["settings"].([]any)[0].(hcl.Properties)["entities"])
 	}
 	return nil
 }
