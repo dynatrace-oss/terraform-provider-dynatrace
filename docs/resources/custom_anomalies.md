@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_custom_anomalies (Resource)
 
+The API utilized for this resource is deprecated, please use [dynatrace_metric_events](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/metric_events) instead.
+
 ## Dynatrace Documentation
 
 - Metric events for alerting - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/metric-events-for-alerting
