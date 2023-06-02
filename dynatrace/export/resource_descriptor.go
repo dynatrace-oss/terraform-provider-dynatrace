@@ -232,6 +232,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure"
+	azure_services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices"
@@ -339,6 +340,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.AWSCredentials),
 	),
 	ResourceTypes.AzureCredentials: NewResourceDescriptor(azure.Service),
+	ResourceTypes.AzureService:     NewResourceDescriptor(azure_services.Service),
 	ResourceTypes.BrowserMonitor: NewResourceDescriptor(
 		browser.Service,
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
@@ -1025,6 +1027,9 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.HttpMonitorPerformanceThresholds,
 	ResourceTypes.HttpMonitorCookies,
 	ResourceTypes.HttpMonitorOutageHandling,
+
+	// Not included in export - to be discussed
+	ResourceTypes.AzureService,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

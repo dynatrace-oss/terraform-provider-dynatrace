@@ -23,6 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
@@ -138,6 +139,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_naming":            requestnaming.DataSource(),
 			"dynatrace_dashboard":                 dashboard.DataSource(),
 			"dynatrace_slo":                       slo.DataSource(),
+			"dynatrace_azure_supported_services":  supported_services.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -154,6 +156,7 @@ func Provider() *schema.Provider {
 			"dynatrace_autotag":                            resources.NewGeneric(export.ResourceTypes.AutoTag).Resource(),
 			"dynatrace_aws_credentials":                    resources.NewGeneric(export.ResourceTypes.AWSCredentials).Resource(),
 			"dynatrace_azure_credentials":                  resources.NewGeneric(export.ResourceTypes.AzureCredentials).Resource(),
+			"dynatrace_azure_service":                      resources.NewGeneric(export.ResourceTypes.AzureService).Resource(),
 			"dynatrace_k8s_credentials":                    resources.NewGeneric(export.ResourceTypes.KubernetesCredentials).Resource(),
 			"dynatrace_cloudfoundry_credentials":           resources.NewGeneric(export.ResourceTypes.CloudFoundryCredentials).Resource(),
 			"dynatrace_service_anomalies":                  resources.NewGeneric(export.ResourceTypes.ServiceAnomalies).Resource(),

@@ -109,11 +109,12 @@ func (ac *AzureCredentials) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(AzureSupportingService).Schema()},
 			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-				if d.IsNewResource() {
-					return false
-				}
-				ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
-				return ssmid.(bool)
+				return true
+				// if d.IsNewResource() {
+				// 	return false
+				// }
+				// ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
+				// return ssmid.(bool)
 			},
 		},
 		"supporting_services_managed_in_dynatrace": {
@@ -210,13 +211,6 @@ func (ac *AzureCredentials) MarshalJSON() ([]byte, error) {
 	} else {
 		return nil, err
 	}
-	// if ac.SupportingServices != nil {
-	// 	rawMessage, err := json.Marshal(ac.SupportingServices)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	m["supportingServices"] = rawMessage
-	// }
 	return json.Marshal(m)
 }
 
@@ -273,11 +267,6 @@ func (ac *AzureCredentials) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
-	// if v, found := m["supportingServices"]; found {
-	// 	if err := json.Unmarshal(v, &ac.SupportingServices); err != nil {
-	// 		return err
-	// 	}
-	// }
 	delete(m, "id")
 	delete(m, "label")
 	delete(m, "directoryId")
@@ -407,16 +396,6 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("monitor_only_tagged_entities"); ok {
 		ac.MonitorOnlyTaggedEntities = opt.NewBool(value.(bool))
-	}
-	if result, ok := decoder.GetOk("supporting_services.#"); ok {
-		ac.SupportingServices = []*AzureSupportingService{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(AzureSupportingService)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "supporting_services", idx)); err != nil {
-				return err
-			}
-			ac.SupportingServices = append(ac.SupportingServices, entry)
-		}
 	}
 	if value, ok := decoder.GetOk("supporting_services_managed_in_dynatrace"); ok {
 		ac.SupportingServicesManagedInDynatrace = value.(bool)

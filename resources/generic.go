@@ -40,6 +40,10 @@ func NewGeneric(resourceType export.ResourceType) *Generic {
 	return &Generic{Type: resourceType, Descriptor: descriptor}
 }
 
+type Computer interface {
+	IsComputer() bool
+}
+
 type Generic struct {
 	Type       export.ResourceType
 	Descriptor export.ResourceDescriptor
@@ -128,6 +132,9 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	// 		d.Set("flawed_reasons", []string{})
 	// 	}
 	// }
+	if _, ok := sttngs.(Computer); ok {
+		return me.ReadForSettings(ctx, d, m, sttngs)
+	}
 	return me.Read(ctx, d, m)
 }
 
@@ -149,33 +156,14 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 		}
 		return diag.FromErr(err)
 	}
+	if _, ok := sttngs.(Computer); ok {
+		return me.ReadForSettings(ctx, d, m, sttngs)
+	}
 	return me.Read(ctx, d, m)
 }
 
-func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if strings.HasSuffix(d.Id(), "---flawed----") {
-		return diag.Diagnostics{}
-	}
+func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, m any, sttngs settings.Settings) diag.Diagnostics {
 	var err error
-	sttngs := me.Settings()
-	// if os.Getenv("CACHE_OFFLINE_MODE") != "true" {
-	// 	if _, ok := settings.(*vault.Credentials); ok {
-	// 		return diag.Diagnostics{}
-	// 	}
-	// 	if _, ok := settings.(*notifications.Notification); ok {
-	// 		return diag.Diagnostics{}
-	// 	}
-	// }
-	service := me.Service(m)
-	if err := service.Get(d.Id(), sttngs); err != nil {
-		if restError, ok := err.(rest.Error); ok {
-			if restError.Code == 404 {
-				d.SetId("")
-				return diag.Diagnostics{}
-			}
-		}
-		return diag.FromErr(err)
-	}
 	if preparer, ok := sttngs.(MarshalPreparer); ok {
 		preparer.PrepareMarshalHCL(hcl.DecoderFrom(d))
 	}
@@ -226,6 +214,32 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 	}
 
 	return diag.Diagnostics{}
+}
+
+func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	if strings.HasSuffix(d.Id(), "---flawed----") {
+		return diag.Diagnostics{}
+	}
+	sttngs := me.Settings()
+	// if os.Getenv("CACHE_OFFLINE_MODE") != "true" {
+	// 	if _, ok := settings.(*vault.Credentials); ok {
+	// 		return diag.Diagnostics{}
+	// 	}
+	// 	if _, ok := settings.(*notifications.Notification); ok {
+	// 		return diag.Diagnostics{}
+	// 	}
+	// }
+	service := me.Service(m)
+	if err := service.Get(d.Id(), sttngs); err != nil {
+		if restError, ok := err.(rest.Error); ok {
+			if restError.Code == 404 {
+				d.SetId("")
+				return diag.Diagnostics{}
+			}
+		}
+		return diag.FromErr(err)
+	}
+	return me.ReadForSettings(ctx, d, m, sttngs)
 }
 
 func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
