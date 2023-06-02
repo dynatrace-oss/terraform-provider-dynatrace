@@ -99,7 +99,7 @@ func (me *mgmzdep) DataSourceType() DataSourceType {
 }
 
 func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s.%s.name}"
+	replacePattern := "${var.%s_%s.value.name}"
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.name}"
 	}
@@ -122,7 +122,7 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 				replacePattern = "${data.%s.%s.name}"
 			}
 		} else {
-			replacePattern = "${var.%s.%s.name}"
+			replacePattern = "${var.%s_%s.value.name}"
 			if environment.Flags.Flat {
 				replacePattern = "${%s.%s.name}"
 			}
@@ -364,7 +364,7 @@ func (me *reqAttName) DataSourceType() DataSourceType {
 }
 
 func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s.%s.name}"
+	replacePattern := "${var.%s_%s.value.name}"
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.name}"
 	}
@@ -385,7 +385,7 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 					replacePattern = "${data.%s.%s.name}"
 				}
 			} else {
-				replacePattern = "${var.%s.%s.name}"
+				replacePattern = "${var.%s_%s.value.name}"
 				if environment.Flags.Flat {
 					replacePattern = "${%s.%s.name}"
 				}
