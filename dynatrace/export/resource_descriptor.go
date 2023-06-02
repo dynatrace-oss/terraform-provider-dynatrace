@@ -947,48 +947,49 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 }
 
 var BlackListedResources = []ResourceType{
-	ResourceTypes.MaintenanceWindow, // legacy
-	ResourceTypes.ManagementZone,    // legacy
-	ResourceTypes.Notification,      // legacy
-	ResourceTypes.AlertingProfile,   // legacy
-	ResourceTypes.CustomAnomalies,   // legacy
-	ResourceTypes.Dashboard,         // taken care of dynatrace_json_dashboard
-	ResourceTypes.IAMUser,           // not sure whether to migrate
-	ResourceTypes.IAMGroup,          // not sure whether to migrate
-	ResourceTypes.IAMPermission,     // not sure whether to migrate
-	ResourceTypes.IAMPolicy,         // not sure whether to migrate
-	ResourceTypes.IAMPolicyBindings, // not sure whether to migrate
+	// Officially deprecated resources (EOL)
+	ResourceTypes.AlertingProfile,   // Replaced by dynatrace_alerting
+	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
+	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
+	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
 
-	// excluding by default
-	ResourceTypes.JSONDashboard, // may replace dynatrace_dashboard in the future
-	ResourceTypes.DashboardSharing,
+	// Deprecated resources due to better alternatives
+	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies
+	ResourceTypes.ApplicationDataPrivacy,  // Replaced by dynatrace_data_privacy and dynatrace_session_replay_web_privacy
+	ResourceTypes.AutoTag,                 // Replaced by dynatrace_autotag_v2
+	ResourceTypes.CloudFoundryCredentials, // Replaced by dynatrace_cloud_foundry
+	ResourceTypes.Dashboard,               // Replaced by dynatrace_json_dashboard
+	ResourceTypes.DatabaseAnomalies,       // Replaced by dynatrace_database_anomalies_v2
+	ResourceTypes.DiskEventAnomalies,      // Replaced by dynatrace_disk_anomaly_rules
+	ResourceTypes.HostAnomalies,           // Replaced by dynatrace_host_anomalies_v2
+	ResourceTypes.KubernetesCredentials,   // Replaced by dynatrace_kubernetes
+	ResourceTypes.ManagementZone,          // Replaced by dynatrace_management_zone_v2
+	ResourceTypes.ServiceAnomalies,        // Replaced by dynatrace_service_anomalies_v2
+	ResourceTypes.SLO,                     // Replaced by dynatrace_slo_v2
 
-	ResourceTypes.ProcessGroupAnomalies, // there could be 100k process groups
+	// Resources waiting for full coverage to deprecate v1/v2 counterpart
+	ResourceTypes.ApplicationDetectionV2, // Cannot handle ordering, use dynatrace_application_detection_rule
+	ResourceTypes.MobileAppRequestErrors, // JS errors missing, use dynatrace_application_error_rules
+	ResourceTypes.WebAppCustomErrors,     // JS errors missing, use dynatrace_application_error_rules
+	ResourceTypes.WebAppRequestErrors,    // JS errors missing, use dynatrace_application_error_rules
 
-	ResourceTypes.WebAppEnablement,             // overlap with ResourceTypes.MobileApplication
-	ResourceTypes.MobileAppEnablement,          // overlap with ResourceTypes.MobileApplication
-	ResourceTypes.CustomAppEnablement,          // overlap with ResourceTypes.MobileApplication
-	ResourceTypes.SessionReplayWebPrivacy,      // overlap with ResourceTypes.ApplicationDataPrivacy
-	ResourceTypes.SessionReplayResourceCapture, // overlap with ResourceTypes.WebApplication
-	ResourceTypes.WebAppKeyPerformanceCustom,   // overlap with ResourceTypes.WebApplication
-	ResourceTypes.BrowserMonitorOutageHandling, // overlap with ResourceTypes.BrowserMonitor
-	ResourceTypes.HttpMonitorOutageHandling,    // overlap with ResourceTypes.HTTPMonitor
-	ResourceTypes.DataPrivacy,                  // overlap with ResourceTypes.ApplicationDataPrivacy
-	ResourceTypes.WebAppCustomErrors,           // overlap with ResourceTypes.ApplicationErrorRules
-	ResourceTypes.WebAppRequestErrors,          // overlap with ResourceTypes.ApplicationErrorRules
-	ResourceTypes.UserSettings,                 // requires personal token
-	ResourceTypes.LogGrail,                     // phased rollout
-	ResourceTypes.ApplicationDetectionV2,       // overlap with ResourceTypes.ApplicationDetection
+	// Schemas rolled back - not currently available
+	ResourceTypes.WebAppKeyPerformanceCustom,
+	ResourceTypes.WebAppKeyPerformanceLoad,
+	ResourceTypes.WebAppKeyPerformanceXHR,
 
-	ResourceTypes.KubernetesCredentials,   // overlap with Settings 2.0 ResourceTypes.Kubernetes
-	ResourceTypes.CloudFoundryCredentials, // overlap with Settings 2.0 ResourceTypes.CloudFoundry
-	ResourceTypes.DiskEventAnomalies,      // overlap with Settings 2.0 ResourceTypes.DiskAnomalyDetectionRules
-	ResourceTypes.SLO,                     // overlap with Settings 2.0 ResourceTypes.SLOV2
-	ResourceTypes.AutoTag,                 // overlap with Settings 2.0 ResourceTypes.AutoTagV2
+	// Excluded since configuration is under account management
+	ResourceTypes.IAMUser,
+	ResourceTypes.IAMGroup,
+	ResourceTypes.IAMPermission,
+	ResourceTypes.IAMPolicy,
+	ResourceTypes.IAMPolicyBindings,
 
-	ResourceTypes.WebAppKeyPerformanceCustom, // schema removed
-	ResourceTypes.WebAppKeyPerformanceLoad,   // schema removed
-	ResourceTypes.WebAppKeyPerformanceXHR,    // schema removed
+	ResourceTypes.JSONDashboard,         // Excluded due to the potential of a large amount of dashboards
+	ResourceTypes.DashboardSharing,      // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
+	ResourceTypes.ProcessGroupAnomalies, // Excluded since there could be 100k+ process groups
+
+	ResourceTypes.UserSettings, // Excluded since it requires a personal token
 
 	// Not included in export - to be discussed
 	ResourceTypes.AzureService,
