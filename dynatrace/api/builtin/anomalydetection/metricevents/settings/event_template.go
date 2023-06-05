@@ -24,11 +24,11 @@ import (
 )
 
 type EventTemplate struct {
-	DavisMerge  *bool         `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-	Description string        `json:"description"`          // The description of the event to trigger.
-	EventType   EventTypeEnum `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`
-	Metadata    MetadataItems `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
-	Title       string        `json:"title"`                // The title of the event to trigger.
+	DavisMerge  *bool           `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
+	Description string          `json:"description"`          // The description of the event to trigger.
+	EventType   EventTypeEnum   `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`
+	Metadata    []*MetadataItem `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
+	Title       string          `json:"title"`                // The title of the event to trigger.
 }
 
 func (me *EventTemplate) Schema() map[string]*schema.Schema {
@@ -49,12 +49,11 @@ func (me *EventTemplate) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"metadata": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "Set of additional key-value properties to be attached to the triggered event.",
 			Optional:    true, // minobjects == 0
-			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
+			Elem:        &schema.Resource{Schema: new(MetadataItem).Schema()},
 			MinItems:    1,
-			MaxItems:    1,
 		},
 		"title": {
 			Type:        schema.TypeString,
