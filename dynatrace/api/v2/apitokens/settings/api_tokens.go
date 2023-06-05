@@ -174,8 +174,10 @@ func (me *APIToken) MarshalHCL(properties hcl.Properties) error {
 	}); err != nil {
 		return err
 	}
-	if err := properties.Encode("token", me.Token); err != nil {
-		return err
+	if me.Token != nil && len(*me.Token) > 0 {
+		if err := properties.Encode("token", me.Token); err != nil {
+			return err
+		}
 	}
 	return nil
 }
