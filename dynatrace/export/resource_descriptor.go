@@ -337,9 +337,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		aws.Service,
 		Dependencies.ID(ResourceTypes.AWSCredentials),
 	),
-	ResourceTypes.AWSService:       NewResourceDescriptor(aws_services.Service),
+	ResourceTypes.AWSService: NewResourceDescriptor(
+		aws_services.Service,
+		Dependencies.ID(ResourceTypes.AWSCredentials),
+	),
 	ResourceTypes.AzureCredentials: NewResourceDescriptor(azure.Service),
-	ResourceTypes.AzureService:     NewResourceDescriptor(azure_services.Service),
+	ResourceTypes.AzureService: NewResourceDescriptor(
+		azure_services.Service,
+		Dependencies.ID(ResourceTypes.AzureCredentials),
+	),
 	ResourceTypes.BrowserMonitor: NewResourceDescriptor(
 		browser.Service,
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
