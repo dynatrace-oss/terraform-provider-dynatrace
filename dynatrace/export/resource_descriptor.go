@@ -231,6 +231,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/errors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws"
+	aws_services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure"
 	azure_services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry"
@@ -336,6 +337,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		aws.Service,
 		Dependencies.ID(ResourceTypes.AWSCredentials),
 	),
+	ResourceTypes.AWSService:       NewResourceDescriptor(aws_services.Service),
 	ResourceTypes.AzureCredentials: NewResourceDescriptor(azure.Service),
 	ResourceTypes.AzureService:     NewResourceDescriptor(azure_services.Service),
 	ResourceTypes.BrowserMonitor: NewResourceDescriptor(
@@ -993,6 +995,7 @@ var BlackListedResources = []ResourceType{
 
 	// Not included in export - to be discussed
 	ResourceTypes.AzureService,
+	ResourceTypes.AWSService,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

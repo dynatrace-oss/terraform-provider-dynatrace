@@ -99,6 +99,7 @@ var ResourceTypes = struct {
 	ManagementZoneV2                    ResourceType
 	NetworkZones                        ResourceType
 	AWSCredentials                      ResourceType
+	AWSService                          ResourceType
 	AzureCredentials                    ResourceType
 	AzureService                        ResourceType
 	CloudFoundryCredentials             ResourceType
@@ -317,6 +318,7 @@ var ResourceTypes = struct {
 	"dynatrace_management_zone_v2",
 	"dynatrace_network_zones",
 	"dynatrace_aws_credentials",
+	"dynatrace_aws_service",
 	"dynatrace_azure_credentials",
 	"dynatrace_azure_service",
 	"dynatrace_cloudfoundry_credentials",
