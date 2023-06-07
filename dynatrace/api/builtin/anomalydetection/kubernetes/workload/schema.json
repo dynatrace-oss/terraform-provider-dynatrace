@@ -70,6 +70,17 @@
 				"$ref": "#/types/HighMemoryUsage"
 			}
 		},
+		"jobFailureEvents": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/JobFailureEvents"
+			}
+		},
 		"notAllPodsReady": {
 			"description": "",
 			"displayName": "",
@@ -81,6 +92,17 @@
 				"$ref": "#/types/NotAllPodsReady"
 			}
 		},
+		"oomKills": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/OOMKills"
+			}
+		},
 		"pendingPods": {
 			"description": "",
 			"displayName": "",
@@ -90,6 +112,39 @@
 			"nullable": false,
 			"type": {
 				"$ref": "#/types/PendingPods"
+			}
+		},
+		"podBackoffEvents": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/PodBackoffEvents"
+			}
+		},
+		"podEvictionEvents": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/PodEvictionEvents"
+			}
+		},
+		"podPreemptionEvents": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/PodPreemptionEvents"
 			}
 		},
 		"podStuckInTerminating": {
@@ -722,6 +777,30 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"JobFailureEvents": {
+			"description": "",
+			"displayName": "JobFailureEvents",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect job failure events",
+					"documentation": "Alerts on any occurrence of Kubernetes events with reason 'BackoffLimitExceeded', 'DeadlineExceeded', or 'PodFailurePolicy'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.265"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"NotAllPodsReady": {
 			"description": "",
 			"displayName": "NotAllPodsReady",
@@ -818,6 +897,27 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OOMKills": {
+			"description": "",
+			"displayName": "OOMKill",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect out-of-memory kills",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -941,6 +1041,78 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodBackoffEvents": {
+			"description": "",
+			"displayName": "PodBackoffEvents",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect pod backoff events",
+					"documentation": "Alerts on any occurrence of Kubernetes events with reason 'BackOff', as observed on pod statuses 'ImagePullBackOff', and 'CrashLoopBackOff'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.265"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodEvictionEvents": {
+			"description": "",
+			"displayName": "PodEvictionEvents",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect pod eviction events",
+					"documentation": "Eviction is the process of terminating one or more pods on a node to free up resources.\n\nAlerts on any occurrence of Kubernetes events with reason 'Evicted'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.265"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodPreemptionEvents": {
+			"description": "",
+			"displayName": "PodPreemptionEvents",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Detect pod preemption events",
+					"documentation": "Preemption is the process of terminating pods with lower priority so that pods with higher priority can be scheduled on a node.\n\nAlerts on any occurrence of Kubernetes events with reason 'Preempted', or 'Preempting'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
+					"maxObjects": 1,
+					"metadata": {
+						"minActiveGateVersion": "1.265"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -1158,5 +1330,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.7"
+	"version": "1.8"
 }

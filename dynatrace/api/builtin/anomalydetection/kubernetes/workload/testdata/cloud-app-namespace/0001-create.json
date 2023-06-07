@@ -39,5 +39,20 @@
     },
     "highMemoryUsage": {
         "enabled": false
+    },
+    "jobFailureEvents": {
+        "enabled": false
+    },
+    "oomKills": {
+        "enabled": false
+    },
+    "podBackoffEvents": {
+        "enabled": false
+    },
+    "podEvictionEvents": {
+        "enabled": false
+    },
+    "podPreemptionEvents": {
+        "enabled": false
     }
 }
