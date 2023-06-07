@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_dashboard (Resource)
 
+-> This resource frequently falls behind due to the constant additions/changes to the dashboard schema, instead it is recommended to use [dynatrace_json_dashboard](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/json_dashboard) which allows to send the full JSON payload.
+
 ## Dynatrace Documentation
 
 - Dashboards and reports - https://www.dynatrace.com/support/help/how-to-use-dynatrace/dashboards-and-charts

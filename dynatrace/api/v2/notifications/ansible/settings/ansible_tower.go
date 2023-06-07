@@ -64,7 +64,6 @@ func (me *AnsibleTower) Schema() map[string]*schema.Schema {
 			Description: "The ID of the associated alerting profile.",
 			Required:    true,
 		},
-
 		"insecure": {
 			Type:        schema.TypeBool,
 			Description: "Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates. Default is `false`.",

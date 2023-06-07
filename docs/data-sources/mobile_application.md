@@ -9,7 +9,7 @@ description: |-
 
 The `dynatrace_mobile_application` data source allows the mobile application ID to be retrieved by its name.
 
-- `name` (String) - The name of the dashboard
+- `name` (String) - The name of the mobile application
 
 ## Example Usage
 

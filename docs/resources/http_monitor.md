@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_http_monitor (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_http_monitor_outage`, please review the schema for additional information.
-
 ## Dynatrace Documentation
 
 - Synthetic Monitoring - HTTP monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#http-monitors

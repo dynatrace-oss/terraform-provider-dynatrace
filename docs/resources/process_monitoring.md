@@ -7,7 +7,6 @@ description: |-
 
 # dynatrace_process_monitoring (Resource)
 
-
 ## Dynatrace Documentation
 
 - Process Availability - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups/configuration/pg-monitoring
@@ -16,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_process_monitoring` downloads all existing muted requests configuration
+- `terraform-provider-dynatrace -export dynatrace_process_monitoring` downloads all existing key processes configuration
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

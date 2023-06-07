@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_slo (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+
 ## Dynatrace Documentation
 
 - Service-level objectives - https://www.dynatrace.com/support/help/how-to-use-dynatrace/cloud-automation/service-level-objectives

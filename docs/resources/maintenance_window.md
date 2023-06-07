@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_maintenance_window (Resource)
 
-The API utilized for this resource is deprecated, please use [dynatrace_maintenance](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance) instead.
+-> This resource API endpoint has been deprecated, please use [dynatrace_maintenance](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance) instead.
 
 ## Dynatrace Documentation
 

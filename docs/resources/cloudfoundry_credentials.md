@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_cloudfoundry_credentials (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_cloud_foundry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/cloud_foundry) instead.
+
 ## Dynatrace Documentation
 
 - Cloud Foundry monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/container-platform-monitoring/cloud-foundry-monitoring

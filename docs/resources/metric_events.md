@@ -120,23 +120,15 @@ Required:
 Optional:
 
 - `davis_merge` (Boolean) Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-- `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
+- `metadata` (Block Set) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
 
 <a id="nestedblock--event_template--metadata"></a>
 ### Nested Schema for `event_template.metadata`
 
 Required:
 
-- `item` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--event_template--metadata--item))
-
-<a id="nestedblock--event_template--metadata--item"></a>
-### Nested Schema for `event_template.metadata.item`
-
-Required:
-
 - `metadata_key` (String) Type 'dt.' for key hints.
 - `metadata_value` (String) no documentation available
-
 
 
 

@@ -22,6 +22,22 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
+# Sample for how to configure Auto Tag Rules using an Entity Selector
+resource "dynatrace_autotag_v2" "GKESample" {
+  name = "GKE-Hosts"
+  rules {
+    rule {
+      type                = "SELECTOR"
+      enabled             = true
+      entity_selector     = "type(host),entityName.startsWith(\"gke\")"
+      value_format        = "true"
+      value_normalization = "Leave text as-is"
+    }
+  }
+}
+```
+
+```terraform
 resource "dynatrace_autotag_v2" "#name#" {
   name = "#name#"
   rules {

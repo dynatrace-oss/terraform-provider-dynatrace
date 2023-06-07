@@ -409,8 +409,8 @@ Required:
 Optional:
 
 - `case_sensitive` (Boolean) Case sensitive
-- `dynamic_key` (String) Dynamic key
-- `dynamic_key_source` (String) Key source
+- `dynamic_key` (String) Only relevant if the `key` is either `CLOUD_APPLICATION_LABELS`, `CLOUD_APPLICATION_NAMESPACE_LABELS`, `HOST_KUBERNETES_LABELS`, `PROCESS_GROUP_PREDEFINED_METADATA`, `CUSTOM_DEVICE_METADATA`, `ENTERPRISE_APPLICATION_METADATA`, `DATA_CENTER_SERVICE_METADATA`, `HOST_CUSTOM_METADATA` or `PROCESS_GROUP_CUSTOM_METADATA`. Depending on the value of the attribute `key` a different set of possible values if valid here. The Dynatrace API unfortunately doesn't offer detailed documentation about valid combinations of the attributes `key`, `dynamic_key` and `dynamic_key_source`. Our recommendation here is to configure the desired result via WebUI and then use the [export functionality](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to generate the correct HCL file for that setting.
+- `dynamic_key_source` (String) Only relevant if the `key` is either `CLOUD_APPLICATION_LABELS`, `CLOUD_APPLICATION_NAMESPACE_LABELS`, `HOST_KUBERNETES_LABELS`, `PROCESS_GROUP_PREDEFINED_METADATA`, `CUSTOM_DEVICE_METADATA`, `ENTERPRISE_APPLICATION_METADATA`, `DATA_CENTER_SERVICE_METADATA`, `HOST_CUSTOM_METADATA` or `PROCESS_GROUP_CUSTOM_METADATA`. Depending on the value of the attribute `key` a different set of possible values if valid here. The Dynatrace API unfortunately doesn't offer detailed documentation about valid combinations of the attributes `key`, `dynamic_key` and `dynamic_key_source`. Our recommendation here is to configure the desired result via WebUI and then use the [export functionality](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to generate the correct HCL file for that setting.
 - `entity_id` (String) Value
 - `enum_value` (String) Value
 - `integer_value` (Number) Value

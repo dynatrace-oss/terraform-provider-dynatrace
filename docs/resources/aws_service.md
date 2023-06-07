@@ -1,51 +1,45 @@
 ---
 layout: ""
-page_title: dynatrace_azure_service Resource - terraform-provider-dynatrace"
+page_title: dynatrace_aws_service Resource - terraform-provider-dynatrace"
 description: |-
-  The resource `dynatrace_azure_service` covers configuration of Supported Services for Azure credentials
+  The resource `dynatrace_aws_service` covers configuration of Supported Services for AWS credentials
 ---
 
-# dynatrace_azure_service (Resource)
+# dynatrace_aws_service (Resource)
 
 -> This resource is excluded by default in the export utility.
 
 ## Dynatrace Documentation
 
-- Microsoft Azure monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/cloud-platform-monitoring/microsoft-azure-services-monitoring
+- Amazon Web Services - https://www.dynatrace.com/support/help/setup-and-configuration/setup-on-cloud-platforms/amazon-web-services/amazon-web-services-integrations/aws-service-metrics
 
-- Azure credentials API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/azure-credentials-api
+- AWS credentials API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/aws-credentials-api
 
 ## Resource Example Usage
 
-This example utilizes the data source `dynatrace_azure_supported_services` in order to query for a full list of all supported services.
-The `for_each` loop within the resource `dynatrace_azure_service` configures each of these services to get utilized with the default metrics recommended by Dynatrace (`use_recommended_metrics`).
+This example utilizes the data source `dynatrace_aws_supported_services` in order to query for a full list of all supported services.
+The `for_each` loop within the resource `dynatrace_aws_service` configures each of these services to get utilized with the default metrics recommended by Dynatrace (`use_recommended_metrics`).
 
-If you want to configure a different set of metrics for a specific service, a separate resource `dynatrace_azure_service` will be necessary for that. That allows you to configure the `metric` blocks according to your wishes.
+If you want to configure a different set of metrics for a specific service, a separate resource `dynatrace_aws_service` will be necessary for that. That allows you to configure the `metric` blocks according to your wishes.
 Just be aware of the fact, that Dynatrace enforces for most services a recommended set of metrics. All of them need to be part of your configuration in order to end up with a non-empty plan.
 
 ```terraform
-resource "dynatrace_azure_credentials" "TERRAFORM_SAMPLE" {
-  active                       = false
-  app_id                       = "ABCDE"
-  auto_tagging                 = true
-  directory_id                 = "ABCDE"
-  label                        = "TERRAFORM_SAMPLE"
-  key                          = "aaaa"
-  monitor_only_tagged_entities = true
-
-  monitor_only_tag_pairs {
-    name  = "string"
-    value = "string"
+resource "dynatrace_aws_service" "TERRAFORM_SAMPLE" {
+  label          = "TERRAFORM-TEST-001"
+  partition_type = "AWS_DEFAULT"
+  tagged_only    = false
+  authentication_data {
+    account_id = "246186168471"
+    iam_role   = "Dynatrace_monitoring_role_demo1"
   }
 }
 
-data "dynatrace_azure_supported_services" "supported_services" {  
-  except = [ "AZURE_STORAGE_ACCOUNT" ] # Dynatrace will complain in case this service is getting configured together with other services in the list
+data "dynatrace_aws_supported_services" "supported_services" {    
 }
 
-resource "dynatrace_azure_service" "TERRAFORM_SAMPLE_services" {
-  for_each = data.dynatrace_azure_supported_services.supported_services.services
-  credentials_id = dynatrace_azure_credentials.TERRAFORM_SAMPLE.id
+resource "dynatrace_aws_service" "TERRAFORM_SAMPLE_services" {
+  for_each = data.dynatrace_aws_supported_services.supported_services.services
+  credentials_id = dynatrace_aws_service.TERRAFORM_SAMPLE.id
   use_recommended_metrics = true
   name           = each.key
 }
@@ -80,4 +74,5 @@ Required:
 Optional:
 
 - `dimensions` (Set of String) a list of metric's dimensions names
+- `statistic` (String) Possible values are `AVERAGE`, `AVG_MIN_MAX`, `MAXIMUM`, `MINIMUM`, `SAMPLE_COUNT` and `SUM`
  

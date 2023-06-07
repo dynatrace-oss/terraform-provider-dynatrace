@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_data_privacy (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_application_data_privacy`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
-
 ## Dynatrace Documentation
 
 - Data privacy and security - https://www.dynatrace.com/support/help/manage/data-privacy-and-security

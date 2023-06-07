@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_application_error_rules (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_web_app_request_errors` and `dynatrace_web_app_custom_errors`, please review the schema for additional information.
-
 ## Dynatrace Documentation
 
 - Configure web application errors - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-errors

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_disk_anomalies (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_disk_anomaly_rules](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/disk_anomaly_rules) instead.
+
 ## Dynatrace Documentation
 
 - Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure

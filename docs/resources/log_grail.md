@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_log_grail (Resource)
 
--> This resource is excluded from the default export, please review the Dynatrace documentation below regarding this feature.
-
 ## Dynatrace Documentation
 
 - Migration to Log powered by Grail - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-migration-to-grail

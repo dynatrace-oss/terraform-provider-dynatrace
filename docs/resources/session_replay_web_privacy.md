@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_session_replay_web_privacy (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_application_data_privacy`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
-
 ## Dynatrace Documentation
 
 - Configure Session Replay for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/session-replay/configure-session-replay-web
