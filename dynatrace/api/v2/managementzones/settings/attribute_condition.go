@@ -80,7 +80,7 @@ func (me *AttributeCondition) Schema() map[string]*schema.Schema {
 		},
 		"dynamic_key": {
 			Type:        schema.TypeString,
-			Description: "Dynamic key",
+			Description: "Only relevant if the `key` is either `CLOUD_APPLICATION_LABELS`, `CLOUD_APPLICATION_NAMESPACE_LABELS`, `HOST_KUBERNETES_LABELS`, `PROCESS_GROUP_PREDEFINED_METADATA`, `CUSTOM_DEVICE_METADATA`, `ENTERPRISE_APPLICATION_METADATA`, `DATA_CENTER_SERVICE_METADATA`, `HOST_CUSTOM_METADATA` or `PROCESS_GROUP_CUSTOM_METADATA`. Depending on the value of the attribute `key` a different set of possible values if valid here. The Dynatrace API unfortunately doesn't offer detailed documentation about valid combinations of the attributes `key`, `dynamic_key` and `dynamic_key_source`. Our recommendation here is to configure the desired result via WebUI and then use the [export functionality](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to generate the correct HCL file for that setting.",
 			Optional:    true,
 		},
 		"case_sensitive": {
@@ -110,7 +110,7 @@ func (me *AttributeCondition) Schema() map[string]*schema.Schema {
 		},
 		"dynamic_key_source": {
 			Type:        schema.TypeString,
-			Description: "Key source",
+			Description: "Only relevant if the `key` is either `CLOUD_APPLICATION_LABELS`, `CLOUD_APPLICATION_NAMESPACE_LABELS`, `HOST_KUBERNETES_LABELS`, `PROCESS_GROUP_PREDEFINED_METADATA`, `CUSTOM_DEVICE_METADATA`, `ENTERPRISE_APPLICATION_METADATA`, `DATA_CENTER_SERVICE_METADATA`, `HOST_CUSTOM_METADATA` or `PROCESS_GROUP_CUSTOM_METADATA`. Depending on the value of the attribute `key` a different set of possible values if valid here. The Dynatrace API unfortunately doesn't offer detailed documentation about valid combinations of the attributes `key`, `dynamic_key` and `dynamic_key_source`. Our recommendation here is to configure the desired result via WebUI and then use the [export functionality](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to generate the correct HCL file for that setting.",
 			Optional:    true,
 		},
 	}
