@@ -29,6 +29,7 @@ type Settings struct {
 	Docker             bool    `json:"docker"`             // Platform: Docker and Kubernetes\n\nStatus: Released\n\nOperating system: Linux
 	DockerWindows      bool    `json:"dockerWindows"`      // Platform: Docker\n\nStatus: Early adopter\n\nOperating system: Windows\n\nMin agent version: 1.149
 	Garden             bool    `json:"garden"`             // Platform: Cloud Foundry\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.133
+	Podman             bool    `json:"podman"`             // Platform: Podman\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.267
 	Scope              *string `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	Winc               bool    `json:"winc"`               // Platform: Cloud Foundry\n\nStatus: Early adopter\n\nOperating system: Windows\n\nMin agent version: 1.175
 }
@@ -69,6 +70,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Platform: Cloud Foundry\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.133",
 			Required:    true,
 		},
+		"podman": {
+			Type:        schema.TypeBool,
+			Description: "Platform: Podman\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.267",
+			Required:    true,
+		},
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
@@ -91,6 +97,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"docker":               me.Docker,
 		"docker_windows":       me.DockerWindows,
 		"garden":               me.Garden,
+		"podman":               me.Podman,
 		"scope":                me.Scope,
 		"winc":                 me.Winc,
 	})
@@ -104,6 +111,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"docker":               &me.Docker,
 		"docker_windows":       &me.DockerWindows,
 		"garden":               &me.Garden,
+		"podman":               &me.Podman,
 		"scope":                &me.Scope,
 		"winc":                 &me.Winc,
 	})
