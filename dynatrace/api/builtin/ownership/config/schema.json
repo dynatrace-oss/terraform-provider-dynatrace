@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure keys for ownership metadata and tags.",
+	"description": "Configure keys for ownership metadata and tags. [See documentation](https://dt-url.net/ownership-custom-keys)",
 	"displayName": "Configure ownership",
 	"documentation": "",
 	"dynatrace": "1",
@@ -103,5 +103,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
