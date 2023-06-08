@@ -80,7 +80,7 @@
 		"addItemButton": "Add team"
 	},
 	"multiObject": true,
-	"ordered": true,
+	"ordered": false,
 	"properties": {
 		"additionalInformation": {
 			"description": "Define key/value pairs that further describe this team — for example, cost center, solution type, or business unit assignments.",
@@ -148,7 +148,7 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "This field should only be used for the automation purpose when importing team information. Once the external ID is created it can’t be changed.",
+			"description": "This field should only be used for the automation purpose when importing team information.",
 			"displayName": "External ID",
 			"documentation": "",
 			"maxObjects": 1,
@@ -164,16 +164,13 @@
 					"type": "LENGTH"
 				},
 				{
-					"type": "NOT_BLANK"
-				},
-				{
-					"customMessage": "Team identifier field can not contain special characters or blank spaces and it must start and end with a letter.",
+					"customMessage": "Team identifier field can not contain special characters or blank spaces and it must start with a letter and end with an alphanumeric character.",
 					"customValidatorId": "team-identifier-validator",
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "team_identifier",
-			"description": "The team identifier is used to reference the team from any entity in Dynatrace. This identifier can’t be edited once the team has been created.",
+			"description": "The team identifier is used to reference the team from any entity in Dynatrace.",
 			"displayName": "Team identifier",
 			"documentation": "",
 			"maxObjects": 1,
@@ -648,7 +645,7 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Supplementary identifier field can not contain special characters or blank spaces and it must start and end with a letter.",
+							"customMessage": "Supplementary identifier field can not contain special characters or blank spaces and it must start with a letter and end with an alphanumeric character.",
 							"customValidatorId": "team-identifier-validator",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
@@ -669,5 +666,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.5"
 }
