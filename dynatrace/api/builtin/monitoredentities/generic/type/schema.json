@@ -210,9 +210,8 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Attribute key must start with a letter and can only contain alpha-numerical characters and underscores OR be one of the reserved names (dt.ip_addresses, dt.listen_ports, dt.dns_names)",
-							"pattern": "^(?:[A-Za-z][A-Za-z0-9_]{2,19}|dt\\.ip_addresses|dt\\.listen_ports|dt\\.dns_names)$",
-							"type": "PATTERN"
+							"customValidatorId": "AttributeKeyValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -583,5 +582,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.75"
+	"version": "1.0.76"
 }
