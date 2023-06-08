@@ -18,8 +18,11 @@
 package generictype
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"golang.org/x/exp/slices"
 )
 
 type SourceFilters []*SourceFilter
@@ -55,7 +58,7 @@ func (me *SourceFilter) Schema() map[string]*schema.Schema {
 		"condition": {
 			Type:        schema.TypeString,
 			Description: "Specify a filter that needs to match in order for the extraction to happen.. Three different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', `$prefix(value)` will ensure that the source begins with exactly 'value', '$exists()' will ensure that any source with matching dimension filter exists.\nIf your value contains the characters '(', ')' or '\\~', you need to escape them by adding a '\\~' in front of them.",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"source_type": {
 			Type:        schema.TypeString,
@@ -70,6 +73,13 @@ func (me *SourceFilter) MarshalHCL(properties hcl.Properties) error {
 		"condition":   me.Condition,
 		"source_type": me.SourceType,
 	})
+}
+
+func (me *SourceFilter) HandlePreconditions() error {
+	if me.Condition == nil && !slices.Contains([]string{"Logs", "Spans", "Topology"}, string(me.SourceType)) {
+		return fmt.Errorf("'condition' must be specified if 'source_type' is set to '%v'", me.SourceType)
+	}
+	return nil
 }
 
 func (me *SourceFilter) UnmarshalHCL(decoder hcl.Decoder) error {

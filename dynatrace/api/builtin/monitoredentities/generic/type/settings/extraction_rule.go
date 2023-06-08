@@ -60,7 +60,7 @@ func (me *ExtractionRule) Schema() map[string]*schema.Schema {
 		"attributes": {
 			Type:        schema.TypeList,
 			Description: "All attribute extraction rules will be applied and found attributes will be added to the extracted type.",
-			Optional:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(AttributeEntries).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -68,7 +68,7 @@ func (me *ExtractionRule) Schema() map[string]*schema.Schema {
 		"icon_pattern": {
 			Type:        schema.TypeString,
 			Description: "Define a pattern which is used to set the icon attribute of the entity. The extracted values must reference barista icon ids. You may define placeholders referencing data source dimensions.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"id_pattern": {
 			Type:        schema.TypeString,
@@ -78,12 +78,12 @@ func (me *ExtractionRule) Schema() map[string]*schema.Schema {
 		"instance_name_pattern": {
 			Type:        schema.TypeString,
 			Description: "Define a pattern which is used to set the name attribute of the entity. You may define placeholders referencing data source dimensions.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"required_dimensions": {
 			Type:        schema.TypeList,
 			Description: "In addition to the dimensions already referred to in the ID pattern, you may specify additional dimensions which must be present in order to evaluate this rule.",
-			Optional:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(DimensionFilters).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -91,7 +91,7 @@ func (me *ExtractionRule) Schema() map[string]*schema.Schema {
 		"role": {
 			Type:        schema.TypeString,
 			Description: "If you want to extract multiple entities of the same type from a single ingest line you need to define multiple rules with different roles.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"sources": {
 			Type:        schema.TypeList,

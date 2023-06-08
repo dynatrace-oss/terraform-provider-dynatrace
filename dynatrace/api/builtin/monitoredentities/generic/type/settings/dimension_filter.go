@@ -60,7 +60,7 @@ func (me *DimensionFilter) Schema() map[string]*schema.Schema {
 		"value_pattern": {
 			Type:        schema.TypeString,
 			Description: "A dimension value pattern which needs to exist in the ingest data to match this filter.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 	}
 }

@@ -56,7 +56,7 @@ func (me *AttributeEntry) Schema() map[string]*schema.Schema {
 		"display_name": {
 			Type:        schema.TypeString,
 			Description: "The human readable attribute name for this extraction rule. Leave blank to use the key as the display name.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"key": {
 			Type:        schema.TypeString,
