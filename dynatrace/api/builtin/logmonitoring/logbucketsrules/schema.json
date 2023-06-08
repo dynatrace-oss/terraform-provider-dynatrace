@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Logs in Dynatrace can be stored in different buckets. The first user-defined rule that matches will assign the bucket. If none matches, the default one will be used.",
+	"description": "Dynatrace logs are stored in buckets. You can give each bucket a unique log retention period (35 days is the default). In addition, you can use buckets to set unique access rules to different logs or log areas. To create or manage buckets go to [bucket permissions](https://dt-url.net/vc034se). Read more about using buckets for logs in our [documentation](https://dt-url.net/ep234n2).",
 	"displayName": "Log buckets",
 	"documentation": "",
 	"dynatrace": "1",
@@ -106,5 +106,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-buckets-rules",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
