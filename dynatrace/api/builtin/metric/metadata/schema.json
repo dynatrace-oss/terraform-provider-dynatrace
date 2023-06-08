@@ -57,7 +57,7 @@
 		"description": {
 			"constraints": [
 				{
-					"maxLength": 1023,
+					"maxLength": 65535,
 					"minLength": 1,
 					"type": "LENGTH"
 				}
@@ -376,5 +376,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "4.24"
+	"version": "4.25"
 }
