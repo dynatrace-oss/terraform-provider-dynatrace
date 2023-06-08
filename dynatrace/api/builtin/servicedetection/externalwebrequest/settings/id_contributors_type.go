@@ -25,7 +25,7 @@ import (
 type IdContributorsType struct {
 	ApplicationID    *ServiceIdContributor      `json:"applicationId"`    // Application identifier
 	ContextRoot      *ContextIdContributor      `json:"contextRoot"`      // URL context root
-	PortForServiceID bool                       `json:"portForServiceId"` // Let the Port contribute to the Service Id
+	PortForServiceID bool                       `json:"portForServiceId"` // Let the port contribute to the Service Id
 	PublicDomainName *PublicDomainIdContributor `json:"publicDomainName"` // Public domain name
 }
 
@@ -49,7 +49,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"port_for_service_id": {
 			Type:        schema.TypeBool,
-			Description: "Let the Port contribute to the Service Id",
+			Description: "Let the port contribute to the Service Id",
 			Required:    true,
 		},
 		"public_domain_name": {

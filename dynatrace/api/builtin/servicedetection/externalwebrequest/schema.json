@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Rules are evaluated from top to bottom, and the first matching rule applies. Rule conditions are evaluated before Service Id Contributors are applied. Conditions do not modify attributes of requests. If conditions match, then Service Id Contributors are applied. **All of the Contributors except for Port always get applied.** It is possible to exclude Port from contributing by toggling the switch off. It is possible to influence the creation of Services by choosing how other Service Id Contributor values get transformed.\\\nMore extensive information on Service detection rules can be found [here](https://dt-url.net/9i03b79).",
+	"description": "Rules are evaluated from top to bottom, and the first matching rule applies. Rule conditions are evaluated before Service Id Contributors are applied. Note that conditions do not modify attributes of requests. If conditions match, then Service Id Contributors are applied. **All of the Contributors except for the port are always applied.** You can exclude the port contribution by disabling the switch. You can enable the transformation of other Service Id Contributors values to manage which Services are created.\\\nMore extensive information on Service detection rules can be found [here](https://dt-url.net/9i03b79).",
 	"displayName": "Service detection rules for External Web Requests",
 	"documentation": "",
 	"dynatrace": "1",
@@ -212,7 +212,7 @@
 	"ordered": true,
 	"properties": {
 		"conditions": {
-			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they **all** must match a Request for the rule to apply. Conditions evaluate against attributes, but do not modify them.",
+			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them.",
 			"displayName": "Conditions",
 			"documentation": "",
 			"items": {
@@ -257,7 +257,7 @@
 			"type": "boolean"
 		},
 		"idContributors": {
-			"description": "Contributors to the Service Identifier calculation. All of the Contributors except for Port always get applied. It is possible to exclude Port from contributing by toggling the switch off.",
+			"description": "Contributors to the Service Identifier calculation. All of the Contributors except for the port are always applied. You can exclude the port contribution by disabling the switch.",
 			"displayName": "Service identifier contributors",
 			"documentation": "",
 			"maxObjects": 1,
@@ -695,7 +695,7 @@
 					"type": "integer"
 				},
 				"transformations": {
-					"description": "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+					"description": "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "Transformations",
 					"documentation": "",
 					"items": {
@@ -745,7 +745,7 @@
 		"idContributorsType": {
 			"constraints": [
 				{
-					"customMessage": "At least one service identifier contributor (application identifier, URL context root, Port or public domain name) must exist.",
+					"customMessage": "At least one service identifier contributor (application identifier, URL context root, port or public domain name) must exist.",
 					"customValidatorId": "at-least-one-service-id-contributor",
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
@@ -778,7 +778,7 @@
 				},
 				"portForServiceId": {
 					"default": true,
-					"description": "Let the Port contribute to the Service Id",
+					"description": "Let the port contribute to the Service Id",
 					"displayName": "Port",
 					"documentation": "",
 					"maxObjects": 1,
@@ -876,7 +876,7 @@
 					"type": "boolean"
 				},
 				"transformations": {
-					"description": "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+					"description": "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "Transformations",
 					"documentation": "",
 					"items": {
@@ -1313,7 +1313,7 @@
 					}
 				},
 				"transformations": {
-					"description": "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+					"description": "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "Transformations",
 					"documentation": "",
 					"items": {
@@ -1406,5 +1406,5 @@
 			]
 		}
 	},
-	"version": "2.1.10"
+	"version": "2.1.12"
 }

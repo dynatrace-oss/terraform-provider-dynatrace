@@ -18,15 +18,18 @@
 package externalwebrequest
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"golang.org/x/exp/slices"
 )
 
 type PublicDomainTransformationSet struct {
 	ContributionType ContributionTypeWithOverride `json:"contributionType"`           // Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`
 	CopyFromHostName *bool                        `json:"copyFromHostName,omitempty"` // Use the detected host name instead of the request's domain name.
-	Transformations  Transformations              `json:"transformations,omitempty"`  // Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.
+	Transformations  Transformations              `json:"transformations,omitempty"`  // Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.
 	ValueOverride    *ValueOverride               `json:"valueOverride,omitempty"`    // The value to be used instead of the detected value.
 }
 
@@ -44,7 +47,7 @@ func (me *PublicDomainTransformationSet) Schema() map[string]*schema.Schema {
 		},
 		"transformations": {
 			Type:        schema.TypeList,
-			Description: "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+			Description: "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(Transformations).Schema()},
 			MinItems:    1,
@@ -70,15 +73,25 @@ func (me *PublicDomainTransformationSet) MarshalHCL(properties hcl.Properties) e
 	})
 }
 
+func (me *PublicDomainTransformationSet) HandlePreconditions() error {
+	if me.CopyFromHostName == nil && slices.Contains([]string{"OriginalValue", "TransformValue"}, string(me.ContributionType)) {
+		me.CopyFromHostName = opt.NewBool(false)
+	}
+	if me.ValueOverride == nil && (string(me.ContributionType) == "OverrideValue") {
+		return fmt.Errorf("'value_override' must be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	}
+	if me.ValueOverride != nil && (string(me.ContributionType) != "OverrideValue") {
+		return fmt.Errorf("'value_override' must not be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	}
+	// ---- Transformations Transformations -> {"expectedValue":"TransformValue","property":"contributionType","type":"EQUALS"}
+	return nil
+}
+
 func (me *PublicDomainTransformationSet) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"contribution_type":   &me.ContributionType,
 		"copy_from_host_name": &me.CopyFromHostName,
 		"transformations":     &me.Transformations,
 		"value_override":      &me.ValueOverride,
 	})
-	if me.CopyFromHostName == nil && (me.ContributionType == ContributionTypeWithOverrides.Originalvalue || me.ContributionType == ContributionTypeWithOverrides.Transformvalue) {
-		me.CopyFromHostName = opt.NewBool(false)
-	}
-	return err
 }
