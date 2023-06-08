@@ -44,39 +44,35 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"data_collection": {
 			Type:        schema.TypeList,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`) To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode.",
+			Description: "To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode.",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DataCollection).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(DataCollection).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"do_not_track": {
 			Type:        schema.TypeList,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Most modern web browsers have a privacy feature called [\"Do Not Track\"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting.",
+			Description: "Most modern web browsers have a privacy feature called [\"Do Not Track\"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting.",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DoNotTrack).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(DoNotTrack).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"masking": {
 			Type:        schema.TypeList,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`)",
+			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(Masking).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(Masking).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"user_tracking": {
 			Type:        schema.TypeList,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`) User tracking",
+			Description: "User tracking",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(UserTracking).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(UserTracking).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

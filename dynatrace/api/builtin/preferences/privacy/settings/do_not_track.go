@@ -18,6 +18,8 @@
 package privacy
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -37,7 +39,7 @@ func (me *DoNotTrack) Schema() map[string]*schema.Schema {
 		"do_not_track": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `Anonymous`, `Disable_rum`",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -47,6 +49,16 @@ func (me *DoNotTrack) MarshalHCL(properties hcl.Properties) error {
 		"comply_with_do_not_track": me.ComplyWithDoNotTrack,
 		"do_not_track":             me.DoNotTrack,
 	})
+}
+
+func (me *DoNotTrack) HandlePreconditions() error {
+	if me.DoNotTrack == nil && me.ComplyWithDoNotTrack {
+		return fmt.Errorf("'do_not_track' must be specified if 'comply_with_do_not_track' is set to '%v'", me.ComplyWithDoNotTrack)
+	}
+	if me.DoNotTrack != nil && !me.ComplyWithDoNotTrack {
+		return fmt.Errorf("'do_not_track' must not be specified if 'comply_with_do_not_track' is set to '%v'", me.ComplyWithDoNotTrack)
+	}
+	return nil
 }
 
 func (me *DoNotTrack) UnmarshalHCL(decoder hcl.Decoder) error {
