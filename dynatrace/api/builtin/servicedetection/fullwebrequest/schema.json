@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Rules are evaluated from top to bottom, and the first matching rule applies. Rule conditions are evaluated before Service Id Contributors are applied. Conditions do not modify attributes of requests. If conditions match, then Service Id Contributors are applied. **All of the Contributors always get applied.** But it is possible to influence the creation of Services by choosing how they get transformed.\\\nMore extensive information on Service detection rules can be found [here](https://dt-url.net/9i03b79).",
+	"description": "Rules are evaluated from top to bottom, and the first matching rule applies. Rule conditions are evaluated before Service Id Contributors are applied. Note that conditions do not modify attributes of requests. If conditions match, then Service Id Contributors are applied. **All of the Contributors are always applied.** But it is possible to influence the creation of Services by choosing how they get transformed.\\\nMore extensive information on Service detection rules can be found [here](https://dt-url.net/9i03b79).",
 	"displayName": "Service detection rules for Full Web Requests",
 	"documentation": "",
 	"dynatrace": "1",
@@ -212,7 +212,7 @@
 	"ordered": true,
 	"properties": {
 		"conditions": {
-			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they **all** must match a Request for the rule to apply. Conditions evaluate against attributes, but do not modify them.",
+			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them.",
 			"displayName": "Conditions",
 			"documentation": "",
 			"items": {
@@ -257,7 +257,7 @@
 			"type": "boolean"
 		},
 		"idContributors": {
-			"description": "Contributors to the Service Identifier calculation. All of the Contributors always get applied.",
+			"description": "Contributors to the Service Identifier calculation. All of the Contributors are always applied.",
 			"displayName": "Service Identifier Contributors",
 			"documentation": "",
 			"maxObjects": 1,
@@ -695,7 +695,7 @@
 					"type": "integer"
 				},
 				"transformations": {
-					"description": "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+					"description": "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "Transformations",
 					"documentation": "",
 					"items": {
@@ -766,7 +766,7 @@
 					}
 				},
 				"contextRoot": {
-					"description": "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**.",
+					"description": "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "URL context root",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1186,7 +1186,7 @@
 					}
 				},
 				"transformations": {
-					"description": "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+					"description": "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "Transformations",
 					"documentation": "",
 					"items": {
@@ -1275,5 +1275,5 @@
 			]
 		}
 	},
-	"version": "2.1.10"
+	"version": "2.1.12"
 }

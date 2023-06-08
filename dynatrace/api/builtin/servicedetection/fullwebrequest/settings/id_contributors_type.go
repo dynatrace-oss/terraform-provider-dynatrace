@@ -24,7 +24,7 @@ import (
 
 type IdContributorsType struct {
 	ApplicationID *ServiceIdContributor `json:"applicationId"` // Application identifier
-	ContextRoot   *ContextIdContributor `json:"contextRoot"`   // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**.
+	ContextRoot   *ContextIdContributor `json:"contextRoot"`   // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.
 	ServerName    *ServiceIdContributor `json:"serverName"`    // Server Name
 }
 
@@ -40,7 +40,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"context_root": {
 			Type:        schema.TypeList,
-			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**.",
+			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ContextIdContributor).Schema()},
 			MinItems:    1,
