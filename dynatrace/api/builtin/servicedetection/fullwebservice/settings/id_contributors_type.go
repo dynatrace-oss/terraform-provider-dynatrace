@@ -18,13 +18,15 @@
 package fullwebservice
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type IdContributorsType struct {
 	ApplicationID             *ServiceIdContributor `json:"applicationId,omitempty"`       // Application identifier
-	ContextRoot               *ContextIdContributor `json:"contextRoot,omitempty"`         // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**.
+	ContextRoot               *ContextIdContributor `json:"contextRoot,omitempty"`         // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.
 	DetectAsWebRequestService bool                  `json:"detectAsWebRequestService"`     // Detect the matching requests as full web services (false) or web request services (true).\n\nSetting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).
 	ServerName                *ServiceIdContributor `json:"serverName,omitempty"`          // Server name
 	WebServiceName            *ServiceIdContributor `json:"webServiceName,omitempty"`      // Web service name
@@ -43,7 +45,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"context_root": {
 			Type:        schema.TypeList,
-			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**.",
+			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ContextIdContributor).Schema()},
 			MinItems:    1,
@@ -90,6 +92,40 @@ func (me *IdContributorsType) MarshalHCL(properties hcl.Properties) error {
 		"web_service_name":              me.WebServiceName,
 		"web_service_namespace":         me.WebServiceNamespace,
 	})
+}
+
+func (me *IdContributorsType) HandlePreconditions() error {
+	if me.ApplicationID == nil && !me.DetectAsWebRequestService {
+		return fmt.Errorf("'application_id' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.ApplicationID != nil && me.DetectAsWebRequestService {
+		return fmt.Errorf("'application_id' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.ContextRoot == nil && !me.DetectAsWebRequestService {
+		return fmt.Errorf("'context_root' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.ContextRoot != nil && me.DetectAsWebRequestService {
+		return fmt.Errorf("'context_root' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.ServerName == nil && !me.DetectAsWebRequestService {
+		return fmt.Errorf("'server_name' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.ServerName != nil && me.DetectAsWebRequestService {
+		return fmt.Errorf("'server_name' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.WebServiceName == nil && !me.DetectAsWebRequestService {
+		return fmt.Errorf("'web_service_name' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.WebServiceName != nil && me.DetectAsWebRequestService {
+		return fmt.Errorf("'web_service_name' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.WebServiceNamespace == nil && !me.DetectAsWebRequestService {
+		return fmt.Errorf("'web_service_namespace' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	if me.WebServiceNamespace != nil && me.DetectAsWebRequestService {
+		return fmt.Errorf("'web_service_namespace' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	}
+	return nil
 }
 
 func (me *IdContributorsType) UnmarshalHCL(decoder hcl.Decoder) error {
