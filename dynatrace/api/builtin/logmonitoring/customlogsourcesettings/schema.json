@@ -4,9 +4,9 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "Manually provided log sources which have not been auto-detected. For more details and examples, see [documentation](https://dt-url.net/o9034us)",
+	"description": "OneAgent automatically discovers new log files for important processes on supported platforms. Auto-detected logs are listed on the Process Group Instance or Host screen.\n\nBelow you can provide custom log sources which have not been auto-detected. For more details and examples, see [documentation](https://dt-url.net/o9034us)",
 	"displayName": "Custom log source configuration",
-	"documentation": "Custom log sources are provided to OneAgent.",
+	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
 		"ContextType": {
@@ -192,6 +192,15 @@
 			"displayName": "Custom Log Source",
 			"documentation": "",
 			"properties": {
+				"accept-binary": {
+					"description": "",
+					"displayName": "Accept binary content",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"type": {
 					"default": "LOG_PATH_PATTERN",
 					"description": "",
@@ -248,5 +257,5 @@
 			}
 		}
 	},
-	"version": "1"
+	"version": "1.0.3"
 }
