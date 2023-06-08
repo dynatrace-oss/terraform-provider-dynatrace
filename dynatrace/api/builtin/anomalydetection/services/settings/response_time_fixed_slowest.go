@@ -19,33 +19,31 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
-type ResponseTimeFixedAll struct {
-	DegradationMilliseconds float64 `json:"degradationMilliseconds"` // Alert if the response time degrades beyond this many ms within an observation period of 5 minutes
+type ResponseTimeFixedSlowest struct {
+	SlowestDegradationMilliseconds float64 `json:"slowestDegradationMilliseconds"` // Alert if the response time of the slowest 10% degrades beyond this many ms within an observation period of 5 minutes
 }
 
-func (me *ResponseTimeFixedAll) Schema() map[string]*schema.Schema {
+func (me *ResponseTimeFixedSlowest) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"degradation_milliseconds": {
+		"slowest_degradation_milliseconds": {
 			Type:        schema.TypeFloat,
-			Description: "Alert if the response time degrades beyond this many ms within an observation period of 5 minutes",
+			Description: "Alert if the response time of the slowest 10% degrades beyond this many ms within an observation period of 5 minutes",
 			Required:    true,
 		},
 	}
 }
 
-func (me *ResponseTimeFixedAll) MarshalHCL(properties hcl.Properties) error {
+func (me *ResponseTimeFixedSlowest) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"degradation_milliseconds": me.DegradationMilliseconds,
+		"slowest_degradation_milliseconds": me.SlowestDegradationMilliseconds,
 	})
 }
 
-func (me *ResponseTimeFixedAll) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *ResponseTimeFixedSlowest) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"degradation_milliseconds": &me.DegradationMilliseconds,
+		"slowest_degradation_milliseconds": &me.SlowestDegradationMilliseconds,
 	})
 }

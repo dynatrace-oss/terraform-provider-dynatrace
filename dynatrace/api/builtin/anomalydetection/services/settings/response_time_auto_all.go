@@ -19,26 +19,24 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
 type ResponseTimeAutoAll struct {
-	DegradationPercent      float64 `json:"degradationPercent"`      // Relative threshold
 	DegradationMilliseconds float64 `json:"degradationMilliseconds"` // Absolute threshold
+	DegradationPercent      float64 `json:"degradationPercent"`      // Relative threshold
 }
 
 func (me *ResponseTimeAutoAll) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"degradation_percent": {
-			Type:        schema.TypeFloat,
-			Description: "Relative threshold",
-			Required:    true,
-		},
 		"degradation_milliseconds": {
 			Type:        schema.TypeFloat,
 			Description: "Absolute threshold",
+			Required:    true,
+		},
+		"degradation_percent": {
+			Type:        schema.TypeFloat,
+			Description: "Relative threshold",
 			Required:    true,
 		},
 	}
@@ -46,14 +44,14 @@ func (me *ResponseTimeAutoAll) Schema() map[string]*schema.Schema {
 
 func (me *ResponseTimeAutoAll) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"degradation_percent":      me.DegradationPercent,
 		"degradation_milliseconds": me.DegradationMilliseconds,
+		"degradation_percent":      me.DegradationPercent,
 	})
 }
 
 func (me *ResponseTimeAutoAll) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"degradation_percent":      &me.DegradationPercent,
 		"degradation_milliseconds": &me.DegradationMilliseconds,
+		"degradation_percent":      &me.DegradationPercent,
 	})
 }

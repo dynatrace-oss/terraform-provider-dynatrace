@@ -19,52 +19,50 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
-type FailureRateFixed struct {
+type FailureRateAuto struct {
+	AbsoluteIncrease       float64                 `json:"absoluteIncrease"`       // Absolute threshold
 	OverAlertingProtection *OverAlertingProtection `json:"overAlertingProtection"` // Avoid over-alerting
-	Sensitivity            Sensitivity             `json:"sensitivity"`            // Sensitivity
-	Threshold              float64                 `json:"threshold"`              // Threshold
+	RelativeIncrease       float64                 `json:"relativeIncrease"`       // Relative threshold
 }
 
-func (me *FailureRateFixed) Schema() map[string]*schema.Schema {
+func (me *FailureRateAuto) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"absolute_increase": {
+			Type:        schema.TypeFloat,
+			Description: "Absolute threshold",
+			Required:    true,
+		},
 		"over_alerting_protection": {
 			Type:        schema.TypeList,
 			Description: "Avoid over-alerting",
-			MaxItems:    1,
-			MinItems:    1,
+			Required:    true,
 			Elem:        &schema.Resource{Schema: new(OverAlertingProtection).Schema()},
-			Required:    true,
+			MinItems:    1,
+			MaxItems:    1,
 		},
-		"sensitivity": {
-			Type:        schema.TypeString,
-			Description: "Sensitivity",
-			Required:    true,
-		},
-		"threshold": {
+		"relative_increase": {
 			Type:        schema.TypeFloat,
-			Description: "Threshold",
+			Description: "Relative threshold",
 			Required:    true,
 		},
 	}
 }
 
-func (me *FailureRateFixed) MarshalHCL(properties hcl.Properties) error {
+func (me *FailureRateAuto) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"absolute_increase":        me.AbsoluteIncrease,
 		"over_alerting_protection": me.OverAlertingProtection,
-		"sensitivity":              me.Sensitivity,
-		"threshold":                me.Threshold,
+		"relative_increase":        me.RelativeIncrease,
 	})
 }
 
-func (me *FailureRateFixed) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *FailureRateAuto) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"absolute_increase":        &me.AbsoluteIncrease,
 		"over_alerting_protection": &me.OverAlertingProtection,
-		"sensitivity":              &me.Sensitivity,
-		"threshold":                &me.Threshold,
+		"relative_increase":        &me.RelativeIncrease,
 	})
 }

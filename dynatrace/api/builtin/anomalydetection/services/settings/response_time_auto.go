@@ -19,15 +19,13 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
 type ResponseTimeAuto struct {
 	OverAlertingProtection *OverAlertingProtection  `json:"overAlertingProtection"` // Avoid over-alerting
-	ResponseTimeAll        *ResponseTimeAutoAll     `json:"responseTimeAll"`        // All requests. Alert if the average response time of all requests degrades beyond **both** the absolute and relative thresholds:
-	ResponseTimeSlowest    *ResponseTimeAutoSlowest `json:"responseTimeSlowest"`    // Slowest 10%. Alert if the average response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:
+	ResponseTimeAll        *ResponseTimeAutoAll     `json:"responseTimeAll"`        // Alert if the median response time of all requests degrades beyond **both** the absolute and relative thresholds:
+	ResponseTimeSlowest    *ResponseTimeAutoSlowest `json:"responseTimeSlowest"`    // Alert if the response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:
 }
 
 func (me *ResponseTimeAuto) Schema() map[string]*schema.Schema {
@@ -35,26 +33,26 @@ func (me *ResponseTimeAuto) Schema() map[string]*schema.Schema {
 		"over_alerting_protection": {
 			Type:        schema.TypeList,
 			Description: "Avoid over-alerting",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(OverAlertingProtection).Schema()},
 			Required:    true,
+			Elem:        &schema.Resource{Schema: new(OverAlertingProtection).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time_all": {
 			Type:        schema.TypeList,
-			Description: "All requests. Alert if the average response time of all requests degrades beyond **both** the absolute and relative thresholds:",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoAll).Schema()},
+			Description: "Alert if the median response time of all requests degrades beyond **both** the absolute and relative thresholds:",
 			Required:    true,
+			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoAll).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time_slowest": {
 			Type:        schema.TypeList,
-			Description: "Slowest 10%. Alert if the average response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoSlowest).Schema()},
+			Description: "Alert if the response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:",
 			Required:    true,
+			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoSlowest).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

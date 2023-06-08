@@ -19,49 +19,39 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
-type LoadSpikes struct {
-	Enabled              bool     `json:"enabled"`                        // Detect service load spikes
-	LoadSpikePercent     *float64 `json:"loadSpikePercent,omitempty"`     // Threshold
-	MinutesAbnormalState *int     `json:"minutesAbnormalState,omitempty"` // Time span
+type OverAlertingProtection struct {
+	MinutesAbnormalState int     `json:"minutesAbnormalState"` // Only alert if the abnormal state remains for at least
+	RequestsPerMinute    float64 `json:"requestsPerMinute"`    // Only alert if there are at least
 }
 
-func (me *LoadSpikes) Schema() map[string]*schema.Schema {
+func (me *OverAlertingProtection) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"enabled": {
-			Type:        schema.TypeBool,
-			Description: "Detect service load spikes",
-			Required:    true,
-		},
-		"load_spike_percent": {
-			Type:        schema.TypeFloat,
-			Description: "Threshold",
-			Optional:    true,
-		},
 		"minutes_abnormal_state": {
 			Type:        schema.TypeInt,
-			Description: "Time span",
-			Optional:    true,
+			Description: "Only alert if the abnormal state remains for at least",
+			Required:    true,
+		},
+		"requests_per_minute": {
+			Type:        schema.TypeFloat,
+			Description: "Only alert if there are at least",
+			Required:    true,
 		},
 	}
 }
 
-func (me *LoadSpikes) MarshalHCL(properties hcl.Properties) error {
+func (me *OverAlertingProtection) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":                me.Enabled,
-		"load_spike_percent":     me.LoadSpikePercent,
 		"minutes_abnormal_state": me.MinutesAbnormalState,
+		"requests_per_minute":    me.RequestsPerMinute,
 	})
 }
 
-func (me *LoadSpikes) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *OverAlertingProtection) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled":                &me.Enabled,
-		"load_spike_percent":     &me.LoadSpikePercent,
 		"minutes_abnormal_state": &me.MinutesAbnormalState,
+		"requests_per_minute":    &me.RequestsPerMinute,
 	})
 }

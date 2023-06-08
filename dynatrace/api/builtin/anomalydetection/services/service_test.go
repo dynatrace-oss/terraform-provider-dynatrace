@@ -15,26 +15,19 @@
 * limitations under the License.
  */
 
-package services
+package services_test
 
-type DetectionMode string
+import (
+	"testing"
 
-var DetectionModes = struct {
-	Auto  DetectionMode
-	Fixed DetectionMode
-}{
-	DetectionMode("Auto"),
-	DetectionMode("Fixed"),
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+)
+
+func TestServiceAnomalyDetection(t *testing.T) {
+	api.TestService(t, services.Service)
 }
 
-type Sensitivity string
-
-var Sensitivities = struct {
-	Low    Sensitivity
-	Medium Sensitivity
-	High   Sensitivity
-}{
-	Sensitivity("Low"),
-	Sensitivity("Medium"),
-	Sensitivity("High"),
+func TestAccServiceAnomalyDetection(t *testing.T) {
+	api.TestAcc(t)
 }

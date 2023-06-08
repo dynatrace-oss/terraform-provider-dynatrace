@@ -19,33 +19,39 @@ package services
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
-type ResponseTimeFixedSlowest struct {
-	SlowestDegradationMilliseconds float64 `json:"slowestDegradationMilliseconds"` // Alert if the response time of the slowest 10% degrades beyond this many ms within an observation period of 5 minutes
+type ResponseTimeAutoSlowest struct {
+	SlowestDegradationMilliseconds float64 `json:"slowestDegradationMilliseconds"` // Absolute threshold
+	SlowestDegradationPercent      float64 `json:"slowestDegradationPercent"`      // Relative threshold
 }
 
-func (me *ResponseTimeFixedSlowest) Schema() map[string]*schema.Schema {
+func (me *ResponseTimeAutoSlowest) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"slowest_degradation_milliseconds": {
 			Type:        schema.TypeFloat,
-			Description: "Alert if the response time of the slowest 10% degrades beyond this many ms within an observation period of 5 minutes",
+			Description: "Absolute threshold",
+			Required:    true,
+		},
+		"slowest_degradation_percent": {
+			Type:        schema.TypeFloat,
+			Description: "Relative threshold",
 			Required:    true,
 		},
 	}
 }
 
-func (me *ResponseTimeFixedSlowest) MarshalHCL(properties hcl.Properties) error {
+func (me *ResponseTimeAutoSlowest) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"slowest_degradation_milliseconds": me.SlowestDegradationMilliseconds,
+		"slowest_degradation_percent":      me.SlowestDegradationPercent,
 	})
 }
 
-func (me *ResponseTimeFixedSlowest) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *ResponseTimeAutoSlowest) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"slowest_degradation_milliseconds": &me.SlowestDegradationMilliseconds,
+		"slowest_degradation_percent":      &me.SlowestDegradationPercent,
 	})
 }

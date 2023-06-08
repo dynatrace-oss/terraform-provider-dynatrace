@@ -18,55 +18,60 @@
 package services
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
-type LoadDrops struct {
-	Enabled              bool     `json:"enabled"`                        // Detect service load drops
-	LoadDropPercent      *float64 `json:"loadDropPercent,omitempty"`      // Threshold
+type LoadSpikes struct {
+	Enabled              bool     `json:"enabled"`                        // This setting is enabled (`true`) or disabled (`false`)
+	LoadSpikePercent     *float64 `json:"loadSpikePercent,omitempty"`     // Threshold
 	MinutesAbnormalState *int     `json:"minutesAbnormalState,omitempty"` // Time span
 }
 
-func (me *LoadDrops) Schema() map[string]*schema.Schema {
+func (me *LoadSpikes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect service load drops",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
-		"load_drop_percent": {
+		"load_spike_percent": {
 			Type:        schema.TypeFloat,
 			Description: "Threshold",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"minutes_abnormal_state": {
 			Type:        schema.TypeInt,
 			Description: "Time span",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
 
-func (me *LoadDrops) MarshalHCL(properties hcl.Properties) error {
+func (me *LoadSpikes) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"enabled":                me.Enabled,
-		"load_drop_percent":      me.LoadDropPercent,
+		"load_spike_percent":     me.LoadSpikePercent,
 		"minutes_abnormal_state": me.MinutesAbnormalState,
 	})
 }
 
-func (me *LoadDrops) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+func (me *LoadSpikes) HandlePreconditions() error {
+	if me.LoadSpikePercent == nil && me.Enabled {
+		return fmt.Errorf("'load_spike_percent' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if me.MinutesAbnormalState == nil && me.Enabled {
+		return fmt.Errorf("'minutes_abnormal_state' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
+}
+
+func (me *LoadSpikes) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]any{
 		"enabled":                &me.Enabled,
-		"load_drop_percent":      &me.LoadDropPercent,
+		"load_spike_percent":     &me.LoadSpikePercent,
 		"minutes_abnormal_state": &me.MinutesAbnormalState,
 	})
-	if me.LoadDropPercent == nil && me.Enabled {
-		me.LoadDropPercent = opt.NewFloat64(0)
-	}
-	return err
 }

@@ -1,0 +1,42 @@
+{
+    "failureRate": {
+        "detectionMode": "fixed",
+        "enabled": true,
+        "fixedDetection": {
+            "overAlertingProtection": {
+                "minutesAbnormalState": 3,
+                "requestsPerMinute": 10
+            },
+            "sensitivity": "low",
+            "threshold": 0
+        }
+    },
+    "loadDrops": {
+        "enabled": true,
+        "loadDropPercent": 50,
+        "minutesAbnormalState": 1
+    },
+    "loadSpikes": {
+        "enabled": true,
+        "loadSpikePercent": 200,
+        "minutesAbnormalState": 1
+    },
+    "responseTime": {
+        "detectionMode": "fixed",
+        "enabled": true,
+        "fixedDetection": {
+            "overAlertingProtection": {
+                "minutesAbnormalState": 1,
+                "requestsPerMinute": 10
+            },
+            "responseTimeAll": {
+                "degradationMilliseconds": 100
+            },
+            "responseTimeSlowest": {
+                "slowestDegradationMilliseconds": 1000
+            },
+            "sensitivity": "low"
+        }
+    },
+    "scope": "SERVICE-1234567890000000"
+}

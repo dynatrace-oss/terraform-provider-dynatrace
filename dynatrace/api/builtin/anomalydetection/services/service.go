@@ -15,16 +15,17 @@
 * limitations under the License.
  */
 
-package services_test
+package services
 
 import (
-	"testing"
+	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-func TestServiceAnomalies(t *testing.T) {
-	t.Skip()
-}
+const SchemaVersion = "0.0.17"
+const SchemaID = "builtin:anomaly-detection.services"
 
-func TestAccServiceAnomalies(t *testing.T) {
-	t.Skip()
+func Service(credentials *settings.Credentials) settings.CRUDService[*services.Settings] {
+	return settings20.Service[*services.Settings](credentials, SchemaID, SchemaVersion)
 }
