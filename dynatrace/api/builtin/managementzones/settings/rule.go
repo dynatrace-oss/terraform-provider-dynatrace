@@ -19,9 +19,9 @@ package managementzones
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -31,7 +31,7 @@ func (me *Rules) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"rule": {
 			Type:        schema.TypeSet,
-			Optional:    true,
+			Required:    true,
 			MinItems:    1,
 			Description: "A management zone rule",
 			Elem:        &schema.Resource{Schema: new(Rule).Schema()},
@@ -47,60 +47,77 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("rule", me)
 }
 
-// No documentation available
 type Rule struct {
-	Enabled        bool                         `json:"enabled"`                  // Enabled
+	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule,omitempty"`
+	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`
+	Enabled        bool                         `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
+	EntitySelector *string                      `json:"entitySelector,omitempty"` // The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
 	Type           RuleType                     `json:"type"`                     // Possible Values: `DIMENSION`, `ME`, `SELECTOR`
-	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule,omitempty"`  // No documentation available
-	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`  // No documentation available
-	EntitySelector string                       `json:"entitySelector,omitempty"` // Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"attribute_rule": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(ManagementZoneAttributeRule).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"dimension_rule": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(DimensionRule).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Enabled",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"entity_selector": {
+			Type:        schema.TypeString,
+			Description: "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+			Optional:    true, // precondition
 		},
 		"type": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `DIMENSION`, `ME`, `SELECTOR`",
 			Required:    true,
 		},
-		"attribute_rule": {
-			Type:        schema.TypeList,
-			Description: "No documentation available",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(ManagementZoneAttributeRule).Schema()},
-			Optional:    true,
-		},
-		"dimension_rule": {
-			Type:        schema.TypeList,
-			Description: "No documentation available",
-			MaxItems:    1,
-			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(DimensionRule).Schema()},
-			Optional:    true,
-		},
-		"entity_selector": {
-			Type:             schema.TypeString,
-			Description:      "Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
-			Optional:         true,
-			DiffSuppressFunc: hcl.SuppressEOT,
-		},
 	}
 }
 
 func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":         me.Enabled,
-		"type":            me.Type,
 		"attribute_rule":  me.AttributeRule,
 		"dimension_rule":  me.DimensionRule,
+		"enabled":         me.Enabled,
 		"entity_selector": me.EntitySelector,
+		"type":            me.Type,
 	})
+}
+
+func (me *Rule) HandlePreconditions() error {
+	if me.AttributeRule == nil && (string(me.Type) == "ME") {
+		return fmt.Errorf("'attribute_rule' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if me.AttributeRule != nil && (string(me.Type) != "ME") {
+		return fmt.Errorf("'attribute_rule' must not be specified if 'type' is set to '%v'", me.Type)
+	}
+	if me.DimensionRule == nil && (string(me.Type) == "DIMENSION") {
+		return fmt.Errorf("'dimension_rule' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if me.DimensionRule != nil && (string(me.Type) != "DIMENSION") {
+		return fmt.Errorf("'dimension_rule' must not be specified if 'type' is set to '%v'", me.Type)
+	}
+	if me.EntitySelector == nil && (string(me.Type) == "SELECTOR") {
+		return fmt.Errorf("'entity_selector' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	return nil
 }
 
 func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {

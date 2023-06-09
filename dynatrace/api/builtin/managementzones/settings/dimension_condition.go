@@ -18,8 +18,9 @@
 package managementzones
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -29,7 +30,7 @@ func (me *DimensionConditions) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeSet,
-			Optional:    true,
+			Required:    true,
 			MinItems:    1,
 			Description: "Dimension conditions",
 			Elem:        &schema.Resource{Schema: new(DimensionCondition).Schema()},
@@ -38,37 +39,18 @@ func (me *DimensionConditions) Schema() map[string]*schema.Schema {
 }
 
 func (me DimensionConditions) MarshalHCL(properties hcl.Properties) error {
-	if len(me) > 0 {
-		if err := properties.EncodeSlice("condition", me); err != nil {
-			return err
-		}
-	}
-	return nil
+	return properties.EncodeSlice("condition", me)
 }
 
 func (me *DimensionConditions) UnmarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("condition"); ok {
-
-		entrySet := value.(*schema.Set)
-
-		for _, entryMap := range entrySet.List() {
-			hash := entrySet.F(entryMap)
-			entry := new(DimensionCondition)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "condition", hash)); err != nil {
-				return err
-			}
-			*me = append(*me, entry)
-		}
-	}
-	return nil
+	return decoder.DecodeSlice("condition", me)
 }
 
-// No documentation available
 type DimensionCondition struct {
 	ConditionType DimensionConditionType `json:"conditionType"` // Possible Values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`
-	Key           *string                `json:"key,omitempty"` // Key
-	RuleMatcher   DimensionOperator      `json:"ruleMatcher"`   // Possible Values: `BEGINS_WITH`, `EQUALS`
-	Value         string                 `json:"value"`         // Value
+	Key           *string                `json:"key,omitempty"`
+	RuleMatcher   DimensionOperator      `json:"ruleMatcher"` // Possible Values: `BEGINS_WITH`, `EQUALS`
+	Value         string                 `json:"value"`
 }
 
 func (me *DimensionCondition) Schema() map[string]*schema.Schema {
@@ -80,8 +62,8 @@ func (me *DimensionCondition) Schema() map[string]*schema.Schema {
 		},
 		"key": {
 			Type:        schema.TypeString,
-			Description: "Key",
-			Optional:    true,
+			Description: "no documentation available",
+			Optional:    true, // precondition
 		},
 		"rule_matcher": {
 			Type:        schema.TypeString,
@@ -90,7 +72,7 @@ func (me *DimensionCondition) Schema() map[string]*schema.Schema {
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "Value",
+			Description: "no documentation available",
 			Required:    true,
 		},
 	}
@@ -103,6 +85,13 @@ func (me *DimensionCondition) MarshalHCL(properties hcl.Properties) error {
 		"rule_matcher":   me.RuleMatcher,
 		"value":          me.Value,
 	})
+}
+
+func (me *DimensionCondition) HandlePreconditions() error {
+	if me.Key == nil && (string(me.ConditionType) == "DIMENSION") {
+		return fmt.Errorf("'key' must be specified if 'condition_type' is set to '%v'", me.ConditionType)
+	}
+	return nil
 }
 
 func (me *DimensionCondition) UnmarshalHCL(decoder hcl.Decoder) error {

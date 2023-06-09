@@ -19,11 +19,9 @@ package managementzones
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// No documentation available
 type DimensionRule struct {
 	AppliesTo  DimensionType       `json:"appliesTo"`            // Possible Values: `ANY`, `LOG`, `METRIC`
 	Conditions DimensionConditions `json:"conditions,omitempty"` // Conditions
@@ -39,10 +37,10 @@ func (me *DimensionRule) Schema() map[string]*schema.Schema {
 		"dimension_conditions": {
 			Type:        schema.TypeList,
 			Description: "Conditions",
-			MaxItems:    1,
-			MinItems:    1,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(DimensionConditions).Schema()},
-			Optional:    true,
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
