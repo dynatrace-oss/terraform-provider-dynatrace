@@ -73,6 +73,7 @@ import (
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
 	issuetracking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
@@ -183,7 +184,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/filters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/queuemanagers"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/queuesharinggroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/notifications"
@@ -567,7 +567,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		notificationsv1.Service,
 		Dependencies.LegacyID(ResourceTypes.Alerting),
 	),
-	ResourceTypes.QueueSharingGroups: NewResourceDescriptor(queuesharinggroups.Service),
+	ResourceTypes.QueueSharingGroups: NewResourceDescriptor(queuesharinggroup.Service),
 	ResourceTypes.AlertingProfile: NewResourceDescriptor(
 		alertingv1.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),

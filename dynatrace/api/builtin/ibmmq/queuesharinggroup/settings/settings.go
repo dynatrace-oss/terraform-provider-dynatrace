@@ -15,46 +15,42 @@
 * limitations under the License.
  */
 
-package queuesharinggroups
+package queuesharinggroup
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Filters TODO: documentation
-type QueueSharingGroup struct {
-	Name          string   `json:"name"`
-	QueueManagers []string `json:"queueManagers,omitempty"`
-	SharedQueues  []string `json:"sharedQueues,omitempty"`
+type Settings struct {
+	Name          string   `json:"name"`                    // Queue sharing group name
+	QueueManagers []string `json:"queueManagers,omitempty"` // Queue managers
+	SharedQueues  []string `json:"sharedQueues,omitempty"`  // Shared queues
 }
 
-func (me *QueueSharingGroup) Schema() map[string]*schema.Schema {
+func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
+			Description: "Queue sharing group name",
 			Required:    true,
-			Description: "The name of the queue sharing group",
 		},
 		"queue_managers": {
 			Type:        schema.TypeSet,
-			Optional:    true,
-			MinItems:    1,
-			Description: "Queue manager(s) that belong to the queue sharing group",
+			Description: "Queue managers",
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"shared_queues": {
 			Type:        schema.TypeSet,
-			Optional:    true,
-			MinItems:    1,
-			Description: "Shared queue(s) that belong to the queue sharing group",
+			Description: "Shared queues",
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}
 }
 
-func (me *QueueSharingGroup) MarshalHCL(properties hcl.Properties) error {
+func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":           me.Name,
 		"queue_managers": me.QueueManagers,
@@ -62,7 +58,7 @@ func (me *QueueSharingGroup) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *QueueSharingGroup) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"name":           &me.Name,
 		"queue_managers": &me.QueueManagers,

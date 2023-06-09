@@ -15,18 +15,18 @@
 * limitations under the License.
  */
 
-package queuesharinggroups
+package queuesharinggroup
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
-	queuesharinggroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/queuesharinggroups/settings"
+	queuesharinggroup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup/settings"
 )
 
 const SchemaID = "builtin:ibmmq.queue-sharing-group"
-const SchemaVersion = "0.0.5"
+const SchemaVersion = "0.0.6"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*queuesharinggroups.QueueSharingGroup] {
-	return settings20.Service[*queuesharinggroups.QueueSharingGroup](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*queuesharinggroup.Settings] {
+	return settings20.Service[*queuesharinggroup.Settings](credentials, SchemaID, SchemaVersion)
 }

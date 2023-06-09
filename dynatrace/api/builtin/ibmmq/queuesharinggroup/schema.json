@@ -1,0 +1,102 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "A queue sharing group defines a group of queue managers that can access the same shared queues on z/OS. Dynatrace needs to know which queue managers and shared queues belong to which queue sharing group for the end-to-end tracing on z/OS.",
+	"displayName": "IBM MQ queue sharing groups",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add queue sharing group"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Queue sharing group name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"queueManagers": {
+			"description": "",
+			"displayName": "Queue managers",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"type": "NOT_EMPTY"
+					},
+					{
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "Queue manager name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 1000,
+			"metadata": {
+				"addItemButton": "Add queue manager"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"sharedQueues": {
+			"description": "",
+			"displayName": "Shared queues",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"type": "NOT_EMPTY"
+					},
+					{
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "Shared queue name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 1000,
+			"metadata": {
+				"addItemButton": "Add shared queue"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:mainframe"
+	],
+	"schemaId": "builtin:ibmmq.queue-sharing-group",
+	"types": {},
+	"version": "0.0.6"
+}

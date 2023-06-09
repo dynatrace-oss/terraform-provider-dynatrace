@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package queuesharinggroups_test
+package queuesharinggroup_test
 
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/queuesharinggroups"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestQueueSharingGroups(t *testing.T) {
-	api.TestService(t, queuesharinggroups.Service)
+	api.TestService(t, queuesharinggroup.Service)
 }
 
 func TestAccQueueSharingGroups(t *testing.T) {
