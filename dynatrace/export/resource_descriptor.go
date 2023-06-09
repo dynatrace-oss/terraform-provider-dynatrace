@@ -121,6 +121,7 @@ import (
 	processgroupsimpledetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/simpledetectionrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processvisibility"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/remote/environment"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/resourceattribute"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipdetermination"
@@ -201,7 +202,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/capture"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/ctxprop"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/entrypoints"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/resattr"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
@@ -501,7 +501,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		requestnaming.Service,
 		Dependencies.RequestAttribute,
 	),
-	ResourceTypes.ResourceAttributes: NewResourceDescriptor(resattr.Service),
+	ResourceTypes.ResourceAttributes: NewResourceDescriptor(resourceattribute.Service),
 	ResourceTypes.ServiceAnomalies:   NewResourceDescriptor(service_anomalies.Service),
 	ResourceTypes.ServiceAnomaliesV2: NewResourceDescriptor(
 		service_anomalies_v2.Service,

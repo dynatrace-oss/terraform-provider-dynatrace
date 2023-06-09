@@ -15,19 +15,16 @@
 * limitations under the License.
  */
 
-package resattr_test
+package resourceattribute
 
-import (
-	"testing"
+type MaskingType string
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/resattr"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-)
-
-func TestResourceAttributes(t *testing.T) {
-	api.TestService(t, resattr.Service)
-}
-
-func TestAccResourceAttributes(t *testing.T) {
-	api.TestAcc(t)
+var MaskingTypes = struct {
+	MaskEntireValue          MaskingType
+	MaskOnlyConfidentialData MaskingType
+	NotMasked                MaskingType
+}{
+	"MASK_ENTIRE_VALUE",
+	"MASK_ONLY_CONFIDENTIAL_DATA",
+	"NOT_MASKED",
 }

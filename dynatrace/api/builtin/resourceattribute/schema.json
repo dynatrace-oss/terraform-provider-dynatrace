@@ -1,0 +1,146 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "resource-attribute-config-delete-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "While Dynatrace automatically captures all OpenTracing and OpenTelemetry resource attributes, to prevent the accidental storage of personal data, only the values of resource attributes for which a related key is specified in the allow-list below are stored. This enables you to meet your privacy requirements while controlling the amount of monitoring data that's stored.",
+	"displayName": "Resource attributes",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"MaskingType": {
+			"description": "",
+			"displayName": "MaskingType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not mask",
+					"value": "NOT_MASKED"
+				},
+				{
+					"displayName": "Mask only confidential data",
+					"value": "MASK_ONLY_CONFIDENTIAL_DATA"
+				},
+				{
+					"displayName": "Mask entire value",
+					"value": "MASK_ENTIRE_VALUE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"attributeKeys": {
+			"constraints": [
+				{
+					"customMessage": "Attribute keys must be unique.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"attributeKey"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Attribute key allow-list",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/RuleItem"
+				}
+			},
+			"maxObjects": 1000,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:service-monitoring.spans"
+	],
+	"schemaId": "builtin:resource-attribute",
+	"types": {
+		"RuleItem": {
+			"constraints": [
+				{
+					"customValidatorId": "resource-attribute-config-disable-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "resource-attribute-config-confidential-consistency-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"attributeKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "prohibit-service-name-key-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Attribute key",
+					"documentation": "Attribute key **service.name** is automatically captured by default",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "If this is true, the value of the specified key is stored.",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"masking": {
+					"default": "NOT_MASKED",
+					"description": "If this attribute contains confidential data, turn on masking to conceal its value from users",
+					"displayName": "Masking",
+					"documentation": "Introduce more granular control over the visibility of attribute values.  \nChoose **Do not mask** to allow every user to see the actual value and use it in defining other configurations.  \nChoose **Mask entire value** to hide the whole value of this attribute from everyone who does not have 'View sensitive request data' permission. These attributes can't be used to define other configurations. \nChoose **Mask only confidential data** to apply automatic masking strategies to your data. These strategies include, for example, credit card numbers, IBAN, IPs, email-addresses, etc. It may not be possible to recognize all sensitive data so please always make sure to verify that sensitive data is actually masked. If sensitive data is not recognized, please use **Mask entire value** instead. Users with 'View sensitive request data' permission will be able to see the entire value, others only the non-sensitive parts. These attributes can't be used to define other configurations.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MaskingType"
+					}
+				}
+			},
+			"summaryPattern": "{attributeKey} - {masking}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.26"
+}

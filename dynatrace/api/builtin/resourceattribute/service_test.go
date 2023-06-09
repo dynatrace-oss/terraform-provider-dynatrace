@@ -15,17 +15,19 @@
 * limitations under the License.
  */
 
-package resattr
+package resourceattribute_test
 
 import (
-	resattr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/resattr/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/resourceattribute"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-const SchemaID = "builtin:resource-attribute"
-const SchemaVersion = "1.0.24"
+func TestResourceAttributes(t *testing.T) {
+	api.TestService(t, resourceattribute.Service)
+}
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*resattr.ResourceAttributes] {
-	return settings20.Service[*resattr.ResourceAttributes](credentials, SchemaID, SchemaVersion)
+func TestAccResourceAttributes(t *testing.T) {
+	api.TestAcc(t)
 }

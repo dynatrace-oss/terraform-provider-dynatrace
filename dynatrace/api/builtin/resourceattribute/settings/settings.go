@@ -15,44 +15,42 @@
 * limitations under the License.
  */
 
-package resattr
+package resourceattribute
 
 import (
 	"encoding/json"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// ResourceAttributes has no documentation
-type ResourceAttributes struct {
-	AttributeKeys AttributeKeys `json:"attributeKeys,omitempty"`
+type Settings struct {
+	AttributeKeys RuleItems `json:"attributeKeys,omitempty"` // Attribute key allow-list
 }
 
-func (me *ResourceAttributes) Name() string {
+func (me *Settings) Name() string {
 	return "dynatrace_resource_attributes"
 }
 
-func (me *ResourceAttributes) Schema() map[string]*schema.Schema {
+func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"keys": {
 			Type:        schema.TypeList,
 			Description: "Attribute key allow-list",
-			Optional:    true,
-			MaxItems:    1,
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(RuleItems).Schema()},
 			MinItems:    1,
-			Elem:        &schema.Resource{Schema: new(AttributeKeys).Schema()},
+			MaxItems:    1,
 		},
 	}
 }
 
-func (me *ResourceAttributes) EnsurePredictableOrder() {
+func (me *Settings) EnsurePredictableOrder() {
 	if len(me.AttributeKeys) == 0 {
 		return
 	}
-	conds := AttributeKeys{}
+	conds := RuleItems{}
 	condStrings := sort.StringSlice{}
 	for _, entry := range me.AttributeKeys {
 		condBytes, _ := json.Marshal(entry)
@@ -67,7 +65,7 @@ func (me *ResourceAttributes) EnsurePredictableOrder() {
 	me.AttributeKeys = conds
 }
 
-func (me *ResourceAttributes) MarshalHCL(properties hcl.Properties) error {
+func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	if len(me.AttributeKeys) > 0 {
 		me.EnsurePredictableOrder()
 		marshalled := hcl.Properties{}
@@ -79,9 +77,9 @@ func (me *ResourceAttributes) MarshalHCL(properties hcl.Properties) error {
 	return nil
 }
 
-func (me *ResourceAttributes) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if _, ok := decoder.GetOk("keys.#"); ok {
-		me.AttributeKeys = AttributeKeys{}
+		me.AttributeKeys = RuleItems{}
 		if err := me.AttributeKeys.UnmarshalHCL(hcl.NewDecoder(decoder, "keys", 0)); err != nil {
 			return err
 		}
