@@ -152,6 +152,7 @@ import (
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/attribute"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/availability"
 	browseroutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/outagehandling"
 	browserperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
@@ -198,7 +199,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/notifications/webhook"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/notifications/xmatters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/attributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/capture"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/ctxprop"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/entrypoints"
@@ -524,7 +524,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 	),
-	ResourceTypes.SpanAttribute:          NewResourceDescriptor(attributes.Service),
+	ResourceTypes.SpanAttribute:          NewResourceDescriptor(attribute.Service),
 	ResourceTypes.SpanCaptureRule:        NewResourceDescriptor(capture.Service),
 	ResourceTypes.SpanContextPropagation: NewResourceDescriptor(ctxprop.Service),
 	ResourceTypes.SpanEntryPoint:         NewResourceDescriptor(entrypoints.Service),

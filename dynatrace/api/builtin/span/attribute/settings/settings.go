@@ -15,35 +15,33 @@
 * limitations under the License.
  */
 
-package attributes
+package attribute
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// SpanAttribute has no documentation
-type SpanAttribute struct {
-	Key     string      `json:"key"`
-	Masking MaskingType `json:"masking"`
+type Settings struct {
+	Key     string      `json:"key"`     // Key of the span attribute to store
+	Masking MaskingType `json:"masking"` // Possible Values: `MASK_ENTIRE_VALUE`, `MASK_ONLY_CONFIDENTIAL_DATA`, `NOT_MASKED`
 }
 
-func (me *SpanAttribute) Name() string {
+func (me *Settings) Name() string {
 	return me.Key
 }
 
-func (me *SpanAttribute) Schema() map[string]*schema.Schema {
+func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
+			Description: "Key of the span attribute to store",
 			Required:    true,
-			Description: "the key of the attribute to capture",
 		},
 		"masking": {
 			Type:        schema.TypeString,
+			Description: "Possible Values: `MASK_ENTIRE_VALUE`, `MASK_ONLY_CONFIDENTIAL_DATA`, `NOT_MASKED`",
 			Required:    true,
-			Description: "granular control over the visibility of attribute values",
 		},
 		"persistent": {
 			Type:        schema.TypeBool,
@@ -54,14 +52,14 @@ func (me *SpanAttribute) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *SpanAttribute) MarshalHCL(properties hcl.Properties) error {
+func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"key":     me.Key,
 		"masking": string(me.Masking),
 	})
 }
 
-func (me *SpanAttribute) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if key, ok := decoder.GetOk("key"); ok {
 		me.Key = key.(string)
 	}
@@ -69,16 +67,4 @@ func (me *SpanAttribute) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Masking = MaskingType(value.(string))
 	}
 	return nil
-}
-
-type MaskingType string
-
-var MaskingTypes = struct {
-	NotMasked    MaskingType
-	Confidential MaskingType
-	EntireValue  MaskingType
-}{
-	MaskingType("NOT_MASKED"),
-	MaskingType("MASK_ONLY_CONFIDENTIAL_DATA"),
-	MaskingType("MASK_ENTIRE_VALUE"),
 }

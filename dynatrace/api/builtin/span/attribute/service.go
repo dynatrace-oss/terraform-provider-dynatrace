@@ -15,19 +15,18 @@
 * limitations under the License.
  */
 
-package attributes_test
+package attribute
 
 import (
-	"testing"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/attributes"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	attribute "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/attribute/settings"
 )
 
-func TestSpanAttributes(t *testing.T) {
-	api.TestService(t, attributes.Service)
-}
+const SchemaID = "builtin:span-attribute"
+const SchemaVersion = "0.0.31"
 
-func TestAccSpanAttributes(t *testing.T) {
-	api.TestAcc(t)
+func Service(credentials *settings.Credentials) settings.CRUDService[*attribute.Settings] {
+	return settings20.Service[*attribute.Settings](credentials, SchemaID, SchemaVersion)
 }
