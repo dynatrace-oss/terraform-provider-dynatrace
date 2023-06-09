@@ -1,0 +1,784 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customMessage": "At least one added filter is needed and additionally every filter needs a management zone id filter value.",
+			"customValidatorId": "maintenance-window-permission-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Maintenance windows are typically planned, recurring periods of system downtime during which your DevOps team can perform preventative maintenance and system upgrades outside of peak traffic hours.",
+	"displayName": "Maintenance windows",
+	"documentation": "To avoid having Dynatrace report on any performance anomalies that may result from such events, set up maintenance windows below that correspond with your organization's maintenance window schedule.",
+	"dynatrace": "1",
+	"enums": {
+		"DayOfWeekType": {
+			"description": "",
+			"displayName": "Day of week type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Monday",
+					"value": "MONDAY"
+				},
+				{
+					"displayName": "Tuesday",
+					"value": "TUESDAY"
+				},
+				{
+					"displayName": "Wednesday",
+					"value": "WEDNESDAY"
+				},
+				{
+					"displayName": "Thursday",
+					"value": "THURSDAY"
+				},
+				{
+					"displayName": "Friday",
+					"value": "FRIDAY"
+				},
+				{
+					"displayName": "Saturday",
+					"value": "SATURDAY"
+				},
+				{
+					"displayName": "Sunday",
+					"value": "SUNDAY"
+				}
+			],
+			"type": "enum"
+		},
+		"MaintenanceType": {
+			"description": "",
+			"displayName": "Maintenance types",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Planned",
+					"value": "PLANNED"
+				},
+				{
+					"displayName": "Unplanned",
+					"value": "UNPLANNED"
+				}
+			],
+			"type": "enum"
+		},
+		"ScheduleType": {
+			"description": "",
+			"displayName": "Scheduling type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Once",
+					"value": "ONCE"
+				},
+				{
+					"displayName": "Daily",
+					"value": "DAILY"
+				},
+				{
+					"displayName": "Weekly",
+					"value": "WEEKLY"
+				},
+				{
+					"displayName": "Monthly",
+					"value": "MONTHLY"
+				}
+			],
+			"type": "enum"
+		},
+		"SuppressionType": {
+			"description": "",
+			"displayName": "Problem detection and alerting",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Detect problems and alert",
+					"value": "DETECT_PROBLEMS_AND_ALERT"
+				},
+				{
+					"displayName": "Detect problems but don't alert",
+					"value": "DETECT_PROBLEMS_DONT_ALERT"
+				},
+				{
+					"displayName": "Disable problem detection during maintenance",
+					"value": "DONT_DETECT_PROBLEMS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 2000,
+	"metadata": {
+		"addItemButton": "Add maintenance window"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "The status of the maintenance window. If `false`, it is not considered during the maintenance window evaluation.",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"filters": {
+			"description": "## Filters\nAdd filters to limit the scope of maintenance to only select matching entities. If no filter is defined, the maintenance window is valid for the whole environment. Each filter is evaluated separately (**OR**).",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Filter"
+				}
+			},
+			"maxObjects": 1000,
+			"metadata": {
+				"addItemButton": "Add filter"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"generalProperties": {
+			"description": "## Properties",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/GeneralProperties"
+			}
+		},
+		"schedule": {
+			"description": "## Schedule",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Schedule"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:maintenance"
+	],
+	"schemaId": "builtin:alerting.maintenance-window",
+	"types": {
+		"DailyRecurrence": {
+			"description": "",
+			"displayName": "DailyRecurrence",
+			"documentation": "",
+			"properties": {
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/RecurrenceRange"
+					}
+				},
+				"timeWindow": {
+					"description": "",
+					"displayName": "Time window",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/TimeWindow"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Filter": {
+			"constraints": [
+				{
+					"customMessage": "At least one filter value is necessary.",
+					"customValidatorId": "maintenance-window-filter-container-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "At least one management zone filter value is necessary.",
+					"customValidatorId": "maintenance-window-permission-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Configured values of one filter are evaluated together (**AND**).",
+			"displayName": "Filter",
+			"documentation": "The maintenance window is applied onto an entity if it matches all of the values of at least one filter.",
+			"properties": {
+				"entityId": {
+					"constraints": [
+						{
+							"customMessage": "Invalid entity id.",
+							"customValidatorId": "maintenance-window-entity-id-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Please use a format of TYPE-ID",
+							"pattern": "^[A-Z][A-Z0-9_]*-[0-9A-F]{16}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "A specific entity that should match this maintenance window.",
+					"displayName": "Entity",
+					"documentation": "**Note**: If an entity type filter value is set, it must be equal to the type of the selected entity. Otherwise this maintenance window will not match.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "me",
+					"type": "text"
+				},
+				"entityTags": {
+					"description": "Entities which contain all of the configured tags will match this maintenance window.",
+					"displayName": "Entity tags",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"customValidatorId": "universal-tag-validator",
+								"type": "CUSTOM_VALIDATOR_REF"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"subType": "tag",
+						"type": "text"
+					},
+					"maxObjects": 1000,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"entityType": {
+					"constraints": [
+						{
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "maintenanceWindowEntityTypeDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": true
+					},
+					"description": "Type of entities this maintenance window should match.",
+					"displayName": "Entity type",
+					"documentation": "If no entity type is selected all entities regardless of the type will match.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Optional",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"managementZones": {
+					"description": "Entities which are part of all the configured management zones will match this maintenance window.",
+					"displayName": "Management zones",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"datasource": {
+							"filterProperties": [],
+							"fullContext": false,
+							"identifier": "managementZoneDataSource",
+							"resetValue": "NEVER",
+							"useApiSearch": true,
+							"validate": true
+						},
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"metadata": {
+							"useCombobox": "enabled"
+						},
+						"subType": "datasource",
+						"type": "text"
+					},
+					"maxObjects": 1000,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "Filter by {entityType|meTypeDisplayName} {entityId|meDisplayName} {entityTags} {managementZones}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GeneralProperties": {
+			"description": "",
+			"displayName": "GeneralProperties",
+			"documentation": "",
+			"properties": {
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 10000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "A short description of the maintenance purpose.",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"disableSyntheticMonitorExecution": {
+					"default": false,
+					"description": "Disables the execution of the synthetic monitors that are within [the scope of this maintenance window](https://dt-url.net/0e0341m).",
+					"displayName": "Disable synthetic monitor execution",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"maintenanceType": {
+					"default": "PLANNED",
+					"description": "Whether the maintenance is planned or unplanned.",
+					"displayName": "Maintenance type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MaintenanceType"
+					}
+				},
+				"name": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"suppression": {
+					"default": "DETECT_PROBLEMS_AND_ALERT",
+					"description": "Defines if alerting or problem generation is disabled.",
+					"displayName": "Problem detection and alerting",
+					"documentation": "* **Detect problems and alert**: Problems are generated and alerted.\n* **Detect problems but don't alert**: Problems are generated but no alerts are sent out.\n* **Disable problem detection during maintenance**: Neither problems are generated nor alerts are sent out.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/SuppressionType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MonthlyRecurrence": {
+			"description": "",
+			"displayName": "MonthlyRecurrence",
+			"documentation": "",
+			"properties": {
+				"dayOfMonth": {
+					"constraints": [
+						{
+							"maximum": 31,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Day of month",
+					"documentation": "If the selected day does not fall within the month, the maintenance window will be active on the last day of the month.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/RecurrenceRange"
+					}
+				},
+				"timeWindow": {
+					"description": "",
+					"displayName": "Time window",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/TimeWindow"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OnceRecurrence": {
+			"constraints": [
+				{
+					"properties": [
+						"startTime",
+						"endTime"
+					],
+					"type": "LESS_THAN"
+				}
+			],
+			"description": "The date time window when the maintenance will take place once.",
+			"displayName": "Maintenance window",
+			"documentation": "",
+			"properties": {
+				"endTime": {
+					"default": "1970-01-01T00:00:00",
+					"description": "",
+					"displayName": "End time",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now+1h"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_date_time"
+				},
+				"startTime": {
+					"default": "1970-01-01T00:00:00",
+					"description": "",
+					"displayName": "Start time",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_date_time"
+				},
+				"timeZone": {
+					"default": "UTC",
+					"description": "",
+					"displayName": "Timezone",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "time_zone"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RecurrenceRange": {
+			"constraints": [
+				{
+					"properties": [
+						"scheduleStartDate",
+						"scheduleEndDate"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "The date range in which maintenance is activated during the specified time window.",
+			"displayName": "Recurrence range",
+			"documentation": "",
+			"properties": {
+				"scheduleEndDate": {
+					"default": "1970-01-01",
+					"description": "",
+					"displayName": "End date",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now+1d"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_date"
+				},
+				"scheduleStartDate": {
+					"default": "1970-01-01",
+					"description": "",
+					"displayName": "Start date",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_date"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Schedule": {
+			"description": "",
+			"displayName": "Schedule",
+			"documentation": "",
+			"properties": {
+				"dailyRecurrence": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DAILY",
+						"property": "scheduleType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DailyRecurrence"
+					}
+				},
+				"monthlyRecurrence": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "MONTHLY",
+						"property": "scheduleType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/MonthlyRecurrence"
+					}
+				},
+				"onceRecurrence": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "ONCE",
+						"property": "scheduleType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/OnceRecurrence"
+					}
+				},
+				"scheduleType": {
+					"default": "ONCE",
+					"description": "Defines the recurrence type of the maintenance window.",
+					"displayName": "Recurrence",
+					"documentation": "* **Once**: One time maintenance window with start and end date time.\n* **Daily**: Maintenance window occurs every day during the configured time window.\n* **Weekly**: Maintenance window occurs each week on one day during the configured time window.\n* **Monthly**: Maintenance window occurs each month on one day during the configured time window.",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ScheduleType"
+					}
+				},
+				"weeklyRecurrence": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "WEEKLY",
+						"property": "scheduleType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/WeeklyRecurrence"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"TimeWindow": {
+			"description": "The time window when the maintenance will take place.",
+			"displayName": "Time window",
+			"documentation": "",
+			"properties": {
+				"endTime": {
+					"default": "13:00:00",
+					"description": "",
+					"displayName": "End time",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now+1h"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_time"
+				},
+				"startTime": {
+					"default": "12:00:00",
+					"description": "",
+					"displayName": "Start time",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required",
+						"uiDefaultValue": "now"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_time"
+				},
+				"timeZone": {
+					"default": "UTC",
+					"description": "",
+					"displayName": "Timezone",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "time_zone"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"WeeklyRecurrence": {
+			"description": "",
+			"displayName": "WeeklyRecurrence",
+			"documentation": "",
+			"properties": {
+				"dayOfWeek": {
+					"default": "MONDAY",
+					"description": "",
+					"displayName": "Day of week",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/DayOfWeekType"
+					}
+				},
+				"recurrenceRange": {
+					"description": "",
+					"displayName": "Recurrence range",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/RecurrenceRange"
+					}
+				},
+				"timeWindow": {
+					"description": "",
+					"displayName": "Time window",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/TimeWindow"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "2.14.2"
+}

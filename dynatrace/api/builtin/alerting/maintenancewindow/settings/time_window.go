@@ -15,30 +15,30 @@
 * limitations under the License.
  */
 
-package maintenance
+package maintenancewindow
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type OnceRecurrence struct {
-	StartTime string `json:"startTime"` // The start time of the maintenance window validity period in YYYY-MM-DDThh:mm:ss format (for example, `2022-01-01T08:00:00`)
-	EndTime   string `json:"endTime"`   // The end time of the maintenance window validity period in YYYY-MM-DDThh:mm:ss format (for example, `2022-01-01T08:00:00`)
+// Time window. The time window when the maintenance will take place.
+type TimeWindow struct {
+	EndTime   string `json:"endTime"`   // The end time of the maintenance window validity period in hh:mm:ss format
+	StartTime string `json:"startTime"` // The start time of the maintenance window validity period in hh:mm:ss format
 	TimeZone  string `json:"timeZone"`  // The time zone of the start and end time. Default time zone is UTC. You can use either UTC offset `UTC+01:00` format or the IANA Time Zone Database format (for example, `Europe/Vienna`)
 }
 
-func (me *OnceRecurrence) Schema() map[string]*schema.Schema {
+func (me *TimeWindow) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"start_time": {
-			Type:        schema.TypeString,
-			Description: "The start time of the maintenance window validity period in YYYY-MM-DDThh:mm:ss format (for example, `2022-01-01T08:00:00`)",
-			Required:    true,
-		},
 		"end_time": {
 			Type:        schema.TypeString,
-			Description: "The end time of the maintenance window validity period in YYYY-MM-DDThh:mm:ss format (for example, `2022-01-01T08:00:00`)",
+			Description: "The end time of the maintenance window validity period in hh:mm:ss format",
+			Required:    true,
+		},
+		"start_time": {
+			Type:        schema.TypeString,
+			Description: "The start time of the maintenance window validity period in hh:mm:ss format",
 			Required:    true,
 		},
 		"time_zone": {
@@ -49,18 +49,18 @@ func (me *OnceRecurrence) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *OnceRecurrence) MarshalHCL(properties hcl.Properties) error {
+func (me *TimeWindow) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"start_time": me.StartTime,
 		"end_time":   me.EndTime,
+		"start_time": me.StartTime,
 		"time_zone":  me.TimeZone,
 	})
 }
 
-func (me *OnceRecurrence) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *TimeWindow) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"start_time": &me.StartTime,
 		"end_time":   &me.EndTime,
+		"start_time": &me.StartTime,
 		"time_zone":  &me.TimeZone,
 	})
 }

@@ -15,29 +15,29 @@
 * limitations under the License.
  */
 
-package maintenance
+package maintenancewindow
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// Recurrence range. The date range in which maintenance is activated during the specified time window.
 type RecurrenceRange struct {
-	StartDate string `json:"scheduleStartDate"` // The start date of the recurrence range in YYYY-MM-DD format
-	EndDate   string `json:"scheduleEndDate"`   // The end date of the recurrence range in YYYY-MM-DD format
+	ScheduleEndDate   string `json:"scheduleEndDate"`   // The end date of the recurrence range in YYYY-MM-DD format
+	ScheduleStartDate string `json:"scheduleStartDate"` // The start date of the recurrence range in YYYY-MM-DD format
 }
 
 func (me *RecurrenceRange) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"start_date": {
-			Type:        schema.TypeString,
-			Description: "The start date of the recurrence range in YYYY-MM-DD format",
-			Required:    true,
-		},
 		"end_date": {
 			Type:        schema.TypeString,
 			Description: "The end date of the recurrence range in YYYY-MM-DD format",
+			Required:    true,
+		},
+		"start_date": {
+			Type:        schema.TypeString,
+			Description: "The start date of the recurrence range in YYYY-MM-DD format",
 			Required:    true,
 		},
 	}
@@ -45,14 +45,14 @@ func (me *RecurrenceRange) Schema() map[string]*schema.Schema {
 
 func (me *RecurrenceRange) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"start_date": me.StartDate,
-		"end_date":   me.EndDate,
+		"end_date":   me.ScheduleEndDate,
+		"start_date": me.ScheduleStartDate,
 	})
 }
 
 func (me *RecurrenceRange) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"start_date": &me.StartDate,
-		"end_date":   &me.EndDate,
+		"end_date":   &me.ScheduleEndDate,
+		"start_date": &me.ScheduleStartDate,
 	})
 }

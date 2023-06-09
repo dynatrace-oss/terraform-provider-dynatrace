@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package maintenance_test
+package maintenancewindow_test
 
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/maintenance"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestMaintenanceWindows(t *testing.T) {
-	api.TestService(t, maintenance.Service)
+	api.TestService(t, maintenancewindow.Service)
 }
 
 func TestAccMaintenanceWindows(t *testing.T) {

@@ -15,63 +15,58 @@
 * limitations under the License.
  */
 
-package maintenance
+package maintenancewindow
 
 import (
 	"encoding/json"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// MaintenanceWindow TODO: documentation
-type MaintenanceWindow struct {
-	Enabled           bool               `json:"enabled"`           // The maintenance window is enabled or disabled
+type Settings struct {
+	Enabled           bool               `json:"enabled"`           // This setting is enabled (`true`) or disabled (`false`)
+	Filters           Filters            `json:"filters,omitempty"` // ## Filters\nAdd filters to limit the scope of maintenance to only select matching entities. If no filter is defined, the maintenance window is valid for the whole environment. Each filter is evaluated separately (**OR**).
 	GeneralProperties *GeneralProperties `json:"generalProperties"` // The general properties of the maintenance window
 	Schedule          *Schedule          `json:"schedule"`          // The schedule of the maintenance window
-	Filters           Filters            `json:"filters,omitempty"` // The filters of the maintenance window
 	LegacyID          *string            `json:"-"`
 }
 
-func (me *MaintenanceWindow) Name() string {
+func (me *Settings) Name() string {
 	return me.GeneralProperties.Name
 }
 
-func (me *MaintenanceWindow) Schema() map[string]*schema.Schema {
+func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "The maintenance window is enabled or disabled",
-			Default:     true,
-			Optional:    true,
-		},
-		"general_properties": {
-			Type:        schema.TypeList,
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
-			MaxItems:    1,
-			Description: "The general properties of the maintenance window",
-			Elem: &schema.Resource{
-				Schema: new(GeneralProperties).Schema(),
-			},
-		},
-		"schedule": {
-			Type:        schema.TypeList,
-			Required:    true,
-			MaxItems:    1,
-			Description: "The schedule of the maintenance window",
-			Elem: &schema.Resource{
-				Schema: new(Schedule).Schema(),
-			},
 		},
 		"filters": {
 			Type:        schema.TypeList,
-			Optional:    true,
-			Description: "The filters of the maintenance window",
-			Elem: &schema.Resource{
-				Schema: new(Filters).Schema(),
-			},
+			Description: "## Filters\nAdd filters to limit the scope of maintenance to only select matching entities. If no filter is defined, the maintenance window is valid for the whole environment. Each filter is evaluated separately (**OR**).",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(Filters).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"general_properties": {
+			Type:        schema.TypeList,
+			Description: "The general properties of the maintenance window",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(GeneralProperties).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"schedule": {
+			Type:        schema.TypeList,
+			Description: "The schedule of the maintenance window",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(Schedule).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"legacy_id": {
 			Type:        schema.TypeString,
@@ -82,7 +77,7 @@ func (me *MaintenanceWindow) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *MaintenanceWindow) EnsurePredictableOrder() {
+func (me *Settings) EnsurePredictableOrder() {
 	if len(me.Filters) > 0 {
 		conds := []*Filter{}
 		condStrings := sort.StringSlice{}
@@ -100,7 +95,7 @@ func (me *MaintenanceWindow) EnsurePredictableOrder() {
 	}
 }
 
-func (me *MaintenanceWindow) MarshalHCL(properties hcl.Properties) error {
+func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	me.EnsurePredictableOrder()
 
 	return properties.EncodeAll(map[string]any{
@@ -112,7 +107,7 @@ func (me *MaintenanceWindow) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *MaintenanceWindow) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":            &me.Enabled,
 		"general_properties": &me.GeneralProperties,
