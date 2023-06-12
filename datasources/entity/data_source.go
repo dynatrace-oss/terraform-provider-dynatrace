@@ -46,6 +46,12 @@ func DataSource() *schema.Resource {
 				Optional:      true,
 				ConflictsWith: []string{"type", "name"},
 			},
+			"properties": {
+				Type:        schema.TypeMap,
+				Description: "Properties defining the entity.",
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -75,11 +81,18 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 			for _, entity := range settings.Entities {
 				if name == *entity.DisplayName {
 					d.SetId(*entity.EntityId)
+					if len(entity.Properties) > 0 {
+						d.Set("properties", entity.Properties)
+					}
 					return nil
 				}
 			}
 		}
 		d.SetId(*settings.Entities[0].EntityId)
+		if len(settings.Entities[0].Properties) > 0 {
+			d.Set("properties", settings.Entities[0].Properties)
+		}
+
 		return nil
 	}
 	d.SetId("")
