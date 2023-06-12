@@ -59,6 +59,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_entity"
 	case ResourceTypes.Credentials:
 		return "dynatrace_credentials"
+	case ResourceTypes.FailureDetectionParameters:
+		return "dynatrace_failure_detection_parameters"
 	}
 	return ""
 }

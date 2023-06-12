@@ -73,6 +73,10 @@ func AsDataSource(resource *Resource) string {
 			type = "SYNTHETIC_LOCATION"
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.FailureDetectionParameters:
+		return fmt.Sprintf(`data "dynatrace_failure_detection_parameters" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}
