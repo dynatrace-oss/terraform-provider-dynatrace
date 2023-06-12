@@ -68,7 +68,11 @@ func AsDataSource(resource *Resource) string {
 			type = "SYNTHETIC_TEST"
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
-
+	case ResourceTypes.SyntheticLocation:
+		return fmt.Sprintf(`data "dynatrace_entity" "%s" {
+			type = "SYNTHETIC_LOCATION"
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}

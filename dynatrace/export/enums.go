@@ -55,6 +55,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_entity"
 	case ResourceTypes.BrowserMonitor:
 		return "dynatrace_entity"
+	case ResourceTypes.SyntheticLocation:
+		return "dynatrace_entity"
 	case ResourceTypes.Credentials:
 		return "dynatrace_credentials"
 	}
