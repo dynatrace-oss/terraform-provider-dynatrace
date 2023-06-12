@@ -118,7 +118,14 @@ func (me *DashboardSharing) UnmarshalHCL(decoder hcl.Decoder) error {
 	} else {
 		me.Preset = false
 	}
-	if value, ok := decoder.GetOk("permissions.#"); ok {
+	if me.Preset {
+		me.Permissions = SharePermissions{
+			&SharePermission{
+				Type:       PermissionTypes.All,
+				Permission: Permissions.View,
+			},
+		}
+	} else if value, ok := decoder.GetOk("permissions.#"); ok {
 		count := value.(int)
 		if count != 0 {
 			if value, ok := decoder.GetOk("permissions.0.permission.#"); ok {
