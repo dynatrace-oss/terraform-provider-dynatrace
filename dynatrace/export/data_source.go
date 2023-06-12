@@ -15,9 +15,6 @@ func AsDataSource(resource *Resource) string {
 	if resource == nil {
 		return ""
 	}
-	if !resource.IsReferencedAsDataSource() {
-		return ""
-	}
 	switch resource.Type {
 	case ResourceTypes.ManagementZoneV2:
 		return fmt.Sprintf(`data "dynatrace_management_zone" "%s" {
@@ -55,6 +52,10 @@ func AsDataSource(resource *Resource) string {
 		}`, resource.UniqueName, resource.Name)
 	case ResourceTypes.MobileApplication:
 		return fmt.Sprintf(`data "dynatrace_mobile_application" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.Credentials:
+		return fmt.Sprintf(`data "dynatrace_credentials" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
 	case ResourceTypes.HTTPMonitor:

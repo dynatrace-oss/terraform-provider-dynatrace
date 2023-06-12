@@ -160,24 +160,23 @@ func (me *Environment) PostProcess() error {
 	}
 
 	for _, resource := range me.GetChildResources() {
-
+		if resource.Parent.Status == ResourceStati.Erronous {
+			continue
+		}
 		var parentBytes []byte
 		var childBytes []byte
 		var err error
-		if parentBytes, err = resource.Parent.ReadFile(); err != nil {
-			return err
+		if parentBytes, err = resource.Parent.ReadFile(); err == nil {
+			if childBytes, err = resource.ReadFile(); err == nil {
+				var parentFile *os.File
+				if parentFile, err = resource.Parent.CreateFile(); err == nil {
+					defer parentFile.Close()
+					parentFile.Write(parentBytes)
+					parentFile.Write([]byte("\n\n"))
+					parentFile.Write(childBytes)
+				}
+			}
 		}
-		if childBytes, err = resource.ReadFile(); err != nil {
-			return err
-		}
-		var parentFile *os.File
-		if parentFile, err = resource.Parent.CreateFile(); err != nil {
-			return err
-		}
-		defer parentFile.Close()
-		parentFile.Write(parentBytes)
-		parentFile.Write([]byte("\n\n"))
-		parentFile.Write(childBytes)
 	}
 	return nil
 }
@@ -339,20 +338,17 @@ func (me *Environment) WriteResourceFiles() (err error) {
 }
 
 func (me *Environment) RemoveNonReferencedModules() (err error) {
+	m := map[ResourceType]*Module{}
 	for k, module := range me.Modules {
+		m[k] = module
+	}
+	for k, module := range m {
 		if module.IsReferencedAsDataSource() || module.Descriptor.Parent != nil {
-			if err = module.PurgeFolder(); err != nil {
-				return err
-			}
+			module.PurgeFolder()
 			delete(me.Modules, k)
-			return nil
-		}
-		if len(module.GetPostProcessedResources()) == 0 {
-			if err = module.PurgeFolder(); err != nil {
-				return err
-			}
+		} else if len(module.GetPostProcessedResources()) == 0 {
+			module.PurgeFolder()
 			delete(me.Modules, k)
-			return nil
 		}
 	}
 	return nil
