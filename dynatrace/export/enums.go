@@ -65,6 +65,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_update_windows"
 	case ResourceTypes.AWSCredentials:
 		return "dynatrace_aws_credentials"
+	case ResourceTypes.AzureCredentials:
+		return "dynatrace_azure_credentials"
 	}
 	return ""
 }
