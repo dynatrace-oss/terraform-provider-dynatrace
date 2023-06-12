@@ -56,7 +56,7 @@ func (me *Module) IsReferencedAsDataSource() bool {
 	if _, found := me.Environment.ResArgs[string(me.Type)]; found {
 		return false
 	}
-	return me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.Alerting || me.Type == ResourceTypes.RequestAttribute || me.Type == ResourceTypes.WebApplication || me.Type == ResourceTypes.RequestNaming || me.Type == ResourceTypes.JSONDashboard || me.Type == ResourceTypes.SLO || me.Type == ResourceTypes.CalculatedServiceMetric || me.Type == ResourceTypes.MobileApplication || me.Type == ResourceTypes.BrowserMonitor || me.Type == ResourceTypes.Credentials || me.Type == ResourceTypes.SyntheticLocation || me.Type == ResourceTypes.FailureDetectionParameters
+	return me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.Alerting || me.Type == ResourceTypes.RequestAttribute || me.Type == ResourceTypes.WebApplication || me.Type == ResourceTypes.RequestNaming || me.Type == ResourceTypes.JSONDashboard || me.Type == ResourceTypes.SLO || me.Type == ResourceTypes.CalculatedServiceMetric || me.Type == ResourceTypes.MobileApplication || me.Type == ResourceTypes.BrowserMonitor || me.Type == ResourceTypes.Credentials || me.Type == ResourceTypes.SyntheticLocation || me.Type == ResourceTypes.FailureDetectionParameters || me.Type == ResourceTypes.UpdateWindows
 }
 
 func (me *Module) DataSource(id string) *DataSource {

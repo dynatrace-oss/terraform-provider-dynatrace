@@ -77,6 +77,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_failure_detection_parameters" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.UpdateWindows:
+		return fmt.Sprintf(`data "dynatrace_update_windows" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}

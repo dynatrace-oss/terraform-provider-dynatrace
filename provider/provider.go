@@ -43,6 +43,7 @@ import (
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/updatewindows"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -144,6 +145,7 @@ func Provider() *schema.Provider {
 			"dynatrace_azure_supported_services":     azure_supported_services.DataSource(),
 			"dynatrace_aws_supported_services":       aws_supported_services.DataSource(),
 			"dynatrace_failure_detection_parameters": failure_detection_parameters.DataSource(),
+			"dynatrace_update_windows":               updatewindows.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
