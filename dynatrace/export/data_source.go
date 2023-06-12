@@ -81,6 +81,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_update_windows" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.AWSCredentials:
+		return fmt.Sprintf(`data "dynatrace_aws_credentials" "%s" {
+			label = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}
