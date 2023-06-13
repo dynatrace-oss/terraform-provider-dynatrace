@@ -34,9 +34,11 @@ type Rule struct {
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Description: "The unique name of the Application detection rule",
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "The unique name of the Application detection rule",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
+			Deprecated:       "Dynatrace computes that value automatically. Any attempts to specify that value will are getting ignored.",
 		},
 		"order": {
 			Type:        schema.TypeString,
