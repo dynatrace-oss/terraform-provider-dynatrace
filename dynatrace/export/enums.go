@@ -290,6 +290,7 @@ var ResourceTypes = struct {
 	WebAppKeyPerformanceCustom          ResourceType
 	WebAppKeyPerformanceLoad            ResourceType
 	WebAppKeyPerformanceXHR             ResourceType
+	BuiltinProcessMonitoring            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -509,6 +510,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_key_performance_custom",
 	"dynatrace_web_app_key_performance_load",
 	"dynatrace_web_app_key_performance_xhr",
+	"dynatrace_builtin_process_monitoring",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

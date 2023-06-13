@@ -112,6 +112,7 @@ import (
 	ownership_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
@@ -951,7 +952,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		xhractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.OwnershipConfig: NewResourceDescriptor(ownership_config.Service),
+	ResourceTypes.OwnershipConfig:          NewResourceDescriptor(ownership_config.Service),
+	ResourceTypes.BuiltinProcessMonitoring: NewResourceDescriptor(builtinprocessmonitoringrule.Service),
 }
 
 var BlackListedResources = []ResourceType{
