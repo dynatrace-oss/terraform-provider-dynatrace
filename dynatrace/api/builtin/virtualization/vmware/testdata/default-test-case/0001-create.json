@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "ipaddress": "vcenter01",
+  "label": "${randomize}",
+  "password": "################",
+  "username": "terraform"
+}

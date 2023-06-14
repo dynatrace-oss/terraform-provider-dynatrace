@@ -293,6 +293,7 @@ var ResourceTypes = struct {
 	BuiltinProcessMonitoring            ResourceType
 	LimitOutboundConnections            ResourceType
 	SpanEvents                          ResourceType
+	VMware                              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -515,6 +516,7 @@ var ResourceTypes = struct {
 	"dynatrace_builtin_process_monitoring",
 	"dynatrace_limit_outbound_connections",
 	"dynatrace_span_events",
+	"dynatrace_vmware",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
