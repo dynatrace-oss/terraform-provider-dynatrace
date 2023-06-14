@@ -156,6 +156,7 @@ import (
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/attribute"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/eventattribute"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/availability"
 	browseroutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/outagehandling"
 	browserperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
@@ -956,6 +957,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.OwnershipConfig:          NewResourceDescriptor(ownership_config.Service),
 	ResourceTypes.BuiltinProcessMonitoring: NewResourceDescriptor(builtinprocessmonitoringrule.Service),
 	ResourceTypes.LimitOutboundConnections: NewResourceDescriptor(allowedoutboundconnections.Service),
+	ResourceTypes.SpanEvents:               NewResourceDescriptor(eventattribute.Service),
 }
 
 var BlackListedResources = []ResourceType{
