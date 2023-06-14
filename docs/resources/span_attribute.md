@@ -24,8 +24,8 @@ The full documentation of the export feature is available [here](https://registr
 
 ### Required
 
-- `key` (String) the key of the attribute to capture
-- `masking` (String) granular control over the visibility of attribute values
+- `key` (String) Key of the span attribute to store
+- `masking` (String) Possible Values: `MASK_ENTIRE_VALUE`, `MASK_ONLY_CONFIDENTIAL_DATA`, `NOT_MASKED`
 
 ### Optional
 

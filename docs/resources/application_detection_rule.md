@@ -29,7 +29,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ### Optional
 
-- `name` (String) The unique name of the Application detection rule
+- `name` (String, Deprecated) The unique name of the Application detection rule
 - `order` (String) The order of the rule in the rules list
 
 ### Read-Only

@@ -48,6 +48,10 @@ Optional:
 - `tags` (Block List) A set of tags assigned to the entity. (see [below for nested schema](#nestedblock--entities--tags))
 - `type` (String) The type of the entity.
 
+Read-Only:
+
+- `properties` (Map of String) Properties defining the entity.
+
 <a id="nestedblock--entities--tags"></a>
 ### Nested Schema for `entities.tags`
 

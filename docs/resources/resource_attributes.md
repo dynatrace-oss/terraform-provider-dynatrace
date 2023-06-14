@@ -57,9 +57,9 @@ resource "dynatrace_resource_attributes" "#name#" {
 <a id="nestedblock--keys"></a>
 ### Nested Schema for `keys`
 
-Optional:
+Required:
 
-- `rule` (Block List) Attribute key allow-list (see [below for nested schema](#nestedblock--keys--rule))
+- `rule` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--keys--rule))
 
 <a id="nestedblock--keys--rule"></a>
 ### Nested Schema for `keys.rule`
@@ -67,9 +67,6 @@ Optional:
 Required:
 
 - `attribute_key` (String) Attribute key **service.name** is automatically captured by default
-- `enabled` (Boolean) If this is true, the value of the specified key is stored.
-- `masking` (String) Introduce more granular control over the visibility of attribute values.  
-Choose **Do not mask** to allow every user to see the actual value and use it in defining other configurations.  
-Choose **Mask entire value** to hide the whole value of this attribute from everyone who does not have 'View sensitive request data' permission. These attributes can't be used to define other configurations. 
-Choose **Mask only confidential data** to apply automatic masking strategies to your data. These strategies include, for example, credit card numbers, IBAN, IPs, email-addresses, etc. It may not be possible to recognize all sensitive data so please always make sure to verify that sensitive data is actually masked. If sensitive data is not recognized, please use **Mask entire value** instead. Users with 'View sensitive request data' permission will be able to see the entire value, others only the non-sensitive parts. These attributes can't be used to define other configurations.
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `masking` (String) Possible Values: `MASK_ENTIRE_VALUE`, `MASK_ONLY_CONFIDENTIAL_DATA`, `NOT_MASKED`
  

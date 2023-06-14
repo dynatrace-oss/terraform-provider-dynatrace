@@ -54,6 +54,7 @@ data "dynatrace_alerting_profile" "Default" {
 ### Optional
 
 - `events` (Boolean) Send events into ServiceNow ITOM
+- `format_problem_details_as_text` (Boolean) Use text format for problem details instead of HTML.
 - `instance` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. This field is mutually exclusive with the **url** field. You can only use one of them
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `password` (String, Sensitive) The password to the ServiceNow account

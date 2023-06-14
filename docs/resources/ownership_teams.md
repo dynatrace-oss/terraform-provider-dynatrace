@@ -61,7 +61,7 @@ resource "dynatrace_ownership_teams" "#name#" {
 
 ### Required
 
-- `identifier` (String) The team identifier is used to reference the team from any entity in Dynatrace. This identifier can’t be edited once the team has been created.
+- `identifier` (String) The team identifier is used to reference the team from any entity in Dynatrace.
 - `name` (String) Team name
 - `responsibilities` (Block List, Min: 1, Max: 1) Turn on all responsibility assignments that apply to this team. (see [below for nested schema](#nestedblock--responsibilities))
 
@@ -70,7 +70,7 @@ resource "dynatrace_ownership_teams" "#name#" {
 - `additional_information` (Block List, Max: 1) Define key/value pairs that further describe this team — for example, cost center, solution type, or business unit assignments. (see [below for nested schema](#nestedblock--additional_information))
 - `contact_details` (Block List, Max: 1) Define options for messaging integration or other means of contacting this team. (see [below for nested schema](#nestedblock--contact_details))
 - `description` (String) Description
-- `external_id` (String) This field should only be used for the automation purpose when importing team information. Once the external ID is created it can’t be changed.
+- `external_id` (String) This field should only be used for the automation purpose when importing team information.
 - `links` (Block List, Max: 1) Include links to online resources where information relevant to this team’s responsibilities can be found. (see [below for nested schema](#nestedblock--links))
 - `supplementary_identifiers` (Block List, Max: 1) The supplementary team identifiers can be optionally used in addition to the main team identifier to reference this team from any entity in Dynatrace. Up to 3 supplementary identifiers are supported. (see [below for nested schema](#nestedblock--supplementary_identifiers))
 

@@ -39,3 +39,4 @@ output "id" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `properties` (Map of String) Properties defining the entity.
