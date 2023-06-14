@@ -65,6 +65,7 @@ import (
 	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
@@ -954,6 +955,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OwnershipConfig:          NewResourceDescriptor(ownership_config.Service),
 	ResourceTypes.BuiltinProcessMonitoring: NewResourceDescriptor(builtinprocessmonitoringrule.Service),
+	ResourceTypes.LimitOutboundConnections: NewResourceDescriptor(allowedoutboundconnections.Service),
 }
 
 var BlackListedResources = []ResourceType{
