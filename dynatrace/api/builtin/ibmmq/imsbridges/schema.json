@@ -1,0 +1,126 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "An IMS bridge is the component of IBM MQ for z/OS that allows direct access to the IMS system. Dynatrace needs to know which queue managers and queues belong to which IMS bridge for the end-to-end tracing on z/OS.",
+	"displayName": "IBM MQ IMS bridges",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add IMS bridge"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "IMS bridge name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"queueManagers": {
+			"description": "",
+			"displayName": "Queue managers",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/QueueManager"
+				}
+			},
+			"maxObjects": 10000,
+			"metadata": {
+				"addItemButton": "Add queue manager"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:mainframe"
+	],
+	"schemaId": "builtin:ibmmq.ims-bridges",
+	"types": {
+		"QueueManager": {
+			"description": "",
+			"displayName": "QueueManager",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Queue manager name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"queueManagerQueue": {
+					"description": "",
+					"displayName": "Queues",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"maxLength": 200,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "Queue name",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10000,
+					"metadata": {
+						"addItemButton": "Add queue"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.8"
+}

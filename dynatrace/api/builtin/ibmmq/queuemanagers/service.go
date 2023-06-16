@@ -15,17 +15,18 @@
 * limitations under the License.
  */
 
-package imsbridges
+package queuemanagers
 
 import (
-	imsbridges "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/imsbridges/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+
+	queuemanagers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers/settings"
 )
 
-const SchemaID = "builtin:ibmmq.ims-bridges"
-const SchemaVersion = "0.0.8"
+const SchemaID = "builtin:ibmmq.queue-managers"
+const SchemaVersion = "1"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*imsbridges.IMSBridge] {
-	return settings20.Service[*imsbridges.IMSBridge](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*queuemanagers.QueueManager] {
+	return settings20.Service[*queuemanagers.QueueManager](credentials, SchemaID, SchemaVersion)
 }

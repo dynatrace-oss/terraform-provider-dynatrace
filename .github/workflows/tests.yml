@@ -2090,7 +2090,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/ibmmq/imsbridges
+        run: go test -v ./dynatrace/api/builtin/ibmmq/imsbridges
       - name: TestQueueManagers
         if: success() || failure()
         env:
@@ -2102,7 +2102,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/ibmmq/queuemanagers
+        run: go test -v ./dynatrace/api/builtin/ibmmq/queuemanagers
       - name: TestQueueSharingGroups
         if: success() || failure()
         env:
