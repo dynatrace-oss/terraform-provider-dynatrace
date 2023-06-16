@@ -28,6 +28,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 )
 
+const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
+
 func Export(args []string) bool {
 	if len(args) == 1 {
 		return false
@@ -62,7 +64,14 @@ func runExport() (err error) {
 	}
 
 	exePath, _ := exec.LookPath("terraform")
-	cmd := exec.Command(exePath, "init", "-no-color")
+	cmdOptions := []string{"init", "-no-color"}
+
+	customProviderLocation := os.Getenv(ENV_VAR_CUSTOM_PROVIDER_LOCATION)
+	if len(customProviderLocation) != 0 && customProviderLocation != "" {
+		cmdOptions = append(cmdOptions, fmt.Sprint("-plugin-dir=", customProviderLocation))
+	}
+
+	cmd := exec.Command(exePath, cmdOptions...)
 	cmd.Dir = environment.OutputFolder
 	outs, err := cmd.StderrPipe()
 	if err != nil {

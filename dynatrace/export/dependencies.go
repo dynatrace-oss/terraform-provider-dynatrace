@@ -24,6 +24,9 @@ import (
 	"strings"
 )
 
+// To allow -target to work with dependencies at an atomic level
+var ATOMIC_DEPENDENCIES = os.Getenv("DYNATRACE_ATOMIC_DEPENDENCIES") == "true"
+
 type Dependency interface {
 	Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any)
 	ResourceType() ResourceType
@@ -99,7 +102,12 @@ func (me *mgmzdep) DataSourceType() DataSourceType {
 }
 
 func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s_%s.value.name}"
+	var replacePattern string
+	if ATOMIC_DEPENDENCIES {
+		replacePattern = "${var.%s_%s.value.name}"
+	} else {
+		replacePattern = "${var.%s.%s.name}"
+	}
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.name}"
 	}
@@ -122,7 +130,11 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 				replacePattern = "${data.%s.%s.name}"
 			}
 		} else {
-			replacePattern = "${var.%s_%s.value.name}"
+			if ATOMIC_DEPENDENCIES {
+				replacePattern = "${var.%s_%s.value.name}"
+			} else {
+				replacePattern = "${var.%s.%s.name}"
+			}
 			if environment.Flags.Flat {
 				replacePattern = "${%s.%s.name}"
 			}
@@ -166,7 +178,13 @@ func (me *legacyID) DataSourceType() DataSourceType {
 }
 
 func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s_%s.value.legacy_id}"
+	var replacePattern string
+	if ATOMIC_DEPENDENCIES {
+		replacePattern = "${var.%s_%s.value.legacy_id}"
+	} else {
+		replacePattern = "${var.%s.%s.legacy_id}"
+	}
+
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.legacy_id}"
 	}
@@ -184,7 +202,11 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 				replacePattern = "${data.%s.%s.legacy_id}"
 			}
 		} else {
-			replacePattern = "${var.%s_%s.value.legacy_id}"
+			if ATOMIC_DEPENDENCIES {
+				replacePattern = "${var.%s_%s.value.legacy_id}"
+			} else {
+				replacePattern = "${var.%s.%s.legacy_id}"
+			}
 			if environment.Flags.Flat {
 				replacePattern = "${%s.%s.legacy_id}"
 			}
@@ -219,7 +241,12 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	childDescriptor := environment.Module(replacingIn).Descriptor
 	isParent := childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
-	replacePattern := "${var.%s_%s.value.id}"
+	var replacePattern string
+	if ATOMIC_DEPENDENCIES {
+		replacePattern = "${var.%s_%s.value.id}"
+	} else {
+		replacePattern = "${var.%s.%s.id}"
+	}
 	if environment.Flags.Flat || isParent {
 		replacePattern = "${%s.%s.id}"
 	}
@@ -240,7 +267,11 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 					replacePattern = "${data.%s.%s.id}"
 				}
 			} else {
-				replacePattern = "${var.%s_%s.value.id}"
+				if ATOMIC_DEPENDENCIES {
+					replacePattern = "${var.%s_%s.value.id}"
+				} else {
+					replacePattern = "${var.%s.%s.id}"
+				}
 				if environment.Flags.Flat || isParent {
 					replacePattern = "${%s.%s.id}"
 				}
@@ -364,7 +395,12 @@ func (me *reqAttName) DataSourceType() DataSourceType {
 }
 
 func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
-	replacePattern := "${var.%s_%s.value.name}"
+	var replacePattern string
+	if ATOMIC_DEPENDENCIES {
+		replacePattern = "${var.%s_%s.value.name}"
+	} else {
+		replacePattern = "${var.%s.%s.name}"
+	}
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.name}"
 	}
@@ -385,7 +421,11 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 					replacePattern = "${data.%s.%s.name}"
 				}
 			} else {
-				replacePattern = "${var.%s_%s.value.name}"
+				if ATOMIC_DEPENDENCIES {
+					replacePattern = "${var.%s_%s.value.name}"
+				} else {
+					replacePattern = "${var.%s.%s.name}"
+				}
 				if environment.Flags.Flat {
 					replacePattern = "${%s.%s.name}"
 				}

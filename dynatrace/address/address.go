@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/spf13/afero"
@@ -124,6 +125,12 @@ func SaveCompletedMap(OutputFolder string) error {
 	addressMap := map[string]map[string]Address{}
 	for _, item := range completedMap.addresses {
 		keyL1 := item.(*AddressComplete).TerraformSchemaID
+
+		if strings.HasPrefix(keyL1, "builtin:") {
+			parts := strings.Split(keyL1, ":")
+			keyL1 = parts[0] + ":" + parts[1]
+		}
+
 		keyL2 := item.(*AddressComplete).OriginalID
 
 		if item.(*AddressComplete).OriginalSchemaID != "" {
