@@ -297,10 +297,10 @@ func (me *Module) WriteVariablesFile() (err error) {
 			}
 			if !me.Environment.Module(resource.Type).IsReferencedAsDataSource() {
 				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s_%s" {
-					type = any
-				}
+	type = any
+}
 				
-				`, resource.Type, resource.UniqueName)); err != nil {
+`, resource.Type, resource.UniqueName)); err != nil {
 					return err
 				}
 			}
@@ -318,10 +318,10 @@ func (me *Module) WriteVariablesFile() (err error) {
 		for _, resourceType := range referencedResourceTypes {
 			if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
 				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
-					type = any
-				}
+	type = any
+}
 		
-				`, resourceType)); err != nil {
+`, resourceType)); err != nil {
 					return err
 				}
 			}
@@ -468,8 +468,8 @@ func (me *Module) WriteResourcesFile() (err error) {
 		for _, resource := range referencedResources {
 
 			if _, err = resourcesFile.WriteString(fmt.Sprintf(`output "resources_%s" {
-		  value = {
-		  `, resource.UniqueName)); err != nil {
+  value = {
+  `, resource.UniqueName)); err != nil {
 				return err
 			}
 
@@ -479,15 +479,15 @@ func (me *Module) WriteResourcesFile() (err error) {
 			}
 
 			if _, err = resourcesFile.WriteString(`}
-}
+  }
 `); err != nil {
 				return err
 			}
 		}
 	} else {
 		if _, err = resourcesFile.WriteString(`output "resources" {
-			value = {
-			`); err != nil {
+  value = {
+  `); err != nil {
 			return err
 		}
 
@@ -498,7 +498,7 @@ func (me *Module) WriteResourcesFile() (err error) {
 			}
 		}
 		if _, err = resourcesFile.WriteString(`}
-}
+  }
 `); err != nil {
 
 			return err
