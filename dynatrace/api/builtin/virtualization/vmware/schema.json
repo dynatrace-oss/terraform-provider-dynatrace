@@ -1,0 +1,147 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Use this page to connect your VMware vCenter, standalone ESXi hosts to Dynatrace for monitoring. For VMware instances, connect all vCenter servers that manage virtual machines where Dynatrace OneAgent is installed. You don't need to add ESXi hosts if they are managed by a vCenter server that is connected to Dynatrace.",
+	"displayName": "VMware",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"keyProperty": "ipaddress",
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Connect new instance"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ipaddress": {
+			"constraints": [
+				{
+					"customMessage": "IP address or name of VMware platform must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Specify the IP address or name of the vCenter or standalone ESXi host:",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, vcenter01"
+			},
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": "text"
+		},
+		"label": {
+			"constraints": [
+				{
+					"customMessage": "Name must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name this connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, Dynatrace integration"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"password": {
+			"constraints": [
+				{
+					"customMessage": "Password must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Password"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"username": {
+			"constraints": [
+				{
+					"customMessage": "Username must not be empty.",
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Provide user credentials for the vCenter or standalone ESXi host:",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Username"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-and-virtualization"
+	],
+	"schemaId": "builtin:virtualization.vmware",
+	"types": {},
+	"version": "0.0.5"
+}

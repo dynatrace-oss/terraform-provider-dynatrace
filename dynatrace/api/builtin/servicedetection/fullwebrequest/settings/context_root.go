@@ -18,6 +18,8 @@
 package fullwebrequest
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,7 +28,7 @@ import (
 type ContextRoot struct {
 	ContributionType ContributionType       `json:"contributionType"`          // Possible Values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`
 	SegmentCount     *int                   `json:"segmentCount,omitempty"`    // The number of segments of the URL to be kept. The URL is divided by slashes (/), the indexing starts with 1 at context root. For example, if you specify 2 for the `www.dynatrace.com/support/help/dynatrace-api/` URL, the value of `support/help` is used.
-	Transformations  ReducedTransformations `json:"transformations,omitempty"` // Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.
+	Transformations  ReducedTransformations `json:"transformations,omitempty"` // Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.
 	ValueOverride    *ValueOverride         `json:"valueOverride,omitempty"`   // The value to be used instead of the detected value.
 }
 
@@ -44,7 +46,7 @@ func (me *ContextRoot) Schema() map[string]*schema.Schema {
 		},
 		"transformations": {
 			Type:        schema.TypeList,
-			Description: "Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**.",
+			Description: "Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.",
 			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(ReducedTransformations).Schema()},
 			MinItems:    1,
@@ -70,15 +72,25 @@ func (me *ContextRoot) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
+func (me *ContextRoot) HandlePreconditions() error {
+	if me.SegmentCount == nil && (string(me.ContributionType) == "TransformURL") {
+		me.SegmentCount = opt.NewInt(0)
+	}
+	if me.ValueOverride == nil && (string(me.ContributionType) == "OverrideValue") {
+		return fmt.Errorf("'value_override' must be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	}
+	if me.ValueOverride != nil && (string(me.ContributionType) != "OverrideValue") {
+		return fmt.Errorf("'value_override' must not be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	}
+	// ---- Transformations ReducedTransformations -> {"expectedValues":["TransformValue","TransformURL"],"property":"contributionType","type":"IN"}
+	return nil
+}
+
 func (me *ContextRoot) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"contribution_type": &me.ContributionType,
 		"segment_count":     &me.SegmentCount,
 		"transformations":   &me.Transformations,
 		"value_override":    &me.ValueOverride,
 	})
-	if me.SegmentCount == nil && me.ContributionType == ContributionTypes.Transformurl {
-		me.SegmentCount = opt.NewInt(0)
-	}
-	return err
 }

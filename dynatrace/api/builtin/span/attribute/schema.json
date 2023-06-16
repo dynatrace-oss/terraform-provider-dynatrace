@@ -1,0 +1,89 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "span-attribute-config-confidential-consistency-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"deletionConstraints": [
+		{
+			"customValidatorId": "span-attribute-config-delete-validator"
+		}
+	],
+	"description": "While Dynatrace automatically captures all OpenTracing and OpenTelemetry span attributes, it only stores span attribute values when the related keys are specified in the allow-list below. By omitting personal data you can meet your organization's privacy requirements and control the amount of stored monitoring data.",
+	"displayName": "Span attributes",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"MaskingType": {
+			"description": "",
+			"displayName": "MaskingType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not mask",
+					"value": "NOT_MASKED"
+				},
+				{
+					"displayName": "Mask only confidential data",
+					"value": "MASK_ONLY_CONFIDENTIAL_DATA"
+				},
+				{
+					"displayName": "Mask entire value",
+					"value": "MASK_ENTIRE_VALUE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"key": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Key of the span attribute to store",
+			"displayName": "Key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"masking": {
+			"default": "NOT_MASKED",
+			"description": "If this attribute contains confidential data, turn on masking to conceal its value from users",
+			"displayName": "Masking",
+			"documentation": "Introduce more granular control over the visibility of attribute values.  \nChoose **Do not mask** to allow every user to see the actual value and use it in defining other configurations.  \nChoose **Mask entire value** to hide the whole value of this attribute from everyone who does not have 'View sensitive request data' permission. These attributes can't be used to define other configurations. \nChoose **Mask only confidential data** to apply automatic masking strategies to your data. These strategies include, for example, credit card numbers, IBAN, IPs, email-addresses, etc. It may not be possible to recognize all sensitive data so please always make sure to verify that sensitive data is actually masked. If sensitive data is not recognized, please use **Mask entire value** instead. Users with 'View sensitive request data' permission will be able to see the entire value, others only the non-sensitive parts. These attributes can't be used to define other configurations.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/MaskingType"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:service-monitoring.spans"
+	],
+	"schemaId": "builtin:span-attribute",
+	"types": {},
+	"version": "0.0.31"
+}

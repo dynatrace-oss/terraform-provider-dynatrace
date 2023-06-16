@@ -28,8 +28,13 @@ type Settings struct {
 	HighCpuThrottling        *HighCpuThrottling        `json:"highCpuThrottling"`
 	HighCpuUsage             *HighCpuUsage             `json:"highCpuUsage"`
 	HighMemoryUsage          *HighMemoryUsage          `json:"highMemoryUsage"`
+	JobFailureEvents         *JobFailureEvents         `json:"jobFailureEvents"`
 	NotAllPodsReady          *NotAllPodsReady          `json:"notAllPodsReady"`
+	OomKills                 *OOMKills                 `json:"oomKills"`
 	PendingPods              *PendingPods              `json:"pendingPods"`
+	PodBackoffEvents         *PodBackoffEvents         `json:"podBackoffEvents"`
+	PodEvictionEvents        *PodEvictionEvents        `json:"podEvictionEvents"`
+	PodPreemptionEvents      *PodPreemptionEvents      `json:"podPreemptionEvents"`
 	PodStuckInTerminating    *PodStuckInTerminating    `json:"podStuckInTerminating"`
 	Scope                    *string                   `json:"-" scope:"scope"` // The scope of this setting (CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
 	WorkloadWithoutReadyPods *WorkloadWithoutReadyPods `json:"workloadWithoutReadyPods"`
@@ -81,6 +86,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"job_failure_events": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(JobFailureEvents).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"not_all_pods_ready": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
@@ -89,11 +102,43 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"oom_kills": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(OOMKills).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"pending_pods": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(PendingPods).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"pod_backoff_events": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(PodBackoffEvents).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"pod_eviction_events": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(PodEvictionEvents).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"pod_preemption_events": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(PodPreemptionEvents).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -129,8 +174,13 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"high_cpu_throttling":         me.HighCpuThrottling,
 		"high_cpu_usage":              me.HighCpuUsage,
 		"high_memory_usage":           me.HighMemoryUsage,
+		"job_failure_events":          me.JobFailureEvents,
 		"not_all_pods_ready":          me.NotAllPodsReady,
+		"oom_kills":                   me.OomKills,
 		"pending_pods":                me.PendingPods,
+		"pod_backoff_events":          me.PodBackoffEvents,
+		"pod_eviction_events":         me.PodEvictionEvents,
+		"pod_preemption_events":       me.PodPreemptionEvents,
 		"pod_stuck_in_terminating":    me.PodStuckInTerminating,
 		"scope":                       me.Scope,
 		"workload_without_ready_pods": me.WorkloadWithoutReadyPods,
@@ -144,8 +194,13 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"high_cpu_throttling":         &me.HighCpuThrottling,
 		"high_cpu_usage":              &me.HighCpuUsage,
 		"high_memory_usage":           &me.HighMemoryUsage,
+		"job_failure_events":          &me.JobFailureEvents,
 		"not_all_pods_ready":          &me.NotAllPodsReady,
+		"oom_kills":                   &me.OomKills,
 		"pending_pods":                &me.PendingPods,
+		"pod_backoff_events":          &me.PodBackoffEvents,
+		"pod_eviction_events":         &me.PodEvictionEvents,
+		"pod_preemption_events":       &me.PodPreemptionEvents,
 		"pod_stuck_in_terminating":    &me.PodStuckInTerminating,
 		"scope":                       &me.Scope,
 		"workload_without_ready_pods": &me.WorkloadWithoutReadyPods,

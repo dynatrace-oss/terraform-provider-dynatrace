@@ -32,7 +32,7 @@ output "Service_List" {
 
 ### Optional
 
-- `entities` (Block List, Max: 1) (see [below for nested schema](#nestedblock--entities))
+- `entities` (Block List) (see [below for nested schema](#nestedblock--entities))
 
 ### Read-Only
 
@@ -43,27 +43,24 @@ output "Service_List" {
 
 Optional:
 
-- `entity` (Block List) A list of monitored entities. (see [below for nested schema](#nestedblock--entities--entity))
-
-<a id="nestedblock--entities--entity"></a>
-### Nested Schema for `entities.entity`
-
-Optional:
-
 - `display_name` (String) The name of the entity, displayed in the UI.
 - `entity_id` (String) The ID of the entity.
-- `tags` (Block List) A set of tags assigned to the entity. (see [below for nested schema](#nestedblock--entities--entity--tags))
+- `tags` (Block List) A set of tags assigned to the entity. (see [below for nested schema](#nestedblock--entities--tags))
 - `type` (String) The type of the entity.
 
-<a id="nestedblock--entities--entity--tags"></a>
-### Nested Schema for `entities.entity.tags`
+Read-Only:
+
+- `properties` (Map of String) Properties defining the entity.
+
+<a id="nestedblock--entities--tags"></a>
+### Nested Schema for `entities.tags`
 
 Optional:
 
-- `tag` (Block List) A tag assigned to the entity (see [below for nested schema](#nestedblock--entities--entity--tags--tag))
+- `tag` (Block List) A tag assigned to the entity (see [below for nested schema](#nestedblock--entities--tags--tag))
 
-<a id="nestedblock--entities--entity--tags--tag"></a>
-### Nested Schema for `entities.entity.tags.tag`
+<a id="nestedblock--entities--tags--tag"></a>
+### Nested Schema for `entities.tags.tag`
 
 Required:
 

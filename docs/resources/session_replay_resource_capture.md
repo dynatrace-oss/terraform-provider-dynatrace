@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_session_replay_resource_capture (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_web_application`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+-> Configuration of the application scope overlaps with [dynatrace_web_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/web_application), but this resource in addition provides an option for an environment scope.
 
 ## Dynatrace Documentation
 

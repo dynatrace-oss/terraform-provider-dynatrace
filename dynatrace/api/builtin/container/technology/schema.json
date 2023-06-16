@@ -87,6 +87,19 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"podman": {
+			"default": false,
+			"description": "Platform: Podman\n\nStatus: Released\n\nOperating system: Linux\n\nMin agent version: 1.267",
+			"displayName": "Podman containers",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.267"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"winc": {
 			"default": false,
 			"description": "Platform: Cloud Foundry\n\nStatus: Early adopter\n\nOperating system: Windows\n\nMin agent version: 1.175",
@@ -107,5 +120,5 @@
 	],
 	"schemaId": "builtin:container.technology",
 	"types": {},
-	"version": "1.0.5"
+	"version": "1.0.7"
 }

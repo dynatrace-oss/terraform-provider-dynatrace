@@ -7,7 +7,6 @@ description: |-
 
 # dynatrace_ddu_pool (Resource)
 
-
 ## Dynatrace Documentation
 
 - DDU Pools - https://www.dynatrace.com/support/help/monitoring-consumption/davis-data-units#ddu-pools

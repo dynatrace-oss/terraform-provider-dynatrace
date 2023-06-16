@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_failure_detection_parameters Data Source - terraform-provider-dynatrace"
+description: |-
+  The data source `dynatrace_failure_detection_parameters` covers queries for failure detection parameters
+---
+
+# dynatrace_failure_detection_parameters (Data Source)
+
+The `dynatrace_failure_detection_parameters` data source allows the failure detection parameter ID to be retrieved by its name.
+
+- `name` (String) - The name of the failure detection parameter
+
+If multiple services match the given criteria, the first result will be retrieved.
+
+## Example Usage
+
+```terraform
+data "dynatrace_failure_detection_parameters" "Example" {
+  name = "Terraform Example"
+}
+
+output "id" {
+  value = data.dynatrace_failure_detection_parameters.Example.id
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}

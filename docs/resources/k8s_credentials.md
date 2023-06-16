@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_k8s_credentials (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_kubernetes](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/kubernetes) instead.
+
 ## Dynatrace Documentation
 
 - Kubernetes/OpenShift monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/container-platform-monitoring/kubernetes-monitoring

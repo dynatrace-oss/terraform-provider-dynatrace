@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_builtin_process_monitoring Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_builtin_process_monitoring` covers configuration for built-in process monitoring rules
+---
+
+# dynatrace_builtin_process_monitoring (Resource)
+
+## Dynatrace Documentation
+
+- Process deep monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/pg-monitoring
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:process.built-in-process-monitoring-rule`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_builtin_process_monitoring` downloads all existing built-in process monitoring rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/process/builtinprocessmonitoringrule/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

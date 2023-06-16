@@ -27,6 +27,7 @@ resource "dynatrace_log_custom_source" "#name#" {
   enabled = false
   scope   = "HOST_GROUP-1234567890000000"
   custom_log_source {
+    accept_binary = true
     type   = "LOG_PATH_PATTERN"
     values = [ "/terraform" ]
   }
@@ -58,6 +59,10 @@ Required:
 
 - `type` (String) Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`
 - `values` (Set of String) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
+
+Optional:
+
+- `accept_binary` (Boolean) Accept binary content
 
 
 <a id="nestedblock--context"></a>

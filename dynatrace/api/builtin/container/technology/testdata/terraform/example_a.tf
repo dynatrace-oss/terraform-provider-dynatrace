@@ -5,6 +5,7 @@ resource "dynatrace_container_technology" "environment" {
   docker               = true
   docker_windows       = true
   garden               = true
+  podman               = true
   scope                = "environment"
   winc                 = true
 }

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_mobile_app_request_errors (Resource)
 
+-> This resource may not have full coverage of the required fields, please use [dynatrace_application_error_rules](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/application_error_rules) instead.
+
 ## Dynatrace Documentation
 
 - Ignore web request errors for mobile applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/mobile-applications/setup-and-configuration/additional-configuration/web-request-errors-mobile

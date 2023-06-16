@@ -44,11 +44,11 @@ type service struct {
 func (me *service) Get(id string, v *entities.Settings) (err error) {
 	var dataObj entities.Settings
 	if len(me.entitySelector) > 0 {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=%s&fields=tags`, url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=%s&fields=tags,properties`, url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	} else {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&entitySelector=type("%s")&fields=tags`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&entitySelector=type("%s")&fields=tags,properties`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	}

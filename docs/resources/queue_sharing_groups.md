@@ -34,12 +34,12 @@ resource "dynatrace_queue_sharing_groups" "#name#" {
 
 ### Required
 
-- `name` (String) The name of the queue sharing group
+- `name` (String) Queue sharing group name
 
 ### Optional
 
-- `queue_managers` (Set of String) Queue manager(s) that belong to the queue sharing group
-- `shared_queues` (Set of String) Shared queue(s) that belong to the queue sharing group
+- `queue_managers` (Set of String) Queue managers
+- `shared_queues` (Set of String) Shared queues
 
 ### Read-Only
 

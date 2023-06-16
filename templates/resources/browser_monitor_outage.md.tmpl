@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_browser_monitor_outage (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_browser_monitor`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
+-> Configuration of the synthetic test scope overlaps with [dynatrace_browser_monitor](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/browser_monitor), but this resource in addition provides an option for an environment scope.
 
 ## Dynatrace Documentation
 

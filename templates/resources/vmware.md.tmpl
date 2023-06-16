@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: dynatrace_vmware Resource - terraform-provider-dynatrace"
+description: |-
+  The resource `dynatrace_vmware` covers configuration for VMware
+---
+
+# dynatrace_vmware (Resource)
+
+## Dynatrace Documentation
+
+- VMware vSphere monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/vmware-vsphere-monitoring
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:virtualization.vmware`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_vmware` downloads all existing VMware configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/virtualization/vmware/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

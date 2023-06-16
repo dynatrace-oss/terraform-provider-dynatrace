@@ -21,10 +21,10 @@ import (
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones"
+	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
 	alertingsrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting/settings"
-	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones"
-	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/managementzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"

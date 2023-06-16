@@ -56,10 +56,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Specify a list of rules which are evaluated in order. When **any** rule matches, the entity defined according to that rule will be extracted. Subsequent rules will not be evaluated.",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ExtractionRules).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ExtractionRules).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

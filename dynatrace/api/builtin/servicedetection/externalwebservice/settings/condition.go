@@ -18,9 +18,12 @@
 package externalwebservice
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"golang.org/x/exp/slices"
 )
 
 type Conditions []*Condition
@@ -132,8 +135,28 @@ func (me *Condition) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
+func (me *Condition) HandlePreconditions() error {
+	if me.IgnoreCase == nil && slices.Contains([]string{"TagEquals", "TagKeyEquals", "StringEndsWith", "NotStringEndsWith", "StringStartsWith", "NotStringStartsWith", "StringContains", "NotStringContains", "StringEquals", "NotStringEquals"}, string(me.CompareOperationType)) {
+		me.IgnoreCase = opt.NewBool(false)
+	}
+	if me.IntValue == nil && slices.Contains([]string{"IntGreaterThan", "IntLessThan"}, string(me.CompareOperationType)) {
+		me.IntValue = opt.NewInt(0)
+	}
+	if me.IpRangeFrom == nil && slices.Contains([]string{"IpInRange", "NotIpInRange"}, string(me.CompareOperationType)) {
+		return fmt.Errorf("'ip_range_from' must be specified if 'compare_operation_type' is set to '%v'", me.CompareOperationType)
+	}
+	if me.IpRangeTo == nil && slices.Contains([]string{"IpInRange", "NotIpInRange"}, string(me.CompareOperationType)) {
+		return fmt.Errorf("'ip_range_to' must be specified if 'compare_operation_type' is set to '%v'", me.CompareOperationType)
+	}
+	// ---- Framework []FrameworkType -> {"expectedValues":["FrameworkEquals","NotFrameworkEquals"],"property":"compareOperationType","type":"IN"}
+	// ---- IntValues []int -> {"expectedValues":["IntEquals","NotIntEquals"],"property":"compareOperationType","type":"IN"}
+	// ---- TagValues []string -> {"expectedValue":"TagEquals","property":"compareOperationType","type":"EQUALS"}
+	// ---- TextValues []string -> {"expectedValues":["TagKeyEquals","StringEndsWith","NotStringEndsWith","StringStartsWith","NotStringStartsWith","StringContains","NotStringContains","StringEquals","NotStringEquals"],"property":"compareOperationType","type":"IN"}
+	return nil
+}
+
 func (me *Condition) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"attribute":              &me.Attribute,
 		"compare_operation_type": &me.CompareOperationType,
 		"framework":              &me.Framework,
@@ -145,12 +168,4 @@ func (me *Condition) UnmarshalHCL(decoder hcl.Decoder) error {
 		"tag_values":             &me.TagValues,
 		"text_values":            &me.TextValues,
 	})
-	if me.IntValue == nil && (me.CompareOperationType == "IntGreaterThan" || me.CompareOperationType == "IntLessThan") {
-		me.IntValue = opt.NewInt(0)
-	}
-	expectedValues := []string{"TagEquals", "TagKeyEquals", "StringEndsWith", "NotStringEndsWith", "StringStartsWith", "NotStringStartsWith", "StringContains", "NotStringContains", "StringEquals", "NotStringEquals"}
-	if me.IgnoreCase == nil && stringInSlice(me.CompareOperationType, expectedValues) {
-		me.IgnoreCase = opt.NewBool(false)
-	}
-	return err
 }

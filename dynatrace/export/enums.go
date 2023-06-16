@@ -51,6 +51,22 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_slo"
 	case ResourceTypes.CalculatedServiceMetric:
 		return "dynatrace_calculated_service_metric"
+	case ResourceTypes.HTTPMonitor:
+		return "dynatrace_entity"
+	case ResourceTypes.BrowserMonitor:
+		return "dynatrace_entity"
+	case ResourceTypes.SyntheticLocation:
+		return "dynatrace_entity"
+	case ResourceTypes.Credentials:
+		return "dynatrace_credentials"
+	case ResourceTypes.FailureDetectionParameters:
+		return "dynatrace_failure_detection_parameters"
+	case ResourceTypes.UpdateWindows:
+		return "dynatrace_update_windows"
+	case ResourceTypes.AWSCredentials:
+		return "dynatrace_aws_credentials"
+	case ResourceTypes.AzureCredentials:
+		return "dynatrace_azure_credentials"
 	}
 	return ""
 }
@@ -99,6 +115,7 @@ var ResourceTypes = struct {
 	ManagementZoneV2                    ResourceType
 	NetworkZones                        ResourceType
 	AWSCredentials                      ResourceType
+	AWSService                          ResourceType
 	AzureCredentials                    ResourceType
 	AzureService                        ResourceType
 	CloudFoundryCredentials             ResourceType
@@ -273,6 +290,10 @@ var ResourceTypes = struct {
 	WebAppKeyPerformanceCustom          ResourceType
 	WebAppKeyPerformanceLoad            ResourceType
 	WebAppKeyPerformanceXHR             ResourceType
+	BuiltinProcessMonitoring            ResourceType
+	LimitOutboundConnections            ResourceType
+	SpanEvents                          ResourceType
+	VMware                              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -317,6 +338,7 @@ var ResourceTypes = struct {
 	"dynatrace_management_zone_v2",
 	"dynatrace_network_zones",
 	"dynatrace_aws_credentials",
+	"dynatrace_aws_service",
 	"dynatrace_azure_credentials",
 	"dynatrace_azure_service",
 	"dynatrace_cloudfoundry_credentials",
@@ -491,6 +513,10 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_key_performance_custom",
 	"dynatrace_web_app_key_performance_load",
 	"dynatrace_web_app_key_performance_xhr",
+	"dynatrace_builtin_process_monitoring",
+	"dynatrace_limit_outbound_connections",
+	"dynatrace_span_events",
+	"dynatrace_vmware",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

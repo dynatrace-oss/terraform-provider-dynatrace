@@ -2,11 +2,10 @@
 layout: ""
 page_title: "dynatrace_process_monitoring_rule Resource - terraform-provider-dynatrace"
 description: |-
-  The resource `dynatrace_process_monitoring_rule` covers configuration for Custom process monitoring rules 
+  The resource `dynatrace_process_monitoring_rule` covers configuration for custom process monitoring rules 
 ---
 
 # dynatrace_process_monitoring (Resource)
-
 
 ## Dynatrace Documentation
 
@@ -16,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_process_monitoring_rule` downloads all existing muted requests configuration
+- `terraform-provider-dynatrace -export dynatrace_process_monitoring_rule` downloads all existing custom process monitoring configuration
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

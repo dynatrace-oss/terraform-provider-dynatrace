@@ -28,13 +28,14 @@ type ServiceNow struct {
 	Name      string `json:"-"`
 	ProfileID string `json:"-"`
 
-	InstanceName  *string `json:"instanceName"`  // The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. \n\n This field is mutually exclusive with the **url** field. You can only use one of them
-	URL           *string `json:"url"`           // The URL of the on-premise ServiceNow installation. \n\n This field is mutually exclusive with the **instanceName** field. You can only use one of them
-	Username      string  `json:"username"`      // The username of the ServiceNow account. \n\n Make sure that your user account has the `web_service_admin` and `x_dynat_ruxit.Integration` roles
-	Password      string  `json:"password"`      // The password to the ServiceNow account
-	Message       string  `json:"message"`       // The content of the ServiceNow description. Type '{' for placeholder suggestions
-	SendIncidents bool    `json:"sendIncidents"` // Send incidents into ServiceNow ITSM
-	SendEvents    bool    `json:"sendEvents"`    // Send events into ServiceNow ITOM
+	FormatProblemDetailsAsText *bool   `json:"formatProblemDetailsAsText,omitempty"` // Use text format for problem details instead of HTML.
+	InstanceName               *string `json:"instanceName"`                         // The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. \n\n This field is mutually exclusive with the **url** field. You can only use one of them
+	URL                        *string `json:"url"`                                  // The URL of the on-premise ServiceNow installation. \n\n This field is mutually exclusive with the **instanceName** field. You can only use one of them
+	Username                   string  `json:"username"`                             // The username of the ServiceNow account. \n\n Make sure that your user account has the `web_service_admin` and `x_dynat_ruxit.Integration` roles
+	Password                   string  `json:"password"`                             // The password to the ServiceNow account
+	Message                    string  `json:"message"`                              // The content of the ServiceNow description. Type '{' for placeholder suggestions
+	SendIncidents              bool    `json:"sendIncidents"`                        // Send incidents into ServiceNow ITSM
+	SendEvents                 bool    `json:"sendEvents"`                           // Send events into ServiceNow ITOM
 }
 
 func (me *ServiceNow) PrepareMarshalHCL(decoder hcl.Decoder) error {
@@ -51,6 +52,11 @@ func (me *ServiceNow) FillDemoValues() []string {
 
 func (me *ServiceNow) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"format_problem_details_as_text": {
+			Type:        schema.TypeBool,
+			Description: "Use text format for problem details instead of HTML.",
+			Optional:    true, // nullable
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "The name of the notification configuration",
@@ -121,14 +127,20 @@ func (me *ServiceNow) MarshalHCL(properties hcl.Properties) error { // The passw
 		"active":  me.Enabled,
 		"profile": me.ProfileID,
 
-		"events":    me.SendEvents,
-		"incidents": me.SendIncidents,
-		"url":       me.URL,
-		"username":  me.Username,
-		"instance":  me.InstanceName,
-		"message":   me.Message,
-		"password":  me.Password,
+		"format_problem_details_as_text": me.FormatProblemDetailsAsText,
+		"events":                         me.SendEvents,
+		"incidents":                      me.SendIncidents,
+		"url":                            me.URL,
+		"username":                       me.Username,
+		"instance":                       me.InstanceName,
+		"message":                        me.Message,
+		"password":                       me.Password,
 	})
+}
+
+func (me *ServiceNow) HandlePreconditions() error {
+	// ---- InstanceName *string -> {"preconditions":[{"property":"url","type":"NULL"},{"expectedValue":"","property":"url","type":"EQUALS"}],"type":"OR"}
+	return nil
 }
 
 func (me *ServiceNow) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -137,12 +149,13 @@ func (me *ServiceNow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"active":  &me.Enabled,
 		"profile": &me.ProfileID,
 
-		"events":    &me.SendEvents,
-		"incidents": &me.SendIncidents,
-		"url":       &me.URL,
-		"username":  &me.Username,
-		"instance":  &me.InstanceName,
-		"message":   &me.Message,
-		"password":  &me.Password,
+		"format_problem_details_as_text": &me.FormatProblemDetailsAsText,
+		"events":                         &me.SendEvents,
+		"incidents":                      &me.SendIncidents,
+		"url":                            &me.URL,
+		"username":                       &me.Username,
+		"instance":                       &me.InstanceName,
+		"message":                        &me.Message,
+		"password":                       &me.Password,
 	})
 }

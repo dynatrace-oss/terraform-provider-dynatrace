@@ -354,30 +354,30 @@ resource "dynatrace_management_zone_v2" "#name#" {
 <a id="nestedblock--rules"></a>
 ### Nested Schema for `rules`
 
-Optional:
+Required:
 
-- `rule` (Block Set) A management zone rule (see [below for nested schema](#nestedblock--rules--rule))
+- `rule` (Block Set, Min: 1) A management zone rule (see [below for nested schema](#nestedblock--rules--rule))
 
 <a id="nestedblock--rules--rule"></a>
 ### Nested Schema for `rules.rule`
 
 Required:
 
-- `enabled` (Boolean) Enabled
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `type` (String) Possible Values: `DIMENSION`, `ME`, `SELECTOR`
 
 Optional:
 
-- `attribute_rule` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--rules--rule--attribute_rule))
-- `dimension_rule` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--rules--rule--dimension_rule))
-- `entity_selector` (String) Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
+- `attribute_rule` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rules--rule--attribute_rule))
+- `dimension_rule` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rules--rule--dimension_rule))
+- `entity_selector` (String) The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
 
 <a id="nestedblock--rules--rule--attribute_rule"></a>
 ### Nested Schema for `rules.rule.attribute_rule`
 
 Required:
 
-- `attribute_conditions` (Block List, Min: 1, Max: 1) Conditions (see [below for nested schema](#nestedblock--rules--rule--attribute_rule--attribute_conditions))
+- `attribute_conditions` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rules--rule--attribute_rule--attribute_conditions))
 - `entity_type` (String) Possible Values: `APPMON_SERVER`, `APPMON_SYSTEM_PROFILE`, `AWS_ACCOUNT`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_AUTO_SCALING_GROUP`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `BROWSER_MONITOR`, `CLOUD_APPLICATION`, `CLOUD_APPLICATION_NAMESPACE`, `CLOUD_FOUNDRY_FOUNDATION`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `CUSTOM_DEVICE_GROUP`, `DATA_CENTER_SERVICE`, `ENTERPRISE_APPLICATION`, `ESXI_HOST`, `EXTERNAL_MONITOR`, `HOST`, `HOST_GROUP`, `HTTP_MONITOR`, `KUBERNETES_CLUSTER`, `KUBERNETES_SERVICE`, `MOBILE_APPLICATION`, `OPENSTACK_ACCOUNT`, `PROCESS_GROUP`, `QUEUE`, `SERVICE`, `WEB_APPLICATION`
 
 Optional:
@@ -394,9 +394,9 @@ Optional:
 <a id="nestedblock--rules--rule--attribute_rule--attribute_conditions"></a>
 ### Nested Schema for `rules.rule.attribute_rule.attribute_conditions`
 
-Optional:
+Required:
 
-- `condition` (Block Set) Attribute conditions (see [below for nested schema](#nestedblock--rules--rule--attribute_rule--attribute_conditions--condition))
+- `condition` (Block Set, Min: 1) Attribute conditions (see [below for nested schema](#nestedblock--rules--rule--attribute_rule--attribute_conditions--condition))
 
 <a id="nestedblock--rules--rule--attribute_rule--attribute_conditions--condition"></a>
 ### Nested Schema for `rules.rule.attribute_rule.attribute_conditions.condition`
@@ -415,7 +415,7 @@ Optional:
 - `enum_value` (String) Value
 - `integer_value` (Number) Value
 - `string_value` (String) Value
-- `tag` (String) Tag. Format: `[CONTEXT]tagKey:tagValue`
+- `tag` (String) Format: `[CONTEXT]tagKey:tagValue`
 
 
 
@@ -434,9 +434,9 @@ Optional:
 <a id="nestedblock--rules--rule--dimension_rule--dimension_conditions"></a>
 ### Nested Schema for `rules.rule.dimension_rule.dimension_conditions`
 
-Optional:
+Required:
 
-- `condition` (Block Set) Dimension conditions (see [below for nested schema](#nestedblock--rules--rule--dimension_rule--dimension_conditions--condition))
+- `condition` (Block Set, Min: 1) Dimension conditions (see [below for nested schema](#nestedblock--rules--rule--dimension_rule--dimension_conditions--condition))
 
 <a id="nestedblock--rules--rule--dimension_rule--dimension_conditions--condition"></a>
 ### Nested Schema for `rules.rule.dimension_rule.dimension_conditions.condition`
@@ -445,9 +445,9 @@ Required:
 
 - `condition_type` (String) Possible Values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`
 - `rule_matcher` (String) Possible Values: `BEGINS_WITH`, `EQUALS`
-- `value` (String) Value
+- `value` (String) no documentation available
 
 Optional:
 
-- `key` (String) Key
+- `key` (String) no documentation available
  

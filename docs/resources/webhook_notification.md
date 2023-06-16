@@ -15,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_webhook_notification` downloads the existing Problem Notifications via Web Hook
+- `terraform-provider-dynatrace -export dynatrace_webhook_notification` downloads the existing problem notifications via Web Hook
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

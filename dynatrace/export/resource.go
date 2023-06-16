@@ -172,6 +172,11 @@ func (me *Resource) Download() error {
 				me.Error = err
 				return nil
 			}
+			if restError.Code == 500 {
+				me.Status = ResourceStati.Erronous
+				me.Error = err
+				return nil
+			}
 			if strings.HasPrefix(restError.Message, "Token is missing required scope") {
 				me.Status = ResourceStati.Erronous
 				me.Error = err

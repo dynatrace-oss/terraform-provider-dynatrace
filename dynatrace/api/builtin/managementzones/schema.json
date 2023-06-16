@@ -1,0 +1,2585 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "rules-size-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Management zones enable defining fine grained access rights to parts of an environment. A Management zone consists of a set of entities like applications, hosts, process groups, or services.",
+	"displayName": "Management zones settings",
+	"documentation": "For each Management zone you can define which user groups have access to them. This way you can ensure the confidentiality of certain parts of an environment and still keep an end to end view across all components for the users that need it.\n\nFor value suggestions based on entity data and preview functionality, environment-wide \"Access environment\" permission is required.",
+	"dynatrace": "1",
+	"enums": {
+		"Attribute": {
+			"checkForDuplicateDisplayNames": false,
+			"description": "",
+			"displayName": "Attribute",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Services",
+					"displayName": "Akka actor system",
+					"value": "SERVICE_AKKA_ACTOR_SYSTEM"
+				},
+				{
+					"description": "Services",
+					"displayName": "Database host name",
+					"value": "SERVICE_DATABASE_HOST_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Database name",
+					"value": "SERVICE_DATABASE_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Database topology",
+					"value": "SERVICE_DATABASE_TOPOLOGY"
+				},
+				{
+					"description": "Services",
+					"displayName": "Database technology",
+					"value": "SERVICE_DATABASE_VENDOR"
+				},
+				{
+					"description": "Services",
+					"displayName": "Detected service name",
+					"value": "SERVICE_DETECTED_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "ESB application name",
+					"value": "SERVICE_ESB_APPLICATION_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "IBM CTG gateway url",
+					"value": "SERVICE_IBM_CTG_GATEWAY_URL"
+				},
+				{
+					"description": "Services",
+					"displayName": "IBM CTG server name",
+					"value": "SERVICE_CTG_SERVICE_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Messaging listener class name",
+					"value": "SERVICE_MESSAGING_LISTENER_CLASS_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Public domain name",
+					"value": "SERVICE_PUBLIC_DOMAIN_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Remote endpoint",
+					"value": "SERVICE_REMOTE_ENDPOINT"
+				},
+				{
+					"description": "Services",
+					"displayName": "Remote service name",
+					"value": "SERVICE_REMOTE_SERVICE_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Service name",
+					"value": "SERVICE_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Service port",
+					"value": "SERVICE_PORT"
+				},
+				{
+					"description": "Services",
+					"displayName": "Service tags",
+					"value": "SERVICE_TAGS"
+				},
+				{
+					"description": "Services",
+					"displayName": "Service topology",
+					"value": "SERVICE_TOPOLOGY"
+				},
+				{
+					"description": "Services",
+					"displayName": "Service type",
+					"value": "SERVICE_TYPE"
+				},
+				{
+					"description": "Services",
+					"displayName": "Technology",
+					"value": "SERVICE_TECHNOLOGY"
+				},
+				{
+					"description": "Services",
+					"displayName": "Technology edition",
+					"value": "SERVICE_TECHNOLOGY_EDITION"
+				},
+				{
+					"description": "Services",
+					"displayName": "Technology version",
+					"value": "SERVICE_TECHNOLOGY_VERSION"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web application ID",
+					"value": "SERVICE_WEB_APPLICATION_ID"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web context root",
+					"value": "SERVICE_WEB_CONTEXT_ROOT"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web server endpoint",
+					"value": "SERVICE_WEB_SERVER_ENDPOINT"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web server name",
+					"value": "SERVICE_WEB_SERVER_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web service name",
+					"value": "SERVICE_WEB_SERVICE_NAME"
+				},
+				{
+					"description": "Services",
+					"displayName": "Web service namespace",
+					"value": "SERVICE_WEB_SERVICE_NAMESPACE"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Azure host name of process",
+					"value": "PROCESS_GROUP_AZURE_HOST_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Azure site name of process",
+					"value": "PROCESS_GROUP_AZURE_SITE_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Cloud Foundry organization name",
+					"value": "CLOUD_FOUNDRY_ORG_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Custom metadata",
+					"value": "PROCESS_GROUP_CUSTOM_METADATA"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Detected process group name",
+					"value": "PROCESS_GROUP_DETECTED_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Docker container name",
+					"value": "DOCKER_CONTAINER_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Docker full image name",
+					"value": "DOCKER_FULL_IMAGE_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Docker image version",
+					"value": "DOCKER_IMAGE_VERSION"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Listen port",
+					"value": "PROCESS_GROUP_LISTEN_PORT"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Predefined metadata",
+					"value": "PROCESS_GROUP_PREDEFINED_METADATA"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Process group",
+					"value": "PROCESS_GROUP_ID"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Process group name",
+					"value": "PROCESS_GROUP_NAME"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Process group tags",
+					"value": "PROCESS_GROUP_TAGS"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Technology",
+					"value": "PROCESS_GROUP_TECHNOLOGY"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Technology edition",
+					"value": "PROCESS_GROUP_TECHNOLOGY_EDITION"
+				},
+				{
+					"description": "Process groups",
+					"displayName": "Technology version",
+					"value": "PROCESS_GROUP_TECHNOLOGY_VERSION"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AIX Logical CPUs",
+					"value": "HOST_AIX_LOGICAL_CPU_COUNT"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AIX Simultaneous multithreading (SMT)",
+					"value": "HOST_AIX_SIMULTANEOUS_THREADS"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AIX Virtual CPUs",
+					"value": "HOST_AIX_VIRTUAL_CPU_COUNT"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AMI ID",
+					"value": "EC2_INSTANCE_AMI_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AWS availability zone",
+					"value": "AWS_AVAILABILITY_ZONE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AWS instance type",
+					"value": "EC2_INSTANCE_AWS_INSTANCE_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AWS name tag",
+					"value": "HOST_AWS_NAME_TAG"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "AWS security group",
+					"value": "EC2_INSTANCE_AWS_SECURITY_GROUP"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Architecture",
+					"value": "HOST_ARCHITECTURE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure SKU",
+					"value": "HOST_AZURE_SKU"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure VM name",
+					"value": "AZURE_VM_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure compute mode",
+					"value": "HOST_AZURE_COMPUTE_MODE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure region",
+					"value": "AZURE_REGION_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure scale set name",
+					"value": "AZURE_SCALE_SET_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure web application host names",
+					"value": "HOST_AZURE_WEB_APPLICATION_HOST_NAMES"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Azure web application site names",
+					"value": "HOST_AZURE_WEB_APPLICATION_SITE_NAMES"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "BOSH availability zone",
+					"value": "HOST_BOSH_AVAILABILITY_ZONE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "BOSH deployment ID",
+					"value": "HOST_BOSH_DEPLOYMENT_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "BOSH instance ID",
+					"value": "HOST_BOSH_INSTANCE_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "BOSH instance name",
+					"value": "HOST_BOSH_INSTANCE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "BOSH stemcell version",
+					"value": "HOST_BOSH_STEMCELL_VERSION"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Beanstalk environment name",
+					"value": "EC2_INSTANCE_BEANSTALK_ENV_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Bitness",
+					"value": "HOST_BITNESS"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Bosh name",
+					"value": "HOST_BOSH_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "CPU cores",
+					"value": "HOST_CPU_CORES"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Cloud type",
+					"value": "HOST_CLOUD_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Custom metadata",
+					"value": "HOST_CUSTOM_METADATA"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Detected host name",
+					"value": "HOST_DETECTED_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "EC2 instance ID",
+					"value": "EC2_INSTANCE_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "EC2 instance name",
+					"value": "EC2_INSTANCE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "EC2 instance tags",
+					"value": "EC2_INSTANCE_TAGS"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Geolocation site",
+					"value": "OPENSTACK_REGION_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Cloud Platform Zone",
+					"value": "GOOGLE_CLOUD_PLATFORM_ZONE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance ID",
+					"value": "GOOGLE_COMPUTE_INSTANCE_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance machine type",
+					"value": "GOOGLE_COMPUTE_INSTANCE_MACHINE_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance name",
+					"value": "GOOGLE_COMPUTE_INSTANCE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance project",
+					"value": "GOOGLE_COMPUTE_INSTANCE_PROJECT"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance project ID",
+					"value": "GOOGLE_COMPUTE_INSTANCE_PROJECT_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Google Compute instance public IP addresses",
+					"value": "GOOGLE_COMPUTE_INSTANCE_PUBLIC_IP_ADDRESSES"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Host IP address",
+					"value": "HOST_IP_ADDRESS"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Host group",
+					"value": "HOST_GROUP_ID"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Host group name",
+					"value": "HOST_GROUP_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Host name",
+					"value": "HOST_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Host tags",
+					"value": "HOST_TAGS"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Hypervisor type",
+					"value": "HOST_HYPERVISOR_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Kubernetes cluster name",
+					"value": "KUBERNETES_CLUSTER_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Logical CPU cores",
+					"value": "HOST_LOGICAL_CPU_CORES"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "OS type",
+					"value": "HOST_OS_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "OS version",
+					"value": "HOST_OS_VERSION"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "OneAgent custom host name",
+					"value": "HOST_ONEAGENT_CUSTOM_HOST_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "OpenStack region",
+					"value": "GEOLOCATION_SITE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack VM name",
+					"value": "OPENSTACK_VM_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack availability zone name",
+					"value": "OPENSTACK_AVAILABILITY_ZONE_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack compute node name",
+					"value": "NAME_OF_COMPUTE_NODE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack instance type",
+					"value": "OPENSTACK_VM_INSTANCE_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack project name",
+					"value": "OPENSTACK_PROJECT_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Openstack security group",
+					"value": "OPENSTACK_VM_SECURITY_GROUP"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "PaaS memory limit",
+					"value": "HOST_PAAS_MEMORY_LIMIT"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "PaaS type",
+					"value": "HOST_PAAS_TYPE"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Private EC2 host name",
+					"value": "EC2_INSTANCE_PRIVATE_HOST_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Public EC2 host name",
+					"value": "EC2_INSTANCE_PUBLIC_HOST_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Technology",
+					"value": "HOST_TECHNOLOGY"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "VMware data center name",
+					"value": "VMWARE_DATACENTER_NAME"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Vmware name",
+					"value": "VMWARE_VM_NAME"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom device DNS address",
+					"value": "CUSTOM_DEVICE_DNS_ADDRESS"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom device IP address",
+					"value": "CUSTOM_DEVICE_IP_ADDRESS"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom device name",
+					"value": "CUSTOM_DEVICE_NAME"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom device port",
+					"value": "CUSTOM_DEVICE_PORT"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom device tags",
+					"value": "CUSTOM_DEVICE_TAGS"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Custom metadata",
+					"value": "CUSTOM_DEVICE_METADATA"
+				},
+				{
+					"description": "Custom devices",
+					"displayName": "Technology",
+					"value": "CUSTOM_DEVICE_TECHNOLOGY"
+				},
+				{
+					"description": "Custom device groups",
+					"displayName": "Custom device group name",
+					"value": "CUSTOM_DEVICE_GROUP_NAME"
+				},
+				{
+					"description": "Custom device groups",
+					"displayName": "Custom device group tags",
+					"value": "CUSTOM_DEVICE_GROUP_TAGS"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Custom metadata",
+					"value": "DATA_CENTER_SERVICE_METADATA"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Data center service IP address",
+					"value": "DATA_CENTER_SERVICE_IP_ADDRESS"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Data center service decoder type",
+					"value": "DATA_CENTER_SERVICE_DECODER_TYPE"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Data center service name",
+					"value": "DATA_CENTER_SERVICE_NAME"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Data center service port",
+					"value": "DATA_CENTER_SERVICE_PORT"
+				},
+				{
+					"description": "Data center services",
+					"displayName": "Data center service tags",
+					"value": "DATA_CENTER_SERVICE_TAGS"
+				},
+				{
+					"description": "Web applications",
+					"displayName": "Web application name",
+					"value": "WEB_APPLICATION_NAME"
+				},
+				{
+					"description": "Web applications",
+					"displayName": "Web application name pattern",
+					"value": "WEB_APPLICATION_NAME_PATTERN"
+				},
+				{
+					"description": "Web applications",
+					"displayName": "Web application tags",
+					"value": "WEB_APPLICATION_TAGS"
+				},
+				{
+					"description": "Web applications",
+					"displayName": "Web application type",
+					"value": "WEB_APPLICATION_TYPE"
+				},
+				{
+					"description": "Mobile apps",
+					"displayName": "Mobile app name",
+					"value": "MOBILE_APPLICATION_NAME"
+				},
+				{
+					"description": "Mobile apps",
+					"displayName": "Mobile app platform",
+					"value": "MOBILE_APPLICATION_PLATFORM"
+				},
+				{
+					"description": "Mobile apps",
+					"displayName": "Mobile app tags",
+					"value": "MOBILE_APPLICATION_TAGS"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Custom metadata",
+					"value": "ENTERPRISE_APPLICATION_METADATA"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Enterprise application IP address",
+					"value": "ENTERPRISE_APPLICATION_IP_ADDRESS"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Enterprise application decoder type",
+					"value": "ENTERPRISE_APPLICATION_DECODER_TYPE"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Enterprise application name",
+					"value": "ENTERPRISE_APPLICATION_NAME"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Enterprise application port",
+					"value": "ENTERPRISE_APPLICATION_PORT"
+				},
+				{
+					"description": "Enterprise applications",
+					"displayName": "Enterprise application tags",
+					"value": "ENTERPRISE_APPLICATION_TAGS"
+				},
+				{
+					"description": "Browser monitors",
+					"displayName": "Browser monitor name",
+					"value": "BROWSER_MONITOR_NAME"
+				},
+				{
+					"description": "Browser monitors",
+					"displayName": "Browser monitor tags",
+					"value": "BROWSER_MONITOR_TAGS"
+				},
+				{
+					"description": "Third-party monitors",
+					"displayName": "Third-party monitor engine description",
+					"value": "EXTERNAL_MONITOR_ENGINE_DESCRIPTION"
+				},
+				{
+					"description": "Third-party monitors",
+					"displayName": "Third-party monitor engine name",
+					"value": "EXTERNAL_MONITOR_ENGINE_NAME"
+				},
+				{
+					"description": "Third-party monitors",
+					"displayName": "Third-party monitor engine type",
+					"value": "EXTERNAL_MONITOR_ENGINE_TYPE"
+				},
+				{
+					"description": "Third-party monitors",
+					"displayName": "Third-party monitor name",
+					"value": "EXTERNAL_MONITOR_NAME"
+				},
+				{
+					"description": "Third-party monitors",
+					"displayName": "Third-party monitor tags",
+					"value": "EXTERNAL_MONITOR_TAGS"
+				},
+				{
+					"description": "HTTP monitors",
+					"displayName": "HTTP monitor name",
+					"value": "HTTP_MONITOR_NAME"
+				},
+				{
+					"description": "HTTP monitors",
+					"displayName": "HTTP monitor tags",
+					"value": "HTTP_MONITOR_TAGS"
+				},
+				{
+					"description": "Custom applications",
+					"displayName": "Custom application name",
+					"value": "CUSTOM_APPLICATION_NAME"
+				},
+				{
+					"description": "Custom applications",
+					"displayName": "Custom application platform",
+					"value": "CUSTOM_APPLICATION_PLATFORM"
+				},
+				{
+					"description": "Custom applications",
+					"displayName": "Custom application tags",
+					"value": "CUSTOM_APPLICATION_TAGS"
+				},
+				{
+					"description": "Custom applications",
+					"displayName": "Custom application type",
+					"value": "CUSTOM_APPLICATION_TYPE"
+				},
+				{
+					"description": "AWS accounts",
+					"displayName": "AWS account ID",
+					"value": "AWS_ACCOUNT_ID"
+				},
+				{
+					"description": "AWS accounts",
+					"displayName": "AWS account name",
+					"value": "AWS_ACCOUNT_NAME"
+				},
+				{
+					"description": "AWS classic load balancers",
+					"displayName": "AWS classic load balancer frontend ports",
+					"value": "AWS_CLASSIC_LOAD_BALANCER_FRONTEND_PORTS"
+				},
+				{
+					"description": "AWS classic load balancers",
+					"displayName": "AWS classic load balancer name",
+					"value": "AWS_CLASSIC_LOAD_BALANCER_NAME"
+				},
+				{
+					"description": "AWS classic load balancers",
+					"displayName": "AWS classic load balancer tags",
+					"value": "AWS_CLASSIC_LOAD_BALANCER_TAGS"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service DB name",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_DB_NAME"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service endpoint",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_ENDPOINT"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service engine",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_ENGINE"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service instance class",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_INSTANCE_CLASS"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service name",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_NAME"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service port",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_PORT"
+				},
+				{
+					"description": "AWS relational database services",
+					"displayName": "AWS relational database service tags",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE_TAGS"
+				},
+				{
+					"description": "AWS auto scaling groups",
+					"displayName": "AWS auto scaling group name",
+					"value": "AWS_AUTO_SCALING_GROUP_NAME"
+				},
+				{
+					"description": "AWS auto scaling groups",
+					"displayName": "AWS auto scaling group tags",
+					"value": "AWS_AUTO_SCALING_GROUP_TAGS"
+				},
+				{
+					"description": "Openstack accounts",
+					"displayName": "Openstack account name",
+					"value": "OPENSTACK_ACCOUNT_NAME"
+				},
+				{
+					"description": "Openstack accounts",
+					"displayName": "Openstack account project name",
+					"value": "OPENSTACK_ACCOUNT_PROJECT_NAME"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "ESXI host cluster name",
+					"value": "ESXI_HOST_CLUSTER_NAME"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "ESXI host name",
+					"value": "ESXI_HOST_NAME"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "ESXI host tags",
+					"value": "ESXI_HOST_TAGS"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "Hardware model",
+					"value": "ESXI_HOST_HARDWARE_MODEL"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "Hardware vendor",
+					"value": "ESXI_HOST_HARDWARE_VENDOR"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "Product name",
+					"value": "ESXI_HOST_PRODUCT_NAME"
+				},
+				{
+					"description": "ESXi hosts",
+					"displayName": "Product version",
+					"value": "ESXI_HOST_PRODUCT_VERSION"
+				},
+				{
+					"description": "AppMon server",
+					"displayName": "AppMon server name",
+					"value": "APPMON_SERVER_NAME"
+				},
+				{
+					"description": "AppMon system profile",
+					"displayName": "AppMon system profile name",
+					"value": "APPMON_SYSTEM_PROFILE_NAME"
+				},
+				{
+					"description": "Cloud Foundry foundation",
+					"displayName": "Cloud Foundry foundation name",
+					"value": "CLOUD_FOUNDRY_FOUNDATION_NAME"
+				},
+				{
+					"description": "AWS application load balancers",
+					"displayName": "AWS application load balancer name",
+					"value": "AWS_APPLICATION_LOAD_BALANCER_NAME"
+				},
+				{
+					"description": "AWS application load balancers",
+					"displayName": "AWS application load balancer tags",
+					"value": "AWS_APPLICATION_LOAD_BALANCER_TAGS"
+				},
+				{
+					"description": "AWS network load balancers",
+					"displayName": "AWS network load balancer name",
+					"value": "AWS_NETWORK_LOAD_BALANCER_NAME"
+				},
+				{
+					"description": "AWS network load balancers",
+					"displayName": "AWS network load balancer tags",
+					"value": "AWS_NETWORK_LOAD_BALANCER_TAGS"
+				},
+				{
+					"description": "Kubernetes namespace",
+					"displayName": "Kubernetes namespace labels",
+					"value": "CLOUD_APPLICATION_NAMESPACE_LABELS"
+				},
+				{
+					"description": "Kubernetes namespace",
+					"displayName": "Kubernetes namespace name",
+					"value": "CLOUD_APPLICATION_NAMESPACE_NAME"
+				},
+				{
+					"description": "Kubernetes workloads",
+					"displayName": "Kubernetes workload labels",
+					"value": "CLOUD_APPLICATION_LABELS"
+				},
+				{
+					"description": "Kubernetes workloads",
+					"displayName": "Kubernetes workload name",
+					"value": "CLOUD_APPLICATION_NAME"
+				},
+				{
+					"description": "Kubernetes services",
+					"displayName": "Kubernetes service name",
+					"value": "KUBERNETES_SERVICE_NAME"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure management group ID",
+					"value": "AZURE_MGMT_GROUP_UUID"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure management group name",
+					"value": "AZURE_MGMT_GROUP_NAME"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure name",
+					"value": "AZURE_ENTITY_NAME"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure subscription UUID",
+					"value": "AZURE_SUBSCRIPTION_UUID"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure subscription name",
+					"value": "AZURE_SUBSCRIPTION_NAME"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure tags",
+					"value": "AZURE_ENTITY_TAGS"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure tenant UUID",
+					"value": "AZURE_TENANT_UUID"
+				},
+				{
+					"description": "Azure entities",
+					"displayName": "Azure tenant name",
+					"value": "AZURE_TENANT_NAME"
+				},
+				{
+					"description": "Kubernetes node",
+					"displayName": "Kubernetes labels",
+					"value": "HOST_KUBERNETES_LABELS"
+				},
+				{
+					"description": "Kubernetes node",
+					"displayName": "Kubernetes node name",
+					"value": "KUBERNETES_NODE_NAME"
+				},
+				{
+					"description": "Queue",
+					"displayName": "Queue name",
+					"value": "QUEUE_NAME"
+				},
+				{
+					"description": "Queue",
+					"displayName": "Queue vendor",
+					"value": "QUEUE_VENDOR"
+				},
+				{
+					"description": "Queue",
+					"displayName": "Technology",
+					"value": "QUEUE_TECHNOLOGY"
+				}
+			],
+			"type": "enum"
+		},
+		"DimensionConditionType": {
+			"description": "",
+			"displayName": "DimensionConditionType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "DIMENSION",
+					"value": "DIMENSION"
+				},
+				{
+					"displayName": "LOG_FILE_NAME",
+					"value": "LOG_FILE_NAME"
+				},
+				{
+					"displayName": "METRIC_KEY",
+					"value": "METRIC_KEY"
+				}
+			],
+			"type": "enum"
+		},
+		"DimensionOperator": {
+			"description": "",
+			"displayName": "DimensionOperator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "begins with",
+					"value": "BEGINS_WITH"
+				},
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				}
+			],
+			"type": "enum"
+		},
+		"DimensionType": {
+			"description": "",
+			"displayName": "DimensionType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "ANY",
+					"value": "ANY"
+				},
+				{
+					"displayName": "LOG",
+					"value": "LOG"
+				},
+				{
+					"displayName": "METRIC",
+					"value": "METRIC"
+				}
+			],
+			"type": "enum"
+		},
+		"ManagementZoneMeType": {
+			"description": "",
+			"displayName": "ManagementZoneMeType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Services",
+					"value": "SERVICE"
+				},
+				{
+					"displayName": "Process groups",
+					"value": "PROCESS_GROUP"
+				},
+				{
+					"displayName": "Hosts",
+					"value": "HOST"
+				},
+				{
+					"displayName": "Custom devices",
+					"value": "CUSTOM_DEVICE"
+				},
+				{
+					"displayName": "ESXi hosts",
+					"value": "ESXI_HOST"
+				},
+				{
+					"displayName": "Custom device groups",
+					"value": "CUSTOM_DEVICE_GROUP"
+				},
+				{
+					"displayName": "Host groups",
+					"value": "HOST_GROUP"
+				},
+				{
+					"displayName": "Data center services",
+					"value": "DATA_CENTER_SERVICE"
+				},
+				{
+					"displayName": "Queue",
+					"value": "QUEUE"
+				},
+				{
+					"displayName": "Web applications (Application Entity)",
+					"value": "WEB_APPLICATION"
+				},
+				{
+					"displayName": "Enterprise applications (Application Entity)",
+					"value": "ENTERPRISE_APPLICATION"
+				},
+				{
+					"displayName": "Mobile apps (Application Entity)",
+					"value": "MOBILE_APPLICATION"
+				},
+				{
+					"displayName": "Custom applications (Application Entity)",
+					"value": "CUSTOM_APPLICATION"
+				},
+				{
+					"displayName": "Browser monitors (Synthetic monitor)",
+					"value": "BROWSER_MONITOR"
+				},
+				{
+					"displayName": "Third-party monitors (Synthetic monitor)",
+					"value": "EXTERNAL_MONITOR"
+				},
+				{
+					"displayName": "HTTP monitors (Synthetic monitor)",
+					"value": "HTTP_MONITOR"
+				},
+				{
+					"displayName": "AppMon server",
+					"value": "APPMON_SERVER"
+				},
+				{
+					"displayName": "AppMon system profile",
+					"value": "APPMON_SYSTEM_PROFILE"
+				},
+				{
+					"displayName": "AWS accounts",
+					"value": "AWS_ACCOUNT"
+				},
+				{
+					"displayName": "AWS classic load balancers",
+					"value": "AWS_CLASSIC_LOAD_BALANCER"
+				},
+				{
+					"displayName": "AWS relational database services",
+					"value": "AWS_RELATIONAL_DATABASE_SERVICE"
+				},
+				{
+					"displayName": "AWS auto scaling groups",
+					"value": "AWS_AUTO_SCALING_GROUP"
+				},
+				{
+					"displayName": "AWS application load balancers",
+					"value": "AWS_APPLICATION_LOAD_BALANCER"
+				},
+				{
+					"displayName": "AWS network load balancers",
+					"value": "AWS_NETWORK_LOAD_BALANCER"
+				},
+				{
+					"displayName": "Openstack accounts",
+					"value": "OPENSTACK_ACCOUNT"
+				},
+				{
+					"displayName": "Kubernetes cluster",
+					"value": "KUBERNETES_CLUSTER"
+				},
+				{
+					"displayName": "Kubernetes service",
+					"value": "KUBERNETES_SERVICE"
+				},
+				{
+					"displayName": "Kubernetes namespace",
+					"value": "CLOUD_APPLICATION_NAMESPACE"
+				},
+				{
+					"displayName": "Kubernetes workloads",
+					"value": "CLOUD_APPLICATION"
+				},
+				{
+					"displayName": "Cloud Foundry foundation",
+					"value": "CLOUD_FOUNDRY_FOUNDATION"
+				},
+				{
+					"displayName": "Azure entities",
+					"value": "AZURE"
+				}
+			],
+			"type": "enum"
+		},
+		"Operator": {
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				},
+				{
+					"displayName": "exists",
+					"value": "EXISTS"
+				},
+				{
+					"displayName": "does not exist",
+					"value": "NOT_EXISTS"
+				},
+				{
+					"displayName": "begins with",
+					"value": "BEGINS_WITH"
+				},
+				{
+					"displayName": "does not begin with",
+					"value": "NOT_BEGINS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "does not contain",
+					"value": "NOT_CONTAINS"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "does not end with",
+					"value": "NOT_ENDS_WITH"
+				},
+				{
+					"displayName": "is greater than",
+					"value": "GREATER_THAN"
+				},
+				{
+					"displayName": "is not greater than",
+					"value": "NOT_GREATER_THAN"
+				},
+				{
+					"displayName": "is greater than or equal",
+					"value": "GREATER_THAN_OR_EQUAL"
+				},
+				{
+					"displayName": "is not greater than or equal",
+					"value": "NOT_GREATER_THAN_OR_EQUAL"
+				},
+				{
+					"displayName": "is lower than",
+					"value": "LOWER_THAN"
+				},
+				{
+					"displayName": "is not lower than",
+					"value": "NOT_LOWER_THAN"
+				},
+				{
+					"displayName": "is lower than or equal",
+					"value": "LOWER_THAN_OR_EQUAL"
+				},
+				{
+					"displayName": "is not lower than or equal",
+					"value": "NOT_LOWER_THAN_OR_EQUAL"
+				},
+				{
+					"displayName": "tag key equals",
+					"value": "TAG_KEY_EQUALS"
+				},
+				{
+					"displayName": "does not equal tag key",
+					"value": "NOT_TAG_KEY_EQUALS"
+				},
+				{
+					"displayName": "is in range",
+					"value": "IS_IP_IN_RANGE"
+				},
+				{
+					"displayName": "is not in range",
+					"value": "NOT_IS_IP_IN_RANGE"
+				},
+				{
+					"displayName": "contains regex",
+					"value": "REGEX_MATCHES"
+				},
+				{
+					"displayName": "does not contain regex",
+					"value": "NOT_REGEX_MATCHES"
+				}
+			],
+			"type": "enum"
+		},
+		"RuleType": {
+			"description": "",
+			"displayName": "RuleType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Monitored entity",
+					"value": "ME"
+				},
+				{
+					"displayName": "Dimensional data",
+					"value": "DIMENSION"
+				},
+				{
+					"displayName": "Entity selector",
+					"value": "SELECTOR"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 5000,
+	"metadata": {
+		"addItemButton": "Add new management zone"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 1000,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Add a description"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"type": "NOT_BLANK"
+				}
+			],
+			"default": "",
+			"description": "**Be careful when renaming** - if there are policies that are referencing this Management zone, they will need to be adapted to the new name!",
+			"displayName": "Management zone name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, Production or Dev"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"rules": {
+			"description": "",
+			"displayName": "Rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Rule"
+				}
+			},
+			"maxObjects": 450,
+			"metadata": {
+				"addItemButton": "Add a new rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:management-zones",
+	"types": {
+		"AttributeCondition": {
+			"constraints": [
+				{
+					"customValidatorId": "meConditionStringValueValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "entity-id-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "tag-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "pg-dynamic-key",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "AttributeCondition",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": true,
+					"description": "",
+					"displayName": "Case sensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"CLOUD_APPLICATION_LABELS",
+									"CLOUD_APPLICATION_NAMESPACE_LABELS",
+									"HOST_KUBERNETES_LABELS",
+									"PROCESS_GROUP_PREDEFINED_METADATA",
+									"CUSTOM_DEVICE_METADATA",
+									"ENTERPRISE_APPLICATION_METADATA",
+									"DATA_CENTER_SERVICE_METADATA",
+									"HOST_CUSTOM_METADATA",
+									"PROCESS_GROUP_CUSTOM_METADATA",
+									"KUBERNETES_SERVICE_NAME",
+									"HOST_AZURE_WEB_APPLICATION_HOST_NAMES",
+									"HOST_AZURE_WEB_APPLICATION_SITE_NAMES",
+									"HOST_DETECTED_NAME",
+									"HOST_NAME",
+									"HOST_OS_VERSION",
+									"HOST_BOSH_NAME",
+									"HOST_BOSH_INSTANCE_ID",
+									"HOST_BOSH_INSTANCE_NAME",
+									"HOST_BOSH_AVAILABILITY_ZONE",
+									"HOST_BOSH_DEPLOYMENT_ID",
+									"HOST_BOSH_STEMCELL_VERSION",
+									"HOST_AWS_NAME_TAG",
+									"HOST_ONEAGENT_CUSTOM_HOST_NAME",
+									"KUBERNETES_CLUSTER_NAME",
+									"KUBERNETES_NODE_NAME",
+									"CLOUD_APPLICATION_NAMESPACE_NAME",
+									"CLOUD_APPLICATION_NAME",
+									"PROCESS_GROUP_AZURE_HOST_NAME",
+									"PROCESS_GROUP_AZURE_SITE_NAME",
+									"PROCESS_GROUP_DETECTED_NAME",
+									"PROCESS_GROUP_NAME",
+									"PROCESS_GROUP_TECHNOLOGY_EDITION",
+									"PROCESS_GROUP_TECHNOLOGY_VERSION",
+									"SERVICE_AKKA_ACTOR_SYSTEM",
+									"SERVICE_DATABASE_NAME",
+									"SERVICE_DATABASE_VENDOR",
+									"SERVICE_DATABASE_HOST_NAME",
+									"SERVICE_DETECTED_NAME",
+									"SERVICE_WEB_SERVER_ENDPOINT",
+									"SERVICE_IBM_CTG_GATEWAY_URL",
+									"SERVICE_MESSAGING_LISTENER_CLASS_NAME",
+									"SERVICE_NAME",
+									"SERVICE_PUBLIC_DOMAIN_NAME",
+									"SERVICE_REMOTE_ENDPOINT",
+									"SERVICE_REMOTE_SERVICE_NAME",
+									"SERVICE_TECHNOLOGY_EDITION",
+									"SERVICE_TECHNOLOGY_VERSION",
+									"SERVICE_WEB_APPLICATION_ID",
+									"SERVICE_WEB_CONTEXT_ROOT",
+									"SERVICE_WEB_SERVER_NAME",
+									"SERVICE_WEB_SERVICE_NAME",
+									"SERVICE_WEB_SERVICE_NAMESPACE",
+									"SERVICE_CTG_SERVICE_NAME",
+									"SERVICE_ESB_APPLICATION_NAME",
+									"CUSTOM_DEVICE_DNS_ADDRESS",
+									"CUSTOM_DEVICE_NAME",
+									"CUSTOM_DEVICE_GROUP_NAME",
+									"WEB_APPLICATION_NAME",
+									"WEB_APPLICATION_NAME_PATTERN",
+									"MOBILE_APPLICATION_NAME",
+									"CUSTOM_APPLICATION_NAME",
+									"ENTERPRISE_APPLICATION_NAME",
+									"DATA_CENTER_SERVICE_NAME",
+									"BROWSER_MONITOR_NAME",
+									"EXTERNAL_MONITOR_NAME",
+									"EXTERNAL_MONITOR_ENGINE_NAME",
+									"EXTERNAL_MONITOR_ENGINE_DESCRIPTION",
+									"HTTP_MONITOR_NAME",
+									"DOCKER_CONTAINER_NAME",
+									"DOCKER_FULL_IMAGE_NAME",
+									"DOCKER_IMAGE_VERSION",
+									"ESXI_HOST_HARDWARE_MODEL",
+									"ESXI_HOST_HARDWARE_VENDOR",
+									"ESXI_HOST_NAME",
+									"ESXI_HOST_CLUSTER_NAME",
+									"ESXI_HOST_PRODUCT_NAME",
+									"ESXI_HOST_PRODUCT_VERSION",
+									"NAME_OF_COMPUTE_NODE",
+									"EC2_INSTANCE_NAME",
+									"EC2_INSTANCE_AMI_ID",
+									"EC2_INSTANCE_BEANSTALK_ENV_NAME",
+									"EC2_INSTANCE_AWS_INSTANCE_TYPE",
+									"EC2_INSTANCE_ID",
+									"EC2_INSTANCE_PRIVATE_HOST_NAME",
+									"EC2_INSTANCE_PUBLIC_HOST_NAME",
+									"EC2_INSTANCE_AWS_SECURITY_GROUP",
+									"OPENSTACK_VM_INSTANCE_TYPE",
+									"OPENSTACK_VM_NAME",
+									"OPENSTACK_VM_SECURITY_GROUP",
+									"VMWARE_VM_NAME",
+									"GOOGLE_COMPUTE_INSTANCE_ID",
+									"GOOGLE_COMPUTE_INSTANCE_NAME",
+									"GOOGLE_COMPUTE_INSTANCE_MACHINE_TYPE",
+									"GOOGLE_COMPUTE_INSTANCE_PROJECT",
+									"GOOGLE_COMPUTE_INSTANCE_PROJECT_ID",
+									"AWS_AVAILABILITY_ZONE_NAME",
+									"AZURE_REGION_NAME",
+									"OPENSTACK_REGION_NAME",
+									"OPENSTACK_AVAILABILITY_ZONE_NAME",
+									"GEOLOCATION_SITE_NAME",
+									"VMWARE_DATACENTER_NAME",
+									"GOOGLE_CLOUD_PLATFORM_ZONE_NAME",
+									"AWS_AUTO_SCALING_GROUP_NAME",
+									"AWS_CLASSIC_LOAD_BALANCER_NAME",
+									"AWS_APPLICATION_LOAD_BALANCER_NAME",
+									"AWS_NETWORK_LOAD_BALANCER_NAME",
+									"AWS_RELATIONAL_DATABASE_SERVICE_NAME",
+									"AWS_RELATIONAL_DATABASE_SERVICE_INSTANCE_CLASS",
+									"AWS_RELATIONAL_DATABASE_SERVICE_ENDPOINT",
+									"AWS_RELATIONAL_DATABASE_SERVICE_ENGINE",
+									"AWS_RELATIONAL_DATABASE_SERVICE_DB_NAME",
+									"AZURE_SCALE_SET_NAME",
+									"AZURE_VM_NAME",
+									"OPENSTACK_PROJECT_NAME",
+									"HOST_GROUP_NAME",
+									"AWS_ACCOUNT_ID",
+									"AWS_ACCOUNT_NAME",
+									"OPENSTACK_ACCOUNT_NAME",
+									"OPENSTACK_ACCOUNT_PROJECT_NAME",
+									"CLOUD_FOUNDRY_ORG_NAME",
+									"CLOUD_FOUNDRY_FOUNDATION_NAME",
+									"APPMON_SERVER_NAME",
+									"APPMON_SYSTEM_PROFILE_NAME",
+									"QUEUE_NAME",
+									"QUEUE_VENDOR"
+								],
+								"property": "key",
+								"type": "IN"
+							},
+							{
+								"precondition": {
+									"expectedValues": [
+										"EXISTS",
+										"NOT_EXISTS"
+									],
+									"property": "operator",
+									"type": "IN"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "boolean"
+				},
+				"dynamicKey": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"key",
+							"dynamicKeySource"
+						],
+						"fullContext": false,
+						"identifier": "meDynamicStringKeyDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Dynamic key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"CLOUD_APPLICATION_LABELS",
+							"CLOUD_APPLICATION_NAMESPACE_LABELS",
+							"HOST_KUBERNETES_LABELS",
+							"PROCESS_GROUP_PREDEFINED_METADATA",
+							"CUSTOM_DEVICE_METADATA",
+							"ENTERPRISE_APPLICATION_METADATA",
+							"DATA_CENTER_SERVICE_METADATA",
+							"HOST_CUSTOM_METADATA",
+							"PROCESS_GROUP_CUSTOM_METADATA"
+						],
+						"property": "key",
+						"type": "IN"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"dynamicKeySource": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"key"
+						],
+						"fullContext": false,
+						"identifier": "meDynamicSourceStringSourceDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Key source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"HOST_CUSTOM_METADATA",
+							"PROCESS_GROUP_CUSTOM_METADATA"
+						],
+						"property": "key",
+						"type": "IN"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"entityId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"key"
+						],
+						"fullContext": false,
+						"identifier": "meEntityEnumValueDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"PROCESS_GROUP_ID",
+							"HOST_GROUP_ID"
+						],
+						"property": "key",
+						"type": "IN"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"enumValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"key"
+						],
+						"fullContext": false,
+						"identifier": "meDynamicEnumValueDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"HOST_AZURE_COMPUTE_MODE",
+									"HOST_AZURE_SKU",
+									"HOST_BITNESS",
+									"HOST_CLOUD_TYPE",
+									"HOST_HYPERVISOR_TYPE",
+									"HOST_ARCHITECTURE",
+									"HOST_OS_TYPE",
+									"HOST_PAAS_TYPE",
+									"HOST_TECHNOLOGY",
+									"PROCESS_GROUP_TECHNOLOGY",
+									"SERVICE_DATABASE_TOPOLOGY",
+									"SERVICE_TOPOLOGY",
+									"SERVICE_TYPE",
+									"SERVICE_TECHNOLOGY",
+									"CUSTOM_DEVICE_TECHNOLOGY",
+									"WEB_APPLICATION_TYPE",
+									"MOBILE_APPLICATION_PLATFORM",
+									"CUSTOM_APPLICATION_TYPE",
+									"CUSTOM_APPLICATION_PLATFORM",
+									"ENTERPRISE_APPLICATION_DECODER_TYPE",
+									"DATA_CENTER_SERVICE_DECODER_TYPE",
+									"EXTERNAL_MONITOR_ENGINE_TYPE",
+									"QUEUE_TECHNOLOGY"
+								],
+								"property": "key",
+								"type": "IN"
+							},
+							{
+								"precondition": {
+									"expectedValues": [
+										"EXISTS",
+										"NOT_EXISTS"
+									],
+									"property": "operator",
+									"type": "IN"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"integerValue": {
+					"constraints": [
+						{
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 0,
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Type value to be evaluated by rule"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"HOST_PAAS_MEMORY_LIMIT",
+									"HOST_AIX_VIRTUAL_CPU_COUNT",
+									"HOST_AIX_LOGICAL_CPU_COUNT",
+									"HOST_AIX_SIMULTANEOUS_THREADS",
+									"HOST_CPU_CORES",
+									"HOST_LOGICAL_CPU_CORES",
+									"PROCESS_GROUP_LISTEN_PORT",
+									"SERVICE_PORT",
+									"CUSTOM_DEVICE_PORT",
+									"ENTERPRISE_APPLICATION_PORT",
+									"DATA_CENTER_SERVICE_PORT",
+									"AWS_CLASSIC_LOAD_BALANCER_FRONTEND_PORTS",
+									"AWS_RELATIONAL_DATABASE_SERVICE_PORT"
+								],
+								"property": "key",
+								"type": "IN"
+							},
+							{
+								"precondition": {
+									"expectedValues": [
+										"EXISTS",
+										"NOT_EXISTS"
+									],
+									"property": "operator",
+									"type": "IN"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "integer"
+				},
+				"key": {
+					"datasource": {
+						"filterProperties": [
+							"../../entityType"
+						],
+						"fullContext": true,
+						"identifier": "meAttributeConditionKeyDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": true
+					},
+					"default": "HOST_AIX_LOGICAL_CPU_COUNT",
+					"description": "",
+					"displayName": "Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/Attribute"
+					}
+				},
+				"operator": {
+					"datasource": {
+						"filterProperties": [
+							"key"
+						],
+						"fullContext": false,
+						"identifier": "meStaticStringConditionOperatorDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/Operator"
+					}
+				},
+				"stringValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 120,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Type value to be evaluated by rule"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValues": [
+											"CLOUD_APPLICATION_LABELS",
+											"CLOUD_APPLICATION_NAMESPACE_LABELS",
+											"HOST_KUBERNETES_LABELS",
+											"PROCESS_GROUP_PREDEFINED_METADATA",
+											"CUSTOM_DEVICE_METADATA",
+											"ENTERPRISE_APPLICATION_METADATA",
+											"DATA_CENTER_SERVICE_METADATA",
+											"HOST_CUSTOM_METADATA",
+											"PROCESS_GROUP_CUSTOM_METADATA",
+											"KUBERNETES_SERVICE_NAME",
+											"HOST_AZURE_WEB_APPLICATION_HOST_NAMES",
+											"HOST_AZURE_WEB_APPLICATION_SITE_NAMES",
+											"HOST_DETECTED_NAME",
+											"HOST_NAME",
+											"HOST_OS_VERSION",
+											"HOST_BOSH_NAME",
+											"HOST_BOSH_INSTANCE_ID",
+											"HOST_BOSH_INSTANCE_NAME",
+											"HOST_BOSH_AVAILABILITY_ZONE",
+											"HOST_BOSH_DEPLOYMENT_ID",
+											"HOST_BOSH_STEMCELL_VERSION",
+											"HOST_AWS_NAME_TAG",
+											"HOST_ONEAGENT_CUSTOM_HOST_NAME",
+											"KUBERNETES_CLUSTER_NAME",
+											"KUBERNETES_NODE_NAME",
+											"CLOUD_APPLICATION_NAMESPACE_NAME",
+											"CLOUD_APPLICATION_NAME",
+											"PROCESS_GROUP_AZURE_HOST_NAME",
+											"PROCESS_GROUP_AZURE_SITE_NAME",
+											"PROCESS_GROUP_DETECTED_NAME",
+											"PROCESS_GROUP_NAME",
+											"PROCESS_GROUP_TECHNOLOGY_EDITION",
+											"PROCESS_GROUP_TECHNOLOGY_VERSION",
+											"SERVICE_AKKA_ACTOR_SYSTEM",
+											"SERVICE_DATABASE_NAME",
+											"SERVICE_DATABASE_VENDOR",
+											"SERVICE_DATABASE_HOST_NAME",
+											"SERVICE_DETECTED_NAME",
+											"SERVICE_WEB_SERVER_ENDPOINT",
+											"SERVICE_IBM_CTG_GATEWAY_URL",
+											"SERVICE_MESSAGING_LISTENER_CLASS_NAME",
+											"SERVICE_NAME",
+											"SERVICE_PUBLIC_DOMAIN_NAME",
+											"SERVICE_REMOTE_ENDPOINT",
+											"SERVICE_REMOTE_SERVICE_NAME",
+											"SERVICE_TECHNOLOGY_EDITION",
+											"SERVICE_TECHNOLOGY_VERSION",
+											"SERVICE_WEB_APPLICATION_ID",
+											"SERVICE_WEB_CONTEXT_ROOT",
+											"SERVICE_WEB_SERVER_NAME",
+											"SERVICE_WEB_SERVICE_NAME",
+											"SERVICE_WEB_SERVICE_NAMESPACE",
+											"SERVICE_CTG_SERVICE_NAME",
+											"SERVICE_ESB_APPLICATION_NAME",
+											"CUSTOM_DEVICE_DNS_ADDRESS",
+											"CUSTOM_DEVICE_NAME",
+											"CUSTOM_DEVICE_GROUP_NAME",
+											"WEB_APPLICATION_NAME",
+											"WEB_APPLICATION_NAME_PATTERN",
+											"MOBILE_APPLICATION_NAME",
+											"CUSTOM_APPLICATION_NAME",
+											"ENTERPRISE_APPLICATION_NAME",
+											"DATA_CENTER_SERVICE_NAME",
+											"BROWSER_MONITOR_NAME",
+											"EXTERNAL_MONITOR_NAME",
+											"EXTERNAL_MONITOR_ENGINE_NAME",
+											"EXTERNAL_MONITOR_ENGINE_DESCRIPTION",
+											"HTTP_MONITOR_NAME",
+											"DOCKER_CONTAINER_NAME",
+											"DOCKER_FULL_IMAGE_NAME",
+											"DOCKER_IMAGE_VERSION",
+											"ESXI_HOST_HARDWARE_MODEL",
+											"ESXI_HOST_HARDWARE_VENDOR",
+											"ESXI_HOST_NAME",
+											"ESXI_HOST_CLUSTER_NAME",
+											"ESXI_HOST_PRODUCT_NAME",
+											"ESXI_HOST_PRODUCT_VERSION",
+											"NAME_OF_COMPUTE_NODE",
+											"EC2_INSTANCE_NAME",
+											"EC2_INSTANCE_AMI_ID",
+											"EC2_INSTANCE_BEANSTALK_ENV_NAME",
+											"EC2_INSTANCE_AWS_INSTANCE_TYPE",
+											"EC2_INSTANCE_ID",
+											"EC2_INSTANCE_PRIVATE_HOST_NAME",
+											"EC2_INSTANCE_PUBLIC_HOST_NAME",
+											"EC2_INSTANCE_AWS_SECURITY_GROUP",
+											"OPENSTACK_VM_INSTANCE_TYPE",
+											"OPENSTACK_VM_NAME",
+											"OPENSTACK_VM_SECURITY_GROUP",
+											"VMWARE_VM_NAME",
+											"GOOGLE_COMPUTE_INSTANCE_ID",
+											"GOOGLE_COMPUTE_INSTANCE_NAME",
+											"GOOGLE_COMPUTE_INSTANCE_MACHINE_TYPE",
+											"GOOGLE_COMPUTE_INSTANCE_PROJECT",
+											"GOOGLE_COMPUTE_INSTANCE_PROJECT_ID",
+											"AWS_AVAILABILITY_ZONE_NAME",
+											"AZURE_REGION_NAME",
+											"OPENSTACK_REGION_NAME",
+											"OPENSTACK_AVAILABILITY_ZONE_NAME",
+											"GEOLOCATION_SITE_NAME",
+											"VMWARE_DATACENTER_NAME",
+											"GOOGLE_CLOUD_PLATFORM_ZONE_NAME",
+											"AWS_AUTO_SCALING_GROUP_NAME",
+											"AWS_CLASSIC_LOAD_BALANCER_NAME",
+											"AWS_APPLICATION_LOAD_BALANCER_NAME",
+											"AWS_NETWORK_LOAD_BALANCER_NAME",
+											"AWS_RELATIONAL_DATABASE_SERVICE_NAME",
+											"AWS_RELATIONAL_DATABASE_SERVICE_INSTANCE_CLASS",
+											"AWS_RELATIONAL_DATABASE_SERVICE_ENDPOINT",
+											"AWS_RELATIONAL_DATABASE_SERVICE_ENGINE",
+											"AWS_RELATIONAL_DATABASE_SERVICE_DB_NAME",
+											"AZURE_SCALE_SET_NAME",
+											"AZURE_VM_NAME",
+											"OPENSTACK_PROJECT_NAME",
+											"HOST_GROUP_NAME",
+											"AWS_ACCOUNT_ID",
+											"AWS_ACCOUNT_NAME",
+											"OPENSTACK_ACCOUNT_NAME",
+											"OPENSTACK_ACCOUNT_PROJECT_NAME",
+											"CLOUD_FOUNDRY_ORG_NAME",
+											"CLOUD_FOUNDRY_FOUNDATION_NAME",
+											"APPMON_SERVER_NAME",
+											"APPMON_SYSTEM_PROFILE_NAME",
+											"QUEUE_NAME",
+											"QUEUE_VENDOR",
+											"AZURE_TENANT_UUID",
+											"AZURE_MGMT_GROUP_UUID",
+											"AZURE_SUBSCRIPTION_UUID",
+											"AZURE_ENTITY_NAME",
+											"AZURE_TENANT_NAME",
+											"AZURE_MGMT_GROUP_NAME",
+											"AZURE_SUBSCRIPTION_NAME",
+											"HOST_IP_ADDRESS",
+											"CUSTOM_DEVICE_IP_ADDRESS",
+											"ENTERPRISE_APPLICATION_IP_ADDRESS",
+											"DATA_CENTER_SERVICE_IP_ADDRESS",
+											"GOOGLE_COMPUTE_INSTANCE_PUBLIC_IP_ADDRESSES"
+										],
+										"property": "key",
+										"type": "IN"
+									},
+									{
+										"preconditions": [
+											{
+												"expectedValue": "VERBATIM",
+												"property": "enumValue",
+												"type": "EQUALS"
+											},
+											{
+												"expectedValues": [
+													"HOST_TECHNOLOGY",
+													"SERVICE_TECHNOLOGY",
+													"CUSTOM_DEVICE_TECHNOLOGY",
+													"PROCESS_GROUP_TECHNOLOGY",
+													"QUEUE_TECHNOLOGY"
+												],
+												"property": "key",
+												"type": "IN"
+											}
+										],
+										"type": "AND"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValues": [
+									"BEGINS_WITH",
+									"CONTAINS",
+									"ENDS_WITH",
+									"EQUALS",
+									"REGEX_MATCHES",
+									"IS_IP_IN_RANGE",
+									"NOT_BEGINS_WITH",
+									"NOT_CONTAINS",
+									"NOT_ENDS_WITH",
+									"NOT_EQUALS",
+									"NOT_REGEX_MATCHES",
+									"NOT_IS_IP_IN_RANGE"
+								],
+								"property": "operator",
+								"type": "IN"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"tag": {
+					"constraints": [
+						{
+							"maxLength": 4025,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"key",
+							"operator"
+						],
+						"fullContext": false,
+						"identifier": "tagDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Tag",
+					"documentation": "Format: `[CONTEXT]tagKey:tagValue`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"AZURE_ENTITY_TAGS",
+									"HOST_TAGS",
+									"PROCESS_GROUP_TAGS",
+									"SERVICE_TAGS",
+									"CUSTOM_DEVICE_TAGS",
+									"CUSTOM_DEVICE_GROUP_TAGS",
+									"WEB_APPLICATION_TAGS",
+									"MOBILE_APPLICATION_TAGS",
+									"CUSTOM_APPLICATION_TAGS",
+									"ENTERPRISE_APPLICATION_TAGS",
+									"DATA_CENTER_SERVICE_TAGS",
+									"BROWSER_MONITOR_TAGS",
+									"EXTERNAL_MONITOR_TAGS",
+									"HTTP_MONITOR_TAGS",
+									"ESXI_HOST_TAGS",
+									"EC2_INSTANCE_TAGS",
+									"AWS_AUTO_SCALING_GROUP_TAGS",
+									"AWS_CLASSIC_LOAD_BALANCER_TAGS",
+									"AWS_APPLICATION_LOAD_BALANCER_TAGS",
+									"AWS_NETWORK_LOAD_BALANCER_TAGS",
+									"AWS_RELATIONAL_DATABASE_SERVICE_TAGS"
+								],
+								"property": "key",
+								"type": "IN"
+							},
+							{
+								"precondition": {
+									"expectedValues": [
+										"EXISTS",
+										"NOT_EXISTS"
+									],
+									"property": "operator",
+									"type": "IN"
+								},
+								"type": "NOT"
+							}
+						],
+						"type": "AND"
+					},
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"searchPattern": "{dynamicKey|valueSet, select, true{{dynamicKey}{dynamicKeySource|valueSet, select, true{ ({dynamicKeySource})} other{}}} other{{key}}} {operator}{stringValue|valueSet, select, true{ ''{stringValue}''} other{}}{integerValue|valueSet, select, true{ ''{key|replace : '.*_PORT$' : 'port', select, port{{integerValue, number, :: ,_ . }}  other {{integerValue}}}''} other{}}{enumValue|valueSet, select, true{{enumValue, select, VERBATIM{{stringValue|valueSet, select, true{} other{ ''{enumValue}''}}} other{ ''{enumValue}''}}} other{}}{entityId|valueSet, select, true{ ''{entityId}''} other{}}{tag|valueSet, select, true{ ''{tag}''} other{}}",
+			"summaryPattern": "{key|valueSet, select, true{*{dynamicKey|valueSet, select, true{{dynamicKey}{dynamicKeySource|valueSet, select, true{ ({dynamicKeySource})} other{}}} other{{key}}}* {operator}{stringValue|valueSet, select, true{ ''{stringValue}''} other{}}{integerValue|valueSet, select, true{ ''{key|replace : '.*_PORT$' : 'port', select, port{{integerValue, number, :: ,_ . }}  other {{integerValue}}}''} other{}}{enumValue|valueSet, select, true{{enumValue, select, VERBATIM{{stringValue|valueSet, select, true{} other{ ''{enumValue}''}}} other{ ''{enumValue}''}}} other{}}{entityId|valueSet, select, true{ ''{entityId}''} other{}}{tag|valueSet, select, true{ ''{tag}''} other{}}} other{}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DimensionCondition": {
+			"constraints": [
+				{
+					"customValidatorId": "metric-key-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "DimensionCondition",
+			"documentation": "",
+			"properties": {
+				"conditionType": {
+					"datasource": {
+						"filterProperties": [
+							"../../appliesTo"
+						],
+						"fullContext": true,
+						"identifier": "dimensionConditionTypeDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "DIMENSION",
+					"description": "",
+					"displayName": "Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DimensionConditionType"
+					}
+				},
+				"key": {
+					"constraints": [
+						{
+							"maxLength": 80,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Key"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DIMENSION",
+						"property": "conditionType",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"ruleMatcher": {
+					"default": "BEGINS_WITH",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/DimensionOperator"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 80,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Value"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{conditionType} {conditionType, select, DIMENSION {''{key}'' } other {}}{ruleMatcher} ''{value}''",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DimensionRule": {
+			"constraints": [
+				{
+					"customValidatorId": "rules-conditions-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "DimensionRule",
+			"documentation": "",
+			"properties": {
+				"appliesTo": {
+					"default": "METRIC",
+					"description": "",
+					"displayName": "Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/DimensionType"
+					}
+				},
+				"conditions": {
+					"description": "",
+					"displayName": "Conditions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/DimensionCondition"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add condition"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"searchPattern": "Dimensional rule for {appliesTo} where {conditions|join:' and '}",
+			"summaryPattern": "**Dimensional rule for** {appliesTo} where {conditions|join:' and '}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ManagementZoneAttributeRule": {
+			"description": "",
+			"displayName": "ManagementZoneAttributeRule",
+			"documentation": "",
+			"properties": {
+				"azureToPGPropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to process groups connected to matching Azure entities",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "AZURE",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"azureToServicePropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to services provided by matching Azure entities",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "AZURE",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"conditions": {
+					"description": "",
+					"displayName": "Conditions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/AttributeCondition"
+						}
+					},
+					"maxObjects": 30,
+					"metadata": {
+						"addItemButton": "Add condition"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"customDeviceGroupToCustomDevicePropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to custom devices in a custom device group",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "CUSTOM_DEVICE_GROUP",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"entityType": {
+					"default": "SERVICE",
+					"description": "",
+					"displayName": "Rule applies to",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ManagementZoneMeType"
+					}
+				},
+				"hostToPGPropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to processes running on matching hosts",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "HOST",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"pgToHostPropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to underlying hosts of matching process groups",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "PROCESS_GROUP",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"pgToServicePropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to all services provided by the process groups",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "PROCESS_GROUP",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"serviceToHostPropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to underlying hosts of matching services",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "SERVICE",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
+				"serviceToPGPropagation": {
+					"default": false,
+					"description": "",
+					"displayName": "Apply to underlying process groups of matching services",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "SERVICE",
+						"property": "entityType",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				}
+			},
+			"searchPattern": "{conditions|meConditionAttributeRule:'false'}",
+			"summaryPattern": "{conditions|meConditionAttributeRule|truncate:'500':'...'}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"attributeRule": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "ME",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ManagementZoneAttributeRule"
+					}
+				},
+				"dimensionRule": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DIMENSION",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DimensionRule"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"entitySelector": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 10000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "entity-selector-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+					"displayName": "Entity selector",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "type(\"host\"),entityName.startsWith(\"HOST\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "SELECTOR",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"type": {
+					"default": "SELECTOR",
+					"description": "",
+					"displayName": "Rule type",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/RuleType"
+					}
+				}
+			},
+			"summaryPattern": "{entitySelector|valueSet, select, true {Entities matching **{entitySelector}**} other {}}{dimensionRule}{attributeRule}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.5"
+}

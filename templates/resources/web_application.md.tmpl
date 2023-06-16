@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_web_application (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_web_app_enablement`, `dynatrace_session_replay_resource_capture`, `dynatrace_web_app_key_performance_load`, `dynatrace_web_app_key_performance_xhr`, and `dynatrace_web_app_key_performance_custom`; please review the schema for additional information.
-
 ## Dynatrace Documentation
 
 - RUM setup and configuration for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications

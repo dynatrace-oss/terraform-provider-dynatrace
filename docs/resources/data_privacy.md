@@ -7,8 +7,6 @@ description: |-
 
 # dynatrace_data_privacy (Resource)
 
--> **Settings 2.0** Certain field(s) of this resource has overlap with `dynatrace_application_data_privacy`, therefore it is excluded from the default export. To retrieve this resource via export, directly specify it as a command line argument. 
-
 ## Dynatrace Documentation
 
 - Data privacy and security - https://www.dynatrace.com/support/help/manage/data-privacy-and-security
@@ -49,10 +47,10 @@ resource "dynatrace_data_privacy" "#name#" {
 
 ### Required
 
-- `data_collection` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_data_privacy`) To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode. (see [below for nested schema](#nestedblock--data_collection))
-- `do_not_track` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_data_privacy`) Most modern web browsers have a privacy feature called ["Do Not Track"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting. (see [below for nested schema](#nestedblock--do_not_track))
-- `masking` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_data_privacy`) (see [below for nested schema](#nestedblock--masking))
-- `user_tracking` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_application_data_privacy`) User tracking (see [below for nested schema](#nestedblock--user_tracking))
+- `data_collection` (Block List, Min: 1, Max: 1) To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode. (see [below for nested schema](#nestedblock--data_collection))
+- `do_not_track` (Block List, Min: 1, Max: 1) Most modern web browsers have a privacy feature called ["Do Not Track"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting. (see [below for nested schema](#nestedblock--do_not_track))
+- `masking` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--masking))
+- `user_tracking` (Block List, Min: 1, Max: 1) User tracking (see [below for nested schema](#nestedblock--user_tracking))
 
 ### Optional
 

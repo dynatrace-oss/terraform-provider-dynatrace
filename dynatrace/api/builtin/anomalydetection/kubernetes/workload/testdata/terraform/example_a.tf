@@ -68,4 +68,19 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
       threshold                     = 2
     }
   }
+  job_failure_events {
+    enabled = true
+  }
+  oom_kills {
+    enabled = true
+  }
+  pod_backoff_events {
+    enabled = true
+  }
+  pod_eviction_events {
+    enabled = true
+  }
+  pod_preemption_events {
+    enabled = true
+  }
 }

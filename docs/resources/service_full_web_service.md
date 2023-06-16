@@ -47,12 +47,12 @@ resource "dynatrace_service_full_web_service" "#name#" {
 ### Required
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `id_contributors` (Block List, Min: 1, Max: 1) Contributors to the Service Identifier calculation. All of the Contributors always get applied. (see [below for nested schema](#nestedblock--id_contributors))
+- `id_contributors` (Block List, Min: 1, Max: 1) Contributors to the Service Identifier calculation. All of the Contributors are always applied. (see [below for nested schema](#nestedblock--id_contributors))
 - `name` (String) Rule name
 
 ### Optional
 
-- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they **all** must match a Request for the rule to apply. Conditions evaluate against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
+- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
 - `description` (String) Description
 - `management_zones` (Set of String) Define a management zone filter for this service detection rule.
 
@@ -72,7 +72,7 @@ Setting this field to true prevents detecting of matching requests as full web s
 Optional:
 
 - `application_id` (Block List, Max: 1) Application identifier (see [below for nested schema](#nestedblock--id_contributors--application_id))
-- `context_root` (Block List, Max: 1) The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root))
+- `context_root` (Block List, Max: 1) The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root))
 - `server_name` (Block List, Max: 1) Server name (see [below for nested schema](#nestedblock--id_contributors--server_name))
 - `web_service_name` (Block List, Max: 1) Web service name (see [below for nested schema](#nestedblock--id_contributors--web_service_name))
 - `web_service_namespace` (Block List, Max: 1) Web service namespace (see [below for nested schema](#nestedblock--id_contributors--web_service_namespace))
@@ -97,7 +97,7 @@ Required:
 
 Optional:
 
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--application_id--service_id_contributor--transformations"></a>
@@ -159,7 +159,7 @@ Required:
 Optional:
 
 - `segment_count` (Number) The number of segments of the URL to be kept. The URL is divided by slashes (/), the indexing starts with 1 at context root. For example, if you specify 2 for the `www.dynatrace.com/support/help/dynatrace-api/` URL, the value of `support/help` is used.
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--context_root--service_id_contributor--transformations"></a>
@@ -216,7 +216,7 @@ Required:
 
 Optional:
 
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--server_name--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--server_name--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--server_name--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--server_name--service_id_contributor--transformations"></a>
@@ -277,7 +277,7 @@ Required:
 
 Optional:
 
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--web_service_name--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--web_service_name--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--web_service_name--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--web_service_name--service_id_contributor--transformations"></a>
@@ -338,7 +338,7 @@ Required:
 
 Optional:
 
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--web_service_namespace--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--web_service_namespace--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--web_service_namespace--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--web_service_namespace--service_id_contributor--transformations"></a>

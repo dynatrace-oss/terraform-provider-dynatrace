@@ -25,11 +25,10 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_metric_events" "#name#" {
   enabled                    = true
   event_entity_dimension_key = "dt.entity.host"
-  legacy_id                  = "a848e7e2-7501-4025-9325-e08c259abf46"
   summary                    = "sample_name"
   event_template {
     description   = "some description"
-    # davis_merge = false
+    davis_merge = false
     event_type    = "CUSTOM_ALERT"
     title         = "sample_name"
   }
@@ -94,16 +93,16 @@ resource "dynatrace_metric_events" "#name#" {
 
 ### Required
 
-- `event_template` (Block List, Min: 1, Max: 1) The event template of the metric event entry (see [below for nested schema](#nestedblock--event_template))
-- `model_properties` (Block List, Min: 1, Max: 1) The model properties of the metric event entry (see [below for nested schema](#nestedblock--model_properties))
-- `query_definition` (Block List, Min: 1, Max: 1) The query definition of the metric event entry (see [below for nested schema](#nestedblock--query_definition))
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `event_template` (Block List, Min: 1, Max: 1) Event template (see [below for nested schema](#nestedblock--event_template))
+- `model_properties` (Block List, Min: 1, Max: 1) Monitoring strategy (see [below for nested schema](#nestedblock--model_properties))
+- `query_definition` (Block List, Min: 1, Max: 1) Query definition (see [below for nested schema](#nestedblock--query_definition))
 - `summary` (String) The textual summary of the metric event entry
 
 ### Optional
 
-- `enabled` (Boolean) Enabled toggle of metric event entry
 - `event_entity_dimension_key` (String) Controls the preferred entity type used for triggered events.
-- `legacy_id` (String) The legacy id of the metric event entry
+- `legacy_id` (String) Config id
 
 ### Read-Only
 
@@ -115,21 +114,21 @@ resource "dynatrace_metric_events" "#name#" {
 Required:
 
 - `description` (String) The description of the event to trigger.
-- `event_type` (String) The event type to trigger.
+- `event_type` (String) Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`
 - `title` (String) The title of the event to trigger.
 
 Optional:
 
 - `davis_merge` (Boolean) Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-- `metadata` (Block List) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
+- `metadata` (Block Set) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
 
 <a id="nestedblock--event_template--metadata"></a>
 ### Nested Schema for `event_template.metadata`
 
 Required:
 
-- `metadata_key` (String) The key of the metadata item
-- `metadata_value` (String) The value of the metadata item
+- `metadata_key` (String) Type 'dt.' for key hints.
+- `metadata_value` (String) no documentation available
 
 
 
@@ -138,11 +137,11 @@ Required:
 
 Required:
 
-- `alert_condition` (String) The alert condition of the model properties
+- `alert_condition` (String) Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`
 - `alert_on_no_data` (Boolean) The ability to set an alert on missing data in a metric. When enabled, missing data samples will contribute as violating samples defined in advanced model properties. We recommend to not alert on missing data for sparse timeseries as this leads to alert spam.
 - `dealerting_samples` (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event.
 - `samples` (Number) The number of one-minute samples that form the sliding evaluation window.
-- `type` (String) Metric-key-based query definitions only support static thresholds.
+- `type` (String) Possible Values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`
 - `violating_samples` (Number) The number of one-minute samples within the evaluation window that must violate to trigger an event.
 
 Optional:
@@ -157,31 +156,36 @@ Optional:
 
 Required:
 
-- `metric_key` (String) The metric key of the query definition
-- `type` (String) The type of query definition
+- `type` (String) Possible Values: `METRIC_KEY`, `METRIC_SELECTOR`
 
 Optional:
 
-- `aggregation` (String) The aggregation of the query definition
-- `dimension_filter` (Block List, Max: 1) The dimension filters of the query definition (see [below for nested schema](#nestedblock--query_definition--dimension_filter))
+- `aggregation` (String) Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
+- `dimension_filter` (Block List, Max: 1) Dimension filter (see [below for nested schema](#nestedblock--query_definition--dimension_filter))
 - `entity_filter` (Block List, Max: 1) Use rule-based filters to define the scope this event monitors. (see [below for nested schema](#nestedblock--query_definition--entity_filter))
+- `management_zone` (String) Management zone
+- `metric_key` (String) Metric key
 - `metric_selector` (String) To learn more, visit [Metric Selector](https://dt-url.net/metselad)
 - `query_offset` (Number) Minute offset of sliding evaluation window for metrics with latency
 
 <a id="nestedblock--query_definition--dimension_filter"></a>
 ### Nested Schema for `query_definition.dimension_filter`
 
-Optional:
+Required:
 
-- `filter` (Block Set) Dimension filter definitions (see [below for nested schema](#nestedblock--query_definition--dimension_filter--filter))
+- `filter` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--query_definition--dimension_filter--filter))
 
 <a id="nestedblock--query_definition--dimension_filter--filter"></a>
 ### Nested Schema for `query_definition.dimension_filter.filter`
 
 Required:
 
-- `dimension_key` (String) The key of the dimension filter
-- `dimension_value` (String) The value of the dimension filter
+- `dimension_key` (String) Dimension key
+- `dimension_value` (String) Dimension value
+
+Optional:
+
+- `operator` (String) Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
 
 
 
@@ -190,22 +194,22 @@ Required:
 
 Optional:
 
-- `conditions` (Block List) Conditions of entity type to filter (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions))
+- `conditions` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions))
 - `dimension_key` (String) Dimension key of entity type to filter
 
 <a id="nestedblock--query_definition--entity_filter--conditions"></a>
 ### Nested Schema for `query_definition.entity_filter.conditions`
 
-Optional:
+Required:
 
-- `condition` (Block Set) Entity filter conditions (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions--condition))
+- `condition` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions--condition))
 
 <a id="nestedblock--query_definition--entity_filter--conditions--condition"></a>
 ### Nested Schema for `query_definition.entity_filter.conditions.condition`
 
 Required:
 
-- `operator` (String)
-- `type` (String)
-- `value` (String)
+- `operator` (String) Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+- `type` (String) Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
+- `value` (String) no documentation available
  

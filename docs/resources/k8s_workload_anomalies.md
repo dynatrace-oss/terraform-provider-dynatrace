@@ -92,6 +92,21 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
       threshold                     = 2
     }
   }
+  job_failure_events {
+    enabled = true
+  }
+  oom_kills {
+    enabled = true
+  }
+  pod_backoff_events {
+    enabled = true
+  }
+  pod_eviction_events {
+    enabled = true
+  }
+  pod_preemption_events {
+    enabled = true
+  }
 }
 ```
 
@@ -105,8 +120,13 @@ resource "dynatrace_k8s_workload_anomalies" "#name#" {
 - `high_cpu_throttling` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_cpu_throttling))
 - `high_cpu_usage` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_cpu_usage))
 - `high_memory_usage` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--high_memory_usage))
+- `job_failure_events` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--job_failure_events))
 - `not_all_pods_ready` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--not_all_pods_ready))
+- `oom_kills` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--oom_kills))
 - `pending_pods` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pending_pods))
+- `pod_backoff_events` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pod_backoff_events))
+- `pod_eviction_events` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pod_eviction_events))
+- `pod_preemption_events` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pod_preemption_events))
 - `pod_stuck_in_terminating` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pod_stuck_in_terminating))
 - `workload_without_ready_pods` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--workload_without_ready_pods))
 
@@ -227,6 +247,14 @@ Required:
 
 
 
+<a id="nestedblock--job_failure_events"></a>
+### Nested Schema for `job_failure_events`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+
 <a id="nestedblock--not_all_pods_ready"></a>
 ### Nested Schema for `not_all_pods_ready`
 
@@ -246,6 +274,14 @@ Required:
 - `observation_period_in_minutes` (Number) within the last
 - `sample_period_in_minutes` (Number) some workload pods are not ready for at least
 
+
+
+<a id="nestedblock--oom_kills"></a>
+### Nested Schema for `oom_kills`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 
 <a id="nestedblock--pending_pods"></a>
@@ -268,6 +304,30 @@ Required:
 - `sample_period_in_minutes` (Number) stuck in pending state for at least
 - `threshold` (Number) there is at least
 
+
+
+<a id="nestedblock--pod_backoff_events"></a>
+### Nested Schema for `pod_backoff_events`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+
+<a id="nestedblock--pod_eviction_events"></a>
+### Nested Schema for `pod_eviction_events`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+
+<a id="nestedblock--pod_preemption_events"></a>
+### Nested Schema for `pod_preemption_events`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 
 <a id="nestedblock--pod_stuck_in_terminating"></a>

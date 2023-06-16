@@ -6,10 +6,11 @@ import (
 )
 
 type Entity struct {
-	EntityId    *string `json:"entityId,omitempty"`    // The ID of the entity.
-	Type        *string `json:"type,omitempty"`        // The type of the entity.
-	DisplayName *string `json:"displayName,omitempty"` // The name of the entity, displayed in the UI.
-	Tags        Tags    `json:"tags,omitempty"`        // A set of tags assigned to the entity.
+	EntityId    *string        `json:"entityId,omitempty"`    // The ID of the entity.
+	Type        *string        `json:"type,omitempty"`        // The type of the entity.
+	DisplayName *string        `json:"displayName,omitempty"` // The name of the entity, displayed in the UI.
+	Tags        Tags           `json:"tags,omitempty"`        // A set of tags assigned to the entity.
+	Properties  map[string]any `json:"properties"`
 }
 
 func (me *Entity) Schema() map[string]*schema.Schema {
@@ -37,16 +38,28 @@ func (me *Entity) Schema() map[string]*schema.Schema {
 				Schema: new(Tags).Schema(),
 			},
 		},
+		"properties": {
+			Type:        schema.TypeMap,
+			Description: "Properties defining the entity.",
+			Computed:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
 	}
 }
 
 func (me *Entity) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
+	if err := properties.EncodeAll(map[string]any{
 		"entity_id":    me.EntityId,
 		"type":         me.Type,
 		"display_name": me.DisplayName,
 		"tags":         me.Tags,
-	})
+	}); err != nil {
+		return err
+	}
+	if len(me.Properties) > 0 {
+		properties["properties"] = me.Properties
+	}
+	return nil
 }
 
 func (me *Entity) UnmarshalHCL(decoder hcl.Decoder) error {

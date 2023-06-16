@@ -7,7 +7,6 @@ description: |-
 
 # dynatrace_cloudapp_workloaddetection (Resource)
 
-
 ## Dynatrace Documentation
 
 - Cloud application and workload detection - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/cloud-app-and-workload-detection
@@ -16,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_cloudapp_workloaddetection` downloads all existing muted requests configuration
+- `terraform-provider-dynatrace -export dynatrace_cloudapp_workloaddetection` downloads all existing workload detection configuration
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

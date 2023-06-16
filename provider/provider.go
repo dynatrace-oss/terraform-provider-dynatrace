@@ -23,11 +23,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
+	aws_credentials "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/aws"
+	aws_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/aws/supported_services"
+	azure_credentials "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure"
+	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
+	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
@@ -41,6 +45,8 @@ import (
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/nodes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/updatewindows"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -116,30 +122,36 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"dynatrace_alerting_profiles":         alerting.DataSource(),
-			"dynatrace_alerting_profile":          v2alerting.DataSource(),
-			"dynatrace_credentials":               vault.DataSource(),
-			"dynatrace_synthetic_locations":       locations.DataSource(),
-			"dynatrace_synthetic_location":        locations.UniqueDataSource(),
-			"dynatrace_service":                   serviceds.DataSource(),
-			"dynatrace_management_zone":           mgmzds.DataSource(),
-			"dynatrace_management_zones":          mgmzds.DataSourceMultiple(),
-			"dynatrace_application":               application.DataSource(),
-			"dynatrace_mobile_application":        mobileapplication.DataSource(),
-			"dynatrace_host":                      host.DataSource(),
-			"dynatrace_process":                   process.DataSource(),
-			"dynatrace_process_group":             processgroup.DataSource(),
-			"dynatrace_aws_iam_external":          dsaws.DataSource(),
-			"dynatrace_request_attribute":         reqattrds.DataSource(),
-			"dynatrace_calculated_service_metric": metricsds.DataSource(),
-			"dynatrace_iam_group":                 ds_iam_groups.DataSource(),
-			"dynatrace_entity":                    entity.DataSource(),
-			"dynatrace_entities":                  entities.DataSource(),
-			"dynatrace_iam_user":                  ds_iam_users.DataSource(),
-			"dynatrace_request_naming":            requestnaming.DataSource(),
-			"dynatrace_dashboard":                 dashboard.DataSource(),
-			"dynatrace_slo":                       slo.DataSource(),
-			"dynatrace_azure_supported_services":  supported_services.DataSource(),
+			"dynatrace_alerting_profiles":            alerting.DataSource(),
+			"dynatrace_alerting_profile":             v2alerting.DataSource(),
+			"dynatrace_credentials":                  vault.DataSource(),
+			"dynatrace_synthetic_locations":          locations.DataSource(),
+			"dynatrace_synthetic_location":           locations.UniqueDataSource(),
+			"dynatrace_service":                      serviceds.DataSource(),
+			"dynatrace_management_zone":              mgmzds.DataSource(),
+			"dynatrace_management_zones":             mgmzds.DataSourceMultiple(),
+			"dynatrace_application":                  application.DataSource(),
+			"dynatrace_mobile_application":           mobileapplication.DataSource(),
+			"dynatrace_host":                         host.DataSource(),
+			"dynatrace_process":                      process.DataSource(),
+			"dynatrace_process_group":                processgroup.DataSource(),
+			"dynatrace_aws_iam_external":             dsaws.DataSource(),
+			"dynatrace_request_attribute":            reqattrds.DataSource(),
+			"dynatrace_calculated_service_metric":    metricsds.DataSource(),
+			"dynatrace_iam_group":                    ds_iam_groups.DataSource(),
+			"dynatrace_entity":                       entity.DataSource(),
+			"dynatrace_entities":                     entities.DataSource(),
+			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
+			"dynatrace_request_naming":               requestnaming.DataSource(),
+			"dynatrace_dashboard":                    dashboard.DataSource(),
+			"dynatrace_slo":                          slo.DataSource(),
+			"dynatrace_azure_supported_services":     azure_supported_services.DataSource(),
+			"dynatrace_aws_supported_services":       aws_supported_services.DataSource(),
+			"dynatrace_failure_detection_parameters": failure_detection_parameters.DataSource(),
+			"dynatrace_update_windows":               updatewindows.DataSource(),
+			"dynatrace_aws_credentials":              aws_credentials.DataSource(),
+			"dynatrace_azure_credentials":            azure_credentials.DataSource(),
+			"dynatrace_synthetic_nodes":              nodes.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -155,6 +167,7 @@ func Provider() *schema.Provider {
 			"dynatrace_notification":                       resources.NewGeneric(export.ResourceTypes.Notification).Resource(),
 			"dynatrace_autotag":                            resources.NewGeneric(export.ResourceTypes.AutoTag).Resource(),
 			"dynatrace_aws_credentials":                    resources.NewGeneric(export.ResourceTypes.AWSCredentials).Resource(),
+			"dynatrace_aws_service":                        resources.NewGeneric(export.ResourceTypes.AWSService).Resource(),
 			"dynatrace_azure_credentials":                  resources.NewGeneric(export.ResourceTypes.AzureCredentials).Resource(),
 			"dynatrace_azure_service":                      resources.NewGeneric(export.ResourceTypes.AzureService).Resource(),
 			"dynatrace_k8s_credentials":                    resources.NewGeneric(export.ResourceTypes.KubernetesCredentials).Resource(),
@@ -364,6 +377,10 @@ func Provider() *schema.Provider {
 			"dynatrace_business_events_buckets":            resources.NewGeneric(export.ResourceTypes.BusinessEventsBuckets).Resource(),
 			"dynatrace_business_events_metrics":            resources.NewGeneric(export.ResourceTypes.BusinessEventsMetrics).Resource(),
 			"dynatrace_business_events_processing":         resources.NewGeneric(export.ResourceTypes.BusinessEventsProcessing).Resource(),
+			"dynatrace_builtin_process_monitoring":         resources.NewGeneric(export.ResourceTypes.BuiltinProcessMonitoring).Resource(),
+			"dynatrace_limit_outbound_connections":         resources.NewGeneric(export.ResourceTypes.LimitOutboundConnections).Resource(),
+			"dynatrace_span_events":                        resources.NewGeneric(export.ResourceTypes.SpanEvents).Resource(),
+			"dynatrace_vmware":                             resources.NewGeneric(export.ResourceTypes.VMware).Resource(),
 			// "dynatrace_web_app_key_performance_custom":     resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceCustom).Resource(),
 			// "dynatrace_web_app_key_performance_load":       resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceLoad).Resource(),
 			// "dynatrace_web_app_key_performance_xhr":        resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceXHR).Resource(),

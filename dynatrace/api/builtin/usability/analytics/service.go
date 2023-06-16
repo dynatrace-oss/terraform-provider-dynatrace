@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.0"
+const SchemaVersion = "1"
 const SchemaID = "builtin:usability-analytics"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*analytics.Settings] {

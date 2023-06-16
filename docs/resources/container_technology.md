@@ -29,6 +29,7 @@ resource "dynatrace_container_technology" "environment" {
   docker               = true
   docker_windows       = true
   garden               = true
+  podman               = true
   scope                = "environment"
   winc                 = true
 }
@@ -79,6 +80,13 @@ Status: Released
 Operating system: Linux
 
 Min agent version: 1.133
+- `podman` (Boolean) Platform: Podman
+
+Status: Released
+
+Operating system: Linux
+
+Min agent version: 1.267
 - `winc` (Boolean) Platform: Cloud Foundry
 
 Status: Early adopter

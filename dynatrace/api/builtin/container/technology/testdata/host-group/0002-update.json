@@ -5,6 +5,7 @@
     "docker": false,
     "dockerWindows": false,
     "garden": true,
+    "podman": true,
     "scope": "HOST_GROUP-1234567890000000",
     "winc": true
 }

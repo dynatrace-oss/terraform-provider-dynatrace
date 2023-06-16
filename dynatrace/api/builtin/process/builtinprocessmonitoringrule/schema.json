@@ -1,0 +1,672 @@
+{
+	"allowedScopes": [
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Enable or disable built-in monitoring rules.\n",
+	"displayName": "Built-in process monitoring rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"-10": {
+			"default": true,
+			"description": "Rule id: 10",
+			"displayName": "Do monitor processes if EXE name equals 'cc-uploader'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-11": {
+			"default": true,
+			"description": "Rule id: 11",
+			"displayName": "Do monitor processes if EXE name equals 'doppler'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-12": {
+			"default": true,
+			"description": "Rule id: 12",
+			"displayName": "Do monitor processes if EXE name equals 'gorouter'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-13": {
+			"default": true,
+			"description": "Rule id: 13",
+			"displayName": "Do monitor processes if EXE name equals 'locket'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-14": {
+			"default": true,
+			"description": "Rule id: 14",
+			"displayName": "Do monitor processes if EXE name equals 'metron'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-16": {
+			"default": true,
+			"description": "Rule id: 16",
+			"displayName": "Do monitor processes if EXE name equals 'rep'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-17": {
+			"default": true,
+			"description": "Rule id: 17",
+			"displayName": "Do monitor processes if EXE name equals 'route-emitter'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-18": {
+			"default": true,
+			"description": "Rule id: 18",
+			"displayName": "Do monitor processes if EXE name equals 'route-registrar'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-19": {
+			"default": true,
+			"description": "Rule id: 19",
+			"displayName": "Do monitor processes if EXE name equals 'routing-api'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-2": {
+			"default": true,
+			"description": "Rule id: 2",
+			"displayName": "Do not monitor processes if EXE name equals 'php-cgi'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-20": {
+			"default": true,
+			"description": "Rule id: 20",
+			"displayName": "Do monitor processes if EXE name equals 'scheduler'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-21": {
+			"default": true,
+			"description": "Rule id: 21",
+			"displayName": "Do monitor processes if EXE name equals 'silk-daemon'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-22": {
+			"default": true,
+			"description": "Rule id: 22",
+			"displayName": "Do monitor processes if EXE name equals 'switchboard'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-23": {
+			"default": true,
+			"description": "Rule id: 23",
+			"displayName": "Do monitor processes if EXE name equals 'syslog_drain_binder'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-24": {
+			"default": true,
+			"description": "Rule id: 24",
+			"displayName": "Do monitor processes if EXE name equals 'tps-watcher'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-25": {
+			"default": true,
+			"description": "Rule id: 25",
+			"displayName": "Do monitor processes if EXE name equals 'trafficcontroller'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-26": {
+			"default": true,
+			"description": "Rule id: 26",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/prebuild-install'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-27": {
+			"default": true,
+			"description": "Rule id: 27",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/npm'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-28": {
+			"default": true,
+			"description": "Rule id: 28",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/grunt'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-29": {
+			"default": true,
+			"description": "Rule id: 29",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/typescript'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-3": {
+			"default": true,
+			"description": "Rule id: 3",
+			"displayName": "Do monitor processes if ASP.NET Core application path exists",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-32": {
+			"default": true,
+			"description": "Rule id: 32",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/node-pre-gyp'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-33": {
+			"default": true,
+			"description": "Rule id: 33",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/node-gyp'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-34": {
+			"default": true,
+			"description": "Rule id: 34",
+			"displayName": "Do not monitor processes if Node.js application base directory ends with '/node_modules/gulp-cli'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-35": {
+			"default": true,
+			"description": "Rule id: 35",
+			"displayName": "Do not monitor processes if Node.js script equals 'bin/pm2'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-36": {
+			"default": true,
+			"description": "Rule id: 36",
+			"displayName": "Do not monitor processes if Cloud Foundry application begins with 'apps-manager-js'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-37": {
+			"default": true,
+			"description": "Rule id: 37",
+			"displayName": "Do monitor processes if Cloud Foundry application exists",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-38": {
+			"default": true,
+			"description": "Rule id: 38",
+			"displayName": "Do not monitor processes if Kubernetes container name equals 'POD'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-39": {
+			"default": true,
+			"description": "Rule id: 39",
+			"displayName": "Do not monitor processes if Docker stripped image contains 'pause-amd64'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-4": {
+			"default": true,
+			"description": "Rule id: 4",
+			"displayName": "Do monitor processes if EXE name equals 'w3wp.exe'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-40": {
+			"default": true,
+			"description": "Rule id: 40",
+			"displayName": "Do monitor processes if Kubernetes namespace exists",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-41": {
+			"default": true,
+			"description": "Rule id: 41",
+			"displayName": "Do monitor processes if container name exists",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-43": {
+			"default": true,
+			"description": "Rule id: 43",
+			"displayName": "Do not monitor processes if EXE path begins with '/tmp/buildpacks/'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-44": {
+			"default": true,
+			"description": "Rule id: 44",
+			"displayName": "Do not monitor processes if EXE name equals 'oc'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-45": {
+			"default": true,
+			"description": "Rule id: 45",
+			"displayName": "Do not monitor processes if Node.js application equals 'yarn'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-46": {
+			"default": true,
+			"description": "Rule id: 46",
+			"displayName": "Do not monitor processes if EXE path equals '/opt/cni/bin/host-local'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-47": {
+			"default": true,
+			"description": "Rule id: 47",
+			"displayName": "Do not monitor processes if Go Binary Linkage equals 'static'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-48": {
+			"default": true,
+			"description": "Rule id: 48",
+			"displayName": "Do not monitor processes if EXE name begins with 'mqsi'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-49": {
+			"default": true,
+			"description": "Rule id: 49",
+			"displayName": "Do not monitor processes if EXE name equals 'filebeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-5": {
+			"default": true,
+			"description": "Rule id: 5",
+			"displayName": "Do monitor processes if EXE name equals 'caddy'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-50": {
+			"default": true,
+			"description": "Rule id: 50",
+			"displayName": "Do not monitor processes if EXE name equals 'metricbeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-51": {
+			"default": true,
+			"description": "Rule id: 51",
+			"displayName": "Do not monitor processes if EXE name equals 'packetbeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-52": {
+			"default": true,
+			"description": "Rule id: 52",
+			"displayName": "Do not monitor processes if EXE name equals 'auditbeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-53": {
+			"default": true,
+			"description": "Rule id: 53",
+			"displayName": "Do not monitor processes if EXE name equals 'heartbeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-54": {
+			"default": true,
+			"description": "Rule id: 54",
+			"displayName": "Do not monitor processes if EXE name equals 'functionbeat'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-55": {
+			"default": true,
+			"description": "Rule id: 55",
+			"displayName": "Do not monitor processes if EXE name equals 'grootfs'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-56": {
+			"default": true,
+			"description": "Rule id: 56",
+			"displayName": "Do not monitor processes if EXE name equals 'tardis'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-57": {
+			"default": true,
+			"description": "Rule id: 57",
+			"displayName": "Do not monitor processes if Java JAR file begins with 'org.eclipse.equinox.launcher'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-58": {
+			"default": true,
+			"description": "Rule id: 58",
+			"displayName": "Do not monitor processes if EXE name equals 'calico-node'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-59": {
+			"default": true,
+			"description": "Rule id: 59",
+			"displayName": "Do not monitor processes if EXE name equals 'casclient.exe'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-6": {
+			"default": true,
+			"description": "Rule id: 6",
+			"displayName": "Do monitor processes if EXE name equals 'influxd'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-60": {
+			"default": true,
+			"description": "Rule id: 60",
+			"displayName": "Do not monitor processes if JAR file name equals 'dynatrace_ibm_mq_connector.jar'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-61": {
+			"default": true,
+			"description": "Rule id: 61",
+			"displayName": "Do not monitor processes if EXE name contains 'Agent.Worker'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-62": {
+			"default": true,
+			"description": "Rule id: 62",
+			"displayName": "Do not monitor processes if ASP.NET Core application DLL contains 'Agent.Worker'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-63": {
+			"default": true,
+			"description": "Rule id: 63",
+			"displayName": "Do not monitor processes if EXE name contains 'Agent.Listener'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-64": {
+			"default": true,
+			"description": "Rule id: 64",
+			"displayName": "Do not monitor processes if ASP.NET Core application DLL contains 'Agent.Listener'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-65": {
+			"default": true,
+			"description": "Rule id: 65",
+			"displayName": "Do not monitor processes if EXE name equals 'FlexNetJobExecutorService'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-66": {
+			"default": true,
+			"description": "Rule id: 66",
+			"displayName": "Do not monitor processes if EXE name equals 'FlexNetMaintenanceRemotingService'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-67": {
+			"default": true,
+			"description": "Rule id: 67",
+			"displayName": "Do not monitor processes if EXE path equals '/usr/bin/piper'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-68": {
+			"default": true,
+			"description": "Rule id: 68",
+			"displayName": "Do not monitor processes if Node.js application equals 'corepack'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-69": {
+			"default": true,
+			"description": "Rule id: 69",
+			"displayName": "Do not monitor processes if Kubernetes container name equals 'cassandra-operator'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-7": {
+			"default": true,
+			"description": "Rule id: 7",
+			"displayName": "Do monitor processes if EXE name equals 'adapter'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-70": {
+			"default": true,
+			"description": "Rule id: 70",
+			"displayName": "Do not monitor processes if EXE name contains 'UiPath'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-8": {
+			"default": true,
+			"description": "Rule id: 8",
+			"displayName": "Do monitor processes if EXE name equals 'auctioneer'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-9": {
+			"default": true,
+			"description": "Rule id: 9",
+			"displayName": "Do monitor processes if EXE name equals 'bbs'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process.built-in-process-monitoring-rule",
+	"types": {},
+	"version": "0.4.1"
+}

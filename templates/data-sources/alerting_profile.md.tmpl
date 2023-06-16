@@ -12,7 +12,6 @@ The ID of this Data Resource aligns with the IDs used by the Dynatrace Settings 
 
 ## Example Usage
 
-
 ```terraform
 data "dynatrace_alerting_profile" "Default" {
   name = "Default"

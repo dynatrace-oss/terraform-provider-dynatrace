@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_browser_monitor_performance (Resource)
 
+-> Configuration of the synthetic test scope overlaps with [dynatrace_browser_monitor](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/browser_monitor), but this resource in addition provides an option for an environment scope.
+
 ## Dynatrace Documentation
 
 - Performance thresholds - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/configure-browser-monitors#performance-thresholds

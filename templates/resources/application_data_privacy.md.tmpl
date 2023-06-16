@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_application_data_privacy (Resource)
 
--> Certain field(s) of this resource has overlap with `dynatrace_data_privacy`, please review the schema for additional information.
+-> This resource is utilizing an older API endpoint, please use [dynatrace_data_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/data_privacy) and [dynatrace_session_replay_web_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/session_replay_web_privacy) instead.
 
 ## Dynatrace Documentation
 

@@ -74,12 +74,12 @@ resource "dynatrace_service_external_web_request" "#name#" {
 ### Required
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `id_contributors` (Block List, Min: 1, Max: 1) Contributors to the Service Identifier calculation. All of the Contributors except for Port always get applied. It is possible to exclude Port from contributing by toggling the switch off. (see [below for nested schema](#nestedblock--id_contributors))
+- `id_contributors` (Block List, Min: 1, Max: 1) Contributors to the Service Identifier calculation. All of the Contributors except for the port are always applied. You can exclude the port contribution by disabling the switch. (see [below for nested schema](#nestedblock--id_contributors))
 - `name` (String) Rule name
 
 ### Optional
 
-- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they **all** must match a Request for the rule to apply. Conditions evaluate against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
+- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
 - `description` (String) Description
 - `management_zones` (Set of String) Define a management zone filter for this service detection rule.
 
@@ -94,7 +94,7 @@ Required:
 
 - `application_id` (Block List, Min: 1, Max: 1) Application identifier (see [below for nested schema](#nestedblock--id_contributors--application_id))
 - `context_root` (Block List, Min: 1, Max: 1) URL context root (see [below for nested schema](#nestedblock--id_contributors--context_root))
-- `port_for_service_id` (Boolean) Let the Port contribute to the Service Id
+- `port_for_service_id` (Boolean) Let the port contribute to the Service Id
 - `public_domain_name` (Block List, Min: 1, Max: 1) Public domain name (see [below for nested schema](#nestedblock--id_contributors--public_domain_name))
 
 <a id="nestedblock--id_contributors--application_id"></a>
@@ -117,7 +117,7 @@ Required:
 
 Optional:
 
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--application_id--service_id_contributor--transformations"></a>
@@ -179,7 +179,7 @@ Required:
 Optional:
 
 - `segment_count` (Number) The number of segments of the URL to be kept. The URL is divided by slashes (/), the indexing starts with 1 at context root. For example, if you specify 2 for the `www.dynatrace.com/support/help/dynatrace-api/` URL, the value of `support/help` is used.
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--context_root--service_id_contributor--transformations"></a>
@@ -237,7 +237,7 @@ Required:
 Optional:
 
 - `copy_from_host_name` (Boolean) Use the detected host name instead of the request's domain name.
-- `transformations` (Block List, Max: 1) Choose how the value will be transformed before contributing to the Service Id. All of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the Service screen under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--public_domain_name--service_id_contributor--transformations))
+- `transformations` (Block List, Max: 1) Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--public_domain_name--service_id_contributor--transformations))
 - `value_override` (Block List, Max: 1) The value to be used instead of the detected value. (see [below for nested schema](#nestedblock--id_contributors--public_domain_name--service_id_contributor--value_override))
 
 <a id="nestedblock--id_contributors--public_domain_name--service_id_contributor--transformations"></a>

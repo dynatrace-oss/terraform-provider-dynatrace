@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_autotag (Resource)
 
+-> This resource is utilizing an older API endpoint, please use [dynatrace_autotag_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/autotag_v2) instead.
+
 ## Dynatrace Documentation
 
 - Define and apply tags - https://www.dynatrace.com/support/help/how-to-use-dynatrace/tags-and-metadata/setup/how-to-define-tags

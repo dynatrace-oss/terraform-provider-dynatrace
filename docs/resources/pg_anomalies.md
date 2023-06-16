@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_pg_anomalies (Resource)
 
-The API utilized for this resource is flawed, please use [dynatrace_pg_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/pg_alerting) instead.
+-> This resource is utilizing an older API endpoint, please use [dynatrace_pg_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/pg_alerting) instead.
 
 ## Dynatrace Documentation
 

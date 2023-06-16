@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_json_dashboard (Resource)
 
+-> This resource is excluded by default in the export utility since there could be a large amount of dashboards.
+
 ## Dynatrace Documentation
 
 - Dashboards and reports - https://www.dynatrace.com/support/help/how-to-use-dynatrace/dashboards-and-charts

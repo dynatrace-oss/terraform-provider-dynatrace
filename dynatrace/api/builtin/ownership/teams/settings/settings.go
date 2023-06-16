@@ -26,8 +26,8 @@ type Settings struct {
 	AdditionalInformation    AdditionalInformations   `json:"additionalInformation,omitempty"`    // Define key/value pairs that further describe this team — for example, cost center, solution type, or business unit assignments.
 	ContactDetails           ContactDetailss          `json:"contactDetails,omitempty"`           // Define options for messaging integration or other means of contacting this team.
 	Description              *string                  `json:"description,omitempty"`              // Description
-	ExternalID               *string                  `json:"externalId,omitempty"`               // This field should only be used for the automation purpose when importing team information. Once the external ID is created it can’t be changed.
-	Identifier               string                   `json:"identifier"`                         // The team identifier is used to reference the team from any entity in Dynatrace. This identifier can’t be edited once the team has been created.
+	ExternalID               *string                  `json:"externalId,omitempty"`               // This field should only be used for the automation purpose when importing team information.
+	Identifier               string                   `json:"identifier"`                         // The team identifier is used to reference the team from any entity in Dynatrace.
 	Links                    Links                    `json:"links,omitempty"`                    // Include links to online resources where information relevant to this team’s responsibilities can be found.
 	Name                     string                   `json:"name"`                               // Team name
 	Responsibilities         *Responsibilities        `json:"responsibilities"`                   // Turn on all responsibility assignments that apply to this team.
@@ -59,12 +59,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"external_id": {
 			Type:        schema.TypeString,
-			Description: "This field should only be used for the automation purpose when importing team information. Once the external ID is created it can’t be changed.",
+			Description: "This field should only be used for the automation purpose when importing team information.",
 			Optional:    true, // nullable
 		},
 		"identifier": {
 			Type:        schema.TypeString,
-			Description: "The team identifier is used to reference the team from any entity in Dynatrace. This identifier can’t be edited once the team has been created.",
+			Description: "The team identifier is used to reference the team from any entity in Dynatrace.",
 			Required:    true,
 		},
 		"links": {

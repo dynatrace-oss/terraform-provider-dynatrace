@@ -60,13 +60,14 @@ resource "dynatrace_maintenance" "#name#" {
 
 ### Required
 
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `general_properties` (Block List, Min: 1, Max: 1) The general properties of the maintenance window (see [below for nested schema](#nestedblock--general_properties))
 - `schedule` (Block List, Min: 1, Max: 1) The schedule of the maintenance window (see [below for nested schema](#nestedblock--schedule))
 
 ### Optional
 
-- `enabled` (Boolean) The maintenance window is enabled or disabled
-- `filters` (Block List) The filters of the maintenance window (see [below for nested schema](#nestedblock--filters))
+- `filters` (Block List, Max: 1) ## Filters
+Add filters to limit the scope of maintenance to only select matching entities. If no filter is defined, the maintenance window is valid for the whole environment. Each filter is evaluated separately (**OR**). (see [below for nested schema](#nestedblock--filters))
 - `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
 
 ### Read-Only
@@ -78,14 +79,14 @@ resource "dynatrace_maintenance" "#name#" {
 
 Required:
 
+- `disable_synthetic` (Boolean) Disables the execution of the synthetic monitors that are within [the scope of this maintenance window](https://dt-url.net/0e0341m).
 - `name` (String) The name of the maintenance window, displayed in the UI
-- `suppression` (String) The type of suppression of alerting and problem detection during the maintenance
-- `type` (String) The type of the maintenance: planned or unplanned
+- `suppression` (String) The type of suppression of alerting and problem detection during the maintenance. Possible Values: `DETECT_PROBLEMS_AND_ALERT`, `DETECT_PROBLEMS_DONT_ALERT`, `DONT_DETECT_PROBLEMS`
+- `type` (String) The type of the maintenance, possible values: `PLANNED` or `UNPLANNED`
 
 Optional:
 
-- `description` (String) A short description of the maintenance purpose
-- `disable_synthetic` (Boolean) Suppress execution of synthetic monitors during the maintenance
+- `description` (String) A short description of the maintenance purpose.
 
 
 <a id="nestedblock--schedule"></a>
@@ -93,7 +94,7 @@ Optional:
 
 Required:
 
-- `type` (String) The time window of the maintenance window
+- `type` (String) The type maintenance window, possible values: `DAILY`, `MONTHLY`, `ONCE`, `WEEKLY`
 
 Optional:
 
@@ -135,7 +136,7 @@ Required:
 
 Required:
 
-- `day_of_month` (Number) The day of the month for monthly maintenance.  The value of `31` is treated as the last day of the month for months that don't have a 31st day. The value of `30` is also treated as the last day of the month for February
+- `day_of_month` (Number) The day of the month for monthly maintenance. If the selected day does not fall within the month, the maintenance window will be active on the last day of the month.
 - `recurrence_range` (Block List, Min: 1, Max: 1) The recurrence date range of the maintenance window (see [below for nested schema](#nestedblock--schedule--monthly_recurrence--recurrence_range))
 - `time_window` (Block List, Min: 1, Max: 1) The time window of the maintenance window (see [below for nested schema](#nestedblock--schedule--monthly_recurrence--time_window))
 
@@ -174,7 +175,7 @@ Required:
 
 Required:
 
-- `day_of_week` (String) The day of the week for weekly maintenance.  The format is the full name of the day in upper case, for example `THURSDAY`
+- `day_of_week` (String) The day of the week for weekly maintenance, possible values: `FRIDAY`, `MONDAY`, `SATURDAY`, `SUNDAY`, `THURSDAY`, `TUESDAY`, `WEDNESDAY`
 - `recurrence_range` (Block List, Min: 1, Max: 1) The recurrence date range of the maintenance window (see [below for nested schema](#nestedblock--schedule--weekly_recurrence--recurrence_range))
 - `time_window` (Block List, Min: 1, Max: 1) The time window of the maintenance window (see [below for nested schema](#nestedblock--schedule--weekly_recurrence--time_window))
 
@@ -202,17 +203,17 @@ Required:
 <a id="nestedblock--filters"></a>
 ### Nested Schema for `filters`
 
-Optional:
+Required:
 
-- `filter` (Block List) A list of matching rules for dynamic filter formation.  If several rules are set, the OR logic applies (see [below for nested schema](#nestedblock--filters--filter))
+- `filter` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--filters--filter))
 
 <a id="nestedblock--filters--filter"></a>
 ### Nested Schema for `filters.filter`
 
 Optional:
 
-- `entity_id` (String) A specific entity that should match this maintenance window
-- `entity_tags` (Set of String) The tags you want to use for matching in the format key or key:value
-- `entity_type` (String) Type of entities this maintenance window should match
-- `management_zones` (Set of String) The IDs of management zones to which the matched entities must belong
+- `entity_id` (String) A specific entity that should match this maintenance window.. **Note**: If an entity type filter value is set, it must be equal to the type of the selected entity. Otherwise this maintenance window will not match.
+- `entity_tags` (Set of String) Entities which contain all of the configured tags will match this maintenance window.
+- `entity_type` (String) Type of entities this maintenance window should match.. If no entity type is selected all entities regardless of the type will match.
+- `management_zones` (Set of String) Entities which are part of all the configured management zones will match this maintenance window.
  

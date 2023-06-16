@@ -16,7 +16,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_process_group_detection` downloads all existing muted requests configuration
+- `terraform-provider-dynatrace -export dynatrace_process_group_detection` downloads all existing advanced process group detection configuration
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

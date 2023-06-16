@@ -2,7 +2,7 @@
 layout: ""
 page_title: dynatrace_synthetic_location Resource - terraform-provider-dynatrace"
 description: |-
-  The resource `dynatrace_synthetic_location` covers configuration of Private Synthetic Locations
+  The resource `dynatrace_synthetic_location` covers configuration of private synthetic locations
 ---
 
 # dynatrace_synthetic_location (Resource)
@@ -15,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_synthetic_location` downloads the currently configured Private Synthetic Locations
+- `terraform-provider-dynatrace -export dynatrace_synthetic_location` downloads the currently configured private synthetic locations
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

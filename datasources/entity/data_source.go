@@ -46,6 +46,12 @@ func DataSource() *schema.Resource {
 				Optional:      true,
 				ConflictsWith: []string{"type", "name"},
 			},
+			"properties": {
+				Type:        schema.TypeMap,
+				Description: "Properties defining the entity.",
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -69,19 +75,32 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}
-	d.SetId(service.SchemaID())
 	if len(settings.Entities) != 0 {
 		if len(name) > 0 {
+			// When looking for a specific name
+			// The first entity that matches that name will be returned
 			for _, entity := range settings.Entities {
 				if name == *entity.DisplayName {
 					d.SetId(*entity.EntityId)
+					if len(entity.Properties) > 0 {
+						d.Set("properties", entity.Properties)
+					}
 					return nil
 				}
 			}
+			// No entity with that name -> ID empty string signals not found
+			d.SetId("")
+			return nil
 		}
+		// When looking via entity_selector the first result
+		// will be returned
 		d.SetId(*settings.Entities[0].EntityId)
+		if len(settings.Entities[0].Properties) > 0 {
+			d.Set("properties", settings.Entities[0].Properties)
+		}
 		return nil
 	}
+	// Without any matches we're setting the ID to an empty string
 	d.SetId("")
 	return nil
 }

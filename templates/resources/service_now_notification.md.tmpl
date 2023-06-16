@@ -15,7 +15,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_service_now_notification` downloads the existing Problem Notifications for Service Now
+- `terraform-provider-dynatrace -export dynatrace_service_now_notification` downloads the existing problem notifications for Service Now
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

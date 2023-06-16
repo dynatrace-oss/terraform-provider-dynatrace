@@ -23,12 +23,18 @@ import (
 )
 
 type CustomLogSource struct {
-	Type   LogSourceType `json:"type"`   // Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`
-	Values []string      `json:"values"` // It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
+	Accept_binary *bool         `json:"accept-binary,omitempty"` // Accept binary content
+	Type          LogSourceType `json:"type"`                    // Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`
+	Values        []string      `json:"values"`                  // It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
 }
 
 func (me *CustomLogSource) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"accept_binary": {
+			Type:        schema.TypeBool,
+			Description: "Accept binary content",
+			Optional:    true, // nullable
+		},
 		"type": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`",
@@ -45,14 +51,16 @@ func (me *CustomLogSource) Schema() map[string]*schema.Schema {
 
 func (me *CustomLogSource) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"type":   me.Type,
-		"values": me.Values,
+		"accept_binary": me.Accept_binary,
+		"type":          me.Type,
+		"values":        me.Values,
 	})
 }
 
 func (me *CustomLogSource) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"type":   &me.Type,
-		"values": &me.Values,
+		"accept_binary": &me.Accept_binary,
+		"type":          &me.Type,
+		"values":        &me.Values,
 	})
 }

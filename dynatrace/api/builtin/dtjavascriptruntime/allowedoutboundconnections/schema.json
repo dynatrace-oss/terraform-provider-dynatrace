@@ -1,0 +1,86 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "You can limit the accessibility of public endpoints from functions running in the Dynatrace JavaScript runtime, for example, the backends of apps and functions written in the Dashboards, Notebooks and Automations app.",
+	"displayName": "Limit outbound connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"allowedOutboundConnections": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/AllowedHostsList"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:dt-javascript-runtime",
+		"group:preferences"
+	],
+	"schemaId": "builtin:dt-javascript-runtime.allowed-outbound-connections",
+	"types": {
+		"AllowedHostsList": {
+			"description": "Specifies allowed hosts and if the allow list should be enforced.",
+			"displayName": "AllowedHostsList",
+			"documentation": "",
+			"properties": {
+				"enforced": {
+					"default": true,
+					"description": "",
+					"displayName": "Limit outbound connections to endpoints in the allow-list",
+					"documentation": "If enabled, the Dynatrace JavaScript runtime will only be able to connect to the specified hosts.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"hostList": {
+					"description": "",
+					"displayName": "Allow-list",
+					"documentation": "The Dynatrace JavaScript runtime will only be to connect to these hosts.",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 255,
+								"minLength": 1,
+								"type": "LENGTH"
+							},
+							{
+								"customValidatorId": "allowed-host-validator",
+								"type": "CUSTOM_VALIDATOR_REF"
+							}
+						],
+						"description": "A Host that app backends should be able to connect to.",
+						"displayName": "Allowed Host",
+						"documentation": "Either an IP, or a domain name which may contain a wildcard ('*') as the leftmost label. If a '*' is used, it must be followed by at least two labels.",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enforced",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				}
+			},
+			"summaryPattern": "Allowlist enforced: {enforced}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}
