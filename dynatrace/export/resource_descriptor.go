@@ -18,6 +18,7 @@
 package export
 
 import (
+	"os"
 	"reflect"
 	"strings"
 
@@ -962,7 +963,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.VMware:                   NewResourceDescriptor(vmware.Service),
 }
 
-var BlackListedResources = []ResourceType{
+var blackListedResources = []ResourceType{
 	// Officially deprecated resources (EOL)
 	ResourceTypes.AlertingProfile,   // Replaced by dynatrace_alerting
 	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
@@ -1002,7 +1003,6 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
 
-	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
 
 	ResourceTypes.UserSettings, // Excluded since it requires a personal token
@@ -1010,6 +1010,19 @@ var BlackListedResources = []ResourceType{
 	// Not included in export - to be discussed
 	ResourceTypes.AzureService,
 	ResourceTypes.AWSService,
+}
+
+var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
+
+func GetBlackListedResources() []ResourceType {
+
+	if ENABLE_EXPORT_DASHBOARD {
+		return blackListedResources
+	}
+
+	// Excluded due to the potential of a large amount of dashboards
+	return append(blackListedResources, ResourceTypes.JSONDashboard)
+
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

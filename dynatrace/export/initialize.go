@@ -55,7 +55,7 @@ func Initialize() (environment *Environment, err error) {
 	if flags.Exclude {
 		for resourceType := range AllResources {
 			blackListed := false
-			for _, blackListedResourceType := range BlackListedResources {
+			for _, blackListedResourceType := range GetBlackListedResources() {
 				if resourceType == blackListedResourceType {
 					blackListed = true
 					break
@@ -120,7 +120,7 @@ func Initialize() (environment *Environment, err error) {
 		if len(resArgs) == 0 {
 			for resourceType := range AllResources {
 				blackListed := false
-				for _, blackListedResourceType := range BlackListedResources {
+				for _, blackListedResourceType := range GetBlackListedResources() {
 					if resourceType == blackListedResourceType {
 						blackListed = true
 						break
