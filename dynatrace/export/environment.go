@@ -481,7 +481,6 @@ func (me *Environment) WriteMainFile() error {
 					mainFile.WriteString(fmt.Sprintf("  %s_%s = module.%s.resources_%s\n", referencedResource.Type, referencedResource.UniqueName, referencedResource.Type.Trim(), referencedResource.UniqueName))
 				}
 			}
-			mainFile.WriteString("}\n\n")
 		} else {
 			referencedResourceTypes := module.GetReferencedResourceTypes()
 			if len(referencedResourceTypes) > 0 {
@@ -497,6 +496,7 @@ func (me *Environment) WriteMainFile() error {
 				}
 			}
 		}
+		mainFile.WriteString("}\n\n")
 	}
 	return nil
 }
