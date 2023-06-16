@@ -15,18 +15,18 @@
 * limitations under the License.
  */
 
-package entrypoints
+package capturing
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
-	entrypoints "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/entrypoints/settings"
+	capturing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/capturing/settings"
 )
 
-const SchemaID = "builtin:span-entry-points"
-const SchemaVersion = "0.1.16"
+const SchemaID = "builtin:span-capturing"
+const SchemaVersion = "0.1.15"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*entrypoints.SpanEntryPoint] {
-	return settings20.Service[*entrypoints.SpanEntryPoint](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*capturing.SpanCaptureSetting] {
+	return settings20.Service[*capturing.SpanCaptureSetting](credentials, SchemaID, SchemaVersion)
 }

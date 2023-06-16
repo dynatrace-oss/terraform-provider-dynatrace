@@ -15,10 +15,10 @@
 * limitations under the License.
  */
 
-package capture
+package capturing
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/match"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/match"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 

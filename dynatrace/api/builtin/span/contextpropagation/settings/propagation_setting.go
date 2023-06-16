@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package ctxprop
+package contextpropagation
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"

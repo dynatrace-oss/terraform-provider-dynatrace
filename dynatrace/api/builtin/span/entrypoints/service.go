@@ -15,19 +15,18 @@
 * limitations under the License.
  */
 
-package capture_test
+package entrypoints
 
 import (
-	"testing"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/capture"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	entrypoints "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/entrypoints/settings"
 )
 
-func TestSpanCaptureRules(t *testing.T) {
-	api.TestService(t, capture.Service)
-}
+const SchemaID = "builtin:span-entry-points"
+const SchemaVersion = "0.1.16"
 
-func TestAccSpanCaptureRules(t *testing.T) {
-	api.TestAcc(t)
+func Service(credentials *settings.Credentials) settings.CRUDService[*entrypoints.SpanEntryPoint] {
+	return settings20.Service[*entrypoints.SpanEntryPoint](credentials, SchemaID, SchemaVersion)
 }

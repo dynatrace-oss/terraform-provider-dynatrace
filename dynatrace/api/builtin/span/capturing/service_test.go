@@ -15,14 +15,19 @@
 * limitations under the License.
  */
 
-package ctxprop
+package capturing_test
 
-type PropagationAction string
+import (
+	"testing"
 
-var PropagationActions = struct {
-	Propagate     PropagationAction
-	DontPropagate PropagationAction
-}{
-	Propagate:     PropagationAction("PROPAGATE"),
-	DontPropagate: PropagationAction("DONT_PROPAGATE"),
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/capturing"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+)
+
+func TestSpanCaptureRules(t *testing.T) {
+	api.TestService(t, capturing.Service)
+}
+
+func TestAccSpanCaptureRules(t *testing.T) {
+	api.TestAcc(t)
 }

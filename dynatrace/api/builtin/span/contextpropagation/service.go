@@ -15,18 +15,18 @@
 * limitations under the License.
  */
 
-package ctxprop
+package contextpropagation
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
-	ctxprop "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/ctxprop/settings"
+	contextpropagation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/contextpropagation/settings"
 )
 
 const SchemaID = "builtin:span-context-propagation"
 const SchemaVersion = "0.1.18"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*ctxprop.PropagationSetting] {
-	return settings20.Service[*ctxprop.PropagationSetting](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*contextpropagation.PropagationSetting] {
+	return settings20.Service[*contextpropagation.PropagationSetting](credentials, SchemaID, SchemaVersion)
 }

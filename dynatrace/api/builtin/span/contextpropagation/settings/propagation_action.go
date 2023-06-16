@@ -15,19 +15,14 @@
 * limitations under the License.
  */
 
-package ctxprop_test
+package contextpropagation
 
-import (
-	"testing"
+type PropagationAction string
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/ctxprop"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-)
-
-func TestContextPropagationSettings(t *testing.T) {
-	api.TestService(t, ctxprop.Service)
-}
-
-func TestAccContextPropagationSettings(t *testing.T) {
-	api.TestAcc(t)
+var PropagationActions = struct {
+	Propagate     PropagationAction
+	DontPropagate PropagationAction
+}{
+	Propagate:     PropagationAction("PROPAGATE"),
+	DontPropagate: PropagationAction("DONT_PROPAGATE"),
 }

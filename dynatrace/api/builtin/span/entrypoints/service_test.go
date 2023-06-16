@@ -15,14 +15,19 @@
 * limitations under the License.
  */
 
-package capture
+package entrypoints_test
 
-type SpanCaptureAction string
+import (
+	"testing"
 
-var SpanEntryPointActions = struct {
-	Capture SpanCaptureAction
-	Ignore  SpanCaptureAction
-}{
-	Capture: SpanCaptureAction("CAPTURE"),
-	Ignore:  SpanCaptureAction("IGNORE"),
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/entrypoints"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+)
+
+func TestSpanEntryPoints(t *testing.T) {
+	api.TestService(t, entrypoints.Service)
+}
+
+func TestAccSpanEntryPoints(t *testing.T) {
+	api.TestAcc(t)
 }

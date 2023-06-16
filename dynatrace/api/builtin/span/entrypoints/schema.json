@@ -1,0 +1,335 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "OpenTelemetry/OpenTracing spans can start new PurePaths. Define rules that define which spans should not be considered as entry points.\n\nNote: This config does not apply to Trace ingest.",
+	"displayName": "Span entry points",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"SpanEntrypointAction": {
+			"description": "",
+			"displayName": "SpanEntrypointAction",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Create entry point",
+					"value": "CREATE_ENTRYPOINT"
+				},
+				{
+					"displayName": "Do not create entry point",
+					"value": "DONT_CREATE_ENTRYPOINT"
+				}
+			],
+			"type": "enum"
+		},
+		"SpanKind": {
+			"description": "",
+			"displayName": "SpanKind",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Internal",
+					"value": "INTERNAL"
+				},
+				{
+					"displayName": "Server",
+					"value": "SERVER"
+				},
+				{
+					"displayName": "Client",
+					"value": "CLIENT"
+				},
+				{
+					"displayName": "Producer",
+					"value": "PRODUCER"
+				},
+				{
+					"displayName": "Consumer",
+					"value": "CONSUMER"
+				}
+			],
+			"type": "enum"
+		},
+		"SpanMatcherSource": {
+			"description": "",
+			"displayName": "SpanMatcherSource",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Span name",
+					"value": "SPAN_NAME"
+				},
+				{
+					"displayName": "Span kind",
+					"value": "SPAN_KIND"
+				},
+				{
+					"displayName": "Attribute",
+					"value": "ATTRIBUTE"
+				},
+				{
+					"displayName": "Instrumentation scope name",
+					"value": "INSTRUMENTATION_SCOPE_NAME"
+				},
+				{
+					"displayName": "Instrumentation scope version",
+					"value": "INSTRUMENTATION_SCOPE_VERSION"
+				}
+			],
+			"type": "enum"
+		},
+		"SpanMatcherType": {
+			"description": "",
+			"displayName": "SpanMatcherType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "Contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "Starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "Ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "Does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "Does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"displayName": "Does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"displayName": "Does not end with",
+					"value": "DOES_NOT_END_WITH"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"entryPointRule": {
+			"description": "",
+			"displayName": "Entry Point Rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SpanEntrypointRule"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:service-monitoring.spans"
+	],
+	"schemaId": "builtin:span-entry-points",
+	"types": {
+		"SpanEntrypointRule": {
+			"constraints": [
+				{
+					"customMessage": "Span kind supports only 'Equals' \u0026 'Does not equal' comparison types",
+					"customValidatorId": "span-kind-comparison-type-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customMessage": "Only ASCII characters are allowed",
+					"customValidatorId": "ascii-character-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Entry point span rule",
+			"documentation": "",
+			"properties": {
+				"matchers": {
+					"description": "",
+					"displayName": "Matchers",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SpanMatcher"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"ruleAction": {
+					"default": "CREATE_ENTRYPOINT",
+					"description": "",
+					"displayName": "Rule action",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/SpanEntrypointAction"
+					}
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.2",
+			"versionInfo": ""
+		},
+		"SpanMatcher": {
+			"description": "",
+			"displayName": "SpanMatcher",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": false,
+					"description": "affects value and key",
+					"displayName": "Case sensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "SPAN_KIND",
+							"property": "source",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "boolean"
+				},
+				"source": {
+					"default": "SPAN_NAME",
+					"description": "",
+					"displayName": "Source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/SpanMatcherSource"
+					}
+				},
+				"sourceKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "ATTRIBUTE",
+						"property": "source",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"spanKindValue": {
+					"default": "INTERNAL",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "SPAN_KIND",
+						"property": "source",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/SpanKind"
+					}
+				},
+				"type": {
+					"default": "EQUALS",
+					"description": "affects value",
+					"displayName": "Comparison Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/SpanMatcherType"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "evaluated at span start",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "SPAN_KIND",
+							"property": "source",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{source} {sourceKey} {type} {value}{spanKindValue}",
+			"type": "object",
+			"version": "0.0.11",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.1.16"
+}

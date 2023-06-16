@@ -15,18 +15,19 @@
 * limitations under the License.
  */
 
-package capture
+package contextpropagation_test
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"testing"
 
-	capture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/capture/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/contextpropagation"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-const SchemaID = "builtin:span-capturing"
-const SchemaVersion = "0.1.15"
+func TestContextPropagationSettings(t *testing.T) {
+	api.TestService(t, contextpropagation.Service)
+}
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*capture.SpanCaptureSetting] {
-	return settings20.Service[*capture.SpanCaptureSetting](credentials, SchemaID, SchemaVersion)
+func TestAccContextPropagationSettings(t *testing.T) {
+	api.TestAcc(t)
 }

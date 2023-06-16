@@ -15,24 +15,24 @@
 * limitations under the License.
  */
 
-package entrypoints
+package contextpropagation
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/spans/match"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/match"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// SpanEntrypointRule has no documentation
-type SpanEntrypointRule struct {
-	Name     string               `json:"ruleName"`
-	Action   SpanEntrypointAction `json:"ruleAction"`
-	Matchers match.SpanMatchers   `json:"matchers" min:"1" max:"100"`
+// PropagationRule has no documentation
+type PropagationRule struct {
+	Name     string             `json:"ruleName"`
+	Action   PropagationAction  `json:"ruleAction"`
+	Matchers match.SpanMatchers `json:"matchers" min:"1" max:"100"`
 }
 
-func (me *SpanEntrypointRule) Schema() map[string]*schema.Schema {
+func (me *PropagationRule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
@@ -55,7 +55,7 @@ func (me *SpanEntrypointRule) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *SpanEntrypointRule) MarshalHCL(properties hcl.Properties) error {
+func (me *PropagationRule) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":    me.Name,
 		"action":  me.Action,
@@ -63,7 +63,7 @@ func (me *SpanEntrypointRule) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *SpanEntrypointRule) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *PropagationRule) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"name":    &me.Name,
 		"action":  &me.Action,
