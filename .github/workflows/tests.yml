@@ -2078,7 +2078,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/ibmmq/filters
+        run: go test -v ./dynatrace/api/builtin/mainframe/mqfilters
       - name: TestIMSBridges
         if: success() || failure()
         env:

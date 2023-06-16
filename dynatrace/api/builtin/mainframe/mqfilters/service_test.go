@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package filters_test
+package mqfilters_test
 
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ibmmq/filters"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/mqfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestMQFilters(t *testing.T) {
-	api.TestService(t, filters.Service)
+	api.TestService(t, mqfilters.Service)
 }
 
 func TestAccMQFilters(t *testing.T) {

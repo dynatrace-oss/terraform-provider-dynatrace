@@ -1,0 +1,176 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace automatically traces CICS and IMS transactions originating from IBM MQ queues. To limit tracing to certain queues, specify their names in the include lists. To exclude queues from tracing, specify their names in the exclude lists. For IMS, these lists apply to message processing regions.\n\nTo only trace specific transactions submitted via the IMS bridge, specify their transaction IDs in the include list or exclude list.",
+	"displayName": "IBM MQ filters",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cicsMqQueueIdExcludes": {
+			"description": "",
+			"displayName": "CICS: Excluded MQ queues",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 48,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "MQ queue name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "CICS: Add MQ queue to exclude list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"cicsMqQueueIdIncludes": {
+			"description": "",
+			"displayName": "CICS: Included MQ queues",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 48,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "MQ queue name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "CICS: Add MQ queue to include list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"imsCrTrnIdExcludes": {
+			"description": "",
+			"displayName": "IMS bridge: Excluded transaction IDs",
+			"documentation": "When you add a transaction ID to the exclude list remaining transactions are still monitored.",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 8,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "IMS transaction ID",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "IMS bridge: Add transaction ID to exclude list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"imsCrTrnIdIncludes": {
+			"description": "",
+			"displayName": "IMS bridge: Included transaction IDs",
+			"documentation": "When you add a transaction ID to the include list, all the remaining transactions are ignored.",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 8,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "IMS transaction ID",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "IMS bridge: Add transaction ID to include list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"imsMqQueueIdExcludes": {
+			"description": "",
+			"displayName": "IMS: Excluded MQ queues",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 48,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "MQ queue name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "IMS: Add MQ queue to exclude list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"imsMqQueueIdIncludes": {
+			"description": "",
+			"displayName": "IMS: Included MQ queues",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 48,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "MQ queue name",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 300,
+			"metadata": {
+				"addItemButton": "IMS: Add MQ queue to include list"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:mainframe"
+	],
+	"schemaId": "builtin:mainframe.mqfilters",
+	"types": {},
+	"version": "1.0.3"
+}
