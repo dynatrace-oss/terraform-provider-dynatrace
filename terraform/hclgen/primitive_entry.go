@@ -30,7 +30,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") != "false"
+var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") == "false"
 
 type primitiveEntry struct {
 	Indent      string
