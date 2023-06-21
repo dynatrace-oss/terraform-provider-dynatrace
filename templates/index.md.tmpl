@@ -25,13 +25,11 @@ terraform {
 } 
 ```
 ## Configure the Dynatrace provider
-```
-provider "dynatrace" {
-    dt_env_url    = "https://########.live.dynatrace.com"
-    dt_api_token  = "################"
-}
-```
-where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_token` needs to be an API Token with the following permissions:
+The recommended way to configure the provider is via environment variables.
+The value of `DYNATRACE_ENV_URL` needs to refer to the URL your Dynatrace Environment is reachable with.
+* Saas Environments: `https://########.live.dynatrace.com`
+* Managed Enviroments: `https://<dynatrace-host>/e/#####################`
+The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following permissions:
 * `Read configuration`
 * `Capture request data`
 * `Read SLO`
@@ -57,7 +55,13 @@ where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_
 * `Create and read synthetic monitors, locations`
 * `Write configuration`
 
-
+Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
+```
+provider "dynatrace" {
+    dt_env_url    = "https://########.live.dynatrace.com"
+    dt_api_token  = "################"
+}
+```
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin, the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can be directly invoked.
