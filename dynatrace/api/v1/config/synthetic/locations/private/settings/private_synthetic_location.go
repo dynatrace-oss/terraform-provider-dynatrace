@@ -117,17 +117,18 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 		},
 		"min_active_gate_count": {
 			Type:        schema.TypeInt,
-			Description: "The minimum number of Active Gates required for that location",
+			Description: "The minimum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`",
 			Optional:    true,
 		},
 		"max_active_gate_count": {
 			Type:        schema.TypeInt,
-			Description: "The maximum number of Active Gates required for that location",
+			Description: "The maximum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`",
 			Optional:    true,
 		},
 		"node_size": {
 			Type:        schema.TypeString,
-			Description: "Possible values: `XS`, `S` and `M`",
+			Description: "Possible values: `UNSUPPORTED`, `XS`, `S` and `M`. Not required when `deployment_type` is set to `STANDARD`.",
+			Default:     "UNSUPPORTED",
 			Optional:    true,
 		},
 	}
