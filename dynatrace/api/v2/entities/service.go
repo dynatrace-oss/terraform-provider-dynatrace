@@ -48,7 +48,8 @@ func (me *service) Get(id string, v *entities.Settings) (err error) {
 			return err
 		}
 	} else {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&entitySelector=type("%s")&fields=tags,properties`, url.QueryEscape(me.entityType)), 200).Finish(&dataObj); err != nil {
+		entitySelector := fmt.Sprintf("type(\"%s\")", me.entityType)
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&entitySelector=%s&fields=tags,properties`, url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	}
