@@ -116,7 +116,7 @@ func (me *SyntheticMonitor) Schema() map[string]*schema.Schema {
 		"key_performance_metrics": {
 			Type:        schema.TypeList,
 			Description: "The key performance metrics configuration",
-			Optional:    true,
+			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(monitors.KeyPerformanceMetrics).Schema()},
 		},
