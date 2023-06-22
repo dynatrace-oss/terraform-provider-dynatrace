@@ -326,12 +326,20 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 		dataSource := me.DataSources[dataSourceID]
 		dataSourceName := dataSource.Name
 		dd, _ := json.Marshal(dataSourceName)
-		if _, err = buf.WriteString(fmt.Sprintf(`
-		data "dynatrace_entity" "%s" {
-			type = "%s"
-			name = %s
-		}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
-			return err
+		if dataSourceID == "tenant" {
+			if _, err = buf.WriteString(`
+			data "dynatrace_tenant" "tenant" {
+			}`); err != nil {
+				return err
+			}
+		} else {
+			if _, err = buf.WriteString(fmt.Sprintf(`
+			data "dynatrace_entity" "%s" {
+				type = "%s"
+				name = %s
+			}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
+				return err
+			}
 		}
 	}
 	data := buf.Bytes()

@@ -9,6 +9,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -130,7 +131,34 @@ func (me *PermissionServiceClient) Update(email string, permission *permissions.
 }
 
 func (me *PermissionServiceClient) List() (api.Stubs, error) {
-	return nil, errors.New("List not implemented")
+	groupsService := groups.NewGroupService(me.clientID, me.accountID, me.clientSecret)
+	groupStubs, err := groupsService.List()
+	if err != nil {
+		return nil, err
+	}
+
+	var stubs api.Stubs
+	var responseBytes []byte
+
+	client := iam.NewIAMClient(me)
+	for _, groupStub := range groupStubs {
+		groupID := groupStub.ID
+		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), 200, false); err != nil {
+			return nil, err
+		}
+		var response GetGroupPermissionsResponse
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
+			return nil, err
+		}
+		if len(response.Permissions) > 0 {
+			for _, permission := range response.Permissions {
+				permissionID := strings.Join([]string{groupID, permission.Name, permission.Scope, permission.ScopeType}, "#-#")
+				stubs = append(stubs, &api.Stub{ID: permissionID, Name: permissionID})
+			}
+		}
+	}
+
+	return stubs, nil
 }
 
 func (me *PermissionServiceClient) Delete(id string) error {

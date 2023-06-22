@@ -25,6 +25,7 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
@@ -45,11 +46,33 @@ type Environment struct {
 	ResArgs      map[string][]string
 }
 
+func (me *Environment) TenantID() string {
+	var tenant string
+	if strings.Contains(me.Credentials.URL, "/e/") {
+		idx := strings.Index(me.Credentials.URL, "/e/")
+		tenant = strings.TrimSuffix(strings.TrimPrefix(me.Credentials.URL[idx:], "/e/"), "/")
+	} else if strings.HasPrefix(me.Credentials.URL, "http://") {
+		tenant = strings.TrimPrefix(me.Credentials.URL, "http://")
+		if idx := strings.Index(tenant, "."); idx != -1 {
+			tenant = tenant[:idx]
+		}
+	} else if strings.HasPrefix(me.Credentials.URL, "https://") {
+		tenant = strings.TrimPrefix(me.Credentials.URL, "https://")
+		if idx := strings.Index(tenant, "."); idx != -1 {
+			tenant = tenant[:idx]
+		}
+	}
+	return tenant
+}
+
 func (me *Environment) DataSource(id string) *DataSource {
 	for _, module := range me.Modules {
 		if dataSource, found := module.DataSources[id]; found {
 			return dataSource
 		}
+	}
+	if id == "tenant" {
+		return &DataSource{ID: id, Name: id, Type: "tenant"}
 	}
 	service := cache.Read(entity.Service(me.Credentials))
 	var entity entitysettings.Entity
@@ -292,12 +315,20 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 		}()
 
 		for dataSourceID, dataSource := range dataSources {
-			if _, err = datasourcesFile.WriteString(fmt.Sprintf(`data "dynatrace_entity" "%s" {
-				type = "%s"
-				name = "%s"				
-			}
-`, dataSourceID, dataSource.Type, dataSource.Name)); err != nil {
-				return err
+			if dataSource.ID == "tenant" {
+				if _, err = datasourcesFile.WriteString(`data "dynatrace_tenant" "tenant" {
+				}
+	`); err != nil {
+					return err
+				}
+			} else {
+				if _, err = datasourcesFile.WriteString(fmt.Sprintf(`data "dynatrace_entity" "%s" {
+					type = "%s"
+					name = "%s"				
+				}
+	`, dataSourceID, dataSource.Type, dataSource.Name)); err != nil {
+					return err
+				}
 			}
 		}
 		dsm := map[string]string{}

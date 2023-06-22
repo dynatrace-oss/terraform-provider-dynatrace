@@ -11,6 +11,10 @@ type User struct {
 	Groups []string `json:"-"`
 }
 
+func (me *User) Name() string {
+	return me.Email
+}
+
 func (me *User) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"email": {

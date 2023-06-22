@@ -580,8 +580,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		order.Service,
 		Dependencies.ID(ResourceTypes.RequestNaming),
 	),
-	ResourceTypes.IAMUser:           NewResourceDescriptor(users.Service),
-	ResourceTypes.IAMGroup:          NewResourceDescriptor(groups.Service),
+	ResourceTypes.IAMUser: NewResourceDescriptor(
+		users.Service,
+		Dependencies.ID(ResourceTypes.IAMGroup),
+	),
+	ResourceTypes.IAMGroup: NewResourceDescriptor(
+		groups.Service,
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.IAMPermission),
+		Dependencies.Tenant,
+	),
 	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
 	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
 	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
