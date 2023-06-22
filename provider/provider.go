@@ -46,6 +46,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/nodes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/tenant"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/updatewindows"
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
@@ -152,6 +153,7 @@ func Provider() *schema.Provider {
 			"dynatrace_aws_credentials":              aws_credentials.DataSource(),
 			"dynatrace_azure_credentials":            azure_credentials.DataSource(),
 			"dynatrace_synthetic_nodes":              nodes.DataSource(),
+			"dynatrace_tenant":                       tenant.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
