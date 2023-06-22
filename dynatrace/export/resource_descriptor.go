@@ -998,11 +998,6 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.WebAppCustomErrors,     // JS errors missing, use dynatrace_application_error_rules
 	ResourceTypes.WebAppRequestErrors,    // JS errors missing, use dynatrace_application_error_rules
 
-	// Schemas rolled back - not currently available
-	ResourceTypes.WebAppKeyPerformanceCustom,
-	ResourceTypes.WebAppKeyPerformanceLoad,
-	ResourceTypes.WebAppKeyPerformanceXHR,
-
 	// Excluded since configuration is under account management
 	ResourceTypes.IAMUser,
 	ResourceTypes.IAMGroup,
