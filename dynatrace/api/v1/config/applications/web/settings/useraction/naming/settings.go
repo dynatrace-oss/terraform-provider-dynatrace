@@ -82,10 +82,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"query_parameter_cleanups": {
 			Type:        schema.TypeSet,
-			Description: "User action naming rules for custom actions",
+			Description: "User action naming rules for custom actions. If not specified Dynatrace assumes `__sid`, `cfid`, `cftoken`, `phpsessid` and `sid`.",
 			Optional:    true,
-			MinItems:    1,
+			Computed:    true,
+			MinItems:    0,
 			Elem:        &schema.Schema{Type: schema.TypeString},
+			DefaultFunc: func() (any, error) {
+				return []any{"__sid", "cfid", "cftoken", "phpsessid", "sid"}, nil
+			},
 		},
 	}
 }
