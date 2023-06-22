@@ -22,7 +22,7 @@ resource "dynatrace_iam_group" "some_group" {
     permission {
       name  = "tenant-manage-settings"
       type  = "tenant"
-      scope = "yqv43759"
+      scope = data.dynarace_tenant.tenant.id
     }
 }
 ```
