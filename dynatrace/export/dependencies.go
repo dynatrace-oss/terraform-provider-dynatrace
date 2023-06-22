@@ -219,7 +219,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 
 func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
 	childDescriptor := environment.Module(replacingIn).Descriptor
-	isParent := childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
+	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	replacePattern := "${var.%s.%s.id}"
 	if environment.Flags.Flat || isParent {

@@ -56,7 +56,22 @@ func (me *Module) IsReferencedAsDataSource() bool {
 	if _, found := me.Environment.ResArgs[string(me.Type)]; found {
 		return false
 	}
-	return me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.Alerting || me.Type == ResourceTypes.RequestAttribute || me.Type == ResourceTypes.WebApplication || me.Type == ResourceTypes.RequestNaming || me.Type == ResourceTypes.JSONDashboard || me.Type == ResourceTypes.SLO || me.Type == ResourceTypes.CalculatedServiceMetric || me.Type == ResourceTypes.MobileApplication || me.Type == ResourceTypes.BrowserMonitor || me.Type == ResourceTypes.Credentials || me.Type == ResourceTypes.SyntheticLocation || me.Type == ResourceTypes.FailureDetectionParameters || me.Type == ResourceTypes.UpdateWindows || me.Type == ResourceTypes.AWSCredentials || me.Type == ResourceTypes.AzureCredentials
+	return me.Type == ResourceTypes.ManagementZoneV2 ||
+		me.Type == ResourceTypes.Alerting ||
+		me.Type == ResourceTypes.RequestAttribute ||
+		me.Type == ResourceTypes.WebApplication ||
+		me.Type == ResourceTypes.RequestNaming ||
+		me.Type == ResourceTypes.JSONDashboard ||
+		me.Type == ResourceTypes.SLO ||
+		me.Type == ResourceTypes.CalculatedServiceMetric ||
+		me.Type == ResourceTypes.MobileApplication ||
+		me.Type == ResourceTypes.BrowserMonitor ||
+		me.Type == ResourceTypes.Credentials ||
+		me.Type == ResourceTypes.SyntheticLocation ||
+		me.Type == ResourceTypes.FailureDetectionParameters ||
+		me.Type == ResourceTypes.UpdateWindows ||
+		me.Type == ResourceTypes.AWSCredentials ||
+		me.Type == ResourceTypes.AzureCredentials
 }
 
 func (me *Module) DataSource(id string) *DataSource {
@@ -298,7 +313,7 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if me.Descriptor.Parent != nil {
+	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -364,7 +379,7 @@ func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
 	if me.IsReferencedAsDataSource() {
 		return map[string]string{}, nil
 	}
-	if me.Descriptor.Parent != nil {
+	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
 		return map[string]string{}, nil
 	}
 	dsm = map[string]string{}
@@ -412,7 +427,7 @@ func (me *Module) WriteResourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if me.Descriptor.Parent != nil {
+	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -472,8 +487,11 @@ func (me *Module) RefersTo(resource *Resource) bool {
 
 func (me *Module) GetChildResources() []*Resource {
 	resources := []*Resource{}
+	if me.Environment.ChildResourceOverride {
+		return resources
+	}
 	for _, resource := range me.Resources {
-		if resource.Status == ResourceStati.PostProcessed && resource.Parent != nil {
+		if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
 			resources = append(resources, resource)
 		}
 	}

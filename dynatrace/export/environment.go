@@ -38,12 +38,13 @@ import (
 )
 
 type Environment struct {
-	mu           sync.Mutex
-	OutputFolder string
-	Credentials  *settings.Credentials
-	Modules      map[ResourceType]*Module
-	Flags        Flags
-	ResArgs      map[string][]string
+	mu                    sync.Mutex
+	OutputFolder          string
+	Credentials           *settings.Credentials
+	Modules               map[ResourceType]*Module
+	Flags                 Flags
+	ResArgs               map[string][]string
+	ChildResourceOverride bool
 }
 
 func (me *Environment) TenantID() string {
@@ -183,16 +184,16 @@ func (me *Environment) PostProcess() error {
 	}
 
 	for _, resource := range me.GetChildResources() {
-		if resource.Parent.Status == ResourceStati.Erronous {
+		if resource.GetParent().Status == ResourceStati.Erronous {
 			continue
 		}
 		var parentBytes []byte
 		var childBytes []byte
 		var err error
-		if parentBytes, err = resource.Parent.ReadFile(); err == nil {
+		if parentBytes, err = resource.GetParent().ReadFile(); err == nil {
 			if childBytes, err = resource.ReadFile(); err == nil {
 				var parentFile *os.File
-				if parentFile, err = resource.Parent.CreateFile(); err == nil {
+				if parentFile, err = resource.GetParent().CreateFile(); err == nil {
 					defer parentFile.Close()
 					parentFile.Write(parentBytes)
 					parentFile.Write([]byte("\n\n"))
@@ -287,6 +288,9 @@ func (me *Environment) GetNonPostProcessedResources() []*Resource {
 
 func (me *Environment) GetChildResources() []*Resource {
 	resources := []*Resource{}
+	if me.ChildResourceOverride {
+		return resources
+	}
 	for _, module := range me.Modules {
 		if module.Descriptor.Parent != nil {
 			resources = append(resources, module.GetChildResources()...)
@@ -374,7 +378,7 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 		m[k] = module
 	}
 	for k, module := range m {
-		if module.IsReferencedAsDataSource() || module.Descriptor.Parent != nil {
+		if module.IsReferencedAsDataSource() || (!module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil) {
 			module.PurgeFolder()
 			delete(me.Modules, k)
 		} else if len(module.GetPostProcessedResources()) == 0 {
@@ -485,7 +489,7 @@ func (me *Environment) WriteMainFile() error {
 		if me.Module(resourceType).IsReferencedAsDataSource() {
 			continue
 		}
-		if me.Module(resourceType).Descriptor.Parent != nil {
+		if !me.ChildResourceOverride && me.Module(resourceType).Descriptor.Parent != nil {
 			continue
 		}
 		if len(me.Module(resourceType).GetPostProcessedResources()) == 0 {

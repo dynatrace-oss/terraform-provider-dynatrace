@@ -147,12 +147,27 @@ func Initialize() (environment *Environment, err error) {
 		return nil, err
 	}
 
+	// If ONLY child resources are getting exported we
+	// don't treat them as such. Request from Omar Zaal
+	requestingOnlyChildResources := true
+	for k := range resArgs {
+		if !ResourceType(k).IsChildResource() {
+			requestingOnlyChildResources = false
+		}
+	}
+	if requestingOnlyChildResources {
+		for _, v := range AllResources {
+			v.Parent = nil
+		}
+	}
+
 	return &Environment{
-		OutputFolder: targetFolder,
-		Credentials:  credentials,
-		Modules:      map[ResourceType]*Module{},
-		Flags:        flags,
-		ResArgs:      resArgs,
+		OutputFolder:          targetFolder,
+		Credentials:           credentials,
+		Modules:               map[ResourceType]*Module{},
+		Flags:                 flags,
+		ResArgs:               resArgs,
+		ChildResourceOverride: requestingOnlyChildResources,
 	}, nil
 }
 

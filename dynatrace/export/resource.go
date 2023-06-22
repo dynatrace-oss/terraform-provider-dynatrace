@@ -45,7 +45,14 @@ type Resource struct {
 	DataSourceReferences []*DataSource
 	OutputFileAbs        string
 	Flawed               bool
-	Parent               *Resource
+	XParent              *Resource
+}
+
+func (me *Resource) GetParent() *Resource {
+	if me.Module.Environment.ChildResourceOverride {
+		return nil
+	}
+	return me.XParent
 }
 
 func (me *Resource) IsReferencedAsDataSource() bool {
@@ -330,7 +337,7 @@ func (me *Resource) PostProcess() error {
 					if err = typedItem.Download(); err != nil {
 						return err
 					}
-					me.Parent = typedItem
+					me.XParent = typedItem
 					me.ResourceReferences = append(me.ResourceReferences, typedItem)
 				case *DataSource:
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)
