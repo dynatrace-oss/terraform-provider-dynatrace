@@ -167,13 +167,13 @@ resource "dynatrace_browser_monitor" "#name#" {
 - `frequency` (Number) The frequency of the monitor, in minutes.
 
 You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
+- `key_performance_metrics` (Block List, Min: 1, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
 - `name` (String) The name of the monitor.
 
 ### Optional
 
 - `anomaly_detection` (Block List, Max: 1) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
 - `enabled` (Boolean) The monitor is enabled (`true`) or disabled (`false`).
-- `key_performance_metrics` (Block List, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
 - `locations` (Set of String) A list of locations from which the monitor is executed.
 
 To specify a location, use its entity ID.
@@ -186,6 +186,15 @@ You can specify only the value of the tag here and the `CONTEXTLESS` context and
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--key_performance_metrics"></a>
+### Nested Schema for `key_performance_metrics`
+
+Required:
+
+- `load_action_kpm` (String) Defines the key performance metric for load actions. Supported values are `VISUALLY_COMPLETE`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE`, `HTML_DOWNLOADED`, `DOM_INTERACTIVE`, `LOAD_EVENT_START` and `LOAD_EVENT_END`.
+- `xhr_action_kpm` (String) Defines the key performance metric for XHR actions. Supported values are `VISUALLY_COMPLETE`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE` and `RESPONSE_END`.
+
 
 <a id="nestedblock--anomaly_detection"></a>
 ### Nested Schema for `anomaly_detection`
@@ -258,15 +267,6 @@ Required:
 - `consecutive_runs` (Number) The number of consecutive fails to trigger an alert
 
 
-
-
-<a id="nestedblock--key_performance_metrics"></a>
-### Nested Schema for `key_performance_metrics`
-
-Required:
-
-- `load_action_kpm` (String) Defines the key performance metric for load actions. Supported values are `VISUALLY_COMPLETE`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE`, `HTML_DOWNLOADED`, `DOM_INTERACTIVE`, `LOAD_EVENT_START` and `LOAD_EVENT_END`.
-- `xhr_action_kpm` (String) Defines the key performance metric for XHR actions. Supported values are `VISUALLY_COMPLETE`, `USER_ACTION_DURATION`, `TIME_TO_FIRST_BYTE` and `RESPONSE_END`.
 
 
 <a id="nestedblock--script"></a>

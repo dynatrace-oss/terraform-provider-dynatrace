@@ -66,6 +66,9 @@ resource "dynatrace_synthetic_location" "#name#" {
 - `location_node_outage_delay_in_minutes` (Number) Alert if the location or node outage lasts longer than *X* minutes. 
 
  Only applicable when **availability_location_outage** or **availability_node_outage** is set to `true`
+- `max_active_gate_count` (Number) The maximum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`
+- `min_active_gate_count` (Number) The minimum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`
+- `node_size` (String) Possible values: `UNSUPPORTED`, `XS`, `S` and `M`. Not required when `deployment_type` is set to `STANDARD`.
 - `nodes` (Set of String) A list of synthetic nodes belonging to the location. 
 
  You can retrieve the list of available nodes with the [GET all nodes](https://dt-url.net/miy3rpl) call

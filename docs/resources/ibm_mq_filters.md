@@ -37,8 +37,8 @@ resource "dynatrace_ibm_mq_filters" "#name#" {
 
 - `cics_mq_queue_id_excludes` (Set of String) CICS: Excluded MQ queues
 - `cics_mq_queue_id_includes` (Set of String) CICS: Included MQ queues
-- `ims_cr_trn_id_excludes` (Set of String) IMS bridge: Excluded transaction IDs
-- `ims_cr_trn_id_includes` (Set of String) IMS bridge: Included transaction IDs
+- `ims_cr_trn_id_excludes` (Set of String) When you add a transaction ID to the exclude list remaining transactions are still monitored.
+- `ims_cr_trn_id_includes` (Set of String) When you add a transaction ID to the include list, all the remaining transactions are ignored.
 - `ims_mq_queue_id_excludes` (Set of String) IMS: Excluded MQ queues
 - `ims_mq_queue_id_includes` (Set of String) IMS: Included MQ queues
 
