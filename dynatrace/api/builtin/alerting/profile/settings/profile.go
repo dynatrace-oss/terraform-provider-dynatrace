@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package alerting
+package profile
 
 import (
 	"encoding/json"

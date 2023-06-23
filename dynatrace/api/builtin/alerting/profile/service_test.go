@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package alerting_test
+package profile_test
 
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAlerting(t *testing.T) {
-	api.TestService(t, alerting.Service)
+	api.TestService(t, profile.Service)
 }
 
 func TestAccAlerting(t *testing.T) {

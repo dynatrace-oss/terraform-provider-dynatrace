@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
+	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile"
 	database_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/diskrules"
 	aws_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/aws"
@@ -187,7 +188,6 @@ import (
 	notificationsv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"

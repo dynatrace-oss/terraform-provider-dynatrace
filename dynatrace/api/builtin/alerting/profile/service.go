@@ -15,13 +15,13 @@
 * limitations under the License.
  */
 
-package alerting
+package profile
 
 import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/alerting/settings"
+	profile "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -29,11 +29,11 @@ import (
 const SchemaID = "builtin:alerting.profile"
 const SchemaVersion = "8.0.1"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*alerting.Profile] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*alerting.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
+func Service(credentials *settings.Credentials) settings.CRUDService[*profile.Profile] {
+	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
-func Duplicates(service settings.RService[*alerting.Profile], v *alerting.Profile) (*api.Stub, error) {
+func Duplicates(service settings.RService[*profile.Profile], v *profile.Profile) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
 		var stubs api.Stubs
