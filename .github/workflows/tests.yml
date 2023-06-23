@@ -2177,7 +2177,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/ansible
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/ansible
       - name: TestEmailNotifications
         if: success() || failure()
         env:
@@ -2189,7 +2189,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/email
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/email
       - name: TestJiraNotifications
         if: success() || failure()
         env:
@@ -2201,7 +2201,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/jira
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/jira
       - name: TestOpsGenieNotifications
         if: success() || failure()
         env:
@@ -2213,7 +2213,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/opsgenie
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/opsgenie
       - name: TestPagerDutyNotifications
         if: success() || failure()
         env:
@@ -2225,7 +2225,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/pagerduty
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/pagerduty
       - name: TestServiceNowNotifications
         if: success() || failure()
         env:
@@ -2237,7 +2237,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/servicenow
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/servicenow
       - name: TestSlackNotifications
         if: success() || failure()
         env:
@@ -2249,7 +2249,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/slack
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/slack
       - name: TestTrelloNotifications
         if: success() || failure()
         env:
@@ -2261,7 +2261,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/trello
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/trello
       - name: TestVictorOpsNotifications
         if: success() || failure()
         env:
@@ -2273,7 +2273,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/victorops
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/victorops
       - name: TestWebHookNotifications
         if: success() || failure()
         env:
@@ -2285,7 +2285,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/webhook
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/webhook
       - name: TestXMattersNotifications
         if: success() || failure()
         env:
@@ -2297,7 +2297,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/v2/notifications/xmatters
+        run: go test -v ./dynatrace/api/builtin/problem/notifications/xmatters
       - name: TestServiceLevelObjectives
         if: success() || failure()
         env:
