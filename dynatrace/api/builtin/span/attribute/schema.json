@@ -55,6 +55,10 @@
 					"maxLength": 200,
 					"minLength": 1,
 					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "prohibit-always-captured-attributes-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
@@ -85,5 +89,5 @@
 	],
 	"schemaId": "builtin:span-attribute",
 	"types": {},
-	"version": "0.0.31"
+	"version": "0.0.32"
 }
