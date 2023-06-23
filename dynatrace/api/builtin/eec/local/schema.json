@@ -15,12 +15,12 @@
 			"documentation": "",
 			"items": [
 				{
-					"description": "Conservative settings.",
+					"description": "Conservative settings",
 					"displayName": "Default",
 					"value": "DEFAULT"
 				},
 				{
-					"description": "High performance profile.",
+					"description": "High performance profile",
 					"displayName": "High limits",
 					"value": "HIGH"
 				}
@@ -44,7 +44,7 @@
 		"ingestActive": {
 			"default": true,
 			"description": "",
-			"displayName": "Enable local PIPE/HTTP metric and Log Ingest API",
+			"displayName": "Enable local HTTP Metric, Log and Event Ingest API",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -79,7 +79,7 @@
 		},
 		"statsdActive": {
 			"default": true,
-			"description": "",
+			"description": "This is applicable only to non-containerized Linux and Windows hosts",
 			"displayName": "Enable Dynatrace StatsD",
 			"documentation": "",
 			"maxObjects": 1,
@@ -98,5 +98,5 @@
 	],
 	"schemaId": "builtin:eec.local",
 	"types": {},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }
