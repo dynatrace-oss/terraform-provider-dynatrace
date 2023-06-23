@@ -7,13 +7,39 @@
 			"customMessage": "Operation has not succeeded (that has been logged). Please contact support team.",
 			"customValidatorId": "logs-on-grail-activate-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Parallel ingest period cannot be changed after logs powered by Grail activation.",
+			"customValidatorId": "logs-on-grail-parallel-ingest-period-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Your tenant is eligible for Grail. For details, see [documentation](https://dt-url.net/n9032kl).\n\nAfter activation, you will:\n\n* Use Grail storage with custom retention times.\n  For details, see [Log buckets and retention](https://dt-url.net/ep234n2) and [Business event bucket assignment](https://dt-url.net/4c034xt)\n\n* Use DQL for data analysis, log metrics, event definition, and processing rules.\n  For details, see [Migration to DQL](https://dt-url.net/2s03459).\n\nYour existing log data will not be available after you activate Grail.\n\nBecause logs typically contain sensitive data, access to Grail is restricted to administrators. For details, see [account settings](https://dt-url.net/1t039fy).",
-	"displayName": "Activate Grail for logs and events",
+	"description": "Learn more about [Log Management and Analytics powered by Grail](https://dt-url.net/6y038ls).",
+	"displayName": "Activate logs powered by Grail",
 	"documentation": "",
 	"dynatrace": "1",
-	"enums": {},
+	"enums": {
+		"ParallelIngestPeriod": {
+			"description": "",
+			"displayName": "Period for which logs will be ingested in parallel to Grail",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "No parallel ingest",
+					"value": "NONE"
+				},
+				{
+					"displayName": "Seven days",
+					"value": "SEVEN_DAYS"
+				},
+				{
+					"displayName": "Thirty five days",
+					"value": "THIRTY_FIVE_DAYS"
+				}
+			],
+			"type": "enum"
+		}
+	},
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -26,6 +52,18 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "boolean"
+		},
+		"parallelIngestPeriod": {
+			"default": "NONE",
+			"description": "The period for which log data will be ingested in parallel to LM Classic and Grail before delayed activation. Only Log Monitoring Classic is eligible for postponed activation. In the case of the instant Grail activation, the value `NONE` has to be specified for this property. It is the only accepted value for the legacy Log Monitoring v1.",
+			"displayName": "Period for parallel ingest in Grail",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ParallelIngestPeriod"
+			}
 		}
 	},
 	"schemaGroups": [
@@ -34,5 +72,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.logs-on-grail-activate",
 	"types": {},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }
