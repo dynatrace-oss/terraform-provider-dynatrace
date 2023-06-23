@@ -25,6 +25,35 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"filter": {
+			"constraints": [
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
+					"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+					"type": "PATTERN"
+				}
+			],
+			"description": "This string should have one of the following formats:\n- $prefix(parameter) - property value starting with 'parameter'\n- $eq(parameter) - property value exactly matching 'parameter'\n- $suffix(parameter) - property value ends with 'parameter'\n- $contains(parameter) - property value contains 'parameter'",
+			"displayName": "Specify filter condition to limit the number of monitored clusters:",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.268",
+				"placeholder": "For example, $contains(Prod)"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
 		"ipaddress": {
 			"constraints": [
 				{
@@ -143,5 +172,5 @@
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "0.0.5"
+	"version": "1.0.1"
 }
