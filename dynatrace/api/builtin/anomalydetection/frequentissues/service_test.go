@@ -15,17 +15,19 @@
 * limitations under the License.
  */
 
-package frequentissues
+package frequentissues_test
 
 import (
-	frequentissues "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/frequentissues"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-const SchemaID = "builtin:anomaly-detection.frequent-issues"
-const SchemaVersion = "1.0.2"
+func TestFrequentIssues(t *testing.T) {
+	api.TestService(t, frequentissues.Service)
+}
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*frequentissues.FrequentIssues] {
-	return settings20.Service[*frequentissues.FrequentIssues](credentials, SchemaID, SchemaVersion)
+func TestAccFrequentIssues(t *testing.T) {
+	api.TestAcc(t)
 }
