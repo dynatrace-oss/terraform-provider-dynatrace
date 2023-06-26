@@ -19,8 +19,8 @@ package keyrequests
 
 import (
 	// toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
+	keyrequests "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/keyrequests/settings"
 	toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
-	keyrequests "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/keyrequests/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
