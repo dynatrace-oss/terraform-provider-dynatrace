@@ -45,7 +45,7 @@ func (me *MetadataFilterItems) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type MetadataFilterItem struct {
-	MetadataKey   string `json:"metadataKey"`   // Type 'dt.' for key hints.
+	MetadataKey   string `json:"metadataKey"`   // GET /api/v2/eventProperties for list of available keys
 	MetadataValue string `json:"metadataValue"` // Value
 }
 
@@ -53,7 +53,7 @@ func (me *MetadataFilterItem) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
-			Description: "Type 'dt.' for key hints.",
+			Description: "GET /api/v2/eventProperties for list of available keys",
 			Required:    true,
 		},
 		"value": {
