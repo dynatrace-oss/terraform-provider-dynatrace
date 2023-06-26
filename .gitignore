@@ -19,4 +19,5 @@ test.json
 test.log
 *.log
 *.cmd
-.vscode/**
+.vscode/*
+.DS_Store
