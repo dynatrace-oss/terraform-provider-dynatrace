@@ -1,4 +1,4 @@
-package ddupool
+package ddulimit
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"

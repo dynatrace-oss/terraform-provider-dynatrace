@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile"
@@ -202,7 +203,6 @@ import (
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/anomalies/frequentissues"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/availability/processgroupalerting"
-	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/ddupool"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
