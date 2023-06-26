@@ -101,7 +101,6 @@ var originalMap = NewAddressMap()
 var completedMap = NewAddressMap()
 
 func AddToOriginal(a AddressOriginal) {
-	fmt.Println("ORIGINAL: ", a)
 	originalMap.AddToAddressMap(&a)
 }
 

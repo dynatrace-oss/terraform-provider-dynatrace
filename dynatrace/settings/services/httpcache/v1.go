@@ -8,6 +8,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
 )
@@ -60,9 +61,7 @@ type ListV1 struct {
 }
 
 func (me *ListV1) Finish(v any) error {
-	if me.SchemaID == "synthetic-monitor" {
-		fmt.Println(me.SchemaID)
-	}
+
 	stubList := &api.StubList{Values: []*api.Stub{}}
 
 	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/" + strings.ReplaceAll(me.SchemaID, ":", ""))
@@ -160,6 +159,38 @@ func (me *ListPrivateSyntheticLocationsV1) Finish(v any) error {
 		}
 	}
 	data, err := json.Marshal(map[string]any{"locations": locations})
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	return nil
+}
+
+type ListDashboardsV1 struct{}
+
+func (me *ListDashboardsV1) Finish(v any) error {
+	stubList := &dashboards.DashboardList{Dashboards: []*dashboards.DashboardStub{}}
+
+	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/dashboard")
+	if err != nil {
+		return err
+	}
+
+	if tarFolder != nil {
+		stubs, err := tarFolder.List()
+		if err != nil {
+			return err
+		}
+
+		for _, stub := range stubs {
+			stubList.Dashboards = append(stubList.Dashboards, &dashboards.DashboardStub{ID: stub.ID, Name: &stub.Name, Owner: &stub.EntityID})
+		}
+	}
+
+	data, err := json.Marshal(stubList)
 	if err != nil {
 		return err
 	}

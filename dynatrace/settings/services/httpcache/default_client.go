@@ -49,6 +49,8 @@ var REGEX_CUSTOM_SERVICE_PHP_LIST, _ = regexp.Compile(`\/api\/config\/v1\/servic
 var REGEX_CUSTOM_SERVICE_PHP_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/php\/([^\/]*)$`)
 var REGEX_CALCULATED_METRICS_SERVICE_LIST, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/service$`)
 var REGEX_CALCULATED_METRICS_SERVICE_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/service\/([^\/]*)$`)
+var REGEX_DASHBOARDS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/dashboards$`)
+var REGEX_DASHBOARDS_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)$`)
 var REGEX_REQUEST_ATTRIBUTES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes$`)
 var REGEX_REQUEST_ATTRIBUTES_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes\/([^\/]*)$`)
 var REGEX_CONDITIONAL_NAMING_HOST_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host$`)
@@ -113,6 +115,10 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return List("calculated-metrics-service")
 	} else if m := REGEX_CALCULATED_METRICS_SERVICE_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("calculated-metrics-service", m[1])
+	} else if m := REGEX_DASHBOARDS_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return Request(&ListDashboardsV1{})
+	} else if m := REGEX_DASHBOARDS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("dashboard", m[1])
 	} else if m := REGEX_REQUEST_ATTRIBUTES_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("request-attributes")
 	} else if m := REGEX_REQUEST_ATTRIBUTES_GET.FindStringSubmatch(url); len(m) == 2 {

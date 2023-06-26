@@ -1003,8 +1003,6 @@ var blackListedResources = []ResourceType{
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
 
-	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
-
 	ResourceTypes.UserSettings, // Excluded since it requires a personal token
 
 	// Not included in export - to be discussed
@@ -1020,8 +1018,9 @@ func GetBlackListedResources() []ResourceType {
 		return blackListedResources
 	}
 
-	// Excluded due to the potential of a large amount of dashboards
-	return append(blackListedResources, ResourceTypes.JSONDashboard)
+	// Excluded due to the potential of a large amount of dashboards (ResourceTypes.JSONDashboard)
+	// Excluded since it is retrieved as a child resource of dynatrace_json_dashboard (ResourceTypes.DashboardSharing)
+	return append(blackListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing)
 
 }
 
