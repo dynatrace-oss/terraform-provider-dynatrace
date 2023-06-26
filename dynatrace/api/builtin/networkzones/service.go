@@ -18,7 +18,7 @@
 package networkzones
 
 import (
-	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
+	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )

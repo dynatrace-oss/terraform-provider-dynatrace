@@ -23,8 +23,8 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	enable "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones"
-	enablesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
+	enable "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones"
+	enablesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
