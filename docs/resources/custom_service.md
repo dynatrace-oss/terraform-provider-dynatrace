@@ -30,7 +30,7 @@ resource "dynatrace_custom_service" "#name#" {
                 enabled = true
                 class {
                     name = "com.example.Prefix"
-                    match = "STARTS_WITH"
+                    match = "EQUALS"
                 }
                 method {
                         name = "methodA"

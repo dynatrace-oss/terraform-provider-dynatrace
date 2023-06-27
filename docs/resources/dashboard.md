@@ -27,6 +27,7 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_dashboard" "#name#" {
   dashboard_metadata {
     name   = "#name#"
+    shared = false
     owner  = "Dynatrace"
     tags   = ["Kubernetes"]
     dynamic_filters {

@@ -25,6 +25,7 @@ The full documentation of the export feature is available [here](https://registr
 ### Required
 
 - `activated` (Boolean) Activate logs powered by Grail.
+- `parallel_ingest_period` (String) Possible Values: `NONE`, `SEVEN_DAYS`, `THIRTY_FIVE_DAYS`
 
 ### Read-Only
 

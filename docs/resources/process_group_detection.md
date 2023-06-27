@@ -23,7 +23,7 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_process_group_detection" "pg_detection_rule" {
+resource "dynatrace_process_group_detection" "_47d495a8-5577-436d-a3b3-777924c2d103" {
   enabled = true
   group_extraction {
     property        = "COMMAND_LINE_ARGS"

@@ -25,8 +25,8 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_webhook_notification" "#name#" { # replace #name# with the name you would like your resource be known within your Terraform Module
   active                 = false
   name                   = "#name#" # replace #name# with the name you would like your entry to be displayed within the Dynatrace Web UI
-  profile                = data.dynatrace_alerting_profile.Default.id
-  url                    = "https://webhook.site/40bf4d43-1a50-4ebd-913d-bf50ce7c3a1e"
+  profile                = dynatrace_alerting.Default.id
+  url                    = "https://webhook.site/#name#"
   insecure               = true
   notify_event_merges    = true
   notify_closed_problems = true
@@ -40,12 +40,33 @@ resource "dynatrace_webhook_notification" "#name#" { # replace #name# with the n
       name         = "http-header-name-02"
       secret_value = "http-header-value-02"
     }
-
+    header {
+      name         = "http-header-name-03"
+      secret_value = "http-header-value-03"
+    }
+    header {
+      name         = "http-header-name-04"
+      secret_value = "http-header-value-04"
+    }
+    header {
+      name         = "http-header-name-05"
+      secret_value = "http-header-value-05"
+    }
+    header {
+      name         = "http-header-name-06"
+      secret_value = "http-header-value-06"
+    }
+  }
+  use_oauth_2            = true
+  oauth_2_credentials {
+    access_token_url = "https://www.google.com"
+    client_id        = "terraform"
+    client_secret    = "#######"
   }
 }
 
-data "dynatrace_alerting_profile" "Default" {
-  name = "Default"
+resource "dynatrace_alerting" "Default" {
+  name = "#name#"
 }
 ```
 
@@ -67,6 +88,10 @@ data "dynatrace_alerting_profile" "Default" {
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `notify_closed_problems` (Boolean) Send email if problem is closed
 - `notify_event_merges` (Boolean) Call webhook if new events merge into existing problems
+- `oauth_2_credentials` (Block List, Max: 1) To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).
+
+The obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload. (see [below for nested schema](#nestedblock--oauth_2_credentials))
+- `use_oauth_2` (Boolean) Use OAuth 2.0 for authentication
 
 ### Read-Only
 
@@ -90,4 +115,19 @@ Optional:
 
 - `secret_value` (String, Sensitive) The value of the HTTP header as a sensitive property. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.
 - `value` (String) The value of the HTTP header. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.
+
+
+
+<a id="nestedblock--oauth_2_credentials"></a>
+### Nested Schema for `oauth_2_credentials`
+
+Required:
+
+- `access_token_url` (String) Access token URL
+- `client_id` (String) Client ID
+- `client_secret` (String) Client secret
+
+Optional:
+
+- `scope` (String) The scope of access you are requesting
  

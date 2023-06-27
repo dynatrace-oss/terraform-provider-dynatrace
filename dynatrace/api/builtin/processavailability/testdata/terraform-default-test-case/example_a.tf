@@ -1,6 +1,6 @@
-resource "dynatrace_process_availability" "example" {
+resource "dynatrace_process_availability" "#name#" {
   enabled = true
-  name    = "example"
+  name    = "#name#"
   rules {
     rule {
       property  = "executable"

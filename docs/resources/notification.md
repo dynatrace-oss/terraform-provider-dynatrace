@@ -26,17 +26,18 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_notification" "#name#" {
-  service_now {
+  slack {
     name             = "#name#"
     active           = true
-    alerting_profile = "c21f969b-5f03-333d-83e0-4f8f136e7682"
-    send_events      = false
-    send_incidents   = false
-    username         = "admin"
-    instance_name    = "dev87541"
-    message          = "{State} {ProblemImpact} Problem {ProblemID}: {ProblemTitle}"
-    password         = "pw2"
+    alerting_profile = dynatrace_alerting_profile.Default.id
+    channel          = "#dynatrace-critical"
+    title            = "Test2"
+    url              = "https://www.google.at/#name#"
   }
+}
+
+resource "dynatrace_alerting_profile" "Default" {
+  display_name = "#name#"
 }
 ```
 

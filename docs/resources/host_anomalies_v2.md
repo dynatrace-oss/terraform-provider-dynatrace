@@ -60,6 +60,19 @@ resource "dynatrace_host_anomalies_v2" "#name#" {
       enabled        = true
       detection_mode = "auto"
     }
+    high_system_load_detection {
+      enabled        = true
+      detection_mode = "custom"
+      custom_thresholds {
+        system_load = 1
+        event_thresholds {
+          dealerting_evaluation_window = 30
+          dealerting_samples           = 30
+          violating_evaluation_window  = 6
+          violating_samples            = 1
+        }
+      }
+    }
     out_of_memory_detection {
       enabled        = true
       detection_mode = "custom"

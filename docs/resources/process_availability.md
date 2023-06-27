@@ -22,9 +22,9 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_process_availability" "example" {
+resource "dynatrace_process_availability" "#name#" {
   enabled = true
-  name    = "example"
+  name    = "#name#"
   rules {
     rule {
       property  = "executable"

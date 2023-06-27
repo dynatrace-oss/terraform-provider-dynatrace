@@ -28,6 +28,7 @@ resource "dynatrace_vmware" "#name#" {
   label     = "#name#"
   password  = "################"
   username  = "terraform"
+  filter    = "$contains(Terraform)"
 }
 ```
 
@@ -41,6 +42,14 @@ resource "dynatrace_vmware" "#name#" {
 - `label` (String) Name this connection
 - `password` (String, Sensitive) no documentation available
 - `username` (String) Provide user credentials for the vCenter or standalone ESXi host:
+
+### Optional
+
+- `filter` (String) This string should have one of the following formats:
+- $prefix(parameter) - property value starting with 'parameter'
+- $eq(parameter) - property value exactly matching 'parameter'
+- $suffix(parameter) - property value ends with 'parameter'
+- $contains(parameter) - property value contains 'parameter'
 
 ### Read-Only
 

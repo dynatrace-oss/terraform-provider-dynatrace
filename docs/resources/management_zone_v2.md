@@ -23,7 +23,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_management_zone_v2" "#name#" {
-  name = "Cloud: Google"
+  name = "#name#"
   rules {
     rule {
       type            = "ME"

@@ -142,7 +142,7 @@ Required:
 
 Required:
 
-- `key` (String) Type 'dt.' for key hints.
+- `key` (String) GET /api/v2/eventProperties for list of available keys
 - `value` (String) Value
 
 
