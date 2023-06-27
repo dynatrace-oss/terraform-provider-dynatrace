@@ -18,6 +18,8 @@
 package notifications
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -30,30 +32,35 @@ type WebHook struct {
 	Name      string `json:"-"`
 	ProfileID string `json:"-"`
 
-	URL                      string       `json:"url"`                      // The URL of the WebHook endpoint
-	Insecure                 bool         `json:"acceptAnyCertificate"`     // Accept any SSL certificate (including self-signed and invalid certificates)
-	NotifyEventMergesEnabled bool         `json:"notifyEventMergesEnabled"` // Call webhook if new events merge into existing problems
-	NotifyClosedProblems     bool         `json:"notifyClosedProblems"`     // Call webhook if problem is closed
-	Headers                  http.Headers `json:"headers,omitempty"`        // Additional HTTP headers
-	Payload                  string       `json:"payload"`                  // The content of the notification message. Type '{' for placeholder suggestions
-	UseOAuth2                *bool        `json:"useOAuth2,omitempty"`
+	URL                      string             `json:"url"`                         // The URL of the WebHook endpoint
+	Insecure                 bool               `json:"acceptAnyCertificate"`        // Accept any SSL certificate (including self-signed and invalid certificates)
+	NotifyEventMergesEnabled bool               `json:"notifyEventMergesEnabled"`    // Call webhook if new events merge into existing problems
+	NotifyClosedProblems     bool               `json:"notifyClosedProblems"`        // Call webhook if problem is closed
+	Headers                  http.Headers       `json:"headers,omitempty"`           // Additional HTTP headers
+	Payload                  string             `json:"payload"`                     // The content of the notification message. Type '{' for placeholder suggestions
+	UseOAuth2                *bool              `json:"useOAuth2,omitempty"`         // Use OAuth 2.0 for authentication
+	OAuth2Credentials        *OAuth2Credentials `json:"oAuth2Credentials,omitempty"` // To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).\n\nThe obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload.
 }
 
 func (me *WebHook) FillDemoValues() []string {
-	if len(me.Headers) == 0 {
-		return []string{}
-	}
-	filled := false
-	for _, header := range me.Headers {
-		if len(header.FillDemoValues()) > 0 {
-			filled = true
+	result := []string{}
+	if len(me.Headers) > 0 {
+		filled := false
+		for _, header := range me.Headers {
+			if len(header.FillDemoValues()) > 0 {
+				filled = true
+			}
+		}
+		if filled {
+			result = append(result, "One or more secret HTTP headers need to get filled in")
 		}
 	}
-	if filled {
-		return []string{"One or more secret HTTP headers need to get filled in"}
+	if me.UseOAuth2 != nil && *me.UseOAuth2 {
+		// me.OAuth2Credentials.ClientSecret = "#######"
+		result = append(result, me.OAuth2Credentials.FillDemoValues()...)
 	}
 
-	return []string{}
+	return result
 }
 
 func (me *WebHook) Schema() map[string]*schema.Schema {
@@ -108,6 +115,19 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 			Description: "Send email if problem is closed",
 			Optional:    true,
 		},
+		"use_oauth_2": {
+			Type:        schema.TypeBool,
+			Description: "Use OAuth 2.0 for authentication",
+			Optional:    true, // nullable
+		},
+		"oauth_2_credentials": {
+			Type:        schema.TypeList,
+			Description: "To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).\n\nThe obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload.",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(OAuth2Credentials).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"legacy_id": {
 			Type:        schema.TypeString,
 			Description: "The ID of these settings when referred to from resources requiring the REST API V1 keys",
@@ -129,7 +149,19 @@ func (me *WebHook) MarshalHCL(properties hcl.Properties) error {
 		"payload":                me.Payload,
 		"url":                    me.URL,
 		"notify_closed_problems": me.NotifyClosedProblems,
+		"use_oauth_2":            me.UseOAuth2,
+		"oauth_2_credentials":    me.OAuth2Credentials,
 	})
+}
+
+func (me *WebHook) HandlePreconditions() error {
+	if (me.OAuth2Credentials == nil) && (me.UseOAuth2 != nil && *me.UseOAuth2) {
+		return fmt.Errorf("'oauth_2_credentials' must be specified if 'use_oauth_2' is set to '%v'", me.UseOAuth2)
+	}
+	if (me.OAuth2Credentials != nil) && (me.UseOAuth2 != nil && !*me.UseOAuth2) {
+		return fmt.Errorf("'oauth_2_credentials' must not be specified if 'use_oauth_2' is set to '%v'", me.UseOAuth2)
+	}
+	return nil
 }
 
 func (me *WebHook) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -144,5 +176,7 @@ func (me *WebHook) UnmarshalHCL(decoder hcl.Decoder) error {
 		"payload":                &me.Payload,
 		"url":                    &me.URL,
 		"notify_closed_problems": &me.NotifyClosedProblems,
+		"use_oauth_2":            &me.UseOAuth2,
+		"oauth_2_credentials":    &me.OAuth2Credentials,
 	})
 }
