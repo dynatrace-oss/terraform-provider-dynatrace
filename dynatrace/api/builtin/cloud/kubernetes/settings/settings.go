@@ -148,7 +148,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"active_gate_group":                  me.ActiveGateGroup,
-		"auth_token":                         me.AuthToken,
+		"auth_token":                         "${state.secret_value}",
 		"certificate_check_enabled":          me.CertificateCheckEnabled,
 		"cloud_application_pipeline_enabled": me.CloudApplicationPipelineEnabled,
 		"cluster_id":                         me.ClusterID,

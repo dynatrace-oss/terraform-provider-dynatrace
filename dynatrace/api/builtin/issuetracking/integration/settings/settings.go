@@ -99,7 +99,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"issuetheme":         me.Issuetheme,
 		"issuetrackersystem": me.Issuetrackersystem,
 		"password":           me.Password,
-		"token":              me.Token,
+		"token":              "${state.secret_value}",
 		"url":                me.Url,
 		"username":           me.Username,
 	})
