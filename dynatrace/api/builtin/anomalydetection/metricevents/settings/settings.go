@@ -60,6 +60,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"legacy_id": {
 			Type:        schema.TypeString,
 			Description: "Config id",
+			Computed:    true,
 			Optional:    true, // nullable
 		},
 		"model_properties": {
