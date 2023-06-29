@@ -10,8 +10,8 @@ import (
 )
 
 func equalLineByLine(s1, s2 string) bool {
-	parts1 := strings.Split(strings.TrimSpace(s1), "\n")
-	parts2 := strings.Split(strings.TrimSpace(s2), "\n")
+	parts1 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s1, "\r\n", "\n"), "\r", "\n")), "\n")
+	parts2 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s2, "\r\n", "\n"), "\r", "\n")), "\n")
 	if len(parts1) != len(parts2) {
 		return false
 	}

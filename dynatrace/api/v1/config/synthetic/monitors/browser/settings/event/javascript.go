@@ -45,7 +45,7 @@ func (me *Javascript) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Description:      "The JavaScript code to be executed in this event",
 			Required:         true,
-			DiffSuppressFunc: SuppressEquivalent,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"wait": {
 			Type:        schema.TypeList,

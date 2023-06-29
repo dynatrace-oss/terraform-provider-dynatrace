@@ -18,6 +18,9 @@
 package monitors
 
 import (
+	"encoding/json"
+	"sort"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -46,7 +49,27 @@ func (me *LoadingTimeThresholdsPolicy) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *LoadingTimeThresholdsPolicy) EnsurePredictableOrder() {
+	if len(me.Thresholds) > 0 {
+		conds := []*LoadingTimeThreshold{}
+		condStrings := sort.StringSlice{}
+		for _, entry := range me.Thresholds {
+			condBytes, _ := json.Marshal(entry)
+			condStrings = append(condStrings, string(condBytes))
+		}
+		condStrings.Sort()
+		for _, condString := range condStrings {
+			cond := LoadingTimeThreshold{}
+			json.Unmarshal([]byte(condString), &cond)
+			conds = append(conds, &cond)
+		}
+		me.Thresholds = conds
+	}
+}
+
 func (me *LoadingTimeThresholdsPolicy) MarshalHCL(properties hcl.Properties) error {
+	me.EnsurePredictableOrder()
+
 	if err := properties.Encode("enabled", me.Enabled); err != nil {
 		return err
 	}
