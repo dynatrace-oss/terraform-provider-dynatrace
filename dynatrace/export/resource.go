@@ -65,9 +65,7 @@ func (me *Resource) SetName(name string) *Resource {
 	}
 	me.Name = name
 	terraformName := toTerraformName(name)
-	if terraformName != me.UniqueName {
-		me.UniqueName = me.Module.namer.Name(terraformName)
-	}
+	me.UniqueName = me.Module.namer.Name(terraformName)
 	me.Status = ResourceStati.Discovered
 	return me
 }

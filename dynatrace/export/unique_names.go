@@ -19,6 +19,7 @@ package export
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"sync"
 )
@@ -53,9 +54,17 @@ func (me *nameCounter) Replace(replace ReplaceFunc) UniqueNamer {
 	return me
 }
 
+var cntreg = regexp.MustCompile(`^(.*)_(\d)*$`)
+
 func (me *nameCounter) Name(name string) string {
 	me.mutex.Lock()
 	defer me.mutex.Unlock()
+
+	// If we're getting passed `Monitor_Name_1` here, we shorten it to `Monitor_Name`
+	if matches := cntreg.FindStringSubmatch(name); matches != nil {
+		name = matches[1]
+	}
+
 	cnt, found := me.m[strings.ToLower(name)]
 	if !found {
 		me.m[strings.ToLower(name)] = 0
