@@ -62,7 +62,9 @@ func (me *nameCounter) Name(name string) string {
 
 	// If we're getting passed `Monitor_Name_1` here, we shorten it to `Monitor_Name`
 	if matches := cntreg.FindStringSubmatch(name); matches != nil {
-		name = matches[1]
+		if matches[1] != "" {
+			name = matches[1]
+		}
 	}
 
 	cnt, found := me.m[strings.ToLower(name)]
