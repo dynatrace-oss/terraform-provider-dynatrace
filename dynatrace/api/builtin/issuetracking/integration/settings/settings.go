@@ -53,9 +53,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"issuequery": {
-			Type:        schema.TypeString,
-			Description: "You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"issuetheme": {
 			Type:        schema.TypeString,

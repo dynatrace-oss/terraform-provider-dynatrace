@@ -82,7 +82,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Description:      "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
 			Optional:         true, // precondition
-			DiffSuppressFunc: hcl.SuppressJSONorEOT,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"type": {
 			Type:        schema.TypeString,
