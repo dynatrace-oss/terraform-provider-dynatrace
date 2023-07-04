@@ -205,6 +205,7 @@ import (
 	notificationsv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -968,6 +969,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LimitOutboundConnections: NewResourceDescriptor(allowedoutboundconnections.Service),
 	ResourceTypes.SpanEvents:               NewResourceDescriptor(eventattribute.Service),
 	ResourceTypes.VMware:                   NewResourceDescriptor(vmware.Service),
+	ResourceTypes.CustomDevice:             NewResourceDescriptor(customdevice.Service),
 }
 
 var BlackListedResources = []ResourceType{
