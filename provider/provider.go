@@ -386,6 +386,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_key_performance_custom":     resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceCustom).Resource(),
 			"dynatrace_web_app_key_performance_load":       resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceLoad).Resource(),
 			"dynatrace_web_app_key_performance_xhr":        resources.NewGeneric(export.ResourceTypes.WebAppKeyPerformanceXHR).Resource(),
+			"dynatrace_custom_device":                      resources.NewGeneric(export.ResourceTypes.CustomDevice).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -296,6 +296,7 @@ var ResourceTypes = struct {
 	LimitOutboundConnections            ResourceType
 	SpanEvents                          ResourceType
 	VMware                              ResourceType
+	CustomDevice                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -519,6 +520,7 @@ var ResourceTypes = struct {
 	"dynatrace_limit_outbound_connections",
 	"dynatrace_span_events",
 	"dynatrace_vmware",
+	"dynatrace_custom_device",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
