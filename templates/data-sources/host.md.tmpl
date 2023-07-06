@@ -7,7 +7,7 @@ description: |-
 
 # dynatrace_host (Data Source)
 
--> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `HOST` instead.
+!> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `HOST` instead.
 
 The host data source allows the host ID to be retrieved by its name and optionally tags / tag-value pairs.
 
