@@ -57,44 +57,42 @@ func sk(s string) string {
 }
 
 func resOpt(bc string, sch map[string]*schema.Schema) bool {
-	return false
-	// 	bc = strings.TrimPrefix(bc, ".")
-	// 	if strings.Contains(bc, ".") {
-	// 		idx := strings.Index(bc, ".")
-	// 		return resOpt0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
-	// 	}
-	// 	return resOpt0(bc, "", sch[bc])
-	// }
+	bc = strings.TrimPrefix(bc, ".")
+	if strings.Contains(bc, ".") {
+		idx := strings.Index(bc, ".")
+		return resOpt0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
+	}
+	return resOpt0(bc, "", sch[bc])
+}
 
-	// func resOpt0(key string, bc string, sch *schema.Schema) bool {
-	// 	if sch == nil {
-	// 		return false
-	// 	}
-	// 	switch sch.Type {
-	// 	case schema.TypeBool:
-	// 		return sch.Optional
-	// 	case schema.TypeInt:
-	// 		return sch.Optional
-	// 	case schema.TypeFloat:
-	// 		return sch.Optional
-	// 	case schema.TypeString:
-	// 		return sch.Optional
-	// 	case schema.TypeList:
-	// 		switch v := sch.Elem.(type) {
-	// 		case *schema.Resource:
-	// 			return resOpt(bc, v.Schema)
-	// 		default:
-	// 			return sch.Optional
-	// 		}
+func resOpt0(key string, bc string, sch *schema.Schema) bool {
+	if sch == nil {
+		return false
+	}
+	switch sch.Type {
+	case schema.TypeBool:
+		return sch.Optional
+	case schema.TypeInt:
+		return sch.Optional
+	case schema.TypeFloat:
+		return sch.Optional
+	case schema.TypeString:
+		return sch.Optional
+	case schema.TypeList:
+		switch v := sch.Elem.(type) {
+		case *schema.Resource:
+			return resOpt(bc, v.Schema)
+		default:
+			return sch.Optional
+		}
 
-	// 	case schema.TypeMap:
-	// 		return false
-	// 	case schema.TypeSet:
-	// 		return false
-	// 	default:
-	// 		return false
-
-	// 	}
+	case schema.TypeMap:
+		return false
+	case schema.TypeSet:
+		return false
+	default:
+		return false
+	}
 }
 
 func resComputed(bc string, sch map[string]*schema.Schema) bool {
@@ -158,7 +156,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 	if key == "legacy_id" {
 		return
 	}
-	if resComputed(breadCrumbs, schema) {
+	if resComputed(breadCrumbs, schema) && !resOpt(breadCrumbs, schema) {
 		return
 	}
 	switch v := value.(type) {
@@ -389,6 +387,9 @@ func (me *HCLGen) export(m map[string]any, schema map[string]*schema.Schema, w i
 	)
 	body := bs.Body()
 	for _, entry := range ents {
+		if pe, ok := entry.(*primitiveEntry); ok {
+			fmt.Println(pe.Key)
+		}
 		if !entry.IsComputed() {
 			if !(entry.IsOptional() && entry.IsDefault()) {
 				if err := entry.Write(body, "  "); err != nil {
@@ -401,6 +402,10 @@ func (me *HCLGen) export(m map[string]any, schema map[string]*schema.Schema, w i
 				if err := entry.Write(body, "  "); err != nil {
 					return err
 				}
+			}
+		} else { // if entry.IsOptional() && !entry.IsDefault() {
+			if err := entry.Write(body, "  "); err != nil {
+				return err
 			}
 		}
 	}
