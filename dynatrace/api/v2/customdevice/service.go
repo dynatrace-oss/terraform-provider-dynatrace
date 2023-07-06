@@ -19,6 +19,8 @@ package customdevice
 
 import (
 	"fmt"
+	"sync"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	customdevice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice/settings"
@@ -26,6 +28,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/google/uuid"
 )
+
+var mutex = &sync.Mutex{}
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*customdevice.CustomDevice] {
 	return &service{credentials}
@@ -37,23 +41,50 @@ type service struct {
 
 func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 	var err error
-
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
-	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&&entitySelector=%s", entitySelector)).Expect(200)
-	var enitityList customdevice.CustomDeviceList
-	if err = req.Finish(enitityList); err != nil {
-		return err
+	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
+
+	// The result from the GET API enpoint is not very stable, so attepting to get the custom device once is not enough.
+	// 20 is an arbitraty number (it takes 40s before the method gives up) that should be long enough for the endpoint to return a value.
+	for i := 0; i < 20; i++ {
+		req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&&entitySelector=%s", entitySelector)).Expect(200)
+		err = req.Finish(&CustomDeviceGetResponse)
+		if len(CustomDeviceGetResponse.Entities) != 0 {
+			break
+		}
+		time.Sleep(2 * time.Second)
 	}
 
-	if len(enitityList.Entities) == 0 {
+	if len(CustomDeviceGetResponse.Entities) == 0 {
+		// We only throu this error if the Finish method failed for the last attempt because sometimes random calls fail.
+		// This way if all calls fail, the last will fail as well, and we only get a false positive if the last call happens to be the only one to fail.
+		if err != nil {
+			return err
+		}
 		return rest.Error{Code: 404, Message: `Custom device with ID:` + id + " not found!"}
 	}
 
-	v.DisplayName = enitityList.Entities[0].DisplayName
-	v.EntityId = enitityList.Entities[0].EntityId
+	v.DisplayName = CustomDeviceGetResponse.Entities[0].DisplayName
+	v.EntityId = CustomDeviceGetResponse.Entities[0].EntityId
 	v.CustomDeviceID = id
 
+	return nil
+}
+
+func (me *service) CheckGet(id string, v *customdevice.CustomDevice) error {
+	var err error
+	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
+	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&&entitySelector=%s", entitySelector)).Expect(200)
+	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
+	if err = req.Finish(&CustomDeviceGetResponse); err != nil {
+		return err
+	}
+	if len(CustomDeviceGetResponse.Entities) == 0 {
+		return nil
+	}
+	v.EntityId = CustomDeviceGetResponse.Entities[0].EntityId
 	return nil
 }
 
@@ -70,28 +101,34 @@ func (me *service) Validate(v *customdevice.CustomDevice) error {
 }
 
 func (me *service) Create(v *customdevice.CustomDevice) (*api.Stub, error) {
+	mutex.Lock()
+	defer mutex.Unlock()
 	var err error
 	if v.CustomDeviceID == "" {
 		v.CustomDeviceID = uuid.NewString()
 	}
-	resultDevice := customdevice.CustomDevice{}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post("/api/v2/entities/custom", v, 201, 204).Finish(&resultDevice); err != nil {
+	if err = client.Post("/api/v2/entities/custom", v, 201, 204).Finish(); err != nil {
 		return nil, err
 	}
-	resultDevice.CustomDeviceID = v.CustomDeviceID
-	resultDevice.DisplayName = v.DisplayName
 
-	return &api.Stub{ID: resultDevice.CustomDeviceID, Name: *resultDevice.DisplayName, Value: resultDevice}, nil
+	// Check the custom device was indeed created before finishing up
+	for i := 0; i < 50; i++ {
+		me.CheckGet(v.CustomDeviceID, v)
+		time.Sleep(2 * time.Second)
+		if v.EntityId != "" {
+			break
+		}
+	}
+	return &api.Stub{ID: v.CustomDeviceID, Name: *v.DisplayName}, nil
 }
 
 func (me *service) Update(id string, v *customdevice.CustomDevice) error {
 	var err error
 	v.CustomDeviceID = id
-	v.EntityId = nil
-	resultDevice := customdevice.CustomDevice{}
+	v.EntityId = ""
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post("/api/v2/entities/custom", v, 201, 204).Finish(&resultDevice); err != nil {
+	if err = client.Post("/api/v2/entities/custom", v, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
