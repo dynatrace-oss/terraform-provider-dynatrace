@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "5.5"
+const SchemaVersion = "5.5.1"
 const SchemaID = "builtin:issue-tracking.integration"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*integration.Settings] {

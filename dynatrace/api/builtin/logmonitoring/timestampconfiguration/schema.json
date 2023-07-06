@@ -10,7 +10,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Dynatrace allows you to define rules that control log data timestamps.\n\nThe timestamp configuration is based on rules containing matchers. These rules determine how Dynatrace Log Monitoring interprets the incoming log data timestamps. For more details and examples, see the [documentation](https://dt-url.net/9x2347u).",
+	"description": "Dynatrace allows you to define rules that control log data timestamps.\n\nThe timestamp configuration is based on rules containing matchers. These rules determine how Dynatrace Log Monitoring interprets the incoming log data timestamps.",
 	"displayName": "Timestamp configuration",
 	"documentation": "",
 	"dynatrace": "1",
@@ -281,5 +281,5 @@
 			}
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
