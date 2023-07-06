@@ -316,7 +316,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		if len(v) == 0 {
 			return
 		}
-		entry := &resourceEntry{Key: key, Entries: exportEntries{}}
+		entry := &mapEntry{Key: key, Entries: exportEntries{}}
 		for xk, xv := range v {
 			entry.Entries = append(entry.Entries, &primitiveEntry{Key: xk, Value: xv, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)})
 		}

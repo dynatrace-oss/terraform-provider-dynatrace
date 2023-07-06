@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
@@ -968,6 +969,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LimitOutboundConnections: NewResourceDescriptor(allowedoutboundconnections.Service),
 	ResourceTypes.SpanEvents:               NewResourceDescriptor(eventattribute.Service),
 	ResourceTypes.VMware:                   NewResourceDescriptor(vmware.Service),
+	ResourceTypes.AutomationWorkflow:       NewResourceDescriptor(workflows.Service),
 }
 
 var BlackListedResources = []ResourceType{

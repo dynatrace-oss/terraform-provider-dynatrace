@@ -31,6 +31,12 @@ type Credentials struct {
 		AccountID    string
 		ClientSecret string
 	}
+	Automation struct {
+		ClientID       string
+		ClientSecret   string
+		TokenURL       string
+		EnvironmentURL string
+	}
 }
 
 func CreateExportCredentials() (*Credentials, error) {

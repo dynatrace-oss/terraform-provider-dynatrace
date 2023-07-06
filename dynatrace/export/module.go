@@ -636,7 +636,7 @@ func (me *Module) Discover() error {
 	var err error
 
 	var stubs api.Stubs
-	// log.Println("Discovering \"" + me.Type + "\" ...")
+	fmt.Println("Discovering \"" + me.Type + "\" ...")
 	if stubs, err = me.Service.List(); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
 			me.Status = ModuleStati.Erronous
@@ -648,6 +648,7 @@ func (me *Module) Discover() error {
 			me.Error = err
 			return nil
 		}
+		fmt.Println(err.Error())
 		return err
 	}
 	stubs = stubs.Sort()

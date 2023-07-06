@@ -156,17 +156,16 @@ func (me *Resource) Download() error {
 			return err
 		}
 	}
-
 	if me.Module.Descriptor.except != nil {
 		if me.Module.Descriptor.except(me.ID, me.Name) {
 			me.Status = ResourceStati.Excluded
 			return nil
 		}
 	}
-
 	var service = me.Module.Service
 
 	settngs := me.Module.Descriptor.NewSettings()
+	fmt.Println("GET", me.ID)
 	if err = service.Get(me.ID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
@@ -192,6 +191,7 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
+	fmt.Println("  ->", "success")
 	me.SetName(settings.Name(settngs, me.ID))
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
