@@ -165,7 +165,7 @@
 		},
 		"LAConfigMonitorOwnLogsEnabled": {
 			"default": false,
-			"description": "Enabling this option may affect your DDU consumption. For more details, see [documentation](https://dt-url.net/hp43ef8).",
+			"description": "Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).",
 			"displayName": "Allow OneAgent to monitor OneAgent logs",
 			"documentation": "",
 			"maxObjects": 1,
@@ -250,5 +250,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.12"
+	"version": "1.1.13"
 }
