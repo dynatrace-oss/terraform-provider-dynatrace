@@ -19,6 +19,7 @@ package customdevice
 
 import (
 	"fmt"
+	"net/url"
 	"sync"
 	"time"
 
@@ -29,7 +30,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var mutex = &sync.Mutex{}
+var mutex sync.Mutex
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*customdevice.CustomDevice] {
 	return &service{credentials}
@@ -48,7 +49,7 @@ func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 	// The result from the GET API enpoint is not very stable, so attepting to get the custom device once is not enough.
 	// 20 is an arbitraty number (it takes 40s before the method gives up) that should be long enough for the endpoint to return a value.
 	for i := 0; i < 20; i++ {
-		req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&&entitySelector=%s", entitySelector)).Expect(200)
+		req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s", url.QueryEscape(entitySelector))).Expect(200)
 		err = req.Finish(&CustomDeviceGetResponse)
 		if len(CustomDeviceGetResponse.Entities) != 0 {
 			break
@@ -57,7 +58,7 @@ func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 	}
 
 	if len(CustomDeviceGetResponse.Entities) == 0 {
-		// We only throu this error if the Finish method failed for the last attempt because sometimes random calls fail.
+		// We only throw this error if the Finish method failed for the last attempt because sometimes random calls fail.
 		// This way if all calls fail, the last will fail as well, and we only get a false positive if the last call happens to be the only one to fail.
 		if err != nil {
 			return err
@@ -76,7 +77,7 @@ func (me *service) CheckGet(id string, v *customdevice.CustomDevice) error {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
-	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&&entitySelector=%s", entitySelector)).Expect(200)
+	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s", url.QueryEscape(entitySelector))).Expect(200)
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 	if err = req.Finish(&CustomDeviceGetResponse); err != nil {
 		return err
@@ -93,7 +94,41 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
+	var err error
+	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	entitySelector := `type("CUSTOM_DEVICE")`
+	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties.detectedName&pageSize=500", url.QueryEscape(entitySelector))).Expect(200)
+	listResponse := struct {
+		Entities []struct {
+			EntityId    string `json:"entityId"`
+			Type        string `json:"type"`
+			DisplayName string `json:"displayName"`
+			Properties  struct {
+				DetectedName string `json:"detectedName"`
+			} `json:"properties"`
+		} `json:"entities"`
+	}{}
+	if err = req.Finish(&listResponse); err != nil {
+		return nil, err
+	}
+	var stubs api.Stubs
+	if len(listResponse.Entities) == 0 {
+		return stubs, nil
+	}
+	for _, entity := range listResponse.Entities {
+		if entity.Type != "CUSTOM_DEVICE" {
+			continue
+		}
+		if len(entity.Properties.DetectedName) == 0 {
+			continue
+		}
+		if len(entity.DisplayName) == 0 {
+			continue
+		}
+		stubs = append(stubs, &api.Stub{ID: entity.Properties.DetectedName, Name: entity.DisplayName})
+	}
+
+	return stubs, nil
 }
 
 func (me *service) Validate(v *customdevice.CustomDevice) error {
