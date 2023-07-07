@@ -10,6 +10,9 @@ import (
 )
 
 func equalLineByLine(s1, s2 string) bool {
+	if len(s1) == 0 && len(s2) == 0 {
+		return false
+	}
 	parts1 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s1, "\r\n", "\n"), "\r", "\n")), "\n")
 	parts2 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s2, "\r\n", "\n"), "\r", "\n")), "\n")
 	if len(parts1) != len(parts2) {
@@ -30,6 +33,9 @@ func SuppressEOT(k, old, new string, d *schema.ResourceData) bool {
 }
 
 func JSONStringsEqual(s1, s2 string) bool {
+	if len(s1) == 0 && len(s2) == 0 {
+		return false
+	}
 	b1 := bytes.NewBufferString("")
 	if err := json.Compact(b1, []byte(s1)); err != nil {
 		return false

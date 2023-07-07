@@ -49,9 +49,48 @@ type Generic struct {
 	Descriptor export.ResourceDescriptor
 }
 
+func VisitResource(res *schema.Resource) {
+	if res == nil {
+		return
+	}
+	VisitSchemaMap(res.Schema)
+}
+
+func VisitSchema(sch *schema.Schema) {
+	if sch == nil {
+		return
+	}
+	if !sch.Computed && sch.Type == schema.TypeString {
+		if sch.DiffSuppressFunc != nil {
+			storedDiffSuppressFunc := sch.DiffSuppressFunc
+			sch.DiffSuppressFunc = func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				if hcl.SuppressJSONorEOT(k, oldValue, newValue, d) {
+					return true
+				}
+				return storedDiffSuppressFunc(k, oldValue, newValue, d)
+			}
+		} else {
+			sch.DiffSuppressFunc = hcl.SuppressJSONorEOT
+		}
+	}
+	if res, ok := sch.Elem.(*schema.Resource); ok {
+		VisitResource(res)
+	}
+}
+
+func VisitSchemaMap(schemata map[string]*schema.Schema) map[string]*schema.Schema {
+	if len(schemata) == 0 {
+		return schemata
+	}
+	for _, sch := range schemata {
+		VisitSchema(sch)
+	}
+	return schemata
+}
+
 func (me *Generic) Resource() *schema.Resource {
 	stngs := me.Descriptor.NewSettings()
-	sch := stngs.Schema()
+	sch := VisitSchemaMap(stngs.Schema())
 	// implicitUpate := false
 	// stnt := reflect.ValueOf(stngs).Elem().Type()
 	// for idx := 0; idx < stnt.NumField(); idx++ {
