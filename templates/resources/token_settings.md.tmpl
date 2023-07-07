@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_token_settings (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Tokens and authentication - https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication

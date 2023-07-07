@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_alerting (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Alerting profiles - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/notifications-and-alerting/alerting-profiles

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_issue_tracking (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Issue-tracking integration - https://www.dynatrace.com/support/help/platform-modules/cloud-automation/release-monitoring/issue-tracking-integration

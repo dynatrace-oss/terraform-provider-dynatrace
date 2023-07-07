@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_limit_outbound_connections (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Allow outbound connections - https://developer.dynatrace.com/develop/functions/allow-outbound-connections/

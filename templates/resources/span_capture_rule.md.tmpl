@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_span_capture_rule (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Span settings - https://www.dynatrace.com/support/help/extend-dynatrace/extend-tracing/span-settings

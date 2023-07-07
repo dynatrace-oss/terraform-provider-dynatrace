@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_pg_alerting (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Process group availability monitoring and alerting - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups/monitoring/process-group-availability-monitoring-and-alerting

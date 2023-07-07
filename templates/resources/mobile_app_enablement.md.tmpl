@@ -9,6 +9,8 @@ description: |-
 
 -> Configuration of the application scope overlaps with [dynatrace_mobile_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/mobile_application), but this resource in addition provides an option for an environment scope.
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure cost and traffic control for mobile applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/mobile-applications/configure-cost-and-traffic-control-mobile

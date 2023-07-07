@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_http_monitor (Resource)
 
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+
 ## Dynatrace Documentation
 
 - Synthetic Monitoring - HTTP monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#http-monitors

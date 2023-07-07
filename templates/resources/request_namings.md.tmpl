@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_request_namings (Resource)
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
 ## Dynatrace Documentation
 
 - Set up request naming - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/service-monitoring-settings/set-up-request-naming

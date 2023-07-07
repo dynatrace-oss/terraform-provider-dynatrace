@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_environment (Resource)
 
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+
 ## Dynatrace Documentation
 
 - Manage your monitoring environments - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-managed/operation/manage-your-monitoring-environments

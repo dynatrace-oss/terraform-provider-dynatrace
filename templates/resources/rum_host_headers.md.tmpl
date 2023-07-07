@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_host_headers (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Define applications for Real User Monitoring - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/setup-and-configuration/initial-configuration/define-your-applications-via-the-my-web-application-placeholder

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_azure_credentials (Resource)
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
 ## Dynatrace Documentation
 
 - Microsoft Azure monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/cloud-platform-monitoring/microsoft-azure-services-monitoring

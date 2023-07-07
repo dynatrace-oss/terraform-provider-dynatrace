@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_process_group_rum (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Real User Monitoring for process groups - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/rum-for-process-groups

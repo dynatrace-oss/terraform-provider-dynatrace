@@ -9,6 +9,8 @@ description: |-
 
 -> Configuration of the application scope overlaps with [dynatrace_web_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/web_application), but this resource in addition provides an option for an environment scope.
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Resource capture - https://www.dynatrace.com/support/help/platform-modules/digital-experience/session-replay/configure-session-replay-web#sr-resource-capturing

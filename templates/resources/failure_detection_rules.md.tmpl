@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_failure_detection_rules (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure service failure detection - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-monitoring-settings/configure-service-failure-detection

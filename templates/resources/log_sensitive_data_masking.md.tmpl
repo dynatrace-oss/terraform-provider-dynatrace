@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_log_sensitive_data_masking (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Sensitive Data Masking - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/log-monitoring-configuration/sensitive-data-masking

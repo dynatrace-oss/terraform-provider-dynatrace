@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_process_visibility (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Process instance snapshots - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/monitoring/host-monitoring#snapshots

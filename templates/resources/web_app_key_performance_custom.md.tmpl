@@ -8,6 +8,8 @@ description: |-
 
 # dynatrace_web_app_key_performance_custom (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Adjust Apdex settings for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/additional-configuration/configure-apdex-web

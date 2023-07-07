@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_jira_notification (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Jira notifications - https://www.dynatrace.com/support/help/setup-and-configuration/integrations/problem-notifications/jira-integration

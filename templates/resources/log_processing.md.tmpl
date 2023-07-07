@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_log_processing (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Log processing - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/log-processing

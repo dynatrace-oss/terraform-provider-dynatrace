@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_container_rule (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Container monitoring rules - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/container-platform-monitoring/container-monitoring-rules

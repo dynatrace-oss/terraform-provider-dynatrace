@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_os_services (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - OS services monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts/monitoring/os-services

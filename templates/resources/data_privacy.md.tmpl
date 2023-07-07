@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_data_privacy (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Data privacy and security - https://www.dynatrace.com/support/help/manage/data-privacy-and-security

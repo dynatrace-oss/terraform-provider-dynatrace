@@ -9,6 +9,8 @@ description: |-
 
 -> Configuration of the application scope overlaps with [dynatrace_web_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/web_application), but this resource in addition provides an option for an environment scope.
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure cost and traffic control for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-cost-and-traffic-control-web

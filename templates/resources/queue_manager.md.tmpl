@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_queue_manager (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - IBM MQ tracing - https://www.dynatrace.com/support/help/how-to-use-dynatrace/queues/configuration/ibm-mq-tracing

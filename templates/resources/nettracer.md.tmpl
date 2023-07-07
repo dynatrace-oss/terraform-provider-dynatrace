@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_nettracer (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Extended network monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/networks/network-monitoring-with-nettracer

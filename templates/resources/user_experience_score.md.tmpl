@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_user_experience_score (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Change user experience score thresholds for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-user-experience-score-web

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_muted_requests (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Mute monitoring of service requests - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/service-monitoring-settings/service-monitoring-mute 

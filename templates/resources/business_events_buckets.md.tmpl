@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_business_events_buckets (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Business event bucket assignment - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-bucket-assignment

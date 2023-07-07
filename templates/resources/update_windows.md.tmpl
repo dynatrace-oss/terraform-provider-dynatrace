@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_update_windows (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - OneAgent update: Configure maintenance windows - https://www.dynatrace.com/support/help/shortlink/oneagent-update#maintenance-windows

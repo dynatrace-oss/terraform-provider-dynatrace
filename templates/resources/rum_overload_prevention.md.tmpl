@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_overload_prevention (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - What does a 'Max. user actions per minute exceeded' message mean? - https://www.dynatrace.com/support/help/shortlink/max-user-actions-per-minute-exceeded#can-my-environment-limit-be-changed

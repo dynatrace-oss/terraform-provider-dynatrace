@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_http_monitor_cookies (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Monitor setup - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/http-monitors/configure-http-monitors#setup

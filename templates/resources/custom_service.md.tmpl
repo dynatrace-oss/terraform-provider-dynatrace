@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_custom_service (Resource)
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
 ## Dynatrace Documentation
 
 - Define custom services - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/custom-services

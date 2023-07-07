@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_aws_anomalies (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/platform/davis-ai/anomaly-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure

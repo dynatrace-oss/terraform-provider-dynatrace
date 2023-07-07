@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_extension_execution_controller (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Extensions 2.0 - https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts

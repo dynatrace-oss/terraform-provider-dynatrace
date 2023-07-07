@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_host_monitoring (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Hosts - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/hosts

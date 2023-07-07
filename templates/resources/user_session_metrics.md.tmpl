@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_user_session_metrics (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Create USQL custom metrics for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/additional-configuration/custom-metrics-from-user-sessions

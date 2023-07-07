@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_process_group_monitoring (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Process deep monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/pg-monitoring

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_business_events_processing (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Business event processing - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-metric-extraction

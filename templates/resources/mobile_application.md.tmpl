@@ -11,6 +11,8 @@ description: |-
 
 -> Session and user action properties are expected to be sorted by their `key`.
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
 ## Dynatrace Documentation
 
 - RUM setup and configuration for mobile apps - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/mobile-apps

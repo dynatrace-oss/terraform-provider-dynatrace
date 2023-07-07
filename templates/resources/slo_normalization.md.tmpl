@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_slo_normalization (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Normalize error budget - https://www.dynatrace.com/support/help/platform-modules/cloud-automation/service-level-objectives/configure-and-monitor-slo#normalize-error-budget

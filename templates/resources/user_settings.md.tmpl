@@ -9,6 +9,8 @@ description: |-
 
 -> This resource is excluded by default in the export utility since it is scoped for an individual user and requires a personal access token.
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:user-settings`)

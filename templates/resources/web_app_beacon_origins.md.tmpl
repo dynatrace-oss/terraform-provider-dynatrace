@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_web_beacon_origins (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure beacon origin allowlist for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/setup-and-configuration/additional-configuration/configure-beacon-domain-allowlist

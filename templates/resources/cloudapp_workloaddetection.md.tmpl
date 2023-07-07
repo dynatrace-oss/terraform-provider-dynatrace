@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_cloudapp_workloaddetection (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Cloud application and workload detection - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/process-groups/configuration/cloud-app-and-workload-detection

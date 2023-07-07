@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_log_custom_source (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Custom log source (Logs Classic) - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/acquire-log-data/log-custom-source

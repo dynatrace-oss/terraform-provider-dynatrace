@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_audit_log (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Manage audit logs - https://www.dynatrace.com/support/help/manage/data-privacy-and-security/configuration/audit-logs

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_synthetic_availability (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:synthetic.synthetic-availability-settings`)

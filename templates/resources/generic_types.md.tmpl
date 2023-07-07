@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_generic_types (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Define custom topology - https://www.dynatrace.com/support/help/extend-dynatrace/extend-topology/custom-topology

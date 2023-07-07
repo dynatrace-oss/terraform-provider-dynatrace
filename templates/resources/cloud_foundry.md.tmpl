@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_cloud_foundry (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Cloud Foundry monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/container-platform-monitoring/cloud-foundry-monitoring

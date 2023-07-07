@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_service_anomalies_v2 (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Adjust the sensitivity of anomaly detection for services - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-services

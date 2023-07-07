@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_user (Resource)
 
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+
 ## Dynatrace Documentation
 
 - User management and SSO - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso

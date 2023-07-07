@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_dashboards_presets (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Preset Dynatrace dashboards - https://www.dynatrace.com/support/help/observe-and-explore/dashboards/dashboards/dashboards-preset

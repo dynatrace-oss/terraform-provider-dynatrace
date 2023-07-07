@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_aix_extension (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Automated injection of deep-code monitoring on AIX - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/installation-and-operation/aix/operation/enable-auto-injection

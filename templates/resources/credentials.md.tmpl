@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_credentials (Resource)
 
+-> This resource requires the API token scopes **Read credential vault entries** (`credentialVault.read`) and **Write credential vault entries** (`credentialVault.write`)
+
 ## Dynatrace Documentation
 
 - Credential vault for synthetic monitors - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/general-information/credential-vault-for-synthetic-monitors

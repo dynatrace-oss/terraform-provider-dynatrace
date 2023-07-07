@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_activegate_token (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - ActiveGate security - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-activegate/activegate-security
