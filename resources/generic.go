@@ -35,18 +35,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func NewGeneric(resourceType export.ResourceType) *Generic {
+func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
 	descriptor := export.AllResources[resourceType]
-	return &Generic{Type: resourceType, Descriptor: descriptor}
+	cv := CredValDefault
+	if len(credVal) > 0 {
+		cv = credVal[0]
+	}
+	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv}
 }
 
 type Computer interface {
 	IsComputer() bool
 }
 
+const (
+	CredValDefault = iota
+	CredValIAM
+	CredValNone
+)
+
 type Generic struct {
-	Type       export.ResourceType
-	Descriptor export.ResourceDescriptor
+	Type                 export.ResourceType
+	Descriptor           export.ResourceDescriptor
+	CredentialValidation int
 }
 
 func VisitResource(res *schema.Resource) {
@@ -129,6 +140,9 @@ func (me *Generic) createCredentials(m any) *settings.Credentials {
 }
 
 func (me *Generic) validateCredentials(m any) diag.Diagnostics {
+	if me.CredentialValidation != CredValDefault {
+		return diag.Diagnostics{}
+	}
 	conf := m.(*config.ProviderConfiguration)
 	if len(conf.EnvironmentURL) == 0 {
 		return diag.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that.")
