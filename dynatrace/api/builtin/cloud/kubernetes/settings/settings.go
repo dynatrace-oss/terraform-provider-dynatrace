@@ -26,24 +26,16 @@ import (
 )
 
 type Settings struct {
-	ActiveGateGroup                 *string           `json:"activeGateGroup,omitempty"`             // ActiveGate Group
-	AuthToken                       *string           `json:"authToken,omitempty"`                   // Create a bearer token for [Kubernetes](https://dt-url.net/og43szq \"Kubernetes\") or [OpenShift](https://dt-url.net/7l43xtp \"OpenShift\").
-	CertificateCheckEnabled         *bool             `json:"certificateCheckEnabled,omitempty"`     // Require valid certificates for communication with API server (recommended)
-	CloudApplicationPipelineEnabled bool              `json:"cloudApplicationPipelineEnabled"`       // Monitor Kubernetes namespaces, services, workloads, and pods
-	ClusterID                       *string           `json:"clusterId,omitempty"`                   // Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.
-	ClusterIdEnabled                bool              `json:"clusterIdEnabled"`                      // For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
-	Enabled                         bool              `json:"enabled"`                               // This setting is enabled (`true`) or disabled (`false`)
-	EndpointUrl                     *string           `json:"endpointUrl,omitempty"`                 // Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").
-	EventPatterns                   EventComplexTypes `json:"eventPatterns,omitempty"`               // Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).
-	EventProcessingActive           bool              `json:"eventProcessingActive"`                 // All events are monitored by default unless event filters are specified.\n\nKubernetes events are subject to Davis data units (DDU) licensing.\nSee [DDUs for events](https://dt-url.net/5n03vcu) for details.
-	FilterEvents                    *bool             `json:"filterEvents,omitempty"`                // Include only events specified by Events Field Selectors
-	HostnameVerificationEnabled     *bool             `json:"hostnameVerificationEnabled,omitempty"` // Verify hostname in certificate against Kubernetes API URL
-	IncludeAllFdiEvents             *bool             `json:"includeAllFdiEvents,omitempty"`         // For a list of included events, see the [documentation](https://dt-url.net/l61d02no).
-	Label                           string            `json:"label"`                                 // Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
-	OpenMetricsBuiltinEnabled       bool              `json:"openMetricsBuiltinEnabled"`             // The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
-	OpenMetricsPipelineEnabled      bool              `json:"openMetricsPipelineEnabled"`            // For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
-	PvcMonitoringEnabled            bool              `json:"pvcMonitoringEnabled"`                  // To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
-	Scope                           string            `json:"-" scope:"scope"`                       // The scope of this setting (KUBERNETES_CLUSTER)
+	ActiveGateGroup             *string `json:"activeGateGroup,omitempty"`             // ActiveGate Group
+	AuthToken                   *string `json:"authToken,omitempty"`                   // Create a bearer token for [Kubernetes](https://dt-url.net/og43szq \"Kubernetes\") or [OpenShift](https://dt-url.net/7l43xtp \"OpenShift\").
+	CertificateCheckEnabled     *bool   `json:"certificateCheckEnabled,omitempty"`     // Require valid certificates for communication with API server (recommended)
+	ClusterID                   *string `json:"clusterId,omitempty"`                   // Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.
+	ClusterIdEnabled            bool    `json:"clusterIdEnabled"`                      // For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
+	Enabled                     bool    `json:"enabled"`                               // This setting is enabled (`true`) or disabled (`false`)
+	EndpointUrl                 *string `json:"endpointUrl,omitempty"`                 // Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").
+	HostnameVerificationEnabled *bool   `json:"hostnameVerificationEnabled,omitempty"` // Verify hostname in certificate against Kubernetes API URL
+	Label                       string  `json:"label"`                                 // Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
+	Scope                       string  `json:"-" scope:"scope"`                       // The scope of this setting (KUBERNETES_CLUSTER)
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -63,11 +55,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "Require valid certificates for communication with API server (recommended)",
 			Optional:    true, // precondition
-		},
-		"cloud_application_pipeline_enabled": {
-			Type:        schema.TypeBool,
-			Description: "Monitor Kubernetes namespaces, services, workloads, and pods",
-			Required:    true,
 		},
 		"cluster_id": {
 			Type:        schema.TypeString,
@@ -89,52 +76,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").",
 			Optional:    true, // precondition
 		},
-		"event_patterns": {
-			Type:        schema.TypeList,
-			Description: "Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).",
-			Optional:    true, // precondition & minobjects == 0
-			Elem:        &schema.Resource{Schema: new(EventComplexTypes).Schema()},
-			MinItems:    1,
-			MaxItems:    1,
-		},
-		"event_processing_active": {
-			Type:        schema.TypeBool,
-			Description: "All events are monitored by default unless event filters are specified.\n\nKubernetes events are subject to Davis data units (DDU) licensing.\nSee [DDUs for events](https://dt-url.net/5n03vcu) for details.",
-			Required:    true,
-		},
-		"filter_events": {
-			Type:        schema.TypeBool,
-			Description: "Include only events specified by Events Field Selectors",
-			Optional:    true, // precondition
-		},
 		"hostname_verification_enabled": {
 			Type:        schema.TypeBool,
 			Description: "Verify hostname in certificate against Kubernetes API URL",
 			Optional:    true, // precondition
 		},
-		"include_all_fdi_events": {
-			Type:        schema.TypeBool,
-			Description: "For a list of included events, see the [documentation](https://dt-url.net/l61d02no).",
-			Optional:    true, // precondition
-		},
 		"label": {
 			Type:        schema.TypeString,
 			Description: "Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).",
-			Required:    true,
-		},
-		"open_metrics_builtin_enabled": {
-			Type:        schema.TypeBool,
-			Description: "The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.",
-			Required:    true,
-		},
-		"open_metrics_pipeline_enabled": {
-			Type:        schema.TypeBool,
-			Description: "For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).",
-			Required:    true,
-		},
-		"pvc_monitoring_enabled": {
-			Type:        schema.TypeBool,
-			Description: "To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.",
 			Required:    true,
 		},
 		"scope": {
@@ -147,76 +96,53 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"active_gate_group":                  me.ActiveGateGroup,
-		"auth_token":                         "${state.secret_value}",
-		"certificate_check_enabled":          me.CertificateCheckEnabled,
-		"cloud_application_pipeline_enabled": me.CloudApplicationPipelineEnabled,
-		"cluster_id":                         me.ClusterID,
-		"cluster_id_enabled":                 me.ClusterIdEnabled,
-		"enabled":                            me.Enabled,
-		"endpoint_url":                       me.EndpointUrl,
-		"event_patterns":                     me.EventPatterns,
-		"event_processing_active":            me.EventProcessingActive,
-		"filter_events":                      me.FilterEvents,
-		"hostname_verification_enabled":      me.HostnameVerificationEnabled,
-		"include_all_fdi_events":             me.IncludeAllFdiEvents,
-		"label":                              me.Label,
-		"open_metrics_builtin_enabled":       me.OpenMetricsBuiltinEnabled,
-		"open_metrics_pipeline_enabled":      me.OpenMetricsPipelineEnabled,
-		"pvc_monitoring_enabled":             me.PvcMonitoringEnabled,
-		"scope":                              me.Scope,
+		"active_gate_group":             me.ActiveGateGroup,
+		"auth_token":                    "${state.secret_value}",
+		"certificate_check_enabled":     me.CertificateCheckEnabled,
+		"cluster_id":                    me.ClusterID,
+		"cluster_id_enabled":            me.ClusterIdEnabled,
+		"enabled":                       me.Enabled,
+		"endpoint_url":                  me.EndpointUrl,
+		"hostname_verification_enabled": me.HostnameVerificationEnabled,
+		"label":                         me.Label,
+		"scope":                         me.Scope,
 	})
 }
 
 func (me *Settings) HandlePreconditions() error {
-	if me.CertificateCheckEnabled == nil && !me.ClusterIdEnabled {
+	if (me.CertificateCheckEnabled == nil) && (!me.ClusterIdEnabled) {
 		me.CertificateCheckEnabled = opt.NewBool(false)
 	}
-	if me.FilterEvents == nil && me.EventProcessingActive {
-		me.FilterEvents = opt.NewBool(false)
-	}
-	if me.HostnameVerificationEnabled == nil && !me.ClusterIdEnabled {
+	if (me.HostnameVerificationEnabled == nil) && (!me.ClusterIdEnabled) {
 		me.HostnameVerificationEnabled = opt.NewBool(false)
 	}
-	if me.IncludeAllFdiEvents == nil && me.FilterEvents != nil && *me.FilterEvents {
-		me.IncludeAllFdiEvents = opt.NewBool(false)
-	}
-	if me.ActiveGateGroup == nil && !me.ClusterIdEnabled {
+	if (me.ActiveGateGroup == nil) && (!me.ClusterIdEnabled) {
 		return fmt.Errorf("'active_gate_group' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
 	}
-	if me.AuthToken == nil && !me.ClusterIdEnabled {
+	if (me.AuthToken == nil) && (!me.ClusterIdEnabled) {
 		return fmt.Errorf("'auth_token' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
 	}
-	if me.ClusterID == nil && me.ClusterIdEnabled {
+	if (me.ClusterID == nil) && (me.ClusterIdEnabled) {
 		return fmt.Errorf("'cluster_id' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
 	}
-	if me.EndpointUrl == nil && !me.ClusterIdEnabled {
+	if (me.EndpointUrl == nil) && (!me.ClusterIdEnabled) {
 		return fmt.Errorf("'endpoint_url' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
 	}
-	// ---- EventPatterns EventComplexTypes -> {"expectedValue":true,"property":"filterEvents","type":"EQUALS"}
 	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"active_gate_group":                  &me.ActiveGateGroup,
-		"auth_token":                         &me.AuthToken,
-		"certificate_check_enabled":          &me.CertificateCheckEnabled,
-		"cloud_application_pipeline_enabled": &me.CloudApplicationPipelineEnabled,
-		"cluster_id":                         &me.ClusterID,
-		"cluster_id_enabled":                 &me.ClusterIdEnabled,
-		"enabled":                            &me.Enabled,
-		"endpoint_url":                       &me.EndpointUrl,
-		"event_patterns":                     &me.EventPatterns,
-		"event_processing_active":            &me.EventProcessingActive,
-		"filter_events":                      &me.FilterEvents,
-		"hostname_verification_enabled":      &me.HostnameVerificationEnabled,
-		"include_all_fdi_events":             &me.IncludeAllFdiEvents,
-		"label":                              &me.Label,
-		"open_metrics_builtin_enabled":       &me.OpenMetricsBuiltinEnabled,
-		"open_metrics_pipeline_enabled":      &me.OpenMetricsPipelineEnabled,
-		"pvc_monitoring_enabled":             &me.PvcMonitoringEnabled,
-		"scope":                              &me.Scope,
+		"active_gate_group":             &me.ActiveGateGroup,
+		"auth_token":                    &me.AuthToken,
+		"certificate_check_enabled":     &me.CertificateCheckEnabled,
+		"cluster_id":                    &me.ClusterID,
+		"cluster_id_enabled":            &me.ClusterIdEnabled,
+		"enabled":                       &me.Enabled,
+		"endpoint_url":                  &me.EndpointUrl,
+		"hostname_verification_enabled": &me.HostnameVerificationEnabled,
+		"label":                         &me.Label,
+		"scope":                         &me.Scope,
 	})
 }
 

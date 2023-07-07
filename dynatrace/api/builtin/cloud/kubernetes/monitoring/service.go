@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package workload
+package monitoring
 
 import (
-	workload "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload/settings"
+	monitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.9"
-const SchemaID = "builtin:anomaly-detection.kubernetes.workload"
+const SchemaVersion = "1"
+const SchemaID = "builtin:cloud.kubernetes.monitoring"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*workload.Settings] {
-	return settings20.Service[*workload.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*monitoring.Settings] {
+	return settings20.Service[*monitoring.Settings](credentials, SchemaID, SchemaVersion)
 }

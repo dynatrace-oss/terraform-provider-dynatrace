@@ -4,9 +4,9 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "Create rules to mask any information you consider to be sensitive. For more details and examples, see [documentation](https://dt-url.net/bc03yti)",
+	"description": "Create rules to mask any information you consider to be sensitive. Masking is done on OneAgent, and no personal data is sent or stored on Dynatrace server.",
 	"displayName": "Sensitive data masking",
-	"documentation": "Masking is done on OneAgent, and no personal data is sent or stored on Dynatrace server.",
+	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
 		"MaskingType": {
@@ -335,5 +335,5 @@
 			}
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }

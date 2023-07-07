@@ -54,6 +54,7 @@ import (
 	bizevents_processing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/pipelines"
 	cloudfoundryv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/cloudfoundry"
 	kubernetesv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes"
+	kubernetesmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
@@ -970,6 +971,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SpanEvents:               NewResourceDescriptor(eventattribute.Service),
 	ResourceTypes.VMware:                   NewResourceDescriptor(vmware.Service),
 	ResourceTypes.CustomDevice:             NewResourceDescriptor(customdevice.Service),
+	ResourceTypes.K8sMonitoring: NewResourceDescriptor(
+		kubernetesmonitoring.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 var BlackListedResources = []ResourceType{
