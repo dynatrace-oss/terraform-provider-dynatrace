@@ -20,7 +20,6 @@ package export
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -522,25 +521,10 @@ func (me *Environment) WriteMainFile() error {
 }
 
 func (me *Environment) ExecuteImport() error {
-	if me.Flags.ImportState {
-		return me.executeImportV1()
-	}
 	if me.Flags.ImportStateV2 {
 		return me.executeImportV2()
 	}
 
-	return nil
-}
-
-func (me *Environment) executeImportV1() error {
-	for _, module := range me.Modules {
-		if shutdown.System.Stopped() {
-			return errors.New("import was stopped")
-		}
-		if err := module.ExecuteImportV1(); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 

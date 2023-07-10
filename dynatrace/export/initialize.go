@@ -181,9 +181,11 @@ func createFlags() (flags Flags, tailArgs []string) {
 	linkArg := flag.Bool("link", false, "enable hard links for .requires_attention and .flawed")
 	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
 	flat := flag.Bool("flat", false, "prevent creating a module structure")
+	importStateV2 := flag.Bool("import-state-v2", false, "deprecated - use `import-state`")
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
-	importStateV2 := flag.Bool("import-state-v2", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
+
+	importStateFlag := (importState != nil && *importState) || (importStateV2 != nil && *importStateV2)
 
 	flag.Parse()
 
@@ -195,8 +197,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		FlagHardLinks:       *linkArg,
 		FlagPreviewOnly:     *preview,
 		Flat:                *flat,
-		ImportState:         *importState,
-		ImportStateV2:       *importStateV2,
+		ImportStateV2:       importStateFlag,
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
 	}, flag.Args()
@@ -226,7 +227,6 @@ type Flags struct {
 	FlagHardLinks       bool
 	FlagPreviewOnly     bool
 	Flat                bool
-	ImportState         bool
 	ImportStateV2       bool
 	Exclude             bool
 	DataSources         bool

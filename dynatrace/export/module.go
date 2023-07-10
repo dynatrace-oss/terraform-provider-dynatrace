@@ -31,7 +31,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/spf13/afero"
@@ -663,85 +662,6 @@ func (me *Module) Discover() error {
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
 	// log.Println("   ", fmt.Sprintf("%d items found", len(stubs)))
-	return nil
-}
-
-func (me *Module) ExecuteImportV1() (err error) {
-	if !me.Environment.Flags.ImportState {
-		return nil
-	}
-	if me.Status.IsOneOf(ModuleStati.Imported, ModuleStati.Erronous, ModuleStati.Untouched) {
-		return nil
-	}
-	referencedResourceTypes := me.GetReferencedResourceTypes()
-	if len(referencedResourceTypes) > 0 {
-		for _, resourceType := range referencedResourceTypes {
-			if err := me.Environment.Module(resourceType).ExecuteImportV1(); err != nil {
-				return err
-			}
-		}
-	}
-	length := 0
-	for _, resource := range me.Resources {
-		if !resource.Status.IsOneOf(ResourceStati.PostProcessed) {
-			continue
-		}
-		length++
-	}
-	fmt.Printf("  - %s (0 of %d)", me.Type, length)
-	exePath, _ := exec.LookPath("terraform")
-	const ClearLine = "\033[2K"
-	idx := 0
-	for _, resource := range me.Resources {
-		if !resource.Status.IsOneOf(ResourceStati.PostProcessed) {
-			continue
-		}
-		statement := fmt.Sprintf("module.%s.%s.%s", me.Type.Trim(), me.Type, resource.UniqueName)
-		if me.Environment.Flags.Flat {
-			statement = fmt.Sprintf("%s.%s", me.Type, resource.UniqueName)
-		}
-		// fmt.Println("terraform", "import", statement, resource.ID, me.Environment.OutputFolder)
-		cmd := exec.Command(
-			exePath,
-			"import",
-			"-lock=false",
-			"-input=false",
-			"-no-color",
-			statement,
-			resource.ID,
-		)
-		var outb, errb bytes.Buffer
-		cmd.Stdout = &outb
-		cmd.Stderr = &errb
-		cmd.Dir = me.Environment.OutputFolder
-		var cacheFolder string
-		if cacheFolder, err = filepath.Abs(cache.GetCacheFolder()); err != nil {
-			return err
-		}
-		cmd.Env = []string{
-			// "TF_LOG_PROVIDER=INFO",
-			"DYNATRACE_ENV_URL=" + me.Environment.Credentials.URL,
-			"DYNATRACE_API_TOKEN=" + me.Environment.Credentials.Token,
-			"DT_CACHE_FOLDER=" + cacheFolder,
-			"CACHE_OFFLINE_MODE=true",
-			"DT_CACHE_DELETE_ON_LAUNCH=false",
-			"DT_NO_CACHE_CLEANUP=true",
-			"DT_TERRAFORM_IMPORT=true",
-		}
-		cmd.Start()
-		if err := cmd.Wait(); err != nil {
-			fmt.Println("out:", outb.String())
-			fmt.Println("err:", errb.String())
-		}
-		idx++
-		fmt.Print(ClearLine)
-		fmt.Print("\r")
-		fmt.Printf("  - %s (%d of %d)", me.Type, idx, length)
-	}
-	fmt.Print(ClearLine)
-	fmt.Print("\r")
-	fmt.Printf("  - %s\n", me.Type)
-	me.Status = ModuleStati.Imported
 	return nil
 }
 
