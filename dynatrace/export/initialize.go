@@ -185,9 +185,9 @@ func createFlags() (flags Flags, tailArgs []string) {
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 
-	importStateFlag := (importState != nil && *importState) || (importStateV2 != nil && *importStateV2)
-
 	flag.Parse()
+
+	importStateFlag := (importState != nil && *importState == true) || (importStateV2 != nil && *importStateV2 == true)
 
 	return Flags{
 		FollowReferences:    *refArg,
