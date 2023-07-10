@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_connectivity_alerts (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Process Groups - https://www.dynatrace.com/support/help/how-to-use-dynatrace/process-groups 

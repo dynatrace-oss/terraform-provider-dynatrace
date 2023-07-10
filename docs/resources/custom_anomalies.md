@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_custom_anomalies (Resource)
 
--> This resource API endpoint has been deprecated, please use [dynatrace_metric_events](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/metric_events) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_metric_events](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/metric_events) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

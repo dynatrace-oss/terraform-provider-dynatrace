@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_database_anomalies (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_database_anomalies_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/database_anomalies_v2) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_database_anomalies_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/database_anomalies_v2) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

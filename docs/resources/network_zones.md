@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_network_zones (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Network zones - https://www.dynatrace.com/support/help/setup-and-configuration/network-zones

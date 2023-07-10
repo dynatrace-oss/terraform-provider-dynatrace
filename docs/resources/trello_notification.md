@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_trello_notification (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Trello integration - https://www.dynatrace.com/support/help/setup-and-configuration/integrations/problem-notifications/trello-integration

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_session_replay_web_privacy (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure Session Replay for web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/session-replay/configure-session-replay-web

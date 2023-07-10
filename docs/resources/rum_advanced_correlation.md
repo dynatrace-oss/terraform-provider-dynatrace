@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_advanced_correlation (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Web applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications

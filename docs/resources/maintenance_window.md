@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_maintenance_window (Resource)
 
--> This resource API endpoint has been deprecated, please use [dynatrace_maintenance](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_maintenance](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

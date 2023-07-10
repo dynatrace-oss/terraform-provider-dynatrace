@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_synthetic_location (Resource)
 
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+
 ## Dynatrace Documentation
 
 - Creating Private Synthetic Locations - https://www.dynatrace.com/support/help/how-to-use-dynatrace/synthetic-monitoring/private-synthetic-locations/create-a-private-synthetic-location

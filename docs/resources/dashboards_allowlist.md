@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_dashboards_allowlist (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Dashboards - https://www.dynatrace.com/support/help/observe-and-explore/dashboards#expand--add-image-url-to-allowlist--28

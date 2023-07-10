@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_request_attribute (Resource)
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Capture request data** (`CaptureRequestData`)
+
 ## Dynatrace Documentation
 
 - Request attributes - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/request-attributes

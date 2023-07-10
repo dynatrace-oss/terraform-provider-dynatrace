@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_log_grail (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Migration to Log powered by Grail - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-migration-to-grail

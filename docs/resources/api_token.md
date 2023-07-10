@@ -11,6 +11,8 @@ description: |-
 
 -> The token value can be retrieved with `dynatrace_api_token.<#name#>.token` after apply.
 
+-> This resource requires the API token scopes **Read API tokens** (`apiTokens.read`) and **Write API tokens** (`apiTokens.write`)
+
 ## Dynatrace Documentation
 
 - Dynatrace API Tokens and authentication - https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication

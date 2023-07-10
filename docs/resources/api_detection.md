@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_api_detection (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Custom API definitions - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-monitoring-settings/customize-api-definitions

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_slack_notification (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Slack integration - https://www.dynatrace.com/support/help/setup-and-configuration/integrations/problem-notifications/slack-integration

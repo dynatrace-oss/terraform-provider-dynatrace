@@ -9,6 +9,8 @@ description: |-
 
 -> Configuration of the synthetic test scope overlaps with [dynatrace_browser_monitor](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/browser_monitor), but this resource in addition provides an option for an environment scope.
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Synthetic alerting overview - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/synthetic-alerting-overview

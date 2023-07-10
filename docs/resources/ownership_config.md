@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_ownership_config (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Ownership - https://www.dynatrace.com/support/help/manage/ownership

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_ip_determination (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Customize IP address detection - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/setup-and-configuration/additional-configuration/customize-ip-address-detection-web

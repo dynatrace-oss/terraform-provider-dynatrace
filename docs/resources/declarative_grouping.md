@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_declarative_grouping (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Declarative process grouping - https://www.dynatrace.com/support/help/shortlink/process-groups#declare

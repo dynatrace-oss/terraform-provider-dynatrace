@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_eula_settings (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Display clickwrap agreement to new users - https://www.dynatrace.com/support/help/manage/access-control/user-management-and-sso/clickwrap-agreement

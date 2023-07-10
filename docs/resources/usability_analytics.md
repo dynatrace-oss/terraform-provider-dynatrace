@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_usability_analytics (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - User experience score - https://www.dynatrace.com/support/help/platform-modules/digital-experience/basic-concepts/ratings/user-experience-score#calculate-the-user-experience-score

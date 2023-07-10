@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_opentelemetry_metrics (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - OpenTelemetry metrics - https://www.dynatrace.com/support/help/extend-dynatrace/opentelemetry/opentelemetry-metrics

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_key_requests (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Monitor key requests - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/analysis/monitor-key-requests

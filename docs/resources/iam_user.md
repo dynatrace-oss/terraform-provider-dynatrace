@@ -9,6 +9,8 @@ description: |-
 
 -> This resource is excluded by default in the export utility since it is part of the account management API.
 
+-> This resource requires the API token scopes **Allow read access for identity resources (users and groups)** (`account-idm-read`) and **Allow write access for identity resources (users and groups)** (`account-idm-write`)
+
 ## Dynatrace Documentation
 
 - Dynatrace IAM - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions

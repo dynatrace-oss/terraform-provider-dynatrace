@@ -7,6 +7,7 @@ description: |-
 
 # dynatrace_process_group_detection (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

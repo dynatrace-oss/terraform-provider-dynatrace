@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_provider_breakdown (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Configure first-party, third-party, and CDN resource detection for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/configure-third-party-and-cdn-content-detection-web

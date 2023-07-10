@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_alerting_profile (Resource)
 
--> This resource API endpoint has been deprecated, please use [dynatrace_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/alerting) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/alerting) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

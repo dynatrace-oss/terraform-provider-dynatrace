@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_container_technology (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Technology support - https://www.dynatrace.com/support/help/technology-support#anchor-containers

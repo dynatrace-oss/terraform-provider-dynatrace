@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_management_zone_v2 (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Management zones - https://www.dynatrace.com/support/help/how-to-use-dynatrace/management-zones

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_ibm_mq_filters (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - IBM MQ monitoring - https://www.dynatrace.com/support/help/technology-support/dynatrace-extensions/dynatrace-extension-required/ibm-mq-extensions

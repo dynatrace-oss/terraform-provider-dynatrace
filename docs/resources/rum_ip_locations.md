@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_rum_ip_locations (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Map internal IP addresses to locations - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications/additional-configuration/map-internal-ip-addresses-to-locations-web

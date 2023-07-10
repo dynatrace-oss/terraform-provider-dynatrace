@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_oneagent_default_version (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - OneAgent update - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-update

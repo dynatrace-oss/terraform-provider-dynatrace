@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_browser_monitor (Resource)
 
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+
 ## Dynatrace Documentation
 
 - Synthetic Monitoring - Browser monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#browser-monitors

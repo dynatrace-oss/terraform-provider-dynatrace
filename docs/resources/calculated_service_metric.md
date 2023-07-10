@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_calculated_service_metric (Resource)
 
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
 ## Dynatrace Documentation
 
 - Calculated metrics for services - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/service-monitoring-settings/calculated-service-metric

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_vmware (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - VMware vSphere monitoring - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/vmware-vsphere-monitoring

@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_k8s_credentials (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_kubernetes](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/kubernetes) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_kubernetes](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/kubernetes) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

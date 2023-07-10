@@ -7,7 +7,9 @@ description: |-
 
 # dynatrace_web_app_custom_errors (Resource)
 
--> This resource may not have full coverage of the required fields, please use [dynatrace_application_error_rules](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/application_error_rules) instead.
+!> This resource may not have full coverage of the required fields, please use [dynatrace_application_error_rules](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/application_error_rules) instead.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

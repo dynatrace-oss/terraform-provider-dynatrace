@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_log_buckets (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Log buckets and retention - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-log-buckets-and-retention

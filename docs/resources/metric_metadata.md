@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_metric_metadata (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Metrics - https://www.dynatrace.com/support/help/observe-and-explore/metrics

@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_custom_tags (Resource)
 
+-> This resource requires the API token scopes **Read entities** (`entities.read`) and **Write entities** (`entities.write`)
+
 ## Dynatrace Documentation
 
 - Define and apply tags - https://www.dynatrace.com/support/help/shortlink/tagging#manual

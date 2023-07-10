@@ -7,6 +7,8 @@ description: |-
 
 # dynatrace_web_app_resource_cleanup (Resource)
 
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
 ## Dynatrace Documentation
 
 - Define URL cleanup rules - https://www.dynatrace.com/support/help/platform-modules/digital-experience/web-applications/how-to-use/waterfall-analysis#define-url-cleanup-rules
