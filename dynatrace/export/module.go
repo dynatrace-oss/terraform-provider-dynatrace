@@ -779,7 +779,9 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 	resList = make(resources, 0, len(me.Resources))
 
 	for _, res := range me.Resources {
-
+		if !res.Status.IsOneOf(ResourceStati.PostProcessed) {
+			continue
+		}
 		if uniqueNameExists[res.UniqueName] {
 			fmt.Println("ERROR: Duplicate UniqueName for ", string(me.Type), res.UniqueName)
 			continue
