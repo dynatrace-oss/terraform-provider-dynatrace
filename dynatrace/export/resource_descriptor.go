@@ -1023,6 +1023,10 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AzureService,
 	ResourceTypes.AWSService,
 	ResourceTypes.AutomationWorkflow,
+
+	// Not included in export - may cause issues for migration use cases
+	ResourceTypes.MetricMetadata,
+	ResourceTypes.MetricQuery,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
