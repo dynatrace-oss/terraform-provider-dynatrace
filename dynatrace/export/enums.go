@@ -298,6 +298,7 @@ var ResourceTypes = struct {
 	VMware                              ResourceType
 	CustomDevice                        ResourceType
 	K8sMonitoring                       ResourceType
+	AutomationWorkflow                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -523,6 +524,7 @@ var ResourceTypes = struct {
 	"dynatrace_vmware",
 	"dynatrace_custom_device",
 	"dynatrace_k8s_monitoring",
+	"dynatrace_automation_workflow",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

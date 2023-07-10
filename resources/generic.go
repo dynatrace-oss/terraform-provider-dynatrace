@@ -133,9 +133,10 @@ func (me *Generic) Resource() *schema.Resource {
 func (me *Generic) createCredentials(m any) *settings.Credentials {
 	conf := m.(*config.ProviderConfiguration)
 	return &settings.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-		IAM:   conf.IAM,
+		Token:      conf.APIToken,
+		URL:        conf.EnvironmentURL,
+		IAM:        conf.IAM,
+		Automation: conf.Automation,
 	}
 }
 

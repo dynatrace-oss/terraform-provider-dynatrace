@@ -10,7 +10,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type UserServiceClient struct {
@@ -76,7 +75,6 @@ type GetUserGroupsResponse struct {
 }
 
 func (me *UserServiceClient) Get(email string, v *users.User) error {
-	logging.File.Println("Get", email)
 	var err error
 	var responseBytes []byte
 

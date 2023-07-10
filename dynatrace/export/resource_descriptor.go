@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
@@ -975,6 +976,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesmonitoring.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
+	ResourceTypes.AutomationWorkflow: NewResourceDescriptor(workflows.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1020,6 +1022,7 @@ var BlackListedResources = []ResourceType{
 	// Not included in export - to be discussed
 	ResourceTypes.AzureService,
 	ResourceTypes.AWSService,
+	ResourceTypes.AutomationWorkflow,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

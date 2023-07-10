@@ -19,6 +19,7 @@ package provider
 
 import (
 	"context"
+	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
@@ -78,7 +79,7 @@ type ResourceSpecification interface {
 // Provider function for Dynatrace API
 func Provider() *schema.Provider {
 	logging.SetOutput()
-	return &schema.Provider{
+	prv := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"dt_env_url": {
 				Type:        schema.TypeString,
@@ -120,6 +121,30 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_SECRET", "DT_CLIENT_SECRET"}, nil),
+			},
+			"automation_client_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DT_AUTOMATION_CLIENT_ID", "DYNATRACE_AUTOMATION_CLIENT_ID"}, nil),
+			},
+			"automation_client_secret": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DT_AUTOMATION_CLIENT_SECRET", "DYNATRACE_AUTOMATION_CLIENT_SECRET"}, nil),
+			},
+			"automation_token_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DT_AUTOMATION_TOKEN_URL", "DYNATRACE_AUTOMATION_TOKEN_URL"}, nil),
+				Description: "The URL that provides the Bearer tokens when accessing the Automation REST API. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`",
+			},
+			"automation_env_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The URL of the Dynatrace Environment with Platform capabilities turned on (`https://#####.apps.dynatrace.com)`. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`",
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DT_AUTOMATION_ENVIRONMENT_URL", "DYNATRACE_AUTOMATION_ENVIRONMENT_URL", "DYNATRACE_AUTOMATION_ENV_URL", "DT_AUTOMATION_ENV_URL"}, nil),
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -391,4 +416,8 @@ func Provider() *schema.Provider {
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
+	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
+		prv.ResourcesMap["dynatrace_automation_workflow"] = resources.NewGeneric(export.ResourceTypes.AutomationWorkflow).Resource()
+	}
+	return prv
 }

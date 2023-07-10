@@ -19,7 +19,9 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -36,12 +38,20 @@ type IAM struct {
 	ClientSecret string
 }
 
+type Automation struct {
+	ClientID       string
+	ClientSecret   string
+	TokenURL       string
+	EnvironmentURL string
+}
+
 func Credentials(m any) *settings.Credentials {
 	conf := m.(*ProviderConfiguration)
 	return &settings.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-		IAM:   conf.IAM,
+		Token:      conf.APIToken,
+		URL:        conf.EnvironmentURL,
+		IAM:        conf.IAM,
+		Automation: conf.Automation,
 	}
 }
 
@@ -55,6 +65,7 @@ type ProviderConfiguration struct {
 	ClusterAPIToken   string
 	APIToken          string
 	IAM               IAM
+	Automation        Automation
 }
 
 type Getter interface {
@@ -77,6 +88,17 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	fullURL := dtEnvURL + "/api/config/v1"
 	fullNonConfigURL := dtEnvURL + "/api/v1"
 	fullApiV2URL := dtEnvURL + "/api/v2"
+
+	automationEnvironmentURL := getString(d, "automation_env_url")
+	automationTokenURL := getString(d, "automation_token_url")
+	if len(automationEnvironmentURL) == 0 {
+		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
+		if match := re.FindStringSubmatch(dtEnvURL); match != nil && len(match) > 0 {
+			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
+			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
+		}
+	}
+
 	var diags diag.Diagnostics
 
 	return &ProviderConfiguration{
@@ -91,6 +113,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			ClientID:     getString(d, "iam_client_id"),
 			AccountID:    getString(d, "iam_account_id"),
 			ClientSecret: getString(d, "iam_client_secret"),
+		},
+		Automation: Automation{
+			ClientID:       getString(d, "automation_client_id"),
+			ClientSecret:   getString(d, "automation_client_secret"),
+			TokenURL:       automationTokenURL,
+			EnvironmentURL: automationEnvironmentURL,
 		},
 	}, diags
 }
