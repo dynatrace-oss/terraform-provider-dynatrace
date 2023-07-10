@@ -387,9 +387,6 @@ func (me *HCLGen) export(m map[string]any, schema map[string]*schema.Schema, w i
 	)
 	body := bs.Body()
 	for _, entry := range ents {
-		if pe, ok := entry.(*primitiveEntry); ok {
-			fmt.Println(pe.Key)
-		}
 		if !entry.IsComputed() {
 			if !(entry.IsOptional() && entry.IsDefault()) {
 				if err := entry.Write(body, "  "); err != nil {
