@@ -708,19 +708,27 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		}
 		uniqueNameExists[res.UniqueName] = true
 
+		providerSource := os.Getenv("DYNATRACE_PROVIDER_SOURCE")
+		if len(providerSource) == 0 {
+			providerSource = `provider["registry.terraform.io/dynatrace-oss/dynatrace"]`
+		} else {
+			providerSource = fmt.Sprintf(`provider["%s"]`, providerSource)
+		}
+
 		resList = append(resList, resource{
-			Module:   fmt.Sprintf("module.%s", me.Type.Trim()),
-			Mode:     "managed",
-			Type:     string(me.Type),
-			Name:     res.UniqueName,
-			Provider: "provider[\"dynatrace.com/com/dynatrace\"]",
+			Module: fmt.Sprintf("module.%s", me.Type.Trim()),
+			Mode:   "managed",
+			Type:   string(me.Type),
+			Name:   res.UniqueName,
+			// Provider: `provider["dynatrace.com/com/dynatrace"]`,
+			Provider: providerSource,
 			Instances: []instance{
 				{
 					Attributes: attrs{
 						Id: res.ID,
 					},
 					SchemaVersion:       0,
-					SensitiveAttributes: make([]interface{}, 0),
+					SensitiveAttributes: make([]any, 0),
 					Private:             "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
 				},
 			},
