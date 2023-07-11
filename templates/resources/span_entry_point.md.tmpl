@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_span_entry_point Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_entry_point` covers configuration for span entry points
 ---

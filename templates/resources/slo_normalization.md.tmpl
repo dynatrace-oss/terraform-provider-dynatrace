@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_slo_normalization Resource - terraform-provider-dynatrace"
+subcategory: "Service-level Objective"
 description: |-
   The resource `dynatrace_slo_normalization` covers configuration for service-level objective setup
 ---

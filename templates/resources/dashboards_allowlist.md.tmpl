@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_dashboards_allowlist Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboards_allowlist` covers dashboard configuration for allowed URL pattern rules
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_eula_settings Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_eula_settings` covers configuration for display of the clickwrap agreement
 ---

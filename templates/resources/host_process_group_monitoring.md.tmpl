@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_host_process_group_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_process_group_monitoring` covers configuration of host level process group monitoring rules
 ---

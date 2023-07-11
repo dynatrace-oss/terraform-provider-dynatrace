@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_disk_specific_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_disk_specific_anomalies_v2` covers configuration for disk specific anomaly detection
 ---

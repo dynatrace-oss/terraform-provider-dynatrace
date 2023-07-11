@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_webhook_notification Resource - terraform-provider-dynatrace"
+subcategory: "Notifications"
 description: |-
   The resource `dynatrace_webhook_notification` covers configuration problem notifications sent via Web Hook
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_web_javascript_updates Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_javascript_updates` covers configuration for web application RUM Javascript updates
 ---

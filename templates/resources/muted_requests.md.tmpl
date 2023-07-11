@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_muted_requests Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_muted_requests` covers configuration for muted requests
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_connectivity_alerts Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The resource `dynatrace_connectivity_alerts` covers configuration for process group connectivity alerts
 ---

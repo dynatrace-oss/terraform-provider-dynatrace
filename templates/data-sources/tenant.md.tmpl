@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_tenant Data Source - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
 description: |-
   The data source `dynatrace_tenant` is a pseudo data source. It evaluates based on the configuration of the provider the Environment ID
 ---

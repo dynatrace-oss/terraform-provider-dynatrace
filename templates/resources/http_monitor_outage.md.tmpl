@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_http_monitor_outage Resource - terraform-provider-dynatrace"
+subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor_outage` covers configuration for HTTP monitor outage handling
 ---

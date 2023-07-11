@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_disk_options Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_disk_options` covers configuration for host disk visibility settings
 ---

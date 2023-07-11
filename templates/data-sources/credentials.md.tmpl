@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_credentials Data Source - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The data source `dynatrace_credentials` covers queries for credentials
 ---

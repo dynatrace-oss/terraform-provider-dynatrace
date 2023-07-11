@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_user_settings Resource - terraform-provider-dynatrace"
+subcategory: "User Settings"
 description: |-
   The resource `dynatrace_user_settings` covers user settings of an individual user
 ---

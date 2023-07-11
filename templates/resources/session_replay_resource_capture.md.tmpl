@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_session_replay_resource_capture Resource - terraform-provider-dynatrace"
+subcategory: "Session Replay"
 description: |-
   The resource `dynatrace_session_replay_resource_capture` covers configuration for Session Replay resource capture
 ---

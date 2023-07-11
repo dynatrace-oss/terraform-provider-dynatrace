@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_management_zone_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Management Zones"
 description: |-
   The resource `dynatrace_management_zone_v2` covers configuration for management zones
 ---

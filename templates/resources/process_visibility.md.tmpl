@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_visibility Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_visibility` covers configuration for process instance snapshots
 ---

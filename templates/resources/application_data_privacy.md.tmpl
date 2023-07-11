@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_application_data_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_application_data_privacy` covers configuration for application data privacy
 ---

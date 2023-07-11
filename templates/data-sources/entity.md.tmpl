@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_entity Data Source - terraform-provider-dynatrace"
+subcategory: "Monitored Entities"
 description: |-
   The data source `dynatrace_entity` covers queries for the ID of a entity based on name and type
 ---

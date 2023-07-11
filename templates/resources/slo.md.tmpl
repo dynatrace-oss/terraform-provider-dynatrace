@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_slo Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_slo` covers configuration for service-level objectives
 ---

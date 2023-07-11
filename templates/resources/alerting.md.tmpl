@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_alerting Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The resource `dynatrace_alerting` covers configuration for alerting profiles
 ---

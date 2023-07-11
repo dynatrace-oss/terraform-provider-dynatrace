@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_application Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `dynatrace_mobile_application` covers configuration for mobile applications
 ---

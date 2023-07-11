@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_jira_notification Resource - terraform-provider-dynatrace"
+subcategory: "Notifications"
 description: |-
   The resource `dynatrace_jira_notification` covers configuration problem notifications sent to Jira
 ---

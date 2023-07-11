@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_process_group` covers queries for the ID of a process group based on name and tags / tag-value pairs
 ---

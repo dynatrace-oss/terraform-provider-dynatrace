@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_maintenance_window Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_maintenance_window` covers configuration for maintenance windows
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_environment Resource - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_environment` covers configuration for environments
 ---

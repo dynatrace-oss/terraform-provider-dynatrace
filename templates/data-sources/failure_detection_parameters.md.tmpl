@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_failure_detection_parameters Data Source - terraform-provider-dynatrace"
+subcategory: "Failure Detection"
 description: |-
   The data source `dynatrace_failure_detection_parameters` covers queries for failure detection parameters
 ---

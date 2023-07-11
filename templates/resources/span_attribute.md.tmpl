@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_span_attribute Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_attribute` covers configuration for span attributes
 ---

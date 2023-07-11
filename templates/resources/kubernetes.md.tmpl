@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_kubernetes Resource - terraform-provider-dynatrace"
+subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_kubernetes` covers configuration for Kubernetes connection settings
 ---

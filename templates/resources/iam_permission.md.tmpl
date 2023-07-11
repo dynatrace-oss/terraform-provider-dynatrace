@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_iam_permission Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_iam_permission` covers configuration of permissions for user groups via Account Management API for SaaS Accounts
 ---

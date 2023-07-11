@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_custom_device Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Entities"
 description: |-
   The resource `dynatrace_custom_device` covers configuration for custom devices.
   -> Deleting a Custom Device is currently not supported by the Dynatrace REST API. As a consequence, Custom Devices created via this Resource, won't really get removed from your Dynatrace Environment. Terraform will simply forget about it. Subsequent attempts to create another Custom Device with the same `custom_device_id` will simply update the existing one.

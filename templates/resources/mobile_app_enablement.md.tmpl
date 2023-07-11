@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_app_enablement Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `dynatrace_mobile_app_enablement` covers configuration for mobile application enablement and cost control
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_generic_types Resource - terraform-provider-dynatrace"
+subcategory: "Topology Model"
 description: |-
   The resource `dynatrace_generic_types` covers configuration for custom topology generic types
 ---

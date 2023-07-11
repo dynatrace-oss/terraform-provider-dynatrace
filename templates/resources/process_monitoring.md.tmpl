@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_monitoring` covers configuration to monitor key processes on a host
 ---

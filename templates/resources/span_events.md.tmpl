@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_span_events Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_events` covers configuration for span events
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_business_events_processing Resource - terraform-provider-dynatrace"
+subcategory: "Business Events"
 description: |-
   The resource `dynatrace_business_events_processing` covers configuration for business event processing
 ---

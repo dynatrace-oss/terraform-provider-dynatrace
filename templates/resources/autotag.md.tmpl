@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_autotag Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_autotag` covers configuration for autotags
 ---

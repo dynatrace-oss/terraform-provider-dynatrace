@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_log_processing Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_processing` covers configuration for log processing
 ---

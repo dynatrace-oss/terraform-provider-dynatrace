@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_issue_tracking Resource - terraform-provider-dynatrace"
+subcategory: "Integrations"
 description: |-
   The resource `dynatrace_issue_tracking` covers configuration for issue-tracking integrations
 ---

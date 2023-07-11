@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_user_session_metrics Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_user_session_metrics` covers configuration for user session custom metrics
 ---

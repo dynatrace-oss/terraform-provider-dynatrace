@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_dashboards_presets Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboards_presets` covers configuration for dashboard preset settings
 ---

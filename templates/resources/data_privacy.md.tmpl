@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_data_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_data_privacy` covers configuration for end users' data privacy
 ---

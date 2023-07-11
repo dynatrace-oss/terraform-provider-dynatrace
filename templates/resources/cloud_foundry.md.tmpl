@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_cloud_foundry Resource - terraform-provider-dynatrace"
+subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_cloud_foundry` covers configuration for Cloud Foundry monitoring
 ---

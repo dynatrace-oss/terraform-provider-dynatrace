@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_service_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_service_anomalies_v2` covers configuration for service anomaly detection
 ---

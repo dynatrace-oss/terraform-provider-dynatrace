@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_monitoring_rule Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_monitoring_rule` covers configuration for custom process monitoring rules 
 ---

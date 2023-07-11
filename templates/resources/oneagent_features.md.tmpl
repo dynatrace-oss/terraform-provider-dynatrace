@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_features Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_oneagent_features` allows for enabling and disabling OneAgent Features (Sensors, ...)
 ---
