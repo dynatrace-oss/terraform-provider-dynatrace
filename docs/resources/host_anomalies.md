@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_host_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_host_anomalies` covers configuration for host anomaly detection
 ---

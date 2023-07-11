@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_opentelemetry_metrics Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_opentelemetry_metrics` covers configuration for OpenTelemetry metrics
 ---

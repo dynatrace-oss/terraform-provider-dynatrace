@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_monitored_technologies_java Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_java` covers configuration to enable/disable Java monitoring
 ---

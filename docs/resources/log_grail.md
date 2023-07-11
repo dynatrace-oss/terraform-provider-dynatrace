@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_log_grail Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_grail` covers configuration for log powered by Grail
 ---

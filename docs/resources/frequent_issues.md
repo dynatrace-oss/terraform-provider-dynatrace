@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_frequent_issues Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_frequent_issues` covers configuration for frequent issue detection
 ---

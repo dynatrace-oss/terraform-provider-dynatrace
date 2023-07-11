@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_web_app_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_web_app_anomalies` covers configuration for web application anomaly detection
 ---

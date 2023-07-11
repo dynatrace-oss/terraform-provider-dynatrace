@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_synthetic_nodes Data Source - terraform-provider-dynatrace"
+subcategory: "Synthetic"
 description: |-
   The data source `dynatrace_synthetic_nodes` queries for all available Synthetic Nodes
 ---

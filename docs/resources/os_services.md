@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_os_services Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_os_services` covers configuration for monitoring OS services
 ---

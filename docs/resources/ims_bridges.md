@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_ims_bridges Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_ims_bridges` covers configuration for IBM MQ IMS bridges
 ---

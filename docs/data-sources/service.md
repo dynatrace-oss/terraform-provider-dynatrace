@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_service Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_service` covers queries for the ID of a service based on name and tags / tag-value pairs
 ---

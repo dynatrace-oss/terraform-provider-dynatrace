@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_custom_tags Resource - terraform-provider-dynatrace"
+subcategory: "Tags"
 description: |-
   The resource `dynatrace_custom_tags` covers configuration for custom tags
 ---

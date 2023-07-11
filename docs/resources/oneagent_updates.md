@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_updates Resource - terraform-provider-dynatrace"
+subcategory: "Updates"
 description: |-
   The resource `dynatrace_oneagent_updates` covers configuration for OneAgent updates
 ---

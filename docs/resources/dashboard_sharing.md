@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_dashboard_sharing Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboard_sharing` covers configuration for dashboard sharing
 ---

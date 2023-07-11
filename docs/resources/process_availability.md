@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_availability Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_availability` covers configuration to monitor key processes on a host
 ---

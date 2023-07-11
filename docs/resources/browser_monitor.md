@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_browser_monitor Resource - terraform-provider-dynatrace"
+subcategory: "Browser Monitors"
 description: |-
   The resource `dynatrace_browser_monitor` covers configuration for browser monitors
 ---

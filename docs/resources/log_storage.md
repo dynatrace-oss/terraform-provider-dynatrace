@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_log_storage Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_storage` covers configuration for log storage settings
 ---

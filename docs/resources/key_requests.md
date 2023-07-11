@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_key_requests Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_key_requests` covers configuration for key requests
 ---

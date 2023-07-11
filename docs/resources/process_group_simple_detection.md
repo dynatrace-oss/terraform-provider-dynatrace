@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group_simple_detection Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_process_group_simple_detection` covers configuration for process group simple detection rules
 ---

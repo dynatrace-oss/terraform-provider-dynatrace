@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_alerting_profile Data Source - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The data source `dynatrace_alerting_profile` covers queries for an Alerting Profile with the given name
 ---

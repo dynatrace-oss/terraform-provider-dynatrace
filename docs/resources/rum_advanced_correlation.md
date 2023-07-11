@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_rum_advanced_correlation Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_advanced_correlation` covers configuration for real user monitoring advanced correlation
 ---

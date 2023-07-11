@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_rum_ip_locations Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_ip_locations` covers configuration for IP address mapping rules for real user monitoring
 ---

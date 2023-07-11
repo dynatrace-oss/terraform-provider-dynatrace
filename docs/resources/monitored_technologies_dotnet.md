@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_monitored_technologies_dotnet Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_dotnet` covers configuration to enable/disable .NET monitoring
 ---

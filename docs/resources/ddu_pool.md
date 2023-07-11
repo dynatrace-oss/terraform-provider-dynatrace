@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_ddu_pool Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_ddu_pool` covers configuration for Davis Data Unit Pools
 ---

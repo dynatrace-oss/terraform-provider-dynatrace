@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_session_replay_web_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Session Replay"
 description: |-
   The resource `dynatrace_session_replay_web_privacy` covers configuration for Session Replay data privacy
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_web_app_custom_errors Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_custom_errors` covers configuration for web application custom errors
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_processgroup_naming Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_processgroup_naming` covers configuration for process group naming
 ---

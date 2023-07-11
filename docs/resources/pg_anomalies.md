@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_pg_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_pg_anomalies` covers configuration for process group anomaly detection
 ---

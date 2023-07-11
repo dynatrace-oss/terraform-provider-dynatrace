@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_dashboards_general Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboards_general` covers configuration for general dashboard settings
 ---

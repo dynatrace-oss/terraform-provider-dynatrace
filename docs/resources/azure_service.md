@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_azure_service Resource - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The resource `dynatrace_azure_service` covers configuration of Supported Services for Azure credentials
 ---

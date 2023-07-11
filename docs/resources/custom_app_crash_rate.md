@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_custom_app_crash_rate Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_custom_app_crash_rate` covers configuration for custom application crash rate increase
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_policy Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_policy` covers policy configuration via Account Management API for Managed Clusters
 ---

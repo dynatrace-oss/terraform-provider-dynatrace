@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_metric_metadata Resource - terraform-provider-dynatrace"
+subcategory: "Metrics"
 description: |-
   The resource `dynatrace_metric_metadata` covers configuration for metric metadata
 ---

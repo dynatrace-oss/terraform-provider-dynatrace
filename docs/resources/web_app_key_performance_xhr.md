@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_web_app_key_performance_xhr Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_key_performance_xhr` covers apdex threshold configuration for XHR actions
 

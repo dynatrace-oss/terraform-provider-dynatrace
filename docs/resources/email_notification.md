@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_email_notification Resource - terraform-provider-dynatrace"
+subcategory: "Notifications"
 description: |-
   The resource `dynatrace_email_notification` covers configuration problem notifications sent via Email
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_database_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_database_anomalies` covers configuration for database anomaly detection
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_custom_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_custom_anomalies` covers configuration for custom metric events
 ---

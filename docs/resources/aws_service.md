@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_aws_service Resource - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The resource `dynatrace_aws_service` covers configuration of Supported Services for AWS credentials
 ---

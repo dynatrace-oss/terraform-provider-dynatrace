@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_user_experience_score Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_user_experience_score` covers configuration for real user monitoring user experience score
 ---

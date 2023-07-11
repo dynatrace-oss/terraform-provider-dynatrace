@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_activegate_updates Resource - terraform-provider-dynatrace"
+subcategory: "Updates"
 description: |-
   The resource `dynatrace_activegate_updates` covers configuration for ActiveGate updates
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_process_group_rum Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_process_group_rum` covers real user monitoring configuration for process groups
 ---

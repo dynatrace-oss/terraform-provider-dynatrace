@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_application Data Source - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The data source `dynatrace_application` covers queries for the ID of an application based on name
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_slo Data Source - terraform-provider-dynatrace"
+subcategory: "Service-level Objective"
 description: |-
   The data source `dynatrace_slo` covers queries for dashboards
 ---

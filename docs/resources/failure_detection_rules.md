@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_failure_detection_rules Resource - terraform-provider-dynatrace"
+subcategory: "Failure Detection"
 description: |-
   The resource `dynatrace_failure_detection_rules` covers configuration for failure detection rules
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_alerting_profile Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_alerting_profile` covers configuration for alerting profiles
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_azure_credentials Data Source - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The data source `dynatrace_azure_credentials` covers queries for Azure credentials
 ---

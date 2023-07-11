@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_autotag_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Tags"
 description: |-
   The resource `dynatrace_autotag_v2` covers configuration for automatically applied tags
 ---

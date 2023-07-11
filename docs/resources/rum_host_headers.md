@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_rum_host_headers Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_host_headers` covers configuration for identifying host names for real user monitoring
 ---

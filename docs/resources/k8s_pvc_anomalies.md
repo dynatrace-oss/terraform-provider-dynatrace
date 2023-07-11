@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_k8s_pvc_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_k8s_pvc_anomalies` covers configuration for Kubernetes persistent volume claim anomalies
 ---

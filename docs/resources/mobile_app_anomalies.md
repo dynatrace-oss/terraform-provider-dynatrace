@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_app_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_mobile_app_anomalies` covers configuration for mobile application anomaly detection
 ---

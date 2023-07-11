@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_default_version Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_oneagent_default_version` covers configuration for OneAgent default version
 ---

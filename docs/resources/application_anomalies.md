@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_application_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_application_anomalies` covers configuration for application anomaly detection
 ---

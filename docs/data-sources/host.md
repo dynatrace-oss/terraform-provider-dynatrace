@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_host Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_host` covers queries for the ID of a host based on name and tags / tag-value pairs
 ---

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_k8s_credentials Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_k8s_credentials` covers configuration for Kubernetes credentials
 ---

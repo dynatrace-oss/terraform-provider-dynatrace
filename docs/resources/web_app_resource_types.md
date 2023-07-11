@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_web_resource_types Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_resource_types` covers configuration for web application resource types
 ---

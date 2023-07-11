@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_app_request_errors Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `dynatrace_mobile_app_request_errors` covers configuration for mobile application request errors
 ---

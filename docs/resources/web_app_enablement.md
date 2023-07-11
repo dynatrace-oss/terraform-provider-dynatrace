@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_web_app_enablement Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_enablement` covers configuration for web application enablement and cost control
 ---
