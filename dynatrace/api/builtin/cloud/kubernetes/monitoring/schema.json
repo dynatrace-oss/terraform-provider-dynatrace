@@ -1,0 +1,225 @@
+{
+	"allowedScopes": [
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "Configure the monitoring features for Kubernetes or OpenShift. Learn more about those features in our [documentation](https://dt-url.net/2ma0vhp).",
+	"displayName": "Monitoring settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cloudApplicationPipelineEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor Kubernetes namespaces, services, workloads, and pods",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.219"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventPatterns": {
+			"description": "Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).",
+			"displayName": "Events field selectors",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/EventComplexType"
+				}
+			},
+			"maxObjects": 20,
+			"metadata": {
+				"addItemButton": "Add events field selector",
+				"itemDisplayName": "Event"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "filterEvents",
+				"type": "EQUALS"
+			},
+			"type": "list"
+		},
+		"eventProcessingActive": {
+			"default": false,
+			"description": "",
+			"displayName": "Monitor events",
+			"documentation": "All events are monitored unless event filters are specified. All ingested events are subject to licensing by default.\n\nIf you have a DPS license see [licensing documentation](https://dt-url.net/cee34zj) for details.\n\nIf you have a non-DPS license see [DDUs for events](https://dt-url.net/5n03vcu) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.187"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"filterEvents": {
+			"default": false,
+			"description": "",
+			"displayName": "Filter events",
+			"documentation": "Include only events specified by Events Field Selectors ",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.187"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "eventProcessingActive",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"includeAllFdiEvents": {
+			"default": false,
+			"description": "For a list of included events, see the [documentation](https://dt-url.net/l61d02no).",
+			"displayName": "Include important events",
+			"documentation": "Automatically include all events that are relevant for Davis",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.209"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "filterEvents",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"openMetricsBuiltinEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Monitor workload and node resource metrics",
+			"documentation": "Workload and node resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.261"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"openMetricsPipelineEnabled": {
+			"default": false,
+			"description": "For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).",
+			"displayName": "Monitor annotated Prometheus exporters",
+			"documentation": "Prometheus metrics in kubernetes environments are subject to licensing.\n\nIf you have DPS licensing see [licensing documentation](https://dt-url.net/nd0348b) for details.\n\nIf you have non-DPS licensing see [Monitoring consumption](https://dt-url.net/k8smpm) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.201"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"pvcMonitoringEnabled": {
+			"default": false,
+			"description": "To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.",
+			"displayName": "Monitor persistent volume claims",
+			"documentation": "The persistent volume claims feature is based on custom metrics and is, therefore, subject to licensing.\n\nIf you have DPS licensing see [licensing documentation](https://dt-url.net/nd0348b) for details.\n\nIf you have non-DPS licensing see [DDUs for custom metrics](https://dt-url.net/k8smcc) for details.",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.239"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-and-virtualization"
+	],
+	"schemaId": "builtin:cloud.kubernetes.monitoring",
+	"types": {
+		"EventComplexType": {
+			"description": "",
+			"displayName": "Event",
+			"documentation": "",
+			"properties": {
+				"active": {
+					"default": true,
+					"description": "",
+					"displayName": "Activate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"label": {
+					"constraints": [
+						{
+							"customMessage": "Specify the events field selector name.",
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "No leading or trailing whitespaces are allowed.",
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Node events",
+					"description": "",
+					"displayName": "Field selector name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"itemDisplayName": "Event"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"pattern": {
+					"constraints": [
+						{
+							"customMessage": "Specify the events field selector.",
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "This event selector is invalid, it should match this pattern: \"key(=|!=)value[,key(=|!=)value]{0,9}\" (The maximum number of selectors in chained expressions is 10)",
+							"pattern": "^[\\w\\.]{1,1024}((=){1,2}|(!=))[^,!=]{0,256}(,[\\w\\.]{1,1024}?((=){1,2}|(!=))[^,!=]{0,256}){0,9}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "involvedObject.kind=Node",
+					"description": "",
+					"displayName": "Field selector expression",
+					"documentation": "The set of allowed characters for this field has been extended with ActiveGate version 1.259. For more details, see the [documentation](https://dt-url.net/7h23wuk#set-up-event-field-selectors).",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{label}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}

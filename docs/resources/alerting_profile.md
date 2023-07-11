@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: "dynatrace_alerting_profile Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_alerting_profile` covers configuration for alerting profiles
 ---
 
 # dynatrace_alerting_profile (Resource)
 
--> This resource API endpoint has been deprecated, please use [dynatrace_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/alerting) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/alerting) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

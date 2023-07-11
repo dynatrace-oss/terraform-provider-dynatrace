@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_queue_sharing_groups Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_queue_sharing_groups` covers configuration for IBM MQ queue sharing groups
 ---
 
 # dynatrace_queue_sharing_groups (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

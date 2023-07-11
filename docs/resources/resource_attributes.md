@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_resource_attributes Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_resource_attributes` covers configuration for resource attributes
 ---
 
 # dynatrace_resource_attributes (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

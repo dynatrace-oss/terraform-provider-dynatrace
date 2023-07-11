@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_user_action_metrics Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_user_action_metrics` covers configuration for user action custom metrics
 ---
 
 # dynatrace_user_action_metrics (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

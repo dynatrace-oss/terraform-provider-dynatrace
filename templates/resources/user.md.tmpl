@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_user Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_user` covers configuration for users
 ---
 
 # dynatrace_user (Resource)
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
 
 ## Dynatrace Documentation
 

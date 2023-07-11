@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_aws_service Resource - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The resource `dynatrace_aws_service` covers configuration of Supported Services for AWS credentials
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_aws_service (Resource)
 
 -> This resource is excluded by default in the export utility.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

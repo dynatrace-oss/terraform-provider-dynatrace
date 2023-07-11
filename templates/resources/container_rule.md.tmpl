@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_container_rule Resource - terraform-provider-dynatrace"
+subcategory: "Containers"
 description: |-
   The resource `dynatrace_container_rule` covers configuration for monitoring rules for containers
 ---
 
 # dynatrace_container_rule (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

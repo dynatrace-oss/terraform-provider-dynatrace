@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_host_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_host_anomalies_v2` covers configuration for host anomaly detection
 ---
 
 # dynatrace_host_anomalies_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -59,6 +62,19 @@ resource "dynatrace_host_anomalies_v2" "#name#" {
     high_memory_detection {
       enabled        = true
       detection_mode = "auto"
+    }
+    high_system_load_detection {
+      enabled        = true
+      detection_mode = "custom"
+      custom_thresholds {
+        system_load = 1
+        event_thresholds {
+          dealerting_evaluation_window = 30
+          dealerting_samples           = 30
+          violating_evaluation_window  = 6
+          violating_samples            = 1
+        }
+      }
     }
     out_of_memory_detection {
       enabled        = true

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_custom_units Resource - terraform-provider-dynatrace"
+subcategory: "Metrics"
 description: |-
   The resource `dynatrace_custom_units` covers configuration for custom units
 ---
 
 # dynatrace_custom_units (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

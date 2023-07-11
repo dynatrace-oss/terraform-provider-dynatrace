@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_builtin_process_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_builtin_process_monitoring` covers configuration for built-in process monitoring rules
 ---
 
 # dynatrace_builtin_process_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

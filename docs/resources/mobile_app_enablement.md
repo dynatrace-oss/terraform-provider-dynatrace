@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_app_enablement Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `dynatrace_mobile_app_enablement` covers configuration for mobile application enablement and cost control
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_mobile_app_enablement (Resource)
 
 -> Configuration of the application scope overlaps with [dynatrace_mobile_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/mobile_application), but this resource in addition provides an option for an environment scope.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -30,7 +33,7 @@ resource "dynatrace_mobile_app_enablement" "#name#" {
     cost_and_traffic_control = 25
   }
   session_replay {
-    enabled = false
+    on_crash = false
   }
 }
 ```

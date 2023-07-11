@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_ibm_mq_filters Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_ibm_mq_filters` covers configuration for IBM MQ filters
 ---
 
 # dynatrace_ibm_mq_filters (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -37,8 +40,8 @@ resource "dynatrace_ibm_mq_filters" "#name#" {
 
 - `cics_mq_queue_id_excludes` (Set of String) CICS: Excluded MQ queues
 - `cics_mq_queue_id_includes` (Set of String) CICS: Included MQ queues
-- `ims_cr_trn_id_excludes` (Set of String) IMS bridge: Excluded transaction IDs
-- `ims_cr_trn_id_includes` (Set of String) IMS bridge: Included transaction IDs
+- `ims_cr_trn_id_excludes` (Set of String) When you add a transaction ID to the exclude list remaining transactions are still monitored.
+- `ims_cr_trn_id_includes` (Set of String) When you add a transaction ID to the include list, all the remaining transactions are ignored.
 - `ims_mq_queue_id_excludes` (Set of String) IMS: Excluded MQ queues
 - `ims_mq_queue_id_includes` (Set of String) IMS: Included MQ queues
 

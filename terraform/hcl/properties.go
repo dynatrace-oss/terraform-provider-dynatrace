@@ -325,8 +325,30 @@ func (me Properties) Encode(key string, v any) error {
 				}
 				return me.Encode(key, reflect.ValueOf(v).Elem().Interface())
 			}
+		} else if reflect.TypeOf(v).Kind() == reflect.Map {
+			switch reflect.TypeOf(v).Elem().Kind() {
+			case reflect.String:
+				if reflect.ValueOf(v).IsNil() {
+					me[key] = nil
+					return nil
+				}
+				if reflect.ValueOf(v).IsZero() {
+					me[key] = nil
+					return nil
+				}
+				m := map[string]any{}
+				rv := reflect.ValueOf(v)
+				for _, vMapKey := range rv.MapKeys() {
+					vMapValue := rv.MapIndex(vMapKey)
+					m[vMapKey.Interface().(string)] = fmt.Sprintf("%v", vMapValue.Interface())
+				}
+				me[key] = m
+				return nil
+			default:
+				panic(fmt.Sprintf("unsupported map value type %v", reflect.TypeOf(v)))
+			}
 		}
-		panic(fmt.Sprintf("unsupported type %T", v))
+		panic(fmt.Sprintf("unsupported type %T, kind: %v", v, reflect.TypeOf(v).Kind()))
 	}
 	return nil
 }

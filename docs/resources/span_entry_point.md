@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_span_entry_point Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_entry_point` covers configuration for span entry points
 ---
 
 # dynatrace_span_entry_point (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

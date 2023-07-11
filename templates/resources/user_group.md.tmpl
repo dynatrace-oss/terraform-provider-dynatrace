@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_user_group Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_user_group` covers configuration for user groups
 ---
 
 # dynatrace_user_group (Resource)
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
 
 ## Dynatrace Documentation
 

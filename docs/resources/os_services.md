@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_os_services Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_os_services` covers configuration for monitoring OS services
 ---
 
 # dynatrace_os_services (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

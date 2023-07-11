@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_transaction_start_filters Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_transaction_start_filters` covers customization of CICS and IMS Monitoring
 ---
 
 # dynatrace_transaction_start_filters (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

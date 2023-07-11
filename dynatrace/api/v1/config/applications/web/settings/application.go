@@ -84,8 +84,19 @@ func (me *Application) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Settings regarding Session Replay",
 			Optional:    true,
+			Computed:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(sessionreplay.Settings).Schema()},
+			DefaultFunc: func() (any, error) {
+				return []any{
+					map[string]any{
+						"cost_control_percentage":                100,
+						"css_resource_capturing_exclusion_rules": []any{},
+						"enable_css_resource_capturing":          true,
+						"enabled":                                false,
+					},
+				}, nil
+			},
 		},
 		"xhr_action_key_performance_metric": {
 			Type:        schema.TypeString,

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_queue_manager Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_queue_manager` covers configuration for IBM MQ Queue Managers
 ---
 
 # dynatrace_queue_manager (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

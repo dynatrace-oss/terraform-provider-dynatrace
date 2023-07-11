@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_k8s_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Cloud Platforms"
+description: |-
+  The resource `dynatrace_k8s_monitoring` covers configuration for Kubernetes monitoring settings
+---
+
+# dynatrace_k8s_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Kubernetes/OpenShift monitoring - https://www.dynatrace.com/support/help/how-to-use-dynatrace/infrastructure-monitoring/container-platform-monitoring/kubernetes-monitoring
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:cloud.kubernetes.monitoring`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_k8s_monitoring` downloads all existing Kubernetes monitoring settings
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/cloud/kubernetes/monitoring/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_user_experience_score Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_user_experience_score` covers configuration for real user monitoring user experience score
 ---
 
 # dynatrace_user_experience_score (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

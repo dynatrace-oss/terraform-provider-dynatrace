@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_disk_specific_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_disk_specific_anomalies_v2` covers configuration for disk specific anomaly detection
 ---
 
 # dynatrace_disk_specific_anomalies_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/disk_specific_v2/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

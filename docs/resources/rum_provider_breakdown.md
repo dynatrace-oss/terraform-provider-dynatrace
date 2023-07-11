@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_rum_provider_breakdown Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_provider_breakdown` covers configuration for provider breakdown rules for real user monitoring
 ---
 
 # dynatrace_rum_provider_breakdown (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

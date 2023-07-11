@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_slo Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_slo` covers configuration for service-level objectives
 ---
 
 # dynatrace_slo (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+
+-> This resource requires the API token scopes **Read SLO** (`slo.read`) and **Write SLO** (`slo.write`)
 
 ## Dynatrace Documentation
 
@@ -28,7 +31,7 @@ resource "dynatrace_slo" "#name#" {
   name = "#name#"
   evaluation = "AGGREGATE"
   filter = "type(\"APPLICATION_METHOD\")"
-  rate = "builtin:apps.web.action.speedIndex.load.browser:splitBy()"
+  metric_expression = "builtin:apps.web.action.speedIndex.load.browser:splitBy()"
   target = 99.58
   timeframe = "-5m"
   warning = 99.99

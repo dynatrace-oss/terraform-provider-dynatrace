@@ -68,9 +68,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"filter": {
-			Type:        schema.TypeString,
-			Description: "Set a filter parameter (entitySelector) on any GET call to evaluate this SLO against specific services only (for example, type(\"SERVICE\")).  For details, see the [Entity Selector documentation](https://dt-url.net/entityselector).",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Set a filter parameter (entitySelector) on any GET call to evaluate this SLO against specific services only (for example, type(\"SERVICE\")).  For details, see the [Entity Selector documentation](https://dt-url.net/entityselector).",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"metric_expression": {
 			Type:        schema.TypeString,

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_custom_source Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_custom_source` covers configuration for custom log source
 ---
 
 # dynatrace_log_custom_source (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

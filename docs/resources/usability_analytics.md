@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_usability_analytics Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_usability_analytics` covers detection of usability issues within your application. User action types that commonly reflect user frustration include dead clicks, rage clicks, rage rotates, and page refreshes
 ---
 
 # dynatrace_usability_analytics (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

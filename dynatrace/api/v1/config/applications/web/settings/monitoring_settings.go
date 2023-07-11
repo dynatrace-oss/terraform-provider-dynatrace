@@ -96,11 +96,19 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "Add the cross origin = anonymous attribute to capture JavaScript error messages and W3C resource timings",
 			Optional:    true,
+			DefaultFunc: func() (any, error) {
+				return true, nil
+			},
+			Computed: true,
 		},
 		"script_tag_cache_duration_in_hours": {
 			Type:        schema.TypeInt,
 			Description: "Time duration for the cache settings",
 			Optional:    true,
+			Computed:    true,
+			DefaultFunc: func() (any, error) {
+				return 1, nil
+			},
 		},
 		"library_file_location": {
 			Type:        schema.TypeString,

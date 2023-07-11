@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_k8s_credentials Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_k8s_credentials` covers configuration for Kubernetes credentials
 ---
 
 # dynatrace_k8s_credentials (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_kubernetes](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/kubernetes) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_kubernetes](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/kubernetes) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -29,7 +32,7 @@ resource "dynatrace_k8s_credentials" "#name#" {
   auth_token                   = "XXXXXXXX"
   active                       = false
   certificate_check_enabled    = false
-  endpoint_url                 = "https://10.0.0.1:6443/"
+  endpoint_url                 = "https://${randomize}.${randomize}.com:6443/"
   events_integration_enabled   = true
   hostname_verification        = false
   prometheus_exporters         = false

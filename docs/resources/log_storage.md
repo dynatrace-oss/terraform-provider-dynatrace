@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_storage Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_storage` covers configuration for log storage settings
 ---
 
 # dynatrace_log_storage (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

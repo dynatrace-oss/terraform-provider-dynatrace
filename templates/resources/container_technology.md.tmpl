@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_container_technology Resource - terraform-provider-dynatrace"
+subcategory: "Containers"
 description: |-
   The resource `dynatrace_container_technology` covers configuration for container monitoring
 ---
 
 # dynatrace_container_technology (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,13 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_process_group` covers queries for the ID of a process group based on name and tags / tag-value pairs
 ---
 
 # dynatrace_process_group (Data Source)
 
--> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `PROCESS_GROUP` instead.
+!> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `PROCESS_GROUP` instead.
 
 The process group data source allows the process group ID to be retrieved by its name and optionally tags / tag-value pairs.
 

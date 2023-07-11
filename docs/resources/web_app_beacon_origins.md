@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_web_beacon_origins Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_beacon_origins` covers configuration for web application beacon origin allowlist
 ---
 
 # dynatrace_web_beacon_origins (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

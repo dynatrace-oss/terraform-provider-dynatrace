@@ -1,13 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_host Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_host` covers queries for the ID of a host based on name and tags / tag-value pairs
 ---
 
 # dynatrace_host (Data Source)
 
--> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `HOST` instead.
+!> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `HOST` instead.
 
 The host data source allows the host ID to be retrieved by its name and optionally tags / tag-value pairs.
 

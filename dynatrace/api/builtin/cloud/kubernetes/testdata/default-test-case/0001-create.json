@@ -2,15 +2,10 @@
   "activeGateGroup": "Terraform",
   "authToken": "################",
   "certificateCheckEnabled": true,
-  "cloudApplicationPipelineEnabled": true,
   "clusterIdEnabled": false,
   "enabled": true,
   "endpointUrl": "https://${randomize}.${randomize}.com:6443/",
-  "eventProcessingActive": false,
   "hostnameVerificationEnabled": true,
   "label": "${randomize}",
-  "openMetricsBuiltinEnabled": false,
-  "openMetricsPipelineEnabled": false,
-  "pvcMonitoringEnabled": false,
   "scope": "KUBERNETES_CLUSTER-1234567890000000"
 }

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_web_application Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_application` covers configuration for web applications
 ---
 
 # dynatrace_web_application (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -808,7 +811,7 @@ Optional:
 - `ignore_case` (Boolean) Case insensitive naming
 - `load_action_naming_rules` (Block List, Max: 1) User action naming rules for loading actions (see [below for nested schema](#nestedblock--user_action_naming_settings--load_action_naming_rules))
 - `placeholders` (Block List, Max: 1) User action placeholders (see [below for nested schema](#nestedblock--user_action_naming_settings--placeholders))
-- `query_parameter_cleanups` (Set of String) User action naming rules for custom actions
+- `query_parameter_cleanups` (Set of String) User action naming rules for custom actions. If not specified Dynatrace assumes `__sid`, `cfid`, `cftoken`, `phpsessid` and `sid`.
 - `split_user_actions_by_domain` (Boolean) Deactivate this setting if different domains should not result in separate user actions
 - `use_first_detected_load_action` (Boolean) First load action found under an XHR action should be used when true. Else the deepest one under the xhr action is used
 - `xhr_action_naming_rules` (Block List, Max: 1) User action naming rules for XHR actions (see [below for nested schema](#nestedblock--user_action_naming_settings--xhr_action_naming_rules))

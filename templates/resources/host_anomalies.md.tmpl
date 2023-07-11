@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_host_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_host_anomalies` covers configuration for host anomaly detection
 ---
 
 # dynatrace_host_anomalies (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_host_anomalies_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/host_anomalies_v2) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_host_anomalies_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/host_anomalies_v2) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -23,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/hosts/example_a.tf" }}
+{{ tffile "dynatrace/api/v1/config/anomalies/hosts/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_custom_tags Resource - terraform-provider-dynatrace"
+subcategory: "Tags"
 description: |-
   The resource `dynatrace_custom_tags` covers configuration for custom tags
 ---
 
 # dynatrace_custom_tags (Resource)
+
+-> This resource requires the API token scopes **Read entities** (`entities.read`) and **Write entities** (`entities.write`)
 
 ## Dynatrace Documentation
 

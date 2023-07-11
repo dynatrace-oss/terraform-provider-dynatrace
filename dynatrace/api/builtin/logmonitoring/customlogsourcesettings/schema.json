@@ -4,7 +4,7 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "OneAgent automatically discovers new log files for important processes on supported platforms. Auto-detected logs are listed on the Process Group Instance or Host screen.\n\nBelow you can provide custom log sources which have not been auto-detected. For more details and examples, see [documentation](https://dt-url.net/o9034us)",
+	"description": "OneAgent automatically discovers new log files for important processes on supported platforms. Auto-detected logs are listed on the Process Group Instance or Host screen.",
 	"displayName": "Custom log source configuration",
 	"documentation": "",
 	"dynatrace": "1",
@@ -257,5 +257,5 @@
 			}
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

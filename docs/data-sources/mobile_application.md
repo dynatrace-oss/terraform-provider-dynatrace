@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_application Data Source - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
 description: |-
   The data source `dynatrace_mobile_application` covers queries for a mobile application
 ---

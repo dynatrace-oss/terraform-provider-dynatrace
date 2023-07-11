@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_database_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_database_anomalies_v2` covers configuration for database anomaly detection
 ---
 
 # dynatrace_database_anomalies_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_request_naming Data Source - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The data source `dynatrace_request_naming` covers queries for request naming rules
 ---

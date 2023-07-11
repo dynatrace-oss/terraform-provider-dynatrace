@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_disk_options Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_disk_options` covers configuration for host disk visibility settings
 ---
 
 # dynatrace_disk_options (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

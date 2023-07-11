@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_updates Resource - terraform-provider-dynatrace"
+subcategory: "Updates"
 description: |-
   The resource `dynatrace_oneagent_updates` covers configuration for OneAgent updates
 ---
 
 # dynatrace_oneagent_updates (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

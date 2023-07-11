@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_eula_settings Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_eula_settings` covers configuration for display of the clickwrap agreement
 ---
 
 # dynatrace_eula_settings (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -40,6 +40,10 @@
 					"customMessage": "A hyphen cannot be the first character of a part.",
 					"pattern": "^((?!\\.-).)+$",
 					"type": "PATTERN"
+				},
+				{
+					"customValidatorId": "attribute-key-allowed-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
@@ -61,5 +65,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-custom-attributes",
 	"types": {},
-	"version": "1.0.10"
+	"version": "1.0.11"
 }

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_extension_execution_remote Resource - terraform-provider-dynatrace"
+subcategory: "Extensions"
 description: |-
   The resource `dynatrace_extension_execution_remote` covers configuration for Extension Execution Controller configuration for ActiveGate deployment
 ---
 
 # dynatrace_extension_execution_remote (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

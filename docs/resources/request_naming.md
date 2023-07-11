@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_request_naming Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_request_naming` covers configuration for request naming
 ---
 
 # dynatrace_request_naming (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

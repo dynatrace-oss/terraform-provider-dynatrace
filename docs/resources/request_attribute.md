@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_request_attribute Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_request_attribute` covers configuration for request attributes
 ---
 
 # dynatrace_request_attribute (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Capture request data** (`CaptureRequestData`)
 
 ## Dynatrace Documentation
 

@@ -4,4 +4,5 @@ resource "dynatrace_vmware" "#name#" {
   label     = "#name#"
   password  = "################"
   username  = "terraform"
+  filter    = "$contains(Terraform)"
 }

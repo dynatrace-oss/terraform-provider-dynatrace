@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.3"
+const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:logmonitoring.logs-on-grail-activate"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*logsongrailactivate.Settings] {

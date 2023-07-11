@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_monitored_technologies_varnish Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_varnish` covers configuration to enable/disable Varnish monitoring
 ---
 
 # dynatrace_monitored_technologies_varnish (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

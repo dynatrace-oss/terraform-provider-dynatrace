@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_api_token Resource - terraform-provider-dynatrace"
+subcategory: "Access Tokens"
 description: |-
   The resource `dynatrace_api_token` covers configuration for API tokens
 ---
@@ -10,6 +11,8 @@ description: |-
 -> The usage of `dynatrace_api_token` will introduce sensitive data within your Terraform state. The `token` property is flagged as `sensitive`, but the field will be stored as plain-text. More information can be found [here](https://developer.hashicorp.com/terraform/language/state/sensitive-data).
 
 -> The token value can be retrieved with `dynatrace_api_token.<#name#>.token` after apply.
+
+-> This resource requires the API token scopes **Read API tokens** (`apiTokens.read`) and **Write API tokens** (`apiTokens.write`)
 
 ## Dynatrace Documentation
 

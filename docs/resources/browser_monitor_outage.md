@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_browser_monitor_outage Resource - terraform-provider-dynatrace"
+subcategory: "Browser Monitors"
 description: |-
   The resource `dynatrace_browser_monitor_outage` covers configuration for browser monitor outage handling
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_browser_monitor_outage (Resource)
 
 -> Configuration of the synthetic test scope overlaps with [dynatrace_browser_monitor](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/browser_monitor), but this resource in addition provides an option for an environment scope.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_custom_service Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_custom_service` covers configuration for custom services
 ---
 
 # dynatrace_custom_service (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -30,7 +33,7 @@ resource "dynatrace_custom_service" "#name#" {
                 enabled = true
                 class {
                     name = "com.example.Prefix"
-                    match = "STARTS_WITH"
+                    match = "EQUALS"
                 }
                 method {
                         name = "methodA"

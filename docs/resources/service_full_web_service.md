@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_service_full_web_service Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_service_full_web_service` covers service detection rules for full web services
 ---
 
 # dynatrace_service_full_web_service (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_metric_query Resource - terraform-provider-dynatrace"
+subcategory: "Metrics"
 description: |-
   The resource `dynatrace_metric_query` covers configuration for metric query
 ---
 
 # dynatrace_metric_query (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_user_settings Resource - terraform-provider-dynatrace"
+subcategory: "User Settings"
 description: |-
   The resource `dynatrace_user_settings` covers user settings of an individual user
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_user_settings (Resource)
 
 -> This resource is excluded by default in the export utility since it is scoped for an individual user and requires a personal access token.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_iam_user Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The data source `dynatrace_iam_user` covers queries for the groups a user is a member of
 ---

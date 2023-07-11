@@ -112,14 +112,14 @@ func (me *UserServiceClient) Update(email string, user *users.User) error {
 
 	client := iam.NewIAMClient(me)
 
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), user.Groups, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), user.Groups, 200, false); err != nil {
 		return err
 	}
 	groups := []string{}
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), groups, 200, false); err != nil {
 		return err
 	}
 
@@ -140,7 +140,7 @@ func (me *UserServiceClient) List() (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -150,7 +150,7 @@ func (me *UserServiceClient) List() (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, item := range response.Items {
-		stubs = append(stubs, &api.Stub{ID: item.UID, Name: item.Email})
+		stubs = append(stubs, &api.Stub{ID: item.Email, Name: item.Email})
 	}
 	return stubs, nil
 }

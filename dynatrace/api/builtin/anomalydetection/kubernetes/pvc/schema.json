@@ -272,7 +272,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 3,
 					"description": "",
 					"displayName": "the available disk space is below",
 					"documentation": "",
@@ -289,5 +289,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.1"
 }

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_host_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_monitoring` covers configuration for host monitoring
 ---
 
 # dynatrace_host_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

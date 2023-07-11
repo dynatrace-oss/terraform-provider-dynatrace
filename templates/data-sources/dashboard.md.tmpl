@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_dashboard Data Source - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The data source `dynatrace_dashboard` covers queries for dashboards
 ---

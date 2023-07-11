@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_management_zone Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_management_zone` covers configuration for management zones
 ---
 
 # dynatrace_management_zone (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/management_zone_v2) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/management_zone_v2) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -25,69 +28,69 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_management_zone" "#name#" {
-  name = "#name#" 
+  name = "#name#"
   rules {
-    type = "PROCESS_GROUP" 
-    enabled = true 
-    propagation_types = ["PROCESS_GROUP_TO_HOST","PROCESS_GROUP_TO_SERVICE"] 
+    type              = "PROCESS_GROUP"
+    enabled           = true
+    propagation_types = ["PROCESS_GROUP_TO_HOST", "PROCESS_GROUP_TO_SERVICE"]
     conditions {
       key {
-        type = "STATIC" 
-        attribute = "PROCESS_GROUP_TAGS" 
+        type      = "STATIC"
+        attribute = "PROCESS_GROUP_TAGS"
       }
       tag {
         # negate = false 
-        operator = "TAG_KEY_EQUALS" 
+        operator = "TAG_KEY_EQUALS"
         value {
-          context = "CONTEXTLESS" 
-          key = "Environment" 
+          context = "CONTEXTLESS"
+          key     = "Environment"
         }
       }
     }
     conditions {
       key {
-        type = "STATIC" 
-        attribute = "PROCESS_GROUP_TAGS" 
+        type      = "STATIC"
+        attribute = "PROCESS_GROUP_TAGS"
       }
       tag {
         # negate = false 
-        operator = "TAG_KEY_EQUALS" 
+        operator = "TAG_KEY_EQUALS"
         value {
-          context = "CONTEXTLESS" 
-          key = "Team" 
+          context = "CONTEXTLESS"
+          key     = "Team"
         }
       }
     }
   }
   rules {
-    type = "PROCESS_GROUP" 
-    enabled = true 
-    propagation_types = ["PROCESS_GROUP_TO_HOST","PROCESS_GROUP_TO_SERVICE"] 
+    type              = "PROCESS_GROUP"
+    enabled           = true
+    propagation_types = ["PROCESS_GROUP_TO_HOST", "PROCESS_GROUP_TO_SERVICE"]
     conditions {
       key {
-        type = "STATIC" 
-        attribute = "PROCESS_GROUP_TAGS" 
+        type      = "STATIC"
+        attribute = "PROCESS_GROUP_TAGS"
       }
       tag {
         # negate = false 
-        operator = "TAG_KEY_EQUALS" 
+        operator = "TAG_KEY_EQUALS"
         value {
-          context = "CONTEXTLESS" 
-          key = "EnvironmentX" 
+          context = "CONTEXTLESS"
+          key     = "EnvironmentX"
         }
       }
     }
     conditions {
       key {
-        type = "STATIC" 
-        attribute = "PROCESS_GROUP_TAGS" 
+        type      = "STATIC"
+        attribute = "PROCESS_GROUP_TAGS"
       }
       tag {
         # negate = false 
-        operator = "TAG_KEY_EQUALS" 
+        operator = "TAG_KEY_EQUALS"
         value {
-          context = "CONTEXTLESS" 
-          key = "TeamX" 
+          context = "CONTEXTLESS"
+          key     = "TeamX"
         }
       }
     }

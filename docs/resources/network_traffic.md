@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_network_traffic Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_network_traffic` covers configuration for excluding network traffic from host monitoring
 ---
 
 # dynatrace_network_traffic (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

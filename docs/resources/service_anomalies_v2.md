@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_service_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_service_anomalies_v2` covers configuration for service anomaly detection
 ---
 
 # dynatrace_service_anomalies_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -22,25 +25,8 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_service_anomalies_v2" "SERVICE-XXXXXXXXXXXXXXXX" {
-  scope = "SERVICE-XXXXXXXXXXXXXXXX"
-  response_time {
-    enabled        = true
-    detection_mode = "fixed"
-    fixed_detection {
-      sensitivity = "high"
-      over_alerting_protection {
-        minutes_abnormal_state = 1
-        requests_per_minute    = 10
-      }
-      response_time_all {
-        degradation_milliseconds = 100
-      }
-      response_time_slowest {
-        slowest_degradation_milliseconds = 1000
-      }
-    }
-  }
+resource "dynatrace_service_anomalies_v2" "#name#" {
+  scope = "SERVICE-1234567890000000"
   failure_rate {
     enabled        = true
     detection_mode = "fixed"
@@ -62,6 +48,23 @@ resource "dynatrace_service_anomalies_v2" "SERVICE-XXXXXXXXXXXXXXXX" {
     enabled                = true
     load_spike_percent     = 200
     minutes_abnormal_state = 1
+  }
+  response_time {
+    enabled        = true
+    detection_mode = "fixed"
+    fixed_detection {
+      sensitivity = "high"
+      over_alerting_protection {
+        minutes_abnormal_state = 1
+        requests_per_minute    = 10
+      }
+      response_time_all {
+        degradation_milliseconds = 100
+      }
+      response_time_slowest {
+        slowest_degradation_milliseconds = 1000
+      }
+    }
   }
 }
 ```

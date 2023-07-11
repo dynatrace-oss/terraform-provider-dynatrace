@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_metrics Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_metrics` covers configuration for log metrics
 ---
 
 # dynatrace_log_metrics (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -25,7 +28,7 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_log_metrics" "#name#" {
   enabled           = true
   dimensions        = [ "dt.os.type", "dt.entity.process_group" ]
-  key               = "log.terraformexample"
+  key               = "log.terraformexample3"
   measure           = "ATTRIBUTE"
   measure_attribute = "dt.entity.host"
   query             = "TestMatcherValue"

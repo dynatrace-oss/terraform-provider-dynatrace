@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_monitored_technologies_apache Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_apache` covers configuration to enable/disable Apache HTTP Server monitoring
 ---
 
 # dynatrace_monitored_technologies_apache (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -69,9 +69,10 @@ func (me *QueryDefinition) Schema() map[string]*schema.Schema {
 			Optional:    true, // precondition
 		},
 		"metric_selector": {
-			Type:        schema.TypeString,
-			Description: "To learn more, visit [Metric Selector](https://dt-url.net/metselad)",
-			Optional:    true, // precondition
+			Type:             schema.TypeString,
+			Description:      "To learn more, visit [Metric Selector](https://dt-url.net/metselad)",
+			Optional:         true, // precondition
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"query_offset": {
 			Type:        schema.TypeInt,

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_business_events_oneagent Resource - terraform-provider-dynatrace"
+subcategory: "Business Events"
 description: |-
   The resource `dynatrace_business_events_oneagent` covers configuration for OneAgent business events
 ---
 
 # dynatrace_business_events_oneagent (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

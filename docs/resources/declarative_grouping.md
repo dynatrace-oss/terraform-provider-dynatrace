@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_declarative_grouping Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_declarative_grouping` covers configuration for declarative process grouping
 ---
 
 # dynatrace_declarative_grouping (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

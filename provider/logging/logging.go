@@ -73,6 +73,9 @@ func (odl *onDemandLogger) Write(p []byte) (int, error) {
 
 // Enable redirects logging into a an output file
 func Enable(fn func(context.Context, *schema.ResourceData, any) diag.Diagnostics) func(context.Context, *schema.ResourceData, any) diag.Diagnostics {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
 	return func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		log.SetOutput(odl)
 		return fn(ctx, d, m)
@@ -80,6 +83,9 @@ func Enable(fn func(context.Context, *schema.ResourceData, any) diag.Diagnostics
 }
 
 func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.ResourceData, any) error {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
 	return func(d *schema.ResourceData, m any) error {
 		log.SetOutput(odl)
 		return fn(d, m)
@@ -87,6 +93,9 @@ func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.Resourc
 }
 
 func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
 	return func(v any) int {
 		log.SetOutput(odl)
 		return fn(v)
@@ -95,11 +104,17 @@ func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
 
 // Enable redirects logging into a an output file
 func SetOutput() {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return
+	}
 	log.SetOutput(odl)
 }
 
 // EnableSchemaDiff redirects logging into a an output file
 func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) func(k, old, new string, d *schema.ResourceData) bool {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
 	return func(k, old, new string, d *schema.ResourceData) bool {
 		log.SetOutput(odl)
 		return fn(k, old, new, d)
@@ -108,6 +123,9 @@ func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) 
 
 // EnableCustomizeDiff redirects logging into a an output file
 func EnableCustomizeDiff(fn func(context.Context, *schema.ResourceDiff, any) error) func(context.Context, *schema.ResourceDiff, any) error {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
 	return func(ctx context.Context, d *schema.ResourceDiff, meta any) error {
 		log.SetOutput(odl)
 		return fn(ctx, d, meta)

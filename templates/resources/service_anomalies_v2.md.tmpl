@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_service_anomalies_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_service_anomalies_v2` covers configuration for service anomaly detection
 ---
 
 # dynatrace_service_anomalies_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/services_v2/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/anomalydetection/services/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

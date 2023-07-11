@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_span_attribute Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_attribute` covers configuration for span attributes
 ---
 
 # dynatrace_span_attribute (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

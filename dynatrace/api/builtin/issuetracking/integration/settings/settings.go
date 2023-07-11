@@ -53,9 +53,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"issuequery": {
-			Type:        schema.TypeString,
-			Description: "You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.",
+			Required:         true,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"issuetheme": {
 			Type:        schema.TypeString,
@@ -99,7 +100,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"issuetheme":         me.Issuetheme,
 		"issuetrackersystem": me.Issuetrackersystem,
 		"password":           me.Password,
-		"token":              me.Token,
+		"token":              "${state.secret_value}",
 		"url":                me.Url,
 		"username":           me.Username,
 	})

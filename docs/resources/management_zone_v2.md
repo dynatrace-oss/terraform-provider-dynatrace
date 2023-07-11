@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_management_zone_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Management Zones"
 description: |-
   The resource `dynatrace_management_zone_v2` covers configuration for management zones
 ---
 
 # dynatrace_management_zone_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -23,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_management_zone_v2" "#name#" {
-  name = "Cloud: Google"
+  name = "#name#"
   rules {
     rule {
       type            = "ME"

@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.5"
+const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:virtualization.vmware"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*vmware.Settings] {

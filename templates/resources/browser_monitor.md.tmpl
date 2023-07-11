@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_browser_monitor Resource - terraform-provider-dynatrace"
+subcategory: "Browser Monitors"
 description: |-
   The resource `dynatrace_browser_monitor` covers configuration for browser monitors
 ---
 
 # dynatrace_browser_monitor (Resource)
+
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/monitors/example_a.tf" }}
+{{ tffile "dynatrace/api/v1/config/synthetic/monitors/browser/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

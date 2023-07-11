@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_cloudapp_workloaddetection Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_cloudapp_workloaddetection` merges processes of similar workloads into process groups, and consequently, services. Please note that fine-grained process detection rules will still be applied, while ignoring container or platform specific properties.
 ---
 
 # dynatrace_cloudapp_workloaddetection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

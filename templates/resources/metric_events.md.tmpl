@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_metric_events Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_metric_events` covers configuration for custom metric events
 ---
 
 # dynatrace_metric_events (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

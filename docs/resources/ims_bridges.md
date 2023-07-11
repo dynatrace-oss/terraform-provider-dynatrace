@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_ims_bridges Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_ims_bridges` covers configuration for IBM MQ IMS bridges
 ---
 
 # dynatrace_ims_bridges (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

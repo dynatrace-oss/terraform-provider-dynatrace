@@ -64,6 +64,7 @@ var Dependencies = struct {
 	K8sCluster                Dependency
 	CloudApplicationNamespace Dependency
 	EnvironmentActiveGate     Dependency
+	Tenant                    Dependency
 }{
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
@@ -87,6 +88,7 @@ var Dependencies = struct {
 	K8sCluster:                &entityds{"KUBERNETES_CLUSTER", "KUBERNETES_CLUSTER-[A-Z0-9]{16}", false},
 	CloudApplicationNamespace: &entityds{"CLOUD_APPLICATION_NAMESPACE", "CLOUD_APPLICATION_NAMESPACE-[A-Z0-9]{16}", false},
 	EnvironmentActiveGate:     &entityds{"ENVIRONMENT_ACTIVE_GATE", "ENVIRONMENT_ACTIVE_GATE-[A-Z0-9]{16}", false},
+	Tenant:                    &tenantds{},
 }
 
 type mgmzdep struct {
@@ -239,7 +241,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 
 func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
 	childDescriptor := environment.Module(replacingIn).Descriptor
-	isParent := childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
+	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
@@ -337,6 +339,35 @@ func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn
 		}
 	}
 	return s, resources
+}
+
+type tenantds struct {
+}
+
+func (me *tenantds) ResourceType() ResourceType {
+	return ""
+}
+
+func (me *tenantds) DataSourceType() DataSourceType {
+	return ""
+}
+
+func (me *tenantds) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+	tenantID := environment.TenantID()
+	if len(tenantID) == 0 {
+		return s, []any{}
+	}
+	// when running on HTTP Cache no data sources should get replaced
+	// The IDs of these entities are guaranteed to match existing ones
+	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+		return s, []any{}
+	}
+	if !strings.Contains(s, tenantID) {
+		return s, []any{}
+	}
+	environment.Module(replacingIn).DataSource("tenant")
+	s = strings.ReplaceAll(s, tenantID, "${data.dynatrace_tenant.tenant.id}")
+	return s, []any{true}
 }
 
 type entityds struct {

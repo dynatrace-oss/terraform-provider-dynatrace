@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_synthetic_locations Data Source - terraform-provider-dynatrace"
+subcategory: "Synthetic"
 description: |-
   The data source `dynatrace_synthetic_locations` covers queries for the ID of synthetic locations based off of provided parameters
 ---

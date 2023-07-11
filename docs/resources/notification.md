@@ -1,14 +1,17 @@
 ---
 layout: ""
 page_title: dynatrace_notification Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_notification` covers configuration for notifications
 ---
 
 # dynatrace_notification (Resource)
 
--> This resource API endpoint has been deprecated, please use dynatrace_{notificationtype}_notification instead. 
+!> This resource API endpoint has been deprecated, please use dynatrace_{notificationtype}_notification instead. 
 For example, for email notifications use [dynatrace_email_notification](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/email_notification).
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -26,17 +29,18 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_notification" "#name#" {
-  service_now {
+  slack {
     name             = "#name#"
     active           = true
-    alerting_profile = "c21f969b-5f03-333d-83e0-4f8f136e7682"
-    send_events      = false
-    send_incidents   = false
-    username         = "admin"
-    instance_name    = "dev87541"
-    message          = "{State} {ProblemImpact} Problem {ProblemID}: {ProblemTitle}"
-    password         = "pw2"
+    alerting_profile = dynatrace_alerting_profile.Default.id
+    channel          = "#dynatrace-critical"
+    title            = "Test2"
+    url              = "https://www.google.at/#name#"
   }
+}
+
+resource "dynatrace_alerting_profile" "Default" {
+  display_name = "#name#"
 }
 ```
 

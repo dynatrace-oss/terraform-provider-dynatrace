@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.6"
+const SchemaVersion = "0.6.1"
 const SchemaID = "builtin:monitoring.slo.normalization"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*normalization.Settings] {

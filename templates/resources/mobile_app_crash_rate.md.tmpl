@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_app_crash_rate Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_mobile_app_crash_rate` covers configuration for mobile application crash rate increase
 ---
 
 # dynatrace_mobile_app_crash_rate (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/mobile_app/crash_rate/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate/testdata/terraform-mobile-app/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

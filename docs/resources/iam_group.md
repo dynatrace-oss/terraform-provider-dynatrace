@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_iam_group Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_iam_group` covers user group configuration via Account Management API for SaaS Accounts
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_iam_group (Resource)
 
 -> This resource is excluded by default in the export utility since it is part of the account management API.
+
+-> This resource requires the API token scopes **Allow read access for identity resources (users and groups)** (`account-idm-read`) and **Allow write access for identity resources (users and groups)** (`account-idm-write`)
 
 ## Dynatrace Documentation
 

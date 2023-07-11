@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_disk_analytics Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_disk_analytics` covers configuration for Disk Analytics extension
 ---
 
 # dynatrace_disk_analytics (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

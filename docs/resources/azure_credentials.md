@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_azure_credentials Resource - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The resource `dynatrace_azure_credentials` covers configuration for Azure credentials
 ---
 
 # dynatrace_azure_credentials (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -35,6 +38,7 @@ resource "dynatrace_azure_credentials" "#name#" {
     name  = "string"
     value = "string"
   }
+  supporting_services_managed_in_dynatrace = true
 }
 ```
 

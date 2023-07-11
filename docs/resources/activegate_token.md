@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_activegate_token Resource - terraform-provider-dynatrace"
+subcategory: "Access Tokens"
 description: |-
   The resource `dynatrace_activegate_token` covers configuration for ActiveGate network security
 ---
 
 # dynatrace_activegate_token (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

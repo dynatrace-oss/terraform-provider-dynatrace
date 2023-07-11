@@ -389,23 +389,23 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"customMessage": "The condition must either use '$eq' or '$prefix' as predicates.",
-							"pattern": "^\\s*(?:\\$eq|\\$prefix)[^A-Za-z0-9].*$",
+							"customMessage": "The condition must either use '$eq', '$prefix', '$equals' or '$exists' as predicates.",
+							"pattern": "^\\s*(?:\\$eq|\\$prefix|\\$equals|\\$exists)[^A-Za-z0-9].*$",
 							"type": "PATTERN"
 						},
 						{
 							"customMessage": "No spaces are allowed except as part of values.",
-							"pattern": "^(?:\\$eq\\(.+?\\)|\\$prefix\\(.+?\\))$",
+							"pattern": "^(?:\\$eq\\(.+?\\)|\\$prefix\\(.+?\\)|\\$exists\\(\\))$",
 							"type": "PATTERN"
 						},
 						{
-							"customMessage": "A predicate must have a non-blank value.",
-							"pattern": "^\\s*(?:\\$eq\\s*?\\(.+?\\)|\\$prefix\\s*?\\(.+?\\))\\s*$",
+							"customMessage": "A predicate must have a non-blank value. While $exists needs to have a blank value.",
+							"pattern": "^\\s*(?:\\$eq\\s*?\\(.+?\\)|\\$prefix\\s*?\\(.+?\\)|\\$exists\\(\\))\\s*$",
 							"type": "PATTERN"
 						},
 						{
 							"customMessage": "The predicate needs to be followed by parenthesis.",
-							"pattern": "^\\s*(\\$eq|\\$prefix)\\s*\\(.*\\)\\s*$",
+							"pattern": "^\\s*(\\$eq|\\$prefix|\\$exists)\\s*\\(.*\\)\\s*$",
 							"type": "PATTERN"
 						},
 						{
@@ -498,5 +498,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.34"
+	"version": "1.0.35"
 }

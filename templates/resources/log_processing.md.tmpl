@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_processing Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_processing` covers configuration for log processing
 ---
 
 # dynatrace_log_processing (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

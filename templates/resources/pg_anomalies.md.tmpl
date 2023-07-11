@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_pg_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_pg_anomalies` covers configuration for process group anomaly detection
 ---
 
 # dynatrace_pg_anomalies (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_pg_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/pg_alerting) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_pg_alerting](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/pg_alerting) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -23,6 +26,6 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/process_groups/example_a.tf" }}
+{{ tffile "dynatrace/api/v1/config/anomalies/processgroups/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}

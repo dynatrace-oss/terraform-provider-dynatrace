@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_http_monitor_outage Resource - terraform-provider-dynatrace"
+subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor_outage` covers configuration for HTTP monitor outage handling
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_http_monitor_outage (Resource)
 
 -> Configuration of the HTTP check scope overlaps with [dynatrace_http_monitor](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/http_monitor), but this resource in addition provides an option for an environment scope.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

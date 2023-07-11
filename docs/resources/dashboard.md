@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_dashboard Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_dashboard` covers configuration for dashboards
 ---
 
 # dynatrace_dashboard (Resource)
 
--> This resource frequently falls behind due to the constant additions/changes to the dashboard schema, instead it is recommended to use [dynatrace_json_dashboard](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/json_dashboard) which allows to send the full JSON payload.
+!> This resource frequently falls behind due to the constant additions/changes to the dashboard schema, instead it is recommended to use [dynatrace_json_dashboard](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/json_dashboard) which allows to send the full JSON payload.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -27,6 +30,7 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_dashboard" "#name#" {
   dashboard_metadata {
     name   = "#name#"
+    shared = false
     owner  = "Dynatrace"
     tags   = ["Kubernetes"]
     dynamic_filters {

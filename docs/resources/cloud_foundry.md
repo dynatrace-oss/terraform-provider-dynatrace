@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_cloud_foundry Resource - terraform-provider-dynatrace"
+subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_cloud_foundry` covers configuration for Cloud Foundry monitoring
 ---
 
 # dynatrace_cloud_foundry (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

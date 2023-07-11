@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_rum_overload_prevention Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_overload_prevention` covers configuration for real user monitoring overload prevention
 ---
 
 # dynatrace_rum_overload_prevention (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

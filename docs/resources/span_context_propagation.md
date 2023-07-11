@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_span_context_propagation Resource - terraform-provider-dynatrace"
+subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_context_propagation` covers configuration for span context propagation
 ---
 
 # dynatrace_span_context_propagation (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_extension_execution_controller Resource - terraform-provider-dynatrace"
+subcategory: "Extensions"
 description: |-
   The resource `dynatrace_extension_execution_controller` covers Extension Execution Controller configuration for OneAgent deployment
 ---
 
 # dynatrace_extension_execution_controller (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -40,7 +43,7 @@ resource "dynatrace_extension_execution_controller" "#name#" {
 
 ### Optional
 
-- `ingest_active` (Boolean) Enable local PIPE/HTTP metric and Log Ingest API
+- `ingest_active` (Boolean) Enable local HTTP Metric, Log and Event Ingest API
 - `performance_profile` (String) Possible Values: `DEFAULT`, `HIGH`
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 - `statsd_active` (Boolean) Enable Dynatrace StatsD

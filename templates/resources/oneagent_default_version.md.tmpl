@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_default_version Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_oneagent_default_version` covers configuration for OneAgent default version
 ---
 
 # dynatrace_oneagent_default_version (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

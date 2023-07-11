@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_custom_attribute Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_custom_attribute` covers configuration for [custom log attributes](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/analyze-log-data/log-custom-attributes) ([Log Monitoring Classic](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring))
 ---
 
 # dynatrace_log_custom_attribute (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

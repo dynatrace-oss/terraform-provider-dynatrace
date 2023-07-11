@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_slo Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_slo` covers configuration for service-level objectives
 ---
 
 # dynatrace_slo (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+
+-> This resource requires the API token scopes **Read SLO** (`slo.read`) and **Write SLO** (`slo.write`)
 
 ## Dynatrace Documentation
 
@@ -23,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/slo/example_a.tf" }}
+{{ tffile "dynatrace/api/v2/slo/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

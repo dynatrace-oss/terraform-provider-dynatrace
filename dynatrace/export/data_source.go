@@ -89,6 +89,10 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_azure_credentials" "%s" {
 			label = "%s"
 		}`, resource.UniqueName, resource.Name)
+	case ResourceTypes.IAMGroup:
+		return fmt.Sprintf(`data "dynatrace_iam_group" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, resource.Name)
 	default:
 		return ""
 	}

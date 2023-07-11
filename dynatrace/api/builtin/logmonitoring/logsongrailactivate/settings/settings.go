@@ -23,7 +23,8 @@ import (
 )
 
 type Settings struct {
-	Activated bool `json:"activated"` // Activate logs powered by Grail.
+	Activated            bool                 `json:"activated"`            // Activate logs powered by Grail.
+	ParallelIngestPeriod ParallelIngestPeriod `json:"parallelIngestPeriod"` // Possible Values: `NONE`, `SEVEN_DAYS`, `THIRTY_FIVE_DAYS`
 }
 
 func (me *Settings) Name() string {
@@ -37,17 +38,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Activate logs powered by Grail.",
 			Required:    true,
 		},
+		"parallel_ingest_period": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `NONE`, `SEVEN_DAYS`, `THIRTY_FIVE_DAYS`",
+			Required:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"activated": me.Activated,
+		"activated":              me.Activated,
+		"parallel_ingest_period": me.ParallelIngestPeriod,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"activated": &me.Activated,
+		"activated":              &me.Activated,
+		"parallel_ingest_period": &me.ParallelIngestPeriod,
 	})
 }

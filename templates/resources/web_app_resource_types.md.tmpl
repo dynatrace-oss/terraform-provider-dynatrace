@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_web_resource_types Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_resource_types` covers configuration for web application resource types
 ---
 
 # dynatrace_web_resource_types (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_muted_requests Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_muted_requests` covers configuration for muted requests
 ---
 
 # dynatrace_muted_requests (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_geolocation Resource - terraform-provider-dynatrace"
+subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_geolocation` covers configuration for geolocation settings
 ---
 
 # dynatrace_geolocation (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

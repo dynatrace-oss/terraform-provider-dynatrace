@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_web_app_resource_cleanup Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_resource_cleanup` covers configuration for resource URL cleanup rules for real user monitoring
 ---
 
 # dynatrace_web_app_resource_cleanup (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/rum/web/resourcecleanuprules/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/rum/web/resourcecleanuprules/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

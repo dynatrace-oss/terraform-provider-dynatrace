@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: "dynatrace_application_data_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_application_data_privacy` covers configuration for application data privacy
 ---
 
 # dynatrace_application_data_privacy (Resource)
 
--> This resource is utilizing an older API endpoint, please use [dynatrace_data_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/data_privacy) and [dynatrace_session_replay_web_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/session_replay_web_privacy) instead.
+!> This resource is utilizing an older API endpoint, please use [dynatrace_data_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/data_privacy) and [dynatrace_session_replay_web_privacy](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/session_replay_web_privacy) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Change data privacy settings** (`DataPrivacy`)
 
 ## Dynatrace Documentation
 

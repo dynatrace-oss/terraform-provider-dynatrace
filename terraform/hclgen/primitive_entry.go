@@ -30,7 +30,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") != "false"
+var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") == "false"
 
 type primitiveEntry struct {
 	Indent      string
@@ -63,7 +63,9 @@ func toJSONencode(s string, indent string) string {
 }
 
 func finalizeString(s string, indent string) string {
-	finalString := strings.ReplaceAll(s, "\n", "\n"+indent+"  ")
+	finalString := strings.ReplaceAll(s, "\r\n", "\n"+indent+"  ")
+	finalString = strings.ReplaceAll(finalString, "\n", "\n"+indent+"  ")
+	finalString = strings.ReplaceAll(finalString, "\r", "\n"+indent+"  ")
 
 	finalString = strings.ReplaceAll(finalString, "${data.", "DOLLAR_DATA_DOT")
 	finalString = strings.ReplaceAll(finalString, "${dynatrace_", "DOLLAR_DYNATRACE")

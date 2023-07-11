@@ -67,6 +67,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_aws_credentials"
 	case ResourceTypes.AzureCredentials:
 		return "dynatrace_azure_credentials"
+	case ResourceTypes.IAMGroup:
+		return "dynatrace_iam_group"
 	}
 	return ""
 }
@@ -294,6 +296,9 @@ var ResourceTypes = struct {
 	LimitOutboundConnections            ResourceType
 	SpanEvents                          ResourceType
 	VMware                              ResourceType
+	CustomDevice                        ResourceType
+	K8sMonitoring                       ResourceType
+	AutomationWorkflow                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -517,6 +522,9 @@ var ResourceTypes = struct {
 	"dynatrace_limit_outbound_connections",
 	"dynatrace_span_events",
 	"dynatrace_vmware",
+	"dynatrace_custom_device",
+	"dynatrace_k8s_monitoring",
+	"dynatrace_automation_workflow",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
@@ -527,6 +535,15 @@ func (me ResourceType) GetChildren() []ResourceType {
 		}
 	}
 	return res
+}
+
+func (me ResourceType) IsChildResource() bool {
+	for k, v := range AllResources {
+		if string(k) == string(me) {
+			return v.Parent != nil
+		}
+	}
+	return false
 }
 
 type ResourceStatus string

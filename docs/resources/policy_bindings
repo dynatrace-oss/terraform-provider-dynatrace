@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_policy_bindings Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_policy_bindings` covers binding policies to user groups via Account Management API for Managed Clusters
 ---
 
 # dynatrace_policy_bindings (Resource)
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
 
 ## Dynatrace Documentation
 

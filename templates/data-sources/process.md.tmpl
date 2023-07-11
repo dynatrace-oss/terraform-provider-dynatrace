@@ -1,13 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process Data Source - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The data source `dynatrace_process` covers queries for the ID of a process based on name and tags / tag-value pairs
 ---
 
 # dynatrace_process (Data Source)
 
--> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `PROCESS_GROUP_INSTANCE` instead.
+!> The data source API endpoint has been deprecated, please use [dynatrace_entity](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/entity) with entity type `PROCESS_GROUP_INSTANCE` instead.
 
 The process data source allows the process ID to be retrieved by its name and optionally tags / tag-value pairs.
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_webhook_notification Resource - terraform-provider-dynatrace"
+subcategory: "Notifications"
 description: |-
   The resource `dynatrace_webhook_notification` covers configuration problem notifications sent via Web Hook
 ---
 
 # dynatrace_webhook_notification (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/notifications/webhook/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/problem/notifications/webhook/testdata/terraform/example_b.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

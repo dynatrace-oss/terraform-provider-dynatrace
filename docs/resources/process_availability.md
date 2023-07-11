@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process_availability Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_availability` covers configuration to monitor key processes on a host
 ---
 
 # dynatrace_process_availability (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -22,9 +25,9 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_process_availability" "example" {
+resource "dynatrace_process_availability" "#name#" {
   enabled = true
-  name    = "example"
+  name    = "#name#"
   rules {
     rule {
       property  = "executable"

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_application_detection_rule Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_application_detection_rule` covers configuration for application detection rules
 ---
 
 # dynatrace_application_detection_rule (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

@@ -1,13 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_custom_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_custom_anomalies` covers configuration for custom metric events
 ---
 
 # dynatrace_custom_anomalies (Resource)
 
--> This resource API endpoint has been deprecated, please use [dynatrace_metric_events](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/metric_events) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_metric_events](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/metric_events) instead.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -23,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/anomalies/metric_events/example_a.tf" }}
+{{ tffile "dynatrace/api/v1/config/anomalies/metricevents/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

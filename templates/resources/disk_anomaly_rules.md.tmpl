@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_disk_anomaly_rules Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_disk_anomaly_rules` covers configuration for disk anomaly detection rules 
 ---
 
 # dynatrace_disk_anomaly_rules (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_slo_normalization Resource - terraform-provider-dynatrace"
+subcategory: "Service-level Objective"
 description: |-
   The resource `dynatrace_slo_normalization` covers configuration for service-level objective setup
 ---
 
 # dynatrace_slo_normalization (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -18,46 +18,47 @@ Use the links to the left to learn about the available resources, data sources, 
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.33.0"
+            version = "1.35.3"
             source = "dynatrace-oss/dynatrace"
         }
     }
 } 
 ```
 ## Configure the Dynatrace provider
+The recommended way to configure the provider is via environment variables.
+The value of `DYNATRACE_ENV_URL` needs to refer to the URL your Dynatrace Environment is reachable with.
+* Saas Environments: `https://########.live.dynatrace.com`
+* Managed Enviroments: `https://<dynatrace-host>/e/#####################`
+
+The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following permissions:
+ * **Read configuration** (`ReadConfig`)
+     * Required for reading API v1 configuration.
+ * **Write configuration** (`WriteConfig`)
+     * Required for creating API v1 configuration.
+ * **Read settings** (`settings.read`)
+     * Required for reading Settings 2.0 configuration.
+ * **Write settings** (`settings.write`) (API v2)
+     * Required for modifying Settings 2.0 configuration.
+ * **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+     * Required for reading and creating synthetic configuration.
+ * **Capture request data** (`CaptureRequestData`)
+     * Required for configuring request attributes.
+ * **Read credential vault entries** (`credentialVault.read`)
+     * Required for reading credentials.
+ * **Write credential vault entries** (`credentialVault.write`)
+     * Required for writing credentials.
+ * **Read network zones** (`networkZones.read`)
+     * Required for reading network zones.
+ * **Write network zones** (`networkZones.write`)
+     * Required for writing network zones.
+
+Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
 ```
 provider "dynatrace" {
     dt_env_url    = "https://########.live.dynatrace.com"
     dt_api_token  = "################"
 }
 ```
-where `dt_env_url` represents the URL of your Dynatrace Environment and `dt_api_token` needs to be an API Token with the following permissions:
-* `Read configuration`
-* `Capture request data`
-* `Read SLO`
-* `Read settings`
-* `Read API tokens`
-* `Read entities`
-* `Read Geographic regions`
-* `Read network zones`
-* `Read synthetic locations`
-* `Read synthetic monitors, locations, and nodes`
-* `Capture request data`
-* `Read credential vault entries`
-* `Access problem and event feed, metrics and topology`
-* `Read synthetic monitors, locations, and nodes`
-* `Write settings`
-* `Write API tokens`
-* `Write entities`
-* `Write network zones`
-* `Write SLO`
-* `Write synthetic locations`
-* `Write credential vault entries`
-* `Change data privacy settings`
-* `Create and read synthetic monitors, locations`
-* `Write configuration`
-
-
 
 ## Exporting existing configuration from a Dynatrace Environment
 In addition to acting as a Terraform Provider Plugin, the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can be directly invoked.

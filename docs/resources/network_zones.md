@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_network_zones Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_network_zones` covers configuration for network zones
 ---
 
 # dynatrace_network_zones (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

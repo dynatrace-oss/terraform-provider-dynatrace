@@ -861,12 +861,12 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 60,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -881,12 +881,12 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 30,
 					"description": "",
 					"displayName": "some workload pods are not ready for at least",
 					"documentation": "",
@@ -1188,7 +1188,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 15,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -1208,7 +1208,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 10,
 					"description": "",
 					"displayName": "pod termination stops progressing for at least",
 					"documentation": "",
@@ -1291,7 +1291,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 15,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -1311,7 +1311,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 10,
 					"description": "",
 					"displayName": "workload has no ready pods for at least",
 					"documentation": "",
@@ -1330,5 +1330,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.8"
+	"version": "1.9"
 }

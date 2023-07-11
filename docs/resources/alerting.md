@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_alerting Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The resource `dynatrace_alerting` covers configuration for alerting profiles
 ---
 
 # dynatrace_alerting (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -142,7 +145,7 @@ Required:
 
 Required:
 
-- `key` (String) Type 'dt.' for key hints.
+- `key` (String) GET /api/v2/eventProperties for list of available keys
 - `value` (String) Value
 
 

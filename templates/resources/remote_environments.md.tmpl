@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_remote_environments Resource - terraform-provider-dynatrace"
+subcategory: "Integrations"
 description: |-
   The resource `dynatrace_remote_environments` covers configuration for remote Dynatrace environments
 ---
 
 # dynatrace_remote_environments (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

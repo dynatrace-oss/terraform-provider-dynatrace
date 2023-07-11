@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_dashboards_presets Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboards_presets` covers configuration for dashboard preset settings
 ---
 
 # dynatrace_dashboards_presets (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

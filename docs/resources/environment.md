@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_environment Resource - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_environment` covers configuration for environments
 ---
 
 # dynatrace_environment (Resource)
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_custom_service Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_custom_service` covers configuration for custom services
 ---
 
 # dynatrace_custom_service (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/custom_services/example_a.tf" }}
+{{ tffile "dynatrace/api/v1/config/customservices/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

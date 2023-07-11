@@ -23,11 +23,12 @@ import (
 )
 
 type Settings struct {
-	Enabled   bool   `json:"enabled"`   // This setting is enabled (`true`) or disabled (`false`)
-	Ipaddress string `json:"ipaddress"` // Specify the IP address or name of the vCenter or standalone ESXi host:
-	Label     string `json:"label"`     // Name this connection
-	Password  string `json:"password"`
-	Username  string `json:"username"` // Provide user credentials for the vCenter or standalone ESXi host:
+	Enabled   bool    `json:"enabled"`          // This setting is enabled (`true`) or disabled (`false`)
+	Filter    *string `json:"filter,omitempty"` // This string should have one of the following formats:\n- $prefix(parameter) - property value starting with 'parameter'\n- $eq(parameter) - property value exactly matching 'parameter'\n- $suffix(parameter) - property value ends with 'parameter'\n- $contains(parameter) - property value contains 'parameter'
+	Ipaddress string  `json:"ipaddress"`        // Specify the IP address or name of the vCenter or standalone ESXi host:
+	Label     string  `json:"label"`            // Name this connection
+	Password  string  `json:"password"`
+	Username  string  `json:"username"` // Provide user credentials for the vCenter or standalone ESXi host:
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -36,6 +37,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"filter": {
+			Type:        schema.TypeString,
+			Description: "This string should have one of the following formats:\n- $prefix(parameter) - property value starting with 'parameter'\n- $eq(parameter) - property value exactly matching 'parameter'\n- $suffix(parameter) - property value ends with 'parameter'\n- $contains(parameter) - property value contains 'parameter'",
+			Optional:    true, // nullable
 		},
 		"ipaddress": {
 			Type:        schema.TypeString,
@@ -64,6 +70,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"enabled":   me.Enabled,
+		"filter":    me.Filter,
 		"ipaddress": me.Ipaddress,
 		"label":     me.Label,
 		"password":  "${state.secret_value}",
@@ -74,6 +81,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":   &me.Enabled,
+		"filter":    &me.Filter,
 		"ipaddress": &me.Ipaddress,
 		"label":     &me.Label,
 		"password":  &me.Password,

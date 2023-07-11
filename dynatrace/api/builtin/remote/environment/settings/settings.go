@@ -59,7 +59,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":          me.Name,
 		"network_scope": me.NetworkScope,
-		"token":         me.Token,
+		"token":         "${state.secret_value}",
 		"uri":           me.Uri,
 	})
 }

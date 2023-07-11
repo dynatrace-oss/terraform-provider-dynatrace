@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_calculated_service_metric Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_calculated_service_metric` covers configuration for calculated service metrics
 ---
 
 # dynatrace_calculated_service_metric (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

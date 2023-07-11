@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_application_error_rules Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_application_error_rules` covers configuration for application error rules
 ---
 
 # dynatrace_application_error_rules (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

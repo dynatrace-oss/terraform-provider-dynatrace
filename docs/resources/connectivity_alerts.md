@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_connectivity_alerts Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The resource `dynatrace_connectivity_alerts` covers configuration for process group connectivity alerts
 ---
 
 # dynatrace_connectivity_alerts (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_monitored_technologies_wsmb Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_wsmb` covers configuration to enable/disable IBM Integration Bus | IBM App Connect Enterprise monitoring
 ---
 
 # dynatrace_monitored_technologies_wsmb (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

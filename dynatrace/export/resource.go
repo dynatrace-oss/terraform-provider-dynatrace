@@ -45,7 +45,14 @@ type Resource struct {
 	DataSourceReferences []*DataSource
 	OutputFileAbs        string
 	Flawed               bool
-	Parent               *Resource
+	XParent              *Resource
+}
+
+func (me *Resource) GetParent() *Resource {
+	if me.Module.Environment.ChildResourceOverride {
+		return nil
+	}
+	return me.XParent
 }
 
 func (me *Resource) IsReferencedAsDataSource() bool {
@@ -58,9 +65,7 @@ func (me *Resource) SetName(name string) *Resource {
 	}
 	me.Name = name
 	terraformName := toTerraformName(name)
-	if terraformName != me.UniqueName {
-		me.UniqueName = me.Module.namer.Name(terraformName)
-	}
+	me.UniqueName = me.Module.namer.Name(terraformName)
 	me.Status = ResourceStati.Discovered
 	return me
 }
@@ -330,7 +335,7 @@ func (me *Resource) PostProcess() error {
 					if err = typedItem.Download(); err != nil {
 						return err
 					}
-					me.Parent = typedItem
+					me.XParent = typedItem
 					me.ResourceReferences = append(me.ResourceReferences, typedItem)
 				case *DataSource:
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)

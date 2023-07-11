@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_kubernetes Resource - terraform-provider-dynatrace"
+subcategory: "Cloud Platforms"
 description: |-
-  The resource `dynatrace_kubernetes` covers configuration for Kubernetes monitoring
+  The resource `dynatrace_kubernetes` covers configuration for Kubernetes connection settings
 ---
 
 # dynatrace_kubernetes (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -15,7 +18,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_kubernetes` downloads all existing Kubernetes monitoring configuration
+- `terraform-provider-dynatrace -export dynatrace_kubernetes` downloads all existing Kubernetes connection settings
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
@@ -24,14 +27,9 @@ The full documentation of the export feature is available [here](https://registr
 ```terraform
 resource "dynatrace_kubernetes" "#name#" {
   enabled                            = true
-  cloud_application_pipeline_enabled = true
   cluster_id                         = "#name#"
   cluster_id_enabled                 = true
-  event_processing_active            = false
   label                              = "#name#"
-  open_metrics_builtin_enabled       = false
-  open_metrics_pipeline_enabled      = false
-  pvc_monitoring_enabled             = false
   scope                              = "KUBERNETES_CLUSTER-1234567890000000"
 }
 ```
@@ -41,17 +39,9 @@ resource "dynatrace_kubernetes" "#name#" {
 
 ### Required
 
-- `cloud_application_pipeline_enabled` (Boolean) Monitor Kubernetes namespaces, services, workloads, and pods
 - `cluster_id_enabled` (Boolean) For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `event_processing_active` (Boolean) All events are monitored by default unless event filters are specified.
-
-Kubernetes events are subject to Davis data units (DDU) licensing.
-See [DDUs for events](https://dt-url.net/5n03vcu) for details.
 - `label` (String) Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
-- `open_metrics_builtin_enabled` (Boolean) The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
-- `open_metrics_pipeline_enabled` (Boolean) For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
-- `pvc_monitoring_enabled` (Boolean) To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
 - `scope` (String) The scope of this setting (KUBERNETES_CLUSTER)
 
 ### Optional
@@ -61,28 +51,9 @@ See [DDUs for events](https://dt-url.net/5n03vcu) for details.
 - `certificate_check_enabled` (Boolean) Require valid certificates for communication with API server (recommended)
 - `cluster_id` (String) Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.
 - `endpoint_url` (String) Get the API URL for [Kubernetes](https://dt-url.net/kz23snj "Kubernetes") or [OpenShift](https://dt-url.net/d623xgw "OpenShift").
-- `event_patterns` (Block List, Max: 1) Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u). (see [below for nested schema](#nestedblock--event_patterns))
-- `filter_events` (Boolean) Include only events specified by Events Field Selectors
 - `hostname_verification_enabled` (Boolean) Verify hostname in certificate against Kubernetes API URL
-- `include_all_fdi_events` (Boolean) For a list of included events, see the [documentation](https://dt-url.net/l61d02no).
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-<a id="nestedblock--event_patterns"></a>
-### Nested Schema for `event_patterns`
-
-Required:
-
-- `event_pattern` (Block List, Min: 1) (see [below for nested schema](#nestedblock--event_patterns--event_pattern))
-
-<a id="nestedblock--event_patterns--event_pattern"></a>
-### Nested Schema for `event_patterns.event_pattern`
-
-Required:
-
-- `active` (Boolean) Activate
-- `label` (String) Field selector name
-- `pattern` (String) The set of allowed characters for this field has been extended with ActiveGate version 1.259. For more details, see the [documentation](https://dt-url.net/7h23wuk#set-up-event-field-selectors).
  

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process_visibility Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_visibility` covers configuration for process instance snapshots
 ---
 
 # dynatrace_process_visibility (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

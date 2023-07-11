@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_json_dashboard Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_json_dashboard` covers configuration for dashboards in JSON format
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_json_dashboard (Resource)
 
 -> This resource is excluded by default in the export utility since there could be a large amount of dashboards.
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 
@@ -23,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/dashboards/example_a_json.tf" }}
+{{ tffile "dynatrace/api/v1/config/jsondashboards/testdata/terraform/example_a_json.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

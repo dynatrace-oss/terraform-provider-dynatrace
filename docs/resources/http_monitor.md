@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_http_monitor Resource - terraform-provider-dynatrace"
+subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor` covers configuration for HTTP monitors
 ---
 
 # dynatrace_http_monitor (Resource)
+
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
 
 ## Dynatrace Documentation
 

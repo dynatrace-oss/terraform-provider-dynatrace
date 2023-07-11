@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_aws_anomalies Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_aws_anomalies` covers configuration for AWS anomaly detection
 ---
 
 # dynatrace_aws_anomalies (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

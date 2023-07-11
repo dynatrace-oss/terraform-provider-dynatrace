@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_iam_policy_bindings Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
 description: |-
   The resource `dynatrace_iam_policy_bindings` covers binding policies to user groups via Account Management API for SaaS Accounts
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_iam_policy_bindings (Resource)
 
 -> This resource is excluded by default in the export utility since it is part of the account management API.
+
+-> This resource requires the API token scope **Allow IAM policy configuration for environments** (`iam-policies-management`)
 
 ## Dynatrace Documentation
 

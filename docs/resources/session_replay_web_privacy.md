@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_session_replay_web_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Session Replay"
 description: |-
   The resource `dynatrace_session_replay_web_privacy` covers configuration for Session Replay data privacy
 ---
 
 # dynatrace_session_replay_web_privacy (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

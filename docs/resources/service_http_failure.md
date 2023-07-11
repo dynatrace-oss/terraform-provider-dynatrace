@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_service_http_failure Resource - terraform-provider-dynatrace"
+subcategory: "Failure Detection"
 description: |-
   The resource `dynatrace_service_http_failure` covers configuration for service-level HTTP failure detection parameters
 ---
 
 # dynatrace_service_http_failure (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

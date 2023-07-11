@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_service_external_web_request Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_service_external_web_request` covers service detection rules for external web requests
 ---
 
 # dynatrace_service_external_web_request (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

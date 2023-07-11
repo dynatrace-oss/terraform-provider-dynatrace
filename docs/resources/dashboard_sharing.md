@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_dashboard_sharing Resource - terraform-provider-dynatrace"
+subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_dashboard_sharing` covers configuration for dashboard sharing
 ---
@@ -8,6 +9,8 @@ description: |-
 # dynatrace_dashboard_sharing (Resource)
 
 -> This is a child resource of [dynatrace_json_dashboard](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/json_dashboard), therefore it is automatically retrieved with the dashboard. 
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 
 ## Dynatrace Documentation
 

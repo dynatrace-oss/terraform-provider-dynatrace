@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group_simple_detection Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_process_group_simple_detection` covers configuration for process group simple detection rules
 ---
 
 # dynatrace_process_group_simple_detection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

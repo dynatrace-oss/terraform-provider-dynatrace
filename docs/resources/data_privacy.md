@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_data_privacy Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_data_privacy` covers configuration for end users' data privacy
 ---
 
 # dynatrace_data_privacy (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

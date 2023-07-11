@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_process_group_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_process_group_monitoring` covers configuration to enable or disable monitoring for certain process groups
 ---
 
 # dynatrace_process_group_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

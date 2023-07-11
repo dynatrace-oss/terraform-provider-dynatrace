@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_generic_relationships Resource - terraform-provider-dynatrace"
+subcategory: "Topology Model"
 description: |-
   The resource `dynatrace_generic_relationships` covers configuration for custom topology generic relationships
 ---
 
 # dynatrace_generic_relationships (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

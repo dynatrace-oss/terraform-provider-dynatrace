@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_update_windows Data Source - terraform-provider-dynatrace"
+subcategory: "Updates"
 description: |-
   The data source `dynatrace_update_windows` covers queries for maintenance windows for OneAgent updates 
 ---

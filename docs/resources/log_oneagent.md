@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_oneagent Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_oneagent` covers configuration for OneAgent settings for Log Monitoring
 ---
 
 # dynatrace_log_oneagent (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -56,7 +59,7 @@ resource "dynatrace_log_oneagent" "#name#" {
 - `log_scanner_linux_nfs_enabled` (Boolean) Detect logs on Network File Systems (NFS)
 - `max_lgis_per_entity_count` (Number) Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.
 - `min_binary_detection_limit_bytes` (Number) Defines the minimum number of bytes in log file required for binary detection.
-- `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your DDU consumption. For more details, see [documentation](https://dt-url.net/hp43ef8).
+- `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).
 - `open_log_files_detection_enabled` (Boolean) Detect open log files
 - `severity_detection_limit_bytes` (Number) Defines the number of characters in every log line (starting from the first character in the line) where severity is searched.
 - `severity_detection_lines_limit` (Number) Defines the number of the first lines of every log entry where severity is searched.

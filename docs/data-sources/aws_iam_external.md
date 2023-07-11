@@ -1,6 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_aws_iam_external Data Source - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The data source `dynatrace_aws_iam_external` covers queries for AWS IAM external ID
 ---

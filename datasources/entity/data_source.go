@@ -20,7 +20,6 @@ package entity
 import (
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
@@ -71,7 +70,8 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 
 	var settings entities.Settings
-	service := cache.Read(srv.Service(entityType, entitySelector, config.Credentials(m)), true)
+	// service := cache.Read(srv.Service(entityType, entitySelector, config.Credentials(m)), true)
+	service := srv.Service(entityType, entitySelector, config.Credentials(m))
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}

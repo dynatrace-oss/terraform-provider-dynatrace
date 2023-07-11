@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_ops_genie_notification Resource - terraform-provider-dynatrace"
+subcategory: "Notifications"
 description: |-
   The resource `dynatrace_ops_genie_notification` covers configuration problem notifications sent to OpsGenie
 ---
 
 # dynatrace_ops_genie_notification (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -25,14 +28,14 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_ops_genie_notification" "#name#" { # replace #name# with the name you would like your resource be known within your Terraform Module
   active  = false
   name    = "#name#" # replace #name# with the name you would like your entry to be displayed within the Dynatrace Web UI
-  profile = data.dynatrace_alerting_profile.Default.id
-  domain  = "ps-genie-domain"
+  profile = dynatrace_alerting.Default.id
+  domain  = "#name#"
   message = "ops-genie-message"
   api_key = "ops-genie-api-key"
 }
 
-data "dynatrace_alerting_profile" "Default" {
-  name = "Default"
+resource "dynatrace_alerting" "Default" {
+  name = "#name#"
 }
 ```
 

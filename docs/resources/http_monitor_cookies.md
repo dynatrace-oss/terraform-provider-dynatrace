@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_http_monitor_cookies Resource - terraform-provider-dynatrace"
+subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor_cookies` covers configuration for HTTP monitor cookies
 ---
 
 # dynatrace_http_monitor_cookies (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

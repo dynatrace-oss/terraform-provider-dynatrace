@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_api_detection Resource - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_api_detection` covers configuration for API detection rules
 ---
 
 # dynatrace_api_detection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

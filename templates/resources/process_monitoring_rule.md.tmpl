@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_process_monitoring_rule Resource - terraform-provider-dynatrace"
+subcategory: "Process Monitoring"
 description: |-
   The resource `dynatrace_process_monitoring_rule` covers configuration for custom process monitoring rules 
 ---
 
 # dynatrace_process_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/process_monitoring_rule/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/process/monitoring/custom/testdata/terraform-host-group/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

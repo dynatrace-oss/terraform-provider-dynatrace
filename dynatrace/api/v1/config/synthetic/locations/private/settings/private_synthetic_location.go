@@ -42,6 +42,9 @@ type PrivateSyntheticLocation struct {
 	AvailabilityNotificationsEnabled bool            `json:"availabilityNotificationsEnabled,omitempty"` // The notifications of location and node outage is enabled (`true`) or disabled (`false`)
 	DeploymentType                   *DeploymentType `json:"deploymentType,omitempty"`                   // The deployment type of the location: \n\n* `STANDARD`: The location is deployed on Windows or Linux.\n* `KUBERNETES`: The location is deployed on Kubernetes
 	AutoUpdateChromium               bool            `json:"autoUpdateChromium,omitempty"`               // Auto upgrade of Chromium is enabled (`true`) or disabled (`false`)
+	MinActiveGateCount               *int            `json:"minActiveGateCount"`
+	MaxActiveGateCount               *int            `json:"maxActiveGateCount"`
+	NodeSize                         *string         `json:"nodeSize"`
 }
 
 func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
@@ -112,6 +115,22 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 			Description: "Auto upgrade of Chromium is enabled (`true`) or disabled (`false`)",
 			Optional:    true,
 		},
+		"min_active_gate_count": {
+			Type:        schema.TypeInt,
+			Description: "The minimum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`",
+			Optional:    true,
+		},
+		"max_active_gate_count": {
+			Type:        schema.TypeInt,
+			Description: "The maximum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`",
+			Optional:    true,
+		},
+		"node_size": {
+			Type:        schema.TypeString,
+			Description: "Possible values: `UNSUPPORTED`, `XS`, `S` and `M`. Not required when `deployment_type` is set to `STANDARD`.",
+			Default:     "UNSUPPORTED",
+			Optional:    true,
+		},
 	}
 }
 
@@ -153,6 +172,15 @@ func (me *PrivateSyntheticLocation) MarshalHCL(properties hcl.Properties) error 
 		return err
 	}
 	if err := properties.Encode("auto_update_chromium", me.AutoUpdateChromium); err != nil {
+		return err
+	}
+	if err := properties.Encode("min_active_gate_count", me.MinActiveGateCount); err != nil {
+		return err
+	}
+	if err := properties.Encode("max_active_gate_count", me.MaxActiveGateCount); err != nil {
+		return err
+	}
+	if err := properties.Encode("node_size", me.NodeSize); err != nil {
 		return err
 	}
 
@@ -202,6 +230,15 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("auto_update_chromium"); ok {
 		me.AutoUpdateChromium = value.(bool)
+	}
+	if value, ok := decoder.GetOk("min_active_gate_count"); ok {
+		me.MinActiveGateCount = opt.NewInt(value.(int))
+	}
+	if value, ok := decoder.GetOk("max_active_gate_count"); ok {
+		me.MaxActiveGateCount = opt.NewInt(value.(int))
+	}
+	if value, ok := decoder.GetOk("node_size"); ok {
+		me.NodeSize = opt.NewString(value.(string))
 	}
 	return nil
 }

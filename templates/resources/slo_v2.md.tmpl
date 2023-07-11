@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_slo_v2 Resource - terraform-provider-dynatrace"
+subcategory: "Service-level Objective"
 description: |-
   The resource `dynatrace_slo_v2` covers configuration for service-level objectives
 ---
 
 # dynatrace_slo_v2 (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

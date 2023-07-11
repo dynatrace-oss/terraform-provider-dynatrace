@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_audit_log Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_audit_log` covers configuration for audit log
 ---
 
 # dynatrace_audit_log (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

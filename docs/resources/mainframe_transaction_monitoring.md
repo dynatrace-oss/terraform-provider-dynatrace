@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_mainframe_transaction_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_mainframe_transaction_monitoring` covers additional monitoring settings for CICS and IMS transactions
 ---
 
 # dynatrace_mainframe_transaction_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

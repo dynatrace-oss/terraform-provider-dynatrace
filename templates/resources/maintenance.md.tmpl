@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_maintenance Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
 description: |-
   The resource `dynatrace_maintenance` covers configuration for maintenance windows
 ---
 
 # dynatrace_maintenance (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

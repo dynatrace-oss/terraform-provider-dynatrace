@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_credentials Resource - terraform-provider-dynatrace"
+subcategory: "Credentials"
 description: |-
   The resource `dynatrace_credentials` covers configuration for credentials
 ---
 
 # dynatrace_credentials (Resource)
+
+-> This resource requires the API token scopes **Read credential vault entries** (`credentialVault.read`) and **Write credential vault entries** (`credentialVault.write`)
 
 ## Dynatrace Documentation
 

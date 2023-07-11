@@ -440,6 +440,16 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			}
 			vTarget.Set(reflect.ValueOf(entries))
 			return true, nil
+		} else if vTarget.Type().Kind() == reflect.Map {
+			if vTarget.Type().Elem().Kind() == reflect.String {
+				m, ok := d.GetOk(key)
+				if ok {
+					vResult = reflect.MakeMapWithSize(vTarget.Type(), 0)
+					for mk, mv := range m.(map[string]any) {
+						vResult.SetMapIndex(reflect.ValueOf(mk), reflect.ValueOf(mv).Convert(vTarget.Type().Elem()))
+					}
+				}
+			}
 		}
 		if vResult.Type().AssignableTo(vTarget.Type()) {
 			vTarget.Set(vResult)

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_failure_detection_parameters Resource - terraform-provider-dynatrace"
+subcategory: "Failure Detection"
 description: |-
   The resource `dynatrace_failure_detection_parameters` covers configuration for failure detection parameters
 ---
 
 # dynatrace_failure_detection_parameters (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

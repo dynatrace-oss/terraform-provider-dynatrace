@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_host_process_group_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_process_group_monitoring` covers configuration of host level process group monitoring rules
 ---
 
 # dynatrace_host_process_group_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
@@ -21,7 +24,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ## Resource Example Usage
 
-{{ tffile "test_data/host/process_groups/monitoring_state/example_a.tf" }}
+{{ tffile "dynatrace/api/builtin/host/processgroups/monitoringstate/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
  

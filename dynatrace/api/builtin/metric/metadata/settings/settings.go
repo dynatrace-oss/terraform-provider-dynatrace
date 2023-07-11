@@ -37,9 +37,10 @@ type Settings struct {
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"description": {
-			Type:        schema.TypeString,
-			Description: "Description",
-			Optional:    true,
+			Type:             schema.TypeString,
+			Description:      "Description",
+			Optional:         true,
+			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"dimensions": {
 			Type:        schema.TypeList,

@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_buckets Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_buckets` covers configuration for log buckets
 ---
 
 # dynatrace_log_buckets (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

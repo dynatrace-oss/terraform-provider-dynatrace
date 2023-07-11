@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_web_javascript_updates Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_javascript_updates` covers configuration for web application RUM Javascript updates
 ---
 
 # dynatrace_web_javascript_updates (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

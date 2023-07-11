@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_web_javascript_version Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_javascript_version` covers configuration for web application custom RUM Javascript version
 ---
 
 # dynatrace_web_javascript_version (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

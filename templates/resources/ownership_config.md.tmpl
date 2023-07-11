@@ -1,11 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_ownership_config Resource - terraform-provider-dynatrace"
+subcategory: "Ownership"
 description: |-
   The resource `dynatrace_ownership_config` covers configuration for ownership
 ---
 
 # dynatrace_ownership_config (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 
