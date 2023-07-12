@@ -1,0 +1,44 @@
+---
+layout: ""
+page_title: "dynatrace_management_zones Data Source - terraform-provider-dynatrace"
+subcategory: "Management Zones"
+description: |-
+  The data source `dynatrace_management_zones` covers queries for management zones
+---
+
+# dynatrace_management_zones (Data Source)
+
+The management zones data source allows retrieval of all management zones.
+
+## Example Usage
+
+```terraform
+data "dynatrace_management_zones" "Test" {
+}
+
+resource "dynatrace_calculated_service_metric" "#name#" {
+  name             = "#name#"
+  enabled          = true
+  management_zones = ["${data.dynatrace_management_zones.Test.values[0].id}"] 
+  metric_key       = "calc:service.#name#"
+  unit             = "MILLI_SECOND_PER_MINUTE"
+  conditions {
+    condition {
+      attribute = "HTTP_REQUEST_METHOD"
+      comparison {
+        negate = false
+        http_method {
+          operator = "EQUALS_ANY_OF"
+          values   = ["POST", "GET"]
+        }
+      }
+    }
+  }
+  metric_definition {
+    metric            = "REQUEST_ATTRIBUTE"
+    request_attribute = "foo"
+  }
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

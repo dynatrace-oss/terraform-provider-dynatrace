@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: "dynatrace_calculated_service_metric Data Source - terraform-provider-dynatrace"
+subcategory: "Service Monitoring"
+description: |-
+  The data source `dynatrace_calculated_service_metric` covers queries for the ID of a calculated service metric
+---
+
+# dynatrace_calculated_service_metric (Data Source)
+
+The calculated service metric data source allows the metric ID to be retrieved by its name.
+
+- `name` (String) - The name of the calculated service metric
+
+## Example Usage
+
+```terraform
+data "dynatrace_calculated_service_metric" "example" {
+  name = "Terraform Example"
+}
+
+output "groups" {
+  value = data.dynatrace_calculated_service_metric.example.id
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}
