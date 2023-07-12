@@ -33,8 +33,16 @@ func DataSource() *schema.Resource {
 		Read: logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Description:   "The type of the entities to find, e.g. `HOST`. You cannot use `type` and `entity_selector` at the same time",
+				ConflictsWith: []string{"entity_selector"},
+			},
+			"entity_selector": {
+				Type:          schema.TypeString,
+				Description:   "An entity selector that filters the entities of interest. You cannot use `type` and `entity_selector` at the same time",
+				Optional:      true,
+				ConflictsWith: []string{"type"},
 			},
 			"entities": {
 				Type:     schema.TypeList,
@@ -52,8 +60,13 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		entityType = v.(string)
 	}
 
+	var entitySelector string
+	if v, ok := d.GetOk("entity_selector"); ok {
+		entitySelector = v.(string)
+	}
+
 	var settings entities.Settings
-	service := srv.Service(entityType, "", config.Credentials(m))
+	service := srv.Service(entityType, entitySelector, config.Credentials(m))
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}
