@@ -324,6 +324,9 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	dsm := map[string]string{}
 	for _, v := range me.Resources {
 		for _, referencedResource := range v.ResourceReferences {
+			if !me.Environment.Module(referencedResource.Type).IsReferencedAsDataSource() {
+				continue
+			}
 			if asDS := AsDataSource(referencedResource); len(asDS) > 0 {
 				dsm[asDS] = asDS
 			}
