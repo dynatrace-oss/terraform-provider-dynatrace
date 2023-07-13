@@ -19,6 +19,7 @@ package vault
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
@@ -52,6 +53,8 @@ func DataSource() *schema.Resource {
 	}
 }
 
+var notFoundRegexp = regexp.MustCompile(`Setting with id '.*' not found \(offline mode\)`)
+
 func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	name := ""
 	typ := ""
@@ -83,6 +86,24 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		}
 		var credentials vault.Credentials
 		if err = service.Get(stub.ID, &credentials); err != nil {
+			/*
+				Identically configured credentials are allowed to be configured via REST and WebUI.
+				Therefore the block
+				  data "dynatrace_credentials" "..." {
+				    	name = "..."
+				  }
+				is not guaranteed to deliver the same ID consistently.
+				During normal usage that's a limitation the user needs to be aware of - therefore not that big of an issue.
+
+				But `terraform-provider-dynatrace -export -import-state` will perform the import in offline mode (based on local cache).
+				Here the error message `Setting with id '######' not found (offline mode)` hints, that LIST delivered an ID that may exist
+				on the remote side, but doesn't locally.
+
+				In that case we just skip to the next stub. There must exist another setting with the same name.
+			*/
+			if notFoundRegexp.MatchString(err.Error()) {
+				continue
+			}
 			return err
 		}
 		if scope != "" && string(credentials.Scope) != scope {
