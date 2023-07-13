@@ -45,14 +45,71 @@ type Automation struct {
 	EnvironmentURL string
 }
 
-func Credentials(m any) *settings.Credentials {
+const (
+	CredValDefault = iota
+	CredValIAM
+	CredValCluster
+	CredValAutomation
+	CredValNone
+)
+
+func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
+	switch CredentialValidation {
+	case CredValDefault:
+		if len(conf.EnvironmentURL) == 0 {
+			return fmt.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that.")
+		}
+		if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
+			return fmt.Errorf("The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
+		}
+		if len(conf.APIToken) == 0 {
+			return fmt.Errorf("No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that.")
+		}
+	case CredValIAM:
+		if len(conf.IAM.AccountID) == 0 {
+			return fmt.Errorf("No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that.")
+		}
+		if len(conf.IAM.ClientID) == 0 {
+			return fmt.Errorf("No OAuth Client ID has been specified. Use either the environment variable `DT_CLIENT_ID` or the configuration attribute `iam_client_id` of the provider for that.")
+		}
+		if len(conf.IAM.ClientSecret) == 0 {
+			return fmt.Errorf("No OAuth Client Secret has been specified. Use either the environment variable `DT_CLIENT_SECRET` or the configuration attribute `iam_client_secret` of the provider for that.")
+		}
+	case CredValCluster:
+		if len(conf.ClusterAPIToken) == 0 {
+			return fmt.Errorf("No Cluster API Token has been specified. Use either the environment variable `DT_CLUSTER_API_TOKEN` or the configuration attribute `dt_cluster_api_token` of the provider for that.")
+		}
+		if len(conf.ClusterAPIV2URL) == 0 {
+			return fmt.Errorf("No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that.")
+		}
+	case CredValAutomation:
+		if len(conf.Automation.ClientID) == 0 {
+			return fmt.Errorf("No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that.")
+		}
+		if len(conf.Automation.ClientSecret) == 0 {
+			return fmt.Errorf("No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that.")
+		}
+		if len(conf.Automation.TokenURL) == 0 {
+			return fmt.Errorf("No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that.")
+		}
+		if len(conf.Automation.EnvironmentURL) == 0 {
+			return fmt.Errorf("No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that.")
+		}
+	}
+	return nil
+}
+
+func Credentials(m any, CredentialValidation int) (*settings.Credentials, error) {
 	conf := m.(*ProviderConfiguration)
+	if err := validateCredentials(conf, CredentialValidation); err != nil {
+		return nil, err
+	}
 	return &settings.Credentials{
 		Token:      conf.APIToken,
 		URL:        conf.EnvironmentURL,
 		IAM:        conf.IAM,
 		Automation: conf.Automation,
-	}
+	}, nil
 }
 
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API

@@ -35,7 +35,7 @@ import (
 var ResourceType = export.ResourceTypes.Alerting
 
 // Resource produces terraform resource definition for Management Zones
-func Resource() *schema.Resource {
+func XResource() *schema.Resource {
 	return &schema.Resource{
 		Schema:        export.AllResources[ResourceType].NewSettings().Schema(),
 		CreateContext: logging.Enable(Create),

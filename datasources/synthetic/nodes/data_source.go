@@ -41,8 +41,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 	var stubs api.Stubs
-	if stubs, err = nodes.Service(config.Credentials(m)).List(); err != nil {
+	if stubs, err = nodes.Service(creds).List(); err != nil {
 		return err
 	}
 	nodes := []*nodessettings.Settings{}

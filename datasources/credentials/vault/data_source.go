@@ -71,8 +71,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	if name == "" && typ == "" && scope == "" {
 		return fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string")
 	}
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 
-	service := export.Service(config.Credentials(m), export.ResourceTypes.Credentials)
+	service := export.Service(creds, export.ResourceTypes.Credentials)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err

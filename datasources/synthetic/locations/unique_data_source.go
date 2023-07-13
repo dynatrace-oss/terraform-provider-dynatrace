@@ -69,8 +69,12 @@ func UniqueDataSourceRead(d *schema.ResourceData, m any) (err error) {
 			ips = vt
 		}
 	}
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(config.Credentials(m)).List(); err != nil {
+	if stubs, err = locations.Service(creds).List(); err != nil {
 		return err
 	}
 

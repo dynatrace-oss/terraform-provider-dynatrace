@@ -39,7 +39,10 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) error {
-	creds := config.Credentials(m)
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 	if len(creds.URL) == 0 {
 		d.SetId("")
 		return nil

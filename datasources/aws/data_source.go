@@ -33,7 +33,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) (err error) {
-	service := svc.Service(config.Credentials(m))
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+
+	service := svc.Service(creds)
 
 	var settings iam.Settings
 	if err = service.Get("", &settings); err != nil {

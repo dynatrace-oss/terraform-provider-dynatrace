@@ -52,10 +52,15 @@ func NewService(m any) *bindings_service.BindingServiceClient {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	_, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(bindings.PolicyBinding)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
+
 	objStub, err := NewService(m).Create(config)
 	if err != nil {
 		return diag.FromErr(err)
@@ -66,6 +71,10 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	_, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(bindings.PolicyBinding)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -78,8 +87,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	_, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(bindings.PolicyBinding)
-	err := NewService(m).Get(d.Id(), config)
+	err = NewService(m).Get(d.Id(), config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -96,6 +109,10 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	_, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if err := NewService(m).Delete(d.Id()); err != nil {
 		if strings.HasSuffix(err.Error(), " doesn't exist") {
 			return diag.Diagnostics{}

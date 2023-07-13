@@ -42,8 +42,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
-
-	service := export.Service(config.Credentials(m), export.ResourceTypes.WebApplication)
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+	service := export.Service(creds, export.ResourceTypes.WebApplication)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err

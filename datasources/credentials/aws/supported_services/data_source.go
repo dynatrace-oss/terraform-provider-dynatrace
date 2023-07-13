@@ -57,7 +57,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			theID = theID + ":" + el
 		}
 	}
-	srvc := services.NewSupportedServicesService(config.Credentials(m))
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+
+	srvc := services.NewSupportedServicesService(creds)
 	all, err := srvc.List()
 	if err != nil {
 		return err

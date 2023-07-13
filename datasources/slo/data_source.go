@@ -104,7 +104,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		name = v.(string)
 	}
 
-	service := slo.Service(config.Credentials(m))
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+	service := slo.Service(creds)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
