@@ -26,24 +26,24 @@ import (
 )
 
 type Settings struct {
-	ActiveGateGroup                 *string           `json:"activeGateGroup,omitempty"`             // ActiveGate Group
-	AuthToken                       *string           `json:"authToken,omitempty"`                   // Create a bearer token for [Kubernetes](https://dt-url.net/og43szq \"Kubernetes\") or [OpenShift](https://dt-url.net/7l43xtp \"OpenShift\").
-	CertificateCheckEnabled         *bool             `json:"certificateCheckEnabled,omitempty"`     // Require valid certificates for communication with API server (recommended)
-	CloudApplicationPipelineEnabled bool              `json:"cloudApplicationPipelineEnabled"`       // Monitor Kubernetes namespaces, services, workloads, and pods
-	ClusterID                       *string           `json:"clusterId,omitempty"`                   // Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.
-	ClusterIdEnabled                bool              `json:"clusterIdEnabled"`                      // For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
-	Enabled                         bool              `json:"enabled"`                               // This setting is enabled (`true`) or disabled (`false`)
-	EndpointUrl                     *string           `json:"endpointUrl,omitempty"`                 // Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").
-	EventPatterns                   EventComplexTypes `json:"eventPatterns,omitempty"`               // Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).
-	EventProcessingActive           bool              `json:"eventProcessingActive"`                 // All events are monitored by default unless event filters are specified.\n\nKubernetes events are subject to Davis data units (DDU) licensing.\nSee [DDUs for events](https://dt-url.net/5n03vcu) for details.
-	FilterEvents                    *bool             `json:"filterEvents,omitempty"`                // Include only events specified by Events Field Selectors
-	HostnameVerificationEnabled     *bool             `json:"hostnameVerificationEnabled,omitempty"` // Verify hostname in certificate against Kubernetes API URL
-	IncludeAllFdiEvents             *bool             `json:"includeAllFdiEvents,omitempty"`         // For a list of included events, see the [documentation](https://dt-url.net/l61d02no).
-	Label                           string            `json:"label"`                                 // Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
-	OpenMetricsBuiltinEnabled       bool              `json:"openMetricsBuiltinEnabled"`             // The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
-	OpenMetricsPipelineEnabled      bool              `json:"openMetricsPipelineEnabled"`            // For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
-	PvcMonitoringEnabled            bool              `json:"pvcMonitoringEnabled"`                  // To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
-	Scope                           string            `json:"-" scope:"scope"`                       // The scope of this setting (KUBERNETES_CLUSTER)
+	ActiveGateGroup                 *string           `json:"activeGateGroup,omitempty"`                 // ActiveGate Group
+	AuthToken                       *string           `json:"authToken,omitempty"`                       // Create a bearer token for [Kubernetes](https://dt-url.net/og43szq \"Kubernetes\") or [OpenShift](https://dt-url.net/7l43xtp \"OpenShift\").
+	CertificateCheckEnabled         *bool             `json:"certificateCheckEnabled,omitempty"`         // Require valid certificates for communication with API server (recommended)
+	CloudApplicationPipelineEnabled *bool             `json:"cloudApplicationPipelineEnabled,omitempty"` // Monitor Kubernetes namespaces, services, workloads, and pods
+	ClusterID                       *string           `json:"clusterId,omitempty"`                       // Unique ID of the cluster, the containerized ActiveGate is deployed to. Defaults to the UUID of the kube-system namespace. The cluster ID of containerized ActiveGates is shown on the Deployment status screen.
+	ClusterIdEnabled                bool              `json:"clusterIdEnabled"`                          // For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
+	Enabled                         bool              `json:"enabled"`                                   // This setting is enabled (`true`) or disabled (`false`)
+	EndpointUrl                     *string           `json:"endpointUrl,omitempty"`                     // Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").
+	EventPatterns                   EventComplexTypes `json:"eventPatterns,omitempty"`                   // Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u).
+	EventProcessingActive           *bool             `json:"eventProcessingActive,omitempty"`           // All events are monitored by default unless event filters are specified.\n\nKubernetes events are subject to Davis data units (DDU) licensing.\nSee [DDUs for events](https://dt-url.net/5n03vcu) for details.
+	FilterEvents                    *bool             `json:"filterEvents,omitempty"`                    // Include only events specified by Events Field Selectors
+	HostnameVerificationEnabled     *bool             `json:"hostnameVerificationEnabled,omitempty"`     // Verify hostname in certificate against Kubernetes API URL
+	IncludeAllFdiEvents             *bool             `json:"includeAllFdiEvents,omitempty"`             // For a list of included events, see the [documentation](https://dt-url.net/l61d02no).
+	Label                           string            `json:"label"`                                     // Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
+	OpenMetricsBuiltinEnabled       *bool             `json:"openMetricsBuiltinEnabled,omitempty"`       // The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
+	OpenMetricsPipelineEnabled      *bool             `json:"openMetricsPipelineEnabled,omitempty"`      // For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
+	PvcMonitoringEnabled            *bool             `json:"pvcMonitoringEnabled,omitempty"`            // To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
+	Scope                           string            `json:"-" scope:"scope"`                           // The scope of this setting (KUBERNETES_CLUSTER)
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
