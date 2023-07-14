@@ -42,11 +42,9 @@ func (rba *RoleBasedAuthentication) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
-	if rba.ExternalID != nil {
-		if v, found := m["externalId"]; found {
-			if err := json.Unmarshal(v, &rba.ExternalID); err != nil {
-				return err
-			}
+	if v, found := m["externalId"]; found {
+		if err := json.Unmarshal(v, &rba.ExternalID); err != nil {
+			return err
 		}
 	}
 	delete(m, "accountId")

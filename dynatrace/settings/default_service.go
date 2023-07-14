@@ -244,6 +244,9 @@ func (me *defaultService[T]) create(v T) (*api.Stub, error) {
 		}
 		return nil, err
 	}
+	if me.options.OnAfterCreate != nil {
+		return me.options.OnAfterCreate(client, (&api.Stubs{&stub}).ToStubs()[0])
+	}
 	return (&api.Stubs{&stub}).ToStubs()[0], nil
 }
 

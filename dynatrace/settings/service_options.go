@@ -32,6 +32,7 @@ type ServiceOptions[T Settings] struct {
 	Stubs          api.RecordStubs
 	CompleteGet    func(client rest.Client, id string, v T) error
 	CreateRetry    func(v T, err error) T
+	OnAfterCreate  func(client rest.Client, stub *api.Stub) (*api.Stub, error)
 	DeleteRetry    func(id string, err error) (bool, error)
 	CreateConfirm  int
 	OnChanged      func(rest.Client, string, T) error
@@ -49,6 +50,11 @@ func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T)
 	return me
 }
 
+func (me *ServiceOptions[T]) WithCompleteGet(fn func(client rest.Client, id string, v T) error) *ServiceOptions[T] {
+	me.CompleteGet = fn
+	return me
+}
+
 func (me *ServiceOptions[T]) WithOnBeforeUpdate(fn func(id string, v T) error) *ServiceOptions[T] {
 	me.OnBeforeUpdate = fn
 	return me
@@ -56,6 +62,11 @@ func (me *ServiceOptions[T]) WithOnBeforeUpdate(fn func(id string, v T) error) *
 
 func (me *ServiceOptions[T]) WithCreateRetry(fn func(v T, err error) T) *ServiceOptions[T] {
 	me.CreateRetry = fn
+	return me
+}
+
+func (me *ServiceOptions[T]) WithAfterCreate(fn func(client rest.Client, stub *api.Stub) (*api.Stub, error)) *ServiceOptions[T] {
+	me.OnAfterCreate = fn
 	return me
 }
 
