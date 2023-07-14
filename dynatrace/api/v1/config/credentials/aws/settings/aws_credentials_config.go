@@ -329,3 +329,13 @@ func (me *AWSCredentialsConfig) FillDemoValues() []string {
 	}
 	return nil
 }
+
+func (me *AWSCredentialsConfig) Anonymize() {
+	if me.AuthenticationData == nil {
+		return
+	}
+	if me.AuthenticationData.RoleBasedAuthentication == nil {
+		return
+	}
+	me.AuthenticationData.RoleBasedAuthentication.ExternalID = nil
+}
