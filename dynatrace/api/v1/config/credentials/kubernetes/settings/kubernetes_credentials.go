@@ -27,6 +27,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *KubernetesCredentials) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_kubernetes` instead."
+}
+
 // KubernetesCredentials Configuration for specific Kubernetes credentials.
 type KubernetesCredentials struct {
 	EventsIntegrationEnabled              *bool                      `json:"eventsIntegrationEnabled,omitempty"`        // The monitoring of events is enabled (`true`) or disabled (`false`) for the Kubernetes cluster. Event monitoring depends on the active state of this configuration to be true.  If not set on creation, the `false` value is used.  If the field is omitted during an update, the old value remains unaffected.

@@ -27,6 +27,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *BaseNotificationConfig) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_{notificationtype}_notification` instead."
+}
+
 // NotificationConfig Configuration of a notification. The actual set of fields depends on the `type` of the notification.
 // See the [Notifications API - JSON models](https://www.dynatrace.com/support/help/shortlink/api-config-notifications-models) help topic for example models of every notification type.
 type NotificationConfig interface {

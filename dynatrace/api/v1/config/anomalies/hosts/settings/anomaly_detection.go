@@ -41,6 +41,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_host_anomalies_v2` instead."
+}
+
 // AnomalyDetection Configuration of anomaly detection for hosts.
 type AnomalyDetection struct {
 	NetworkDroppedPacketsDetection     *droppedpackets.DetectionConfig `json:"networkDroppedPacketsDetection"`     // Configuration of high number of dropped packets detection.

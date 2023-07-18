@@ -25,6 +25,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *ApplicationDataPrivacy) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_data_privacy` instead."
+}
+
 // ApplicationDataPrivacy represents data privacy settings of the application
 type ApplicationDataPrivacy struct {
 	WebApplicationID                *string                           `json:"-"`                                  // Dynatrace entity ID of the web application

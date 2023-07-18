@@ -33,6 +33,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *MetricEvent) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_metric_events` instead."
+}
+
 // MetricEvent The configuration of the metric event.
 type MetricEvent struct {
 	MetricID            *string                     `json:"metricId"`                      // The ID of the metric evaluated by the metric event.

@@ -12,6 +12,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Profile) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_alerting` instead."
+}
+
 // Profile Configuration of an alerting profile.
 type Profile struct {
 	ID               *string                    `json:"id,omitempty"`               // The ID of the alerting profile.

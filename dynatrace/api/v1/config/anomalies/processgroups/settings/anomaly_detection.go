@@ -22,6 +22,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_pg_alerting` instead."
+}
+
 // AnomalyDetection Configuration of anomaly detection for the process group.
 type AnomalyDetection struct {
 	ProcessGroupId         string                  `json:"-"`                                // The ID of the process group

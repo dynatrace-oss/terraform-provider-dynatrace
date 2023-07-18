@@ -27,6 +27,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *SLO) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_slo_v2` instead."
+}
+
 type SLO struct {
 	Name              string  `json:"name"`                        // The name of the SLO
 	Enabled           bool    `json:"enabled,omitempty"`           // The SLO is enabled (`true`) or disabled (`false`)

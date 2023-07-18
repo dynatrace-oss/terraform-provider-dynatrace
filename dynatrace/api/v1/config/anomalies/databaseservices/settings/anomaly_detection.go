@@ -32,6 +32,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_database_anomalies_v2` instead."
+}
+
 // AnomalyDetection The configuration of the anomaly detection for database services.
 type AnomalyDetection struct {
 	FailureRateIncrease            *failurerate.Detection      `json:"failureRateIncrease"`            // Configuration of failure rate increase detection.

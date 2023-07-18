@@ -29,6 +29,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *ManagementZone) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_management_zone_v2` instead."
+}
+
 // ManagementZone The configuration of the management zone. It defines how the management zone applies.
 type ManagementZone struct {
 	Description              *string                    `json:"description,omitempty"`              // The description of the management zone

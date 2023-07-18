@@ -32,6 +32,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_web_app_anomalies` instead."
+}
+
 // AnomalyDetection The configuration of anomaly detection for applications.
 type AnomalyDetection struct {
 	ResponseTimeDegradation *responsetime.Detection `json:"responseTimeDegradation"` // Configuration of response time degradation detection.

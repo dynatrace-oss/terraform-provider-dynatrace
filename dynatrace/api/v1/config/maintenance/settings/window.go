@@ -29,6 +29,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Window) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_maintenance` instead."
+}
+
 // Window Configuration of a maintenance window.
 type Window struct {
 	Name                               string      `json:"name"`                                         // The name of the maintenance window, displayed in the UI.
