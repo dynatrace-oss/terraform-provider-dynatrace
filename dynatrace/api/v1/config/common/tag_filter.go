@@ -32,6 +32,13 @@ type TagFilter struct {
 	Value   *string `json:"value,omitempty"` // The value of the tag. Not applicable to custom tags.
 }
 
+func nonnil(v *string) string {
+	if v == nil {
+		return ""
+	}
+	return *v
+}
+
 func (me *TagFilter) Equals(other *TagFilter) bool {
 	if other == nil {
 		return false
@@ -42,13 +49,8 @@ func (me *TagFilter) Equals(other *TagFilter) bool {
 	if me.Context != other.Context {
 		return false
 	}
-	if me.Value == nil && other.Value != nil {
-		return false
-	}
-	if me.Value != nil && other.Value == nil {
-		return false
-	}
-	if me.Value != nil && *me.Value != *other.Value {
+
+	if nonnil(me.Value) != nonnil(other.Value) {
 		return false
 	}
 	return true
