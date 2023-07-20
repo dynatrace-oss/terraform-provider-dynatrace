@@ -201,6 +201,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
 	maintenancev1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/maintenance"
 	managementzonesv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/managementzones"
@@ -977,6 +978,18 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.AutomationWorkflow: NewResourceDescriptor(workflows.Service),
+	ResourceTypes.CustomTags: NewResourceDescriptor(
+		customtags.Service,
+		Dependencies.ID(ResourceTypes.HTTPMonitor),
+		Dependencies.ID(ResourceTypes.BrowserMonitor),
+		Dependencies.ID(ResourceTypes.WebApplication),
+		Dependencies.ID(ResourceTypes.MobileApplication),
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.ProcessGroupInstance),
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+		Coalesce(Dependencies.Service),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1027,6 +1040,9 @@ var BlackListedResources = []ResourceType{
 	// Not included in export - may cause issues for migration use cases
 	ResourceTypes.MetricMetadata,
 	ResourceTypes.MetricQuery,
+
+	// Won't get exported by default - subject to discuss internally
+	ResourceTypes.CustomTags,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
