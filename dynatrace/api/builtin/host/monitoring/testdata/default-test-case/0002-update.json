@@ -1,6 +1,5 @@
 {
     "autoInjection": true,
     "enabled": false,
-    "fullStack": true,
     "hostId": "HOST-1234567890000000"
   }
