@@ -2,7 +2,13 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Use this page to connect your Cloud Foundry foundation to Dynatrace for monitoring. Please have your Cloud Foundry API target URL, your authentication endpoint and your Cloud Foundry username and password ready.\\\n\\\nNo additional DDUs will be consumed by using this integration.",
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Use this page to connect your Cloud Foundry foundation to Dynatrace for monitoring. Please have your Cloud Foundry API target URL, your authentication endpoint and your Cloud Foundry username and password ready.",
 	"displayName": "Cloud Foundry",
 	"documentation": "",
 	"dynatrace": "1",
@@ -215,10 +221,29 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Specified name already exists. Please provide different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"label"
+			]
+		},
+		{
+			"customMessage": "Specified URL is already used in another configuration.",
+			"customValidatorId": "cloudfoundry-unique-api-url",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Specified URL is already used in another configuration.",
+			"customValidatorId": "cloudfoundry-unique-login-url",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:cloud-and-virtualization"
 	],
 	"schemaId": "builtin:cloud.cloudfoundry",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

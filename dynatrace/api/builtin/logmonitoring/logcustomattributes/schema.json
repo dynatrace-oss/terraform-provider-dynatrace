@@ -4,7 +4,7 @@
 	],
 	"description": "Dynatrace log monitoring gives you the ability to define custom attributes for log data that is ingested. Custom log attributes are extracted from the log data during log data ingestion and become available within Dynatrace. You can use these attributes as filters in the log viewer, as dimensions while creating log metrics, and as properties while creating log events.",
 	"displayName": "Log custom attributes",
-	"documentation": "Learn more by visiting [our documentation](https://www.dynatrace.com/support/help/how-to-use-dynatrace/log-monitoring/analyze-log-data/log-custom-attributes).",
+	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
 	"maxObjects": 50,
@@ -32,8 +32,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Key may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
-					"pattern": "^[.a-z0-9_\\-]+$",
+					"customMessage": "Key may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-'), dots ('.') and colons (':'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.:a-z0-9_\\-]+$",
 					"type": "PATTERN"
 				},
 				{
@@ -59,11 +59,25 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Custom attribute with the specified key already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
+		},
+		{
+			"customMessage": "Exceeded limit of custom attributes.",
+			"customValidatorId": "attribute-slot-available-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring.analysis",
 		"group:log-monitoring"
 	],
 	"schemaId": "builtin:logmonitoring.log-custom-attributes",
 	"types": {},
-	"version": "1.0.11"
+	"version": "1.0.12"
 }

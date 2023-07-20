@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Logs can be transformed through processing rules using [this syntax](https://dt-url.net/8k03xm2). Note that rules are processed sequentially, making the order important; a different rule order could give different results.",
+	"description": "Logs can be transformed through processing rules. Note that rules are processed sequentially, making the order important; a different rule order could give different results.",
 	"displayName": "Processing",
 	"documentation": "",
 	"dynatrace": "1",
@@ -15,7 +15,7 @@
 	"ordered": true,
 	"properties": {
 		"ProcessorDefinition": {
-			"description": "## Processor definition\nAdd a rule definition using our syntax. [In our documentation](https://dt-url.net/8k03xm2) you will find instructions and application [examples](https://dt-url.net/m24305t).",
+			"description": "## Processor definition\n",
 			"displayName": "",
 			"documentation": "",
 			"maxObjects": 1,
@@ -96,6 +96,15 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Rule with the specified name already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ruleName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring.analysis",
 		"group:log-monitoring"
@@ -174,5 +183,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.15"
+	"version": "1.0.16"
 }

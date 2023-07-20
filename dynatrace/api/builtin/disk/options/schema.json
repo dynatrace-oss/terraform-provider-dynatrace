@@ -65,7 +65,7 @@
 					"$ref": "#/types/DiskComplex"
 				}
 			},
-			"maxObjects": 200,
+			"maxObjects": 1500,
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -146,5 +146,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.6"
+	"version": "1.2.7"
 }

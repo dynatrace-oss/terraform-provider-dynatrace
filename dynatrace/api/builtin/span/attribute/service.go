@@ -25,7 +25,7 @@ import (
 )
 
 const SchemaID = "builtin:span-attribute"
-const SchemaVersion = "0.0.32"
+const SchemaVersion = "0.0.33"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*attribute.Settings] {
 	return settings20.Service[*attribute.Settings](credentials, SchemaID, SchemaVersion)
