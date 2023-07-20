@@ -8,8 +8,6 @@
       "doNotTrack": "anonymous"
     },
     "masking": {
-      "ipAddressMaskingEnabled": false,
-      "personalDataUriMaskingEnabled": false,
       "userActionMaskingEnabled": false
     },
     "userTracking": {

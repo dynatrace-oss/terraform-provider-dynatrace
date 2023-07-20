@@ -7,8 +7,6 @@
       "complyWithDoNotTrack": false
     },
     "masking": {
-      "ipAddressMasking": "public",
-      "ipAddressMaskingEnabled": true,
       "personalDataUriMaskingEnabled": true,
       "userActionMaskingEnabled": true
     },
