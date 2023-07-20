@@ -88,9 +88,6 @@ func Initialize() (environment *Environment, err error) {
 					effectiveTailArgs = append(effectiveTailArgs, string(child)+"="+id)
 				}
 			}
-			if flags.FlagMigrationOutput && flags.DataSources {
-				break
-			}
 		}
 		for _, idx := range effectiveTailArgs {
 			key, id := ValidateResource(idx)
