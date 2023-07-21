@@ -124,51 +124,64 @@ func (me *service) SchemaID() string {
 	return "v2:environment:custom-device"
 }
 
+type lresponse struct {
+	NextPageKey string `json:"nextPageKey"`
+	Entities    []struct {
+		EntityId    string `json:"entityId"`
+		Type        string `json:"type"`
+		DisplayName string `json:"displayName"`
+		Properties  struct {
+			DetectedName     string   `json:"detectedName"`
+			IPAddress        []string `json:"ipAddress,omitempty"`
+			ListenPorts      []int    `json:"listenPorts,omitempty"`
+			CustomFavicon    *string  `json:"customFavicon,omitempty"`
+			DNSNames         []string `json:"dnsNames,omitempty"`
+			CustomProperties []*struct {
+				Key   string `json:"key,omitempty"`
+				Value string `json:"value,omitempty"`
+			} `json:"customProperties"`
+		} `json:"properties"`
+		IsInstanceOf []*struct {
+			ID   *string `json:"id,omitempty"`
+			Type *string `json:"type,omitempty"`
+		} `json:"isInstanceOf"`
+	} `json:"entities"`
+}
+
 func (me *service) List() (api.Stubs, error) {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `type("CUSTOM_DEVICE")`
 	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships&pageSize=500", url.QueryEscape(entitySelector))).Expect(200)
-	listResponse := struct {
-		Entities []struct {
-			EntityId    string `json:"entityId"`
-			Type        string `json:"type"`
-			DisplayName string `json:"displayName"`
-			Properties  struct {
-				DetectedName     string   `json:"detectedName"`
-				IPAddress        []string `json:"ipAddress,omitempty"`
-				ListenPorts      []int    `json:"listenPorts,omitempty"`
-				CustomFavicon    *string  `json:"customFavicon,omitempty"`
-				DNSNames         []string `json:"dnsNames,omitempty"`
-				CustomProperties []*struct {
-					Key   string `json:"key,omitempty"`
-					Value string `json:"value,omitempty"`
-				} `json:"customProperties"`
-			} `json:"properties"`
-			IsInstanceOf []*struct {
-				ID   *string `json:"id,omitempty"`
-				Type *string `json:"type,omitempty"`
-			} `json:"isInstanceOf"`
-		} `json:"entities"`
-	}{}
+	listResponse := lresponse{}
 	if err = req.Finish(&listResponse); err != nil {
 		return nil, err
 	}
 	var stubs api.Stubs
-	if len(listResponse.Entities) == 0 {
-		return stubs, nil
-	}
-	for _, entity := range listResponse.Entities {
-		if entity.Type != "CUSTOM_DEVICE" {
-			continue
+	for {
+		if len(listResponse.Entities) == 0 {
+			return stubs, nil
 		}
-		if len(entity.Properties.DetectedName) == 0 {
-			continue
+		for _, entity := range listResponse.Entities {
+			if entity.Type != "CUSTOM_DEVICE" {
+				continue
+			}
+			if len(entity.Properties.DetectedName) == 0 {
+				continue
+			}
+			if len(entity.DisplayName) == 0 {
+				continue
+			}
+			stubs = append(stubs, &api.Stub{ID: entity.Properties.DetectedName, Name: entity.DisplayName})
 		}
-		if len(entity.DisplayName) == 0 {
-			continue
+		if len(listResponse.NextPageKey) == 0 {
+			break
 		}
-		stubs = append(stubs, &api.Stub{ID: entity.Properties.DetectedName, Name: entity.DisplayName})
+		req = client.Get(fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(listResponse.NextPageKey))).Expect(200)
+		listResponse = lresponse{}
+		if err = req.Finish(&listResponse); err != nil {
+			return nil, err
+		}
 	}
 
 	return stubs, nil
