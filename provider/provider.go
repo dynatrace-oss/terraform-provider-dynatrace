@@ -414,6 +414,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_device":                      resources.NewGeneric(export.ResourceTypes.CustomDevice).Resource(),
 			"dynatrace_k8s_monitoring":                     resources.NewGeneric(export.ResourceTypes.K8sMonitoring).Resource(),
 			"dynatrace_host_monitoring_mode":               resources.NewGeneric(export.ResourceTypes.HostMonitoringMode).Resource(),
+			"dynatrace_ip_address_masking":                 resources.NewGeneric(export.ResourceTypes.IPAddressMasking).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

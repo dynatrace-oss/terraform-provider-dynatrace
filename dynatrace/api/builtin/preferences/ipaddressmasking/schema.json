@@ -1,0 +1,70 @@
+{
+	"allowedScopes": [
+		"MOBILE_APPLICATION",
+		"CUSTOM_APPLICATION",
+		"APPLICATION",
+		"environment"
+	],
+	"description": "Control what data Dynatrace is capturing. Dynatrace can capture IP addresses and GPS coordinates of end users to determine the location from which they access your application. IP Address Masking truncates IP addresses captured from your end users' web browsers and the data captured by OneAgent for effective de-identification.",
+	"displayName": "Anonymize End-User IP Addresses",
+	"documentation": "\n\nTo learn more, visit [Mask IPs and GPS coordinates](https://dt-url.net/mask-end-users-ip-addresses). For further details on Dynatrace's privacy settings, visit [Data privacy and security](https://dt-url.net/zn03sq4) documentation.",
+	"dynatrace": "1",
+	"enums": {
+		"IpAddressMaskingOption": {
+			"description": "",
+			"displayName": "IpAddressMaskingOption",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Mask all IP addresses",
+					"value": "all"
+				},
+				{
+					"displayName": "Mask only public IP addresses",
+					"value": "public"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Mask end-user IP addresses and GPS coordinates",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"type": {
+			"default": "all",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/enums/IpAddressMaskingOption"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-general",
+		"group:preferences",
+		"group:rum-settings",
+		"group:privacy-settings"
+	],
+	"schemaId": "builtin:preferences.ipaddressmasking",
+	"types": {},
+	"version": "1"
+}

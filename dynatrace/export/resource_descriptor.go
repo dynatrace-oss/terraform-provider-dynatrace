@@ -123,6 +123,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	ownership_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/ipaddressmasking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/ansible"
@@ -994,6 +995,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HostMonitoringMode: NewResourceDescriptor(
 		hostmonitoringmode.Service,
 		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.IPAddressMasking: NewResourceDescriptor(
+		ipaddressmasking.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 }
 

@@ -301,6 +301,7 @@ var ResourceTypes = struct {
 	AutomationWorkflow                  ResourceType
 	CustomTags                          ResourceType
 	HostMonitoringMode                  ResourceType
+	IPAddressMasking                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -529,6 +530,7 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow",
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
+	"dynatrace_ip_address_masking",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
