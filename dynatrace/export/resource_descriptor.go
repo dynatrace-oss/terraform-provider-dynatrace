@@ -79,6 +79,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
+	hostmonitoringmode "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/mode"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
@@ -989,6 +990,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 		Coalesce(Dependencies.Service),
+	),
+	ResourceTypes.HostMonitoringMode: NewResourceDescriptor(
+		hostmonitoringmode.Service,
+		Coalesce(Dependencies.Host),
 	),
 }
 
