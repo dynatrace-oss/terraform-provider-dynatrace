@@ -39,7 +39,8 @@ resource "dynatrace_custom_device" "#name#" {
 - `group` (String) User defined group of entity. Changing the group requires a new custom device to be created.
 - `ip_addresses` (Set of String) The list of IP addresses that belong to the custom device.
 - `listen_ports` (Set of Number) The list of ports the custom devices listens to.
-- `properties` (Map of String) The list of key-value pair properties that will be shown beneath the infographics of your custom device.
+- `properties` (Map of String, Deprecated) The list of key-value pair properties that will be shown beneath the infographics of your custom device.
+- `props` (String) The list of key-value pair properties that will be shown beneath the infographics of your custom device.
 - `type` (String) The technology type definition of the custom device.
 
 ### Read-Only
