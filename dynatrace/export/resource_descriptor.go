@@ -1043,6 +1043,8 @@ var BlackListedResources = []ResourceType{
 
 	// Won't get exported by default - subject to discuss internally
 	ResourceTypes.CustomTags,
+	// Won't get exported by default - subject to discuss internally
+	ResourceTypes.CustomDevice,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
