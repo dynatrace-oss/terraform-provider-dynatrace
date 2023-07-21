@@ -1,6 +1,8 @@
 package customdevice
 
 import (
+	"encoding/json"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -118,7 +120,13 @@ func (me *CustomDevice) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeMap,
 			Description: "The list of key-value pair properties that will be shown beneath the infographics of your custom device.",
 			Optional:    true,
+			Deprecated:  "Please use the attribute `props` instead",
 			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
+		"props": {
+			Type:        schema.TypeString,
+			Description: "The list of key-value pair properties that will be shown beneath the infographics of your custom device.",
+			Optional:    true,
 		},
 	}
 }
@@ -150,6 +158,11 @@ func (me *CustomDeviceGetResponse) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 func (me *CustomDevice) MarshalHCL(properties hcl.Properties) error {
+	propsString := ""
+	if len(me.Properties) > 0 {
+		data, _ := json.Marshal(me.Properties)
+		propsString = string(data)
+	}
 	if err := properties.EncodeAll(map[string]any{
 		"entity_id":        me.EntityId,
 		"display_name":     me.DisplayName,
@@ -160,14 +173,18 @@ func (me *CustomDevice) MarshalHCL(properties hcl.Properties) error {
 		"type":             me.Type,
 		"favicon_url":      me.FaviconUrl,
 		"dns_names":        me.DNSNames,
-		"properties":       me.Properties,
 	}); err != nil {
 		return err
 	}
+	if len(propsString) > 0 {
+		properties.Encode("props", propsString)
+	}
+
 	return nil
 }
 
 func (me *CustomDevice) UnmarshalHCL(decoder hcl.Decoder) error {
+	propsString := ""
 	err := decoder.DecodeAll(map[string]any{
 		"entity_id":        &me.EntityId,
 		"display_name":     &me.DisplayName,
@@ -179,10 +196,16 @@ func (me *CustomDevice) UnmarshalHCL(decoder hcl.Decoder) error {
 		"favicon_url":      &me.FaviconUrl,
 		"config_url":       &me.ConfigUrl,
 		"dns_names":        &me.DNSNames,
+		"props":            &propsString,
 		"properties":       &me.Properties,
 	})
-
-	return err
+	if err != nil {
+		return err
+	}
+	if len(propsString) > 0 {
+		json.Unmarshal([]byte(propsString), &me.Properties)
+	}
+	return nil
 }
 
 func (me *CustomDevice) Name() string {
