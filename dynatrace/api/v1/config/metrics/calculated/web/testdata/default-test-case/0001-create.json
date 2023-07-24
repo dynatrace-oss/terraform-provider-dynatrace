@@ -1,0 +1,9 @@
+{
+  "applicationIdentifier": "APPLICATION-EA7C4B59F27D43EB",
+  "name": "x${randomize}",
+  "metricKey": "calc:apps.web.x${randomize}",
+  "enabled": true,
+  "metricDefinition": {
+      "metric": "CumulativeLayoutShift"
+  }
+}

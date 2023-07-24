@@ -257,6 +257,7 @@ import (
 
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
 	calculated_service_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
+	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -373,6 +374,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.HostGroup,
 		Dependencies.ProcessGroup,
 		Dependencies.ProcessGroupInstance,
+	),
+	ResourceTypes.CalculatedWebMetric: NewResourceDescriptor(
+		calculated_web_metrics.Service,
 	),
 	ResourceTypes.CloudFoundryCredentials: NewResourceDescriptor(cloudfoundry.Service),
 	ResourceTypes.CustomAnomalies: NewResourceDescriptor(
