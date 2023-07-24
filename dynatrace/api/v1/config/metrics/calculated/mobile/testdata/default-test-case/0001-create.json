@@ -1,0 +1,13 @@
+{
+  "applicationIdentifier": "MOBILE_APPLICATION-7F6AE72450E14F11",
+  "name": "x${randomize}",
+  "metricKey": "calc:apps.mobile.x${randomize}",
+  "enabled": true,
+  "metricType": "USER_ACTION_DURATION",
+  "dimensions": [
+    {
+      "topX": 1,
+      "dimension": "APP_VERSION"
+    }
+  ]
+}

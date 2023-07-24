@@ -256,6 +256,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault"
 
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
+	calculated_mobile_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/mobile"
 	calculated_service_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 )
@@ -377,6 +378,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.CalculatedWebMetric: NewResourceDescriptor(
 		calculated_web_metrics.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.CalculatedMobileMetric: NewResourceDescriptor(
+		calculated_mobile_metrics.Service,
+		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 	ResourceTypes.CloudFoundryCredentials: NewResourceDescriptor(cloudfoundry.Service),
 	ResourceTypes.CustomAnomalies: NewResourceDescriptor(
@@ -424,6 +430,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
+		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
+		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
 	),
 	ResourceTypes.DashboardSharing: NewChildResourceDescriptor(
@@ -537,6 +545,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
+		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
+		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
 	),
 	ResourceTypes.SpanAttribute:          NewResourceDescriptor(attribute.Service),
 	ResourceTypes.SpanCaptureRule:        NewResourceDescriptor(capturing.Service),
@@ -944,6 +954,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		slov2.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
+		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
+		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
 	),
 	ResourceTypes.AutoTagV2: NewResourceDescriptor(
 		autotagging.Service,
