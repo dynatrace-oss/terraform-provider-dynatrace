@@ -70,6 +70,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 				}
 				return stub, nil
 			}).
+			WithDuplicates(Duplicates).
 			WithCompleteGet(func(client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
 				// This is a sanity (last resort) function
 				// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
@@ -94,4 +95,31 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 				return nil
 			}),
 	)
+}
+
+func Duplicates(service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWSCredentialsConfig) (*api.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_aws_credentials") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name() == stub.Name {
+				return nil, fmt.Errorf("AWS Credential Config with label `%s` already exists", v.Name())
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_aws_credentials") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name() == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }
