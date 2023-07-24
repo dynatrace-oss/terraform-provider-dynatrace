@@ -181,6 +181,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	importStateV2 := flag.Bool("import-state-v2", false, "deprecated - use `import-state`")
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
+	skipTerraformInit := flag.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
 
 	flag.Parse()
 
@@ -197,6 +198,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		ImportStateV2:       importStateFlag,
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
+		SkipTerraformInit:   *skipTerraformInit,
 	}, flag.Args()
 }
 
@@ -227,4 +229,5 @@ type Flags struct {
 	ImportStateV2       bool
 	Exclude             bool
 	DataSources         bool
+	SkipTerraformInit   bool
 }
