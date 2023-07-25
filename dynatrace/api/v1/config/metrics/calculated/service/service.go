@@ -133,8 +133,11 @@ func (me *service) Update(id string, v *mysettings.CalculatedServiceMetric) erro
 }
 
 func (me *service) Delete(id string) error {
-	for {
-		if err := me.client.Delete(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 204).Finish(); err != nil {
+	var err error
+	attempts := 30
+
+	for i := 0; i < attempts; i++ {
+		if err = me.client.Delete(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 204).Finish(); err != nil {
 			if strings.Contains(err.Error(), fmt.Sprintf("Service metric with %s not found", id)) {
 				return nil
 			}
@@ -144,6 +147,11 @@ func (me *service) Delete(id string) error {
 		} else {
 			break
 		}
+		time.Sleep(2 * time.Second)
+	}
+
+	if err != nil {
+		return err
 	}
 	return nil
 }
