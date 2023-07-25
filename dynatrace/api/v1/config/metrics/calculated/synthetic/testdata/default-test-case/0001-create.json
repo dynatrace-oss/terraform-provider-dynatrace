@@ -1,0 +1,13 @@
+{
+  "monitorIdentifier": "SYNTHETIC_TEST-74EEC98A3855C3DD",
+  "name": "x${randomize}",
+  "metricKey": "calc:synthetic.browser.x${randomize}",
+  "enabled": true,
+  "metric": "HTMLDownloaded",
+  "dimensions": [
+    {
+      "topX": 100,
+      "dimension": "Location"
+    }
+  ]
+}

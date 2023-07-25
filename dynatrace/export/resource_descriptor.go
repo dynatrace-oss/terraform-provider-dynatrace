@@ -258,6 +258,7 @@ import (
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
 	calculated_mobile_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/mobile"
 	calculated_service_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
+	calculated_synthetic_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 )
 
@@ -384,6 +385,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		calculated_mobile_metrics.Service,
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
+	ResourceTypes.CalculatedSyntheticMetric: NewResourceDescriptor(
+		calculated_synthetic_metrics.Service,
+		Dependencies.ID(ResourceTypes.BrowserMonitor),
+		Dependencies.ID(ResourceTypes.HTTPMonitor),
+	),
 	ResourceTypes.CloudFoundryCredentials: NewResourceDescriptor(cloudfoundry.Service),
 	ResourceTypes.CustomAnomalies: NewResourceDescriptor(
 		custom_anomalies.Service,
@@ -432,6 +438,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
 		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
+		Dependencies.ID(ResourceTypes.CalculatedSyntheticMetric),
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
 	),
 	ResourceTypes.DashboardSharing: NewChildResourceDescriptor(
@@ -547,6 +554,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
 		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
+		Dependencies.ID(ResourceTypes.CalculatedSyntheticMetric),
 	),
 	ResourceTypes.SpanAttribute:          NewResourceDescriptor(attribute.Service),
 	ResourceTypes.SpanCaptureRule:        NewResourceDescriptor(capturing.Service),
@@ -956,6 +964,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
 		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
+		Dependencies.ID(ResourceTypes.CalculatedSyntheticMetric),
 	),
 	ResourceTypes.AutoTagV2: NewResourceDescriptor(
 		autotagging.Service,

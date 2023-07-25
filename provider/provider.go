@@ -214,6 +214,7 @@ func Provider() *schema.Provider {
 			"dynatrace_calculated_service_metric":          resources.NewGeneric(export.ResourceTypes.CalculatedServiceMetric).Resource(),
 			"dynatrace_calculated_web_metric":              resources.NewGeneric(export.ResourceTypes.CalculatedWebMetric).Resource(),
 			"dynatrace_calculated_mobile_metric":           resources.NewGeneric(export.ResourceTypes.CalculatedMobileMetric).Resource(),
+			"dynatrace_calculated_synthetic_metric":        resources.NewGeneric(export.ResourceTypes.CalculatedSyntheticMetric).Resource(),
 			"dynatrace_service_naming":                     resources.NewGeneric(export.ResourceTypes.ServiceNaming).Resource(),
 			"dynatrace_host_naming":                        resources.NewGeneric(export.ResourceTypes.HostNaming).Resource(),
 			"dynatrace_processgroup_naming":                resources.NewGeneric(export.ResourceTypes.ProcessGroupNaming).Resource(),
