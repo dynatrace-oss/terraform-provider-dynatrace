@@ -93,6 +93,9 @@ func (me *service) Delete(id string) error {
 
 	for i := 0; i < attempts; i++ {
 		if err = me.client.Delete(fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), 204, 200).Finish(); err != nil {
+			if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
+				return nil
+			}
 			if !strings.Contains(err.Error(), fmt.Sprintf("Unable to delete Mrum metric with key: \"%s\" from DemMetricsConfigPersistence", id)) {
 				return err
 			}
