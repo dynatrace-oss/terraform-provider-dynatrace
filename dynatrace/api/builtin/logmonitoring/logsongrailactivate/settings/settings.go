@@ -22,6 +22,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated since it is only meant to be used for the initial Logs powered by Grail activation."
+}
+
 type Settings struct {
 	Activated            bool                 `json:"activated"`            // Activate logs powered by Grail.
 	ParallelIngestPeriod ParallelIngestPeriod `json:"parallelIngestPeriod"` // Possible Values: `NONE`, `SEVEN_DAYS`, `THIRTY_FIVE_DAYS`

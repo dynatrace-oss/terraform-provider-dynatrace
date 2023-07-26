@@ -1077,10 +1077,12 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.MetricMetadata,
 	ResourceTypes.MetricQuery,
 
-	// Won't get exported by default - subject to discuss internally
+	// Not included in default export -  excluded due to potential time consuming execution
 	ResourceTypes.CustomTags,
-	// Won't get exported by default - subject to discuss internally
 	ResourceTypes.CustomDevice,
+
+	// Deprecated since it is only meant to be used for the initial Logs powered by Grail activation
+	ResourceTypes.LogGrail,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
