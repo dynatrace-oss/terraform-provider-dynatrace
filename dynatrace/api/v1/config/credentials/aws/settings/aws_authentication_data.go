@@ -109,13 +109,6 @@ func (aad *AWSAuthenticationData) UnmarshalHCL(decoder hcl.Decoder) error {
 		aad.Type = Types.Role
 		aad.RoleBasedAuthentication.AccountID = value.(string)
 	}
-	if value, ok := decoder.GetOk("external_id"); ok {
-		if aad.RoleBasedAuthentication == nil {
-			aad.RoleBasedAuthentication = new(RoleBasedAuthentication)
-		}
-		aad.Type = Types.Role
-		aad.RoleBasedAuthentication.ExternalID = opt.NewString(value.(string))
-	}
 	if value, ok := decoder.GetOk("iam_role"); ok {
 		if aad.RoleBasedAuthentication == nil {
 			aad.RoleBasedAuthentication = new(RoleBasedAuthentication)
