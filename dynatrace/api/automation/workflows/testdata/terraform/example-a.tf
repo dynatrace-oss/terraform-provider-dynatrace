@@ -1,47 +1,8 @@
----
-layout: ""
-page_title: "dynatrace_automation_workflow Resource - terraform-provider-dynatrace"
-subcategory: "Automation"
-description: |-
-  The resource `dynatrace_automation_workflow` covers configuration of Workflows
----
-
-# dynatrace_automation_workflow (Resource)
-
--> This resource is excluded by default in the export utility. You can, of course, specify that resource explicitly in order to export it. In that case, don't forget to specify the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` for authentication.
-
-## Dynatrace Documentation
-
-- Dynatrace Workflows - https://www.dynatrace.com/support/help/platform-modules/cloud-automation/workflows
-
-## Prerequisites
-
-Using this resource requires an OAuth client to be configured within your account settings.
-The scopes of the OAuth Client need to include `View workflows (automation:workflows:read)` and `Create and edit workflows (automation:workflows:write)`.
-
-Finally the provider configuration requires the credentials for that OAuth Client.
-The configuration section of your provider needs to look like this.
-```terraform
-provider "dynatrace" {
-  dt_env_url   = "https://########.live.dynatrace.com/"  
-  dt_api_token = "######.########################.################################################################"  
-
-  # Usually not required. Terraform will deduct it if `dt_env_url` has been specified
-  # automation_env_url = "https://########.apps.dynatrace.com/" 
-  automation_client_id = "######.########"
-  automation_client_secret = "######.########.################################################################"  
-}
-```
--> In order to handle credentials in a secure manner we recommend to use the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` as an alternative.
-
-## Resource Example Usage
-
-```terraform
 resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
   description = "Desc"
-  actor       = "703d65c0-4aff-45d9-8b34-2c6f5f17bb8e"
+  actor       = "########-####-####-####-############"
   title       = "Sample Worklow TF1"
-  owner       = "703d65c0-4aff-45d9-8b34-2c6f5f17bb8e"
+  owner       = "########-####-####-####-############"
   private     = true
   tasks {
     task {
@@ -130,6 +91,3 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
     }
   }
 }
-```
-
-{{ .SchemaMarkdown | trimspace }}
