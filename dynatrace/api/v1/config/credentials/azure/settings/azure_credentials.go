@@ -187,6 +187,14 @@ func (ac *AzureCredentials) MarshalJSON() ([]byte, error) {
 		m["monitorOnlyExcludingTagPairs"] = rawMessage
 	}
 
+	if ac.SupportingServices != nil {
+		rawMessage, err := json.Marshal(ac.SupportingServices)
+		if err != nil {
+			return nil, err
+		}
+		m["supportingServices"] = rawMessage
+	}
+
 	if rawMessage, err := json.Marshal(opt.Bool(ac.Active)); err == nil {
 		m["active"] = rawMessage
 	} else {
@@ -246,7 +254,11 @@ func (ac *AzureCredentials) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
-
+	if v, found := m["supportingServices"]; found {
+		if err := json.Unmarshal(v, &ac.SupportingServices); err != nil {
+			return err
+		}
+	}
 	if v, found := m["active"]; found {
 		if err := json.Unmarshal(v, &ac.Active); err != nil {
 			return err
@@ -326,9 +338,6 @@ func (ac *AzureCredentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("monitor_only_tagged_entities", opt.Bool(ac.MonitorOnlyTaggedEntities)); err != nil {
 		return err
 	}
-	// if err := properties.Encode("supporting_services", ac.SupportingServices); err != nil {
-	// 	return err
-	// }
 	return nil
 }
 
