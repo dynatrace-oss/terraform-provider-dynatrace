@@ -418,11 +418,11 @@ func Provider() *schema.Provider {
 			"dynatrace_k8s_monitoring":                     resources.NewGeneric(export.ResourceTypes.K8sMonitoring).Resource(),
 			"dynatrace_host_monitoring_mode":               resources.NewGeneric(export.ResourceTypes.HostMonitoringMode).Resource(),
 			"dynatrace_ip_address_masking":                 resources.NewGeneric(export.ResourceTypes.IPAddressMasking).Resource(),
+			"dynatrace_automation_workflow":                resources.NewGeneric(export.ResourceTypes.AutomationWorkflow).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
 	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
-		prv.ResourcesMap["dynatrace_automation_workflow"] = resources.NewGeneric(export.ResourceTypes.AutomationWorkflow).Resource()
 	}
 	return prv
 }
