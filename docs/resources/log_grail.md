@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_log_grail Resource - terraform-provider-dynatrace"
-subcategory: "Log Monitoring"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_log_grail` covers configuration for log powered by Grail
 ---
 
 # dynatrace_log_grail (Resource)
+
+!> This resource API endpoint has been deprecated since it is only meant to be used for the initial Logs powered by Grail activation.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 

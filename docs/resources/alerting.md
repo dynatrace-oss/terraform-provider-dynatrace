@@ -186,7 +186,7 @@ Optional:
 
 Optional:
 
-- `rule` (Block List) A conditions for the metric usage (see [below for nested schema](#nestedblock--rules--rule))
+- `rule` (Block Set) A conditions for the metric usage (see [below for nested schema](#nestedblock--rules--rule))
 
 <a id="nestedblock--rules--rule"></a>
 ### Nested Schema for `rules.rule`
