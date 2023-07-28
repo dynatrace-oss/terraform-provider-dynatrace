@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_azure_supported_services (Data Source)
 
-The AWS supported service data source queries for a full list of all supported services.
+The Azure supported service data source queries for a full list of all supported services.
 
 ## Example Usage
 
