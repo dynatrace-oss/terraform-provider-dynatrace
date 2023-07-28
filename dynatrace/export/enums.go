@@ -305,6 +305,7 @@ var ResourceTypes = struct {
 	CustomTags                          ResourceType
 	HostMonitoringMode                  ResourceType
 	IPAddressMasking                    ResourceType
+	AppSecVulnerabilitySettings         ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -537,6 +538,7 @@ var ResourceTypes = struct {
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
 	"dynatrace_ip_address_masking",
+	"dynatrace_appsec_vulnerability_settings",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
