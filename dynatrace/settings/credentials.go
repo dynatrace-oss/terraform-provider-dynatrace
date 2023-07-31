@@ -54,7 +54,10 @@ type Credentials struct {
 }
 
 func CreateExportCredentials() (*Credentials, error) {
-	environmentURL := os.Getenv("DYNATRACE_SOURCE_ENV_URL")
+	environmentURL := os.Getenv("DT_SOURCE_ENV_URL")
+	if len(environmentURL) == 0 {
+		environmentURL = os.Getenv("DYNATRACE_SOURCE_ENV_URL")
+	}
 	if environmentURL == "" {
 		environmentURL = os.Getenv("DYNATRACE_ENV_URL")
 		if environmentURL == "" {
@@ -62,7 +65,10 @@ func CreateExportCredentials() (*Credentials, error) {
 		}
 	}
 	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
-	apiToken := os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
+	apiToken := os.Getenv("DT_SOURCE_API_TOKEN")
+	if len(apiToken) == 0 {
+		apiToken = os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
+	}
 	if apiToken == "" {
 		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
 		if apiToken == "" {
@@ -70,13 +76,27 @@ func CreateExportCredentials() (*Credentials, error) {
 		}
 	}
 	automationEnvironmentURL := os.Getenv("DT_AUTOMATION_ENVIRONMENT_URL")
+	if len(automationEnvironmentURL) == 0 {
+		automationEnvironmentURL = os.Getenv("DYNATRACE_AUTOMATION_ENVIRONMENT_URL")
+	}
 	automationTokenURL := os.Getenv("DT_AUTOMATION_TOKEN_URL")
+	if len(automationTokenURL) == 0 {
+		automationTokenURL = os.Getenv("DYNATRACE_AUTOMATION_TOKEN_URL")
+	}
 	if len(automationEnvironmentURL) == 0 {
 		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
 		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
 			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
 		}
+	}
+	automationClientID := os.Getenv("DT_AUTOMATION_CLIENT_ID")
+	if len(automationClientID) == 0 {
+		automationClientID = os.Getenv("DYNATRACE_AUTOMATION_CLIENT_ID")
+	}
+	automationClientSecret := os.Getenv("DT_AUTOMATION_CLIENT_SECRET")
+	if len(automationClientSecret) == 0 {
+		automationClientSecret = os.Getenv("DYNATRACE_AUTOMATION_CLIENT_SECRET")
 	}
 	credentials := &Credentials{
 		URL:   environmentURL,
@@ -96,8 +116,8 @@ func CreateExportCredentials() (*Credentials, error) {
 			TokenURL       string
 			EnvironmentURL string
 		}{
-			ClientID:       os.Getenv("DT_AUTOMATION_CLIENT_ID"),
-			ClientSecret:   os.Getenv("DT_AUTOMATION_CLIENT_SECRET"),
+			ClientID:       automationClientID,
+			ClientSecret:   automationClientSecret,
 			EnvironmentURL: automationEnvironmentURL,
 			TokenURL:       automationTokenURL,
 		},
