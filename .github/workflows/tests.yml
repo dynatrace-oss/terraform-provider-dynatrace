@@ -21,6 +21,23 @@ jobs:
         env:
           GOPROXY: "https://proxy.golang.org"
         run: go build .
+      - name: TestAccBusinessCalendars
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
+          DYNATRACE_AUTOMATION_CLIENT_SECRET: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_SECRET }}
+          DYNATRACE_AUTOMATION_TOKEN_URL: ${{ secrets.DYNATRACE_AUTOMATION_TOKEN_URL }}
+          DYNATRACE_AUTOMATION_ENVIRONMENT_URL: ${{ secrets.DYNATRACE_AUTOMATION_ENVIRONMENT_URL }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/automation/business_calendars
       - name: TestAccWorkflows
         if: success() || failure()
         env:

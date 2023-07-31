@@ -419,6 +419,7 @@ func Provider() *schema.Provider {
 			"dynatrace_host_monitoring_mode":               resources.NewGeneric(export.ResourceTypes.HostMonitoringMode).Resource(),
 			"dynatrace_ip_address_masking":                 resources.NewGeneric(export.ResourceTypes.IPAddressMasking).Resource(),
 			"dynatrace_automation_workflow":                resources.NewGeneric(export.ResourceTypes.AutomationWorkflow).Resource(),
+			"dynatrace_automation_business_calendar":       resources.NewGeneric(export.ResourceTypes.AutomationBusinessCalendar).Resource(),
 			"dynatrace_appsec_vulnerability_settings":      resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilitySettings).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,

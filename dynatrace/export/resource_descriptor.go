@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
@@ -1005,7 +1006,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesmonitoring.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.AutomationWorkflow: NewResourceDescriptor(workflows.Service),
+	ResourceTypes.AutomationWorkflow:         NewResourceDescriptor(workflows.Service),
+	ResourceTypes.AutomationBusinessCalendar: NewResourceDescriptor(business_calendars.Service),
 	ResourceTypes.CustomTags: NewResourceDescriptor(
 		customtags.Service,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
@@ -1074,6 +1076,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AzureService,
 	ResourceTypes.AWSService,
 	ResourceTypes.AutomationWorkflow,
+	ResourceTypes.AutomationBusinessCalendar,
 
 	// Not included in export - may cause issues for migration use cases
 	ResourceTypes.MetricMetadata,
