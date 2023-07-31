@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.3"
+const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:failure-detection.environment.parameters"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*parameters.Settings] {

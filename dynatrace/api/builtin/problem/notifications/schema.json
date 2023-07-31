@@ -4,6 +4,11 @@
 	],
 	"constraints": [
 		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons, please re-enter all secret token(s) before saving the settings.",
+			"type": "SECRET_RESUBMISSION"
+		},
+		{
 			"customValidatorId": "problem-notification-oauth-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
@@ -401,6 +406,7 @@
 					"description": "The URL of the target job template.\n\nFor example, https://\u003cAnsible server name\u003e/#/templates/job_template/\u003cJobTemplateID\u003e\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
 					"displayName": "Job template URL",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -795,6 +801,7 @@
 					"description": "The URL of the Jira API endpoint.",
 					"displayName": "Jira endpoint URL",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -859,6 +866,7 @@
 					"description": "",
 					"displayName": "Access token URL",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -966,6 +974,7 @@
 					"description": "The region domain of the OpsGenie.\n\nFor example, **api.opsgenie.com** for US or **api.eu.opsgenie.com** for EU.\n",
 					"displayName": "OpsGenie region domain",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -1200,6 +1209,7 @@
 					"description": "The URL of the on-premise ServiceNow installation. \n\n This field is mutually exclusive with the **instanceName** field. You can only use one of them.",
 					"displayName": "OnPremise URL",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -1676,6 +1686,7 @@
 					"description": "The URL of the WebHook endpoint.",
 					"displayName": "Webhook URL",
 					"documentation": "",
+					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -1878,5 +1889,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4.10"
+	"version": "1.4.11"
 }

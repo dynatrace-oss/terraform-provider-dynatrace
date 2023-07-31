@@ -190,6 +190,14 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
@@ -276,10 +284,24 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"displayName": "Pattern",
+					"propertyRef": "date-time-pattern"
+				},
+				{
+					"displayName": "Timezone",
+					"propertyRef": "timezone"
+				}
+			],
 			"emptyState": {
 				"text": "**Create your first rule**\n\nAdd the first rule to configure timestamp patterns"
 			}
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

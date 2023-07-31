@@ -164,13 +164,13 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Team identifier field can not contain special characters or blank spaces and it must start with a letter and end with an alphanumeric character.",
+					"customMessage": "Team identifier field can not contain special characters or blank spaces and it must start and end with an alphanumeric character.",
 					"customValidatorId": "team-identifier-validator",
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "team_identifier",
-			"description": "The team identifier is used to reference the team from any entity in Dynatrace.",
+			"description": "The team identifier is used to reference the team from any entity in Dynatrace. If you are using Kubernetes labels, keep in mind the 63 character limit that they enforce.",
 			"displayName": "Team identifier",
 			"documentation": "",
 			"maxObjects": 1,
@@ -258,6 +258,15 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "There cannot be 2 teams with the same identifier.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"identifier"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:ownership"
 	],
@@ -645,7 +654,7 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Supplementary identifier field can not contain special characters or blank spaces and it must start with a letter and end with an alphanumeric character.",
+							"customMessage": "Supplementary identifier field can not contain special characters or blank spaces and it must start and end with an alphanumeric character.",
 							"customValidatorId": "team-identifier-validator",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
@@ -666,5 +675,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }
