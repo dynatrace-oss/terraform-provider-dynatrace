@@ -422,6 +422,7 @@ func Provider() *schema.Provider {
 			"dynatrace_automation_business_calendar":       resources.NewGeneric(export.ResourceTypes.AutomationBusinessCalendar).Resource(),
 			"dynatrace_appsec_vulnerability_settings":      resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilitySettings).Resource(),
 			"dynatrace_appsec_vulnerability_third_party":   resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdParty).Resource(),
+			"dynatrace_appsec_vulnerability_code":          resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityCode).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

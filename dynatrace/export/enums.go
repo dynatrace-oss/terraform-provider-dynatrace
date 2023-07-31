@@ -308,6 +308,7 @@ var ResourceTypes = struct {
 	IPAddressMasking                    ResourceType
 	AppSecVulnerabilitySettings         ResourceType
 	AppSecVulnerabilityThirdParty       ResourceType
+	AppSecVulnerabilityCode             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -543,6 +544,7 @@ var ResourceTypes = struct {
 	"dynatrace_ip_address_masking",
 	"dynatrace_appsec_vulnerability_settings",
 	"dynatrace_appsec_vulnerability_third_party",
+	"dynatrace_appsec_vulnerability_code",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
