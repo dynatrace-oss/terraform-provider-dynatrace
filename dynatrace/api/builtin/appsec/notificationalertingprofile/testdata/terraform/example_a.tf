@@ -1,4 +1,4 @@
-resource "dynatrace_appsec_vulnerability_alerting" "#name#" {
+resource "dynatrace_vulnerability_alerting" "#name#" {
   name                   = "#name#"
   enabled                = true
   enabled_risk_levels    = [ "LOW", "MEDIUM", "HIGH", "CRITICAL" ]

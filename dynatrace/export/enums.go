@@ -549,12 +549,12 @@ var ResourceTypes = struct {
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
 	"dynatrace_ip_address_masking",
-	"dynatrace_appsec_vulnerability_settings",
-	"dynatrace_appsec_vulnerability_third_party",
-	"dynatrace_appsec_vulnerability_code",
+	"dynatrace_vulnerability_settings",
+	"dynatrace_vulnerability_third_party",
+	"dynatrace_vulnerability_code",
 	"dynatrace_appsec_notification",
-	"dynatrace_appsec_vulnerability_alerting",
-	"dynatrace_appsec_attack_alerting",
+	"dynatrace_vulnerability_alerting",
+	"dynatrace_attack_alerting",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
