@@ -50,6 +50,7 @@ import (
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationalertingprofile"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationattackalertingprofile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
@@ -1043,6 +1044,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AppSecVulnerabilityAlerting: NewResourceDescriptor(
 		notificationalertingprofile.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+	),
+	ResourceTypes.AppSecAttackAlerting: NewResourceDescriptor(
+		notificationattackalertingprofile.Service,
 	),
 }
 

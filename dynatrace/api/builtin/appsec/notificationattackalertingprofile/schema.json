@@ -1,0 +1,100 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Attack alerting profiles enable you to set up alert-filtering rules that are based on the state of detected attacks. This allows you to control which conditions result in security notifications and which don't.",
+	"displayName": "Attack alerting profiles",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"AttackMitigation": {
+			"description": "",
+			"displayName": "AttackMitigation",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Exploited",
+					"value": "NONE_BLOCKING_DISABLED"
+				},
+				{
+					"displayName": "Blocked",
+					"value": "BLOCKED_WITH_EXCEPTION"
+				},
+				{
+					"displayName": "Allowlisted",
+					"value": "NONE_ALLOWLISTED"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 10,
+	"metadata": {
+		"addItemButton": "Add alerting profile"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabledAttackMitigations": {
+			"constraints": [
+				{
+					"customValidatorId": "attack-candidate-number-of-attack-states-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Attack State",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/AttackMitigation"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add attack state"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:alerting.appsec",
+		"group:alerting"
+	],
+	"schemaId": "builtin:appsec.notification-attack-alerting-profile",
+	"types": {},
+	"version": "0.0.4"
+}
