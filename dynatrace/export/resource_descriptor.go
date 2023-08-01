@@ -49,6 +49,7 @@ import (
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
@@ -1034,6 +1035,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AppSecVulnerabilitySettings:   NewResourceDescriptor(runtimevulnerabilitydetection.Service),
 	ResourceTypes.AppSecVulnerabilityThirdParty: NewResourceDescriptor(rulesettings.Service),
 	ResourceTypes.AppSecVulnerabilityCode:       NewResourceDescriptor(codelevelvulnerability.Service),
+	ResourceTypes.AppSecNotification: NewResourceDescriptor(
+		notificationintegration.Service,
+		// Add AppSec alerting profiles dependencies
+	),
 }
 
 var BlackListedResources = []ResourceType{

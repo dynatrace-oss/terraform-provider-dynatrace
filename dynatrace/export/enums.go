@@ -309,6 +309,7 @@ var ResourceTypes = struct {
 	AppSecVulnerabilitySettings         ResourceType
 	AppSecVulnerabilityThirdParty       ResourceType
 	AppSecVulnerabilityCode             ResourceType
+	AppSecNotification                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -545,6 +546,7 @@ var ResourceTypes = struct {
 	"dynatrace_appsec_vulnerability_settings",
 	"dynatrace_appsec_vulnerability_third_party",
 	"dynatrace_appsec_vulnerability_code",
+	"dynatrace_appsec_notification",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

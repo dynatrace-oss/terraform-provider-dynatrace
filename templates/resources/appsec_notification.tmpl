@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_appsec_notification Resource - terraform-provider-dynatrace"
+subcategory: "Application Security"
+description: |-
+  The resource `dynatrace_appsec_notification` covers configuration for security notifications
+---
+
+# dynatrace_appsec_notification (Resource)
+
+-> This resource requires the API token scopes **Read security problems** (`securityProblems.read`) and **Write security problems** (`securityProblems.write`)
+
+## Dynatrace Documentation
+
+- Security notifications for vulnerabilities and attacks - https://www.dynatrace.com/support/help/platform-modules/application-security/security-notifications
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:appsec.notification-integration`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_appsec_notification` downloads all existing security notifications
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/appsec/rulesettings/testdata/notificationintegration/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

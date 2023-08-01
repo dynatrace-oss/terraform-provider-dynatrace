@@ -423,6 +423,7 @@ func Provider() *schema.Provider {
 			"dynatrace_appsec_vulnerability_settings":      resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilitySettings).Resource(),
 			"dynatrace_appsec_vulnerability_third_party":   resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdParty).Resource(),
 			"dynatrace_appsec_vulnerability_code":          resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityCode).Resource(),
+			"dynatrace_appsec_notification":                resources.NewGeneric(export.ResourceTypes.AppSecNotification).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
