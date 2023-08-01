@@ -23,6 +23,8 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/attackalerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/vulnerabilityalerting"
 	dsaws "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/aws"
 	aws_credentials "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/aws"
 	aws_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/aws/supported_services"
@@ -179,6 +181,8 @@ func Provider() *schema.Provider {
 			"dynatrace_azure_credentials":            azure_credentials.DataSource(),
 			"dynatrace_synthetic_nodes":              nodes.DataSource(),
 			"dynatrace_tenant":                       tenant.DataSource(),
+			"dynatrace_vulnerability_alerting":       vulnerabilityalerting.DataSource(),
+			"dynatrace_attack_alerting":              attackalerting.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

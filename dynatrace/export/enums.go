@@ -69,6 +69,10 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_azure_credentials"
 	case ResourceTypes.IAMGroup:
 		return "dynatrace_iam_group"
+	case ResourceTypes.AppSecVulnerabilityAlerting:
+		return "dynatrace_vulnerability_alerting"
+	case ResourceTypes.AppSecAttackAlerting:
+		return "dynatrace_attack_alerting"
 	}
 	return ""
 }

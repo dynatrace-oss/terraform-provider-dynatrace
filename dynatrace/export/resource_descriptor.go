@@ -1039,7 +1039,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AppSecVulnerabilityCode:       NewResourceDescriptor(codelevelvulnerability.Service),
 	ResourceTypes.AppSecNotification: NewResourceDescriptor(
 		notificationintegration.Service,
-		// Add AppSec alerting profiles dependencies
+		Dependencies.ID(ResourceTypes.AppSecVulnerabilityAlerting),
+		Dependencies.ID(ResourceTypes.AppSecAttackAlerting),
 	),
 	ResourceTypes.AppSecVulnerabilityAlerting: NewResourceDescriptor(
 		notificationalertingprofile.Service,

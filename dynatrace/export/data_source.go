@@ -93,6 +93,14 @@ func AsDataSource(resource *Resource) string {
 		return fmt.Sprintf(`data "dynatrace_iam_group" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, esc(resource.Name))
+	case ResourceTypes.AppSecVulnerabilityAlerting:
+		return fmt.Sprintf(`data "dynatrace_vulnerability_alerting" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, esc(resource.Name))
+	case ResourceTypes.AppSecAttackAlerting:
+		return fmt.Sprintf(`data "dynatrace_attack_alerting" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, esc(resource.Name))
 	default:
 		return ""
 	}

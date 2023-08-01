@@ -71,7 +71,9 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.UpdateWindows ||
 		me.Type == ResourceTypes.AWSCredentials ||
 		me.Type == ResourceTypes.AzureCredentials ||
-		me.Type == ResourceTypes.IAMGroup
+		me.Type == ResourceTypes.IAMGroup ||
+		me.Type == ResourceTypes.AppSecVulnerabilityAlerting ||
+		me.Type == ResourceTypes.AppSecAttackAlerting
 }
 
 func (me *Module) DataSource(id string) *DataSource {
