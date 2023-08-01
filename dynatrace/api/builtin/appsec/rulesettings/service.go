@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package incoming
+package rulesettings
 
 import (
-	incoming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming/settings"
+	rulesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.2"
-const SchemaID = "builtin:bizevents.http.incoming"
+const SchemaVersion = "1.0.5"
+const SchemaID = "builtin:appsec.rule-settings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*incoming.Settings] {
-	return settings20.Service[*incoming.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*rulesettings.Settings] {
+	return settings20.Service[*rulesettings.Settings](credentials, SchemaID, SchemaVersion)
 }

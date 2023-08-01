@@ -193,7 +193,7 @@
 			"type": "text"
 		},
 		"triggers": {
-			"description": "Define conditions to trigger business events from incoming web requests. Whenever one condition applies the event gets captured.",
+			"description": "Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
 			"displayName": "Triggers",
 			"documentation": "",
 			"items": {
@@ -683,5 +683,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

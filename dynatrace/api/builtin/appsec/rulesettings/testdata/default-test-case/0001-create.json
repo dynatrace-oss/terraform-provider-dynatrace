@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "mode": "MONITORING_OFF",
+  "operator": "NOT_EQUALS",
+  "property": "MANAGEMENT_ZONE",
+  "value": "${randomize}"
+}

@@ -15,17 +15,36 @@
 * limitations under the License.
  */
 
-package incoming
+package rulesettings
 
-import (
-	incoming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-)
+type ConditionOperator string
 
-const SchemaVersion = "1.0.2"
-const SchemaID = "builtin:bizevents.http.incoming"
+var ConditionOperators = struct {
+	Equals    ConditionOperator
+	NotEquals ConditionOperator
+}{
+	"EQUALS",
+	"NOT_EQUALS",
+}
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*incoming.Settings] {
-	return settings20.Service[*incoming.Settings](credentials, SchemaID, SchemaVersion)
+type MonitoringMode string
+
+var MonitoringModes = struct {
+	MonitoringOff MonitoringMode
+	MonitoringOn  MonitoringMode
+}{
+	"MONITORING_OFF",
+	"MONITORING_ON",
+}
+
+type Property string
+
+var Properties = struct {
+	HostTag        Property
+	ManagementZone Property
+	ProcessTag     Property
+}{
+	"HOST_TAG",
+	"MANAGEMENT_ZONE",
+	"PROCESS_TAG",
 }

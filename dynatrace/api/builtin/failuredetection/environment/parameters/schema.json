@@ -81,6 +81,12 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "failure-detection-params-delete-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:service-monitoring",
 		"group:failure-detection"
@@ -299,11 +305,6 @@
 				"requestAttribute": {
 					"constraints": [
 						{
-							"customMessage": "Invalid UUID",
-							"pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-5][0-9a-fA-F]{3}\\-[089abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$",
-							"type": "PATTERN"
-						},
-						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -315,7 +316,7 @@
 						"identifier": "request_attribute_source",
 						"resetValue": "NEVER",
 						"useApiSearch": true,
-						"validate": false
+						"validate": true
 					},
 					"default": "",
 					"description": "",
@@ -574,5 +575,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

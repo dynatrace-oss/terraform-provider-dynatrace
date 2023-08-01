@@ -48,6 +48,8 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
@@ -1029,7 +1031,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
-	ResourceTypes.AppSecVulnerabilitySettings: NewResourceDescriptor(runtimevulnerabilitydetection.Service),
+	ResourceTypes.AppSecVulnerabilitySettings:   NewResourceDescriptor(runtimevulnerabilitydetection.Service),
+	ResourceTypes.AppSecVulnerabilityThirdParty: NewResourceDescriptor(rulesettings.Service),
+	ResourceTypes.AppSecVulnerabilityCode:       NewResourceDescriptor(codelevelvulnerability.Service),
 }
 
 var BlackListedResources = []ResourceType{
