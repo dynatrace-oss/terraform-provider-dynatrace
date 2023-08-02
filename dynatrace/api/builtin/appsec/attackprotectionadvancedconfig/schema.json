@@ -1,0 +1,226 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define specific attack control rules based on process group and vulnerability type. This overrides the global attack control.",
+	"displayName": "Application Protection: Monitoring rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"AttackType": {
+			"description": "",
+			"displayName": "Attack type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Includes any attack type",
+					"displayName": "Any",
+					"value": "ANY"
+				},
+				{
+					"description": "SQL injection attack type",
+					"displayName": "SQL injection",
+					"value": "SQL_INJECTION"
+				},
+				{
+					"description": "Command injection attack type",
+					"displayName": "Command injection",
+					"value": "CMD_INJECTION"
+				},
+				{
+					"description": "JNDI injection attack type",
+					"displayName": "JNDI injection",
+					"value": "JNDI_INJECTION"
+				}
+			],
+			"type": "enum"
+		},
+		"BlockingStrategy": {
+			"description": "",
+			"displayName": "Attack control",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Attacks will be ignored.",
+					"displayName": "Off; incoming attacks NOT detected or blocked.",
+					"value": "OFF"
+				},
+				{
+					"description": "Attacks will be recorded.",
+					"displayName": "Monitor; incoming attacks detected only.",
+					"value": "MONITOR"
+				},
+				{
+					"description": "Attacks will be blocked.",
+					"displayName": "Block; incoming attacks detected and blocked.",
+					"value": "BLOCK"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add new rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"attackHandling": {
+			"description": "",
+			"displayName": "Step 2: Define attack control for chosen criteria",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/AttackHandling"
+			}
+		},
+		"criteria": {
+			"description": "",
+			"displayName": "Step 1: Define criteria",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Criteria"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"metadata": {
+			"description": "",
+			"displayName": "Step 3: Leave comment (optional)",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Metadata"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:appsec",
+		"group:appsec.attack-protection"
+	],
+	"schemaId": "builtin:appsec.attack-protection-advanced-config",
+	"types": {
+		"AttackHandling": {
+			"description": "",
+			"displayName": "AttackHandling",
+			"documentation": "",
+			"properties": {
+				"blockingStrategy": {
+					"default": "MONITOR",
+					"description": "Note: Monitoring and blocking have been designed to carry a production-ready performance footprint.\nThe overhead is depending on your application, but should be negligible in most cases.",
+					"displayName": "Attack control",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/BlockingStrategy"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Criteria": {
+			"description": "",
+			"displayName": "Step 1: Define Criteria",
+			"documentation": "",
+			"properties": {
+				"attackType": {
+					"default": "ANY",
+					"description": "",
+					"displayName": "Attack type",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/AttackType"
+					}
+				},
+				"processGroup": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "processGroupDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": true,
+						"validate": true
+					},
+					"description": "",
+					"displayName": "Process group",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Metadata": {
+			"description": "",
+			"displayName": "Metadata",
+			"documentation": "",
+			"properties": {
+				"comment": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Comment",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

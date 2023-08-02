@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_attack_rules Resource - terraform-provider-dynatrace"
+subcategory: "Application Security"
+description: |-
+  The resource `dynatrace_attack_rules` covers configuration for application protection: monitoring rules
+---
+
+# dynatrace_attack_rules (Resource)
+
+-> This resource requires the API token scopes **Read attacks** (`attacks.read`) and **Write attacks** (`attacks.write`)
+
+## Dynatrace Documentation
+
+- Runtime Application Protection - https://www.dynatrace.com/support/help/platform-modules/application-security/application-protection
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:appsec.attack-protection-advanced-config`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_attack_rules` downloads existing application protection: monitoring rules
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/appsec/attackprotectionadvancedconfig/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
