@@ -430,6 +430,7 @@ func Provider() *schema.Provider {
 			"dynatrace_appsec_notification":                resources.NewGeneric(export.ResourceTypes.AppSecNotification).Resource(),
 			"dynatrace_vulnerability_alerting":             resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityAlerting).Resource(),
 			"dynatrace_attack_alerting":                    resources.NewGeneric(export.ResourceTypes.AppSecAttackAlerting).Resource(),
+			"dynatrace_attack_settings":                    resources.NewGeneric(export.ResourceTypes.AppSecAttackSettings).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

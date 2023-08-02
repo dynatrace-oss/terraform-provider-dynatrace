@@ -48,6 +48,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationalertingprofile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationattackalertingprofile"
@@ -1049,6 +1050,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AppSecAttackAlerting: NewResourceDescriptor(
 		notificationattackalertingprofile.Service,
 	),
+	ResourceTypes.AppSecAttackSettings: NewResourceDescriptor(attackprotectionsettings.Service),
 }
 
 var BlackListedResources = []ResourceType{
