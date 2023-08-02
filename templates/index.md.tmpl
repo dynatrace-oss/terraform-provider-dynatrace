@@ -51,6 +51,14 @@ The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following p
      * Required for reading network zones.
  * **Write network zones** (`networkZones.write`)
      * Required for writing network zones.
+ * **Read security problems** (`securityProblems.read`)
+     * Required for reading security configuration.
+ * **Write security problems** (`securityProblems.write`)
+     * Required for writing security configuration.
+ * **Read attacks** (`attacks.read`)
+     * Required for reading attack security configuration.
+ * **Write attacks** (`attacks.write`)
+     * Required for writing attack security configuration.
 
 Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
 ```
