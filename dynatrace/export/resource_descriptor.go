@@ -1119,6 +1119,17 @@ var BlackListedResources = []ResourceType{
 
 	// Deprecated since it is only meant to be used for the initial Logs powered by Grail activation
 	ResourceTypes.LogGrail,
+
+	// Excluding AppSec resources from default export since it requires the feature to be activated
+	ResourceTypes.AppSecVulnerabilitySettings,
+	ResourceTypes.AppSecVulnerabilityThirdParty,
+	ResourceTypes.AppSecVulnerabilityCode,
+	ResourceTypes.AppSecNotification,
+	ResourceTypes.AppSecVulnerabilityAlerting,
+	ResourceTypes.AppSecAttackAlerting,
+	ResourceTypes.AppSecAttackSettings,
+	ResourceTypes.AppSecAttackRules,
+	ResourceTypes.AppSecAttackAllowlist,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
