@@ -1,0 +1,197 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define blocking or monitoring exception rules for specific attacks.",
+	"displayName": "Application Protection: Allowlist",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"BlockingStrategy": {
+			"description": "The attack handling strategy for allowlisted attacks.",
+			"displayName": "Attack control",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Attacks will be ignored.",
+					"displayName": "Off; incoming attacks NOT detected or blocked.",
+					"value": "OFF"
+				},
+				{
+					"description": "Attacks will be recorded.",
+					"displayName": "Monitor; incoming attacks detected only.",
+					"value": "MONITOR"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add new exception rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"attackHandling": {
+			"description": "",
+			"displayName": "Step 2: Define attack control for chosen criteria",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/AttackHandling"
+			}
+		},
+		"criteria": {
+			"description": "",
+			"displayName": "Step 1: Define criteria",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Criteria"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"metadata": {
+			"description": "",
+			"displayName": "Step 3: Leave comment (optional)",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Metadata"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:appsec",
+		"group:appsec.attack-protection"
+	],
+	"schemaId": "builtin:appsec.attack-protection-allowlist-config",
+	"types": {
+		"AttackHandling": {
+			"description": "",
+			"displayName": "Allowlisted attacks - Attack handling",
+			"documentation": "",
+			"properties": {
+				"blockingStrategy": {
+					"default": "OFF",
+					"description": "Note: Monitoring has been designed to carry a production-ready performance footprint.\nThe overhead is depending on your application, but should be negligible in most cases.",
+					"displayName": "Attack control",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/BlockingStrategy"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Criteria": {
+			"constraints": [
+				{
+					"customMessage": "Please specify at least one of source IP or attack pattern.",
+					"customValidatorId": "allowlistedAttacksCriteriaValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Allowlisted attacks - Criteria",
+			"documentation": "",
+			"properties": {
+				"attackPattern": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Attack pattern",
+					"documentation": "Only consider attacks matching the specified pattern.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"sourceIp": {
+					"constraints": [
+						{
+							"customMessage": "Please enter a valid IP address.",
+							"customValidatorId": "ipValidator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Source IP",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Metadata": {
+			"description": "",
+			"displayName": "Allowlisted attacks - Comment",
+			"documentation": "",
+			"properties": {
+				"comment": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Comment",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

@@ -49,6 +49,7 @@ import (
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionadvancedconfig"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionallowlistconfig"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationalertingprofile"
@@ -1059,6 +1060,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		attackprotectionadvancedconfig.Service,
 		Coalesce(Dependencies.ProcessGroup),
 	),
+	ResourceTypes.AppSecAttackAllowlist: NewResourceDescriptor(attackprotectionallowlistconfig.Service),
 }
 
 var BlackListedResources = []ResourceType{
