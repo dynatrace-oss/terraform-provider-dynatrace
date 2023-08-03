@@ -27,15 +27,6 @@ resource "dynatrace_dashboard" "#name#" {
         legend = true
         type   = "TIMESERIES"
       }
-      filters {
-        filter {
-          entity_type = "HOST"
-          match {
-            key    = "HOST_SOFTWARE_TECH"
-            values = ["KUBERNETES"]
-          }
-        }
-      }
       type        = "HOST"
       custom_name = "Full-Stack Kubernetes nodes"
     }
