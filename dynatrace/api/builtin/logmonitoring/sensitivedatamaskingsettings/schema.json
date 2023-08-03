@@ -16,12 +16,10 @@
 			"items": [
 				{
 					"displayName": "replace with string",
-					"icon": "link-2",
 					"value": "STRING"
 				},
 				{
 					"displayName": "SHA-1",
-					"icon": "keystone",
 					"value": "SHA1"
 				}
 			],
@@ -161,6 +159,14 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
@@ -330,10 +336,16 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"displayName": "Masking type",
+					"propertyRef": "masking/type"
+				}
+			],
 			"emptyState": {
 				"text": "**Create your first rule**\n\nAdd the first rule to configure sensitive data masking"
 			}
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

@@ -148,11 +148,24 @@
 			"type": "boolean"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
 	],
 	"schemaId": "builtin:logmonitoring.log-storage-settings",
+	"tableColumns": {
+		"sendToStorageColumn": {
+			"pattern": "{send-to-storage, select, true {Include} other {Exclude}}"
+		}
+	},
 	"types": {
 		"Matcher": {
 			"description": "",
@@ -234,10 +247,21 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"columnRef": "sendToStorageColumn",
+					"displayName": "Rule type",
+					"type": "text"
+				}
+			],
 			"emptyState": {
 				"text": "**Create your first rule**\n\nAdd the first rule to start ingesting logs"
 			}
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
