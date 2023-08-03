@@ -1015,9 +1015,17 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesmonitoring.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.AutomationWorkflow:         NewResourceDescriptor(workflows.Service),
+	ResourceTypes.AutomationWorkflow: NewResourceDescriptor(
+		workflows.Service,
+		Dependencies.ID(ResourceTypes.AutomationSchedulingRule),
+		Dependencies.ID(ResourceTypes.AutomationBusinessCalendar),
+	),
 	ResourceTypes.AutomationBusinessCalendar: NewResourceDescriptor(business_calendars.Service),
-	ResourceTypes.AutomationSchedulingRule:   NewResourceDescriptor(scheduling_rules.Service),
+	ResourceTypes.AutomationSchedulingRule: NewResourceDescriptor(
+		scheduling_rules.Service,
+		Dependencies.ID(ResourceTypes.AutomationSchedulingRule),
+		Dependencies.ID(ResourceTypes.AutomationBusinessCalendar),
+	),
 	ResourceTypes.CustomTags: NewResourceDescriptor(
 		customtags.Service,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
