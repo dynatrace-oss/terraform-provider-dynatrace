@@ -307,6 +307,7 @@ var ResourceTypes = struct {
 	K8sMonitoring                       ResourceType
 	AutomationWorkflow                  ResourceType
 	AutomationBusinessCalendar          ResourceType
+	AutomationSchedulingRule            ResourceType
 	CustomTags                          ResourceType
 	HostMonitoringMode                  ResourceType
 	IPAddressMasking                    ResourceType
@@ -549,6 +550,7 @@ var ResourceTypes = struct {
 	"dynatrace_k8s_monitoring",
 	"dynatrace_automation_workflow",
 	"dynatrace_automation_business_calendar",
+	"dynatrace_automation_scheduling_rule",
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
 	"dynatrace_ip_address_masking",

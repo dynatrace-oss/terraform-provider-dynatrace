@@ -424,6 +424,7 @@ func Provider() *schema.Provider {
 			"dynatrace_ip_address_masking":                 resources.NewGeneric(export.ResourceTypes.IPAddressMasking).Resource(),
 			"dynatrace_automation_workflow":                resources.NewGeneric(export.ResourceTypes.AutomationWorkflow).Resource(),
 			"dynatrace_automation_business_calendar":       resources.NewGeneric(export.ResourceTypes.AutomationBusinessCalendar).Resource(),
+			"dynatrace_automation_scheduling_rule":         resources.NewGeneric(export.ResourceTypes.AutomationSchedulingRule).Resource(),
 			"dynatrace_vulnerability_settings":             resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilitySettings).Resource(),
 			"dynatrace_vulnerability_third_party":          resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdParty).Resource(),
 			"dynatrace_vulnerability_code":                 resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityCode).Resource(),

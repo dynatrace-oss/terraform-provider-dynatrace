@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/activegatetoken"
@@ -1016,6 +1017,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.AutomationWorkflow:         NewResourceDescriptor(workflows.Service),
 	ResourceTypes.AutomationBusinessCalendar: NewResourceDescriptor(business_calendars.Service),
+	ResourceTypes.AutomationSchedulingRule:   NewResourceDescriptor(scheduling_rules.Service),
 	ResourceTypes.CustomTags: NewResourceDescriptor(
 		customtags.Service,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
@@ -1108,6 +1110,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AWSService,
 	ResourceTypes.AutomationWorkflow,
 	ResourceTypes.AutomationBusinessCalendar,
+	ResourceTypes.AutomationSchedulingRule,
 
 	// Not included in export - may cause issues for migration use cases
 	ResourceTypes.MetricMetadata,
