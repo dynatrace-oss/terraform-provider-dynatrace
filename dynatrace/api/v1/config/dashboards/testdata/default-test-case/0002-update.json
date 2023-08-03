@@ -51,13 +51,6 @@
         },
         "customName": "Full-Stack Kubernetes nodes",
         "defaultName": "Full-Stack Kubernetes nodes",
-        "filtersPerEntityType": {
-          "HOST": {
-            "HOST_SOFTWARE_TECH": [
-              "KUBERNETES"
-            ]
-          }
-        },
         "type": "HOST"
       },
       "name": "",
