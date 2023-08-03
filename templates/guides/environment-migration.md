@@ -42,7 +42,11 @@ Windows: `terraform-provider-dynatrace.exe -export -migrate`
 
 Linux: `terraform-provider-dynatrace -export -migrate`
 
--> The `dynatrace_json_dashboard`, `dynatrace_aws_service`, `dynatrace_azure_service`, and account management resources are excluded by default, please use the iterative method to export/apply after running the bulk migration.
+The following resources are excluded by default, please use the iterative method to export/apply after running the bulk migration.
+* Excluded by default due to longer execution: `dynatrace_json_dashboard`, `dynatrace_custom_tags`, `dynatrace_custom_device`
+* Application Security: `dynatrace_appsec_notification`, `dynatrace_vulnerability_alerting`, `dynatrace_vulnerability_settings`, `dynatrace_vulnerability_third_party`, `dynatrace_vulnerability_code`, `dynatrace_attack_alerting`, `dynatrace_attack_settings`, `dynatrace_attack_rules`, `dynatrace_attack_allowlist`
+* AutomationEngine: `dynatrace_automation_workflow`, `dynatrace_automation_business_calendar`, `dynatrace_automation_scheduling_rule`
+* Account Management: `dynatrace_iam_group`(SaaS), `dynatrace_iam_permission`(SaaS), `dynatrace_iam_policy_bindings`(SaaS), `dynatrace_iam_policy`(SaaS), `dynatrace_iam_user`(SaaS), `dynatrace_mgmz_permission`(Managed), `dynatrace_policy_bindings`(Managed), `dynatrace_policy`(Managed), `dynatrace_user_group`(Managed), `dynatrace_user`(Managed)
 
 ### Iterative Migration
 The iterative approach is useful in scenarios where you would like to migrate configuration by resource group or to an environment with existing configuration. 
