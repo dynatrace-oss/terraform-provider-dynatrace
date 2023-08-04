@@ -168,7 +168,9 @@ func (me *Module) MkdirAll(flawed bool) error {
 	mkdirMutex.Lock()
 	defer mkdirMutex.Unlock()
 	if flawed {
-		return os.MkdirAll(me.GetFlawedFolder(), os.ModePerm)
+		if err := os.MkdirAll(me.GetFlawedFolder(), os.ModePerm); err != nil {
+			return err
+		}
 	}
 	return os.MkdirAll(me.GetFolder(), os.ModePerm)
 }
