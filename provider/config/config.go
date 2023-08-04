@@ -140,6 +140,13 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	clusterURL := getString(d, "dt_cluster_url")
 
 	dtEnvURL = strings.TrimSuffix(strings.TrimSuffix(dtEnvURL, " "), "/")
+	if len(dtEnvURL) != 0 {
+		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
+		if match := re.FindStringSubmatch(dtEnvURL); match != nil && len(match) > 0 {
+			dtEnvURL = fmt.Sprintf("https://%s.live.dynatrace.com", match[1])
+		}
+	}
+
 	clusterURL = strings.TrimSuffix(strings.TrimSuffix(clusterURL, " "), "/")
 
 	fullURL := dtEnvURL + "/api/config/v1"
@@ -156,6 +163,32 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 		}
 	}
 
+	client_id := getString(d, "client_id")
+	client_secret := getString(d, "client_secret")
+	account_id := getString(d, "account_id")
+
+	iam_client_id := getString(d, "iam_client_id")
+	if len(iam_client_id) == 0 {
+		iam_client_id = client_id
+	}
+	iam_account_id := getString(d, "iam_account_id")
+	if len(iam_account_id) == 0 {
+		iam_account_id = account_id
+	}
+	iam_client_secret := getString(d, "iam_client_secret")
+	if len(iam_client_secret) == 0 {
+		iam_client_secret = client_secret
+	}
+
+	automation_client_id := getString(d, "automation_client_id")
+	if len(automation_client_id) == 0 {
+		automation_client_id = client_id
+	}
+	automation_client_secret := getString(d, "automation_client_secret")
+	if len(automation_client_secret) == 0 {
+		automation_client_secret = client_secret
+	}
+
 	var diags diag.Diagnostics
 
 	return &ProviderConfiguration{
@@ -167,8 +200,8 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 		ClusterAPIToken:   clusterAPIToken,
 		ClusterAPIV2URL:   clusterURL,
 		IAM: IAM{
-			ClientID:     getString(d, "iam_client_id"),
-			AccountID:    getString(d, "iam_account_id"),
+			ClientID:     iam_client_id,
+			AccountID:    iam_account_id,
 			ClientSecret: getString(d, "iam_client_secret"),
 		},
 		Automation: Automation{
