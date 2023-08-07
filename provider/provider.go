@@ -60,6 +60,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
@@ -456,6 +457,7 @@ func Provider() *schema.Provider {
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
 	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
+		prv.ResourcesMap["dynatrace_generic_setting"] = generic.Resource()
 	}
 	return prv
 }

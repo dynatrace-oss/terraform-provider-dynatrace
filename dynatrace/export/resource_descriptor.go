@@ -87,6 +87,7 @@ import (
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
 	networktraffic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
@@ -1071,6 +1072,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ProcessGroup),
 	),
 	ResourceTypes.AppSecAttackAllowlist: NewResourceDescriptor(attackprotectionallowlistconfig.Service),
+	ResourceTypes.GenericSetting:        NewResourceDescriptor(generic.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1141,6 +1143,9 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AppSecAttackSettings,
 	ResourceTypes.AppSecAttackRules,
 	ResourceTypes.AppSecAttackAllowlist,
+
+	// Incubator
+	ResourceTypes.GenericSetting,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
