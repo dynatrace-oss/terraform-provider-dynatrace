@@ -18,7 +18,7 @@ Use the links to the left to learn about the available resources, data sources, 
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.37.0"
+            version = "1.38.0"
             source = "dynatrace-oss/dynatrace"
         }
     }
@@ -51,6 +51,14 @@ The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following p
      * Required for reading network zones.
  * **Write network zones** (`networkZones.write`)
      * Required for writing network zones.
+ * **Read security problems** (`securityProblems.read`)
+     * Required for reading security configuration.
+ * **Write security problems** (`securityProblems.write`)
+     * Required for writing security configuration.
+ * **Read attacks** (`attacks.read`)
+     * Required for reading attack security configuration.
+ * **Write attacks** (`attacks.write`)
+     * Required for writing attack security configuration.
 
 Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
 ```
@@ -83,10 +91,13 @@ Please provide any feedback of the export utility via [GitHub Issues](https://gi
 
 ### Optional
 
+- `account_id` (String, Sensitive)
 - `automation_client_id` (String, Sensitive)
 - `automation_client_secret` (String, Sensitive)
 - `automation_env_url` (String) The URL of the Dynatrace Environment with Platform capabilities turned on (`https://#####.apps.dynatrace.com)`. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`
 - `automation_token_url` (String) The URL that provides the Bearer tokens when accessing the Automation REST API. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`
+- `client_id` (String, Sensitive)
+- `client_secret` (String, Sensitive)
 - `dt_api_token` (String, Sensitive)
 - `dt_cluster_api_token` (String, Sensitive)
 - `dt_cluster_url` (String, Sensitive)

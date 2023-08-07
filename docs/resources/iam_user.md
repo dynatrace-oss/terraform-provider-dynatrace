@@ -59,3 +59,4 @@ resource "dynatrace_iam_user" "john_doe_gmail_com" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `uid` (String)
