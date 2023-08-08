@@ -56,6 +56,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/activegatetokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
@@ -367,6 +368,7 @@ func Provider() *schema.Provider {
 			"dynatrace_metric_metadata":                    resources.NewGeneric(export.ResourceTypes.MetricMetadata).Resource(),
 			"dynatrace_metric_query":                       resources.NewGeneric(export.ResourceTypes.MetricQuery).Resource(),
 			"dynatrace_activegate_token":                   resources.NewGeneric(export.ResourceTypes.ActiveGateToken).Resource(),
+			"dynatrace_ag_token":                           activegatetokens.Resource(),
 			"dynatrace_audit_log":                          resources.NewGeneric(export.ResourceTypes.AuditLog).Resource(),
 			"dynatrace_k8s_cluster_anomalies":              resources.NewGeneric(export.ResourceTypes.K8sClusterAnomalies).Resource(),
 			"dynatrace_k8s_namespace_anomalies":            resources.NewGeneric(export.ResourceTypes.K8sNamespaceAnomalies).Resource(),

@@ -222,6 +222,7 @@ import (
 	notificationsv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/activegatetokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -856,6 +857,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MetricMetadata:  NewResourceDescriptor(metadata.Service),
 	ResourceTypes.MetricQuery:     NewResourceDescriptor(query.Service),
 	ResourceTypes.ActiveGateToken: NewResourceDescriptor(activegatetoken.Service),
+	ResourceTypes.AGToken:         NewResourceDescriptor(activegatetokens.Service),
 	ResourceTypes.AuditLog:        NewResourceDescriptor(auditlog.Service),
 	ResourceTypes.K8sClusterAnomalies: NewResourceDescriptor(
 		cluster.Service,
@@ -1121,6 +1123,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AutomationWorkflow,
 	ResourceTypes.AutomationBusinessCalendar,
 	ResourceTypes.AutomationSchedulingRule,
+	ResourceTypes.AGToken,
 
 	// Not included in export - may cause issues for migration use cases
 	ResourceTypes.MetricMetadata,

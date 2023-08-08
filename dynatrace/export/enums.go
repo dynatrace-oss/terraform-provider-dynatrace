@@ -235,6 +235,7 @@ var ResourceTypes = struct {
 	MetricMetadata                      ResourceType
 	MetricQuery                         ResourceType
 	ActiveGateToken                     ResourceType
+	AGToken                             ResourceType
 	AuditLog                            ResourceType
 	K8sClusterAnomalies                 ResourceType
 	K8sNamespaceAnomalies               ResourceType
@@ -479,6 +480,7 @@ var ResourceTypes = struct {
 	"dynatrace_metric_metadata",
 	"dynatrace_metric_query",
 	"dynatrace_activegate_token",
+	"dynatrace_ag_token",
 	"dynatrace_audit_log",
 	"dynatrace_k8s_cluster_anomalies",
 	"dynatrace_k8s_namespace_anomalies",
