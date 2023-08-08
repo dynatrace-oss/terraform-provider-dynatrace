@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_log_security_context Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
+description: |-
+  The resource `dynatrace_log_security_context` covers configuration for log security context rules
+---
+
+# dynatrace_log_security_context (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Log Management and Analytics - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:logmonitoring.log-security-context-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_log_security_context` downloads all existing log security context configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/logmonitoring/logsecuritycontextrules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

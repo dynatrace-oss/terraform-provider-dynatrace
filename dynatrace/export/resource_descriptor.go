@@ -104,6 +104,7 @@ import (
 	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsecuritycontextrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
@@ -904,6 +905,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogCustomAttribute:         NewResourceDescriptor(logcustomattributes.Service),
 	ResourceTypes.LogSensitiveDataMasking:    NewResourceDescriptor(sensitivedatamasking.Service),
 	ResourceTypes.LogBuckets:                 NewResourceDescriptor(logbucketsrules.Service),
+	ResourceTypes.LogSecurityContext:         NewResourceDescriptor(logsecuritycontextrules.Service),
 	ResourceTypes.EULASettings:               NewResourceDescriptor(eulasettings.Service),
 	ResourceTypes.APIDetectionRules:          NewResourceDescriptor(apidetection.Service),
 	ResourceTypes.ServiceExternalWebRequest:  NewResourceDescriptor(externalwebrequest.Service),
