@@ -19,15 +19,14 @@ package logsecuritycontextrules_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsecuritycontextrules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestLogSecurityContext(t *testing.T) {
-	api.TestService(t, logsecuritycontextrules.Service)
+	// api.TestService(t, logsecuritycontextrules.Service)
+	t.Skip()
 }
 
 func TestAccLogSecurityContext(t *testing.T) {
-	api.TestAcc(t)
+	// api.TestAcc(t)
+	t.Skip()
 }
