@@ -12,6 +12,7 @@ type Settings struct {
 	ExpirationDate *string `json:"expirationDate,omitempty"`
 	SeedToken      bool    `json:"seedToken,omitempty"`
 	Token          *string `json:"token,omitempty"`
+	TenantToken    *string `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -39,6 +40,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Sensitive:   true,
 			Computed:    true,
 		},
+		"tenant_token": {
+			Type:        schema.TypeString,
+			Description: "The tenant token. This information isn't directly related to the Active Gate Token. It's included for convenience. You require the permission `InstallerDownload` for that attribute to get populated",
+			Sensitive:   true,
+			Computed:    true,
+		},
 		"seed": {
 			Type:        schema.TypeBool,
 			Description: "The token is a seed token (true) or an individual token (false). We recommend the individual token option (false)",
@@ -53,6 +60,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"type":            me.Type,
 		"expiration_date": me.ExpirationDate,
 		"seed":            me.SeedToken,
+		"tenant_token":    me.TenantToken,
 	}); err != nil {
 		return err
 	}

@@ -38,6 +38,10 @@ type TokenCreateResponse struct {
 	Token          *string `json:"token,omitempty"`
 }
 
+type TenantTokenResponse struct {
+	TenantToken string `json:"tenantToken"`
+}
+
 type service struct {
 	credentials *settings.Credentials
 }
@@ -49,6 +53,11 @@ func (me *service) Get(id string, v *activegatetokens.Settings) error {
 	req := client.Get(fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
+	}
+	var ttr TenantTokenResponse
+	req = client.Get("/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	if err = req.Finish(&ttr); err == nil {
+		v.TenantToken = &ttr.TenantToken
 	}
 
 	return nil
@@ -76,6 +85,13 @@ func (me *service) Create(v *activegatetokens.Settings) (*api.Stub, error) {
 	}
 	v.ExpirationDate = response.ExpirationDate
 	v.Token = response.Token
+
+	var ttr TenantTokenResponse
+	req := client.Get("/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	if err = req.Finish(&ttr); err == nil {
+		v.TenantToken = &ttr.TenantToken
+	}
+
 	return &api.Stub{ID: response.ID, Name: v.Name, Value: v}, nil
 }
 
