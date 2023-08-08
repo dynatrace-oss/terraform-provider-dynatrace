@@ -1,0 +1,178 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure rules for security context. The first user-defined rule that matches will be executed. Learn more by visiting our [documentation](https://dt-url.net/5r036aj).",
+	"displayName": "Business event security context",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ValueSourceEnum": {
+			"description": "",
+			"displayName": "Value source",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Value will be copied from field",
+					"displayName": "Field",
+					"value": "FIELD"
+				},
+				{
+					"description": "Constant literal will be used as value",
+					"displayName": "Literal",
+					"value": "LITERAL"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"securityContextRule": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SecurityContextRule"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Business event security context rule with the specified name already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"securityContextRule/ruleName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:business-analytics",
+		"group:business-analytics.ingest-pipeline"
+	],
+	"schemaId": "builtin:bizevents-security-context-rules",
+	"types": {
+		"SecurityContextRule": {
+			"description": "",
+			"displayName": "Security Context Rule",
+			"documentation": "",
+			"properties": {
+				"query": {
+					"constraints": [
+						{
+							"maxLength": 1500,
+							"minLength": 2,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "security-context-dql-query-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"maxLength": 60,
+							"minLength": 2,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 1024,
+							"minLength": 2,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Literal value to be set",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "LITERAL",
+						"property": "valueSource",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"valueSource": {
+					"default": "LITERAL",
+					"description": "",
+					"displayName": "Select value source type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "radio",
+					"type": {
+						"$ref": "#/enums/ValueSourceEnum"
+					}
+				},
+				"valueSourceField": {
+					"constraints": [
+						{
+							"maxLength": 256,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Name of field used to copy value",
+					"displayName": "Value source field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "FIELD",
+						"property": "valueSource",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{ruleName}",
+			"type": "object",
+			"version": "1",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.3"
+}

@@ -432,6 +432,7 @@ func Provider() *schema.Provider {
 			"dynatrace_business_events_buckets":            resources.NewGeneric(export.ResourceTypes.BusinessEventsBuckets).Resource(),
 			"dynatrace_business_events_metrics":            resources.NewGeneric(export.ResourceTypes.BusinessEventsMetrics).Resource(),
 			"dynatrace_business_events_processing":         resources.NewGeneric(export.ResourceTypes.BusinessEventsProcessing).Resource(),
+			"dynatrace_business_events_security_context":   resources.NewGeneric(export.ResourceTypes.BusinessEventsSecurityContext).Resource(),
 			"dynatrace_builtin_process_monitoring":         resources.NewGeneric(export.ResourceTypes.BuiltinProcessMonitoring).Resource(),
 			"dynatrace_limit_outbound_connections":         resources.NewGeneric(export.ResourceTypes.LimitOutboundConnections).Resource(),
 			"dynatrace_span_events":                        resources.NewGeneric(export.ResourceTypes.SpanEvents).Resource(),

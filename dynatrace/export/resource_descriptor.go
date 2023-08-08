@@ -64,6 +64,7 @@ import (
 	bizevents_buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/buckets"
 	bizevents_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/metrics"
 	bizevents_processing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/pipelines"
+	bizevents_security "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/security/contextrules"
 	cloudfoundryv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/cloudfoundry"
 	kubernetesv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes"
 	kubernetesmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring"
@@ -993,9 +994,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 	),
-	ResourceTypes.BusinessEventsBuckets:    NewResourceDescriptor(bizevents_buckets.Service),
-	ResourceTypes.BusinessEventsMetrics:    NewResourceDescriptor(bizevents_metrics.Service),
-	ResourceTypes.BusinessEventsProcessing: NewResourceDescriptor(bizevents_processing.Service),
+	ResourceTypes.BusinessEventsBuckets:         NewResourceDescriptor(bizevents_buckets.Service),
+	ResourceTypes.BusinessEventsMetrics:         NewResourceDescriptor(bizevents_metrics.Service),
+	ResourceTypes.BusinessEventsProcessing:      NewResourceDescriptor(bizevents_processing.Service),
+	ResourceTypes.BusinessEventsSecurityContext: NewResourceDescriptor(bizevents_security.Service),
 	ResourceTypes.WebAppKeyPerformanceCustom: NewResourceDescriptor(
 		customactions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),

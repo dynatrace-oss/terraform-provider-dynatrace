@@ -297,6 +297,7 @@ var ResourceTypes = struct {
 	BusinessEventsBuckets               ResourceType
 	BusinessEventsMetrics               ResourceType
 	BusinessEventsProcessing            ResourceType
+	BusinessEventsSecurityContext       ResourceType
 	WebAppKeyPerformanceCustom          ResourceType
 	WebAppKeyPerformanceLoad            ResourceType
 	WebAppKeyPerformanceXHR             ResourceType
@@ -542,6 +543,7 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_buckets",
 	"dynatrace_business_events_metrics",
 	"dynatrace_business_events_processing",
+	"dynatrace_business_events_security_context",
 	"dynatrace_web_app_key_performance_custom",
 	"dynatrace_web_app_key_performance_load",
 	"dynatrace_web_app_key_performance_xhr",
