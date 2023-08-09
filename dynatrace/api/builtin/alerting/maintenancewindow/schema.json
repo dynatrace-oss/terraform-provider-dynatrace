@@ -176,6 +176,11 @@
 		"group:maintenance"
 	],
 	"schemaId": "builtin:alerting.maintenance-window",
+	"tableColumns": {
+		"expiredStateColumn": {
+			"pattern": "{schedule|mwPrefix}"
+		}
+	},
 	"types": {
 		"DailyRecurrence": {
 			"description": "",
@@ -780,5 +785,16 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.14.2"
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"columnRef": "expiredStateColumn",
+					"displayName": "State",
+					"type": "text"
+				}
+			]
+		}
+	},
+	"version": "2.14.3"
 }

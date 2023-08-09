@@ -432,6 +432,12 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "metric-event-config-count-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:anomaly-detection"
 	],
@@ -1175,46 +1181,27 @@
 				"managementZone": {
 					"constraints": [
 						{
-							"maxLength": 21,
+							"pattern": "^-?\\d{1,19}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
 					],
-					"datasource": {
-						"filterProperties": [],
-						"fullContext": false,
-						"identifier": "managementZoneDataSource",
-						"resetValue": "NEVER",
-						"useApiSearch": false,
-						"validate": true
-					},
 					"description": "",
 					"displayName": "Management zone",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
 						"autoSelectFirst": "disabled",
-						"placeholder": "Optional for admins",
 						"useCombobox": "enabled"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
-					"precondition": {
-						"preconditions": [
-							{
-								"expectedValue": "METRIC_KEY",
-								"property": "type",
-								"type": "EQUALS"
-							},
-							{
-								"expectedValue": "METRIC_SELECTOR",
-								"property": "type",
-								"type": "EQUALS"
-							}
-						],
-						"type": "OR"
-					},
-					"subType": "datasource",
+					"referencedType": "ManagementZone",
+					"subType": "config",
 					"type": "text"
 				},
 				"metricKey": {
@@ -1318,5 +1305,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.14"
+	"version": "1.0.15"
 }

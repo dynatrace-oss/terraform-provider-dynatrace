@@ -176,6 +176,15 @@
 			"type": "boolean"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "An API rule with this name already exists",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"apiName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:service-monitoring"
 	],
@@ -234,5 +243,22 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.1.2"
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"displayName": "Color",
+					"propertyRef": "./apiColor"
+				},
+				{
+					"builtinColumnRef": "summary"
+				},
+				{
+					"displayName": "Third party",
+					"propertyRef": "./thirdPartyApi"
+				}
+			]
+		}
+	},
+	"version": "3.1.3"
 }

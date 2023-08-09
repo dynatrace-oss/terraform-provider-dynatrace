@@ -62,7 +62,25 @@
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"type": "list"
+			"type": "list",
+			"uiCustomization": {
+				"table": {
+					"columns": [
+						{
+							"displayName": "Capture",
+							"propertyRef": "./captureSettings/capture"
+						},
+						{
+							"displayName": "Impact Apdex",
+							"propertyRef": "./captureSettings/impactApdex"
+						},
+						{
+							"displayName": "Consider for Davis",
+							"propertyRef": "./captureSettings/considerForAi"
+						}
+					]
+				}
+			}
 		},
 		"ignoreRequestErrorsInApdexCalculation": {
 			"default": false,
@@ -270,5 +288,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

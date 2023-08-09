@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "3.1.2"
+const SchemaVersion = "3.1.3"
 const SchemaID = "builtin:apis.detection-rules"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*detectionrules.Settings] {
