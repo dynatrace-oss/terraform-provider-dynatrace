@@ -21,9 +21,11 @@ type MaskingType string
 
 var MaskingTypes = struct {
 	Sha1   MaskingType
+	Sha256 MaskingType
 	String MaskingType
 }{
 	"SHA1",
+	"SHA256",
 	"STRING",
 }
 

@@ -21,6 +21,10 @@
 				{
 					"displayName": "SHA-1",
 					"value": "SHA1"
+				},
+				{
+					"displayName": "SHA-256",
+					"value": "SHA256"
 				}
 			],
 			"type": "enum"
@@ -347,5 +351,5 @@
 			}
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
