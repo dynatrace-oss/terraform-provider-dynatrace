@@ -346,6 +346,10 @@
 					"value": "IBM_IMS_SOAP_GW_NAME"
 				},
 				{
+					"displayName": "Dynatrace z/OS module version",
+					"value": "Z_CM_VERSION"
+				},
+				{
 					"displayName": "Equinox config path",
 					"value": "EQUINOX_CONFIG_PATH"
 				},
@@ -611,5 +615,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.4"
+	"version": "0.4.5"
 }
