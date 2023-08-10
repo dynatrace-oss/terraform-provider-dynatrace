@@ -27,24 +27,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func (me *SLO) Deprecated() string {
-	return "This resource is utilizing an older API endpoint, please use `dynatrace_slo_v2` instead."
-}
-
 type SLO struct {
-	Name              string  `json:"name"`                        // The name of the SLO
-	Enabled           bool    `json:"enabled,omitempty"`           // The SLO is enabled (`true`) or disabled (`false`)
-	Description       *string `json:"description,omitempty"`       // The custom description of the SLO (optional)
-	UseRateMetric     bool    `json:"useRateMetric"`               // The type of the metric to use for SLO calculation: \n\n* `true`: An existing percentage-based metric. \n* `false`: A ratio of two metrics. \n\nFor a list of available metrics, see [Built-in metric page](https://dt-url.net/be03kow) or try the [GET metrics](https://dt-url.net/8e43kxf) API call
-	MetricRate        *string `json:"metricRate,omitempty"`        // The percentage-based metric for the calculation of the SLO. \n\nRequired when the **useRateMetric** is set to `true`
-	MetricExpression  *string `json:"metricExpression,omitempty"`  // The percentage-based metric expression for the calculation of the SLO
-	MetricNumerator   *string `json:"metricNumerator,omitempty"`   // The metric for the count of successes (the numerator in rate calculation). \n\nRequired when the **useRateMetric** is set to `false`
-	MetricDenominator *string `json:"metricDenominator,omitempty"` // The total count metric (the denominator in rate calculation). \n\nRequired when the **useRateMetric** is set to `false`
-	EvaluationType    string  `json:"evaluationType"`              // The evaluation type of the SLO. Currently only `AGGREGATE` is supported
-	Filter            *string `json:"filter,omitempty"`            // The entity filter for the SLO evaluation. Use the [syntax of entity selector](https://dt-url.net/entityselector)
-	Target            float64 `json:"target"`                      // The target value of the SLO
-	Warning           float64 `json:"warning"`                     // The warning value of the SLO. \n\n At warning state the SLO is still fulfilled but is getting close to failure
-	Timeframe         string  `json:"timeframe"`                   // The timeframe for the SLO evaluation. Use the syntax of the global timeframe selector
+	Name                string               `json:"name"`                          // The name of the SLO
+	MetricName          *string              `json:"metricName,omitempty"`          // The name that is used to create SLO func metrics keys. Once created, metric name cannot be changed.
+	Enabled             bool                 `json:"enabled,omitempty"`             // The SLO is enabled (`true`) or disabled (`false`)
+	Description         *string              `json:"description,omitempty"`         // The custom description of the SLO (optional)
+	UseRateMetric       bool                 `json:"useRateMetric"`                 // The type of the metric to use for SLO calculation: \n\n* `true`: An existing percentage-based metric. \n* `false`: A ratio of two metrics. \n\nFor a list of available metrics, see [Built-in metric page](https://dt-url.net/be03kow) or try the [GET metrics](https://dt-url.net/8e43kxf) API call
+	MetricRate          *string              `json:"metricRate,omitempty"`          // The percentage-based metric for the calculation of the SLO. \n\nRequired when the **useRateMetric** is set to `true`
+	MetricExpression    *string              `json:"metricExpression,omitempty"`    // The percentage-based metric expression for the calculation of the SLO
+	MetricNumerator     *string              `json:"metricNumerator,omitempty"`     // The metric for the count of successes (the numerator in rate calculation). \n\nRequired when the **useRateMetric** is set to `false`
+	MetricDenominator   *string              `json:"metricDenominator,omitempty"`   // The total count metric (the denominator in rate calculation). \n\nRequired when the **useRateMetric** is set to `false`
+	EvaluationType      string               `json:"evaluationType"`                // The evaluation type of the SLO. Currently only `AGGREGATE` is supported
+	Filter              *string              `json:"filter,omitempty"`              // The entity filter for the SLO evaluation. Use the [syntax of entity selector](https://dt-url.net/entityselector)
+	Target              float64              `json:"target"`                        // The target value of the SLO
+	Warning             float64              `json:"warning"`                       // The warning value of the SLO. \n\n At warning state the SLO is still fulfilled but is getting close to failure
+	Timeframe           string               `json:"timeframe"`                     // The timeframe for the SLO evaluation. Use the syntax of the global timeframe selector
+	ErrorBudgetBurnRate *ErrorBudgetBurnRate `json:"errorBudgetBurnRate,omitempty"` // Error budget burn rate configuration of a service-level objective (SLO).
 }
 
 func (me *SLO) Schema() map[string]*schema.Schema {
@@ -53,6 +51,12 @@ func (me *SLO) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The name of the rule",
+		},
+		"metric_name": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "The name that is used to create SLO func metrics keys. Once created, metric name cannot be changed.",
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"description": {
 			Type:        schema.TypeString,
@@ -117,6 +121,14 @@ func (me *SLO) Schema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "The timeframe for the SLO evaluation. Use the syntax of the global timeframe selector",
 		},
+		"error_budget_burn_rate": {
+			Type:        schema.TypeList,
+			Description: "Error budget burn rate configuration of a service-level objective (SLO).",
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(ErrorBudgetBurnRate).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 	}
 }
 
@@ -131,23 +143,27 @@ func empty2Nil(s *string) *string {
 }
 
 func (me *SLO) MarshalHCL(properties hcl.Properties) error {
-
 	err := properties.EncodeAll(map[string]any{
-		"name":              me.Name,
-		"description":       me.Description,
-		"disabled":          !me.Enabled,
-		"rate":              empty2Nil(me.MetricRate),
-		"metric_expression": empty2Nil(me.MetricExpression),
-		"numerator":         empty2Nil(me.MetricNumerator),
-		"denominator":       empty2Nil(me.MetricDenominator),
-		"evaluation":        me.EvaluationType,
-		"filter":            me.Filter,
-		"target":            me.Target,
-		"warning":           me.Warning,
-		"timeframe":         me.Timeframe,
+		"name":                   me.Name,
+		"metric_name":            me.MetricName,
+		"description":            me.Description,
+		"disabled":               !me.Enabled,
+		"rate":                   empty2Nil(me.MetricRate),
+		"metric_expression":      empty2Nil(me.MetricExpression),
+		"numerator":              empty2Nil(me.MetricNumerator),
+		"denominator":            empty2Nil(me.MetricDenominator),
+		"evaluation":             me.EvaluationType,
+		"filter":                 me.Filter,
+		"target":                 me.Target,
+		"warning":                me.Warning,
+		"timeframe":              me.Timeframe,
+		"error_budget_burn_rate": me.ErrorBudgetBurnRate,
 	})
 	if err != nil {
 		return err
+	}
+	if me.ErrorBudgetBurnRate.IsEmpty() {
+		delete(properties, "error_budget_burn_rate")
 	}
 	if me.Enabled {
 		delete(properties, "disabled")
@@ -194,18 +210,20 @@ func nonNil(s *string) *string {
 
 func (me *SLO) UnmarshalHCL(decoder hcl.Decoder) error {
 	err := decoder.DecodeAll(map[string]any{
-		"name":              &me.Name,
-		"description":       &me.Description,
-		"disabled":          &me.Enabled,
-		"rate":              &me.MetricRate,
-		"numerator":         &me.MetricNumerator,
-		"metric_expression": &me.MetricExpression,
-		"denominator":       &me.MetricDenominator,
-		"evaluation":        &me.EvaluationType,
-		"filter":            &me.Filter,
-		"target":            &me.Target,
-		"warning":           &me.Warning,
-		"timeframe":         &me.Timeframe,
+		"name":                   &me.Name,
+		"metric_name":            &me.MetricName,
+		"description":            &me.Description,
+		"disabled":               &me.Enabled,
+		"rate":                   &me.MetricRate,
+		"numerator":              &me.MetricNumerator,
+		"metric_expression":      &me.MetricExpression,
+		"denominator":            &me.MetricDenominator,
+		"evaluation":             &me.EvaluationType,
+		"filter":                 &me.Filter,
+		"target":                 &me.Target,
+		"warning":                &me.Warning,
+		"timeframe":              &me.Timeframe,
+		"error_budget_burn_rate": &me.ErrorBudgetBurnRate,
 	})
 	me.Enabled = !me.Enabled
 	me.MetricNumerator = nonNil(me.MetricNumerator)
