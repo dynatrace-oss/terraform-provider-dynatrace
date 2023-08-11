@@ -56,7 +56,7 @@ func (me *SLO) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Optional:         true,
 			Description:      "The name that is used to create SLO func metrics keys. Once created, metric name cannot be changed.",
-			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return d.Id() != "" },
 		},
 		"description": {
 			Type:        schema.TypeString,
