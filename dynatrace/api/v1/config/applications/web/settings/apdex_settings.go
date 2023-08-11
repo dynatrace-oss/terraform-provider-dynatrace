@@ -25,11 +25,11 @@ import (
 
 // Defines the Apdex settings of an application
 type ApdexSettings struct {
-	Threshold                    *int `json:"threshold,omitempty"`                    // no documentation available
-	ToleratedThreshold           *int `json:"toleratedThreshold,omitempty"`           // Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.
-	FrustratingThreshold         *int `json:"frustratingThreshold,omitempty"`         // Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.
-	ToleratedFallbackThreshold   *int `json:"toleratedFallbackThreshold,omitempty"`   // Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.
-	FrustratingFallbackThreshold *int `json:"frustratingFallbackThreshold,omitempty"` // Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.
+	Threshold                    *float64 `json:"threshold,omitempty"`                    // no documentation available
+	ToleratedThreshold           *float64 `json:"toleratedThreshold,omitempty"`           // Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.
+	FrustratingThreshold         *float64 `json:"frustratingThreshold,omitempty"`         // Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.
+	ToleratedFallbackThreshold   *float64 `json:"toleratedFallbackThreshold,omitempty"`   // Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.
+	FrustratingFallbackThreshold *float64 `json:"frustratingFallbackThreshold,omitempty"` // Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.
 }
 
 func (me *ApdexSettings) IsEmpty() bool {
@@ -39,27 +39,27 @@ func (me *ApdexSettings) IsEmpty() bool {
 func (me *ApdexSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "no documentation available",
 			Optional:    true,
 		},
 		"tolerated_threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.",
 			Optional:    true,
 		},
 		"frustrating_threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.",
 			Optional:    true,
 		},
 		"tolerated_fallback_threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.",
 			Optional:    true,
 		},
 		"frustrating_fallback_threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.",
 			Optional:    true,
 		},
