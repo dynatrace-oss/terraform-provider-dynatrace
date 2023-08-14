@@ -108,12 +108,15 @@ func (me *service) CheckGet(id string, v *customdevice.CustomDevice) error {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
-	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s", url.QueryEscape(entitySelector))).Expect(200)
+	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties", url.QueryEscape(entitySelector))).Expect(200)
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 	if err = req.Finish(&CustomDeviceGetResponse); err != nil {
 		return err
 	}
 	if len(CustomDeviceGetResponse.Entities) == 0 {
+		return nil
+	}
+	if len(v.DNSNames) != len(CustomDeviceGetResponse.Entities[0].Properties.DNSNames) || len(v.ListenPorts) != len(CustomDeviceGetResponse.Entities[0].Properties.ListenPorts) {
 		return nil
 	}
 	v.EntityId = CustomDeviceGetResponse.Entities[0].EntityId
