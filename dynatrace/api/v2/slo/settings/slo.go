@@ -128,6 +128,12 @@ func (me *SLO) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(ErrorBudgetBurnRate).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				if k == "error_budget_burn_rate.#" && newValue == "0" {
+					return true
+				}
+				return false
+			},
 		},
 	}
 }
@@ -162,9 +168,9 @@ func (me *SLO) MarshalHCL(properties hcl.Properties) error {
 	if err != nil {
 		return err
 	}
-	if me.ErrorBudgetBurnRate.IsEmpty() {
-		delete(properties, "error_budget_burn_rate")
-	}
+	// if me.ErrorBudgetBurnRate.IsEmpty() {
+	// 	delete(properties, "error_budget_burn_rate")
+	// }
 	if me.Enabled {
 		delete(properties, "disabled")
 	}
