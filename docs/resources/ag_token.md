@@ -58,5 +58,6 @@ resource "dynatrace_ag_token" "#name#" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `tenant_token` (String, Sensitive) The tenant token. This information isn't directly related to the Active Gate Token. It's included for convenience. You require the permission `InstallerDownload` for that attribute to get populated
 - `token` (String, Sensitive) The secret of the token.
  
