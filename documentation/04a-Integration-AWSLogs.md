@@ -6,189 +6,118 @@ The configuration below is an example of how to configure the CloudWatch log for
 
 ```
 locals {
-  deployment_name  = "deployment_name"
-  target_url       = "target_url"
-  target_api_token = "target_api_token"
-}
-
-# ######################################################################################
-# CREATE RESOURCE GROUP
-# ######################################################################################
-
-resource "azurerm_resource_group" "resgrp" {
-  name     = "example-resources"
-  location = "East US"
-}
-
-# ######################################################################################
-# SET UP AZURE EVENT HUBS INSTANCE
-# ######################################################################################
-
-resource "azurerm_eventhub_namespace" "evthubns" {
-  name                = "acceptanceTestEventHubNamespace"
-  location            = azurerm_resource_group.resgrp.location
-  resource_group_name = azurerm_resource_group.resgrp.name
-  sku                 = "Basic"
-  capacity            = 2
-
+  stack_name = "dynatrace-aws-logs"
+  # tags are optional
   tags = {
-    environment = "Production"
-  }
-}
-
-resource "azurerm_eventhub" "evthub" {
-  name                = "acceptanceTestEventHub"
-  namespace_name      = azurerm_eventhub_namespace.evthubns.name
-  resource_group_name = azurerm_resource_group.resgrp.name
-  partition_count     = 2
-  message_retention   = 2
-}
-
-resource "azurerm_eventhub_namespace_authorization_rule" "evthubnsauthrule" {
-  name                = "example-auth-rule"
-  namespace_name      = azurerm_eventhub_namespace.evthubns.name
-  resource_group_name = azurerm_eventhub_namespace.evthubns.resource_group_name
-  listen              = true
-  send                = false
-  manage              = false
-}
-
-# ######################################################################################
-# STORAGE ACCOUNT
-# ######################################################################################
-
-resource "azurerm_storage_account" "storage" {
-  name                     = "storageaccountname"
-  resource_group_name      = azurerm_resource_group.resgrp.name
-  location                 = azurerm_resource_group.resgrp.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-data "azurerm_client_config" "current" {}
-
-resource "azurerm_key_vault" "example" {
-  name                       = "examplekeyvault"
-  location                   = azurerm_resource_group.resgrp.location
-  resource_group_name        = azurerm_resource_group.resgrp.name
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days = 7
-  purge_protection_enabled   = false
-  sku_name                   = "standard"
-}
-
-# ######################################################################################
-# CONFIGURE MONITORING SETTINGS - ROUTE TO EVENT HUB INSTANCE
-# ######################################################################################
-
-resource "azurerm_monitor_diagnostic_setting" "example" {
-  name                           = "example-diagnostic-setting"
-  target_resource_id             = azurerm_storage_account.storacc.id
-  eventhub_authorization_rule_id = azurerm_eventhub_namespace_authorization_rule.evthubnsauthrule.authorization_rule_id
-
-  log {
-    category = "AuditEvent"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 30
-    }
-  }
-}
-
-# #################################################################################################################
-# -----------------------------------------------------------------------------------------------------------------
-#
-#   EVERYTHING FROM HERE ON REPLICATES WHAT IS USUALLY DONE BY
-#   https://github.com/dynatrace-oss/dynatrace-azure-log-forwarder/releases/latest/download/dynatrace-azure-logs.sh
-#
-# -----------------------------------------------------------------------------------------------------------------
-# #################################################################################################################
-
-
-# ######################################################################################
-# DEPLOYMENT GROUP
-# ######################################################################################
-
-data "http" "template" {
-  url = "https://github.com/dynatrace-oss/dynatrace-azure-log-forwarder/releases/download/release-0.1.3/dynatrace-azure-forwarder.json"
-}
-
-resource "azurerm_resource_group_template_deployment" "example" {
-  name                = "example-deployment"
-  resource_group_name = azurerm_resource_group.resgrp.name
-  deployment_mode     = "Incremental" # Unsure here. Should this be "Complete"?
-  template_content    = data.http.template.body
-  parameters = jsondecode({
-    "forwarderName" : "${local.deployment_name}",
-    "targetUrl" : "${local.target_url}",
-    "targetAPIToken" : "${local.target_api_token}",
-    "eventHubConnectionString" : "${azurerm_eventhub_namespace_authorization_rule.evthubnsauthrule.primary_connection_string}",
-    "eventHubName" : "${azurerm_eventhub.evthub.name}",
-    "requireValidCertificate" : true,
-    "selfMonitoringEnabled" : false,
-    "deployActiveGateContainer" : false,
-    "targetPaasToken" : "",
-    "filterConfig" : "",
-    "resourceTags" : "\"LogsForwarderDeployment\":\"${local.deployment_name}\""
-  })
-}
-
-resource "azurerm_app_service_plan" "example" {
-  name                = "example-app-service-plan"
-  location            = azurerm_resource_group.resgrp.location
-  resource_group_name = azurerm_resource_group.resgrp.name
-  sku {
-    tier = "Standard"
-    size = "S1"
-  }
-}
-
-# wait some time to allow functionapp to warmup ?
-resource "azurerm_web_app" "example" {
-  name                = "${local.deployment_name}-function"
-  location            = azurerm_resource_group.resgrp.location
-  resource_group_name = azurerm_resource_group.resgrp.name
-  app_service_plan_id = azurerm_app_service_plan.example.id
-
-  site_config {
-    dotnet_framework_version = "v4.0"
-  }
-}
-
-resource "azurerm_storage_container" "container" {
-  name                  = "webapp-container"
-  storage_account_name  = azurerm_storage_account.storage.name
-  container_access_type = "private"
-}
-
-resource "azurerm_storage_blob" "log_forwarder_blob" {
-  name                   = "dynatrace-azure-log-forwarder.zip"
-  storage_account_name   = azurerm_storage_account.storage.name
-  storage_container_name = azurerm_storage_container.container.name
-  type                   = "Block"
-  source                 = "https://github.com/dynatrace-oss/dynatrace-azure-log-forwarder/releases/download/release-0.1.3/dynatrace-azure-log-forwarder.zip"
-}
-
-resource "azurerm_app_service" "example" {
-  name                = "${local.deployment_name}-function"
-  location            = azurerm_resource_group.resgrp.location
-  resource_group_name = azurerm_resource_group.resgrp.name
-  app_service_plan_id = azurerm_app_service_plan.example.id
-
-  site_config {
-    always_on                = true
-    dotnet_framework_version = "v4.0"
+    source = "terraform"
   }
 
-  storage_account {
-    name           = azurerm_storage_account.storage.name
-    type           = "AzureBlob"
-    account_key    = azurerm_storage_account.storage.primary_access_key
-    container_name = azurerm_storage_container.container.name
-    path           = "site/wwwroot"
-  }
+  # To discover potential names for log groups the command
+  #   aws logs describe-log-groups --output text --query "logGroups[].[logGroupName]"
+  # will be helpful
+  log_groups = [
+    "/aws/lambda/my-lambda",
+    "/aws/apigateway/my-api"
+  ]
+
+  # https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html
+  # empty string matches everything
+  filter_pattern = ""
 }
 
+resource "local_file" "dynatrace_aws_log_forwarder" {
+  filename = "${path.module}/dynatrace-aws-log-forwarder.zip"
+  source   = "https://github.com/dynatrace-oss/dynatrace-aws-log-forwarder/releases/latest/download/dynatrace-aws-log-forwarder.zip"
+}
+
+resource "archive_file" "dynatrace_aws_log_forwarder" {
+  type        = "zip"
+  # You may want to choose a different folder to extract to here
+  output_path = "${path.module}"
+  source_file = file(local_file.dynatrace_aws_log_forwarder.filename)
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Lambda Function code needs to be available via S3 Bucket
+# ----------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket" "dynatrace_aws_log_forwarder" {
+  bucket = "dynatrace_aws_log_forwarder"
+}
+
+resource "aws_s3_bucket_object" "dynatrace_aws_log_forwarder" {
+  bucket = aws_s3_bucket.dynatrace_aws_log_forwarder.id
+  key    = "dynatrace-aws-log-forwarder.zip"
+  source = "${archive_file.dynatrace_aws_log_forwarder.output_path}/dynatrace-aws-log-forwarder-lambda.zip"
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Create Stack
+# ----------------------------------------------------------------------------------------------------------------------
+resource "aws_cloudformation_stack" "dynatrace_aws_log_forwarder" {
+  name = local.stack_name
+  capabilities = ["CAPABILITY_IAM"]
+  tags = local.tags
+  parameters = {
+    # The URL to Your Dynatrace SaaS logs ingest target.
+    # If you choose new ActiveGate deployment (UseExistingActiveGate = false), provide Tenant URL (https://<your_environment_ID>.live.dynatrace.com).
+    # If you choose to use existing ActiveGate (UseExistingActiveGate = true), provide ActiveGate endpoint:
+    #  - for Public ActiveGate: https://<your_environment_ID>.live.dynatrace.com
+    #  - for Environment ActiveGate: https://<active_gate_address>:9999/e/<environment_id> (e.g. https://22.111.98.222:9999/e/abc12345)
+    DynatraceEnvironmentUrl = var.target_url
+    # Set to "" if you choose to new an existing ActiveGate (UseExistingActiveGate = false). It will not be used.
+    # If you choose to use an existing ActiveGate (UseExistingActiveGate = true)
+    #  - for Public ActiveGate: https://<TenantId>.live.dynatrace.com
+    #  - for Environment ActiveGate: https://<active_gate_address>:9999/e/<TenantId> (e.g. https://22.111.98.222:9999/e/abc12345)
+    TenantId = "tenant-id"
+    # Dynatrace API token. Integration requires API v1 Log import Token permission.
+    DynatraceApiKey = var.target_api_token
+    # Enables checking SSL certificate of the target Active Gate
+    # By default (if this option is not provided) certificates aren't validated
+    VerifySSLTargetActiveGate = false
+    # If you choose new ActiveGate deployment, set to 'false'
+    # In such case, a new EC2 with ActiveGate will be added to log forwarder deployment (enclosed in VPC with log forwarder)
+    # If you choose to use existing ActiveGate (either Public AG or Environment AG), set to 'true'.
+    UseExistingActiveGate = true
+    # Only needed when UseExistingActiveGate = false
+    # PaaS token generated in Integration/Platform as a Service.
+    # Used for ActiveGate installation.
+    DynatracePaasToken = var.target_paas_token
+    # Defines the max log length after which a log will be truncated
+    # For values over 8192 there's also a change in Dynatrace settings needed
+    # For that you need to contact Dynatrace One.
+    MaxLogContentLength = 8192
+  }
+
+  ###############################################################
+  # This is VERY messy - definitely room for improvement
+  # When executing `dynatrace-aws-logs.sh deploy` it executes two things in a row:
+  #   * `aws cloudformation deploy` creates a stack using the template file `dynatrace-aws-log-forwarder-template.yaml`
+  #       - The Lambda Function defined within `dynatrace-aws-log-forwarder-template.yaml` contains a source code only a skeleton
+  #   * `aws lambda update-function-code` immediately afterwards updates the source code contained within `dynatrace-aws-log-forwarder-lambda.zip`
+  # The AWS Terraform Provider doesn't offer a counterpart for `aws lambda update-function-code`
+  #   - The resource `aws_lambda_function` would CREATE a Lambda Function for us
+  #   - But in that case we'd have to replicate the settings of it from `dynatrace-aws-log-forwarder-template.yaml`
+  # The current solution replaces within the template the skeleton code 
+  #     ZipFile: |
+  #        def handler(event, context):
+  #          raise Exception("Dynatrace Logs Lambda has not been uploaded")
+  # with
+  #     S3Bucket: ${aws_s3_bucket.dynatrace_aws_log_forwarder.id}
+  #     S3Key: ${aws_s3_bucket_object.dynatrace_aws_log_forwarder.key}
+  # in other words, we're referring to the zip archive that has been previously made available via S3 Bucket
+  # That way there is no counterpart for `aws lambda update-function-code` necessary
+  template_body = replace(file("dynatrace-aws-log-forwarder-template.yaml"), "        ZipFile: |\n          def handler(event, context):\n            raise Exception(\"Dynatrace Logs Lambda has not been uploaded\")", "        S3Bucket: ${aws_s3_bucket.dynatrace_aws_log_forwarder.id}\n        S3Key: ${aws_s3_bucket_object.dynatrace_aws_log_forwarder.key}")
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "example" {
+  for_each = local.log_groups
+
+  name            = local.stack_name
+  role_arn        = aws_cloudformation_stack.dynatrace_aws_log_forwarder.outputs["CloudWatchLogsRoleArn"]
+  log_group_name  = each.key
+  filter_pattern  = local.filter_pattern
+  destination_arn = aws_cloudformation_stack.dynatrace_aws_log_forwarder.outputs["FirehoseArn"]
+}
+
+# aws logs put-subscription-filter --log-group-name "$LOG_GROUP" --filter-name "$SUBSCRIPTION_FILTER_NAME" --filter-pattern "$FILTER_PATTERN"  --role-arn "$ROLE_ARN"
 ```
