@@ -14,13 +14,14 @@ Invoking the export functionality requires
 * Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
 
 ### Execution
-Windows: `terraform-provider-dynatrace.exe -export [-ref] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
+Windows: `terraform-provider-dynatrace.exe -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
 
-Linux: `./terraform-provider-dynatrace -export [-ref] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
+Linux: `./terraform-provider-dynatrace -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
 
 ### Options
 * `-ref` Enable resources with data sources and dependencies
 * `-migrate` Enable resources with dependencies, no data sources. More information available in the [Environment Migration](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/environment-migration) guide.
+* `-import-state` Automatically initializes the terraform modules and imports downloaded resources into the state
 * `-id` Enable commented id output in resource files
 * `-flat` All downloaded resources end up directly within the target folder - no module structure will be created
 * `-exclude` Exclude specified resource(s) from export
@@ -33,6 +34,8 @@ Linux: `./terraform-provider-dynatrace -export [-ref] [-id] [-flat] [-exclude] [
 * `./terraform-provider-dynatrace -export -ref dynatrace_dashboard dynatrace_web_application` downloads all available dashboards, web applications and resource dependencies with references
 * `./terraform-provider-dynatrace -export -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads the alerting profiles with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`, includes all resource dependencies with references
 * `./terraform-provider-dynatrace -export -ref dynatrace_calculated_service_metric dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads all available calculated service metrics and also the alerting profile with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`, includes all resource dependencies with references
+* `./terraform-provider-dynatrace -export -import-state` downloads all available configuration settings and imports resources into the state
+* `./terraform-provider-dynatrace -export -import-state dynatrace_web_application` downloads all web applications and imports resources into the state
 * `./terraform-provider-dynatrace -export -ref -exclude dynatrace_calculated_service_metric dynatrace_alerting` download all available configuration settings except `dynatrace_calculated_service_metric` and `dynatrace_alerting`, includes all resource dependencies with references
 
 ### Additional Information
