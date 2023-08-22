@@ -57,7 +57,7 @@ type SettingsObjectUpdate struct {
 type SettingsObjectCreate struct {
 	SchemaVersion string `json:"schemaVersion,omitempty"`
 	SchemaID      string `json:"schemaId"`
-	Scope         string `json:"scope"`
+	Scope         string `json:"scope,omitempty"`
 	Value         any    `json:"value"`
 }
 

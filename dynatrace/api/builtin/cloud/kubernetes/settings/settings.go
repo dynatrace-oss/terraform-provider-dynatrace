@@ -43,7 +43,18 @@ type Settings struct {
 	OpenMetricsBuiltinEnabled       *bool             `json:"openMetricsBuiltinEnabled,omitempty"`       // The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
 	OpenMetricsPipelineEnabled      *bool             `json:"openMetricsPipelineEnabled,omitempty"`      // For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
 	PvcMonitoringEnabled            *bool             `json:"pvcMonitoringEnabled,omitempty"`            // To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
-	Scope                           string            `json:"-" scope:"scope"`                           // The scope of this setting (KUBERNETES_CLUSTER)
+	Scope                           *string           `json:"-" scope:"scope"`                           // The scope of this setting (KUBERNETES_CLUSTER)
+}
+
+func (me *Settings) SetScope(scope string) {
+	me.Scope = &scope
+}
+
+func (me *Settings) GetScope() string {
+	if me.Scope == nil {
+		return ""
+	}
+	return *me.Scope
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -146,9 +157,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Deprecated:  "This field has been moved to a new schema, please utilize the resource `dynatrace_k8s_monitoring` to configure this field.",
 		},
 		"scope": {
-			Type:        schema.TypeString,
-			Description: "The scope of this setting (KUBERNETES_CLUSTER)",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "The scope of this setting (KUBERNETES_CLUSTER)",
+			Optional:         true,
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" },
 		},
 	}
 }
