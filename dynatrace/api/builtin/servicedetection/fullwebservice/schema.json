@@ -212,7 +212,7 @@
 	"ordered": true,
 	"properties": {
 		"conditions": {
-			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them.",
+			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them.",
 			"displayName": "Conditions",
 			"documentation": "",
 			"items": {
@@ -268,7 +268,7 @@
 			}
 		},
 		"managementZones": {
-			"description": "Define a management zone filter for this service detection rule.",
+			"description": "Define a management zone of the process group for which this service detection rule should be created.",
 			"displayName": "Management zones",
 			"documentation": "",
 			"items": {
@@ -1319,30 +1319,36 @@
 			"columns": [
 				{
 					"displayName": "Detect as web request service",
+					"id": "asWebRequest",
 					"propertyRef": "./idContributors/detectAsWebRequestService"
 				},
 				{
 					"displayName": "Application ID",
+					"id": "applicationId",
 					"propertyRef": "./idContributors/applicationId/enableIdContributor"
 				},
 				{
 					"displayName": "URL context root",
+					"id": "contextRoot",
 					"propertyRef": "./idContributors/contextRoot/enableIdContributor"
 				},
 				{
 					"displayName": "Server name",
+					"id": "serverName",
 					"propertyRef": "./idContributors/serverName/enableIdContributor"
 				},
 				{
 					"displayName": "Web service name",
+					"id": "webSvcName",
 					"propertyRef": "./idContributors/webServiceName/enableIdContributor"
 				},
 				{
 					"displayName": "Web service namespace",
+					"id": "webSvcNamespace",
 					"propertyRef": "./idContributors/webServiceNamespace/enableIdContributor"
 				}
 			]
 		}
 	},
-	"version": "2.1.12"
+	"version": "2.1.13"
 }
