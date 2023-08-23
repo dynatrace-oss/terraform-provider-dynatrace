@@ -79,6 +79,23 @@
 			"subType": "rum_app_detection_app_picker",
 			"type": "text"
 		},
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Add a description for your rule",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "multiline",
+			"type": "text"
+		},
 		"matcher": {
 			"default": "DOMAIN_MATCHES",
 			"description": "",
@@ -114,5 +131,5 @@
 	],
 	"schemaId": "builtin:rum.web.app-detection",
 	"types": {},
-	"version": "2.0.1"
+	"version": "2.1"
 }

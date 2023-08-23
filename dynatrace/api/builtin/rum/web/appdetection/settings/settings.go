@@ -23,9 +23,10 @@ import (
 )
 
 type Settings struct {
-	ApplicationID string  `json:"applicationId"` // Select an existing application or create a new one.
-	Matcher       Matcher `json:"matcher"`       // Possible Values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`
-	Pattern       string  `json:"pattern"`       // Pattern
+	ApplicationID string  `json:"applicationId"`         // Select an existing application or create a new one.
+	Description   *string `json:"description,omitempty"` // (v1.274) Add a description for your rule
+	Matcher       Matcher `json:"matcher"`               // Possible Values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`
+	Pattern       string  `json:"pattern"`               // Pattern
 }
 
 func (me *Settings) Name() string {
@@ -38,6 +39,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Select an existing application or create a new one.",
 			Required:    true,
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Description: "(v1.274) Add a description for your rule",
+			Optional:    true, // nullable
 		},
 		"matcher": {
 			Type:        schema.TypeString,
@@ -55,6 +61,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"application_id": me.ApplicationID,
+		"description":    me.Description,
 		"matcher":        me.Matcher,
 		"pattern":        me.Pattern,
 	})
@@ -63,6 +70,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"application_id": &me.ApplicationID,
+		"description":    &me.Description,
 		"matcher":        &me.Matcher,
 		"pattern":        &me.Pattern,
 	})

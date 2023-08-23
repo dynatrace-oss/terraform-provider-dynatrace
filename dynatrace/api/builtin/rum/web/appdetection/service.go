@@ -26,7 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.0.1"
+const SchemaVersion = "2.1"
 const SchemaID = "builtin:rum.web.app-detection"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*appdetection.Settings] {
