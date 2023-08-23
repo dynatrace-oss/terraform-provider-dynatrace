@@ -24,11 +24,13 @@ var MaskingPresets = struct {
 	BlockList     MaskingPreset
 	MaskAll       MaskingPreset
 	MaskUserInput MaskingPreset
+	NoMasking     MaskingPreset
 }{
 	"ALLOW_LIST",
 	"BLOCK_LIST",
 	"MASK_ALL",
 	"MASK_USER_INPUT",
+	"NO_MASKING",
 }
 
 type MaskingTargetType string
