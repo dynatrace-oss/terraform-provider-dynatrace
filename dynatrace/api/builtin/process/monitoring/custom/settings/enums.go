@@ -91,6 +91,7 @@ var AgentItemNames = struct {
 	PgIdCalcInputKeyLinkage            AgentItemName
 	PhpCliScriptPath                   AgentItemName
 	PhpCliWorkingDir                   AgentItemName
+	Rke2Type                           AgentItemName
 	RuxitClusterId                     AgentItemName
 	RuxitNodeId                        AgentItemName
 	ServiceName                        AgentItemName
@@ -191,6 +192,7 @@ var AgentItemNames = struct {
 	"PG_ID_CALC_INPUT_KEY_LINKAGE",
 	"PHP_CLI_SCRIPT_PATH",
 	"PHP_CLI_WORKING_DIR",
+	"RKE2_TYPE",
 	"RUXIT_CLUSTER_ID",
 	"RUXIT_NODE_ID",
 	"SERVICE_NAME",

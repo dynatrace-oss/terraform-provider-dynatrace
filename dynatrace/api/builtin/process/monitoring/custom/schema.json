@@ -350,6 +350,10 @@
 					"value": "Z_CM_VERSION"
 				},
 				{
+					"displayName": "RKE2 runtime type",
+					"value": "RKE2_TYPE"
+				},
+				{
 					"displayName": "Equinox config path",
 					"value": "EQUINOX_CONFIG_PATH"
 				},
@@ -615,5 +619,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.5"
+	"version": "0.4.6"
 }
