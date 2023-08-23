@@ -30,6 +30,11 @@
 					"value": "log.content"
 				},
 				{
+					"displayName": "Log Record Level",
+					"icon": "filter",
+					"value": "loglevel"
+				},
+				{
 					"displayName": "K8s container name",
 					"icon": "kubernetes-container-services",
 					"value": "k8s.container.name"
@@ -255,6 +260,7 @@
 				{
 					"columnRef": "sendToStorageColumn",
 					"displayName": "Rule type",
+					"id": "sendToStorage",
 					"type": "text"
 				}
 			],
@@ -263,5 +269,5 @@
 			}
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
