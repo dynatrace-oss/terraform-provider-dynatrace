@@ -791,10 +791,29 @@
 				{
 					"columnRef": "expiredStateColumn",
 					"displayName": "State",
-					"type": "text"
+					"id": "state",
+					"items": [
+						{
+							"displayName": "Expired",
+							"value": "Expired"
+						},
+						{
+							"displayName": "Ongoing",
+							"value": "Ongoing"
+						},
+						{
+							"displayName": "Upcoming",
+							"value": "Upcoming"
+						}
+					],
+					"type": "enum",
+					"width": "120"
+				},
+				{
+					"builtinColumnRef": "summary"
 				}
 			]
 		}
 	},
-	"version": "2.14.3"
+	"version": "2.14.4"
 }

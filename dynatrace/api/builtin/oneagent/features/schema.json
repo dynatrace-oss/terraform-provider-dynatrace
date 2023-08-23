@@ -21,6 +21,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"keyProperty": "key",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add override"
@@ -97,10 +98,37 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Key property must have unique value",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:preferences"
 	],
 	"schemaId": "builtin:oneagent.features",
+	"tableColumns": {
+		"minAgentColumn": {
+			"pattern": "{key|datasourceMetadata:'MIN_AGENT_VERSION'}"
+		}
+	},
 	"types": {},
-	"version": "1.5.7"
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"columnRef": "minAgentColumn",
+					"displayName": "Min. OneAgent version",
+					"id": "minAgent",
+					"type": "float",
+					"width": "110"
+				}
+			]
+		}
+	},
+	"version": "1.5.9"
 }
