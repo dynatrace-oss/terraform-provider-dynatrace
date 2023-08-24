@@ -42,7 +42,6 @@ resource "dynatrace_kubernetes" "#name#" {
 - `cluster_id_enabled` (Boolean) For more information on local Kubernetes API monitoring, see the [documentation](https://dt-url.net/6q62uep).
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `label` (String) Renaming the cluster breaks configurations that are based on its name (e.g., management zones, and alerting).
-- `scope` (String) The scope of this setting (KUBERNETES_CLUSTER)
 
 ### Optional
 
@@ -63,6 +62,7 @@ See [DDUs for events](https://dt-url.net/5n03vcu) for details.
 - `open_metrics_builtin_enabled` (Boolean, Deprecated) The workload resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
 - `open_metrics_pipeline_enabled` (Boolean, Deprecated) For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
 - `pvc_monitoring_enabled` (Boolean, Deprecated) To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
+- `scope` (String) The scope of this setting (KUBERNETES_CLUSTER)
 
 ### Read-Only
 
