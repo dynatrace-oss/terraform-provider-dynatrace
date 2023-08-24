@@ -65,6 +65,7 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.CalculatedServiceMetric ||
 		me.Type == ResourceTypes.MobileApplication ||
 		me.Type == ResourceTypes.BrowserMonitor ||
+		me.Type == ResourceTypes.HTTPMonitor ||
 		me.Type == ResourceTypes.Credentials ||
 		me.Type == ResourceTypes.SyntheticLocation ||
 		me.Type == ResourceTypes.FailureDetectionParameters ||
