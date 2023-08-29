@@ -74,6 +74,9 @@ func (me *service) Create(v *requestnaming.RequestNaming) (*api.Stub, error) {
 		}
 		time.Sleep(2 * time.Second)
 	}
+	if err != nil {
+		return nil, err
+	}
 
 	return &stub, nil
 }
