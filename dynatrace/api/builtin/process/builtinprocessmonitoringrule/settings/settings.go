@@ -24,6 +24,7 @@ import (
 
 type Settings struct {
 	HostGroupID *string `json:"-" scope:"hostGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	RuleID1     bool    `json:"-1"`                    // (v1.274) Rule id: 1 - Do not monitor processes if PHP script exists
 	RuleID2     bool    `json:"-2"`                    // Rule id: 2 - Do not monitor processes if EXE name equals 'php-cgi'
 	RuleID3     bool    `json:"-3"`                    // Rule id: 3 - Do monitor processes if ASP.NET Core application path exists
 	RuleID4     bool    `json:"-4"`                    // Rule id: 4 - Do monitor processes if EXE name equals 'w3wp.exe'
@@ -102,6 +103,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Optional:    true,
 			Default:     "environment",
+		},
+		"php_script": {
+			Type:        schema.TypeBool,
+			Description: "(v1.274) Rule id: 1 - Do not monitor processes if PHP script exists",
+			Optional:    true,
+			Default:     true,
 		},
 		"exe_phpcgi": {
 			Type:        schema.TypeBool,
@@ -499,6 +506,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"host_group_id":                         me.HostGroupID,
+		"php_script":                            me.RuleID1,
 		"exe_phpcgi":                            me.RuleID2,
 		"aspnetcore":                            me.RuleID3,
 		"exe_w3wp":                              me.RuleID4,
@@ -570,6 +578,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"host_group_id":                         &me.HostGroupID,
+		"php_script":                            &me.RuleID1,
 		"exe_phpcgi":                            &me.RuleID2,
 		"aspnetcore":                            &me.RuleID3,
 		"exe_w3wp":                              &me.RuleID4,
