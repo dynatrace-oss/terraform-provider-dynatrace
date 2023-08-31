@@ -168,6 +168,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipdetermination"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings"
 	rummobileenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/enablement"
+	mobilekeyperformancemetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/keyperformancemetrics"
 	mobilerequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/requesterrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/overloadprevention"
 	rumprocessgroup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/processgroup"
@@ -1012,6 +1013,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		xhractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.MobileAppKeyPerformance: NewResourceDescriptor(
+		mobilekeyperformancemetrics.Service,
+		Dependencies.ID(ResourceTypes.MobileApplication),
+	),
 	ResourceTypes.OwnershipConfig:          NewResourceDescriptor(ownership_config.Service),
 	ResourceTypes.BuiltinProcessMonitoring: NewResourceDescriptor(builtinprocessmonitoringrule.Service),
 	ResourceTypes.LimitOutboundConnections: NewResourceDescriptor(allowedoutboundconnections.Service),
@@ -1128,6 +1133,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AutomationBusinessCalendar,
 	ResourceTypes.AutomationSchedulingRule,
 	ResourceTypes.AGToken,
+	ResourceTypes.MobileAppKeyPerformance,
 
 	// Not included in export - may cause issues for migration use cases
 	ResourceTypes.MetricMetadata,

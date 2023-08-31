@@ -302,6 +302,7 @@ var ResourceTypes = struct {
 	WebAppKeyPerformanceCustom          ResourceType
 	WebAppKeyPerformanceLoad            ResourceType
 	WebAppKeyPerformanceXHR             ResourceType
+	MobileAppKeyPerformance             ResourceType
 	BuiltinProcessMonitoring            ResourceType
 	LimitOutboundConnections            ResourceType
 	SpanEvents                          ResourceType
@@ -549,6 +550,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_key_performance_custom",
 	"dynatrace_web_app_key_performance_load",
 	"dynatrace_web_app_key_performance_xhr",
+	"dynatrace_mobile_app_key_performance",
 	"dynatrace_builtin_process_monitoring",
 	"dynatrace_limit_outbound_connections",
 	"dynatrace_span_events",
