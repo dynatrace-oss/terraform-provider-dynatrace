@@ -17,4 +17,4 @@
 
 package version
 
-const Current = "1.40.0"
+const Current = "1.41.0"
