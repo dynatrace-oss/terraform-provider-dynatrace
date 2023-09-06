@@ -79,9 +79,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"metric_name": {
-			Type:        schema.TypeString,
-			Description: "Metric name",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Metric name",
+			Optional:         true,
+			Computed:         true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return d.Id() != "" },
 		},
 		"name": {
 			Type:        schema.TypeString,
