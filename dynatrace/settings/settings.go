@@ -231,7 +231,7 @@ func RefersToMissingID(v any) bool {
 		return false
 	}
 	if marshalledSettings, err := json.Marshal(v); err == nil {
-		return strings.Contains(string(marshalledSettings), "TFMIGRATIONID-")
+		return strings.Contains(string(marshalledSettings), "tfmigrationid")
 	}
 	return false
 }

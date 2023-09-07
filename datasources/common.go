@@ -73,15 +73,16 @@ func NotFoundID(values ...any) string {
 	stringValues := []string{}
 	if len(values) > 0 {
 		for _, value := range values {
-			stringValues = append(stringValues, fmt.Sprintf("%v", value))
+			v := strings.ToLower(strings.ReplaceAll(fmt.Sprintf("%v", value), " ", ""))
+			stringValues = append(stringValues, v)
 		}
 	}
 	if len(stringValues) == 0 {
-		return "TFMIGRATIONID-" + uuid.NewString()
+		return "TFMIGRATIONID" + uuid.NewString()
 	}
 	ret := "TFMIGRATIONID"
 	for _, value := range stringValues {
-		ret = ret + "-" + value
+		ret = ret + value
 	}
-	return ret
+	return strings.ReplaceAll(strings.ToLower(ret), " ", "")
 }
