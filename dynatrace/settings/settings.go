@@ -19,9 +19,11 @@ package settings
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"reflect"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -222,6 +224,16 @@ func ClearLegacyID(v any) *string {
 		return legacyID
 	}
 	return nil
+}
+
+func RefersToMissingID(v any) bool {
+	if v == nil {
+		return false
+	}
+	if marshalledSettings, err := json.Marshal(v); err == nil {
+		return strings.Contains(string(marshalledSettings), "TFMIGRATIONID-")
+	}
+	return false
 }
 
 type ErrorSettings struct {

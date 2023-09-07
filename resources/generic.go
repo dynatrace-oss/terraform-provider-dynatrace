@@ -194,6 +194,12 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("_restore_", *restore)
 	}
 	d.SetId(stub.ID)
+
+	if settings.RefersToMissingID(sttngs) {
+		settingName := settings.Name(sttngs, "")
+		logging.File.Printf("The resource `%s` with name `%s` and ID `%s` is not in its final state. It refers to resources that don't exist yet.", me.Type, settingName, stub.ID)
+	}
+
 	// if settings.SupportsFlawedReasons(sttngs) {
 	// 	flawedReasons := settings.GetFlawedReasons(sttngs)
 	// 	if len(flawedReasons) > 0 {
@@ -228,6 +234,10 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 			return diag.FromErr(errors.New(restError.Message))
 		}
 		return diag.FromErr(err)
+	}
+	if settings.RefersToMissingID(sttngs) {
+		settingName := settings.Name(sttngs, "")
+		logging.File.Printf("The resource `%s` with name `%s` and ID `%s` is not in its final state. It refers to resources that don't exist yet.", me.Type, settingName, d.Id())
 	}
 	if _, ok := sttngs.(Computer); ok {
 		return me.ReadForSettings(ctx, d, m, sttngs)

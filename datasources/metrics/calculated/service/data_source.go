@@ -18,6 +18,7 @@
 package service
 
 import (
+	common "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -60,6 +61,6 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			}
 		}
 	}
-	d.SetId("")
+	d.SetId(common.NotFoundID(name))
 	return nil
 }
