@@ -18,6 +18,9 @@
 package slo
 
 import (
+	"strings"
+
+	common "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
 	slosetting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/settings"
@@ -146,6 +149,6 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		}
 	}
 
-	d.SetId("")
+	d.SetId(common.NotFoundID(strings.ToLower(strings.ReplaceAll(name, " ", ""))))
 	return nil
 }
