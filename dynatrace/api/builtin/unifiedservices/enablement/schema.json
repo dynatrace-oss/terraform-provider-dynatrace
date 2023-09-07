@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Enabling Unified services detection for API-ingested OpenTelemetry data will enhance the way Dynatrace detects and groups observability signals, such as metrics, logs, and spans, for OpenTelemetry services.\n\nYou will get, automatic endpoint detection and alerting (optional activation); if service mesh is detected in your applications, service mesh metrics will be displayed for the related service; and much more. Please check the [documentation](https://dt-url.net/gy03cmt) for details.\n\nIt is recommended to enable the Unified services for OpenTelemetry to start benefitting from the improved automation and intelligence Unified Services provide to OpenTelemetry services.\n\n* Breaking change: This action will introduce new service metric keys, which will affect existing API metric queries, dashboards, and service names.\n* This action can be reverted.\n\nIf you already use the service type **Span (default) service** in your environment, we recommend migrating your instances to the **Unified service** type.",
+	"displayName": "Unified services for OpenTelemetry",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "We recommend to have this setting enabled.",
+			"displayName": "Enable Unified services",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:unified-services-enablement",
+	"types": {},
+	"version": "1.10"
+}
