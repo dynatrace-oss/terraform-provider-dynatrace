@@ -23,9 +23,10 @@ import (
 )
 
 type Settings struct {
-	Config_item_title string   `json:"config-item-title"` // Name
-	Date_time_pattern string   `json:"date-time-pattern"` // Date-time pattern
-	Enabled           bool     `json:"enabled"`           // This setting is enabled (`true`) or disabled (`false`)
+	Config_item_title string   `json:"config-item-title"`           // Name
+	Date_search_limit *int     `json:"date-search-limit,omitempty"` // (v1.275) Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
+	Date_time_pattern string   `json:"date-time-pattern"`           // Date-time pattern
+	Enabled           bool     `json:"enabled"`                     // This setting is enabled (`true`) or disabled (`false`)
 	Matchers          Matchers `json:"matchers,omitempty"`
 	Scope             *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	Timezone          string   `json:"timezone"`        // Timezone
@@ -41,6 +42,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Name",
 			Required:    true,
+		},
+		"date_search_limit": {
+			Type:        schema.TypeInt,
+			Description: "(v1.275) Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
+			Optional:    true, // nullable
 		},
 		"date_time_pattern": {
 			Type:        schema.TypeString,
@@ -77,6 +83,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"config_item_title": me.Config_item_title,
+		"date_search_limit": me.Date_search_limit,
 		"date_time_pattern": me.Date_time_pattern,
 		"enabled":           me.Enabled,
 		"matchers":          me.Matchers,
@@ -88,6 +95,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"config_item_title": &me.Config_item_title,
+		"date_search_limit": &me.Date_search_limit,
 		"date_time_pattern": &me.Date_time_pattern,
 		"enabled":           &me.Enabled,
 		"matchers":          &me.Matchers,

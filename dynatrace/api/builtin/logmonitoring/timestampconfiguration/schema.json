@@ -107,6 +107,25 @@
 			"nullable": false,
 			"type": "text"
 		},
+		"date-search-limit": {
+			"constraints": [
+				{
+					"maximum": 8192,
+					"minimum": 0,
+					"type": "RANGE"
+				}
+			],
+			"description": "Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
+			"displayName": "Timestamp search limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "bytes"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "integer"
+		},
 		"date-time-pattern": {
 			"constraints": [
 				{
@@ -291,11 +310,18 @@
 				},
 				{
 					"displayName": "Pattern",
+					"id": "dateTimePattern",
 					"propertyRef": "date-time-pattern"
 				},
 				{
 					"displayName": "Timezone",
+					"id": "timezone",
 					"propertyRef": "timezone"
+				},
+				{
+					"displayName": "Timestamp Search Limit",
+					"id": "dateSearchLimit",
+					"propertyRef": "date-search-limit"
 				}
 			],
 			"emptyState": {
@@ -303,5 +329,5 @@
 			}
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
