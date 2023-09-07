@@ -208,6 +208,7 @@ import (
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/unifiedservices/endpointmetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
@@ -1082,8 +1083,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		attackprotectionadvancedconfig.Service,
 		Coalesce(Dependencies.ProcessGroup),
 	),
-	ResourceTypes.AppSecAttackAllowlist: NewResourceDescriptor(attackprotectionallowlistconfig.Service),
-	ResourceTypes.GenericSetting:        NewResourceDescriptor(generic.Service),
+	ResourceTypes.AppSecAttackAllowlist:  NewResourceDescriptor(attackprotectionallowlistconfig.Service),
+	ResourceTypes.GenericSetting:         NewResourceDescriptor(generic.Service),
+	ResourceTypes.UnifiedServicesMetrics: NewResourceDescriptor(endpointmetrics.Service),
 }
 
 var BlackListedResources = []ResourceType{

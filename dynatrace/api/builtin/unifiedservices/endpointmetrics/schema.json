@@ -1,0 +1,31 @@
+{
+	"allowedScopes": [
+		"SERVICE",
+		"environment"
+	],
+	"description": "This setting allows to turn on or off endpoint metrics for Unified services. Please check the [documentation](https://dt-url.net/gy03cmt) for details.",
+	"displayName": "Unified services endpoint metrics",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enableEndpointMetrics": {
+			"default": true,
+			"description": "Should metrics be written for endpoints? Please be aware that this setting has billing implications. Check out this [documentation](https://dt-url.net/td23cgh) for further details.",
+			"displayName": "Enable endpoint metrics",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:unified-services-endpoint-metrics",
+	"types": {},
+	"version": "1"
+}

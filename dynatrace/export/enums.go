@@ -325,6 +325,7 @@ var ResourceTypes = struct {
 	AppSecAttackRules                   ResourceType
 	AppSecAttackAllowlist               ResourceType
 	GenericSetting                      ResourceType
+	UnifiedServicesMetrics              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -573,6 +574,7 @@ var ResourceTypes = struct {
 	"dynatrace_attack_rules",
 	"dynatrace_attack_allowlist",
 	"dynatrace_generic_setting",
+	"dynatrace_unified_services_metrics",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

@@ -458,6 +458,7 @@ func Provider() *schema.Provider {
 			"dynatrace_attack_settings":                    resources.NewGeneric(export.ResourceTypes.AppSecAttackSettings).Resource(),
 			"dynatrace_attack_rules":                       resources.NewGeneric(export.ResourceTypes.AppSecAttackRules).Resource(),
 			"dynatrace_attack_allowlist":                   resources.NewGeneric(export.ResourceTypes.AppSecAttackAllowlist).Resource(),
+			"dynatrace_unified_services_metrics":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesMetrics).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

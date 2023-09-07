@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_unified_services_metrics Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
+description: |-
+  The resource `dynatrace_unified_services_metrics` allows to turn on or off endpoint metrics for Unified services
+---
+
+# dynatrace_unified_services_metrics (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Unified service - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-detection-and-naming/service-types/unified-service
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:unified-services-endpoint-metrics`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_unified_services_metrics` downloads existing unified services endpoint metrics configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/unifiedservices/endpointmetrics/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
