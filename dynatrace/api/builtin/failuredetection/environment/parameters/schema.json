@@ -450,9 +450,9 @@
 					"type": "boolean"
 				},
 				"ignoredExceptions": {
-					"description": "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.",
-					"displayName": "Ignored Exceptions",
-					"documentation": "If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+					"description": "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+					"displayName": "Ignored exceptions",
+					"documentation": "",
 					"items": {
 						"description": "",
 						"displayName": "",
@@ -476,9 +476,9 @@
 					"type": "set"
 				},
 				"successForcingExceptions": {
-					"description": "Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.",
+					"description": "Define exceptions which indicate that an entire service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
 					"displayName": "Success forcing exceptions",
-					"documentation": "If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
+					"documentation": "",
 					"items": {
 						"description": "",
 						"displayName": "",
@@ -575,5 +575,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

@@ -331,6 +331,13 @@
 					"type": "integer"
 				},
 				"maxValue": {
+					"constraints": [
+						{
+							"maximum": 9007199254740991,
+							"minimum": -9007199254740991,
+							"type": "RANGE"
+						}
+					],
 					"description": "",
 					"displayName": "Maximum value",
 					"documentation": "The maximum allowed value of the metric.",
@@ -340,6 +347,13 @@
 					"type": "float"
 				},
 				"minValue": {
+					"constraints": [
+						{
+							"maximum": 9007199254740991,
+							"minimum": -9007199254740991,
+							"type": "RANGE"
+						}
+					],
 					"description": "",
 					"displayName": "Minimum value",
 					"documentation": "The minimum allowed value of the metric.",
@@ -376,5 +390,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "4.25"
+	"version": "4.26"
 }

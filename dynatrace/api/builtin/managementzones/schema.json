@@ -1386,6 +1386,23 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "conditions-count-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "long-id-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Management zone with this name already exists. Please provide a different one.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:preferences"
 	],
@@ -1873,7 +1890,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"maxLength": 120,
+							"maxLength": 150,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -2581,5 +2598,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

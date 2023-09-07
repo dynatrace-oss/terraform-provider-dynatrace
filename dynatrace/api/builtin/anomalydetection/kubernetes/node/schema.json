@@ -3,7 +3,7 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes node. Changing thresholds resets the observation period.",
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes nodes. Changing thresholds resets the observation period.",
 	"displayName": "Kubernetes node anomaly detection",
 	"documentation": "",
 	"dynatrace": "1",
@@ -136,7 +136,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -156,7 +156,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -257,7 +257,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -277,7 +277,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -348,7 +348,7 @@
 					"default": false,
 					"description": "",
 					"displayName": "Detect problematic node conditions",
-					"documentation": "Evaluates node conditions 'MemoryPressure', 'DiskPressure', 'PIDPressure', 'OutOfDisk' and 'NetworkUnavailable'",
+					"documentation": "Evaluates node conditions\n* MemoryPressure\n* DiskPressure\n* PIDPressure\n* OutOfDisk\n* NetworkUnavailable\n* KernelDeadlock\n* ReadonlyFilesystem\n* FrequentKubeletRestart\n* FrequentDockerRestart\n* FrequentContainerdRestart\n* KubeletUnhealthy\n* ContainerRuntimeUnhealthy",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -378,7 +378,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -398,7 +398,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -481,7 +481,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -501,7 +501,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -602,7 +602,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -622,7 +622,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -646,5 +646,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.2"
+	"version": "1.3"
 }
