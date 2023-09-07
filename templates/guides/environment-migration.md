@@ -55,6 +55,12 @@ Most resources do not allow configuration with the same name, but there is a sma
 * `DYNATRACE_DUPLICATE_REJECT=ALL` - Duplicates will not overwrite existing configuration
 * `DYNATRACE_DUPLICATE_HIJACK=ALL` - Duplicates will overwrite existing configuration
 
+A common approach with the configuration migration is to do an apply prior to the OneAgent migration and then a reapply after to deploy any configuration that depend on entities existing. An underlying dependency which has entity verification could have cascading effects where a data source could be driven to `null` and the plan/apply prevents execution. 
+
+Example: You may have a request attribute which has an entity filter, a calculated service metric that depends on this request attribute, and a dashboard that is using the calculated service metric. 
+
+In order to have a successful execution, the environment variable `MIGRATION=true` can be set which will replace `null` data source references with a name prefixed with `TFMIGRATIONID-`. This feature is currently available for calculated service metric and SLO data sources. When enabling this feature, a log file will be produced which will contain all resources that are incomplete due to missing underlying dependencies. Reapplying the configuration once the underlying resource dependency exists will automatically repair any resources.
+
 For an iterative migration, utilize the `-migrate -datasources` flags. This will create all of the necessary files with dependencies via data sources and hardcoded entity IDs.
 
 Windows: `terraform-provider-dynatrace.exe -export -migrate -datasources <resourcename>`
