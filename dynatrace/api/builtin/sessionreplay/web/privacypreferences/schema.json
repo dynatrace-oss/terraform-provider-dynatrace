@@ -32,11 +32,6 @@
 					"description": "This option allows you to specify web elements or attributes that should be masked. Any web element or attribute not in this list will be captured. When you initially select this masking option, you get rules that reflect the **Mask all** option.",
 					"displayName": "Block list",
 					"value": "BLOCK_LIST"
-				},
-				{
-					"description": "This option disables the masking of your users' sensitive data in text, user inputs, and images. Use this setting cautiously, as sensitive user data is at risk of exposure.",
-					"displayName": "No masking",
-					"value": "NO_MASKING"
 				}
 			],
 			"type": "enum"
@@ -457,5 +452,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }
