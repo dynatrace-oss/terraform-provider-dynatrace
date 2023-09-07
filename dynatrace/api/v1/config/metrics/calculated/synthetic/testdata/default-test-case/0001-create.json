@@ -1,5 +1,5 @@
 {
-  "monitorIdentifier": "SYNTHETIC_TEST-74EEC98A3855C3DD",
+  "monitorIdentifier": "SYNTHETIC_TEST-147CFF44DDB25C05",
   "name": "x${randomize}",
   "metricKey": "calc:synthetic.browser.x${randomize}",
   "enabled": true,

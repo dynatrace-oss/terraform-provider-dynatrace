@@ -4,5 +4,5 @@ resource "dynatrace_calculated_synthetic_metric" "#name#" {
   enabled            = true
   metric             = "JavaScriptErrors"
   metric_key         = "calc:synthetic.browser.#name#"
-  monitor_identifier = "SYNTHETIC_TEST-74EEC98A3855C3DD"
+  monitor_identifier = "SYNTHETIC_TEST-147CFF44DDB25C05"
 }
