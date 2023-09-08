@@ -219,6 +219,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
+	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
@@ -1088,6 +1089,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.GenericSetting:         NewResourceDescriptor(generic.Service),
 	ResourceTypes.UnifiedServicesMetrics: NewResourceDescriptor(endpointmetrics.Service),
 	ResourceTypes.UnifiedServicesOpenTel: NewResourceDescriptor(unifiedservicesopentel.Service),
+	ResourceTypes.PlatformBucket:         NewResourceDescriptor(platformbuckets.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1163,6 +1165,7 @@ var BlackListedResources = []ResourceType{
 
 	// Incubator
 	ResourceTypes.GenericSetting,
+	ResourceTypes.PlatformBucket,
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {

@@ -465,6 +465,7 @@ func Provider() *schema.Provider {
 	}
 	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
 		prv.ResourcesMap["dynatrace_generic_setting"] = generic.Resource()
+		prv.ResourcesMap["dynatrace_platform_bucket"] = resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource()
 	}
 	return prv
 }
