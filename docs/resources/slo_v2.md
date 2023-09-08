@@ -53,7 +53,6 @@ resource "dynatrace_slo_v2" "#name#" {
 - `evaluation_window` (String) Define the timeframe during which the SLO is to be evaluated. For the timeframe you can enter expressions like -1h (last hour), -1w (last week) or complex expressions like -2d to now (last two days), -1d/d to now/d (beginning of yesterday to beginning of today).
 - `filter` (String) Set a filter parameter (entitySelector) on any GET call to evaluate this SLO against specific services only (for example, type("SERVICE")).  For details, see the [Entity Selector documentation](https://dt-url.net/entityselector).
 - `metric_expression` (String) For details, see the [Metrics page](/ui/metrics "Metrics page").
-- `metric_name` (String) Metric name
 - `name` (String) SLO name
 - `target_success` (Number) Set the target value of the SLO. A percentage below this value indicates a failure.
 - `target_warning` (Number) Set the warning value of the SLO. At the warning state the SLO is fulfilled. However, it is getting close to a failure.
@@ -62,6 +61,7 @@ resource "dynatrace_slo_v2" "#name#" {
 
 - `custom_description` (String) The description of the SLO
 - `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
+- `metric_name` (String) Metric name
 
 ### Read-Only
 
