@@ -32,6 +32,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/spf13/afero"
 )
@@ -220,7 +221,7 @@ func (me *Module) CreateFile(name string) (*os.File, error) {
 	return os.Create(fileName)
 }
 
-func (me *Module) WriteProviderFile() (err error) {
+func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -230,7 +231,9 @@ func (me *Module) WriteProviderFile() (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
-	fmt.Println("- " + me.Type)
+	if logToScreen {
+		fmt.Println("- " + me.Type)
+	}
 	if err = me.MkdirAll(false); err != nil {
 		return err
 	}
@@ -266,7 +269,7 @@ func (me *Module) WriteProviderFile() (err error) {
 	return nil
 }
 
-func (me *Module) WriteVariablesFile() (err error) {
+func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -283,7 +286,9 @@ func (me *Module) WriteVariablesFile() (err error) {
 	if len(referencedResourceTypes) == 0 {
 		return nil
 	}
-	fmt.Println("- " + me.Type)
+	if logToScreen {
+		fmt.Println("- " + me.Type)
+	}
 	var variablesFile *os.File
 	if variablesFile, err = me.CreateFile("___variables___.tf"); err != nil {
 		return err
@@ -314,7 +319,7 @@ func (me *Module) WriteVariablesFile() (err error) {
 	return nil
 }
 
-func (me *Module) WriteDataSourcesFile() (err error) {
+func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -324,7 +329,9 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	if me.Environment.Flags.Flat {
 		return nil
 	}
-	fmt.Println("- " + me.Type)
+	if logToScreen {
+		fmt.Println("- " + me.Type)
+	}
 	buf := new(bytes.Buffer)
 	dsm := map[string]string{}
 	for _, v := range me.Resources {
@@ -551,7 +558,9 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		idx := 0
 		var wg sync.WaitGroup
 		wg.Add(len(me.Resources))
-
+		if len(me.Resources) > 0 {
+			logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
+		}
 		for _, resource := range me.Resources {
 			go func(resource *Resource) error {
 				defer wg.Done()
@@ -595,6 +604,9 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 	idx := 0
 	var wg sync.WaitGroup
 	wg.Add(len(resourcesToDownload))
+	if len(resourcesToDownload) > 0 {
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
+	}
 	for _, resource := range resourcesToDownload {
 		go func(resource *Resource) error {
 			defer wg.Done()
@@ -643,14 +655,15 @@ func (me *Module) Discover() error {
 	var err error
 
 	var stubs api.Stubs
-	// log.Println("Discovering \"" + me.Type + "\" ...")
 	if stubs, err = me.Service.List(); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
+			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. Token is missing required scope.", me.Type)
 			me.Status = ModuleStati.Erronous
 			me.Error = err
 			return nil
 		}
 		if strings.Contains(err.Error(), "No schema with topic identifier") {
+			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. The schema doesn't exist on that environment.", me.Type)
 			me.Status = ModuleStati.Erronous
 			me.Error = err
 			return nil
@@ -669,7 +682,7 @@ func (me *Module) Discover() error {
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
-	// log.Println("   ", fmt.Sprintf("%d items found", len(stubs)))
+	logging.Debug.Info.Printf("[DISCOVER] [%s] %d items found.", me.Type, len(stubs))
 	return nil
 }
 
