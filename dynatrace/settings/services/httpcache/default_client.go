@@ -31,12 +31,15 @@ var REGEX_SETTINGS_20_LIST, _ = regexp.Compile(`\/api\/v2\/settings\/objects\?sc
 var REGEX_SETTINGS_20_GET, _ = regexp.Compile(`\/api\/v2\/settings\/objects\/(.*)`)
 var REGEX_APPLICATIONS_MOBILE_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile$`)
 var REGEX_APPLICATIONS_MOBILE_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/([^\/]*)$`)
-var REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTIONS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/.*\/keyUserActions$`)
-var REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/.*\/userActionAndSessionProperties$`)
+var REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTIONS_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/([^\/]*)\/keyUserActions$`)
+var REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/([^\/]*)\/userActionAndSessionProperties$`)
+var REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/mobile\/([^\/]*)\/userActionAndSessionProperties/([^\/]*)$`)
 var REGEX_APPLICATIONS_WEB_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web$`)
 var REGEX_APPLICATIONS_WEB_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/([^\/]*)$`)
-var REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/.*\/keyUserActions$`)
-var REGEX_APPLICATIONS_WEB_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/.*\/userActionAndSessionProperties$`)
+var REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/([^\/]*)\/keyUserActions$`)
+var REGEX_APPLICATIONS_WEB_ERROR_RULES_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/([^\/]*)\/errorRules$`)
+var REGEX_APPLICATION_DETECTION_RULES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applicationDetectionRules$`)
+var REGEX_APPLICATION_DETECTION_RULES_GET, _ = regexp.Compile(`\/api\/config\/v1\/applicationDetectionRules\/([^\/]*)$`)
 var REGEX_CUSTOM_SERVICE_NODEJS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/nodeJS$`)
 var REGEX_CUSTOM_SERVICE_NODEJS_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/nodeJS\/([^\/]*)$`)
 var REGEX_CUSTOM_SERVICE_DOTNET_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/dotNet$`)
@@ -52,7 +55,7 @@ var REGEX_CALCULATED_METRICS_SERVICE_GET, _ = regexp.Compile(`\/api\/config\/v1\
 var REGEX_DASHBOARDS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/dashboards$`)
 var REGEX_DASHBOARDS_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)$`)
 var REGEX_REQUEST_ATTRIBUTES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes$`)
-var REGEX_REQUEST_ATTRIBUTES_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes\/([^\/]*)$`)
+var REGEX_REQUEST_ATTRIBUTES_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes\/([^\/?]*)\?includeProcessGroupReferences=true$`)
 var REGEX_CONDITIONAL_NAMING_HOST_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host$`)
 var REGEX_CONDITIONAL_NAMING_HOST_GET, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host\/([^\/]*)$`)
 var REGEX_REQUEST_NAMING_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestNaming$`)
@@ -79,18 +82,24 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return List("application-mobile")
 	} else if m := REGEX_APPLICATIONS_MOBILE_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("application-mobile", m[1])
-	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
-		return EmptyList(me.schemaID + ":" + "key-user-actions")
-	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST.FindStringSubmatch(url); len(m) == 1 {
-		return EmptyList(me.schemaID + ":" + "user-actions-and-session-properties")
+	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTIONS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("application-mobile-key-user-actions", m[1])
+	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("application-mobile-user-actions-and-session-properties", m[1])
+	} else if m := REGEX_APPLICATIONS_MOBILE_KEY_USER_ACTION_AND_SESSION_PROPERTIES_GET.FindStringSubmatch(url); len(m) == 3 {
+		return doGet("application-mobile-user-actions-and-session-properties-remote-properties", m[1]+":"+m[2])
 	} else if m := REGEX_APPLICATIONS_WEB_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("application-web")
 	} else if m := REGEX_APPLICATIONS_WEB_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("application-web", m[1])
-	} else if m := REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_LIST.FindStringSubmatch(url); len(m) == 1 {
-		return EmptyList(me.schemaID + ":" + "key-user-actions")
-	} else if m := REGEX_APPLICATIONS_WEB_KEY_USER_ACTION_AND_SESSION_PROPERTIES_LIST.FindStringSubmatch(url); len(m) == 1 {
-		return EmptyList(me.schemaID + ":" + "user-actions-and-session-properties")
+	} else if m := REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("application-web-key-user-actions", m[1])
+	} else if m := REGEX_APPLICATIONS_WEB_ERROR_RULES_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("application-web-error-rules", m[1])
+	} else if m := REGEX_APPLICATION_DETECTION_RULES_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("app-detection-rule")
+	} else if m := REGEX_APPLICATION_DETECTION_RULES_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("app-detection-rule", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-nodejs")
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_GET.FindStringSubmatch(url); len(m) == 2 {

@@ -112,22 +112,54 @@ func (me *Environment) InitialDownload() error {
 
 	if parallel {
 		var wg sync.WaitGroup
-		wg.Add(len(resourceTypes))
-		for _, sResourceType := range resourceTypes {
-			go func(sResourceType string) error {
-				defer wg.Done()
-				if shutdown.System.Stopped() {
-					return nil
-				}
-
-				keys := me.ResArgs[sResourceType]
-				module := me.Module(ResourceType(sResourceType))
-				if err := module.Download(false, keys...); err != nil {
-					return err
-				}
-				return nil
-			}(sResourceType)
+		itemCount := len(resourceTypes)
+		channel := make(chan string, itemCount)
+		maxThreads := 10
+		if maxThreads > itemCount {
+			maxThreads = itemCount
 		}
+		wg.Add(maxThreads)
+
+		processItem := func(sResourceType string) error {
+			keys := me.ResArgs[sResourceType]
+			module := me.Module(ResourceType(sResourceType))
+			if err := module.Download(parallel, keys...); err != nil {
+				return err
+			}
+			return nil
+		}
+
+		for i := 0; i < maxThreads; i++ {
+
+			go func() error {
+
+				for {
+					sResourceTypeLoop, ok := <-channel
+					if !ok {
+						wg.Done()
+						return nil
+					}
+					if shutdown.System.Stopped() {
+						wg.Done()
+						return nil
+					}
+
+					err := processItem(sResourceTypeLoop)
+
+					if err != nil {
+						wg.Done()
+						return err
+					}
+				}
+			}()
+
+		}
+
+		for _, sResourceType := range resourceTypes {
+			channel <- sResourceType
+		}
+
+		close(channel)
 		wg.Wait()
 	} else {
 		for _, sResourceType := range resourceTypes {
@@ -137,7 +169,7 @@ func (me *Environment) InitialDownload() error {
 
 			keys := me.ResArgs[sResourceType]
 			module := me.Module(ResourceType(sResourceType))
-			if err := module.Download(true, keys...); err != nil {
+			if err := module.Download(parallel, keys...); err != nil {
 				return err
 			}
 		}
@@ -504,6 +536,8 @@ func (me *Environment) WriteMainFile() error {
 		mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", module.GetFolder(true)))
 
 		if ATOMIC_DEPENDENCIES {
+
+			uniqueNameExists := map[string]bool{}
 			referencedResources := module.GetResourceReferences()
 			if len(referencedResources) > 0 {
 				for _, referencedResource := range referencedResources {
@@ -513,6 +547,12 @@ func (me *Environment) WriteMainFile() error {
 					if referencedResource.Type == resourceType {
 						continue
 					}
+					typeAndUniqueName := referencedResource.Type.Trim() + referencedResource.UniqueName
+					if uniqueNameExists[typeAndUniqueName] {
+						fmt.Println("ERROR: WriteMainFile Duplicate UniqueName for ", string(referencedResource.Type), referencedResource.UniqueName)
+						continue
+					}
+					uniqueNameExists[typeAndUniqueName] = true
 					mainFile.WriteString(fmt.Sprintf("  %s_%s = module.%s.resources_%s\n", referencedResource.Type, referencedResource.UniqueName, referencedResource.Type.Trim(), referencedResource.UniqueName))
 				}
 			}

@@ -222,6 +222,7 @@ func (me *request) Raw() ([]byte, error) {
 		me.onResponse(response)
 	}
 	if err != nil {
+		errorLogger.Println(me.method, url+"\n    "+err.Error())
 		return nil, err
 	}
 	requestData := data

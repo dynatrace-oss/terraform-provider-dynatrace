@@ -579,6 +579,8 @@ func (me *Module) GetPostProcessedResources() []*Resource {
 	return resources
 }
 
+const ClearLine = "\033[2K"
+
 func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 	if shutdown.System.Stopped() {
 		return nil
@@ -593,79 +595,98 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		}
 	}
 
-	const ClearLine = "\033[2K"
-	if len(keys) == 0 {
-		length := len(me.Resources)
-		if multiThreaded {
-			fmt.Printf("Downloading \"%s\"\n", me.Type)
-		} else {
-			fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
-		}
-		idx := 0
-		var wg sync.WaitGroup
-		wg.Add(len(me.Resources))
-
-		for _, resource := range me.Resources {
-			go func(resource *Resource) error {
-				defer wg.Done()
-				if shutdown.System.Stopped() {
-					return nil
-				}
-				if err := resource.Download(); err != nil {
-					return err
-				}
-				idx++
-				if !multiThreaded {
-					fmt.Print(ClearLine)
-					fmt.Print("\r")
-					fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-				}
-				return nil
-			}(resource)
-		}
-		wg.Wait()
-		if !multiThreaded {
-			fmt.Print(ClearLine)
-			fmt.Print("\r")
-			fmt.Printf("Downloading \"%s\"\n", me.Type)
-		}
-		return nil
-	}
 	resourcesToDownload := []*Resource{}
-	for _, key := range keys {
+
+	if len(keys) == 0 {
 		for _, resource := range me.Resources {
-			if resource.ID == key {
-				resourcesToDownload = append(resourcesToDownload, resource)
+			resourcesToDownload = append(resourcesToDownload, resource)
+		}
+	} else {
+		for _, key := range keys {
+			for _, resource := range me.Resources {
+				if resource.ID == key {
+					resourcesToDownload = append(resourcesToDownload, resource)
+				}
 			}
 		}
+
 	}
+
+	err = me.downloadResources(resourcesToDownload, multiThreaded)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThreaded bool) error {
 	length := len(me.Resources)
 	if multiThreaded {
-		fmt.Printf("Downloading \"%s\"\n", me.Type)
+		fmt.Printf("Downloading \"%s\" Count:  %d\n", me.Type, length)
 	} else {
 		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
 	}
 	idx := 0
 	var wg sync.WaitGroup
-	wg.Add(len(resourcesToDownload))
-	for _, resource := range resourcesToDownload {
-		go func(resource *Resource) error {
-			defer wg.Done()
-			if shutdown.System.Stopped() {
-				return nil
-			}
-			if err := resource.Download(); err != nil {
-				return err
-			}
-			idx++
-			if !multiThreaded {
-				fmt.Print(ClearLine)
-				fmt.Print("\r")
-				fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-			}
-			return nil
-		}(resource)
+	itemCount := len(resourcesToDownload)
+	channel := make(chan *Resource, itemCount)
+	mutex := sync.Mutex{}
+	maxThreads := 50
+	if !multiThreaded {
+		maxThreads = 1
 	}
+	if maxThreads > itemCount {
+		maxThreads = itemCount
+	}
+	wg.Add(maxThreads)
+
+	processItem := func(resource *Resource) error {
+		if err := resource.Download(); err != nil {
+			return err
+		}
+		mutex.Lock()
+		idx++
+		if !multiThreaded {
+			fmt.Print(ClearLine)
+			fmt.Print("\r")
+			fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+		}
+		mutex.Unlock()
+		return nil
+	}
+
+	for i := 0; i < maxThreads; i++ {
+
+		go func() error {
+
+			for {
+				resourceLoop, ok := <-channel
+				if !ok {
+					wg.Done()
+					return nil
+				}
+				if shutdown.System.Stopped() {
+					wg.Done()
+					return nil
+				}
+
+				err := processItem(resourceLoop)
+
+				if err != nil {
+					wg.Done()
+					return err
+				}
+			}
+		}()
+
+	}
+
+	for _, resource := range resourcesToDownload {
+		channel <- resource
+	}
+
+	close(channel)
 	wg.Wait()
 	if !multiThreaded {
 		fmt.Print(ClearLine)
@@ -764,7 +785,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 			continue
 		}
 		if uniqueNameExists[res.UniqueName] {
-			fmt.Println("ERROR: Duplicate UniqueName for ", string(me.Type), res.UniqueName)
+			fmt.Println("ERROR: ExecuteImportV2 Duplicate UniqueName for ", string(me.Type), res.UniqueName)
 			continue
 		}
 		uniqueNameExists[res.UniqueName] = true
