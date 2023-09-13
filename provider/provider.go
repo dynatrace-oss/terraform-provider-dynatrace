@@ -58,6 +58,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/activegatetokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotagrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
@@ -460,6 +461,7 @@ func Provider() *schema.Provider {
 			"dynatrace_attack_allowlist":                   resources.NewGeneric(export.ResourceTypes.AppSecAttackAllowlist).Resource(),
 			"dynatrace_unified_services_metrics":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesMetrics).Resource(),
 			"dynatrace_unified_services_opentel":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesOpenTel).Resource(),
+			"dynatrace_autotag_rules":                      autotagrules.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
