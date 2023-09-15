@@ -63,6 +63,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/internetproxy"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/smtp"
@@ -465,6 +466,7 @@ func Provider() *schema.Provider {
 			"dynatrace_autotag_rules":                      autotagrules.Resource(),
 			"dynatrace_generic_setting":                    generic.Resource(),
 			"dynatrace_managed_smtp":                       smtp.Resource(),
+			"dynatrace_managed_internet_proxy":             internetproxy.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
