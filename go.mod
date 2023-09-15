@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/dlclark/regexp2 v1.8.1
 	github.com/dynatrace/dynatrace-configuration-as-code-core v0.1.0
+	github.com/go-logr/logr v1.2.4
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/go-hclog v1.4.0
@@ -28,7 +29,6 @@ require (
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/fatih/color v1.14.1 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect

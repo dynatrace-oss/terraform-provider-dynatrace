@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_generic_setting Resource - terraform-provider-dynatrace"
+subcategory: "Platform"
+description: |-
+  The resource `dynatrace_generic_setting` covers configuration for Schemas contributed by Custom Platform Apps
+---
+
+# dynatrace_generic_setting (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+-> In case the Platform App configured by such a settings explicitly validates them, authentication via API Token may not be enough. In such a case the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` are required. That OAuth Client will require the permissions `app-engine:apps:run` and `settings:objects:write`. In any case, Terraform will primarily attempt to create or modify the settings using the API Token and if that fails will utilize the OAuth Client for authentication.
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_generic_setting` downloads all existing settings related to Platform Apps.
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+The actual payload of the configuration is essentially any kind of JSON object assigned to the attribute `value`.
+The `scope` attribute is optional and defaults to `environment` - which is usually the case for settings contributed by Platform Apps.
+You can best `schema` for the settings of a specific Platform App find when navigating in the WebUI to these settings and click the ellipsis button.
+
+{{ tffile "dynatrace/api/builtin/generic/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

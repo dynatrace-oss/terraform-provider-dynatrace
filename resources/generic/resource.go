@@ -61,10 +61,13 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 	d.SetId(stub.ID)
 
+	config.LocalStorage = config.Value
+
 	marshalled := hcl.Properties{}
 	if err := config.MarshalHCL(marshalled); err != nil {
 		return diag.FromErr(err)
 	}
+
 	for k, v := range marshalled {
 		d.Set(k, v)
 	}
@@ -84,6 +87,16 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := generic.Service(creds).Update(d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
+
+	config.LocalStorage = config.Value
+	marshalled := hcl.Properties{}
+	if err := config.MarshalHCL(marshalled); err != nil {
+		return diag.FromErr(err)
+	}
+
+	for k, v := range marshalled {
+		d.Set(k, v)
+	}
 	return diag.Diagnostics{}
 }
 
@@ -93,13 +106,29 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 
+	var configToMarshal *settings.Settings
+
 	apiConfig := new(settings.Settings)
 	if err := generic.Service(creds).Get(d.Id(), apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
+	// in case the configuration contains secrets
+	stateConfig := new(settings.Settings)
+	if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, Resource())); err != nil {
+		return diag.FromErr(err)
+	}
+	if len(stateConfig.Value) > 0 {
+		stateConfig.Merge(apiConfig)
+		stateConfig.LocalStorage = stateConfig.Value
+		configToMarshal = stateConfig
+	} else {
+		apiConfig.LocalStorage = apiConfig.Value
+		configToMarshal = apiConfig
+	}
+
 	marshalled := hcl.Properties{}
-	if err := apiConfig.MarshalHCL(marshalled); err != nil {
+	if err := configToMarshal.MarshalHCL(marshalled); err != nil {
 		return diag.FromErr(err)
 	}
 	for k, v := range marshalled {

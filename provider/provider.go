@@ -462,11 +462,11 @@ func Provider() *schema.Provider {
 			"dynatrace_unified_services_metrics":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesMetrics).Resource(),
 			"dynatrace_unified_services_opentel":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesOpenTel).Resource(),
 			"dynatrace_autotag_rules":                      autotagrules.Resource(),
+			"dynatrace_generic_setting":                    generic.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
 	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
-		prv.ResourcesMap["dynatrace_generic_setting"] = generic.Resource()
 		prv.ResourcesMap["dynatrace_platform_bucket"] = resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource()
 	}
 	return prv

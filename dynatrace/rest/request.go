@@ -298,6 +298,24 @@ func (me *request) Raw() ([]byte, error) {
 	return data, nil
 }
 
+func Envelope(data []byte, url string, method string) error {
+	if len(data) == 0 {
+		return nil
+	}
+	var err error
+	var env errorEnvelope
+	if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
+		return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+	} else {
+		var envs []errorEnvelope
+		if err = json.Unmarshal(data, &envs); err == nil && len(envs) > 0 {
+			env = envs[0]
+			return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+		}
+	}
+	return nil
+}
+
 func (me *request) Expect(codes ...int) Request {
 	me.expect = statuscodes(codes)
 	return me
