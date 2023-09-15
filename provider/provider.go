@@ -65,6 +65,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/smtp"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 
@@ -463,6 +464,7 @@ func Provider() *schema.Provider {
 			"dynatrace_unified_services_opentel":           resources.NewGeneric(export.ResourceTypes.UnifiedServicesOpenTel).Resource(),
 			"dynatrace_autotag_rules":                      autotagrules.Resource(),
 			"dynatrace_generic_setting":                    generic.Resource(),
+			"dynatrace_managed_smtp":                       smtp.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
