@@ -3018,7 +3018,15 @@ jobs:
           DYNATRACE_AUTOMATION_CLIENT_SECRET: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_SECRET }}
           DYNATRACE_AUTOMATION_ENVIRONMENT_URL: ${{ secrets.DYNATRACE_AUTOMATION_ENVIRONMENT_URL }}
           DYNATRACE_AUTOMATION_TOKEN_URL: ${{ secrets.DYNATRACE_AUTOMATION_TOKEN_URL }}
+          DYNATRACE_LOG_HTTP: "terraform-provider-dynatrace.log"
+          DYNATRACE_HTTP_RESPONSE: true
         run: go test -v ./dynatrace/api/platform/buckets
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestPlatformBucketsResults
+          path: ./dynatrace/api/platform/buckets/terraform_provider_dynatrace.http.log
+          retention-days: 5
       # - name: TestCustomDevices
       #   if: success() || failure()
       #   env:
