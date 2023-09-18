@@ -3,49 +3,46 @@ package buckets
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type Bucket struct {
-	Name          string  `json:"bucketName"`       // TODO
-	Table         Table   `json:"table"`            // TODO
-	DisplayName   string  `json:"displayName"`      // TODO
-	Status        *Status `json:"status,omitempty"` // TODO
-	RetentionDays int     `json:"retentionDays"`    // TODO
-	Version       int     `json:"version"`          // TODO
+	Name          string `json:"bucketName"`       // The name / id of the bucket definition
+	Table         Table  `json:"table"`            // The table the bucket definition applies to. Possible values are `logs`, `spans`,	`events` and `bizevents`
+	DisplayName   string `json:"displayName"`      // The name of the bucket definition when visualized within the UI
+	Status        Status `json:"status,omitempty"` // The current status of the bucket definition. Possible values are `creating`, `active`, `updating` and `deleting`
+	RetentionDays int    `json:"retentionDays"`    // The retention in days
+	Version       int    `json:"version"`          // The REST API keeps track of changes by increasing that value with every update
 }
 
 func (me *Bucket) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "TODO",
+			Description: "The name / id of the bucket definition",
 			Required:    true,
 			ForceNew:    true,
 		},
 		"table": {
-			Type:        schema.TypeString,
-			Description: "TODO",
-			Required:    true,
-			ForceNew:    true,
+			Type:         schema.TypeString,
+			Description:  "The table the bucket definition applies to. Possible values are `logs`, `spans`,	`events` and `bizevents`. Changing this attribute will result in deleting and re-creating the bucket definition",
+			ValidateFunc: validation.StringInSlice([]string{`logs`, `spans`, `events`, `bizevents`}, false),
+			Required:     true,
+			ForceNew:     true,
 		},
 		"display_name": {
 			Type:        schema.TypeString,
-			Description: "TODO",
+			Description: "The name of the bucket definition when visualized within the UI",
 			Optional:    true,
 		},
 		"retention": {
 			Type:        schema.TypeInt,
-			Description: "The retention in days",
+			Description: "The retention of stored data in days",
 			Required:    true,
 		},
 		"status": {
 			Type:        schema.TypeString,
-			Description: "TODO",
-			Computed:    true,
-		},
-		"version": {
-			Type:        schema.TypeInt,
-			Description: "TODO",
+			Description: "The status of the bucket definition. Usually has the value `active` unless an update or delete is currently happening",
 			Computed:    true,
 		},
 	}
@@ -65,7 +62,6 @@ func (me *Bucket) MarshalHCL(properties hcl.Properties) error {
 		"display_name": me.DisplayName,
 		"retention":    me.RetentionDays,
 		"status":       me.Status,
-		"version":      me.Version,
 	})
 }
 
@@ -76,7 +72,6 @@ func (me *Bucket) UnmarshalHCL(decoder hcl.Decoder) error {
 		"display_name": &me.DisplayName,
 		"retention":    &me.RetentionDays,
 		"status":       &me.Status,
-		"version":      &me.Version,
 	})
 }
 

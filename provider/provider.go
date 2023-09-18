@@ -469,11 +469,11 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_smtp":                       smtp.Resource(),
 			"dynatrace_managed_internet_proxy":             internetproxy.Resource(),
 			"dynatrace_managed_preferences":                preferences.Resource(),
+			"dynatrace_platform_bucket":                    resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
 	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
-		prv.ResourcesMap["dynatrace_platform_bucket"] = resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource()
 	}
 	return prv
 }
