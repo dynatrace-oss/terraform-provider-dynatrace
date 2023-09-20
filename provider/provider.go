@@ -67,6 +67,7 @@ import (
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/preferences"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/publicendpoints"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/smtp"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
@@ -470,6 +471,7 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_internet_proxy":             internetproxy.Resource(),
 			"dynatrace_managed_preferences":                preferences.Resource(),
 			"dynatrace_platform_bucket":                    resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource(),
+			"dynatrace_managed_public_endpoints":           publicendpoints.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
