@@ -119,12 +119,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
-	if err != nil {
-		return diag.FromErr(err)
+	return diag.Diagnostics{
+		diag.Diagnostic{
+			Severity: 1,
+			Summary:  "HTTP DELETE method not available",
+			Detail:   "The configuration will no longer be managed by Terraform but will still be present on the Dynatrace cluster since a delete method is not available.",
+		},
 	}
-	if err := NewService(m).Delete(); err != nil {
-		return diag.FromErr(err)
-	}
-	return diag.Diagnostics{}
 }

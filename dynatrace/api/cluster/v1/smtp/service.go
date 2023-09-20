@@ -46,17 +46,7 @@ func (cs *ServiceClient) Update(smtpConfig *smtp.Settings) error {
 
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete() error {
-	defaultConfig := smtp.Settings{
-		HostName:                       "hostname",
-		Port:                           25,
-		UserName:                       "username",
-		Password:                       "password",
-		ConnectionSecurity:             smtp.ConnectionSecurities.NoEncryption,
-		SenderEmailAddress:             "noreply@dynatrace-managed.com",
-		AllowFallbackViaMissionControl: true,
-		UseSmtpServer:                  true,
-	}
-	return cs.Update(&defaultConfig)
+	return nil
 }
 
 // Get TODO: documentation
