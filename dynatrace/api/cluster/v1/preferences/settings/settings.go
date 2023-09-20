@@ -25,21 +25,20 @@ import (
 
 // The configuration of the user
 type Settings struct {
-	CertificateManagementEnabled   bool   `json:"certificateManagementEnabled,omitempty"`
-	CertificateManagementPossible  bool   `json:"certificateManagementPossible,omitempty"`
-	SupportSendBilling             bool   `json:"supportSendBilling"`                 // If true, usage and billing information will be reported.
-	SuppressNonBillingRelevantData bool   `json:"suppressNonBillingRelevantData"`     // If true, usage and billing information will NOT be reported.
-	SupportSendClusterHealth       bool   `json:"supportSendClusterHealth"`           // If true, Dynatrace cluster health will be reported.
-	SupportSendEvents              bool   `json:"supportSendEvents,omitempty"`        // If true, Dynatrace cluster health and OneAgent events will be reported.
-	SupportAllowRemoteAccess       bool   `json:"supportAllowRemoteAccess,omitempty"` // If true, audited remote-access to your Dynatrace configuration is allowed settings.
-	RemoteAccessOnDemandOnly       bool   `json:"remoteAccessOnDemandOnly,omitempty"` // If true, audited access to your Dynatrace cluster is allowed by approved Dynatrace employees otherwise by privileged Dynatrace employees.
-	CommunityCreateUser            bool   `json:"communityCreateUser,omitempty"`      // If true, each new user will get an invitation to set up a Dynatrace user account to access Dynatrace support resources user upon first login.
-	CommunityExternalSearch        bool   `json:"communityExternalSearch,omitempty"`  // If true, results from Documentation are included in platform search.
-	RuxitMonitorsRuxit             bool   `json:"ruxitMonitorsRuxit"`                 // If true, Dynatrace OneAgent monitors Dynatrace.
-	TelemetrySharing               bool   `json:"telemetrySharing,omitempty"`
-	HelpChatEnabled                bool   `json:"helpChatEnabled,omitempty"`             // If true, live, in-product assistance with our Product Experts is enabled.
-	ReadOnlyRemoteAccessAllowed    bool   `json:"readOnlyRemoteAccessAllowed,omitempty"` // If true, audited, read-only remote access to your Dynatrace configuration settings is allowed.
-	OriginalConfig                 string `json:"-"`
+	CertificateManagementEnabled   bool `json:"certificateManagementEnabled,omitempty"`
+	CertificateManagementPossible  bool `json:"certificateManagementPossible,omitempty"`
+	SupportSendBilling             bool `json:"supportSendBilling"`                 // If true, usage and billing information will be reported.
+	SuppressNonBillingRelevantData bool `json:"suppressNonBillingRelevantData"`     // If true, usage and billing information will NOT be reported.
+	SupportSendClusterHealth       bool `json:"supportSendClusterHealth"`           // If true, Dynatrace cluster health will be reported.
+	SupportSendEvents              bool `json:"supportSendEvents,omitempty"`        // If true, Dynatrace cluster health and OneAgent events will be reported.
+	SupportAllowRemoteAccess       bool `json:"supportAllowRemoteAccess,omitempty"` // If true, audited remote-access to your Dynatrace configuration is allowed settings.
+	RemoteAccessOnDemandOnly       bool `json:"remoteAccessOnDemandOnly,omitempty"` // If true, audited access to your Dynatrace cluster is allowed by approved Dynatrace employees otherwise by privileged Dynatrace employees.
+	CommunityCreateUser            bool `json:"communityCreateUser,omitempty"`      // If true, each new user will get an invitation to set up a Dynatrace user account to access Dynatrace support resources user upon first login.
+	CommunityExternalSearch        bool `json:"communityExternalSearch,omitempty"`  // If true, results from Documentation are included in platform search.
+	RuxitMonitorsRuxit             bool `json:"ruxitMonitorsRuxit"`                 // If true, Dynatrace OneAgent monitors Dynatrace.
+	TelemetrySharing               bool `json:"telemetrySharing,omitempty"`
+	HelpChatEnabled                bool `json:"helpChatEnabled,omitempty"`             // If true, live, in-product assistance with our Product Experts is enabled.
+	ReadOnlyRemoteAccessAllowed    bool `json:"readOnlyRemoteAccessAllowed,omitempty"` // If true, audited, read-only remote access to your Dynatrace configuration settings is allowed.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -116,12 +115,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "If true, audited, read-only remote access to your Dynatrace configuration settings is allowed. Default: `false`",
 			Optional:    true,
-		},
-		"original_config": {
-			Type:        schema.TypeString,
-			Description: "For internal use: original config in JSON format to be used on destroy",
-			Optional:    true,
-			Computed:    true,
 		},
 	}
 }

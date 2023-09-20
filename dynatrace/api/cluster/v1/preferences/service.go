@@ -46,7 +46,7 @@ func (cs *ServiceClient) Update(config *preferences.Settings) error {
 
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete(config *preferences.Settings) error {
-	return cs.Update(config)
+	return nil
 }
 
 // Get TODO: documentation

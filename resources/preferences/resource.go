@@ -19,14 +19,12 @@ package preferences
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	preferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/preferences"
 	preferences_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/preferences/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
 
@@ -59,11 +57,6 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	originalConfig, err := NewService(m).Get()
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	config := new(preferences_settings.Settings)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -81,12 +74,6 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	for k, v := range marshalled {
 		d.Set(k, v)
 	}
-
-	bytes, err := json.Marshal(originalConfig)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	d.Set("original_config", string(bytes))
 
 	return diag.Diagnostics{}
 }
@@ -133,24 +120,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
-	if err != nil {
-		return diag.FromErr(err)
+	return diag.Diagnostics{
+		diag.Diagnostic{
+			Severity: 1,
+			Summary:  "HTTP DELETE method not available",
+			Detail:   "The configuration will no longer be managed by Terraform but will still be present on the Dynatrace cluster since a delete method is not available.",
+		},
 	}
-
-	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
-	stateConfig := new(preferences_settings.Settings)
-	if val, ok := stateDecoder.GetOk("original_config"); ok {
-		state := val.(string)
-		if len(state) > 0 {
-			if err := json.Unmarshal([]byte(state), stateConfig); err != nil {
-				return diag.FromErr(err)
-			}
-		}
-	}
-
-	if err := NewService(m).Delete(stateConfig); err != nil {
-		return diag.FromErr(err)
-	}
-	return diag.Diagnostics{}
 }
