@@ -32,9 +32,17 @@ type DashboardSharing struct {
 	PublicAccess *AnonymousAccess `json:"publicAccess"` // Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard
 	Preset       bool             `json:"preset"`       // If `true` the dashboard will be marked as preset
 	Enabled      bool             `json:"enabled"`      // The dashboard is shared (`true`) or private (`false`)
+	Muted        bool             `json:"-"`            // Internal field keeping track of whether this resource should get updated
 
 	// not part of payload - used by export
 	Name string `json:"-"`
+}
+
+func diffsuppress(k, oldValue, newValue string, d *schema.ResourceData) bool {
+	if v, ok := d.GetOk("muted"); ok {
+		return v.(bool)
+	}
+	return false
 }
 
 func (me *DashboardSharing) Schema() map[string]*schema.Schema {
@@ -45,30 +53,39 @@ func (me *DashboardSharing) Schema() map[string]*schema.Schema {
 			Description: "The Dynatrace entity ID of the dashboard",
 		},
 		"enabled": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Description: "The dashboard is shared (`true`) or private (`false`)",
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Description:      "The dashboard is shared (`true`) or private (`false`)",
+			DiffSuppressFunc: diffsuppress,
 		},
 		"preset": {
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Description:      "If `true` the dashboard will be marked as preset",
+			DiffSuppressFunc: diffsuppress,
+		},
+		"muted": {
 			Type:        schema.TypeBool,
-			Optional:    true,
-			Description: "If `true` the dashboard will be marked as preset",
+			Computed:    true,
+			Description: "Reserved for internal use by the provider",
 		},
 		"permissions": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(SharePermissions).Schema()},
-			Description: "Access permissions of the dashboard",
+			Type:             schema.TypeList,
+			Optional:         true,
+			MinItems:         1,
+			MaxItems:         1,
+			Elem:             &schema.Resource{Schema: new(SharePermissions).Schema()},
+			Description:      "Access permissions of the dashboard",
+			DiffSuppressFunc: diffsuppress,
 		},
 		"public": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(AnonymousAccess).Schema()},
-			Description: "Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard",
+			Type:             schema.TypeList,
+			Optional:         true,
+			MinItems:         1,
+			MaxItems:         1,
+			Elem:             &schema.Resource{Schema: new(AnonymousAccess).Schema()},
+			Description:      "Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard",
+			DiffSuppressFunc: diffsuppress,
 		},
 	}
 }
@@ -82,6 +99,9 @@ func (me *DashboardSharing) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if err := properties.Encode("preset", me.Preset); err != nil {
+		return err
+	}
+	if err := properties.Encode("muted", me.Muted); err != nil {
 		return err
 	}
 	if len(me.Permissions) > 0 {
@@ -112,6 +132,11 @@ func (me *DashboardSharing) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Enabled = value.(bool)
 	} else {
 		me.Enabled = false
+	}
+	if value, ok := decoder.GetOk("muted"); ok {
+		me.Muted = value.(bool)
+	} else {
+		me.Muted = false
 	}
 	if value, ok := decoder.GetOk("preset"); ok {
 		me.Preset = value.(bool)
