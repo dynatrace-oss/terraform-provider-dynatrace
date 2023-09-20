@@ -59,6 +59,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/activegatetokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/autotagrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/backup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
@@ -472,6 +473,7 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_preferences":                preferences.Resource(),
 			"dynatrace_platform_bucket":                    resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource(),
 			"dynatrace_managed_public_endpoints":           publicendpoints.Resource(),
+			"dynatrace_managed_backup":                     backup.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
