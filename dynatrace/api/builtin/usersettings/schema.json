@@ -14,10 +14,6 @@
 			"documentation": "",
 			"items": [
 				{
-					"displayName": "Browser language - default",
-					"value": "auto"
-				},
-				{
 					"displayName": "English",
 					"value": "en"
 				},
@@ -34,10 +30,6 @@
 			"documentation": "",
 			"items": [
 				{
-					"displayName": "Browser theme - default",
-					"value": "auto"
-				},
-				{
 					"displayName": "Light Theme",
 					"value": "light"
 				},
@@ -52,14 +44,59 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"auto-language": {
+			"default": true,
+			"description": "",
+			"displayName": "Language - use browser default",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"auto-region": {
+			"default": true,
+			"description": "",
+			"displayName": "Region - use browser default",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"auto-theme": {
+			"default": true,
+			"description": "",
+			"displayName": "Theme - use browser default",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"auto-timezone": {
+			"default": true,
+			"description": "",
+			"displayName": "Timezone - use browser default",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"language": {
-			"default": "auto",
+			"default": "en",
 			"description": "",
 			"displayName": "Language",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "auto-language",
+				"type": "EQUALS"
+			},
 			"type": {
 				"$ref": "#/enums/Language"
 			}
@@ -80,24 +117,34 @@
 				"useApiSearch": false,
 				"validate": true
 			},
-			"default": "auto",
+			"default": "en-US",
 			"description": "",
 			"displayName": "Region",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "auto-region",
+				"type": "EQUALS"
+			},
 			"subType": "datasource",
 			"type": "text"
 		},
 		"theme": {
-			"default": "auto",
+			"default": "light",
 			"description": "Page refresh required to view changes",
 			"displayName": "Theme",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "auto-theme",
+				"type": "EQUALS"
+			},
 			"type": {
 				"$ref": "#/enums/Theme"
 			}
@@ -110,10 +157,15 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "auto-timezone",
+				"type": "EQUALS"
+			},
 			"type": "time_zone"
 		}
 	},
 	"schemaId": "builtin:user-settings",
 	"types": {},
-	"version": "1.1.3"
+	"version": "2"
 }

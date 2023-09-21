@@ -18,16 +18,23 @@
 package usersettings
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Settings struct {
-	Language Language `json:"language"`        // Possible Values: `Auto`, `En`, `Ja`
-	Region   string   `json:"region"`          // Region
-	Scope    string   `json:"-" scope:"scope"` // The scope of this setting (user, userdefaults)
-	Theme    Theme    `json:"theme"`           // Possible Values: `Auto`, `Dark`, `Light`
-	Timezone string   `json:"timezone"`        // Timezone
+	AutoLanguage bool      `json:"auto-language"`      // Language - use browser default
+	AutoRegion   bool      `json:"auto-region"`        // Region - use browser default
+	AutoTheme    bool      `json:"auto-theme"`         // Theme - use browser default
+	AutoTimezone bool      `json:"auto-timezone"`      // Timezone - use browser default
+	Language     *Language `json:"language,omitempty"` // Possible Values: `En`, `Ja`
+	Region       *string   `json:"region,omitempty"`   // Region
+	Scope        string    `json:"-" scope:"scope"`    // The scope of this setting (user, userdefaults)
+	Theme        *Theme    `json:"theme,omitempty"`    // Possible Values: `Dark`, `Light`
+	Timezone     *string   `json:"timezone,omitempty"` // Timezone
 }
 
 func (me *Settings) Name() string {
@@ -36,15 +43,35 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"auto_language": {
+			Type:        schema.TypeBool,
+			Description: "Language - use browser default",
+			Required:    true,
+		},
+		"auto_region": {
+			Type:        schema.TypeBool,
+			Description: "Region - use browser default",
+			Required:    true,
+		},
+		"auto_theme": {
+			Type:        schema.TypeBool,
+			Description: "Theme - use browser default",
+			Required:    true,
+		},
+		"auto_timezone": {
+			Type:        schema.TypeBool,
+			Description: "Timezone - use browser default",
+			Required:    true,
+		},
 		"language": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Auto`, `En`, `Ja`",
-			Required:    true,
+			Description: "Possible Values: `En`, `Ja`",
+			Optional:    true, // precondition
 		},
 		"region": {
 			Type:        schema.TypeString,
 			Description: "Region",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 		"scope": {
 			Type:        schema.TypeString,
@@ -53,33 +80,63 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"theme": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Auto`, `Dark`, `Light`",
-			Required:    true,
+			Description: "Possible Values: `Dark`, `Light`",
+			Optional:    true, // precondition
 		},
 		"timezone": {
 			Type:        schema.TypeString,
 			Description: "Timezone",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"language": me.Language,
-		"region":   me.Region,
-		"scope":    me.Scope,
-		"theme":    me.Theme,
-		"timezone": me.Timezone,
+		"auto_language": me.AutoLanguage,
+		"auto_region":   me.AutoRegion,
+		"auto_theme":    me.AutoTheme,
+		"auto_timezone": me.AutoTimezone,
+		"language":      me.Language,
+		"region":        me.Region,
+		"scope":         me.Scope,
+		"theme":         me.Theme,
+		"timezone":      me.Timezone,
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	if (me.Timezone == nil) && (!me.AutoTimezone) {
+		me.Timezone = opt.NewString("")
+	}
+	if (me.Language == nil) && (!me.AutoLanguage) {
+		return fmt.Errorf("'language' must be specified if 'auto_language' is set to '%v'", me.AutoLanguage)
+	}
+	if (me.Language != nil) && (me.AutoLanguage) {
+		return fmt.Errorf("'language' must not be specified if 'auto_language' is set to '%v'", me.AutoLanguage)
+	}
+	if (me.Region == nil) && (!me.AutoRegion) {
+		return fmt.Errorf("'region' must be specified if 'auto_region' is set to '%v'", me.AutoRegion)
+	}
+	if (me.Theme == nil) && (!me.AutoTheme) {
+		return fmt.Errorf("'theme' must be specified if 'auto_theme' is set to '%v'", me.AutoTheme)
+	}
+	if (me.Theme != nil) && (me.AutoTheme) {
+		return fmt.Errorf("'theme' must not be specified if 'auto_theme' is set to '%v'", me.AutoTheme)
+	}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"language": &me.Language,
-		"region":   &me.Region,
-		"scope":    &me.Scope,
-		"theme":    &me.Theme,
-		"timezone": &me.Timezone,
+		"auto_language": &me.AutoLanguage,
+		"auto_region":   &me.AutoRegion,
+		"auto_theme":    &me.AutoTheme,
+		"auto_timezone": &me.AutoTimezone,
+		"language":      &me.Language,
+		"region":        &me.Region,
+		"scope":         &me.Scope,
+		"theme":         &me.Theme,
+		"timezone":      &me.Timezone,
 	})
 }
