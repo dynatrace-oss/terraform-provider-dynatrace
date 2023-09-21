@@ -30,6 +30,10 @@ var MatcherTypes = struct {
 	LogSource              MatcherType
 	Loglevel               MatcherType
 	ProcessTechnology      MatcherType
+	WinlogEventid          MatcherType
+	WinlogOpcode           MatcherType
+	WinlogProvider         MatcherType
+	WinlogTask             MatcherType
 }{
 	"container.name",
 	"dt.entity.container_group",
@@ -41,6 +45,10 @@ var MatcherTypes = struct {
 	"log.source",
 	"loglevel",
 	"process.technology",
+	"winlog.eventid",
+	"winlog.opcode",
+	"winlog.provider",
+	"winlog.task",
 }
 
 type Operator string

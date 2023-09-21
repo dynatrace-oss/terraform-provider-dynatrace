@@ -30,7 +30,7 @@
 					"value": "log.content"
 				},
 				{
-					"displayName": "Log Record Level",
+					"displayName": "Log record level",
 					"icon": "filter",
 					"value": "loglevel"
 				},
@@ -63,6 +63,26 @@
 					"displayName": "Process technology",
 					"icon": "services",
 					"value": "process.technology"
+				},
+				{
+					"displayName": "Windows log record event ID",
+					"icon": "filter",
+					"value": "winlog.eventid"
+				},
+				{
+					"displayName": "Windows log record source",
+					"icon": "filter",
+					"value": "winlog.provider"
+				},
+				{
+					"displayName": "Windows log record task category",
+					"icon": "filter",
+					"value": "winlog.task"
+				},
+				{
+					"displayName": "Windows log record operational code",
+					"icon": "filter",
+					"value": "winlog.opcode"
 				}
 			],
 			"type": "enum"
@@ -97,6 +117,10 @@
 				{
 					"maxLength": 1024,
 					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "logMonitoringLogSourceRuleNameValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
@@ -117,7 +141,7 @@
 			"displayName": "Active",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
+			"modificationPolicy": "ALWAYS",
 			"nullable": false,
 			"type": "boolean"
 		},
@@ -269,5 +293,5 @@
 			}
 		}
 	},
-	"version": "1.0.4"
+	"version": "1.0.6"
 }
