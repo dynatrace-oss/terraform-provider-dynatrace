@@ -29,7 +29,7 @@
 					"$ref": "#/types/UserGroups"
 				}
 			},
-			"maxObjects": 100,
+			"maxObjects": 20000,
 			"metadata": {
 				"addItemButton": "Configure home dashboard"
 			},
@@ -124,5 +124,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.16"
+	"version": "1.0.17"
 }

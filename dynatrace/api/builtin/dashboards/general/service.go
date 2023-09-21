@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.16"
+const SchemaVersion = "1.0.17"
 const SchemaID = "builtin:dashboards.general"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*general.Settings] {

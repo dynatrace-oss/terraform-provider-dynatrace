@@ -442,6 +442,11 @@
 		"group:anomaly-detection"
 	],
 	"schemaId": "builtin:anomaly-detection.metric-events",
+	"tableColumns": {
+		"mzName": {
+			"pattern": "{queryDefinition.managementZone|mgmtZoneDisplayName}"
+		}
+	},
 	"types": {
 		"DimensionFilter": {
 			"constraints": [
@@ -1305,5 +1310,27 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.15"
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"displayName": "Query type",
+					"id": "queryTypeId",
+					"propertyRef": "queryDefinition/type"
+				},
+				{
+					"displayName": "Model type",
+					"id": "modelTypeId",
+					"propertyRef": "modelProperties/type"
+				},
+				{
+					"columnRef": "mzName",
+					"displayName": "Management zone",
+					"id": "mzId",
+					"type": "text"
+				}
+			]
+		}
+	},
+	"version": "1.0.16"
 }

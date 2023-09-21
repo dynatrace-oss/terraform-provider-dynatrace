@@ -1,46 +1,40 @@
 {
-	"dynatrace": "1",
-	"schemaId": "builtin:host.monitoring",
-	"displayName": "Monitoring",
-	"description": "OneAgent automatically monitors host, its processes, services and applications but you can switch off monitoring or disable auto-injection.",
-	"documentation": "",
-	"schemaGroups": [
-	  "group:host-monitoring"
-	],
-	"version": "1.2.1",
-	"multiObject": false,
-	"maxObjects": 1,
 	"allowedScopes": [
-	  "HOST"
+		"HOST"
 	],
+	"description": "OneAgent automatically monitors host, its processes, services and applications but you can switch off monitoring or disable auto-injection.",
+	"displayName": "Monitoring",
+	"documentation": "",
+	"dynatrace": "1",
 	"enums": {},
-	"types": {},
+	"maxObjects": 1,
+	"multiObject": false,
 	"properties": {
-	  "enabled": {
-		"displayName": "Monitor this host",
-		"description": "Turn on monitoring to gain visibility into this host, its processes, services, and applications.",
-		"documentation": "",
-		"type": "boolean",
-		"nullable": false,
-		"maxObjects": 1,
-		"modificationPolicy": "DEFAULT",
-		"default": true
-	  },
-	  "autoInjection": {
-		"displayName": "Auto-injection",
-		"description": "An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
-		"documentation": "",
-		"type": "boolean",
-		"nullable": false,
-		"maxObjects": 1,
-		"modificationPolicy": "DEFAULT",
-		"default": true
-	  }
+		"autoInjection": {
+			"default": true,
+			"description": "An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
+			"displayName": "Auto-injection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabled": {
+			"default": true,
+			"description": "Turn on monitoring to gain visibility into this host, its processes, services, and applications.",
+			"displayName": "Monitor this host",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
 	},
-	"constraints": [
-	  {
-		"type": "CUSTOM_VALIDATOR_REF",
-		"customValidatorId": "full-stack-monitoring"
-	  }
-	]
-  }
+	"schemaGroups": [
+		"group:host-monitoring"
+	],
+	"schemaId": "builtin:host.monitoring",
+	"types": {},
+	"version": "1.3"
+}
