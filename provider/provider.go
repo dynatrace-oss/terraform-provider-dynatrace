@@ -69,6 +69,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/preferences"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/publicendpoints"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/remoteaccess"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/smtp"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
@@ -474,6 +475,7 @@ func Provider() *schema.Provider {
 			"dynatrace_platform_bucket":                    resources.NewGeneric(export.ResourceTypes.PlatformBucket).Resource(),
 			"dynatrace_managed_public_endpoints":           publicendpoints.Resource(),
 			"dynatrace_managed_backup":                     backup.Resource(),
+			"dynatrace_managed_remote_access":              remoteaccess.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
