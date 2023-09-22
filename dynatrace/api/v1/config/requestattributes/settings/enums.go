@@ -38,9 +38,10 @@ var Captures = struct {
 }
 
 // CapturingAndStorageLocation Specifies the location where the values are captured and stored.
-//  Required if the **source** is one of the following: `GET_PARAMETER`, `URI`, `REQUEST_HEADER`, `RESPONSE_HEADER`.
-//  Not applicable in other cases.
-//  If the **source** value is `REQUEST_HEADER` or `RESPONSE_HEADER`, the `CAPTURE_AND_STORE_ON_BOTH` location is not allowed.
+//
+//	Required if the **source** is one of the following: `GET_PARAMETER`, `URI`, `REQUEST_HEADER`, `RESPONSE_HEADER`.
+//	Not applicable in other cases.
+//	If the **source** value is `REQUEST_HEADER` or `RESPONSE_HEADER`, the `CAPTURE_AND_STORE_ON_BOTH` location is not allowed.
 type CapturingAndStorageLocation string
 
 func (me CapturingAndStorageLocation) Ref() *CapturingAndStorageLocation {
@@ -72,10 +73,12 @@ var SessionAttributeTechnologys = struct {
 	ASPNet     SessionAttributeTechnology
 	ASPNetCore SessionAttributeTechnology
 	Java       SessionAttributeTechnology
+	PHP        SessionAttributeTechnology
 }{
 	"ASP_NET",
 	"ASP_NET_CORE",
 	"JAVA",
+	"PHP",
 }
 
 // Technology The technology of the method to capture if the **source** value is `METHOD_PARAM`. \n\n Not applicable in other cases.
@@ -101,38 +104,65 @@ type Source string
 
 // Sources offers the known enum values
 var Sources = struct {
-	CICSSdk          Source
-	ClientIP         Source
-	CustomAttribute  Source
-	IibLabel         Source
-	IibNode          Source
-	MethodParam      Source
-	PostParameter    Source
-	QueryParameter   Source
-	RequestHeader    Source
-	ResponseHeader   Source
-	SessionAttribute Source
-	URI              Source
-	URIPath          Source
+	CICSSdk                 Source
+	CICSSystemId            Source
+	CICSTaskId              Source
+	CICSTransactionCallType Source
+	ClientIP                Source
+	CustomAttribute         Source
+	DliDbOrLtermName        Source
+	DliSegmentName          Source
+	IibLabel                Source
+	IibNode                 Source
+	ImsTransactionCallType  Source
+	MethodParam             Source
+	MqCorrelationId         Source
+	MqMessageId             Source
+	MqMessageSize           Source
+	PostParameter           Source
+	QueryParameter          Source
+	RequestHeader           Source
+	ResponseHeader          Source
+	ServerVariable          Source
+	SessionAttribute        Source
+	SpanAttribute           Source
+	URI                     Source
+	URIPath                 Source
+	WebserviceMethod        Source
+	WebserviceName          Source
 }{
 	"CICS_SDK",
+	"CICS_SYSTEM_ID",
+	"CICS_TASK_ID",
+	"CICS_TRANSACTION_CALL_TYPE",
 	"CLIENT_IP",
 	"CUSTOM_ATTRIBUTE",
+	"DLI_DB_OR_LTERM_NAME",
+	"DLI_SEGMENT_NAME",
 	"IIB_LABEL",
 	"IIB_NODE",
+	"IMS_TRANSACTION_CALL_TYPE",
 	"METHOD_PARAM",
+	"MQ_CORRELATION_ID",
+	"MQ_MESSAGE_ID",
+	"MQ_MESSAGE_SIZE",
 	"POST_PARAMETER",
 	"QUERY_PARAMETER",
 	"REQUEST_HEADER",
 	"RESPONSE_HEADER",
+	"SERVER_VARIABLE",
 	"SESSION_ATTRIBUTE",
+	"SPAN_ATTRIBUTE",
 	"URI",
 	"URI_PATH",
+	"WEBSERVICE_METHOD",
+	"WEBSERVICE_NAME",
 }
 
 // IIBNodeType The IBM integration bus node type for which the value is captured.
-//  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.
-//  Not applicable in other cases.
+//
+//	This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.
+//	Not applicable in other cases.
 type IIBNodeType string
 
 func (me IIBNodeType) Ref() *IIBNodeType {
@@ -148,6 +178,8 @@ var IIBNodeTypes = struct {
 	CollectorNode              IIBNodeType
 	ComputeNode                IIBNodeType
 	DatabaseNode               IIBNodeType
+	DatabaseRetrieveNode       IIBNodeType
+	DatabaseRouteNode          IIBNodeType
 	DecisionServiceNode        IIBNodeType
 	DotNetComputeNode          IIBNodeType
 	FileReadNode               IIBNodeType
@@ -156,23 +188,41 @@ var IIBNodeTypes = struct {
 	GroupCompleteNode          IIBNodeType
 	GroupGatherNode            IIBNodeType
 	GroupScatterNode           IIBNodeType
+	HTTPAsyncRequest           IIBNodeType
+	HTTPAsyncResponse          IIBNodeType
 	HTTPHeader                 IIBNodeType
+	HTTPInput                  IIBNodeType
+	HTTPReply                  IIBNodeType
+	HTTPRequest                IIBNodeType
 	JavaComputeNode            IIBNodeType
 	JmsClientReceive           IIBNodeType
 	JmsClientReplyNode         IIBNodeType
 	JmsHeader                  IIBNodeType
+	JmsInputNode               IIBNodeType
+	JmsOutputNode              IIBNodeType
+	JmsReplyNode               IIBNodeType
 	MqGetNode                  IIBNodeType
+	MqInputNode                IIBNodeType
 	MqOutputNode               IIBNodeType
+	MqReplyNode                IIBNodeType
 	PassthruNode               IIBNodeType
+	PublicationNode            IIBNodeType
 	ResetContentDescriptorNode IIBNodeType
+	RestAsyncRequestNode       IIBNodeType
+	RestAsyncResponseNode      IIBNodeType
+	RestRequestNode            IIBNodeType
 	ReSequenceNode             IIBNodeType
 	RouteNode                  IIBNodeType
 	SAPReplyNode               IIBNodeType
 	ScaReplyNode               IIBNodeType
 	SecurityPep                IIBNodeType
 	SequenceNode               IIBNodeType
+	SoapAsyncRequestNode       IIBNodeType
+	SoapAsyncResponseNode      IIBNodeType
 	SoapExtractNode            IIBNodeType
+	SoapInputNode              IIBNodeType
 	SoapReplyNode              IIBNodeType
+	SoapRequestNode            IIBNodeType
 	SoapWrapperNode            IIBNodeType
 	SrRetrieveEntityNode       IIBNodeType
 	SrRetrieveItServiceNode    IIBNodeType
@@ -190,6 +240,8 @@ var IIBNodeTypes = struct {
 	"COLLECTOR_NODE",
 	"COMPUTE_NODE",
 	"DATABASE_NODE",
+	"DATABASE_RETRIEVE_NODE",
+	"DATABASE_ROUTE_NODE",
 	"DECISION_SERVICE_NODE",
 	"DOT_NET_COMPUTE_NODE",
 	"FILE_READ_NODE",
@@ -198,23 +250,41 @@ var IIBNodeTypes = struct {
 	"GROUP_COMPLETE_NODE",
 	"GROUP_GATHER_NODE",
 	"GROUP_SCATTER_NODE",
+	"HTTP_ASYNC_REQUEST",
+	"HTTP_ASYNC_RESPONSE",
 	"HTTP_HEADER",
+	"HTTP_INPUT",
+	"HTTP_REPLY",
+	"HTTP_REQUEST",
 	"JAVA_COMPUTE_NODE",
 	"JMS_CLIENT_RECEIVE",
 	"JMS_CLIENT_REPLY_NODE",
 	"JMS_HEADER",
+	"JMS_INPUT_NODE",
+	"JMS_OUTPUT_NODE",
+	"JMS_REPLY_NODE",
 	"MQ_GET_NODE",
+	"MQ_INPUT_NODE",
 	"MQ_OUTPUT_NODE",
+	"MQ_REPLY_NODE",
 	"PASSTHRU_NODE",
+	"PUBLICATION_NODE",
 	"RESET_CONTENT_DESCRIPTOR_NODE",
+	"REST_ASYNC_REQUEST_NODE",
+	"REST_ASYNC_RESPONSE_NODE",
+	"REST_REQUEST_NODE",
 	"RE_SEQUENCE_NODE",
 	"ROUTE_NODE",
 	"SAP_REPLY_NODE",
 	"SCA_REPLY_NODE",
 	"SECURITY_PEP",
 	"SEQUENCE_NODE",
+	"SOAP_ASYNC_REQUEST_NODE",
+	"SOAP_ASYNC_RESPONSE_NODE",
 	"SOAP_EXTRACT_NODE",
+	"SOAP_INPUT_NODE",
 	"SOAP_REPLY_NODE",
+	"SOAP_REQUEST_NODE",
 	"SOAP_WRAPPER_NODE",
 	"SR_RETRIEVE_ENTITY_NODE",
 	"SR_RETRIEVE_IT_SERVICE_NODE",
@@ -363,6 +433,7 @@ func (me ServiceTechnology) Ref() *ServiceTechnology {
 var ServiceTechnologys = struct {
 	ActiveMq                             ServiceTechnology
 	ActiveMqArtemis                      ServiceTechnology
+	AdobeExperienceManager               ServiceTechnology
 	AdoNet                               ServiceTechnology
 	AIX                                  ServiceTechnology
 	Akka                                 ServiceTechnology
@@ -376,6 +447,7 @@ var ServiceTechnologys = struct {
 	ApacheHTTPClientSync                 ServiceTechnology
 	ApacheHTTPServer                     ServiceTechnology
 	ApacheKafka                          ServiceTechnology
+	ApacheLog4j                          ServiceTechnology
 	ApacheSolr                           ServiceTechnology
 	ApacheStorm                          ServiceTechnology
 	ApacheSynapse                        ServiceTechnology
@@ -387,6 +459,7 @@ var ServiceTechnologys = struct {
 	ASPDotNetCoreSignalr                 ServiceTechnology
 	ASPDotNetSignalr                     ServiceTechnology
 	AsyncHTTPClient                      ServiceTechnology
+	AWSDynamoDB                          ServiceTechnology
 	AWSLambda                            ServiceTechnology
 	AWSRds                               ServiceTechnology
 	AWSService                           ServiceTechnology
@@ -396,6 +469,7 @@ var ServiceTechnologys = struct {
 	AzureServiceFabric                   ServiceTechnology
 	AzureStorage                         ServiceTechnology
 	Boshbpm                              ServiceTechnology
+	CICSFileAccess                       ServiceTechnology
 	Citrix                               ServiceTechnology
 	CitrixCommon                         ServiceTechnology
 	CitrixDesktopDeliveryControllers     ServiceTechnology
@@ -405,11 +479,13 @@ var ServiceTechnologys = struct {
 	CitrixStorefront                     ServiceTechnology
 	CitrixVirtualDeliveryAgent           ServiceTechnology
 	CitrixWorkspaceEnvironmentManagement ServiceTechnology
+	CitrixXen                            ServiceTechnology
 	CloudFoundry                         ServiceTechnology
 	CloudFoundryAuctioneer               ServiceTechnology
 	CloudFoundryBosh                     ServiceTechnology
 	CloudFoundryGorouter                 ServiceTechnology
 	Coldfusion                           ServiceTechnology
+	ConfluentKafkaClient                 ServiceTechnology
 	Containerd                           ServiceTechnology
 	CoreDNS                              ServiceTechnology
 	Couchbase                            ServiceTechnology
@@ -421,6 +497,8 @@ var ServiceTechnologys = struct {
 	Docker                               ServiceTechnology
 	DotNet                               ServiceTechnology
 	DotNetRemoting                       ServiceTechnology
+	Drupal                               ServiceTechnology
+	Dynatrace                            ServiceTechnology
 	ElasticSearch                        ServiceTechnology
 	Envoy                                ServiceTechnology
 	Erlang                               ServiceTechnology
@@ -430,7 +508,9 @@ var ServiceTechnologys = struct {
 	Garden                               ServiceTechnology
 	Glassfish                            ServiceTechnology
 	Go                                   ServiceTechnology
+	GoogleCloudFunctions                 ServiceTechnology
 	GraalTruffle                         ServiceTechnology
+	GraphQl                              ServiceTechnology
 	Grpc                                 ServiceTechnology
 	Grsecurity                           ServiceTechnology
 	Hadoop                               ServiceTechnology
@@ -451,6 +531,8 @@ var ServiceTechnologys = struct {
 	IBMMqClient                          ServiceTechnology
 	IBMWebshprereApplicationServer       ServiceTechnology
 	IBMWebshprereLiberty                 ServiceTechnology
+	IBMWebsphereApplicationServer        ServiceTechnology
+	IBMWebsphereLiberty                  ServiceTechnology
 	IIS                                  ServiceTechnology
 	IISAppPool                           ServiceTechnology
 	Istio                                ServiceTechnology
@@ -458,16 +540,24 @@ var ServiceTechnologys = struct {
 	JaxWs                                ServiceTechnology
 	JBoss                                ServiceTechnology
 	JBossEap                             ServiceTechnology
+	JBossLogmanager                      ServiceTechnology
+	JdkHTTPClient                        ServiceTechnology
 	JdkHTTPServer                        ServiceTechnology
 	Jersey                               ServiceTechnology
 	Jetty                                ServiceTechnology
 	Jruby                                ServiceTechnology
 	Jython                               ServiceTechnology
 	Kubernetes                           ServiceTechnology
+	Laminas                              ServiceTechnology
+	Laravel                              ServiceTechnology
+	Libc                                 ServiceTechnology
 	Libvirt                              ServiceTechnology
 	Linkerd                              ServiceTechnology
+	LinuxSystem                          ServiceTechnology
+	Magento                              ServiceTechnology
 	Mariadb                              ServiceTechnology
-	Memcache                             ServiceTechnology
+	Memcached                            ServiceTechnology
+	Micronaut                            ServiceTechnology
 	MicrosoftSQLServer                   ServiceTechnology
 	Mongodb                              ServiceTechnology
 	MSSQLClient                          ServiceTechnology
@@ -494,17 +584,25 @@ var ServiceTechnologys = struct {
 	PHP                                  ServiceTechnology
 	PHPFpm                               ServiceTechnology
 	Play                                 ServiceTechnology
+	Podman                               ServiceTechnology
 	PostgreSQL                           ServiceTechnology
 	PostgreSQLDotNetDataProvider         ServiceTechnology
 	PowerDNS                             ServiceTechnology
 	Progress                             ServiceTechnology
 	Python                               ServiceTechnology
+	QosLogback                           ServiceTechnology
+	Quarkus                              ServiceTechnology
 	RabbitMq                             ServiceTechnology
+	ReactorCore                          ServiceTechnology
 	Redis                                ServiceTechnology
 	Resteasy                             ServiceTechnology
 	Restlet                              ServiceTechnology
 	Riak                                 ServiceTechnology
+	Rke2                                 ServiceTechnology
+	Rsocket                              ServiceTechnology
 	Ruby                                 ServiceTechnology
+	Runc                                 ServiceTechnology
+	Rxjava                               ServiceTechnology
 	SagWebmethodsIs                      ServiceTechnology
 	SAP                                  ServiceTechnology
 	SAPHanadb                            ServiceTechnology
@@ -514,24 +612,33 @@ var ServiceTechnologys = struct {
 	Scala                                ServiceTechnology
 	Selinux                              ServiceTechnology
 	Sharepoint                           ServiceTechnology
+	Slim                                 ServiceTechnology
 	Spark                                ServiceTechnology
 	Spring                               ServiceTechnology
 	Sqlite                               ServiceTechnology
+	Symfony                              ServiceTechnology
 	Thrift                               ServiceTechnology
 	Tibco                                ServiceTechnology
 	TibcoBusinessWorks                   ServiceTechnology
 	TibcoEms                             ServiceTechnology
+	UndertowIo                           ServiceTechnology
 	VarnishCache                         ServiceTechnology
+	Vertx                                ServiceTechnology
 	Vim2                                 ServiceTechnology
+	Vios                                 ServiceTechnology
 	VirtualMachineKvm                    ServiceTechnology
 	VirtualMachineQemu                   ServiceTechnology
 	Wildfly                              ServiceTechnology
 	WindowsContainers                    ServiceTechnology
+	WindowsSystem                        ServiceTechnology
 	Wink                                 ServiceTechnology
+	Wordpress                            ServiceTechnology
 	ZeroMq                               ServiceTechnology
+	ZosConnect                           ServiceTechnology
 }{
 	"ACTIVE_MQ",
 	"ACTIVE_MQ_ARTEMIS",
+	"ADOBE_EXPERIENCE_MANAGER",
 	"ADO_NET",
 	"AIX",
 	"AKKA",
@@ -545,6 +652,7 @@ var ServiceTechnologys = struct {
 	"APACHE_HTTP_CLIENT_SYNC",
 	"APACHE_HTTP_SERVER",
 	"APACHE_KAFKA",
+	"APACHE_LOG4J",
 	"APACHE_SOLR",
 	"APACHE_STORM",
 	"APACHE_SYNAPSE",
@@ -556,6 +664,7 @@ var ServiceTechnologys = struct {
 	"ASP_DOTNET_CORE_SIGNALR",
 	"ASP_DOTNET_SIGNALR",
 	"ASYNC_HTTP_CLIENT",
+	"AWS_DYNAMO_DB",
 	"AWS_LAMBDA",
 	"AWS_RDS",
 	"AWS_SERVICE",
@@ -565,6 +674,7 @@ var ServiceTechnologys = struct {
 	"AZURE_SERVICE_FABRIC",
 	"AZURE_STORAGE",
 	"BOSHBPM",
+	"CICS_FILE_ACCESS",
 	"CITRIX",
 	"CITRIX_COMMON",
 	"CITRIX_DESKTOP_DELIVERY_CONTROLLERS",
@@ -574,11 +684,13 @@ var ServiceTechnologys = struct {
 	"CITRIX_STOREFRONT",
 	"CITRIX_VIRTUAL_DELIVERY_AGENT",
 	"CITRIX_WORKSPACE_ENVIRONMENT_MANAGEMENT",
+	"CITRIX_XEN",
 	"CLOUDFOUNDRY",
 	"CLOUDFOUNDRY_AUCTIONEER",
 	"CLOUDFOUNDRY_BOSH",
 	"CLOUDFOUNDRY_GOROUTER",
 	"COLDFUSION",
+	"CONFLUENT_KAFKA_CLIENT",
 	"CONTAINERD",
 	"CORE_DNS",
 	"COUCHBASE",
@@ -590,6 +702,8 @@ var ServiceTechnologys = struct {
 	"DOCKER",
 	"DOTNET",
 	"DOTNET_REMOTING",
+	"DRUPAL",
+	"DYNATRACE",
 	"ELASTIC_SEARCH",
 	"ENVOY",
 	"ERLANG",
@@ -599,7 +713,9 @@ var ServiceTechnologys = struct {
 	"GARDEN",
 	"GLASSFISH",
 	"GO",
+	"GOOGLE_CLOUD_FUNCTIONS",
 	"GRAAL_TRUFFLE",
+	"GRAPH_QL",
 	"GRPC",
 	"GRSECURITY",
 	"HADOOP",
@@ -620,6 +736,8 @@ var ServiceTechnologys = struct {
 	"IBM_MQ_CLIENT",
 	"IBM_WEBSHPRERE_APPLICATION_SERVER",
 	"IBM_WEBSHPRERE_LIBERTY",
+	"IBM_WEBSPHERE_APPLICATION_SERVER",
+	"IBM_WEBSPHERE_LIBERTY",
 	"IIS",
 	"IIS_APP_POOL",
 	"ISTIO",
@@ -627,16 +745,24 @@ var ServiceTechnologys = struct {
 	"JAX_WS",
 	"JBOSS",
 	"JBOSS_EAP",
+	"JBOSS_LOGMANAGER",
+	"JDK_HTTP_CLIENT",
 	"JDK_HTTP_SERVER",
 	"JERSEY",
 	"JETTY",
 	"JRUBY",
 	"JYTHON",
 	"KUBERNETES",
+	"LAMINAS",
+	"LARAVEL",
+	"LIBC",
 	"LIBVIRT",
 	"LINKERD",
+	"LINUX_SYSTEM",
+	"MAGENTO",
 	"MARIADB",
-	"MEMcache",
+	"MEMCACHED",
+	"MICRONAUT",
 	"MICROSOFT_SQL_SERVER",
 	"MONGODB",
 	"MSSQL_CLIENT",
@@ -663,17 +789,25 @@ var ServiceTechnologys = struct {
 	"PHP",
 	"PHP_FPM",
 	"PLAY",
+	"PODMAN",
 	"POSTGRE_SQL",
 	"POSTGRE_SQL_DOTNET_DATA_PROVIDER",
 	"POWER_DNS",
 	"PROGRESS",
 	"PYTHON",
+	"QOS_LOGBACK",
+	"QUARKUS",
 	"RABBIT_MQ",
+	"REACTOR_CORE",
 	"REDIS",
 	"RESTEASY",
 	"RESTLET",
 	"RIAK",
+	"RKE2",
+	"RSOCKET",
 	"RUBY",
+	"RUNC",
+	"RXJAVA",
 	"SAG_WEBMETHODS_IS",
 	"SAP",
 	"SAP_HANADB",
@@ -683,21 +817,29 @@ var ServiceTechnologys = struct {
 	"SCALA",
 	"SELINUX",
 	"SHAREPOINT",
+	"SLIM",
 	"SPARK",
 	"SPRING",
 	"SQLITE",
+	"SYMFONY",
 	"THRIFT",
 	"TIBCO",
 	"TIBCO_BUSINESS_WORKS",
 	"TIBCO_EMS",
+	"UNDERTOW_IO",
 	"VARNISH_CACHE",
+	"VERTX",
 	"VIM2",
+	"VIOS",
 	"VIRTUAL_MACHINE_KVM",
 	"VIRTUAL_MACHINE_QEMU",
 	"WILDFLY",
 	"WINDOWS_CONTAINERS",
+	"WINDOWS_SYSTEM",
 	"WINK",
+	"WORDPRESS",
 	"ZERO_MQ",
+	"ZOS_CONNECT",
 }
 
 // Operator Operator comparing the extracted value to the comparison value.
@@ -705,13 +847,19 @@ type Operator string
 
 // Operators offers the known enum values
 var Operators = struct {
-	BeginsWith Operator
-	Contains   Operator
-	EndsWith   Operator
-	Equals     Operator
+	BeginsWith      Operator
+	BegingWithAnyOf Operator
+	Contains        Operator
+	EndsWith        Operator
+	EndsWithAnyOf   Operator
+	Equals          Operator
+	EqualsAnyOf     Operator
 }{
 	"BEGINS_WITH",
+	"BEGINS_WITH_ANY_OF",
 	"CONTAINS",
 	"ENDS_WITH",
+	"ENDS_WITH_ANY_OF",
 	"EQUALS",
+	"EQUALS_ANY_OF",
 }
