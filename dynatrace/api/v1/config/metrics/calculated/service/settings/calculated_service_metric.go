@@ -41,6 +41,7 @@ type CalculatedServiceMetric struct {
 	TsmMetricKey        string                      `json:"tsmMetricKey"`                       // The key of the calculated service metric.
 	UnitDisplayName     *string                     `json:"unitDisplayName,omitempty"`          // The display name of the metric's unit.   Only applicable when the **unit** parameter is set to `UNSPECIFIED`.
 	Conditions          Conditions                  `json:"conditions,omitempty"`               // The set of conditions for the metric usage.   **All** the specified conditions must be fulfilled to use the metric.
+	IgnoreMutedRequests *bool                       `json:"ignoreMutedRequests,omitempty"`      // Metric should (true) or not (false) ignore muted requests.
 	Unknowns            map[string]json.RawMessage  `json:"-"`
 }
 
@@ -143,6 +144,11 @@ func (me *CalculatedServiceMetric) Schema() map[string]*schema.Schema {
 			Description: "The set of conditions for the metric usage. **All** the specified conditions must be fulfilled to use the metric",
 			Elem:        &schema.Resource{Schema: new(Conditions).Schema()},
 		},
+		"ignore_muted_requests": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Metric should (true) or not (false) ignore muted requests.",
+		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
@@ -156,42 +162,46 @@ func (me *CalculatedServiceMetric) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	delete(properties, "metadata")
+	delete(properties, "ignore_muted_requests")
 	if me.MetricDefinition != nil && me.MetricDefinition.Metric == nil && me.MetricDefinition.RequestAttribute == nil {
 		me.MetricDefinition = nil
 	}
 	return properties.EncodeAll(map[string]any{
-		"entity_id":            me.EntityID,
-		"name":                 me.Name,
-		"description":          me.Description,
-		"unit":                 me.Unit,
-		"enabled":              me.Enabled,
-		"metric_key":           me.TsmMetricKey,
-		"unit_display_name":    me.UnitDisplayName,
-		"management_zones":     me.ManagementZones,
-		"metric_definition":    me.MetricDefinition,
-		"dimension_definition": me.DimensionDefinition,
-		"conditions":           me.Conditions,
-		"unknowns":             me.Unknowns,
+		"entity_id":             me.EntityID,
+		"name":                  me.Name,
+		"description":           me.Description,
+		"unit":                  me.Unit,
+		"enabled":               me.Enabled,
+		"metric_key":            me.TsmMetricKey,
+		"unit_display_name":     me.UnitDisplayName,
+		"management_zones":      me.ManagementZones,
+		"metric_definition":     me.MetricDefinition,
+		"dimension_definition":  me.DimensionDefinition,
+		"conditions":            me.Conditions,
+		"ignore_muted_requests": me.IgnoreMutedRequests,
+		"unknowns":              me.Unknowns,
 	})
 }
 
 func (me *CalculatedServiceMetric) UnmarshalHCL(decoder hcl.Decoder) error {
 	if me.Unknowns != nil {
 		delete(me.Unknowns, "metadata")
+		delete(me.Unknowns, "ignore_muted_requests")
 	}
 	err := decoder.DecodeAll(map[string]any{
-		"entity_id":            &me.EntityID,
-		"name":                 &me.Name,
-		"description":          &me.Description,
-		"unit":                 &me.Unit,
-		"enabled":              &me.Enabled,
-		"metric_key":           &me.TsmMetricKey,
-		"unit_display_name":    &me.UnitDisplayName,
-		"management_zones":     &me.ManagementZones,
-		"metric_definition":    &me.MetricDefinition,
-		"dimension_definition": &me.DimensionDefinition,
-		"conditions":           &me.Conditions,
-		"unknowns":             &me.Unknowns,
+		"entity_id":             &me.EntityID,
+		"name":                  &me.Name,
+		"description":           &me.Description,
+		"unit":                  &me.Unit,
+		"enabled":               &me.Enabled,
+		"metric_key":            &me.TsmMetricKey,
+		"unit_display_name":     &me.UnitDisplayName,
+		"management_zones":      &me.ManagementZones,
+		"metric_definition":     &me.MetricDefinition,
+		"dimension_definition":  &me.DimensionDefinition,
+		"conditions":            &me.Conditions,
+		"ignore_muted_requests": &me.IgnoreMutedRequests,
+		"unknowns":              &me.Unknowns,
 	})
 	if me.UnitDisplayName == nil || len(*me.UnitDisplayName) == 0 {
 		me.UnitDisplayName = nil
@@ -205,6 +215,7 @@ func (me *CalculatedServiceMetric) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *CalculatedServiceMetric) MarshalJSON() ([]byte, error) {
 	if me.Unknowns != nil {
 		delete(me.Unknowns, "metadata")
+		delete(me.Unknowns, "ignoreMutedRequests")
 	}
 	properties := xjson.NewProperties(me.Unknowns)
 	if err := properties.MarshalAll(map[string]any{
@@ -219,6 +230,7 @@ func (me *CalculatedServiceMetric) MarshalJSON() ([]byte, error) {
 		"metricDefinition":    me.MetricDefinition,
 		"dimensionDefinition": me.DimensionDefinition,
 		"conditions":          me.Conditions,
+		"ignoreMutedRequests": me.IgnoreMutedRequests,
 	}); err != nil {
 		return nil, err
 	}
@@ -228,6 +240,7 @@ func (me *CalculatedServiceMetric) MarshalJSON() ([]byte, error) {
 func (me *CalculatedServiceMetric) UnmarshalJSON(data []byte) error {
 	if me.Unknowns != nil {
 		delete(me.Unknowns, "metadata")
+		delete(me.Unknowns, "ignoreMutedRequests")
 	}
 	properties := xjson.NewProperties(me.Unknowns)
 	if err := json.Unmarshal(data, &properties); err != nil {
@@ -245,6 +258,7 @@ func (me *CalculatedServiceMetric) UnmarshalJSON(data []byte) error {
 		"metricDefinition":    &me.MetricDefinition,
 		"dimensionDefinition": &me.DimensionDefinition,
 		"conditions":          &me.Conditions,
+		"ignoreMutedRequests": &me.IgnoreMutedRequests,
 	})
 	if me.UnitDisplayName != nil && len(*me.UnitDisplayName) == 0 {
 		me.UnitDisplayName = nil
@@ -257,6 +271,8 @@ type Unit string
 
 // Units offers the known enum values
 var Units = struct {
+	Ampere               Unit
+	Billion              Unit
 	Bit                  Unit
 	BitPerHour           Unit
 	BitPerMinute         Unit
@@ -270,13 +286,21 @@ var Units = struct {
 	Day                  Unit
 	DecibelMilliWatt     Unit
 	GibiByte             Unit
+	GibiBytePerHour      Unit
+	GibiBytePerMinute    Unit
+	GibiBytePerSecond    Unit
 	Giga                 Unit
 	GigaByte             Unit
+	GigaBytePerHour      Unit
+	GigaBytePerMinute    Unit
+	GigaBytePerSecond    Unit
+	Hertz                Unit
 	Hour                 Unit
 	KibiByte             Unit
 	KibiBytePerHour      Unit
 	KibiBytePerMinute    Unit
 	KibiBytePerSecond    Unit
+	KiloMetrePerHour     Unit
 	Kilo                 Unit
 	KiloByte             Unit
 	KiloBytePerHour      Unit
@@ -291,7 +315,10 @@ var Units = struct {
 	MegaBytePerHour      Unit
 	MegaBytePerMinute    Unit
 	MegaBytePerSecond    Unit
+	MetrePerHour         Unit
+	MetrePerSecond       Unit
 	MicroSecond          Unit
+	Million              Unit
 	MilliCores           Unit
 	MilliSecond          Unit
 	MilliSecondPerMinute Unit
@@ -310,10 +337,15 @@ var Units = struct {
 	Ratio                Unit
 	Second               Unit
 	State                Unit
+	Trillion             Unit
 	Unspecified          Unit
+	Volt                 Unit
+	Watt                 Unit
 	Week                 Unit
 	Year                 Unit
 }{
+	"AMPERE",
+	"BILLION",
 	"BIT",
 	"BIT_PER_HOUR",
 	"BIT_PER_MINUTE",
@@ -327,8 +359,15 @@ var Units = struct {
 	"DAY",
 	"DECIBEL_MILLI_WATT",
 	"GIBI_BYTE",
+	"GIBI_BYTE_PER_HOUR",
+	"GIBI_BYTE_PER_MINUTE",
+	"GIBI_BYTE_PER_SECOND",
 	"GIGA",
 	"GIGA_BYTE",
+	"GIGA_BYTE_PER_HOUR",
+	"GIGA_BYTE_PER_MINUTE",
+	"GIGA_BYTE_PER_SECOND",
+	"HERTZ",
 	"HOUR",
 	"KIBI_BYTE",
 	"KIBI_BYTE_PER_HOUR",
@@ -339,6 +378,7 @@ var Units = struct {
 	"KILO_BYTE_PER_HOUR",
 	"KILO_BYTE_PER_MINUTE",
 	"KILO_BYTE_PER_SECOND",
+	"KILO_METRE_PER_HOUR",
 	"MEBI_BYTE",
 	"MEBI_BYTE_PER_HOUR",
 	"MEBI_BYTE_PER_MINUTE",
@@ -348,7 +388,10 @@ var Units = struct {
 	"MEGA_BYTE_PER_HOUR",
 	"MEGA_BYTE_PER_MINUTE",
 	"MEGA_BYTE_PER_SECOND",
+	"METRE_PER_HOUR",
+	"METRE_PER_SECOND",
 	"MICRO_SECOND",
+	"MILLION",
 	"MILLI_CORES",
 	"MILLI_SECOND",
 	"MILLI_SECOND_PER_MINUTE",
@@ -367,7 +410,10 @@ var Units = struct {
 	"RATIO",
 	"SECOND",
 	"STATE",
+	"TRILLION",
 	"UNSPECIFIED",
+	"VOLT",
+	"WATT",
 	"WEEK",
 	"YEAR",
 }
