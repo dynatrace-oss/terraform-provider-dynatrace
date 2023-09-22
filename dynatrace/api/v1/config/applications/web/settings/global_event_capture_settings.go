@@ -33,6 +33,9 @@ type GlobalEventCaptureSettings struct {
 	KeyDown                            bool   `json:"keyDown"`                            // KeyDown enabled/disabled
 	Scroll                             bool   `json:"scroll"`                             // Scroll enabled/disabled
 	AdditionalEventCapturedAsUserInput string `json:"additionalEventCapturedAsUserInput"` // Additional events to be captured globally as user input. \n\nFor example `DragStart` or `DragEnd`. Maximum 100 characters.
+	Change                             *bool  `json:"change,omitempty"`                   // Change enabled/disabled
+	TouchEnd                           *bool  `json:"touchEnd,omitempty"`                 // TouchEnd enabled/disabled
+	TouchStart                         *bool  `json:"touchStart,omitempty"`               // TouchStart enabled/disabled
 }
 
 func (me *GlobalEventCaptureSettings) Schema() map[string]*schema.Schema {
@@ -77,6 +80,24 @@ func (me *GlobalEventCaptureSettings) Schema() map[string]*schema.Schema {
 			Description: "Additional events to be captured globally as user input. \n\nFor example `DragStart` or `DragEnd`. Maximum 100 characters.",
 			Optional:    true,
 		},
+		"change": {
+			Type:        schema.TypeBool,
+			Description: "Change enabled/disabled",
+			Optional:    true,
+			Default:     true,
+		},
+		"touch_end": {
+			Type:        schema.TypeBool,
+			Description: "TouchEnd enabled/disabled",
+			Optional:    true,
+			Default:     true,
+		},
+		"touch_start": {
+			Type:        schema.TypeBool,
+			Description: "TouchStart enabled/disabled",
+			Optional:    true,
+			Default:     true,
+		},
 	}
 }
 
@@ -90,6 +111,9 @@ func (me *GlobalEventCaptureSettings) MarshalHCL(properties hcl.Properties) erro
 		"keydown":     me.KeyDown,
 		"scroll":      me.Scroll,
 		"additional_event_captured_as_user_input": me.AdditionalEventCapturedAsUserInput,
+		"change":      me.Change,
+		"touch_end":   me.TouchEnd,
+		"touch_start": me.TouchStart,
 	})
 }
 
@@ -103,5 +127,8 @@ func (me *GlobalEventCaptureSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"keydown":     &me.KeyDown,
 		"scroll":      &me.Scroll,
 		"additional_event_captured_as_user_input": &me.AdditionalEventCapturedAsUserInput,
+		"change":      &me.Change,
+		"touch_end":   &me.TouchEnd,
+		"touch_start": &me.TouchStart,
 	})
 }

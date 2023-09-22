@@ -160,6 +160,7 @@ var MetaDataCapturingTypes = struct {
 	JavaScriptVariable MetaDataCapturingType
 	MetaTag            MetaDataCapturingType
 	QueryString        MetaDataCapturingType
+	ResponseHeader     MetaDataCapturingType
 }{
 	"COOKIE",
 	"CSS_SELECTOR",
@@ -167,6 +168,7 @@ var MetaDataCapturingTypes = struct {
 	"JAVA_SCRIPT_VARIABLE",
 	"META_TAG",
 	"QUERY_STRING",
+	"RESPONSE_HEADER",
 }
 
 type PropertyType string
