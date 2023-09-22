@@ -159,6 +159,7 @@ var Attributes = struct {
 	HTTPMonitorTags                           Attribute
 	KubernetesClusterName                     Attribute
 	KubernetesNodeName                        Attribute
+	KubernetesServiceName                     Attribute
 	MobileApplicationName                     Attribute
 	MobileApplicationPlatform                 Attribute
 	MobileApplicationTags                     Attribute
@@ -183,6 +184,9 @@ var Attributes = struct {
 	ProcessGroupTechnology                    Attribute
 	ProcessGroupTechnologyEdition             Attribute
 	ProcessGroupTechnologyVersion             Attribute
+	QueueName                                 Attribute
+	QueueTechnology                           Attribute
+	QueueVendor                               Attribute
 	ServiceAkkaActorSystem                    Attribute
 	ServiceCTGServiceName                     Attribute
 	ServiceDatabaseHostName                   Attribute
@@ -355,6 +359,7 @@ var Attributes = struct {
 	"HTTP_MONITOR_TAGS",
 	"KUBERNETES_CLUSTER_NAME",
 	"KUBERNETES_NODE_NAME",
+	"KUBERNETES_SERVICE_NAME",
 	"MOBILE_APPLICATION_NAME",
 	"MOBILE_APPLICATION_PLATFORM",
 	"MOBILE_APPLICATION_TAGS",
@@ -379,6 +384,9 @@ var Attributes = struct {
 	"PROCESS_GROUP_TECHNOLOGY",
 	"PROCESS_GROUP_TECHNOLOGY_EDITION",
 	"PROCESS_GROUP_TECHNOLOGY_VERSION",
+	"QUEUE_NAME",
+	"QUEUE_TECHNOLOGY",
+	"QUEUE_VENDOR",
 	"SERVICE_AKKA_ACTOR_SYSTEM",
 	"SERVICE_CTG_SERVICE_NAME",
 	"SERVICE_DATABASE_HOST_NAME",
