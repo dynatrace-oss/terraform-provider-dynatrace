@@ -15,6 +15,8 @@ There are two main approaches for migration (more information below):
 * Bulk - Migrate ALL configuration from one environment to a fresh target environment
 * Iterative - Migrate configuration by resource group - safer approach for a target environment with existing configuration
 
+A recommended approach is to pre-apply configuration prior to the OneAgent migration and then re-apply after to deploy any configuration that previously returned an error due to an entity dependency. It can be expected that most configuration will be successfully applied during the pre-apply phase. **Please keep exported working directories of configuration that are applied in case any configuration needs to be re-applied or destroyed.**
+
 An Excel spreadsheet is available to assist with the migration process, specifically helpful for an iterative approach. Note that the spreadsheet has a custom function to track a static time/date for when the checkbox for column A "Complete" is selected. Leaving the document untrusted will simply make column C "Date Completed" unusable, everything else in the document will function and view properly.
 
 For the iterative approach, it is important to push configuration in order of dependency. Please reference column D "Migration: Iterative Order" and push all configuration in order of the number present for each resource. Eg. Push all configuration with iterative order "1", then all with "2", etc. 
@@ -55,7 +57,7 @@ Most resources do not allow configuration with the same name, but there is a sma
 * `DYNATRACE_DUPLICATE_REJECT=ALL` - Duplicates will not overwrite existing configuration
 * `DYNATRACE_DUPLICATE_HIJACK=ALL` - Duplicates will overwrite existing configuration
 
-A common approach with the configuration migration is to do an apply prior to the OneAgent migration and then a reapply after to deploy any configuration that depend on entities existing. An underlying dependency which has entity verification could have cascading effects where a data source could be driven to `null` and the plan/apply prevents execution. 
+A common approach with the configuration migration is to do an apply prior to the OneAgent migration and then a re-apply after to deploy any configuration that depend on entities existing. An underlying dependency which has entity verification could have cascading effects where a data source could be driven to `null` and the plan/apply prevents execution. 
 
 Example: You may have a request attribute which has an entity filter, a calculated service metric that depends on this request attribute, and a dashboard that is using the calculated service metric. 
 

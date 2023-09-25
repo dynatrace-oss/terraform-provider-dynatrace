@@ -66,6 +66,7 @@ resource "dynatrace_calculated_service_metric" "#name#" {
 - `dimension_definition` (Block List, Max: 1) Parameters of a definition of a calculated service metric (see [below for nested schema](#nestedblock--dimension_definition))
 - `enabled` (Boolean) The metric is enabled (`true`) or disabled (`false`)
 - `entity_id` (String) Restricts the metric usage to the specified service. This field is mutually exclusive with the `management_zones` field
+- `ignore_muted_requests` (Boolean) Metric should (true) or not (false) ignore muted requests.
 - `management_zones` (Set of String) Restricts the metric usage to specified management zones. This field is mutually exclusive with the `entity_id` field
 - `metric_definition` (Block List, Max: 1) The definition of a calculated service metric (see [below for nested schema](#nestedblock--metric_definition))
 - `unit_display_name` (String) The display name of the metric's unit. Only applicable when the **unit** parameter is set to `UNSPECIFIED`

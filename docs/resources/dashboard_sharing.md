@@ -35,6 +35,7 @@ description: |-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `muted` (Boolean) Reserved for internal use by the provider
 
 <a id="nestedblock--permissions"></a>
 ### Nested Schema for `permissions`

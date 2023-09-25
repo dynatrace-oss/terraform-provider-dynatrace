@@ -26,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_rum_host_headers" "#name#" {
-  header_name = "HostHeaderExample3"
+  header_name = "#name#"
 }
 ```
 

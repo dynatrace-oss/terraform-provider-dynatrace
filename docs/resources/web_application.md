@@ -357,6 +357,7 @@ Put a regular expression, matching all the required URLs, here.
 
 If noting specified the feature is disabled
 - `fetch_requests` (Boolean) `fetch()` request capture enabled/disabled
+- `instrumented_web_server` (Boolean) Instrumented web or app server.
 - `ip_address_restriction_settings` (Block List, Max: 1) Settings for restricting certain ip addresses and for introducing subnet mask. It also restricts the mode (see [below for nested schema](#nestedblock--monitoring_settings--ip_address_restriction_settings))
 - `javascript_framework_support` (Block List, Max: 1) Support of various JavaScript frameworks (see [below for nested schema](#nestedblock--monitoring_settings--javascript_framework_support))
 - `javascript_injection_rules` (Block List, Max: 1) Java script injection rules (see [below for nested schema](#nestedblock--monitoring_settings--javascript_injection_rules))
@@ -493,6 +494,7 @@ Optional:
 - `additional_event_captured_as_user_input` (String) Additional events to be captured globally as user input. 
 
 For example `DragStart` or `DragEnd`. Maximum 100 characters.
+- `change` (Boolean) Change enabled/disabled
 - `click` (Boolean) Click enabled/disabled
 - `doubleclick` (Boolean) DoubleClick enabled/disabled
 - `keydown` (Boolean) KeyDown enabled/disabled
@@ -500,6 +502,8 @@ For example `DragStart` or `DragEnd`. Maximum 100 characters.
 - `mousedown` (Boolean) MouseDown enabled/disabled
 - `mouseup` (Boolean) MouseUp enabled/disabled
 - `scroll` (Boolean) Scroll enabled/disabled
+- `touch_end` (Boolean) TouchEnd enabled/disabled
+- `touch_start` (Boolean) TouchStart enabled/disabled
 
 
 
