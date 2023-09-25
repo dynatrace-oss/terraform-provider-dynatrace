@@ -349,8 +349,6 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 				old = diffSuppressedContent(old)
 				new = diffSuppressedContent(new)
-				log(old)
-				log(new)
 				return hcl.JSONStringsEqual(old, new)
 			},
 		},
