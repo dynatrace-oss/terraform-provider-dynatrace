@@ -292,8 +292,9 @@ func (me *defaultService[T]) update(id string, v T) error {
 			} else {
 				return err
 			}
+		} else {
+			return nil
 		}
-		return nil
 	}
 	return err
 }
@@ -302,7 +303,7 @@ func (me *defaultService[T]) Delete(id string) error {
 	var err error
 	numRetries := 0
 	for {
-		if err = me.client.Delete(me.deleteURL(id)).Expect(204, 200).Finish(); err != nil {
+		if err = me.client.Delete(me.deleteURL(id)).Expect(204, 200, 404).Finish(); err != nil {
 			if me.options != nil && me.options.DeleteRetry != nil {
 				retry, e2 := me.options.DeleteRetry(id, err)
 				if e2 != nil {
