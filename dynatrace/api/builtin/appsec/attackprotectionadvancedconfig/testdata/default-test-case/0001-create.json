@@ -1,0 +1,12 @@
+{
+  "criteria": {
+    "attackType": "ANY"
+  },
+  "enabled": true,
+  "metadata": {
+    "comment": ""
+  },
+  "attackHandling": {
+    "blockingStrategy": "MONITOR"
+  }
+}

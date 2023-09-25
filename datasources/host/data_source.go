@@ -60,8 +60,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		tagList = sTags.List()
 		dscommon.StringsToTags(tagList, &tags)
 	}
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 
-	service := hosts.Service(config.Credentials(m))
+	service := hosts.Service(creds)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err

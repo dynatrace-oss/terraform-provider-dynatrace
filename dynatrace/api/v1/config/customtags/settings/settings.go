@@ -28,6 +28,7 @@ type Settings struct {
 	Tags            common.TagFilters `json:"tags"` // A list of tags to be added to monitored entities.
 	MatchedEntities int64             `json:"matchedEntitiesCount"`
 	CurrentState    string            `json:"-"`
+	ExportName      string            `json:"-"` // If set it will get used preferrably before the EntitySelector as the Name of this setting
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -58,6 +59,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Computed:    true,
 		},
 	}
+}
+
+func (me *Settings) Name() string {
+	if len(me.ExportName) > 0 {
+		return me.ExportName
+	}
+	return me.EntitySelector
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {

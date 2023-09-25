@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: calculated_mobile_metric Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
+description: |-
+  The resource `calculated_mobile_metric` covers configuration for calculated mobile/custom app metrics
+---
+
+# calculated_mobile_metric (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
+## Dynatrace Documentation
+
+- Create calculated metrics for mobile applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/mobile-applications/additional-configuration/rum-calculated-metrics-mobile
+
+- Mobile app metrics API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/calculated-metrics/mobile-app-metrics
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export calculated_mobile_metric` downloads all existing calculated mobile/custom app metric configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/v1/config/metrics/calculated/mobile/testdata/terraform/example-a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

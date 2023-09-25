@@ -1,0 +1,6 @@
+{
+    "enabled": true,
+    "defaultAttackHandling": {
+        "blockingStrategyJava": "MONITOR"
+    }
+}

@@ -1,0 +1,277 @@
+/**
+* @license
+* Copyright 2020 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package generic
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	generic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
+	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"golang.org/x/oauth2/clientcredentials"
+
+	"net/http"
+	"net/url"
+)
+
+// var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
+var NO_REPAIR_INPUT = true
+
+func Service(credentials *settings.Credentials) settings.CRUDService[*generic.Settings] {
+	return &service{credentials: credentials}
+}
+
+type service struct {
+	credentials *settings.Credentials
+}
+
+var httpListener = &crest.HTTPListener{
+	Callback: func(response crest.RequestResponse) {
+		if response.Request != nil {
+			if response.Request.URL != nil {
+				if response.Request.Body != nil {
+					body, _ := io.ReadAll(response.Request.Body)
+					rest.Logger.Println(response.Request.Method, response.Request.URL.String()+"\n    "+string(body))
+				} else {
+					rest.Logger.Println(response.Request.Method, response.Request.URL)
+				}
+			}
+		}
+		if response.Response != nil {
+			if response.Response.Body != nil {
+				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+					body, _ := io.ReadAll(response.Response.Body)
+					if body != nil {
+						rest.Logger.Println(response.Response.StatusCode, string(body))
+					} else {
+						rest.Logger.Println(response.Response.StatusCode)
+					}
+				}
+			}
+		}
+	},
+}
+
+func (me *service) TokenClient() *crest.Client {
+	var parsedURL *url.URL
+	parsedURL, _ = url.Parse(me.credentials.URL)
+
+	tokenClient := crest.NewClient(
+		parsedURL,
+		http.DefaultClient,
+		crest.WithHTTPListener(httpListener),
+	)
+
+	tokenClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	tokenClient.SetHeader("Authorization", "Api-Token "+me.credentials.Token)
+	return tokenClient
+}
+
+func (me *service) Client(schemaIDs string) *settings20.Client {
+	var parsedURL *url.URL
+	parsedURL, _ = url.Parse(me.credentials.URL)
+
+	tokenClient := me.TokenClient()
+
+	oauthClient := crest.NewClient(
+		parsedURL,
+		auth.NewOAuthBasedClient(
+			context.TODO(),
+			clientcredentials.Config{
+				ClientID:     me.credentials.Automation.ClientID,
+				ClientSecret: me.credentials.Automation.ClientSecret,
+				TokenURL:     me.credentials.Automation.TokenURL,
+			}),
+		crest.WithHTTPListener(httpListener),
+	)
+
+	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	oauthClient.SetHeader("Authorization", "Api-Token "+me.credentials.Token)
+
+	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
+}
+
+func (me *service) Get(id string, v *generic.Settings) error {
+	var err error
+	var response settings20.Response
+	var settingsObject SettingsObject
+
+	response, err = me.Client("").Get(context.TODO(), id)
+	if err != nil {
+		return err
+	}
+	if response.StatusCode != 200 {
+		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
+			return err
+		}
+		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
+	}
+	if err := json.Unmarshal(response.Data, &settingsObject); err != nil {
+		return err
+	}
+
+	v.Value = string(settingsObject.Value)
+	v.Scope = settingsObject.Scope
+	v.SchemaID = settingsObject.SchemaID
+
+	return nil
+}
+
+type schemaStub struct {
+	SchemaID string `json:"schemaId"`
+}
+
+type schemataResponse struct {
+	Items []schemaStub `json:"items"`
+}
+
+func (me *service) List() (api.Stubs, error) {
+	tokenClient := me.TokenClient()
+	response, err := tokenClient.GET(context.TODO(), "api/v2/settings/schemas", crest.RequestOptions{})
+	if err != nil {
+		return nil, err
+	}
+	var schemata schemataResponse
+	json.Unmarshal(response.Payload, &schemata)
+	if len(schemata.Items) == 0 {
+		return api.Stubs{}, nil
+	}
+	schemaIDs := []string{}
+	for _, schemaStub := range schemata.Items {
+		if strings.HasPrefix(schemaStub.SchemaID, "app:") {
+			schemaIDs = append(schemaIDs, schemaStub.SchemaID)
+		}
+	}
+	if len(schemaIDs) == 0 {
+		return api.Stubs{}, nil
+	}
+	var stubs api.Stubs
+	for _, schemaID := range schemaIDs {
+		response, err := me.Client(schemaID).List(context.TODO())
+		if response.StatusCode != 200 {
+			if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
+				return nil, err
+			}
+			return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
+		}
+		if err != nil {
+			return nil, err
+		}
+		for _, item := range response.Items {
+			newItem := new(generic.Settings)
+			newItem.Value = string(item.Value)
+			newItem.Scope = item.Scope
+			newItem.SchemaID = schemaID
+			newItem.Scope = item.Scope
+			stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
+
+		}
+	}
+	return stubs, nil
+}
+
+func (me *service) Validate(v *generic.Settings) error {
+	return nil // Settings 2.0 doesn't offer validation
+}
+
+func (me *service) Create(v *generic.Settings) (*api.Stub, error) {
+	return me.create(v, false)
+}
+
+type Matcher interface {
+	Match(o any) bool
+}
+
+func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
+	scope := "environment"
+	if len(v.Scope) > 0 {
+		scope = v.Scope
+	}
+	// TODO: REPAIR_INPUT
+	response, err := me.Client(v.SchemaID).Create(context.TODO(), scope, []byte(v.Value))
+	if response.StatusCode != 200 {
+		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	stub := &api.Stub{ID: response.ID, Name: response.ID}
+	return stub, nil
+}
+
+func (me *service) Update(id string, v *generic.Settings) error {
+	// TODO: REPAIR_INPUT
+	response, err := me.Client("").Update(context.TODO(), id, []byte(v.Value))
+	if response.StatusCode != 200 {
+		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
+			return err
+		}
+		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
+	}
+
+	return err
+}
+
+func (me *service) Delete(id string) error {
+	return me.delete(id, 0)
+}
+
+func (me *service) delete(id string, numRetries int) error {
+	response, err := me.Client("").Delete(context.TODO(), id)
+	if response.StatusCode != 204 {
+		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
+			return err
+		}
+		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
+	}
+
+	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
+		return nil
+	}
+	if err != nil && strings.Contains(err.Error(), "Internal Server Error occurred") {
+		if numRetries == 10 {
+			return err
+		}
+		time.Sleep(6 * time.Second)
+		return me.delete(id, numRetries+1)
+	}
+	return err
+
+}
+
+func (me *service) Name() string {
+	return me.SchemaID()
+}
+
+func (me *service) SchemaID() string {
+	return "generic"
+}

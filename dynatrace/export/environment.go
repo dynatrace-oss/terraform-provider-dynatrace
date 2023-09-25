@@ -198,7 +198,7 @@ func (me *Environment) PostProcess() error {
 		}
 		const ClearLine = "\033[2K"
 		for k, reslist := range m {
-			fmt.Printf("- %s (0 of %d)", k, len(reslist))
+			fmt.Printf("- [POSTPROCESS] %s (0 of %d)", k, len(reslist))
 			for idx, resource := range reslist {
 				if shutdown.System.Stopped() {
 					return nil
@@ -208,12 +208,12 @@ func (me *Environment) PostProcess() error {
 				}
 				fmt.Print(ClearLine)
 				fmt.Print("\r")
-				fmt.Printf("- %s (%d of %d)", k, idx+1, len(reslist))
+				fmt.Printf("- [POSTPROCESS] %s (%d of %d)", k, idx+1, len(reslist))
 
 			}
 			fmt.Print(ClearLine)
 			fmt.Print("\r")
-			fmt.Printf("- %s\n", k)
+			fmt.Printf("- [POSTPROCESS] %s\n", k)
 		}
 
 		resources = me.GetNonPostProcessedResources()
@@ -387,9 +387,28 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 
 		return nil
 	}
-	for _, module := range me.Modules {
-		if err = module.WriteDataSourcesFile(); err != nil {
-			return err
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(me.Modules))
+		for _, module := range me.Modules {
+			go func(module *Module) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err = module.WriteDataSourcesFile(false); err != nil {
+					return err
+				}
+				return nil
+			}(module)
+		}
+		wg.Wait()
+	} else {
+		for _, module := range me.Modules {
+			if err = module.WriteDataSourcesFile(true); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -400,9 +419,28 @@ func (me *Environment) WriteResourceFiles() (err error) {
 		return nil
 	}
 	fmt.Println("Writing ___resources___.tf")
-	for _, module := range me.Modules {
-		if err = module.WriteResourcesFile(); err != nil {
-			return err
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(me.Modules))
+		for _, module := range me.Modules {
+			go func(module *Module) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err = module.WriteResourcesFile(); err != nil {
+					return err
+				}
+				return nil
+			}(module)
+		}
+		wg.Wait()
+	} else {
+		for _, module := range me.Modules {
+			if err = module.WriteResourcesFile(); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -462,9 +500,29 @@ func (me *Environment) WriteProviderFiles() (err error) {
 	if me.Flags.Flat {
 		return nil
 	}
-	for _, module := range me.Modules {
-		if err = module.WriteProviderFile(); err != nil {
-			return err
+
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(me.Modules))
+		for _, module := range me.Modules {
+			go func(module *Module) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err = module.WriteProviderFile(false); err != nil {
+					return err
+				}
+				return nil
+			}(module)
+		}
+		wg.Wait()
+	} else {
+		for _, module := range me.Modules {
+			if err = module.WriteProviderFile(true); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -472,9 +530,28 @@ func (me *Environment) WriteProviderFiles() (err error) {
 
 func (me *Environment) WriteVariablesFiles() (err error) {
 	fmt.Println("Writing ___variables___.tf")
-	for _, module := range me.Modules {
-		if err = module.WriteVariablesFile(); err != nil {
-			return err
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(me.Modules))
+		for _, module := range me.Modules {
+			go func(module *Module) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err = module.WriteVariablesFile(false); err != nil {
+					return err
+				}
+				return nil
+			}(module)
+		}
+		wg.Wait()
+	} else {
+		for _, module := range me.Modules {
+			if err = module.WriteVariablesFile(true); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -25,7 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
-	cfg "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -49,12 +49,17 @@ func Resource() *schema.Resource {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
 
-	if _, err := customtags.Service(cfg.Credentials(m)).Create(config); err != nil {
+	if _, err := customtags.Service(creds).Create(config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -79,6 +84,10 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
@@ -116,7 +125,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		delConfig := new(settings.Settings)
 		delConfig.EntitySelector = config.EntitySelector
 		delConfig.Tags = deleteTags
-		srv := customtags.Service(cfg.Credentials(m))
+		srv := customtags.Service(creds)
 		if fullDeleter, ok := srv.(FullDeleter); ok {
 			if err := fullDeleter.DeleteValue(delConfig); err != nil {
 				if !strings.HasPrefix(err.Error(), "Unable to find tag") {
@@ -126,7 +135,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := customtags.Service(cfg.Credentials(m)).Update(config.EntitySelector, config); err != nil {
+	if err := customtags.Service(creds).Update(config.EntitySelector, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -142,6 +151,10 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
 	stateConfig := new(settings.Settings)
 
@@ -159,7 +172,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	}
 
 	apiConfig := new(settings.Settings)
-	if err := customtags.Service(cfg.Credentials(m)).Get(selector, apiConfig); err != nil {
+	if err := customtags.Service(creds).Get(selector, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -187,6 +200,10 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
 	stateConfig := new(settings.Settings)
 	if val, ok := stateDecoder.GetOk("entity_selector"); ok {
@@ -201,7 +218,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	srv := customtags.Service(cfg.Credentials(m))
+	srv := customtags.Service(creds)
 	if fullDeleter, ok := srv.(FullDeleter); ok {
 		if err := fullDeleter.DeleteValue(stateConfig); err != nil {
 			if strings.HasPrefix(err.Error(), "Unable to find tag") {

@@ -89,7 +89,7 @@
 		"evaluationWindow": {
 			"constraints": [
 				{
-					"maxLength": 50,
+					"maxLength": 60,
 					"minLength": 3,
 					"type": "LENGTH"
 				},
@@ -234,6 +234,36 @@
 			"type": "float"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "There is another SLO with an identical name defined. Please make your SLO name unique to save your changes.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		},
+		{
+			"customMessage": "There is another SLO with an identical metric name defined. Please make your SLO metric name unique to save your changes.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"metricName"
+			]
+		},
+		{
+			"customMessage": "There is another identical SLO defined. Please make your SLO unique to save your changes.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name",
+				"customDescription",
+				"metricExpression",
+				"evaluationType",
+				"filter",
+				"targetSuccess",
+				"targetWarning",
+				"evaluationWindow"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:cloud-automation.monitoring.slo",
 		"group:cloud-automation"
@@ -304,5 +334,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "6.0.12"
+	"version": "6.0.13"
 }

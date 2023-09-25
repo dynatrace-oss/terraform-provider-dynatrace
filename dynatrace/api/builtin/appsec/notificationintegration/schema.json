@@ -1,0 +1,1001 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "security-notification-url-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons, please re-enter all secret token(s) before saving the settings.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Integrate security notifications with your existing incident-management system or team-collaboration channel. Within security integrations, use vulnerability and attack alerting profiles to filter the total number of alerts down to those relevant for your team.\n\nTo learn more, visit [Third-party integrations](https://dt-url.net/j803tgc).",
+	"displayName": "Security notifications",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"NotificationTrigger": {
+			"description": "",
+			"displayName": "NotificationTrigger",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Vulnerability alert",
+					"value": "SECURITY_PROBLEM"
+				},
+				{
+					"displayName": "Attack alert",
+					"value": "ATTACK_CANDIDATE"
+				}
+			],
+			"type": "enum"
+		},
+		"NotificationType": {
+			"description": "",
+			"displayName": "NotificationType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Custom Integration",
+					"icon": "webhook",
+					"value": "WEBHOOK"
+				},
+				{
+					"displayName": "Jira",
+					"icon": "jira",
+					"value": "JIRA"
+				},
+				{
+					"displayName": "Email",
+					"icon": "mailclosed",
+					"value": "EMAIL"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add integration"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"attackCandidateBasedAlertingProfile": {
+			"default": "00000000-0000-0000-0000-000000000000",
+			"description": "Select an [alerting profile](/ui/settings/builtin:appsec.notification-attack-alerting-profile) to control the delivery of security notifications related to this integration.",
+			"displayName": "Alerting profile",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"uiDefaultValue": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ATTACK_CANDIDATE",
+				"property": "trigger",
+				"type": "EQUALS"
+			},
+			"referencedType": "builtin:appsec.notification-attack-alerting-profile",
+			"type": "setting"
+		},
+		"attackCandidateBasedEmailPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "EMAIL",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "ATTACK_CANDIDATE",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/AttackCandidateBasedEmailPayload"
+			}
+		},
+		"attackCandidateBasedJiraPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "JIRA",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "ATTACK_CANDIDATE",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/AttackCandidateBasedJiraPayload"
+			}
+		},
+		"attackCandidateBasedWebhookPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "WEBHOOK",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "ATTACK_CANDIDATE",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/AttackCandidateBasedWebhookPayload"
+			}
+		},
+		"displayName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"type": "NOT_BLANK"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Display name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"emailConfiguration": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "EMAIL",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/EmailConfiguration"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"jiraConfiguration": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "JIRA",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/JiraConfiguration"
+			}
+		},
+		"securityProblemBasedAlertingProfile": {
+			"default": "00000000-0000-0000-0000-000000000000",
+			"description": "Select an [alerting profile](/ui/settings/builtin:appsec.notification-alerting-profile) to control the delivery of security notifications related to this integration.",
+			"displayName": "Alerting profile",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"uiDefaultValue": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "SECURITY_PROBLEM",
+				"property": "trigger",
+				"type": "EQUALS"
+			},
+			"referencedType": "builtin:appsec.notification-alerting-profile",
+			"type": "setting"
+		},
+		"securityProblemBasedEmailPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "EMAIL",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "SECURITY_PROBLEM",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/SecurityProblemBasedEmailPayload"
+			}
+		},
+		"securityProblemBasedJiraPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "JIRA",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "SECURITY_PROBLEM",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/SecurityProblemBasedJiraPayload"
+			}
+		},
+		"securityProblemBasedWebhookPayload": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "WEBHOOK",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					{
+						"expectedValue": "SECURITY_PROBLEM",
+						"property": "trigger",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": {
+				"$ref": "#/types/SecurityProblemBasedWebhookPayload"
+			}
+		},
+		"trigger": {
+			"default": "SECURITY_PROBLEM",
+			"description": "",
+			"displayName": "Security alert type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/NotificationTrigger"
+			}
+		},
+		"type": {
+			"default": "WEBHOOK",
+			"description": "",
+			"displayName": "Notification type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/NotificationType"
+			}
+		},
+		"webhookConfiguration": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "WEBHOOK",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/WebhookConfiguration"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:integration"
+	],
+	"schemaId": "builtin:appsec.notification-integration",
+	"types": {
+		"AttackCandidateBasedEmailPayload": {
+			"description": "",
+			"displayName": "AttackCandidateBasedEmailPayload",
+			"documentation": "",
+			"properties": {
+				"body": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "security-notification-attack-candidate-email-body-trial-account-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "\u003ch3\u003e\nAttack {AttackDisplayId}: {Title}\n\u003c/h3\u003e\n\u003cbr\u003e\nVulnerability Name: \u003cb\u003e{VulnerabilityName}\u003c/b\u003e\u003cbr\u003e\nEntry Point: \u003cb\u003e{EntryPoint}\u003c/b\u003e\u003cbr\u003e\nProcess Group: \u003cb\u003e{ProcessGroupId}\u003c/b\u003e\u003cbr\u003e",
+					"description": "The template of the email notifications.  \nIn case a value of a security problem is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Body",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the body might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{AttackDisplayId}**: The unique identifier assigned by Dynatrace, for example: \"A-1234\".  \n**{Title}**: Location of the attack, for example: \"com.dynatrace.Class.method():120\"  \n**{Type}**: The type of attack, for example: \"SQL Injection\".  \n**{AttackUrl}**: URL of the attack in Dynatrace.  \n**{ProcessGroupId}**: Details about the process group attacked.  \n**{EntryPoint}**: The entry point of the attack into the process, for example: \"/login\". Can be empty.  \n**{Status}**: The status of the attack, for example: \"Exploited\"  \n**{Timestamp}**: When the attack happened.  \n**{VulnerabilityName}**: Name of the associated code-level vulnerability, for example: \"InMemoryDatabaseCaller.getAccountInfo():51\". Can be empty.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"subject": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Attack {AttackDisplayId}: {Title}",
+					"description": "The subject of the email notifications.",
+					"displayName": "Subject",
+					"documentation": "Available placeholders:  \n**{AttackDisplayId}**: The unique identifier assigned by Dynatrace, for example, \"A-1234\".  \n**{Title}**: Location of the attack, for example: \"com.dynatrace.Class.method():120\"  \n**{Type}**: The type of attack, for example: \"SQL Injection\".  \n**{AttackUrl}**: URL of the attack in Dynatrace.  \n**{ProcessGroupId}**: Details about the process group attacked.  \n**{EntryPoint}**: The entry point of the attack into the process, for example: \"/login\". Can be empty.  \n**{Status}**: The status of the attack, for example: \"Exploited\"  \n**{Timestamp}**: When the attack happened.  \n**{VulnerabilityName}**: Name of the associated code-level vulnerability, for example: \"InMemoryDatabaseCaller.getAccountInfo():51\". Can be empty.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"AttackCandidateBasedJiraPayload": {
+			"description": "",
+			"displayName": "AttackCandidateBasedJiraPayload",
+			"documentation": "",
+			"properties": {
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "{VulnerabilityName}\n\nEntry Point: {EntryPoint}\nProcess Group: {ProcessGroupId}",
+					"description": "The description of the Jira issue to be created by this notification.  \nIn case a value of an attack is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Issue description",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the description might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{AttackDisplayId}**: The unique identifier assigned by Dynatrace, for example: \"A-1234\".  \n**{Title}**: Location of the attack, for example: \"com.dynatrace.Class.method():120\"  \n**{Type}**: The type of attack, for example: \"SQL Injection\".  \n**{AttackUrl}**: URL of the attack in Dynatrace.  \n**{ProcessGroupId}**: Details about the process group attacked.  \n**{EntryPoint}**: The entry point of the attack into the process, for example: \"/login\". Can be empty.  \n**{Status}**: The status of the attack, for example: \"Exploited\"  \n**{Timestamp}**: When the attack happened.  \n**{VulnerabilityName}**: Name of the associated code-level vulnerability, for example: \"InMemoryDatabaseCaller.getAccountInfo():51\". Can be empty.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"summary": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Attack {AttackDisplayId}: {Title}",
+					"description": "The summary of the Jira issue to be created by this notification.",
+					"displayName": "Summary",
+					"documentation": "**Note:** The Jira summary field must contain less than 255 characters. Any content exceeding this limit after evaluating the placeholders will be discarded.  \n  \nAvailable placeholders:  \n**{AttackDisplayId}**: The unique identifier assigned by Dynatrace, for example, \"A-1234\".  \n**{Title}**: Location of the attack, for example: \"com.dynatrace.Class.method():120\"  \n**{Type}**: The type of attack, for example: \"SQL Injection\".  \n**{AttackUrl}**: URL of the attack in Dynatrace.  \n**{ProcessGroupId}**: Details about the process group attacked.  \n**{EntryPoint}**: The entry point of the attack into the process, for example: \"/login\". Can be empty.  \n**{Status}**: The status of the attack, for example: \"Exploited\"  \n**{Timestamp}**: When the attack happened.  \n**{VulnerabilityName}**: Name of the associated code-level vulnerability, for example: \"InMemoryDatabaseCaller.getAccountInfo():51\". Can be empty.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"AttackCandidateBasedWebhookPayload": {
+			"description": "",
+			"displayName": "AttackCandidateBasedWebhookPayload",
+			"documentation": "",
+			"properties": {
+				"payload": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "{\n\t\"Title\":\"{Title}\",\n\t\"AttackUrl\":\"{AttackUrl}\"\n}",
+					"description": "This is the content your notification message will include when users view it.  \nIn case a value of an attack is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Custom payload",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the custom payload might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{AttackDisplayId}**: The unique identifier assigned by Dynatrace, for example: \"A-1234\".  \n**{Title}**: Location of the attack, for example: \"com.dynatrace.Class.method():120\"  \n**{Type}**: The type of attack, for example: \"SQL Injection\".  \n**{AttackUrl}**: URL of the attack in Dynatrace.  \n**{ProcessGroupId}**: Details about the process group attacked.  \n**{EntryPoint}**: The entry point of the attack into the process, for example: \"/login\". Can be empty.  \n**{Status}**: The status of the attack, for example: \"Exploited\"  \n**{Timestamp}**: When the attack happened.  \n**{VulnerabilityName}**: Name of the associated code-level vulnerability, for example: \"InMemoryDatabaseCaller.getAccountInfo():51\". Can be empty.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EmailConfiguration": {
+			"constraints": [
+				{
+					"customMessage": "Number of total recipients exceeded 50",
+					"customValidatorId": "security-notification-email-total-recipients-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "EmailConfiguration",
+			"documentation": "",
+			"properties": {
+				"bccRecipients": {
+					"description": "",
+					"displayName": "BCC",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"customMessage": "Email address is not valid",
+								"pattern": "^[\\.a-zA-Z0-9!#$%\u0026'*+/=?^_`{|}~-]+?@[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?)*$",
+								"type": "PATTERN"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"subType": "email",
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add recipient"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"ccRecipients": {
+					"description": "",
+					"displayName": "CC",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"customMessage": "Email address is not valid",
+								"pattern": "^[\\.a-zA-Z0-9!#$%\u0026'*+/=?^_`{|}~-]+?@[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?)*$",
+								"type": "PATTERN"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"subType": "email",
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add recipient"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"recipients": {
+					"description": "",
+					"displayName": "To",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"customMessage": "Email address is not valid",
+								"pattern": "^[\\.a-zA-Z0-9!#$%\u0026'*+/=?^_`{|}~-]+?@[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?)*$",
+								"type": "PATTERN"
+							},
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"subType": "email",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"metadata": {
+						"addItemButton": "Add recipient"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"JiraConfiguration": {
+			"description": "",
+			"displayName": "JiraConfiguration",
+			"documentation": "",
+			"properties": {
+				"apiToken": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The API token for the Jira profile. Using password authentication [was deprecated by Jira](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-basic-auth-and-cookie-based-auth/)",
+					"displayName": "API token",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "secret"
+				},
+				"issueType": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The type of the Jira issue to be created by this notification.\n\nTo find all available issue types or create your own, in Jira, go to Project settings \u003e Issue types.",
+					"displayName": "Issue type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"projectKey": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The project key of the Jira issue to be created by this notification.",
+					"displayName": "Project key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"url": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Not a valid URI",
+							"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Not a valid http(s) URL",
+							"pattern": "^https?://.*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The URL of the Jira API endpoint.",
+					"displayName": "Jira endpoint URL",
+					"documentation": "",
+					"forceSecretResubmission": true,
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "url",
+					"type": "text"
+				},
+				"username": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The username of the Jira profile.",
+					"displayName": "Username",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityProblemBasedEmailPayload": {
+			"description": "",
+			"displayName": "SecurityProblemBasedEmailPayload",
+			"documentation": "",
+			"properties": {
+				"body": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "security-notification-security-problem-email-body-trial-account-validator",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "\u003ch3\u003e\nSecurity problem {SecurityProblemId}: {Title}\n\u003c/h3\u003e\n\u003cbr\u003e\nSeverity: \u003cb\u003e{Severity}\u003c/b\u003e\u003cbr\u003e\nDavis Security Score: \u003cb\u003e{DavisSecurityScore}\u003c/b\u003e\u003cbr\u003e\n\u003chr\u003e\n\u003cbr\u003e\n{Description}",
+					"description": "The template of the email notifications.  \nIn case a value of a security problem is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Body",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the description might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{SecurityProblemId}**: The unique identifier assigned by Dynatrace, for example, \"S-1234\".  \n**{Title}**: A short summary of the type of vulnerability that was found, for example, \"Remote Code Execution\".  \n**{Description}**: A more detailed description of the vulnerability.  \n**{CvssScore}**: CVSS score of the identified vulnerability, for example, \"10.0\". Can be empty. \n**{DavisSecurityScore}**: [Davis Security Score](https://www.dynatrace.com/support/help/how-to-use-dynatrace/application-security/davis-security-score/) is an enhanced risk-calculation score based on the CVSS, for example, \"10.0\".  \n**{Severity}**: The security problem severity, for example, \"Critical\" or \"Medium\".  \n**{SecurityProblemUrl}**: URL of the security problem in Dynatrace.  \n**{AffectedEntities}**: Details about the entities affected by the security problem in a json array.  \n**{ManagementZones}**: Comma-separated list of all management zones affected by the vulnerability at the time of detection.  \n**{Tags}**: Comma-separated list of tags that are defined for a vulnerability's affected entities. For example: \"PROD, owner:John\". Assign the tag's key in square brackets: **{Tags[key]}** to get all associated values. For example: \"{Tags[owner]}\" will be resolved as \"John\". Tags without an assigned value will be resolved as empty string.  \n**{Exposed}**: Describes whether one or more affected process is exposed to the public Internet. Can be \"true\" or \"false\".  \n**{DataAssetsReachable}**: Describes whether one or more affected process can reach data assets. Can be \"true\" or \"false\".  \n**{ExploitAvailable}**: Describes whether there's an exploit available for the vulnerability. Can be \"true\" or \"false\".",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"subject": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Security problem {SecurityProblemId}: {Title}",
+					"description": "The subject of the email notifications.",
+					"displayName": "Subject",
+					"documentation": "Available placeholders:  \n**{SecurityProblemId}**: The unique identifier assigned by Dynatrace, for example, \"S-1234\".  \n**{Title}**: A short summary of the type of vulnerability that was found, for example, \"Remote Code Execution\".  \n**{CvssScore}**: CVSS score of the identified vulnerability, for example, \"10.0\". Can be empty. \n**{DavisSecurityScore}**: [Davis Security Score](https://www.dynatrace.com/support/help/how-to-use-dynatrace/application-security/davis-security-score/) is an enhanced risk-calculation score based on the CVSS, for example, \"10.0\".  \n**{Severity}**: The security problem severity, for example, \"Critical\" or \"Medium\".  \n**{SecurityProblemUrl}**: URL of the security problem in Dynatrace.  \n**{Exposed}**: Describes whether one or more affected process is exposed to the public Internet. Can be \"true\" or \"false\".  \n**{DataAssetsReachable}**: Describes whether one or more affected process can reach data assets. Can be \"true\" or \"false\".  \n**{ExploitAvailable}**: Describes whether there's an exploit available for the vulnerability. Can be \"true\" or \"false\".",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityProblemBasedJiraPayload": {
+			"description": "",
+			"displayName": "SecurityProblemBasedJiraPayload",
+			"documentation": "",
+			"properties": {
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Severity: {Severity}\nDavis Security Score: {DavisSecurityScore}\n\n{Description}",
+					"description": "The description of the Jira issue to be created by this notification.  \nIn case a value of a security problem is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Issue description",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the description might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{SecurityProblemId}**: The unique identifier assigned by Dynatrace, for example, \"S-1234\".  \n**{Title}**: A short summary of the type of vulnerability that was found, for example, \"Remote Code Execution\".  \n**{Description}**: A more detailed description of the vulnerability.  \n**{CvssScore}**: CVSS score of the identified vulnerability, for example, \"10.0\". Can be empty. \n**{DavisSecurityScore}**: [Davis Security Score](https://www.dynatrace.com/support/help/how-to-use-dynatrace/application-security/davis-security-score/) is an enhanced risk-calculation score based on the CVSS, for example, \"10.0\".  \n**{Severity}**: The security problem severity, for example, \"Critical\" or \"Medium\".  \n**{SecurityProblemUrl}**: URL of the security problem in Dynatrace.  \n**{AffectedEntities}**: Details about the entities affected by the security problem in a json array.  \n**{ManagementZones}**: Comma-separated list of all management zones affected by the vulnerability at the time of detection.  \n**{Tags}**: Comma-separated list of tags that are defined for a vulnerability's affected entities. For example: \"PROD, owner:John\". Assign the tag's key in square brackets: **{Tags[key]}** to get all associated values. For example: \"{Tags[owner]}\" will be resolved as \"John\". Tags without an assigned value will be resolved as empty string.  \n**{Exposed}**: Describes whether one or more affected process is exposed to the public Internet. Can be \"true\" or \"false\".  \n**{DataAssetsReachable}**: Describes whether one or more affected process can reach data assets. Can be \"true\" or \"false\".  \n**{ExploitAvailable}**: Describes whether there's an exploit available for the vulnerability. Can be \"true\" or \"false\".",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"summary": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Security problem {SecurityProblemId}: {Title}",
+					"description": "The summary of the Jira issue to be created by this notification.",
+					"displayName": "Summary",
+					"documentation": "**Note:** The Jira summary field must contain less than 255 characters. Any content exceeding this limit after evaluating the placeholders will be discarded.  \n  \nAvailable placeholders:  \n**{SecurityProblemId}**: The unique identifier assigned by Dynatrace, for example, \"S-1234\".  \n**{Title}**: A short summary of the type of vulnerability that was found, for example, \"Remote Code Execution\".  \n**{CvssScore}**: CVSS score of the identified vulnerability, for example, \"10.0\". Can be empty. \n**{DavisSecurityScore}**: [Davis Security Score](https://www.dynatrace.com/support/help/how-to-use-dynatrace/application-security/davis-security-score/) is an enhanced risk-calculation score based on the CVSS, for example, \"10.0\".  \n**{Severity}**: The security problem severity, for example, \"Critical\" or \"Medium\".  \n**{SecurityProblemUrl}**: URL of the security problem in Dynatrace.  \n**{Exposed}**: Describes whether one or more affected process is exposed to the public Internet. Can be \"true\" or \"false\".  \n**{DataAssetsReachable}**: Describes whether one or more affected process can reach data assets. Can be \"true\" or \"false\".  \n**{ExploitAvailable}**: Describes whether there's an exploit available for the vulnerability. Can be \"true\" or \"false\".",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityProblemBasedWebhookPayload": {
+			"description": "",
+			"displayName": "SecurityProblemBasedWebhookPayload",
+			"documentation": "",
+			"properties": {
+				"payload": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "{\n\t\"SecurityProblemId\":\"{SecurityProblemId}\",\n\t\"Severity\":\"{Severity}\",\n\t\"DavisSecurityScore\":\"{DavisSecurityScore}\",\n\t\"SecurityProblemUrl\":\"{SecurityProblemUrl}\"\n}",
+					"description": "This is the content your notification message will include when users view it.  \nIn case a value of a security problem is not set, the placeholder will be replaced by an empty string.",
+					"displayName": "Custom payload",
+					"documentation": "**Note:** Security notifications contain sensitive information. Excessive usage of placeholders in the custom payload might leak information to untrusted parties.  \n  \nAvailable placeholders:  \n**{SecurityProblemId}**: The unique identifier assigned by Dynatrace, for example, \"S-1234\".  \n**{Title}**: A short summary of the type of vulnerability that was found, for example, \"Remote Code Execution\".  \n**{Description}**: A more detailed description of the vulnerability.  \n**{CvssScore}**: CVSS score of the identified vulnerability, for example, \"10.0\". Can be empty. \n**{DavisSecurityScore}**: [Davis Security Score](https://www.dynatrace.com/support/help/how-to-use-dynatrace/application-security/davis-security-score/) is an enhanced risk-calculation score based on the CVSS, for example, \"10.0\".  \n**{Severity}**: The security problem severity, for example, \"Critical\" or \"Medium\".  \n**{SecurityProblemUrl}**: URL of the security problem in Dynatrace.  \n**{AffectedEntities}**: Details about the entities affected by the security problem in a json array.  \n**{ManagementZones}**: Comma-separated list of all management zones affected by the vulnerability at the time of detection.  \n**{Tags}**: Comma-separated list of tags that are defined for a vulnerability's affected entities. For example: \"PROD, owner:John\". Assign the tag's key in square brackets: **{Tags[key]}** to get all associated values. For example: \"{Tags[owner]}\" will be resolved as \"John\". Tags without an assigned value will be resolved as empty string.  \n**{Exposed}**: Describes whether one or more affected process is exposed to the public Internet. Can be \"true\" or \"false\".  \n**{DataAssetsReachable}**: Describes whether one or more affected process can reach data assets. Can be \"true\" or \"false\".  \n**{ExploitAvailable}**: Describes whether there's an exploit available for the vulnerability. Can be \"true\" or \"false\".",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "multiline",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"WebhookConfiguration": {
+			"description": "",
+			"displayName": "WebhookConfiguration",
+			"documentation": "",
+			"properties": {
+				"acceptAnyCertificate": {
+					"default": false,
+					"description": "",
+					"displayName": "Accept any SSL certificate (including self-signed and invalid certificates)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"headers": {
+					"description": "Use additional HTTP headers to attach any additional information, for example, configuration, authorization, or metadata.  \n  \nNote that JSON-based webhook endpoints require the addition of the **Content-Type: application/json** header to enable escaping of special characters and to avoid malformed JSON content.",
+					"displayName": "Additional HTTP headers",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/WebhookConfigurationHeader"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add HTTP header"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"url": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid URI",
+							"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Not a valid http(s) URL",
+							"pattern": "^https?://.*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Webhook endpoint URL",
+					"documentation": "",
+					"forceSecretResubmission": true,
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "url",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"WebhookConfigurationHeader": {
+			"description": "",
+			"displayName": "WebhookConfigurationHeader",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"secret": {
+					"default": false,
+					"description": "",
+					"displayName": "Secret HTTP header value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"secretValue": {
+					"constraints": [
+						{
+							"maxLength": 8192,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The secret value of the HTTP header. May contain an empty value.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "secret",
+						"type": "EQUALS"
+					},
+					"type": "secret"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 8192,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The value of the HTTP header. May contain an empty value.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": false,
+						"property": "secret",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.4.8"
+}

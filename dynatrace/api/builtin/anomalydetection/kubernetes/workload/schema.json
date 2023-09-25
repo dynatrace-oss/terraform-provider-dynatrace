@@ -236,7 +236,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -256,7 +256,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -362,7 +362,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -382,7 +382,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -468,7 +468,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -488,7 +488,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -592,7 +592,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -612,7 +612,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -716,7 +716,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -736,7 +736,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -985,7 +985,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1005,7 +1005,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1183,7 +1183,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1203,7 +1203,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1286,7 +1286,7 @@
 				"observationPeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1306,7 +1306,7 @@
 				"samplePeriodInMinutes": {
 					"constraints": [
 						{
-							"maximum": 30,
+							"maximum": 60,
 							"minimum": 1,
 							"type": "RANGE"
 						}
@@ -1330,5 +1330,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.9"
+	"version": "1.10"
 }

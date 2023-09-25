@@ -18,6 +18,7 @@
 package settings
 
 import (
+	"encoding/json"
 	"reflect"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -90,5 +91,34 @@ func name(v any, id string) string {
 	if field.IsValid() && field.Type() == stringPointerType {
 		return field.Elem().String()
 	}
+
+	hasValueField := false
+	hasScopeField := false
+	hasSchemaIDField := false
+
+	valueField := rv.FieldByName("Value")
+	if valueField.IsValid() && valueField.Type() == stringType {
+		hasValueField = true
+	}
+	field = rv.FieldByName("Scope")
+	if field.IsValid() && field.Type() == stringType {
+		hasScopeField = true
+	}
+	field = rv.FieldByName("SchemaID")
+	if field.IsValid() && field.Type() == stringType {
+		hasSchemaIDField = true
+	}
+	if hasValueField && hasSchemaIDField && hasScopeField {
+		valueBytes := []byte(valueField.String())
+		m := map[string]any{}
+		if err := json.Unmarshal(valueBytes, &m); err == nil {
+			if mv, ok := m["name"]; ok {
+				if mvs, ok := mv.(string); ok {
+					return mvs
+				}
+			}
+		}
+	}
+
 	panic(rv.Type().PkgPath() + "." + rv.Type().Name() + " does neither have a property 'Name', 'DisplayName', 'Label' or 'Key' nor does it offer a method 'Name()'")
 }

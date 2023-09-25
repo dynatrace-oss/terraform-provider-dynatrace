@@ -31,6 +31,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_disk_anomaly_rules` instead."
+}
+
 // AnomalyDetection has no documentation
 type AnomalyDetection struct {
 	Name             string          `json:"name"`                     // The name of the disk event rule.

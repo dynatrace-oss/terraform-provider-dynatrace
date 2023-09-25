@@ -100,7 +100,7 @@ resource "dynatrace_business_events_oneagent" "#name#" {
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `event` (Block List, Min: 1, Max: 1) Event meta data (see [below for nested schema](#nestedblock--event))
 - `rule_name` (String) Rule name
-- `triggers` (Block List, Min: 1, Max: 1) Define conditions to trigger business events from incoming web requests. Whenever one condition applies the event gets captured. (see [below for nested schema](#nestedblock--triggers))
+- `triggers` (Block List, Min: 1, Max: 1) Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event. (see [below for nested schema](#nestedblock--triggers))
 
 ### Optional
 

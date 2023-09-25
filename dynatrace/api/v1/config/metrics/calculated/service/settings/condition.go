@@ -119,6 +119,8 @@ var Attributes = struct {
 	AkkaActorMessageType       Attribute
 	AkkaActorPath              Attribute
 	ApplicationBuildVersion    Attribute
+	ApplicationEnvironment     Attribute
+	ApplicationName            Attribute
 	ApplicationReleaseVersion  Attribute
 	AzureFunctionsFunctionName Attribute
 	AzureFunctionsSiteName     Attribute
@@ -138,6 +140,7 @@ var Attributes = struct {
 	DatabaseChildCallTime      Attribute
 	DatabaseHost               Attribute
 	DatabaseName               Attribute
+	DatabaseStatemnent         Attribute
 	DatabaseType               Attribute
 	DatabaseURL                Attribute
 	DiskIoTime                 Attribute
@@ -209,6 +212,8 @@ var Attributes = struct {
 	"AKKA_ACTOR_MESSAGE_TYPE",
 	"AKKA_ACTOR_PATH",
 	"APPLICATION_BUILD_VERSION",
+	"APPLICATION_ENVIRONMENT",
+	"APPLICATION_NAME",
 	"APPLICATION_RELEASE_VERSION",
 	"AZURE_FUNCTIONS_FUNCTION_NAME",
 	"AZURE_FUNCTIONS_SITE_NAME",
@@ -228,6 +233,7 @@ var Attributes = struct {
 	"DATABASE_CHILD_CALL_TIME",
 	"DATABASE_HOST",
 	"DATABASE_NAME",
+	"DATABASE_STATEMENT",
 	"DATABASE_TYPE",
 	"DATABASE_URL",
 	"DISK_IO_TIME",

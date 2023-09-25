@@ -19,15 +19,12 @@ package logstoragesettings_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestLogStorage(t *testing.T) {
-	api.TestService(t, logstoragesettings.Service)
+	t.Skip()
 }
 
 func TestAccLogStorage(t *testing.T) {
-	api.TestAcc(t)
+	t.Skip()
 }

@@ -19,12 +19,15 @@ package rest
 import (
 	"bytes"
 	"math/rand"
+	"os"
 
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
 
 const MinWaitDuration = 1 * time.Second
@@ -104,6 +107,15 @@ func request(method string, url string) (*http.Request, error) {
 }
 
 func requestWithBody(method string, url string, body io.Reader) (*http.Request, error) {
+	var data []byte
+	if buf, ok := body.(*bytes.Buffer); ok {
+		data = buf.Bytes()
+	}
+	if len(data) > 0 {
+		rest.Logger.Println(method, url+"\n    "+string(data))
+	} else {
+		rest.Logger.Println(method, url)
+	}
 	req, err := http.NewRequest(method, url, body)
 
 	if err != nil {
@@ -127,7 +139,13 @@ func executeRequest(client *http.Client, request *http.Request) (Response, error
 			err = resp.Body.Close()
 		}()
 		body, err := io.ReadAll(resp.Body)
-
+		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+			if body != nil {
+				rest.Logger.Println(resp.Status, string(body))
+			} else {
+				rest.Logger.Println(resp.Status)
+			}
+		}
 		return Response{
 			StatusCode: resp.StatusCode,
 			Body:       body,

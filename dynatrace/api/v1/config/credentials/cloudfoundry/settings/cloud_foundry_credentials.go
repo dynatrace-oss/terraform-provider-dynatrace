@@ -29,6 +29,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *CloudFoundryCredentials) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_cloud_foundry` instead."
+}
+
 // CloudFoundryCredentials Configuration for specific Cloud Foundry credentials.
 type CloudFoundryCredentials struct {
 	LoginURL string                     `json:"loginUrl"`           // The login URL of the Cloud Foundry foundation credentials.  The URL must be valid according to RFC 2396.  Leading or trailing whitespaces are not allowed.

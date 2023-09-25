@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Business events can be stored in different buckets. The first user-defined rule that matches will determine bucket assignment. If no rules match, the default bucket will be used.\n\nLearn more by visiting [our documentation](https://dt-url.net/4c034xt).",
+	"description": "Business events can be stored in different buckets. The first user-defined rule that matches will determine bucket assignment. If no rules match, the default bucket will be used.\n\nLearn to create custom buckets and more by visiting [our documentation](https://dt-url.net/4c034xt).",
 	"displayName": "Business event bucket assignment",
 	"documentation": "",
 	"dynatrace": "1",
@@ -20,10 +20,16 @@
 					"maxLength": 500,
 					"minLength": 1,
 					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "bucket-active-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"datasource": {
-				"filterProperties": [],
+				"filterProperties": [
+					"bucketName"
+				],
 				"fullContext": false,
 				"identifier": "bucket-configuration-data-source",
 				"resetValue": "NEVER",
@@ -100,11 +106,20 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Specified ruleName already exists. Please provide a different one.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ruleName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:business-analytics",
 		"group:business-analytics.ingest-pipeline"
 	],
 	"schemaId": "builtin:bizevents-processing-buckets.rule",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

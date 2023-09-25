@@ -23,11 +23,11 @@ import (
 )
 
 type Settings struct {
-	Conditions      Conditions          `json:"conditions,omitempty"`      // A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them.
+	Conditions      Conditions          `json:"conditions,omitempty"`      // A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them.
 	Description     *string             `json:"description,omitempty"`     // Description
 	Enabled         bool                `json:"enabled"`                   // This setting is enabled (`true`) or disabled (`false`)
 	IdContributors  *IdContributorsType `json:"idContributors"`            // Contributors to the Service Identifier calculation. All of the Contributors are always applied.
-	ManagementZones []string            `json:"managementZones,omitempty"` // Define a management zone filter for this service detection rule.
+	ManagementZones []string            `json:"managementZones,omitempty"` // Define a management zone of the process group for which this service detection rule should be created.
 	Name            string              `json:"name"`                      // Rule name
 }
 
@@ -35,7 +35,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"conditions": {
 			Type:        schema.TypeList,
-			Description: "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them.",
+			Description: "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Conditions).Schema()},
 			MinItems:    1,
@@ -61,7 +61,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"management_zones": {
 			Type:        schema.TypeSet,
-			Description: "Define a management zone filter for this service detection rule.",
+			Description: "Define a management zone of the process group for which this service detection rule should be created.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},

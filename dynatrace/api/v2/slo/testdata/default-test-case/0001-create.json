@@ -10,5 +10,8 @@
   "filter": "",
   "target": 80,
   "warning": 90,
-  "timeframe": "-1h"
+  "timeframe": "-1h",
+  "errorBudgetBurnRate": {
+    "burnRateVisualizationEnabled": false
+  }
 }

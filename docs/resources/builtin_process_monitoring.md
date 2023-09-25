@@ -111,6 +111,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
 - `node_prebuildinstall` (Boolean) Rule id: 26 - Do not monitor processes if Node.js application base directory ends with '/node_modules/prebuild-install'
 - `node_typescript` (Boolean) Rule id: 29 - Do not monitor processes if Node.js application base directory ends with '/node_modules/typescript'
 - `node_yarn` (Boolean) Rule id: 45 - Do not monitor processes if Node.js application equals 'yarn'
+- `php_script` (Boolean) (v1.274) Rule id: 1 - Do not monitor processes if PHP script exists
 
 ### Read-Only
 

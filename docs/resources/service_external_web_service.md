@@ -65,9 +65,9 @@ resource "dynatrace_service_external_web_service" "#name#" {
 
 ### Optional
 
-- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
+- `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
 - `description` (String) Description
-- `management_zones` (Set of String) Define a management zone filter for this service detection rule.
+- `management_zones` (Set of String) Define a management zone of the process group for which this service detection rule should be created.  Note: in case of external requests/services the PG might not always be known. See [here](https://dt-url.net/9i03b79)
 
 ### Read-Only
 

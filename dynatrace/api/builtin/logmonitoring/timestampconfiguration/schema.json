@@ -107,6 +107,25 @@
 			"nullable": false,
 			"type": "text"
 		},
+		"date-search-limit": {
+			"constraints": [
+				{
+					"maximum": 8192,
+					"minimum": 0,
+					"type": "RANGE"
+				}
+			],
+			"description": "Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
+			"displayName": "Timestamp search limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"suffix": "bytes"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "integer"
+		},
 		"date-time-pattern": {
 			"constraints": [
 				{
@@ -190,6 +209,14 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
@@ -276,10 +303,31 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"displayName": "Pattern",
+					"id": "dateTimePattern",
+					"propertyRef": "date-time-pattern"
+				},
+				{
+					"displayName": "Timezone",
+					"id": "timezone",
+					"propertyRef": "timezone"
+				},
+				{
+					"displayName": "Timestamp Search Limit",
+					"id": "dateSearchLimit",
+					"propertyRef": "date-search-limit"
+				}
+			],
 			"emptyState": {
 				"text": "**Create your first rule**\n\nAdd the first rule to configure timestamp patterns"
 			}
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.4"
 }

@@ -8,8 +8,6 @@ description: |-
 
 # dynatrace_slo (Resource)
 
-!> This resource is utilizing an older API endpoint, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
-
 -> This resource requires the API token scopes **Read SLO** (`slo.read`) and **Write SLO** (`slo.write`)
 
 ## Dynatrace Documentation
@@ -54,12 +52,22 @@ resource "dynatrace_slo" "#name#" {
 - `denominator` (String) The total count metric (the denominator in rate calculation)
 - `description` (String) The custom description of the SLO (optional)
 - `disabled` (Boolean) The SLO is enabled (`false`) or disabled (`true`)
+- `error_budget_burn_rate` (Block List, Max: 1) Error budget burn rate configuration of a service-level objective (SLO). (see [below for nested schema](#nestedblock--error_budget_burn_rate))
 - `filter` (String) The entity filter for the SLO evaluation. Use the [syntax of entity selector](https://dt-url.net/entityselector)
 - `metric_expression` (String) The percentage-based metric expression for the calculation of the SLO
+- `metric_name` (String) The name that is used to create SLO func metrics keys. Once created, metric name cannot be changed.
 - `numerator` (String, Deprecated) The metric for the count of successes (the numerator in rate calculation)
 - `rate` (String) The percentage-based metric for the calculation of the SLO
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--error_budget_burn_rate"></a>
+### Nested Schema for `error_budget_burn_rate`
+
+Optional:
+
+- `burn_rate_visualization_enabled` (Boolean) The error budget burn rate calculation is enabled (true) or disabled (false).
+- `fast_burn_threshold` (Number) The threshold between a slow and a fast burn rate.
  

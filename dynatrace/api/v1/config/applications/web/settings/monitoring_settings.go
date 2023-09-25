@@ -49,6 +49,7 @@ type MonitoringSettings struct {
 	IPAddressRestrictionSettings     *ipaddress.RestrictionSettings `json:"ipAddressRestrictionSettings,omitempty"`     // Settings for restricting certain ip addresses and for introducing subnet mask. It also restricts the mode
 	JavaScriptInjectionRules         JavaScriptInjectionRules       `json:"javaScriptInjectionRules,omitempty"`         // Java script injection rules
 	AngularPackageName               *string                        `json:"angularPackageName,omitempty"`               // The name of the angular package
+	InstrumentedWebServer            *bool                          `json:"instrumentedWebServer,omitempty"`            // Instrumented web or app server.
 }
 
 func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
@@ -178,6 +179,11 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Description: "The name of the angular package",
 			Optional:    true,
 		},
+		"instrumented_web_server": {
+			Type:        schema.TypeBool,
+			Description: "Instrumented web or app server.",
+			Optional:    true,
+		},
 	}
 }
 
@@ -204,6 +210,7 @@ func (me *MonitoringSettings) MarshalHCL(properties hcl.Properties) error {
 		"ip_address_restriction_settings":      me.IPAddressRestrictionSettings,
 		"javascript_injection_rules":           me.JavaScriptInjectionRules,
 		"angular_package_name":                 me.AngularPackageName,
+		"instrumented_web_server":              me.InstrumentedWebServer,
 	}); err != nil {
 		return err
 	}
@@ -243,5 +250,6 @@ func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"ip_address_restriction_settings":      &me.IPAddressRestrictionSettings,
 		"javascript_injection_rules":           &me.JavaScriptInjectionRules,
 		"angular_package_name":                 &me.AngularPackageName,
+		"instrumented_web_server":              &me.InstrumentedWebServer,
 	})
 }

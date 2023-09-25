@@ -69,6 +69,10 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_azure_credentials"
 	case ResourceTypes.IAMGroup:
 		return "dynatrace_iam_group"
+	case ResourceTypes.AppSecVulnerabilityAlerting:
+		return "dynatrace_vulnerability_alerting"
+	case ResourceTypes.AppSecAttackAlerting:
+		return "dynatrace_attack_alerting"
 	}
 	return ""
 }
@@ -126,6 +130,9 @@ var ResourceTypes = struct {
 	Dashboard                           ResourceType
 	JSONDashboard                       ResourceType
 	CalculatedServiceMetric             ResourceType
+	CalculatedWebMetric                 ResourceType
+	CalculatedMobileMetric              ResourceType
+	CalculatedSyntheticMetric           ResourceType
 	HostNaming                          ResourceType
 	ProcessGroupNaming                  ResourceType
 	ServiceNaming                       ResourceType
@@ -228,6 +235,7 @@ var ResourceTypes = struct {
 	MetricMetadata                      ResourceType
 	MetricQuery                         ResourceType
 	ActiveGateToken                     ResourceType
+	AGToken                             ResourceType
 	AuditLog                            ResourceType
 	K8sClusterAnomalies                 ResourceType
 	K8sNamespaceAnomalies               ResourceType
@@ -250,6 +258,7 @@ var ResourceTypes = struct {
 	LogSensitiveDataMasking             ResourceType
 	LogStorage                          ResourceType
 	LogBuckets                          ResourceType
+	LogSecurityContext                  ResourceType
 	EULASettings                        ResourceType
 	APIDetectionRules                   ResourceType
 	ServiceExternalWebRequest           ResourceType
@@ -289,9 +298,11 @@ var ResourceTypes = struct {
 	BusinessEventsBuckets               ResourceType
 	BusinessEventsMetrics               ResourceType
 	BusinessEventsProcessing            ResourceType
+	BusinessEventsSecurityContext       ResourceType
 	WebAppKeyPerformanceCustom          ResourceType
 	WebAppKeyPerformanceLoad            ResourceType
 	WebAppKeyPerformanceXHR             ResourceType
+	MobileAppKeyPerformance             ResourceType
 	BuiltinProcessMonitoring            ResourceType
 	LimitOutboundConnections            ResourceType
 	SpanEvents                          ResourceType
@@ -299,6 +310,24 @@ var ResourceTypes = struct {
 	CustomDevice                        ResourceType
 	K8sMonitoring                       ResourceType
 	AutomationWorkflow                  ResourceType
+	AutomationBusinessCalendar          ResourceType
+	AutomationSchedulingRule            ResourceType
+	CustomTags                          ResourceType
+	HostMonitoringMode                  ResourceType
+	IPAddressMasking                    ResourceType
+	AppSecVulnerabilitySettings         ResourceType
+	AppSecVulnerabilityThirdParty       ResourceType
+	AppSecVulnerabilityCode             ResourceType
+	AppSecNotification                  ResourceType
+	AppSecVulnerabilityAlerting         ResourceType
+	AppSecAttackAlerting                ResourceType
+	AppSecAttackSettings                ResourceType
+	AppSecAttackRules                   ResourceType
+	AppSecAttackAllowlist               ResourceType
+	GenericSetting                      ResourceType
+	UnifiedServicesMetrics              ResourceType
+	UnifiedServicesOpenTel              ResourceType
+	PlatformBucket                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -352,6 +381,9 @@ var ResourceTypes = struct {
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
 	"dynatrace_calculated_service_metric",
+	"dynatrace_calculated_web_metric",
+	"dynatrace_calculated_mobile_metric",
+	"dynatrace_calculated_synthetic_metric",
 	"dynatrace_host_naming",
 	"dynatrace_processgroup_naming",
 	"dynatrace_service_naming",
@@ -454,6 +486,7 @@ var ResourceTypes = struct {
 	"dynatrace_metric_metadata",
 	"dynatrace_metric_query",
 	"dynatrace_activegate_token",
+	"dynatrace_ag_token",
 	"dynatrace_audit_log",
 	"dynatrace_k8s_cluster_anomalies",
 	"dynatrace_k8s_namespace_anomalies",
@@ -476,6 +509,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_sensitive_data_masking",
 	"dynatrace_log_storage",
 	"dynatrace_log_buckets",
+	"dynatrace_log_security_context",
 	"dynatrace_eula_settings",
 	"dynatrace_api_detection",
 	"dynatrace_service_external_web_request",
@@ -515,9 +549,11 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_buckets",
 	"dynatrace_business_events_metrics",
 	"dynatrace_business_events_processing",
+	"dynatrace_business_events_security_context",
 	"dynatrace_web_app_key_performance_custom",
 	"dynatrace_web_app_key_performance_load",
 	"dynatrace_web_app_key_performance_xhr",
+	"dynatrace_mobile_app_key_performance",
 	"dynatrace_builtin_process_monitoring",
 	"dynatrace_limit_outbound_connections",
 	"dynatrace_span_events",
@@ -525,6 +561,24 @@ var ResourceTypes = struct {
 	"dynatrace_custom_device",
 	"dynatrace_k8s_monitoring",
 	"dynatrace_automation_workflow",
+	"dynatrace_automation_business_calendar",
+	"dynatrace_automation_scheduling_rule",
+	"dynatrace_custom_tags",
+	"dynatrace_host_monitoring_mode",
+	"dynatrace_ip_address_masking",
+	"dynatrace_vulnerability_settings",
+	"dynatrace_vulnerability_third_party",
+	"dynatrace_vulnerability_code",
+	"dynatrace_appsec_notification",
+	"dynatrace_vulnerability_alerting",
+	"dynatrace_attack_alerting",
+	"dynatrace_attack_settings",
+	"dynatrace_attack_rules",
+	"dynatrace_attack_allowlist",
+	"dynatrace_generic_setting",
+	"dynatrace_unified_services_metrics",
+	"dynatrace_unified_services_opentel",
+	"dynatrace_platform_bucket",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

@@ -18,6 +18,9 @@
 package processavailability
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -27,5 +30,32 @@ const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:processavailability"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*processavailability.Settings] {
-	return settings20.Service[*processavailability.Settings](credentials, SchemaID, SchemaVersion)
+	return settings20.Service[*processavailability.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*processavailability.Settings]{Duplicates: Duplicates})
+}
+
+func Duplicates(service settings.RService[*processavailability.Settings], v *processavailability.Settings) (*api.Stub, error) {
+	if settings.RejectDuplicate("dynatrace_process_availability") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return nil, fmt.Errorf("Process Availability Rule with name `%s` already exists", v.Name)
+			}
+		}
+	} else if settings.HijackDuplicate("dynatrace_process_availability") {
+		var err error
+		var stubs api.Stubs
+		if stubs, err = service.List(); err != nil {
+			return nil, err
+		}
+		for _, stub := range stubs {
+			if v.Name == stub.Name {
+				return stub, nil
+			}
+		}
+	}
+	return nil, nil
 }

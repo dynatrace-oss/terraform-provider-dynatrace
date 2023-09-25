@@ -11,6 +11,16 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"-1": {
+			"default": true,
+			"description": "Rule id: 1",
+			"displayName": "Do not monitor processes if PHP script exists",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-10": {
 			"default": true,
 			"description": "Rule id: 10",
@@ -668,5 +678,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.1"
+	"version": "0.4.2"
 }

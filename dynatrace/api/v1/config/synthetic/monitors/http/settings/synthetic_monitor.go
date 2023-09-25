@@ -138,6 +138,18 @@ func (me *SyntheticMonitor) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("manually_assigned_apps", me.ManuallyAssignedApps); err != nil {
 		return err
 	}
+	if len(me.Tags) > 0 {
+		onlyUserTags := monitors.TagsWithSourceInfo{}
+		for _, tag := range me.Tags {
+			if tag.Source != nil {
+				tagSource := *tag.Source
+				if tagSource == monitors.TagSources.User {
+					onlyUserTags = append(onlyUserTags, tag)
+				}
+			}
+		}
+		me.Tags = onlyUserTags
+	}
 	if err := properties.Encode("tags", me.Tags); err != nil {
 		return err
 	}

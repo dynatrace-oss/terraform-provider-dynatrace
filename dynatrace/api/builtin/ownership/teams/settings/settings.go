@@ -27,7 +27,7 @@ type Settings struct {
 	ContactDetails           ContactDetailss          `json:"contactDetails,omitempty"`           // Define options for messaging integration or other means of contacting this team.
 	Description              *string                  `json:"description,omitempty"`              // Description
 	ExternalID               *string                  `json:"externalId,omitempty"`               // This field should only be used for the automation purpose when importing team information.
-	Identifier               string                   `json:"identifier"`                         // The team identifier is used to reference the team from any entity in Dynatrace.
+	Identifier               string                   `json:"identifier"`                         // The team identifier is used to reference the team from any entity in Dynatrace. If you are using Kubernetes labels, keep in mind the 63 character limit that they enforce.
 	Links                    Links                    `json:"links,omitempty"`                    // Include links to online resources where information relevant to this team’s responsibilities can be found.
 	Name                     string                   `json:"name"`                               // Team name
 	Responsibilities         *Responsibilities        `json:"responsibilities"`                   // Turn on all responsibility assignments that apply to this team.
@@ -64,7 +64,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"identifier": {
 			Type:        schema.TypeString,
-			Description: "The team identifier is used to reference the team from any entity in Dynatrace.",
+			Description: "The team identifier is used to reference the team from any entity in Dynatrace. If you are using Kubernetes labels, keep in mind the 63 character limit that they enforce.",
 			Required:    true,
 		},
 		"links": {

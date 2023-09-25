@@ -17,13 +17,19 @@
 		"bucketName": {
 			"constraints": [
 				{
+					"customValidatorId": "bucket-active-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
 					"maxLength": 500,
 					"minLength": 1,
 					"type": "LENGTH"
 				}
 			],
 			"datasource": {
-				"filterProperties": [],
+				"filterProperties": [
+					"bucketName"
+				],
 				"fullContext": false,
 				"identifier": "bucket-configuration-data-source",
 				"resetValue": "NEVER",
@@ -100,11 +106,20 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Specified ruleName already exists. Please provide a different one.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ruleName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring.analysis",
 		"group:log-monitoring"
 	],
 	"schemaId": "builtin:logmonitoring.log-buckets-rules",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

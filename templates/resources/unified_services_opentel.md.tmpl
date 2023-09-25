@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_unified_services_opentel Resource - terraform-provider-dynatrace"
+subcategory: "Service Detection"
+description: |-
+  The resource `dynatrace_unified_services_opentel` allows to enable/disable unified services for OpenTelemetry
+---
+
+# dynatrace_unified_services_opentel (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Unified service - https://www.dynatrace.com/support/help/platform-modules/applications-and-microservices/services/service-detection-and-naming/service-types/unified-service
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:unified-services-enablement`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_unified_services_opentel` downloads existing unified services OpenTelemetry configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/unifiedservices/enablement/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

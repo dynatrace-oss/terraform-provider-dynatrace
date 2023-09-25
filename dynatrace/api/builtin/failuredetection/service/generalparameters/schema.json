@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"SERVICE"
 	],
-	"description": "Dynatrace failure detection automatically detects the vast majority of error conditions in your environment. However, detected service errors don't necessarily mean that the underlying requests have failed. There may be cases where the default service failure detection settings don't meet your particular needs. In such cases, you can configure the settings provided below. For complete details, see [configure service failure detection](https://dt-url.net/ys5k0p4y).",
+	"description": "Dynatrace failure detection automatically detects the vast majority of error conditions in your environment. However, detected service errors don't necessarily mean that the underlying requests have failed. There may be cases where the default service failure detection settings don't meet your particular needs. In such cases, you can configure the settings provided below. Please note that these settings are not applicable to services of type 'Span service'. For complete details, see [configure service failure detection](https://dt-url.net/ys5k0p4y).",
 	"displayName": "General failure detection parameters",
 	"documentation": "",
 	"dynatrace": "1",
@@ -199,11 +199,6 @@
 				"requestAttribute": {
 					"constraints": [
 						{
-							"customMessage": "Invalid UUID",
-							"pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-5][0-9a-fA-F]{3}\\-[089abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$",
-							"type": "PATTERN"
-						},
-						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -215,7 +210,7 @@
 						"identifier": "request_attribute_source",
 						"resetValue": "NEVER",
 						"useApiSearch": true,
-						"validate": false
+						"validate": true
 					},
 					"default": "",
 					"description": "",
@@ -349,9 +344,9 @@
 					"type": "boolean"
 				},
 				"ignoredExceptions": {
-					"description": "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.",
-					"displayName": "Ignored Exceptions",
-					"documentation": "If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+					"description": "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+					"displayName": "Ignored exceptions",
+					"documentation": "",
 					"items": {
 						"description": "",
 						"displayName": "",
@@ -375,9 +370,9 @@
 					"type": "set"
 				},
 				"successForcingExceptions": {
-					"description": "Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.",
+					"description": "Define exceptions which indicate that an entire service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
 					"displayName": "Success forcing exceptions",
-					"documentation": "If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
+					"documentation": "",
 					"items": {
 						"description": "",
 						"displayName": "",
@@ -407,5 +402,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.4"
 }

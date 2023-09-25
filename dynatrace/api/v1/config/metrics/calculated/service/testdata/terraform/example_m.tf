@@ -44,4 +44,5 @@ resource "dynatrace_calculated_service_metric" "#name#" {
     metric            = "REQUEST_ATTRIBUTE"
     request_attribute = "foo"
   }
+  ignore_muted_requests = true
 }

@@ -1,0 +1,98 @@
+{
+	"allowedScopes": [
+		"DEVICE_APPLICATION_METHOD",
+		"MOBILE_APPLICATION",
+		"CUSTOM_APPLICATION"
+	],
+	"description": "[Set the user-satisfaction performance thresholds](https://dt-url.net/4l023z2) (**Satisfactory**, **Tolerable**, and **Frustrating**) for the **User action duration** metric to refine the Apdex calculations for this app.",
+	"displayName": "Apdex configuration",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"frustratingIfReportedOrWebRequestError": {
+			"default": true,
+			"description": "Treat user actions with reported errors or web request errors as erroneous and rate their performance as Frustrating. Turn off this setting if errors should not affect the Apdex rate.",
+			"displayName": "Consider reported errors / web request errors in Apdex calculations",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"thresholds": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Thresholds"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-general"
+	],
+	"schemaId": "builtin:rum.mobile.key-performance-metrics",
+	"types": {
+		"Thresholds": {
+			"constraints": [
+				{
+					"properties": [
+						"frustratingThresholdSeconds",
+						"tolerableThresholdSeconds"
+					],
+					"type": "GREATER_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "Thresholds",
+			"documentation": "",
+			"properties": {
+				"frustratingThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 240,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 12,
+					"description": "If the action duration is above this value, the Apdex is considered to be **Frustrating**.",
+					"displayName": "Frustrating performance [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				},
+				"tolerableThresholdSeconds": {
+					"constraints": [
+						{
+							"maximum": 240,
+							"minimum": 0.1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "If the action duration is below this value, the Apdex is considered to be **Satisfactory**.",
+					"displayName": "Tolerable performance [sec]",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.1.6"
+}

@@ -32,6 +32,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/spf13/afero"
 )
@@ -65,13 +66,16 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.CalculatedServiceMetric ||
 		me.Type == ResourceTypes.MobileApplication ||
 		me.Type == ResourceTypes.BrowserMonitor ||
+		me.Type == ResourceTypes.HTTPMonitor ||
 		me.Type == ResourceTypes.Credentials ||
 		me.Type == ResourceTypes.SyntheticLocation ||
 		me.Type == ResourceTypes.FailureDetectionParameters ||
 		me.Type == ResourceTypes.UpdateWindows ||
 		me.Type == ResourceTypes.AWSCredentials ||
 		me.Type == ResourceTypes.AzureCredentials ||
-		me.Type == ResourceTypes.IAMGroup
+		me.Type == ResourceTypes.IAMGroup ||
+		me.Type == ResourceTypes.AppSecVulnerabilityAlerting ||
+		me.Type == ResourceTypes.AppSecAttackAlerting
 }
 
 func (me *Module) DataSource(id string) *DataSource {
@@ -166,7 +170,9 @@ func (me *Module) MkdirAll(flawed bool) error {
 	mkdirMutex.Lock()
 	defer mkdirMutex.Unlock()
 	if flawed {
-		return os.MkdirAll(me.GetFlawedFolder(), os.ModePerm)
+		if err := os.MkdirAll(me.GetFlawedFolder(), os.ModePerm); err != nil {
+			return err
+		}
 	}
 	return os.MkdirAll(me.GetFolder(), os.ModePerm)
 }
@@ -215,7 +221,7 @@ func (me *Module) CreateFile(name string) (*os.File, error) {
 	return os.Create(fileName)
 }
 
-func (me *Module) WriteProviderFile() (err error) {
+func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -225,7 +231,9 @@ func (me *Module) WriteProviderFile() (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
-	fmt.Println("- " + me.Type)
+	if logToScreen {
+		fmt.Println("- " + me.Type)
+	}
 	if err = me.MkdirAll(false); err != nil {
 		return err
 	}
@@ -261,7 +269,7 @@ func (me *Module) WriteProviderFile() (err error) {
 	return nil
 }
 
-func (me *Module) WriteVariablesFile() (err error) {
+func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -274,7 +282,6 @@ func (me *Module) WriteVariablesFile() (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
-
 	var variablesFile *os.File
 	if variablesFile, err = me.CreateFile("___variables___.tf"); err != nil {
 		return err
@@ -298,7 +305,9 @@ func (me *Module) WriteVariablesFile() (err error) {
 		if len(referencedResources) == 0 {
 			return nil
 		}
-		fmt.Println("- " + me.Type)
+		if logToScreen {
+			fmt.Println("- " + me.Type)
+		}
 
 		sort.Slice(referencedResources, func(i, j int) bool {
 			if referencedResources[i].UniqueName == referencedResources[j].UniqueName {
@@ -325,7 +334,10 @@ func (me *Module) WriteVariablesFile() (err error) {
 		if len(referencedResourceTypes) == 0 {
 			return nil
 		}
-		fmt.Println("- " + me.Type)
+
+		if logToScreen {
+			fmt.Println("- " + me.Type)
+		}
 
 		sort.Slice(referencedResourceTypes, func(i, j int) bool {
 			return referencedResourceTypes[i] < referencedResourceTypes[j]
@@ -345,7 +357,7 @@ func (me *Module) WriteVariablesFile() (err error) {
 	return nil
 }
 
-func (me *Module) WriteDataSourcesFile() (err error) {
+func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
@@ -355,11 +367,16 @@ func (me *Module) WriteDataSourcesFile() (err error) {
 	if me.Environment.Flags.Flat {
 		return nil
 	}
-	fmt.Println("- " + me.Type)
+	if logToScreen {
+		fmt.Println("- " + me.Type)
+	}
 	buf := new(bytes.Buffer)
 	dsm := map[string]string{}
 	for _, v := range me.Resources {
 		for _, referencedResource := range v.ResourceReferences {
+			if !me.Environment.Module(referencedResource.Type).IsReferencedAsDataSource() {
+				continue
+			}
 			if asDS := AsDataSource(referencedResource); len(asDS) > 0 {
 				dsm[asDS] = asDS
 			}
@@ -682,6 +699,9 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 
 	}
 
+	if len(resourcesToDownload) > 0 {
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
+	}
 	for _, resource := range resourcesToDownload {
 		channel <- resource
 	}
@@ -717,14 +737,15 @@ func (me *Module) Discover() error {
 	var err error
 
 	var stubs api.Stubs
-	// log.Println("Discovering \"" + me.Type + "\" ...")
 	if stubs, err = me.Service.List(); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
+			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. Token is missing required scope.", me.Type)
 			me.Status = ModuleStati.Erronous
 			me.Error = err
 			return nil
 		}
 		if strings.Contains(err.Error(), "No schema with topic identifier") {
+			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. The schema doesn't exist on that environment.", me.Type)
 			me.Status = ModuleStati.Erronous
 			me.Error = err
 			return nil
@@ -743,7 +764,7 @@ func (me *Module) Discover() error {
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
-	// log.Println("   ", fmt.Sprintf("%d items found", len(stubs)))
+	logging.Debug.Info.Printf("[DISCOVER] [%s] %d items found.", me.Type, len(stubs))
 	return nil
 }
 

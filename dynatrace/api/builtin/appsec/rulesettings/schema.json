@@ -1,0 +1,175 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "By default, all processes are covered by Third-party Vulnerability Analytics. Define custom monitoring rules here. Note that the monitoring rules are ordered, and that the first matching rule will be applied.",
+	"displayName": "Vulnerability Analytics: Monitoring rules for third-party vulnerabilities",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ConditionOperator": {
+			"description": "",
+			"displayName": "Condition operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				}
+			],
+			"type": "enum"
+		},
+		"MonitoringMode": {
+			"description": "",
+			"displayName": "MonitoringMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Do not monitor",
+					"value": "MONITORING_OFF"
+				},
+				{
+					"displayName": "Monitor",
+					"value": "MONITORING_ON"
+				}
+			],
+			"type": "enum"
+		},
+		"Property": {
+			"description": "",
+			"displayName": "Property",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process tag",
+					"value": "PROCESS_TAG"
+				},
+				{
+					"displayName": "Host tag",
+					"value": "HOST_TAG"
+				},
+				{
+					"displayName": "Management zone",
+					"value": "MANAGEMENT_ZONE"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add new rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"mode": {
+			"default": "MONITORING_OFF",
+			"description": "",
+			"displayName": "Control",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/MonitoringMode"
+			}
+		},
+		"operator": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Condition operator",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ConditionOperator"
+			}
+		},
+		"property": {
+			"default": "PROCESS_TAG",
+			"description": "",
+			"displayName": "Property",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Property"
+			}
+		},
+		"value": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Condition value",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Rule with the same values already exists!",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"mode",
+				"property",
+				"operator",
+				"value"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:appsec.vulnerability-analytics",
+		"group:appsec"
+	],
+	"schemaId": "builtin:appsec.rule-settings",
+	"types": {
+		"FlagDefaultTrue": {
+			"description": "",
+			"displayName": "FlagDefaultTrue",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.5"
+}

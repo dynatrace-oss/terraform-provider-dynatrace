@@ -40,8 +40,12 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
+	creds, err := config.Credentials(m, config.CredValIAM)
+	if err != nil {
+		return err
+	}
 
-	service := groups.Service(config.Credentials(m))
+	service := groups.Service(creds)
 	stubs, err := service.List()
 	if err != nil {
 		return err

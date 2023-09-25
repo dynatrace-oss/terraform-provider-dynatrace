@@ -2,6 +2,12 @@
 	"allowedScopes": [
 		"KUBERNETES_CLUSTER"
 	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
 	"description": "Connect to Kubernetes or OpenShift for enhanced observability. Learn more about Kubernetes or OpenShift in our documentation.",
 	"displayName": "Connection settings",
 	"documentation": "",
@@ -230,6 +236,13 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Maximum number of monitored Kubernetes clusters reached. Please disable monitoring of some clusters.",
+			"customValidatorId": "kubernetes-max-scopes",
+			"type": "MULTI_SCOPE_CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaId": "builtin:cloud.kubernetes",
 	"types": {
 		"FlagDefaultTrue": {
@@ -254,5 +267,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3"
+	"version": "3.0.1"
 }

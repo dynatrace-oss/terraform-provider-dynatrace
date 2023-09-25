@@ -81,13 +81,16 @@ func DataSource() *schema.Resource {
 
 func DataSourceRead(d *schema.ResourceData, m any) error {
 	d.SetId("dynatrace_alerting_profiles")
-	service := cache.Read[*alerting.Profile](alertingsrv.Service(config.Credentials(m)), true)
-	var err error
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+	service := cache.Read[*alerting.Profile](alertingsrv.Service(creds), true)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
 	}
-	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(config.Credentials(m)), true)
+	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
 	var mgmzStubs api.Stubs
 	if mgmzStubs, err = mgmzService.List(); err != nil {
 		return err

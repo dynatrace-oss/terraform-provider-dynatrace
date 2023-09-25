@@ -50,7 +50,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	objStub, err := apitokens.Service(cfg.Credentials(m)).Create(config)
+	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	objStub, err := apitokens.Service(creds).Create(config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -76,8 +80,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
+	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	if err := apitokens.Service(cfg.Credentials(m)).Update(d.Id(), config); err != nil {
+	if err := apitokens.Service(creds).Update(d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -86,8 +94,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(settings.APIToken)
-	err := apitokens.Service(cfg.Credentials(m)).Get(d.Id(), config)
+	err = apitokens.Service(creds).Get(d.Id(), config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -107,7 +119,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if err := apitokens.Service(cfg.Credentials(m)).Delete(d.Id()); err != nil {
+	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := apitokens.Service(creds).Delete(d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 

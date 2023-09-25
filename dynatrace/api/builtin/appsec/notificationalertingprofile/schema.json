@@ -1,0 +1,183 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Vulnerability alerting profiles enable you to set up alert-filtering rules that are based on the risk level of detected vulnerabilities. This allows you to control which conditions result in security notifications and which don't.",
+	"displayName": "Vulnerability alerting profiles",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"RiskLevel": {
+			"description": "",
+			"displayName": "RiskLevel",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Critical",
+					"value": "CRITICAL"
+				},
+				{
+					"displayName": "High",
+					"value": "HIGH"
+				},
+				{
+					"displayName": "Medium",
+					"value": "MEDIUM"
+				},
+				{
+					"displayName": "Low",
+					"value": "LOW"
+				}
+			],
+			"type": "enum"
+		},
+		"TriggerEvent": {
+			"description": "",
+			"displayName": "TriggerEvent",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Vulnerability (re)opened",
+					"value": "SECURITY_PROBLEM_OPENED"
+				},
+				{
+					"displayName": "New management zone affected",
+					"value": "NEW_MANAGEMENT_ZONE_AFFECTED"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 200,
+	"metadata": {
+		"addItemButton": "Add alerting profile"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"enabledRiskLevels": {
+			"constraints": [
+				{
+					"customValidatorId": "security-problem-number-of-risk-levels-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": [
+				"LOW",
+				"MEDIUM",
+				"HIGH",
+				"CRITICAL"
+			],
+			"description": "",
+			"displayName": "Risk Levels",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/RiskLevel"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add risk level"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"enabledTriggerEvents": {
+			"constraints": [
+				{
+					"customValidatorId": "security-problem-number-of-trigger-events-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": [
+				"SECURITY_PROBLEM_OPENED"
+			],
+			"description": "",
+			"displayName": "Alert for the following events:",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/TriggerEvent"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"featureFlag": "com.compuware.EnableCaspNotificationsTriggerEvent.feature",
+				"maturity": "EARLY_ADOPTER"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"managementZone": {
+			"constraints": [
+				{
+					"pattern": "^-?\\d{1,19}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Alert only if the following management zone is affected (optional)",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"featureFlag": "com.compuware.EnableCaspNotificationsTriggerEvent.feature",
+				"maturity": "EARLY_ADOPTER"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"referencedType": "ManagementZone",
+			"subType": "config",
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:alerting.appsec",
+		"group:alerting"
+	],
+	"schemaId": "builtin:appsec.notification-alerting-profile",
+	"types": {},
+	"version": "0.1.3"
+}

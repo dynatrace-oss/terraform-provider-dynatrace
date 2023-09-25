@@ -8,13 +8,11 @@ resource "dynatrace_json_dashboard" "#name#" {
         "tags" : [
           "Azure"
         ],
-        "preset" : true,
-        "hasConsistentColors" : false
+        "preset" : true
       },
       "tiles" : [
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -23,7 +21,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Successful calls by service instance",
@@ -41,23 +38,18 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "0",
                       "name" : "dt.entity.custom_device",
-                      "values" : [],
                       "entityDimension" : true
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -66,7 +58,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Latency by service instance",
@@ -88,19 +79,15 @@ resource "dynatrace_json_dashboard" "#name#" {
                       "entityDimension" : true
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -109,7 +96,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Total errors",
@@ -131,19 +117,15 @@ resource "dynatrace_json_dashboard" "#name#" {
                       "entityDimension" : true
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -152,7 +134,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Total calls",
@@ -167,8 +148,6 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "type" : "BAR",
                   "entityType" : "IOT",
                   "dimensions" : [],
-                  "sortAscending" : false,
-                  "sortColumn" : false,
                   "aggregationRate" : "TOTAL"
                 },
                 {
@@ -177,7 +156,6 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "type" : "BAR",
                   "entityType" : "IOT",
                   "dimensions" : [],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
@@ -196,13 +174,11 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "customColor" : "#4fd5e0"
                 }
               }
-            },
-            "filtersPerEntityType" : {}
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -211,7 +187,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Client & server errors by operation",
@@ -229,23 +204,18 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -254,7 +224,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Successful calls by operation",
@@ -272,23 +241,18 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -297,7 +261,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Blocked calls by operation",
@@ -315,23 +278,18 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -340,7 +298,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Latency by operation",
@@ -358,23 +315,18 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -383,7 +335,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Data IN/OUT",
@@ -398,8 +349,6 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "type" : "BAR",
                   "entityType" : "IOT",
                   "dimensions" : [],
-                  "sortAscending" : false,
-                  "sortColumn" : false,
                   "aggregationRate" : "TOTAL"
                 },
                 {
@@ -408,7 +357,6 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "type" : "BAR",
                   "entityType" : "IOT",
                   "dimensions" : [],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
@@ -427,13 +375,11 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "customColor" : "#008cdb"
                 }
               }
-            },
-            "filtersPerEntityType" : {}
+            }
           }
         },
         {
           "name" : "Custom chart",
-          "isAutoRefreshDisabled": false,
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
           "bounds" : {
@@ -442,7 +388,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Data IN by operation",
@@ -460,11 +405,9 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
@@ -475,12 +418,10 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "customColor" : "#ef651f"
                 }
               }
-            },
-            "filtersPerEntityType" : {}
+            }
           }
         },
         {
-          "isAutoRefreshDisabled": false,
           "name" : "Custom chart",
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
@@ -490,7 +431,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Data OUT by operation",
@@ -508,11 +448,9 @@ resource "dynatrace_json_dashboard" "#name#" {
                     {
                       "id" : "2",
                       "name" : "Operation name",
-                      "values" : [],
-                      "entityDimension" : false
+                      "values" : []
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
@@ -523,12 +461,10 @@ resource "dynatrace_json_dashboard" "#name#" {
                   "customColor" : "#ef651f"
                 }
               }
-            },
-            "filtersPerEntityType" : {}
+            }
           }
         },
         {
-          "isAutoRefreshDisabled": false,
           "name" : "Custom chart",
           "tileType" : "CUSTOM_CHARTING",
           "configured" : true,
@@ -538,7 +474,6 @@ resource "dynatrace_json_dashboard" "#name#" {
             "width" : 342,
             "height" : 304
           },
-          "tileFilter" : {},
           "filterConfig" : {
             "type" : "MIXED",
             "customName" : "Blocked calls by service instance",
@@ -560,18 +495,14 @@ resource "dynatrace_json_dashboard" "#name#" {
                       "entityDimension" : true
                     }
                   ],
-                  "sortAscending" : false,
                   "sortColumn" : true,
                   "aggregationRate" : "TOTAL"
                 }
-              ],
-              "resultMetadata" : {}
-            },
-            "filtersPerEntityType" : {}
+              ]
+            }
           }
         },
         {
-          "isAutoRefreshDisabled": false,
           "name" : "Performance ",
           "tileType" : "HEADER",
           "configured" : true,
@@ -580,11 +511,9 @@ resource "dynatrace_json_dashboard" "#name#" {
             "left" : 38,
             "width" : 1026,
             "height" : 38
-          },
-          "tileFilter" : {}
+          }
         },
         {
-          "isAutoRefreshDisabled": false,
           "name" : "Data volume",
           "tileType" : "HEADER",
           "configured" : true,
@@ -593,8 +522,7 @@ resource "dynatrace_json_dashboard" "#name#" {
             "left" : 1064,
             "width" : 342,
             "height" : 38
-          },
-          "tileFilter" : {}
+          }
         }
       ]
   })

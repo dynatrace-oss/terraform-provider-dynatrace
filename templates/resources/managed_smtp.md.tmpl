@@ -1,0 +1,38 @@
+---
+layout: ""
+page_title: dynatrace_managed_smtp Resource - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
+description: |-
+  The resource `dynatrace_managed_smtp` covers configuration for cluster SMTP settings
+---
+
+# dynatrace_managed_smtp (Resource)
+
+!> **HTTP DELETE method not available** Terraform will no longer manage this resource on `destroy` but the configuration will still be present on the Dynatrace cluster.
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+
+## Dynatrace Documentation
+
+- Configure an SMTP server connection - https://www.dynatrace.com/support/help/managed-cluster/configuration/configure-smtp-server-connection
+
+- Cluster API v1 - https://www.dynatrace.com/support/help/managed-cluster/cluster-api/cluster-api-v1
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_managed_smtp" "Test" {
+  host_name = "hostname"
+  port = "25"
+  user_name = "username"
+  password = "password"
+  is_password_configured = true
+  connection_security = "NO_ENCRYPTION"
+  sender_email_address = "noreply@dynatrace-managed.com"
+  allow_fallback_via_mission_control = true
+  use_smtp_server = true
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 

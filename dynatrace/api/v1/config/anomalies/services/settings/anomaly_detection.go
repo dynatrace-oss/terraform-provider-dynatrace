@@ -32,6 +32,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *AnomalyDetection) Deprecated() string {
+	return "This resource is utilizing an older API endpoint, please use `dynatrace_service_anomalies_v2` instead."
+}
+
 // AnomalyDetection Dynatrace automatically detects service-related performance anomalies such as response time degradations and failure rate increases. Use these settings to configure detection sensitivity, set alert thresholds, or disable alerting for certain services.
 type AnomalyDetection struct {
 	LoadSpike               *load.SpikeDetection    `json:"loadSpike,omitempty"`     // The configuration of load spikes detection.

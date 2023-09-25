@@ -1,0 +1,68 @@
+{
+	"allowedScopes": [
+		"HOST"
+	],
+	"description": "OneAgent monitoring mode can only be switched while the agent is connected.",
+	"displayName": "Monitoring Mode",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"OAMonitoringMode": {
+			"description": "",
+			"displayName": "OAMonitoringMode",
+			"documentation": "",
+			"items": [
+				{
+					"description": "includes topology discovery and basic health monitoring of your host",
+					"displayName": "Discovery",
+					"value": "DISCOVERY"
+				},
+				{
+					"description": "includes topology discovery, detailed health and performance monitoring of your host, and enables Network monitoring, Log monitoring, and Extensions",
+					"displayName": "Infrastructure",
+					"value": "INFRA_ONLY"
+				},
+				{
+					"description": "also includes application performance, user experience data, code-level visibility and PurePath insights",
+					"displayName": "Full-stack",
+					"value": "FULL_STACK"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"monitoringMode": {
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "monitoringModeOptions",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "FULL_STACK",
+			"description": "Dynatrace OneAgent allows you to monitor every aspect of your environment, including all processes, services, and applications detected on your hosts.\n\nOneAgent monitoring modes give you flexibility to adjust which capabilities of OneAgent are enabled for your host. Each successive mode increases the enabled capabilities, but also increases license consumption. To learn more, visit [Monitoring consumption](https://www.dynatrace.com/support/help/shortlink/monitoring-consumption).",
+			"displayName": "Monitoring mode",
+			"documentation": "Monitoring mode will be applied to a process after its restart.\n\nThe OneAgent's monitoring mode will automatically overwrite this setting whenever it is changed with [oneagentctl](https://dt-url.net/oneagentctl) or the OneAgent comes online.",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": {
+				"$ref": "#/enums/OAMonitoringMode"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:host-monitoring"
+	],
+	"schemaId": "builtin:host.monitoring.mode",
+	"types": {},
+	"version": "1.3"
+}

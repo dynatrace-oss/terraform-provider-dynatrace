@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -173,6 +174,30 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 		req := client.Post(fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserAction)), map[string]any{}, 200)
 		if err = req.Finish(); err != nil {
 			return err
+		}
+	}
+	if len(keyUserActionsToAdd) > 0 {
+		var maxTries = 60
+		var successes = 0
+		var requiredSuccesses = 5
+
+		var response = struct {
+			TotalCount int `json:"totalCount"`
+		}{}
+
+		for i := 0; i < maxTries; i++ {
+			if err = client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("DEVICE_APPLICATION_METHOD"),fromRelationships.isDeviceApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
+				return err
+			}
+
+			if response.TotalCount == len(keyUserActionsToAdd) {
+				successes++
+				if successes >= requiredSuccesses {
+					break
+				}
+			}
+
+			time.Sleep(2 * time.Second)
 		}
 	}
 

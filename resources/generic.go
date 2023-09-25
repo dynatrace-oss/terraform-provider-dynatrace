@@ -60,6 +60,10 @@ type Generic struct {
 	CredentialValidation int
 }
 
+type Deprecated interface {
+	Deprecated() string
+}
+
 func VisitResource(res *schema.Resource) {
 	if res == nil {
 		return
@@ -102,23 +106,18 @@ func VisitSchemaMap(schemata map[string]*schema.Schema) map[string]*schema.Schem
 func (me *Generic) Resource() *schema.Resource {
 	stngs := me.Descriptor.NewSettings()
 	sch := VisitSchemaMap(stngs.Schema())
-	// implicitUpate := false
-	// stnt := reflect.ValueOf(stngs).Elem().Type()
-	// for idx := 0; idx < stnt.NumField(); idx++ {
-	// 	field := stnt.Field(idx)
-	// 	if field.Type == implicitUpdateType {
-	// 		implicitUpate = true
-	// 		break
-	// 	}
-	// }
-	// if implicitUpate {
-	// 	sch["replaced_value"] = &schema.Schema{
-	// 		Type:        schema.TypeString,
-	// 		Description: "for internal use only",
-	// 		Optional:    true,
-	// 		Computed:    true,
-	// 	}
-	// }
+
+	if dep, ok := stngs.(Deprecated); ok {
+		return &schema.Resource{
+			Schema:             sch,
+			CreateContext:      logging.Enable(me.Create),
+			UpdateContext:      logging.Enable(me.Update),
+			ReadContext:        logging.Enable(me.Read),
+			DeleteContext:      logging.Enable(me.Delete),
+			Importer:           &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
+			DeprecationMessage: dep.Deprecated(),
+		}
+	}
 
 	return &schema.Resource{
 		Schema:        sch,
@@ -195,6 +194,12 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("_restore_", *restore)
 	}
 	d.SetId(stub.ID)
+
+	if settings.RefersToMissingID(sttngs) {
+		settingName := settings.Name(sttngs, "")
+		logging.File.Printf("The resource `%s` with name `%s` and ID `%s` is not in its final state. It refers to resources that don't exist yet.", me.Type, settingName, stub.ID)
+	}
+
 	// if settings.SupportsFlawedReasons(sttngs) {
 	// 	flawedReasons := settings.GetFlawedReasons(sttngs)
 	// 	if len(flawedReasons) > 0 {
@@ -229,6 +234,10 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 			return diag.FromErr(errors.New(restError.Message))
 		}
 		return diag.FromErr(err)
+	}
+	if settings.RefersToMissingID(sttngs) {
+		settingName := settings.Name(sttngs, "")
+		logging.File.Printf("The resource `%s` with name `%s` and ID `%s` is not in its final state. It refers to resources that don't exist yet.", me.Type, settingName, d.Id())
 	}
 	if _, ok := sttngs.(Computer); ok {
 		return me.ReadForSettings(ctx, d, m, sttngs)

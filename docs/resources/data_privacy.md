@@ -34,8 +34,6 @@ resource "dynatrace_data_privacy" "#name#" {
     comply_with_do_not_track = false
   }
   masking {
-    ip_address_masking                = "public"
-    ip_address_masking_enabled        = true
     personal_data_uri_masking_enabled = true
     user_action_masking_enabled       = true
   }
@@ -88,9 +86,6 @@ Optional:
 
 Required:
 
-- `ip_address_masking_enabled` (Boolean) Dynatrace captures the IP addresses of your end-users to determine the regions from which they access your application. To learn more, visit [Mask IPs and GPS coordinates](https://dt-url.net/mask-end-users-ip-addresses).. Dynatrace also captures GPS data from mobile apps that provide their users with the option of sharing geolocation data. On the server side, Dynatrace captures IP addresses to enable detailed troubleshooting for Dynatrace service calls.
-
-Once enabled, IP address masking sets the last octet of monitored IPv4 addresses and the last 80 bits of IPv6 addresses to zeroes. GPS coordinates are rounded up to 1 decimal place (~10 km). This masking occurs in memory. Full IP addresses are never written to disk. Location lookups are made using anonymized IP addresses and GPS coordinates.
 - `personal_data_uri_masking_enabled` (Boolean) Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures full URIs on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).. URIs and request headers contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.
 - `user_action_masking_enabled` (Boolean) When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action. To learn more about masking user actions, visit [Mask user actions](https://dt-url.net/mask-user-action).. When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action, it constructs a name for the user action based on:
 
@@ -111,7 +106,10 @@ In rare circumstances, confidential data (for example, email addresses, username
 
 Optional:
 
-- `ip_address_masking` (String) Possible Values: `All`, `Public`
+- `ip_address_masking` (String, Deprecated) Possible Values: `All`, `Public`
+- `ip_address_masking_enabled` (Boolean, Deprecated) Dynatrace captures the IP addresses of your end-users to determine the regions from which they access your application. To learn more, visit [Mask IPs and GPS coordinates](https://dt-url.net/mask-end-users-ip-addresses).. Dynatrace also captures GPS data from mobile apps that provide their users with the option of sharing geolocation data. On the server side, Dynatrace captures IP addresses to enable detailed troubleshooting for Dynatrace service calls.
+
+Once enabled, IP address masking sets the last octet of monitored IPv4 addresses and the last 80 bits of IPv6 addresses to zeroes. GPS coordinates are rounded up to 1 decimal place (~10 km). This masking occurs in memory. Full IP addresses are never written to disk. Location lookups are made using anonymized IP addresses and GPS coordinates.
 
 
 <a id="nestedblock--user_tracking"></a>

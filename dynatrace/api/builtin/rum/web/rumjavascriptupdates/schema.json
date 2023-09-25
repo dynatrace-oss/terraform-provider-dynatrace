@@ -15,7 +15,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Define the RUM JavaScript version to be used globally (in the global settings) or for a specific web application (in the application settings). In order to profit from RUM JavaScript updates, it is recommended to choose a dynamic version like **Latest stable**, **Previous stable** or **Latest IE7-10** supported. If dynamic versions are not an option for you, choose **Custom** instead. This option refers to a static version defined in the [Custom RUM JavaScript version](/ui/settings/builtin:rum.web.custom-rum-javascript-version) environment settings.",
+	"description": "Define the RUM JavaScript version to be used globally (in the global settings) or for a specific web application (in the application settings). In order to profit from RUM JavaScript updates, it is recommended to choose a dynamic version like **Latest stable** or **Previous stable**. If dynamic versions are not an option for you, choose **Custom** instead. This option refers to a static version defined in the [Custom RUM JavaScript version](/ui/settings/builtin:rum.web.custom-rum-javascript-version) environment settings.",
 	"displayName": "RUM JavaScript updates",
 	"documentation": "",
 	"dynatrace": "1",
@@ -77,5 +77,5 @@
 	],
 	"schemaId": "builtin:rum.web.rum-javascript-updates",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

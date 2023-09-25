@@ -41,7 +41,7 @@
 				},
 				{
 					"description": "Services",
-					"displayName": "Database vendor",
+					"displayName": "Database technology",
 					"value": "SERVICE_DATABASE_VENDOR"
 				},
 				{
@@ -1296,6 +1296,19 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "at-conditions-count-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Tag name must be unique",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:tags"
 	],
@@ -1783,7 +1796,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"maxLength": 120,
+							"maxLength": 150,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -2363,5 +2376,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.11"
+	"version": "1.0.12"
 }

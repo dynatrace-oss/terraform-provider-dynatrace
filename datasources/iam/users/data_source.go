@@ -40,6 +40,10 @@ func DataSource() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Computed: true,
 			},
+			"uid": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -55,10 +59,18 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 	d.SetId(email)
 
+	creds, err := config.Credentials(m, config.CredValIAM)
+	if err != nil {
+		return err
+	}
+
 	var user usr.User
-	service := users.Service(config.Credentials(m))
+	service := users.Service(creds)
 	if err := service.Get(email, &user); err != nil {
 		return err
+	}
+	if len(user.UID) > 0 {
+		d.Set("uid", user.UID)
 	}
 	if len(user.Groups) > 0 {
 		sort.Strings(user.Groups)

@@ -8,6 +8,7 @@ import (
 
 type User struct {
 	Email  string   `json:"email"`
+	UID    string   `json:"uid"`
 	Groups []string `json:"-"`
 }
 
@@ -27,6 +28,10 @@ func (me *User) Schema() map[string]*schema.Schema {
 			MinItems: 1,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
+		"uid": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
 	}
 }
 
@@ -34,6 +39,7 @@ func (me *User) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"email":  me.Email,
 		"groups": me.Groups,
+		"uid":    me.UID,
 	})
 }
 
@@ -41,5 +47,6 @@ func (me *User) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"email":  &me.Email,
 		"groups": &me.Groups,
+		"uid":    &me.UID,
 	})
 }

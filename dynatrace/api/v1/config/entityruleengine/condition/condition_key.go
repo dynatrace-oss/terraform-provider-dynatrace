@@ -163,6 +163,7 @@ func (bck *BaseConditionKey) MarshalJSON() ([]byte, error) {
 // * `HOST_CUSTOM_METADATA_KEY` -> CustomHostMetadataConditionKey
 // * `PROCESS_PREDEFINED_METADATA_KEY` -> ProcessMetadataConditionKey
 // * `STRING` -> StringConditionKey
+// * `STATIC` -> StringConditionKey
 type ConditionKeyType string
 
 func (v ConditionKeyType) Ref() *ConditionKeyType {
@@ -178,10 +179,12 @@ var ConditionKeyTypes = struct {
 	HostCustomMetadataKey        ConditionKeyType
 	ProcessCustomMetadataKey     ConditionKeyType
 	ProcessPredefinedMetadataKey ConditionKeyType
+	Static                       ConditionKeyType
 	String                       ConditionKeyType
 }{
 	"HOST_CUSTOM_METADATA_KEY",
 	"PROCESS_CUSTOM_METADATA_KEY",
 	"PROCESS_PREDEFINED_METADATA_KEY",
+	"STATIC",
 	"STRING",
 }

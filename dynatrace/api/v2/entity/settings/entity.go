@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -57,7 +59,11 @@ func (me *Entity) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if len(me.Properties) > 0 {
-		properties["properties"] = me.Properties
+		props := map[string]any{}
+		for k, v := range me.Properties {
+			props[k] = fmt.Sprintf("%v", v)
+		}
+		properties["properties"] = props
 	}
 	return nil
 }

@@ -3,11 +3,13 @@ package iam
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -50,6 +52,9 @@ func (me *iamClient) authenticate(httpRequest *http.Request, forceNew bool) erro
 		log.Println("--- BEARER TOKEN ---")
 		log.Println(bearerToken)
 		log.Println("--------------------")
+	}
+	if len(strings.TrimSpace(bearerToken)) == 0 {
+		return errors.New(msgInvalidOAuthCredentials)
 	}
 
 	httpRequest.Header.Set("Authorization", "Bearer "+bearerToken)

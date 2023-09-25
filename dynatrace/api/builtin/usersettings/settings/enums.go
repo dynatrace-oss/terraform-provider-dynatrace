@@ -20,11 +20,9 @@ package usersettings
 type Language string
 
 var Languages = struct {
-	Auto Language
-	En   Language
-	Ja   Language
+	En Language
+	Ja Language
 }{
-	"auto",
 	"en",
 	"ja",
 }
@@ -32,11 +30,9 @@ var Languages = struct {
 type Theme string
 
 var Themes = struct {
-	Auto  Theme
 	Dark  Theme
 	Light Theme
 }{
-	"auto",
 	"dark",
 	"light",
 }

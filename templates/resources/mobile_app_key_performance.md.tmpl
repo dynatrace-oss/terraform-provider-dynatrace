@@ -1,0 +1,32 @@
+---
+layout: ""
+page_title: dynatrace_mobile_app_key_performance Resource - terraform-provider-dynatrace"
+subcategory: "Mobile & Custom Applications"
+description: |-
+  The resource `dynatrace_mobile_app_key_performance` covers apdex threshold configuration for mobile/custom applications
+---
+
+# dynatrace_mobile_app_key_performance (Resource)
+
+-> Configuration of the mobile/custom application scope overlaps with [dynatrace_mobile_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/mobile_application), but this resource in addition provides an option for a key user action scope.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Adjust Apdex settings for mobile applications - https://www.dynatrace.com/support/help/platform-modules/digital-experience/mobile-applications/additional-configuration/configure-apdex-mobile
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.mobile.key-performance-metrics`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_mobile_app_key_performance` downloads all existing apdex threshold configuration for mobile/custom applications
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/mobile/keyperformancemetrics/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

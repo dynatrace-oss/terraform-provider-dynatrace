@@ -69,6 +69,16 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
+			"datasource": {
+				"filterProperties": [
+					"applicationId"
+				],
+				"fullContext": false,
+				"identifier": "appDetectionAppsDatasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
 			"default": "",
 			"description": "Select an existing application or create a new one.",
 			"displayName": "Application",
@@ -76,7 +86,24 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"subType": "rum_app_detection_app_picker",
+			"subType": "datasource",
+			"type": "text"
+		},
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Add a description for your rule",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "multiline",
 			"type": "text"
 		},
 		"matcher": {
@@ -114,5 +141,5 @@
 	],
 	"schemaId": "builtin:rum.web.app-detection",
 	"types": {},
-	"version": "2.0.1"
+	"version": "2.1.1"
 }

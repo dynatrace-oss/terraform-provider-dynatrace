@@ -28,7 +28,7 @@ type SeverityRules []*SeverityRule
 func (me *SeverityRules) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"rule": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Optional:    true,
 			MinItems:    1,
 			Description: "A conditions for the metric usage",

@@ -33,6 +33,9 @@ import (
 	"net/url"
 )
 
+// var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
+var NO_REPAIR_INPUT = true
+
 func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.CRUDService[T] {
 	var opts *ServiceOptions[T]
 	if len(options) > 0 {
@@ -54,7 +57,7 @@ type SettingsObjectUpdate struct {
 type SettingsObjectCreate struct {
 	SchemaVersion string `json:"schemaVersion,omitempty"`
 	SchemaID      string `json:"schemaId"`
-	Scope         string `json:"scope"`
+	Scope         string `json:"scope,omitempty"`
 	Value         any    `json:"value"`
 }
 
@@ -212,7 +215,13 @@ func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
 	}
 	soc.Scope = settings.GetScope(v)
 
-	req := me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
+	var req rest.Request
+	if NO_REPAIR_INPUT {
+		req = me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
+	} else {
+		req = me.client.Post("/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200)
+	}
+
 	objectID := []SettingsObjectCreateResponse{}
 
 	if oerr := req.Finish(&objectID); oerr != nil {
@@ -246,7 +255,15 @@ func (me *service[T]) Update(id string, v T) error {
 
 func (me *service[T]) update(id string, v T, retry bool) error {
 	sou := SettingsObjectUpdate{Value: v, SchemaVersion: me.schemaVersion}
-	if err := me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
+
+	var req rest.Request
+	if NO_REPAIR_INPUT {
+		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
+	} else {
+		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou, 200)
+	}
+
+	if err := req.Finish(); err != nil {
 		if me.options != nil && me.options.UpdateRetry != nil && !retry {
 			if modifiedPayload := me.options.UpdateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
 				return me.update(id, modifiedPayload, true)

@@ -4,8 +4,13 @@
 	],
 	"constraints": [
 		{
-			"customValidatorId": "environment-url-validator",
+			"customValidatorId": "environment-url-validator-v2",
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the token to update the setting.",
+			"type": "SECRET_RESUBMISSION"
 		}
 	],
 	"description": "Configure connections to other Dynatrace environments for cross-environment capabilities (e.g. dashboards)",
@@ -124,6 +129,7 @@
 			"description": "Specify the full URI to the remote environment. Your local environment will have to be able to connect this URI on a network level.",
 			"displayName": "Remote environment URI",
 			"documentation": "",
+			"forceSecretResubmission": true,
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -131,6 +137,24 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"uri"
+			]
+		},
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		},
+		{
+			"customValidatorId": "environment-duplicate-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:integration.external",
 		"group:integration"
@@ -155,5 +179,5 @@
 			]
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

@@ -304,6 +304,12 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		}
 		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
 		*e = append(*e, entry)
+	case []int:
+		if len(v) == 0 {
+			return
+		}
+		entry := &primitiveEntry{Key: key, Value: value, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
+		*e = append(*e, entry)
 	case []float64:
 		if len(v) == 0 {
 			return

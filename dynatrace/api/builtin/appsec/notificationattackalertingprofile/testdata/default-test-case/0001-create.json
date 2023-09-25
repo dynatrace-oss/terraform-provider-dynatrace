@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "enabledAttackMitigations": [
+    "NONE_BLOCKING_DISABLED"
+  ],
+  "name": "${randomize}"
+}

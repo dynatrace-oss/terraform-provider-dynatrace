@@ -96,7 +96,10 @@
         "keyUp": true,
         "keyDown": true,
         "scroll": true,
-        "additionalEventCapturedAsUserInput": ""
+        "additionalEventCapturedAsUserInput": "",
+        "change": true,
+        "touchEnd": true,
+        "touchStart": true
       }
     },
     "browserRestrictionSettings": {

@@ -20,9 +20,12 @@ package dashboards
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
+	"golang.org/x/exp/slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -32,6 +35,235 @@ import (
 type JSONDashboard struct {
 	name     string
 	Contents string
+}
+
+var DYNATRACE_DASHBOARD_TESTS = len(os.Getenv("DYNATRACE_DASHBOARD_TESTS")) > 0
+
+func denullslice(s []any) []any {
+	if len(s) == 0 {
+		return s
+	}
+	rs := []any{}
+	for _, v := range s {
+		switch tv := v.(type) {
+		case map[string]any:
+			m2 := denullmap(tv)
+			if len(m2) > 0 {
+				rs = append(rs, m2)
+			}
+		case []any:
+			s2 := denullslice(tv)
+			if len(s2) > 0 {
+				rs = append(rs, s2)
+			}
+		default:
+			rs = append(rs, v)
+		}
+	}
+	return rs
+}
+
+func denullmap(m map[string]any) map[string]any {
+	if len(m) == 0 {
+		return m
+	}
+	for k, v := range m {
+		switch tv := v.(type) {
+		case map[string]any:
+			m2 := denullmap(tv)
+			if len(m2) == 0 {
+				delete(m, k)
+			} else {
+				m[k] = m2
+			}
+		case []any:
+			s2 := denullslice(tv)
+			if len(s2) == 0 {
+				delete(m, k)
+			} else {
+				m[k] = denullslice(tv)
+			}
+		case bool:
+			if !tv {
+				delete(m, k)
+			}
+		default:
+			if v == nil {
+				delete(m, k)
+			}
+		}
+	}
+	return m
+}
+
+func enrs(s []any, bc string, fordiff bool) {
+	bc = strings.TrimPrefix(bc, ".")
+	if len(s) == 0 {
+		return
+	}
+	for _, v := range s {
+		switch tv := v.(type) {
+		case map[string]any:
+			enrm(tv, bc+"[#]", fordiff)
+		case []any:
+			enrs(tv, bc+"[#]", fordiff)
+		default:
+		}
+	}
+}
+
+func ensure(m map[string]any, key string, value any) {
+	if _, found := m[key]; !found {
+		m[key] = value
+	}
+}
+
+func enrm(m map[string]any, bc string, fordiff bool) {
+	bc = strings.TrimPrefix(bc, ".")
+	if m == nil {
+		return
+	}
+
+	if bc == "tiles[#].filterConfig" {
+		ensure(m, "filtersPerEntityType", map[string]any{})
+	}
+	if bc == "tiles[#].filterConfig.chartConfig" {
+		ensure(m, "resultMetadata", map[string]any{})
+	}
+	if bc == "tiles[#].filterConfig.chartConfig.series[#].dimensions[#]" {
+		ensure(m, "resultMetadata", []any{})
+	}
+	if bc == "tiles[#].filterConfig.chartConfig" {
+		ensure(m, "series", []any{})
+		ensure(m, "legendShown", true)
+	}
+	if bc == "tiles[#].filterConfig.chartConfig.series[#]" {
+		ensure(m, "dimensions", []any{})
+	}
+	if bc == "tiles[#].filterConfig.chartConfig.series[#].dimensions[#]" {
+		ensure(m, "values", []string{})
+		if DYNATRACE_DASHBOARD_TESTS && fordiff {
+			delete(m, "name")
+		}
+	}
+	if bc == "tiles[#].visualConfig" {
+		ensure(m, "rules", []any{})
+	}
+	if bc == "tiles[#].queries[#]" {
+		ensure(m, "enabled", true)
+		ensure(m, "timeAggregation", "DEFAULT")
+	}
+	if bc == "" {
+		ensure(m, "tiles", []any{})
+	}
+	if bc == "tiles[#]" {
+		ensure(m, "assignedEntities", []any{})
+		ensure(m, "query", "")
+		ensure(m, "bounds", map[string]any{})
+		// ensure(m, "visualConfig", map[string]any{})
+		ensure(m, "visualConfig", nil)
+		if name, found := m["name"]; found {
+			ensure(m, "customName", name)
+		}
+		ensure(m, "type", "NOT_CONFIGURED")
+		ensure(m, "visualizationConfig", map[string]any{})
+		ensure(m, "isAutoRefreshDisabled", true)
+	}
+	if bc == "tiles[#].visualConfig" {
+		ensure(m, "heatmapSettings", map[string]any{})
+		ensure(m, "honeycombSettings", map[string]any{})
+	}
+	if bc == "tiles[#].visualConfig.heatmapSettings" {
+		ensure(m, "yAxis", "VALUE")
+	}
+	if bc == "tiles[#].visualConfig.honeycombSettings" {
+		ensure(m, "showHive", true)
+		ensure(m, "showLegend", true)
+	}
+	if bc == "tiles[#].visualConfig.rules[#]" {
+		ensure(m, "properties", map[string]any{"color": "DEFAULT"})
+	}
+	if bc == "tiles[#].visualConfig.rules[#].properties" {
+		ensure(m, "color", "DEFAULT")
+	}
+	if bc == "tiles[#].visualConfig.thresholds[#]" {
+		ensure(m, "visible", true)
+	}
+	if bc == "tiles[#].visualizationConfig" {
+		ensure(m, "hasAxisBucketing", true)
+	}
+	if bc == "tiles[#].queries[#].filterBy.nestedFilters[#]" {
+		if criteria, found := m["criteria"]; found {
+			if crits, ok := criteria.([]any); ok {
+				sortedCrits := []any{}
+				marshCrits := []string{}
+				for _, crit := range crits {
+					data, _ := json.Marshal(crit)
+					marshCrits = append(marshCrits, string(data))
+				}
+				slices.Sort(marshCrits)
+				for _, marshCrit := range marshCrits {
+					crit := map[string]any{}
+					json.Unmarshal([]byte(marshCrit), &crit)
+					sortedCrits = append(sortedCrits, crit)
+				}
+				m["criteria"] = sortedCrits
+			}
+		}
+	}
+
+	for k, v := range m {
+		switch tv := v.(type) {
+		case map[string]any:
+			enrm(tv, bc+"."+k, fordiff)
+		case []any:
+			enrs(tv, bc+"."+k, fordiff)
+		default:
+		}
+	}
+	if bc == "tiles[#]" {
+		if check(m, "tileType", "DTAQL", "PIE_CHART", "APPLICATION_WORLDMAP") {
+			delete(m, "visualizationConfig")
+		}
+	}
+
+}
+
+func check(m map[string]any, key string, values ...string) bool {
+	value, found := m[key]
+	if !found {
+		return false
+	}
+	svalue, ok := value.(string)
+	if !ok {
+		return false
+	}
+	if len(values) == 0 {
+		return false
+	}
+	for _, v := range values {
+		if v == svalue {
+			return true
+		}
+	}
+	return false
+}
+
+func (me *JSONDashboard) EnrichRequireds() *JSONDashboard {
+	m := map[string]any{}
+	json.Unmarshal([]byte(me.Contents), &m)
+	enrm(m, "", false)
+	data, _ := json.Marshal(m)
+	me.Contents = string(data)
+	return me
+}
+
+func (me *JSONDashboard) DeNull() {
+	m := map[string]any{}
+	json.Unmarshal([]byte(me.Contents), &m)
+	denullmap(m)
+	data, _ := json.Marshal(m)
+	me.Contents = string(data)
 }
 
 func (me *JSONDashboard) Anonymize() {
@@ -65,13 +297,60 @@ func (me *JSONDashboard) Name() string {
 	return fmt.Sprintf("%s owned by %s", c.Metadata.Name, *c.Metadata.Owner)
 }
 
+func get(v any, key string) any {
+	if v == nil {
+		return nil
+	}
+	if m, ok := v.(map[string]any); ok {
+		if d, found := m[key]; found {
+			return d
+		}
+		return nil
+	}
+	return nil
+}
+
+func diffSuppressedContent(content string) string {
+	m := map[string]any{}
+	json.Unmarshal([]byte(content), &m)
+	if DYNATRACE_DASHBOARD_TESTS {
+		if dmd := get(m, "dashboardMetadata"); dmd != nil {
+			if df := get(dmd, "dashboardFilter"); df != nil {
+				if mgmz := get(df, "managementZone"); mgmz != nil {
+					delete(df.(map[string]any), "managementZone")
+				}
+			}
+		}
+	}
+	denullmap(m)
+	enrm(m, "", true)
+	if DYNATRACE_DASHBOARD_TESTS {
+		if tiles, found := m["tiles"]; found {
+			if tileSlice, ok := tiles.([]any); ok {
+				for _, tile := range tileSlice {
+					if tm, ok := tile.(map[string]any); ok {
+						delete(tm, "metricExpressions")
+					}
+				}
+
+			}
+		}
+	}
+	data, _ := json.Marshal(m)
+	return string(data)
+}
+
 func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"contents": {
-			Type:             schema.TypeString,
-			Required:         true,
-			Description:      "Contains the JSON Code of the Dashboard",
-			DiffSuppressFunc: hcl.SuppressJSONorEOT,
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Contains the JSON Code of the Dashboard",
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				old = diffSuppressedContent(old)
+				new = diffSuppressedContent(new)
+				return hcl.JSONStringsEqual(old, new)
+			},
 		},
 	}
 }

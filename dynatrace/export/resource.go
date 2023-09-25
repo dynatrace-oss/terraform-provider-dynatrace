@@ -28,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
@@ -173,16 +174,29 @@ func (me *Resource) Download() error {
 				return nil
 			}
 			if restError.Code == 404 {
+				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
+				me.Status = ResourceStati.Erronous
+				me.Error = err
+				return nil
+			}
+			if restError.Code == 400 {
+				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
+				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
 				me.Status = ResourceStati.Erronous
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 500 {
+				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
 				me.Status = ResourceStati.Erronous
 				me.Error = err
 				return nil
 			}
 			if strings.HasPrefix(restError.Message, "Token is missing required scope") {
+				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
 				me.Status = ResourceStati.Erronous
 				me.Error = err
 				return nil

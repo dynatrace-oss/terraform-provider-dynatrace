@@ -23,5 +23,6 @@
   },
   "name": "x${randomize}",
   "tsmMetricKey": "calc:service.x${randomize}",
-  "unit": "MILLI_SECOND_PER_MINUTE"
+  "unit": "MILLI_SECOND_PER_MINUTE",
+  "ignoreMutedRequests": true
 }

@@ -21,11 +21,13 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/list"
 	customtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
 )
 
@@ -37,12 +39,26 @@ type service struct {
 	credentials *settings.Credentials
 }
 
+var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
+
 func (me *service) Get(selector string, v *customtags.Settings) (err error) {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	if err = client.Get(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
 	}
 	v.EntitySelector = selector
+	if entityIdSelectorRegexp.MatchString(selector) {
+		var response = struct {
+			Entities []struct {
+				DisplayName string `json:"displayName"`
+			}
+		}{}
+		if err = client.Get(fmt.Sprintf("/api/v2/entities?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(&response); err == nil {
+			if len(response.Entities) > 0 {
+				v.ExportName = response.Entities[0].DisplayName
+			}
+		}
+	}
 
 	return nil
 }
@@ -52,7 +68,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
+	return list.List(rest.DefaultClient(me.credentials.URL, me.credentials.Token))
 }
 
 func (me *service) Validate(v *customtags.Settings) error {

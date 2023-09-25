@@ -39,10 +39,17 @@ resource "dynatrace_user_settings" "#name#" {
 
 ### Required
 
-- `language` (String) Possible Values: `Auto`, `En`, `Ja`
-- `region` (String) Region
+- `auto_language` (Boolean) Language - use browser default
+- `auto_region` (Boolean) Region - use browser default
+- `auto_theme` (Boolean) Theme - use browser default
+- `auto_timezone` (Boolean) Timezone - use browser default
 - `scope` (String) The scope of this setting (user, userdefaults)
-- `theme` (String) Possible Values: `Auto`, `Dark`, `Light`
+
+### Optional
+
+- `language` (String) Possible Values: `En`, `Ja`
+- `region` (String) Region
+- `theme` (String) Possible Values: `Dark`, `Light`
 - `timezone` (String) Timezone
 
 ### Read-Only

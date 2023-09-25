@@ -68,10 +68,14 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if v, ok := d.GetOk("entity_selector"); ok {
 		entitySelector = v.(string)
 	}
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 
 	var settings entities.Settings
-	// service := cache.Read(srv.Service(entityType, entitySelector, config.Credentials(m)), true)
-	service := srv.Service(entityType, entitySelector, config.Credentials(m))
+	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
+	service := srv.Service(entityType, entitySelector, creds)
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}

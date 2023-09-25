@@ -51,9 +51,13 @@ func DataSourceMultiple() *schema.Resource {
 }
 
 func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
-	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(config.Credentials(m)), true)
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
+
+	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
 	var stubs api.Stubs
-	var err error
 	if stubs, err = service.List(); err != nil {
 		return err
 	}

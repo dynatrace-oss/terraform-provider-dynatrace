@@ -64,7 +64,7 @@ resource "dynatrace_ownership_teams" "#name#" {
 
 ### Required
 
-- `identifier` (String) The team identifier is used to reference the team from any entity in Dynatrace.
+- `identifier` (String) The team identifier is used to reference the team from any entity in Dynatrace. If you are using Kubernetes labels, keep in mind the 63 character limit that they enforce.
 - `name` (String) Team name
 - `responsibilities` (Block List, Min: 1, Max: 1) Turn on all responsibility assignments that apply to this team. (see [below for nested schema](#nestedblock--responsibilities))
 

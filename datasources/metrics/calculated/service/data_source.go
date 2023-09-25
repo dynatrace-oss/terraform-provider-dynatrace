@@ -18,6 +18,9 @@
 package service
 
 import (
+	"strings"
+
+	common "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -42,8 +45,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 
-	service := export.Service(config.Credentials(m), export.ResourceTypes.CalculatedServiceMetric)
+	service := export.Service(creds, export.ResourceTypes.CalculatedServiceMetric)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err
@@ -56,6 +63,6 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			}
 		}
 	}
-	d.SetId("")
+	d.SetId(common.NotFoundID(strings.ToLower(strings.ReplaceAll(name, " ", ""))))
 	return nil
 }

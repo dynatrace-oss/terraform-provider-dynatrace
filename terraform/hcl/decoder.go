@@ -193,6 +193,7 @@ func (d *decoder) Decode(key string, v any) error {
 
 var stringType = reflect.TypeOf("")
 var stringSliceType = reflect.TypeOf([]string{})
+var intSliceType = reflect.TypeOf([]int{})
 var marshalerType = reflect.TypeOf((*Marshaler)(nil)).Elem()
 
 func (d *decoder) decode(key string, v any) (bool, error) {
@@ -437,6 +438,13 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			entries := []string{}
 			for _, entry := range setResult.List() {
 				entries = append(entries, entry.(string))
+			}
+			vTarget.Set(reflect.ValueOf(entries))
+			return true, nil
+		} else if ok && vTarget.Type() == intSliceType {
+			entries := []int{}
+			for _, entry := range setResult.List() {
+				entries = append(entries, entry.(int))
 			}
 			vTarget.Set(reflect.ValueOf(entries))
 			return true, nil

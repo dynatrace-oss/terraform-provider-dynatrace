@@ -4,6 +4,11 @@
 	],
 	"constraints": [
 		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the secrets to update the setting.",
+			"type": "SECRET_RESUBMISSION"
+		},
+		{
 			"customMessage": "Cannot create a valid URL from the given target and query.",
 			"customValidatorId": "issueTracker-url-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -216,6 +221,7 @@
 			"description": "For Jira, use the base URL (for example, https://jira.yourcompany.com); for GitHub, use the repository URL (for example, https://github.com/org/repo); for GitLab, use the specific project API for a single project (for example, https://gitlab.com/api/v4/projects/:projectId), and the specific group API for a multiple projects (for example, https://gitlab.com/api/v4/groups/:groupId); for ServiceNow, use your company instance URL (for example, https://yourinstance.service-now.com/)",
 			"displayName": "Target URL",
 			"documentation": "",
+			"forceSecretResubmission": true,
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -268,5 +274,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "5.5.1"
+	"version": "5.6"
 }

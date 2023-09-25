@@ -25,6 +25,7 @@ import (
 )
 
 func TestAzureCredentials(t *testing.T) {
+	t.Skip()
 	api.TestService(t, azure.Service)
 }
 

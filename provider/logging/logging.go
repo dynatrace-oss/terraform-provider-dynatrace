@@ -40,6 +40,28 @@ type onDemandLogger struct {
 	name string
 }
 
+type void struct{}
+
+func (v *void) Write(p []byte) (n int, err error) { return 0, nil }
+
+func createDebugLogger(name string) *log.Logger {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return log.New(&void{}, "", log.LstdFlags)
+	}
+	if len(name) == 0 {
+		return log.New(&void{}, "", log.LstdFlags)
+	}
+	return log.New(&onDemandLogger{name: name}, "", log.LstdFlags)
+}
+
+var Debug = struct {
+	Info *log.Logger
+	Warn *log.Logger
+}{
+	Info: createDebugLogger("terraform-provider-dynatrace.export.log"),
+	Warn: createDebugLogger("terraform-provider-dynatrace.warnings.log"),
+}
+
 var odl = &onDemandLogger{name: "terraform-provider-dynatrace.log"}
 var File = log.New(odl, "", log.LstdFlags)
 

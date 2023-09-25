@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: dynatrace_autotag_rules Resource - terraform-provider-dynatrace"
+subcategory: "Tags"
+description: |-
+  The resource `dynatrace_autotag_rules` covers rule configuration of automatically applied tags
+---
+
+# dynatrace_autotag_rules (Resource)
+
+-> [`dynatrace_autotag_v2`](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/autotag_v2) is the primary resource to manage auto tags. This particular resource allows you to manage a subset of tags of a given auto tag ID. The benefit of this is that it allows the flexibility of multiple users to manage the same automatically applied tag.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Define and apply tags - https://www.dynatrace.com/support/help/how-to-use-dynatrace/tags-and-metadata/setup/how-to-define-tags
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:tags.auto-tagging`)
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/tags/autotagging/rules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

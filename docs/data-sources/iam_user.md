@@ -34,3 +34,4 @@ output "groups" {
 
 - `groups` (List of String)
 - `id` (String) The ID of this resource.
+- `uid` (String)

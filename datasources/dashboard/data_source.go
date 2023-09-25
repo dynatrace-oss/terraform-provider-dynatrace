@@ -51,8 +51,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		owner = v.(string)
 	}
 	nameOwner := name + " owned by " + owner
+	creds, err := config.Credentials(m, config.CredValDefault)
+	if err != nil {
+		return err
+	}
 
-	service := export.Service(config.Credentials(m), export.ResourceTypes.Dashboard)
+	service := export.Service(creds, export.ResourceTypes.Dashboard)
 	var stubs api.Stubs
 	if stubs, err = service.List(); err != nil {
 		return err

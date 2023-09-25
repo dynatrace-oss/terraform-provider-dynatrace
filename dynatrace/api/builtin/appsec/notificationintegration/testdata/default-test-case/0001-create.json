@@ -1,0 +1,16 @@
+{
+  "attackCandidateBasedAlertingProfile": "vu9U3hXa3q0AAAABADNidWlsdGluOmFwcHNlYy5ub3RpZmljYXRpb24tYXR0YWNrLWFsZXJ0aW5nLXByb2ZpbGUABnRlbmFudAAGdGVuYW50ACQ0MGYyMDY3Mi1jY2U3LTNmN2UtYTliNC0zYWI0MzkwOWJmMzi-71TeFdrerQ",
+  "attackCandidateBasedEmailPayload": {
+    "body": "\u003ch3\u003e\nAttack {AttackDisplayId}: {Title}\n\u003c/h3\u003e\n\u003cbr\u003e\nVulnerability Name: \u003cb\u003e{VulnerabilityName}\u003c/b\u003e\u003cbr\u003e\nEntry Point: \u003cb\u003e{EntryPoint}\u003c/b\u003e\u003cbr\u003e\nProcess Group: \u003cb\u003e{ProcessGroupId}\u003c/b\u003e\u003cbr\u003e",
+    "subject": "Attack {AttackDisplayId}: {Title}"
+  },
+  "displayName": "Terraform Attack Candidate Email Test",
+  "emailConfiguration": {
+    "recipients": [
+      "kodai.ishikawa@dynatrace.com"
+    ]
+  },
+  "enabled": true,
+  "trigger": "ATTACK_CANDIDATE",
+  "type": "EMAIL"
+}

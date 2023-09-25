@@ -82,7 +82,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"customMessage": "The Ownership identifier key field can not contain special characters or blank spaces and it must start and end with a letter.",
+							"customMessage": "The Ownership identifier key field can not contain special characters or blank spaces and it must start and end with an alphanumeric character.",
 							"customValidatorId": "ownership-key-validator",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
@@ -103,5 +103,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

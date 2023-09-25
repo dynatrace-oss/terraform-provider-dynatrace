@@ -134,6 +134,38 @@ func (me *request) Payload(payload any) Request {
 }
 
 func (me *request) Finish(vs ...any) error {
+	if err := me.finish(vs...); err != nil {
+		// If the Settings 2.0 API returned with an error
+		// that contains constraint violations complaining
+		// about unknown properties we may be able to
+		// retry with payload that doesn't contain these
+		// properties
+		if CorrectPayload(err, me) {
+			return me.finishRetry(1, vs...)
+		}
+		return err
+	}
+	return nil
+}
+
+func (me *request) finishRetry(numRetries int, vs ...any) error {
+	if err := me.finish(vs...); err != nil {
+		// If the Settings 2.0 API returned with an error
+		// that contains constraint violations complaining
+		// about unknown properties we may be able to
+		// retry with payload that doesn't contain these
+		// properties
+		if CorrectPayload(err, me) {
+			if numRetries > 5 {
+				return err
+			}
+			return me.finishRetry(numRetries+1, vs...)
+		}
+		return err
+	}
+	return nil
+}
+func (me *request) finish(vs ...any) error {
 	if shutdown.System.Stopped() {
 		return nil
 	}
@@ -265,6 +297,24 @@ func (me *request) Raw() ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+func Envelope(data []byte, url string, method string) error {
+	if len(data) == 0 {
+		return nil
+	}
+	var err error
+	var env errorEnvelope
+	if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
+		return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+	} else {
+		var envs []errorEnvelope
+		if err = json.Unmarshal(data, &envs); err == nil && len(envs) > 0 {
+			env = envs[0]
+			return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+		}
+	}
+	return nil
 }
 
 func (me *request) Expect(codes ...int) Request {

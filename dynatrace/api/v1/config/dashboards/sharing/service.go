@@ -52,12 +52,25 @@ type NoValuesLister[T settings.Settings] interface {
 	ListNoValues() (api.Stubs, error)
 }
 
+type DashbordMeta struct {
+	DashboardMetaData struct {
+		Preset bool `json:"preset"`
+	} `json:"dashboardMetadata"`
+}
+
 func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 	id = strings.TrimSuffix(id, "-sharing")
+
+	var dbm DashbordMeta
+	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
+		return err
+	}
 
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
+
+	v.Muted = dbm.DashboardMetaData.Preset
 
 	var dashboardName string
 	var stubs api.Stubs
@@ -107,6 +120,21 @@ const max_retries = 10
 
 func (me *service) update(id string, v *sharing.DashboardSharing, retry int) error {
 	id = strings.TrimSuffix(id, "-sharing")
+
+	var dbm DashbordMeta
+	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
+		return err
+	}
+
+	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", url.PathEscape(id)), 200).Finish(v); err != nil {
+		return err
+	}
+
+	if dbm.DashboardMetaData.Preset {
+		v.Muted = true
+		return nil
+	}
+
 	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		// newly created dashboards are sometimes not yet known cluster wide
 		// this retry functionality tries to make up for that
@@ -116,6 +144,9 @@ func (me *service) update(id string, v *sharing.DashboardSharing, retry int) err
 			}
 			time.Sleep(10 * time.Second)
 			return me.update(id, v, retry+1)
+		}
+		if strings.Contains(err.Error(), "Sharing settings of a preset can't be updated. It's shared by default") {
+			return nil
 		}
 		return err
 	}

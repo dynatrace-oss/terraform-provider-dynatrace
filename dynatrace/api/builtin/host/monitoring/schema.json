@@ -2,13 +2,7 @@
 	"allowedScopes": [
 		"HOST"
 	],
-	"constraints": [
-		{
-			"customValidatorId": "full-stack-monitoring",
-			"type": "CUSTOM_VALIDATOR_REF"
-		}
-	],
-	"description": "OneAgent automatically monitors host, its processes, services and applications but you can switch off monitoring, disable full-stack monitoring or auto-injection.",
+	"description": "OneAgent automatically monitors host, its processes, services and applications but you can switch off monitoring or disable auto-injection.",
 	"displayName": "Monitoring",
 	"documentation": "",
 	"dynatrace": "1",
@@ -35,16 +29,6 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "boolean"
-		},
-		"fullStack": {
-			"default": true,
-			"description": "Dynatrace uses full-stack monitoring by default, to monitor every aspect of your environment, including all processes, services, and applications detected on your hosts. \n\nIf you turn off full-stack monitoring, Dynatrace will only monitor your infrastructure. You will lose access to application performance, user experience data, code-level visibility and PurePath insights. \n\nTo learn more, visit [Infrastructure Monitoring mode](https://www.dynatrace.com/support/help/shortlink/infrastructure).\n\nPlease note that changing the monitoring mode will impact the license consumption of this OneAgent. To learn more, visit [Host units](https://dt-url.net/hi03uns).",
-			"displayName": "Full-stack monitoring",
-			"documentation": "Full-stack monitoring will be applied to a process after its restart.\n\nThe OneAgent's monitoring mode will automatically overwrite this setting whenever it is changed with [oneagentctl](https://dt-url.net/oneagentctl) or the OneAgent comes online.",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "boolean"
 		}
 	},
 	"schemaGroups": [
@@ -52,5 +36,5 @@
 	],
 	"schemaId": "builtin:host.monitoring",
 	"types": {},
-	"version": "1.2"
+	"version": "1.3"
 }

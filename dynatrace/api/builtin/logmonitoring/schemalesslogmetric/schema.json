@@ -9,7 +9,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "With [log metrics](https://dt-url.net/ngn07i6), you can use queries to create metrics from logs data for dashboarding, analysis, and custom alerting.\n\n Note:\n- Newly-defined log metrics are available only for log data ingested after [metric creation](https://dt-url.net/iy23x1d).\n- Log metrics consume DDUs.\n\nFor complete details on pricing, visit [DDUs for custom metrics](https://dt-url.net/vg43xi8).",
+	"description": "With log metrics, you can use queries to create metrics from logs data for dashboarding, analysis, and custom alerting. Log metrics consume [Davis® data units](https://dt-url.net/vg43xi8).\n\nNote that newly-defined log metrics are available only for log data ingested after metric creation.",
 	"displayName": "Log metrics",
 	"documentation": "",
 	"dynatrace": "1",
@@ -166,8 +166,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Attribute may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
-					"pattern": "^[.a-z0-9_\\-]+$",
+					"customMessage": "Attribute may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-'), dots ('.') and colons (':'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+					"pattern": "^[.:a-z0-9_\\-]+$",
 					"type": "PATTERN"
 				},
 				{
@@ -244,11 +244,20 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Metric with the specified key already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring.analysis",
 		"group:log-monitoring"
 	],
 	"schemaId": "builtin:logmonitoring.schemaless-log-metric",
 	"types": {},
-	"version": "8.0.47"
+	"version": "8.0.48"
 }

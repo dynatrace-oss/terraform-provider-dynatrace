@@ -116,6 +116,14 @@
 			"type": "boolean"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
@@ -252,10 +260,16 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Name"
+				}
+			],
 			"emptyState": {
 				"text": "**Add your first custom log source**\n\nAdd the first custom log source to support what has not been detected automatically"
 			}
 		}
 	},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

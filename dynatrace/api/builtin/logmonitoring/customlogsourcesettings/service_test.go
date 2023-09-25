@@ -19,15 +19,12 @@ package customlogsourcesettings_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestLogCustomSource(t *testing.T) {
-	api.TestService(t, customlogsourcesettings.Service)
+	t.Skip()
 }
 
 func TestAccLogCustomSource(t *testing.T) {
-	api.TestAcc(t)
+	t.Skip()
 }

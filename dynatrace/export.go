@@ -55,12 +55,18 @@ func readStuff(scanner *bufio.Scanner) {
 }
 
 func runExport() (err error) {
+	os.Remove("terraform-provider-dynatrace.export.log")
+	os.Remove("terraform-provider-dynatrace.warnings.log")
 	var environment *export.Environment
 	if environment, err = export.Initialize(); err != nil {
 		return err
 	}
 	if err = environment.Export(); err != nil {
 		return err
+	}
+
+	if environment.Flags.SkipTerraformInit {
+		return nil
 	}
 
 	exePath, _ := exec.LookPath("terraform")

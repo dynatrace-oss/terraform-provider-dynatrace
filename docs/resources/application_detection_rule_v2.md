@@ -43,6 +43,10 @@ resource "dynatrace_application_detection_rule_v2" "#name#" {
 - `matcher` (String) Possible Values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`
 - `pattern` (String) Pattern
 
+### Optional
+
+- `description` (String) (v1.274) Add a description for your rule
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

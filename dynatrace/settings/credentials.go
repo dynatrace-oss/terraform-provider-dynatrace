@@ -53,8 +53,23 @@ type Credentials struct {
 	}
 }
 
+func getEnv(names ...string) string {
+	if len(names) == 0 {
+		return ""
+	}
+	for _, name := range names {
+		if value := os.Getenv(name); len(value) > 0 {
+			return value
+		}
+	}
+	return ""
+}
+
 func CreateExportCredentials() (*Credentials, error) {
-	environmentURL := os.Getenv("DYNATRACE_SOURCE_ENV_URL")
+	environmentURL := os.Getenv("DT_SOURCE_ENV_URL")
+	if len(environmentURL) == 0 {
+		environmentURL = os.Getenv("DYNATRACE_SOURCE_ENV_URL")
+	}
 	if environmentURL == "" {
 		environmentURL = os.Getenv("DYNATRACE_ENV_URL")
 		if environmentURL == "" {
@@ -62,7 +77,17 @@ func CreateExportCredentials() (*Credentials, error) {
 		}
 	}
 	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
-	apiToken := os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
+	if len(environmentURL) != 0 {
+		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
+		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
+			environmentURL = fmt.Sprintf("https://%s.live.dynatrace.com", match[1])
+		}
+	}
+
+	apiToken := os.Getenv("DT_SOURCE_API_TOKEN")
+	if len(apiToken) == 0 {
+		apiToken = os.Getenv("DYNATRACE_SOURCE_API_TOKEN")
+	}
 	if apiToken == "" {
 		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
 		if apiToken == "" {
@@ -70,7 +95,13 @@ func CreateExportCredentials() (*Credentials, error) {
 		}
 	}
 	automationEnvironmentURL := os.Getenv("DT_AUTOMATION_ENVIRONMENT_URL")
+	if len(automationEnvironmentURL) == 0 {
+		automationEnvironmentURL = os.Getenv("DYNATRACE_AUTOMATION_ENVIRONMENT_URL")
+	}
 	automationTokenURL := os.Getenv("DT_AUTOMATION_TOKEN_URL")
+	if len(automationTokenURL) == 0 {
+		automationTokenURL = os.Getenv("DYNATRACE_AUTOMATION_TOKEN_URL")
+	}
 	if len(automationEnvironmentURL) == 0 {
 		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
 		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
@@ -78,6 +109,33 @@ func CreateExportCredentials() (*Credentials, error) {
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
 		}
 	}
+
+	client_id := getEnv("DT_CLIENT_ID", "DYNATRACE_CLIENT_ID")
+	client_secret := getEnv("DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET")
+	account_id := getEnv("DT_ACCOUNT_ID", "DYNATRACE_ACCOUNT_ID")
+
+	iam_client_id := getEnv("IAM_CLIENT_ID", "DYNATRACE_IAM_CLIENT_ID", "DT_IAM_CLIENT_ID", "DT_CLIENT_ID", "DYNATRACE_CLIENT_ID")
+	if len(iam_client_id) == 0 {
+		iam_client_id = client_id
+	}
+	iam_account_id := getEnv("IAM_ACCOUNT_ID", "DYNATRACE_IAM_ACCOUNT_ID", "DT_IAM_ACCOUNT_ID", "DT_ACCOUNT_ID", "DYNATRACE_ACCOUNT_ID")
+	if len(iam_account_id) == 0 {
+		iam_account_id = account_id
+	}
+	iam_client_secret := getEnv("IAM_CLIENT_SECRET", "DYNATRACE_IAM_CLIENT_SECRET", "DT_IAM_CLIENT_SECRET", "DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET")
+	if len(iam_client_secret) == 0 {
+		iam_client_secret = client_secret
+	}
+
+	automation_client_id := getEnv("AUTOMATION_CLIENT_ID", "DYNATRACE_AUTOMATION_CLIENT_ID", "DT_AUTOMATION_CLIENT_ID", "DT_CLIENT_ID", "DYNATRACE_CLIENT_ID")
+	if len(automation_client_id) == 0 {
+		automation_client_id = client_id
+	}
+	automation_client_secret := getEnv("AUTOMATION_CLIENT_SECRET", "DYNATRACE_AUTOMATION_CLIENT_SECRET", "DT_AUTOMATION_CLIENT_SECRET", "DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET")
+	if len(automation_client_secret) == 0 {
+		automation_client_secret = client_secret
+	}
+
 	credentials := &Credentials{
 		URL:   environmentURL,
 		Token: apiToken,
@@ -86,9 +144,9 @@ func CreateExportCredentials() (*Credentials, error) {
 			AccountID    string
 			ClientSecret string
 		}{
-			ClientID:     os.Getenv("DT_CLIENT_ID"),
-			AccountID:    os.Getenv("DT_ACCOUNT_ID"),
-			ClientSecret: os.Getenv("DT_CLIENT_SECRET"),
+			ClientID:     iam_client_id,
+			AccountID:    iam_account_id,
+			ClientSecret: iam_client_secret,
 		},
 		Automation: struct {
 			ClientID       string
@@ -96,8 +154,8 @@ func CreateExportCredentials() (*Credentials, error) {
 			TokenURL       string
 			EnvironmentURL string
 		}{
-			ClientID:       os.Getenv("DT_AUTOMATION_CLIENT_ID"),
-			ClientSecret:   os.Getenv("DT_AUTOMATION_CLIENT_SECRET"),
+			ClientID:       automation_client_id,
+			ClientSecret:   automation_client_secret,
 			EnvironmentURL: automationEnvironmentURL,
 			TokenURL:       automationTokenURL,
 		},

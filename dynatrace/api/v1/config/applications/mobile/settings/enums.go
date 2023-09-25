@@ -64,17 +64,19 @@ var Origins = struct {
 type Aggregation string
 
 var Aggregations = struct {
-	First Aggregation
-	Last  Aggregation
-	Max   Aggregation
-	Min   Aggregation
-	Sum   Aggregation
+	Average Aggregation
+	First   Aggregation
+	Last    Aggregation
+	Max     Aggregation
+	Min     Aggregation
+	Sum     Aggregation
 }{
-	First: Aggregation("FIRST"),
-	Last:  Aggregation("LAST"),
-	Max:   Aggregation("MAX"),
-	Min:   Aggregation("MIN"),
-	Sum:   Aggregation("SUM"),
+	Average: Aggregation("AVERAGE"),
+	First:   Aggregation("FIRST"),
+	Last:    Aggregation("LAST"),
+	Max:     Aggregation("MAX"),
+	Min:     Aggregation("MIN"),
+	Sum:     Aggregation("SUM"),
 }
 
 type IconType string

@@ -30,6 +30,11 @@
 					"value": "log.content"
 				},
 				{
+					"displayName": "Log record level",
+					"icon": "filter",
+					"value": "loglevel"
+				},
+				{
 					"displayName": "K8s container name",
 					"icon": "kubernetes-container-services",
 					"value": "k8s.container.name"
@@ -58,6 +63,26 @@
 					"displayName": "Process technology",
 					"icon": "services",
 					"value": "process.technology"
+				},
+				{
+					"displayName": "Windows log record event ID",
+					"icon": "filter",
+					"value": "winlog.eventid"
+				},
+				{
+					"displayName": "Windows log record source",
+					"icon": "filter",
+					"value": "winlog.provider"
+				},
+				{
+					"displayName": "Windows log record task category",
+					"icon": "filter",
+					"value": "winlog.task"
+				},
+				{
+					"displayName": "Windows log record operational code",
+					"icon": "filter",
+					"value": "winlog.opcode"
 				}
 			],
 			"type": "enum"
@@ -92,6 +117,10 @@
 				{
 					"maxLength": 1024,
 					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "logMonitoringLogSourceRuleNameValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
@@ -112,7 +141,7 @@
 			"displayName": "Active",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
+			"modificationPolicy": "ALWAYS",
 			"nullable": false,
 			"type": "boolean"
 		},
@@ -148,11 +177,24 @@
 			"type": "boolean"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"config-item-title"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring",
 		"group:log-monitoring.ingest-and-processing"
 	],
 	"schemaId": "builtin:logmonitoring.log-storage-settings",
+	"tableColumns": {
+		"sendToStorageColumn": {
+			"pattern": "{send-to-storage, select, true {Include} other {Exclude}}"
+		}
+	},
 	"types": {
 		"Matcher": {
 			"description": "",
@@ -234,10 +276,22 @@
 	},
 	"uiCustomization": {
 		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"columnRef": "sendToStorageColumn",
+					"displayName": "Rule type",
+					"id": "sendToStorage",
+					"type": "text"
+				}
+			],
 			"emptyState": {
 				"text": "**Create your first rule**\n\nAdd the first rule to start ingesting logs"
 			}
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.6"
 }

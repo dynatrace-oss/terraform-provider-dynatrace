@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.11"
+const SchemaVersion = "1.0.12"
 const SchemaID = "builtin:logmonitoring.log-custom-attributes"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*logcustomattributes.Settings] {

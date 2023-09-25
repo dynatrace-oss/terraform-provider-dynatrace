@@ -83,11 +83,20 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Attribute keys must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:service-monitoring",
 		"group:service-monitoring.spans"
 	],
 	"schemaId": "builtin:span-attribute",
 	"types": {},
-	"version": "0.0.32"
+	"version": "0.0.38"
 }

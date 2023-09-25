@@ -9,6 +9,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -72,6 +73,7 @@ type GroupStub struct {
 
 type GetUserGroupsResponse struct {
 	Groups []*GroupStub
+	UID    string `json:"uid"`
 }
 
 func (me *UserServiceClient) Get(email string, v *users.User) error {
@@ -81,6 +83,9 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 	client := iam.NewIAMClient(me)
 
 	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), email), 200, false); err != nil {
+		if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
+			return rest.Error{Code: 404, Message: err.Error()}
+		}
 		return err
 	}
 
@@ -90,6 +95,7 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 	}
 	v.Email = email
 	v.Groups = []string{}
+	v.UID = response.UID
 	groupService := groups.NewGroupService(me.clientID, me.accountID, me.clientID)
 	var visibleGroupIDs api.Stubs
 	if visibleGroupIDs, err = groupService.List(); err != nil {

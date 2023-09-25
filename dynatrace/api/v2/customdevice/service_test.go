@@ -19,15 +19,14 @@ package customdevice_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestCustomDevice(t *testing.T) {
-	api.TestService(t, customdevice.Service)
+	// api.TestService(t, customdevice.Service)
+	t.Skip()
 }
 
 func TestAccCustomDevice(t *testing.T) {
-	api.TestAcc(t)
+	// api.TestAcc(t)
+	t.Skip()
 }

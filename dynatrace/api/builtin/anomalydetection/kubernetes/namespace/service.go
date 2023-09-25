@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.1"
+const SchemaVersion = "1.2"
 const SchemaID = "builtin:anomaly-detection.kubernetes.namespace"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*namespace.Settings] {

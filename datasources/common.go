@@ -18,9 +18,12 @@
 package common
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
+	"github.com/google/uuid"
 )
 
 // TagSubsetCheck checks that the input tags are a subset of source tags
@@ -61,4 +64,25 @@ func StringsToTags(tagList []any, tags *[]tagapi.Tag) {
 		}
 		*tags = append(*tags, tag)
 	}
+}
+
+func NotFoundID(values ...any) string {
+	if os.Getenv("MIGRATION") != "true" {
+		return ""
+	}
+	stringValues := []string{}
+	if len(values) > 0 {
+		for _, value := range values {
+			v := strings.ToLower(strings.ReplaceAll(fmt.Sprintf("%v", value), " ", ""))
+			stringValues = append(stringValues, v)
+		}
+	}
+	if len(stringValues) == 0 {
+		return "TFMIGRATIONID" + uuid.NewString()
+	}
+	ret := "TFMIGRATIONID"
+	for _, value := range stringValues {
+		ret = ret + value
+	}
+	return strings.ReplaceAll(strings.ToLower(ret), " ", "")
 }

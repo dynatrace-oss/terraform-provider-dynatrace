@@ -32,10 +32,10 @@ import (
 // Profile represents an Alerting Profile in Dynatrace
 type Profile struct {
 	ID             string        `json:"-"`
-	Name           string        `json:"name"`                    // The name of the Alerting Profile
-	ManagementZone *string       `json:"managementZone"`          // Define management zone filter for profile
-	SeverityRules  SeverityRules `json:"severityRules,omitempty"` // Define severity rules for profile. A maximum of 100 severity rules is allowed.
-	EventFilters   EventFilters  `json:"eventFilters,omitempty"`  // Define event filters for profile. A maximum of 100 event filters is allowed.
+	Name           string        `json:"name"`                   // The name of the Alerting Profile
+	ManagementZone *string       `json:"managementZone"`         // Define management zone filter for profile
+	SeverityRules  SeverityRules `json:"severityRules"`          // Define severity rules for profile. A maximum of 100 severity rules is allowed.
+	EventFilters   EventFilters  `json:"eventFilters,omitempty"` // Define event filters for profile. A maximum of 100 event filters is allowed.
 	LegacyID       *string       `json:"-"`
 }
 
@@ -147,8 +147,8 @@ func (me *Profile) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("legacy_id"); ok {
 		me.LegacyID = opt.NewString(value.(string))
 	}
+	me.SeverityRules = SeverityRules{}
 	if _, ok := decoder.GetOk("rules.#"); ok {
-		me.SeverityRules = SeverityRules{}
 		if err := me.SeverityRules.UnmarshalHCL(hcl.NewDecoder(decoder, "rules", 0)); err != nil {
 			return err
 		}

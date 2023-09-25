@@ -27,7 +27,7 @@ import (
 )
 
 const SchemaID = "builtin:anomaly-detection.metric-events"
-const SchemaVersion = "1.0.14"
+const SchemaVersion = "1.0.16"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*metricevents.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})

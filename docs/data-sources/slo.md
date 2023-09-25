@@ -36,4 +36,16 @@ output "id" {
 
 ### Read-Only
 
+- `burn_rate_visualization_enabled` (Boolean) Burn rate visualization is enabled (`true`) or disabled (`false`)
+- `description` (String) The custom description of the SLO
+- `enabled` (Boolean) The SLO is enabled (`true`) or disabled (`false`)
+- `evaluation_type` (String) The evaluation type of the SLO. Currently only `AGGREGATE` is supported
+- `evaluation_window` (String) The timeframe during which the SLO is to be evaluated. For the timeframe you can enter expressions like -1h (last hour), -1w (last week) or complex expressions like -2d to now (last two days), -1d/d to now/d (beginning of yesterday to beginning of today).
+- `fast_burn_threshold` (Number) The threshold defines when a burn rate is marked as fast-burning (high-emergency). Burn rates lower than this threshold (and greater than 1) are highlighted as slow-burn (low-emergency)
+- `filter` (String) The entity filter for the SLO evaluation. See [syntax of entity selector](https://dt-url.net/entityselector) for details
 - `id` (String) The ID of this resource.
+- `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
+- `metric_expression` (String) The percentage-based metric expression for the calculation of the SLO
+- `metric_name` (String) No documentation available
+- `target_success` (Number) The target value of the SLO
+- `target_warning` (Number) The warning value of the SLO. At warning state the SLO is still fulfilled but is getting close to failure

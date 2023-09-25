@@ -1,0 +1,33 @@
+---
+layout: ""
+page_title: dynatrace_managed_internet_proxy Resource - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
+description: |-
+  The resource `dynatrace_managed_internet_proxy` covers configuration for cluster proxy
+---
+
+# dynatrace_managed_internet_proxy (Resource)
+
+-> This resource requires one of the cluster API token scopes **Control Management** (`ControlManagement`), **Service Provider API** (`ServiceProviderAPI`), or **Unattended Install** (`UnattendedInstall`)
+
+## Dynatrace Documentation
+
+- Can I use a proxy for internet access? - https://www.dynatrace.com/support/help/managed-cluster/configuration/can-i-use-a-proxy-for-internet-access
+
+- Cluster API v1 - https://www.dynatrace.com/support/help/managed-cluster/cluster-api/cluster-api-v1
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_managed_internet_proxy" "Test" {
+  scheme = "http"
+  server = "zAOE-GV81/65oVgaIlPYTCADGSPFJ9ZqXYNGbxn97dbq:flAI2E8e8bfOvlmaGu"
+  port = 65535
+  user = "string"
+  password = "string"
+  non_proxy_hosts = ["string"]
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 

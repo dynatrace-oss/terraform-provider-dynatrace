@@ -7,8 +7,6 @@ resource "dynatrace_data_privacy" "#name#" {
     comply_with_do_not_track = false
   }
   masking {
-    ip_address_masking                = "public"
-    ip_address_masking_enabled        = true
     personal_data_uri_masking_enabled = true
     user_action_masking_enabled       = true
   }

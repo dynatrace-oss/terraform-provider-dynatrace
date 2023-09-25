@@ -21,7 +21,7 @@ resource "dynatrace_http_monitor" "#name#" {
   name = "#name#" 
   enabled = true 
   frequency = 60 
-  locations = ["${data.dynatrace_synthetic_locations.Test[0].id}"] 
+  locations = [ "${data.dynatrace_synthetic_locations.Test.locations[0].entity_id}" ]
   anomaly_detection {
     loading_time_thresholds {
       enabled = true 
