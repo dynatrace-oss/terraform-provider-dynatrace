@@ -55,7 +55,11 @@ func (me *service) List() (api.Stubs, error) {
 }
 
 func (me *service) Get(id string, v *dashboards.JSONDashboard) error {
-	return me.service.Get(id, v)
+	if err := me.service.Get(id, v); err != nil {
+		return err
+	}
+	v.DeNull()
+	return nil
 }
 
 func (me *service) Validate(v *dashboards.JSONDashboard) error {
@@ -66,14 +70,14 @@ func (me *service) Validate(v *dashboards.JSONDashboard) error {
 }
 
 func (me *service) Create(v *dashboards.JSONDashboard) (*api.Stub, error) {
-	return me.service.Create(v)
+	return me.service.Create(v.EnrichRequireds())
 }
 
 func (me *service) Update(id string, v *dashboards.JSONDashboard) error {
 	jsonDashboard := v
 	oldContents := jsonDashboard.Contents
 	jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
-	err := me.service.Update(id, v)
+	err := me.service.Update(id, v.EnrichRequireds())
 	jsonDashboard.Contents = oldContents
 	return err
 }
