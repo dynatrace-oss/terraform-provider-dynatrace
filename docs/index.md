@@ -61,6 +61,9 @@ The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following p
      * Required for writing attack security configuration.
 
 Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
+
+!> Specifying credentials for Dynatrace environments is considered highly problematic from a security standpoint. Especially in production environments the environment variables `DYNATRACE_ENV_URL` and `DYNATRACE_API_TOKEN` are the recommended way to go when it comes to configuring the Dynatrace Terraform Provider. There exists never a good reason to specify credentials inline.
+
 ```
 provider "dynatrace" {
     dt_env_url    = "https://########.live.dynatrace.com"
