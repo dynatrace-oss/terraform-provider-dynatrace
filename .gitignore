@@ -6,6 +6,7 @@ terraform-provider-dynatrace.exe
 terraform-provider-dynatrace.log
 download.cmd
 playground/*
+build/*
 configuration/*
 configuration_playground/*
 export.cmd
