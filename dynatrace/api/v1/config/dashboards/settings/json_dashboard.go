@@ -123,7 +123,9 @@ func enrm(m map[string]any, bc string, fordiff bool) {
 	if m == nil {
 		return
 	}
-
+	if bc == "dashboardMetadata" {
+		delete(m, "popularity")
+	}
 	if bc == "tiles[#].filterConfig" {
 		ensure(m, "filtersPerEntityType", map[string]any{})
 	}
