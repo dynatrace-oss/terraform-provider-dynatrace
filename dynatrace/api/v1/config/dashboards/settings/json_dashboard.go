@@ -353,6 +353,9 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 				new = diffSuppressedContent(new)
 				return hcl.JSONStringsEqual(old, new)
 			},
+			StateFunc: func(val any) string {
+				return diffSuppressedContent(val.(string))
+			},
 		},
 	}
 }
