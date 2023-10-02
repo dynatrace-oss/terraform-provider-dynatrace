@@ -176,12 +176,16 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 			return err
 		}
 	}
+
 	if len(keyUserActionsToAdd) > 0 {
-		var maxTries = 60
+		var maxTries = 40
 		var successes = 0
 		var requiredSuccesses = 5
 
 		var response = struct {
+			Entities []struct {
+				DisplayName string `json:"displayName"`
+			} `json:"entities"`
 			TotalCount int `json:"totalCount"`
 		}{}
 
@@ -190,14 +194,31 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 				return err
 			}
 
-			if response.TotalCount == len(keyUserActionsToAdd) {
-				successes++
-				if successes >= requiredSuccesses {
+			success := true
+			for _, kua := range applicationConfig.KeyUserActions {
+				found := false
+				for _, respEntity := range response.Entities {
+					if kua == respEntity.DisplayName {
+						found = true
+					}
+				}
+				if !found {
+					success = false
 					break
 				}
 			}
 
-			time.Sleep(2 * time.Second)
+			if success {
+				successes++
+				if successes >= requiredSuccesses {
+					break
+				}
+				time.Sleep(200 * time.Millisecond)
+				continue
+			} else {
+				successes = 0
+				time.Sleep(10 * time.Second)
+			}
 		}
 	}
 
