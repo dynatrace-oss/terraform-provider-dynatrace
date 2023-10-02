@@ -54,6 +54,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (HOST HOST_GROUP environment)",
 			Required:    true,
+			ForceNew:    true,
 		},
 	}
 }

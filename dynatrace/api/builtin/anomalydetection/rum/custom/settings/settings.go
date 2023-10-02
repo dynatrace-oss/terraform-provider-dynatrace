@@ -50,6 +50,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (DEVICE_APPLICATION_METHOD CUSTOM_APPLICATION environment)",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 		"slow_user_actions": {
 			Type:        schema.TypeList,

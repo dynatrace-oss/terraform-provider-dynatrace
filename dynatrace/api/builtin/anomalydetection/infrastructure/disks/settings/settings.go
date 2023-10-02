@@ -35,6 +35,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope for the disk anomaly detection",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"disk": {
 			Type:        schema.TypeList,

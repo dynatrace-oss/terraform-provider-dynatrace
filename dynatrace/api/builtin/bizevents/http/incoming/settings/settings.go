@@ -59,6 +59,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 		"triggers": {
 			Type:        schema.TypeList,

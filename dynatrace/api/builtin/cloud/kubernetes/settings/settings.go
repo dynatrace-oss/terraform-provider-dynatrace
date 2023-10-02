@@ -161,6 +161,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description:      "The scope of this setting (KUBERNETES_CLUSTER)",
 			Optional:         true,
 			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" },
+			ForceNew:         true,
 		},
 	}
 }

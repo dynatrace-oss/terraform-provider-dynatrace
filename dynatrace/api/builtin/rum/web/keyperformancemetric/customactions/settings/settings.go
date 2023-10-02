@@ -37,6 +37,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (APPLICATION_METHOD, APPLICATION)",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"thresholds": {
 			Type:        schema.TypeList,

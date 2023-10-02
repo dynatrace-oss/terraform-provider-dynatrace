@@ -24,6 +24,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The process group ID for availability monitoring",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,

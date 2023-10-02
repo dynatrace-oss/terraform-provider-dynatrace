@@ -43,6 +43,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 	}
 }

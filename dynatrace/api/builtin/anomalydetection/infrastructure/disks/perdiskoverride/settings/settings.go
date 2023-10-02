@@ -40,6 +40,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The id for the disk anomaly detection",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"disk_low_inodes_detection": {
 			Type:        schema.TypeList,
