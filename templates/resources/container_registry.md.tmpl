@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: dynatrace_container_registry Resource - terraform-provider-dynatrace"
+subcategory: "Containers"
+description: |-
+  The resource `dynatrace_container_registry` covers configuration for the URL of the public/private repository hosting container images
+---
+
+# dynatrace_container_registry (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:container-registry`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_container_registry` downloads the existing container URL of the public/private repository hosting container images
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/container/registry/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

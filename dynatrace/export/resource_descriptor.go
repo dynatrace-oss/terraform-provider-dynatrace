@@ -70,6 +70,7 @@ import (
 	kubernetesmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/registry"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/customunit"
@@ -885,6 +886,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.ContainerBuiltinRule: NewResourceDescriptor(builtinmonitoringrule.Service),
 	ResourceTypes.ContainerRule:        NewResourceDescriptor(monitoringrule.Service),
+	ResourceTypes.ContainerRegistry:    NewResourceDescriptor(registry.Service),
 	ResourceTypes.ContainerTechnology: NewResourceDescriptor(
 		containertechnology.Service,
 		Coalesce(Dependencies.Host),
