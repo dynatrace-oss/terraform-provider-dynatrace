@@ -189,7 +189,7 @@
 		"LAConfigSeverityDetectionLimit_Bytes": {
 			"constraints": [
 				{
-					"maximum": 300,
+					"maximum": 8192,
 					"minimum": 1,
 					"type": "RANGE"
 				}
@@ -209,7 +209,7 @@
 		"LAConfigSeverityDetectionLinesLimit": {
 			"constraints": [
 				{
-					"maximum": 5,
+					"maximum": 25,
 					"minimum": 1,
 					"type": "RANGE"
 				}
@@ -250,5 +250,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.13"
+	"version": "1.1.14"
 }
