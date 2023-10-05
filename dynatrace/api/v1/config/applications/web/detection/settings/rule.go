@@ -62,7 +62,6 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 
 func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":                   me.Name,
 		"order":                  me.Order,
 		"application_identifier": me.ApplicationIdentifier,
 		"filter_config":          me.FilterConfig,
