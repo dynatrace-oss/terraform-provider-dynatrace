@@ -20,6 +20,7 @@ package generic
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -218,6 +219,9 @@ func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
 		}
+		if response.StatusCode == 0 {
+			return nil, errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
+		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
 	if err != nil {
@@ -234,6 +238,9 @@ func (me *service) Update(id string, v *generic.Settings) error {
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
+		}
+		if response.StatusCode == 0 {
+			return errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
 		}
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
