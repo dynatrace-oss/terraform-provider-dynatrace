@@ -51,6 +51,18 @@ func DataSource() *schema.Resource {
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
+			"from": {
+				Type:        schema.TypeString,
+				Description: "Limits the time frame entities are queried for - specifically the start of the requested timeframe. Defaults to `now-3y`. You can use one of the following formats:\n  * Timestamp in UTC milliseconds\n  * Human-readable format of `2021-01-25T05:57:01.123+01:00`. If no time zone is specified, `UTC` is used. You can use a space character instead of the `T`. Seconds and fractions of a second are optional\n  * Relative timeframe, back from now. The format is `now-NU/A`, where `N` is the amount of time, `U` is the unit of time, and `A` is an alignment. The alignment rounds all the smaller values to the nearest zero in the past. For example, `now-1y/w` is one year back, aligned by a week. You can also specify relative timeframe without an alignment: `now-NU`. Supported time units for the relative timeframe are:\n    - `m` for minutes\n    - `h` for hours\n    - `d` for days\n    - `w` for weeks\n    - `M` for months\n    - `y` for years",
+				Optional:    true,
+				Default:     "now-3y",
+			},
+			"to": {
+				Type:        schema.TypeString,
+				Description: "Limits the time frame entities are queried for - specifically the end of the requested timeframe. Defaults to `now`. You can use one of the following formats:\n  * Timestamp in UTC milliseconds\n  * Human-readable format of `2021-01-25T05:57:01.123+01:00`. If no time zone is specified, `UTC` is used. You can use a space character instead of the `T`. Seconds and fractions of a second are optional\n  * Relative timeframe, back from now. The format is `now-NU/A`, where `N` is the amount of time, `U` is the unit of time, and `A` is an alignment. The alignment rounds all the smaller values to the nearest zero in the past. For example, `now-1y/w` is one year back, aligned by a week. You can also specify relative timeframe without an alignment: `now-NU`. Supported time units for the relative timeframe are:\n    - `m` for minutes\n    - `h` for hours\n    - `d` for days\n    - `w` for weeks\n    - `M` for months\n    - `y` for years",
+				Optional:    true,
+				Default:     "now",
+			},
 		},
 	}
 }
@@ -68,6 +80,17 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if v, ok := d.GetOk("entity_selector"); ok {
 		entitySelector = v.(string)
 	}
+	var from string
+	if v, ok := d.GetOk("from"); ok {
+		from = v.(string)
+	}
+	var to string
+	if v, ok := d.GetOk("to"); ok {
+		to = v.(string)
+	}
+	if to == "now" {
+		to = ""
+	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
 		return err
@@ -75,7 +98,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 
 	var settings entities.Settings
 	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
-	service := srv.Service(entityType, entitySelector, creds)
+	service := srv.Service(entityType, entitySelector, from, to, creds)
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}

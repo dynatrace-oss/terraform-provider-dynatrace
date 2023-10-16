@@ -31,25 +31,36 @@ import (
 
 const SchemaID = "v2:environment:entities"
 
-func Service(entityType string, entitySelector string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
-	return &service{entityType: entityType, entitySelector: entitySelector, client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(entityType string, entitySelector string, from string, to string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
+	return &service{entityType: entityType, entitySelector: entitySelector, from: from, to: to, client: rest.DefaultClient(credentials.URL, credentials.Token)}
 }
 
 type service struct {
 	client         rest.Client
 	entityType     string
 	entitySelector string
+	from           string
+	to             string
 }
 
 func (me *service) Get(id string, v *entities.Settings) (err error) {
+	from := me.from
+	to := me.to
+	if len(from) == 0 {
+		from = "now-3y"
+	}
+	if len(to) > 0 {
+		to = fmt.Sprintf("&to=%s", url.QueryEscape(to))
+	}
+
 	var dataObj entities.Settings
 	if len(me.entitySelector) > 0 {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=%s&fields=tags,properties`, url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties`, to, url.QueryEscape(from), url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	} else {
 		entitySelector := fmt.Sprintf("type(\"%s\")", me.entityType)
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&entitySelector=%s&fields=tags,properties`, url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	}

@@ -101,7 +101,7 @@ func (me *service) Get(id string, v *processgroups.AnomalyDetection) error {
 }
 
 func (me *service) List() (api.Stubs, error) {
-	srv := cache.Read(entities.Service("PROCESS_GROUP", "", me.credentials), true)
+	srv := cache.Read(entities.Service("PROCESS_GROUP", "", "", "", me.credentials), true)
 	v := new(entitiesSettings.Settings)
 	if err := srv.Get("", v); err != nil {
 		return nil, err
