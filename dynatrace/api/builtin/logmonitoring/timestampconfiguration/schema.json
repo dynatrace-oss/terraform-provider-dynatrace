@@ -10,8 +10,8 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Dynatrace allows you to define rules that control log data timestamps.\n\nThe timestamp configuration is based on rules containing matchers. These rules determine how Dynatrace Log Monitoring interprets the incoming log data timestamps.",
-	"displayName": "Timestamp configuration",
+	"description": "Dynatrace OneAgent detects number of timestamp formats in your log records. In case of custom timestamps included in log record define them below. This will assure data quality for analysis.\nTimestamp detection also influence proper log splitting. If no timestamp is detected or log format prevents auto-timestamping, adjacent lines can be merged into single log record (also indentations are considered).",
+	"displayName": "Timestamp/Splitting patterns",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -329,5 +329,5 @@
 			}
 		}
 	},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

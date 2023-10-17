@@ -4,8 +4,8 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "OneAgent automatically discovers new log files for important processes on supported platforms. Auto-detected logs are listed on the Process Group Instance or Host screen.",
-	"displayName": "Custom log source configuration",
+	"description": "Add custom log sources before creating log ingest rule in case of:\n* process is not important (this mean that log source is not automatically discovered by OneAgent)\n* logs from Windows event logs (other than Windows system log, Windows security log, or Windows Application log)\n* AIX logs\n* allowing binary content\n* unsupported rotation pattern\n\nOneAgent automatically discovers new log files for important processes on supported platforms. Auto-detected logs are listed on the Process Group Instance or Host screen.",
+	"displayName": "Custom log sources",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -271,5 +271,5 @@
 			}
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

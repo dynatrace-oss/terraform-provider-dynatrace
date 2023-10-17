@@ -5,7 +5,7 @@
 		"environment"
 	],
 	"description": "Configure OneAgent options for Dynatrace Log Monitoring",
-	"displayName": "OneAgent",
+	"displayName": "Advanced settings",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -27,8 +27,8 @@
 		},
 		"LAConfigContainersLogsDetectionEnabled": {
 			"default": true,
-			"description": "",
-			"displayName": "Detect logs inside containers",
+			"description": "Enabling this option configures OneAgent to detect log messages written to the containerized application's stdout/stderr streams.",
+			"displayName": "Detect logs of containerized applications",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -250,5 +250,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.14"
+	"version": "1.1.15"
 }

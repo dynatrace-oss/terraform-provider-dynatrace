@@ -3,7 +3,7 @@ layout: ""
 page_title: dynatrace_log_timestamp Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
-  The resource `dynatrace_log_timestamp` covers configuration for log timestamp
+  The resource `dynatrace_log_timestamp` covers configuration for log timestamp/splitting patterns
 ---
 
 # dynatrace_log_timestamp (Resource)
@@ -18,7 +18,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_log_timestamp` downloads all existing log timestamp configuration
+- `terraform-provider-dynatrace -export dynatrace_log_timestamp` downloads all existing log timestamp/splitting patterns
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

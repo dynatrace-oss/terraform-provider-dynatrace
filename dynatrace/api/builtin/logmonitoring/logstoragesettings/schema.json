@@ -4,8 +4,8 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "Dynatrace allows you to include and exclude specific log sources for analysis by Dynatrace Log Monitoring.\n\nThe storage configuration is based on rules that use matchers for hierarchy, log path, and process groups. These rules determine the upload of log files known to OneAgent, auto-detected log files, and custom log files defined per process group.\n\nAdd multiple scopes if you want to include or exclude items based on multiple attributes.",
-	"displayName": "Log storage configuration",
+	"description": "You can include and exclude specific log sources for analysis by Dynatrace Log Monitoring. The ingest of log records is based on below rules that use matchers like log path, log levels, process groups, k8s specific selectors and more.\n\nLog files are automatically discovered but in some cases you'll need to define custom log files.",
+	"displayName": "Log ingest rules",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -293,5 +293,5 @@
 			}
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }
