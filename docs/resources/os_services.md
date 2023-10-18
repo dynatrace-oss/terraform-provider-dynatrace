@@ -57,7 +57,7 @@ resource "dynatrace_os_services" "#name#" {
 
 - `alerting` (Boolean) Toggle the switch in order to enable or disable alerting for this policy
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `monitoring` (Boolean) Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics consume custom metrics (DDUs). Refer to [documentation](https://dt-url.net/vl03xzk) for DDU consumption examples. Each monitored service consumes one custom metric.
+- `monitoring` (Boolean) Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.
 - `name` (String) Rule name
 - `system` (String) Possible Values: `LINUX`, `WINDOWS`
 
@@ -117,10 +117,6 @@ Required:
 <a id="nestedblock--detection_conditions_linux--linux_detection_condition"></a>
 ### Nested Schema for `detection_conditions_linux.linux_detection_condition`
 
-Required:
-
-- `property` (String) Possible Values: `ServiceName`, `StartupType`
-
 Optional:
 
 - `condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
@@ -134,6 +130,9 @@ Available logic operations:
 - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.
 - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.
 - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.
+- `host_metadata_condition` (Block List, Max: 1) Custom metadata (see [below for nested schema](#nestedblock--detection_conditions_linux--linux_detection_condition--host_metadata_condition))
+- `property` (String) Possible Values: `ServiceName`, `StartupType`
+- `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeOsService`
 - `startup_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
 
 - `$eq(enabled)` – Matches services with startup type equal to enabled.
@@ -149,6 +148,25 @@ Use one of the following values as a parameter for this condition:
 - `static`
 - `disabled`
 
+<a id="nestedblock--detection_conditions_linux--linux_detection_condition--host_metadata_condition"></a>
+### Nested Schema for `detection_conditions_linux.linux_detection_condition.host_metadata_condition`
+
+Required:
+
+- `metadata_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
+
+- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
+- `$eq(production)` – Matches if `production` matches the host metadata value exactly.
+- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
+- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.
+
+Available logic operations:
+- `$not($eq(production))` – Matches if the host metadata value is different from `production`.
+- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
+- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+- `metadata_key` (String) Key
+
+
 
 
 <a id="nestedblock--detection_conditions_windows"></a>
@@ -160,10 +178,6 @@ Required:
 
 <a id="nestedblock--detection_conditions_windows--detection_conditions_window"></a>
 ### Nested Schema for `detection_conditions_windows.detection_conditions_window`
-
-Required:
-
-- `property` (String) Possible Values: `DisplayName`, `Manufacturer`, `Path`, `ServiceName`, `StartupType`
 
 Optional:
 
@@ -178,6 +192,9 @@ Available logic operations:
 - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.
 - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.
 - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.
+- `host_metadata_condition` (Block List, Max: 1) Custom metadata (see [below for nested schema](#nestedblock--detection_conditions_windows--detection_conditions_window--host_metadata_condition))
+- `property` (String) Possible Values: `DisplayName`, `Manufacturer`, `Path`, `ServiceName`, `StartupType`
+- `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeOsService`
 - `startup_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
 
 - `$eq(manual)` – Matches services that are started manually.
@@ -195,6 +212,25 @@ Use one of the following values as a parameter for this condition:
 - `auto_trigger` for Automatic (Trigger Start)
 - `auto_delay_trigger` for Automatic (Delayed Start, Trigger Start)
 - `disabled` for Disabled
+
+<a id="nestedblock--detection_conditions_windows--detection_conditions_window--host_metadata_condition"></a>
+### Nested Schema for `detection_conditions_windows.detection_conditions_window.host_metadata_condition`
+
+Required:
+
+- `metadata_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
+
+- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
+- `$eq(production)` – Matches if `production` matches the host metadata value exactly.
+- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
+- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.
+
+Available logic operations:
+- `$not($eq(production))` – Matches if the host metadata value is different from `production`.
+- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
+- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+- `metadata_key` (String) Key
+
 
 
 

@@ -3,7 +3,7 @@ layout: ""
 page_title: dynatrace_log_storage Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
-  The resource `dynatrace_log_storage` covers configuration for log storage settings
+  The resource `dynatrace_log_storage` covers configuration for log ingest rules
 ---
 
 # dynatrace_log_storage (Resource)
@@ -18,7 +18,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_log_storage` downloads all existing log storage setting configuration
+- `terraform-provider-dynatrace -export dynatrace_log_storage` downloads all existing log ingest rules
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

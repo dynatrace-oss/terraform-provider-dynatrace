@@ -49,7 +49,7 @@ func (me *NetworkZone) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Name of the network zone, not case sensitive. Dynatrace stores the name in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot",
+			Description: "Name of the network zone cannot be modified once created. Dynatrace stores the field in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot",
 			Optional:    true,
 		},
 		"description": {
