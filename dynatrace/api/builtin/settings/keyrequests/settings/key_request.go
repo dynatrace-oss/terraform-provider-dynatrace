@@ -39,6 +39,7 @@ func (me *KeyRequest) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "ID of Dynatrace Service, eg. SERVICE-123ABC45678EFGH",
+			ForceNew:    true,
 		},
 		"names": {
 			Type:        schema.TypeSet,

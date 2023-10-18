@@ -384,6 +384,7 @@ func Provider() *schema.Provider {
 			"dynatrace_container_builtin_rule":             resources.NewGeneric(export.ResourceTypes.ContainerBuiltinRule).Resource(),
 			"dynatrace_container_rule":                     resources.NewGeneric(export.ResourceTypes.ContainerRule).Resource(),
 			"dynatrace_container_technology":               resources.NewGeneric(export.ResourceTypes.ContainerTechnology).Resource(),
+			"dynatrace_container_registry":                 resources.NewGeneric(export.ResourceTypes.ContainerRegistry).Resource(),
 			"dynatrace_remote_environments":                resources.NewGeneric(export.ResourceTypes.RemoteEnvironments).Resource(),
 			"dynatrace_web_app_custom_errors":              resources.NewGeneric(export.ResourceTypes.WebAppCustomErrors).Resource(),
 			"dynatrace_web_app_request_errors":             resources.NewGeneric(export.ResourceTypes.WebAppRequestErrors).Resource(),

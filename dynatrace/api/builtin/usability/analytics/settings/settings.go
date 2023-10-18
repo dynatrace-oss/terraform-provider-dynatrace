@@ -38,6 +38,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 		"detect_rage_clicks": {
 			Type:        schema.TypeBool,

@@ -73,6 +73,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (SYNTHETIC_TEST). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 	}
 }

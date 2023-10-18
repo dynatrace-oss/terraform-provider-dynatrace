@@ -45,6 +45,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (MOBILE_APPLICATION, CUSTOM_APPLICATION)",
 			Required:    true,
+			ForceNew:    true,
 		},
 	}
 }

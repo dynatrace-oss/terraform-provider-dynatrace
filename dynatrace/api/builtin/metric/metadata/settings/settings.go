@@ -69,6 +69,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (metric)",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"source_entity_type": {
 			Type:        schema.TypeString,

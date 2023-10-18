@@ -77,6 +77,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (user, userdefaults)",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"theme": {
 			Type:        schema.TypeString,

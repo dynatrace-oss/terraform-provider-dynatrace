@@ -123,7 +123,48 @@ func enrm(m map[string]any, bc string, fordiff bool) {
 	if m == nil {
 		return
 	}
-
+	if bc == "tiles[#].queries[#].filterBy" {
+		if v, found := m["nestedFilters"]; found {
+			if nestedFilters, ok := v.([]any); ok {
+				jsons := []string{}
+				for _, nestedFilter := range nestedFilters {
+					if nestedFilterMap, ok := nestedFilter.(map[string]any); ok {
+						if v, found := nestedFilterMap["criteria"]; found {
+							if criteria, ok := v.([]any); ok {
+								cjsons := []string{}
+								for _, crit := range criteria {
+									data, _ := json.Marshal(crit)
+									cjsons = append(cjsons, string(data))
+								}
+								slices.Sort(cjsons)
+								sortedCriteria := []any{}
+								for _, js := range cjsons {
+									nf := map[string]any{}
+									json.Unmarshal([]byte(js), &nf)
+									sortedCriteria = append(sortedCriteria, nf)
+								}
+								nestedFilterMap["criteria"] = sortedCriteria
+								nestedFilter = nestedFilterMap
+							}
+						}
+					}
+					data, _ := json.Marshal(nestedFilter)
+					jsons = append(jsons, string(data))
+				}
+				slices.Sort(jsons)
+				sortedNestedFilters := []any{}
+				for _, js := range jsons {
+					nf := map[string]any{}
+					json.Unmarshal([]byte(js), &nf)
+					sortedNestedFilters = append(sortedNestedFilters, nf)
+				}
+				m["nestedFilters"] = sortedNestedFilters
+			}
+		}
+	}
+	if bc == "dashboardMetadata" {
+		delete(m, "popularity")
+	}
 	if bc == "tiles[#].filterConfig" {
 		ensure(m, "filtersPerEntityType", map[string]any{})
 	}
@@ -157,6 +198,7 @@ func enrm(m map[string]any, bc string, fordiff bool) {
 		ensure(m, "tiles", []any{})
 	}
 	if bc == "tiles[#]" {
+		ensure(m, "queriesSettings", map[string]any{"resolution": ""})
 		ensure(m, "assignedEntities", []any{})
 		ensure(m, "query", "")
 		ensure(m, "bounds", map[string]any{})
@@ -350,6 +392,9 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 				old = diffSuppressedContent(old)
 				new = diffSuppressedContent(new)
 				return hcl.JSONStringsEqual(old, new)
+			},
+			StateFunc: func(val any) string {
+				return diffSuppressedContent(val.(string))
 			},
 		},
 	}

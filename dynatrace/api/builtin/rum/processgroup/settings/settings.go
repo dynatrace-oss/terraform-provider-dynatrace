@@ -42,6 +42,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting - PROCESS_GROUP-XXXXXXXXXXXXXXXX",
 			Required:    true,
+			ForceNew:    true,
 		},
 	}
 }

@@ -244,6 +244,7 @@ var ResourceTypes = struct {
 	ContainerBuiltinRule                ResourceType
 	ContainerRule                       ResourceType
 	ContainerTechnology                 ResourceType
+	ContainerRegistry                   ResourceType
 	RemoteEnvironments                  ResourceType
 	WebAppCustomErrors                  ResourceType
 	WebAppRequestErrors                 ResourceType
@@ -495,6 +496,7 @@ var ResourceTypes = struct {
 	"dynatrace_container_builtin_rule",
 	"dynatrace_container_rule",
 	"dynatrace_container_technology",
+	"dynatrace_container_registry",
 	"dynatrace_remote_environments",
 	"dynatrace_web_app_custom_errors",
 	"dynatrace_web_app_request_errors",

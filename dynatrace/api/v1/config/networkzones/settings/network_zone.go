@@ -20,6 +20,7 @@ package networkzones
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	"github.com/google/uuid"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -48,7 +49,7 @@ func (me *NetworkZone) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Name of the network zone, not case sensitive. Dynatrace stores the name in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot",
+			Description: "Name of the network zone cannot be modified once created. Dynatrace stores the field in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot",
 			Optional:    true,
 		},
 		"description": {
@@ -93,15 +94,21 @@ func (me *NetworkZone) PrepareMarshalHCL(decoder hcl.Decoder) error {
 }
 
 func (me *NetworkZone) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"name":                              me.NetworkZoneName,
+	if err := properties.EncodeAll(map[string]any{
+		"name":                              me.ID,
 		"description":                       me.Description,
 		"alternative_zones":                 me.AltZones,
 		"num_of_oneagents_from_other_zones": me.NumOfOneAgentsFromOtherZones,
 		"num_of_oneagents_using":            me.NumOfOneAgentsUsing,
 		"num_of_configured_activegates":     me.NumofConfiguredActiveGates,
 		"num_of_configured_oneagents":       me.NumOfConfiguredOneAgents,
-	})
+	}); err != nil {
+		return err
+	}
+	if _, err := uuid.Parse(*me.ID); err == nil {
+		delete(properties, "name")
+	}
+	return nil
 }
 
 func (me *NetworkZone) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -47,6 +47,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (CUSTOM_APPLICATION environment)",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 	}
 }

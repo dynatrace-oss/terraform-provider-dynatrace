@@ -39,6 +39,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope for the database anomaly detection",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"database_connections": {
 			Type:        schema.TypeList,

@@ -42,6 +42,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings",
 			Required:    true,
+			ForceNew:    true,
 		},
 	}
 }

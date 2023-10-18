@@ -31,6 +31,26 @@ output "Service_List" {
 
 - `entities` (Block List) (see [below for nested schema](#nestedblock--entities))
 - `entity_selector` (String) An entity selector that filters the entities of interest. You cannot use `type` and `entity_selector` at the same time
+- `from` (String) Limits the time frame entities are queried for - specifically the start of the requested timeframe. Defaults to `now-3y`. You can use one of the following formats:
+  * Timestamp in UTC milliseconds
+  * Human-readable format of `2021-01-25T05:57:01.123+01:00`. If no time zone is specified, `UTC` is used. You can use a space character instead of the `T`. Seconds and fractions of a second are optional
+  * Relative timeframe, back from now. The format is `now-NU/A`, where `N` is the amount of time, `U` is the unit of time, and `A` is an alignment. The alignment rounds all the smaller values to the nearest zero in the past. For example, `now-1y/w` is one year back, aligned by a week. You can also specify relative timeframe without an alignment: `now-NU`. Supported time units for the relative timeframe are:
+    - `m` for minutes
+    - `h` for hours
+    - `d` for days
+    - `w` for weeks
+    - `M` for months
+    - `y` for years
+- `to` (String) Limits the time frame entities are queried for - specifically the end of the requested timeframe. Defaults to `now`. You can use one of the following formats:
+  * Timestamp in UTC milliseconds
+  * Human-readable format of `2021-01-25T05:57:01.123+01:00`. If no time zone is specified, `UTC` is used. You can use a space character instead of the `T`. Seconds and fractions of a second are optional
+  * Relative timeframe, back from now. The format is `now-NU/A`, where `N` is the amount of time, `U` is the unit of time, and `A` is an alignment. The alignment rounds all the smaller values to the nearest zero in the past. For example, `now-1y/w` is one year back, aligned by a week. You can also specify relative timeframe without an alignment: `now-NU`. Supported time units for the relative timeframe are:
+    - `m` for minutes
+    - `h` for hours
+    - `d` for days
+    - `w` for weeks
+    - `M` for months
+    - `y` for years
 - `type` (String) The type of the entities to find, e.g. `HOST`. You cannot use `type` and `entity_selector` at the same time
 
 ### Read-Only

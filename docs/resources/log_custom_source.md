@@ -3,7 +3,7 @@ layout: ""
 page_title: dynatrace_log_custom_source Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
-  The resource `dynatrace_log_custom_source` covers configuration for custom log source
+  The resource `dynatrace_log_custom_source` covers configuration for custom log sources
 ---
 
 # dynatrace_log_custom_source (Resource)
@@ -18,7 +18,7 @@ description: |-
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_log_custom_source` downloads all existing custom log source configuration
+- `terraform-provider-dynatrace -export dynatrace_log_custom_source` downloads all existing custom log sources
 
 The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 

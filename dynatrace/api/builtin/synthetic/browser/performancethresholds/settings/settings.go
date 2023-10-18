@@ -43,6 +43,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (SYNTHETIC_TEST)",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"thresholds": {
 			Type:        schema.TypeList,

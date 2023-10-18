@@ -200,11 +200,17 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "ipRangeOverlapValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring.geographic-regions",
 		"group:web-and-mobile-monitoring"
 	],
 	"schemaId": "builtin:rum.ip-mappings",
 	"types": {},
-	"version": "1.1.1"
+	"version": "1.1.2"
 }

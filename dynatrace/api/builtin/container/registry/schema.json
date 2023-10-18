@@ -1,0 +1,43 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "The URL of the public/private repository hosting container images",
+	"displayName": "Container Registry",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"containerRegistry": {
+			"constraints": [
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Typically set without protocol. Leave empty to use default configuration",
+			"displayName": "Container Registry",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, private.registry.org"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:container-registry",
+	"types": {},
+	"version": "1"
+}

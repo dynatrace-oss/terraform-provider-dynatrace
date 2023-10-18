@@ -27,6 +27,16 @@ var LinuxServiceProps = struct {
 	"StartupType",
 }
 
+type RuleType string
+
+var RuleTypes = struct {
+	Ruletypehost      RuleType
+	Ruletypeosservice RuleType
+}{
+	"RuleTypeHost",
+	"RuleTypeOsService",
+}
+
 type System string
 
 var Systems = struct {

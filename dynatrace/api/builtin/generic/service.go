@@ -18,8 +18,10 @@
 package generic
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -33,6 +35,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"net/http"
@@ -77,6 +80,31 @@ var httpListener = &crest.HTTPListener{
 	},
 }
 
+type LoggingRoundTripper struct {
+	RoundTripper http.RoundTripper
+}
+
+func (lrt *LoggingRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
+	rest.Logger.Println(r.Method, r.URL)
+	if r.Body != nil {
+		buf := new(bytes.Buffer)
+		io.Copy(buf, r.Body)
+		rest.Logger.Println("  ", buf.String())
+		r.Body = io.NopCloser(bytes.NewBuffer(buf.Bytes()))
+	}
+	res, err := lrt.RoundTripper.RoundTrip(r)
+	if err != nil {
+		rest.Logger.Println("  error:", err.Error())
+	}
+	if res != nil && res.Body != nil {
+		buf := new(bytes.Buffer)
+		io.Copy(buf, res.Body)
+		rest.Logger.Println("  =>", buf.String())
+		res.Body = io.NopCloser(bytes.NewBuffer(buf.Bytes()))
+	}
+	return res, err
+}
+
 func (me *service) TokenClient() *crest.Client {
 	var parsedURL *url.URL
 	parsedURL, _ = url.Parse(me.credentials.URL)
@@ -98,6 +126,10 @@ func (me *service) Client(schemaIDs string) *settings20.Client {
 
 	tokenClient := me.TokenClient()
 
+	if os.Getenv("DYNATRACE_DEBUG_GENERIC_SETTINGS") == "true" {
+		http.DefaultClient.Transport = &LoggingRoundTripper{http.DefaultTransport}
+	}
+
 	oauthClient := crest.NewClient(
 		parsedURL,
 		auth.NewOAuthBasedClient(
@@ -106,7 +138,7 @@ func (me *service) Client(schemaIDs string) *settings20.Client {
 				ClientID:     me.credentials.Automation.ClientID,
 				ClientSecret: me.credentials.Automation.ClientSecret,
 				TokenURL:     me.credentials.Automation.TokenURL,
-			}),
+				AuthStyle:    oauth2.AuthStyleInParams}),
 		crest.WithHTTPListener(httpListener),
 	)
 
@@ -218,6 +250,9 @@ func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
 		}
+		if response.StatusCode == 0 {
+			return nil, errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
+		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
 	if err != nil {
@@ -234,6 +269,9 @@ func (me *service) Update(id string, v *generic.Settings) error {
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
+		}
+		if response.StatusCode == 0 {
+			return errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
 		}
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}

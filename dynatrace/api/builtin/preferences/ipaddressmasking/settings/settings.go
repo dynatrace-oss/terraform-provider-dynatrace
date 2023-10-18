@@ -46,6 +46,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (MOBILE_APPLICATION, CUSTOM_APPLICATION, APPLICATION). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
+			ForceNew:    true,
 		},
 		"type": {
 			Type:        schema.TypeString,

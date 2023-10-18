@@ -29,7 +29,7 @@ The full documentation of the export feature is available [here](https://registr
 
 - `alternative_zones` (List of String) A list of alternative network zones.
 - `description` (String) A short description of the network zone
-- `name` (String) Name of the network zone, not case sensitive. Dynatrace stores the name in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot
+- `name` (String) Name of the network zone cannot be modified once created. Dynatrace stores the field in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot
 - `num_of_configured_activegates` (Number) The number of ActiveGates in the network zone.
 - `num_of_configured_oneagents` (Number) The number of OneAgents that are configured to use the network zone as primary.
 - `num_of_oneagents_from_other_zones` (Number) The number of OneAgents from other network zones that are using ActiveGates in the network zone.

@@ -135,26 +135,51 @@ func SaveKeyUserActions(client rest.Client, id string, v *web.Application) error
 		}
 	}
 
-	successes := 0
-	numRequiredSuccesses := 20
-	for {
-		testKual := web.KeyUserActionList{}
-		req = client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)), 200)
-		if err = req.Finish(&testKual); err != nil {
-			return err
-		}
+	if len(keyUserActionsToCreate) > 0 {
+		var maxTries = 40
+		var successes = 0
+		var requiredSuccesses = 5
 
-		if len(testKual.KeyUserActions) == len(v.KeyUserActions) {
-			successes = successes + 1
-			if successes >= numRequiredSuccesses {
-				break
+		var response = struct {
+			Entities []struct {
+				DisplayName string `json:"displayName"`
+			} `json:"entities"`
+			TotalCount int `json:"totalCount"`
+		}{}
+
+		for i := 0; i < maxTries; i++ {
+			if err = client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("APPLICATION_METHOD"),fromRelationships.isApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
+				return err
 			}
-			time.Sleep(time.Millisecond * 200)
-		} else {
-			successes = 0
-			time.Sleep(time.Second * 10)
+
+			success := true
+			for _, kua := range v.KeyUserActions {
+				found := false
+				for _, respEntity := range response.Entities {
+					if kua.Name == respEntity.DisplayName {
+						found = true
+					}
+				}
+				if !found {
+					success = false
+					break
+				}
+			}
+
+			if success {
+				successes++
+				if successes >= requiredSuccesses {
+					break
+				}
+				time.Sleep(200 * time.Millisecond)
+				continue
+			} else {
+				successes = 0
+				time.Sleep(10 * time.Second)
+			}
 		}
 	}
+
 	return nil
 }
 
