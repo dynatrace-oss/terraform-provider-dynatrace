@@ -7,6 +7,8 @@
 
 Please check the documentation within the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) for how to use and configure this Provider as well as for currrently supported resources and data sources.
 
+Additional information can be found under [Dynatrace Configuration as Code via Terraform](https://www.dynatrace.com/support/help/manage/configuration-as-code/terraform).
+
 ## Exporting existing configuration from a Dynatrace Environment
 
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
