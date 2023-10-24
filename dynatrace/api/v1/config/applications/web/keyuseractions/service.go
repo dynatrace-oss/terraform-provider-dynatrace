@@ -57,32 +57,6 @@ type KeyUserAction struct {
 	MEIdentifier string `json:"meIdentifier"`
 }
 
-// {
-// 	"totalCount": 1,
-// 	"pageSize": 50,
-// 	"entities": [
-// 	  {
-// 		"entityId": "APPLICATION_METHOD-889EFBCD62C0A9EC",
-// 		"type": "APPLICATION_METHOD",
-// 		"displayName": "Loading of page /example",
-// 		"fromRelationships": {
-// 		  "isApplicationMethodOf": [
-// 			{
-// 			  "id": "APPLICATION-0DA2132F908F4A55",
-// 			  "type": "APPLICATION"
-// 			}
-// 		  ],
-// 		  "isApplicationMethodOfGroup": [
-// 			{
-// 			  "id": "APPLICATION_METHOD_GROUP-28C0BF69FAA99BF4",
-// 			  "type": "APPLICATION_METHOD_GROUP"
-// 			}
-// 		  ]
-// 		}
-// 	  }
-// 	]
-//   }
-
 type QueryForWebAppIDResponse struct {
 	Entities []struct {
 		FromRelationships struct {
