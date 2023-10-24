@@ -183,6 +183,7 @@ func (me *Application) Schema() map[string]*schema.Schema {
 			Description: "User Action names to be flagged as Key User Actions",
 			Elem:        &schema.Resource{Schema: new(KeyUserActions).Schema()},
 			Optional:    true,
+			Deprecated:  "Configuring Key User Actions within `dynatrace_web_application` is discouraged. Use the dedicated resource `dynatrace_key_user_action` instead.",
 		},
 	}
 }
