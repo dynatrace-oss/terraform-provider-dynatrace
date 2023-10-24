@@ -477,6 +477,7 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_public_endpoints":           publicendpoints.Resource(),
 			"dynatrace_managed_backup":                     backup.Resource(),
 			"dynatrace_managed_remote_access":              remoteaccess.Resource(),
+			"dynatrace_key_user_action":                    resources.NewGeneric(export.ResourceTypes.KeyUserAction).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

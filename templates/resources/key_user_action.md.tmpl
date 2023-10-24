@@ -1,0 +1,33 @@
+---
+layout: ""
+page_title: dynatrace_key_user_action Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
+description: |-
+  The resource `dynatrace_key_user_action` covers configuration of Key User Actions for web applications
+---
+
+# dynatrace_key_user_action (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`), **Write configuration** (`WriteConfig`) and **Read Entities** (`entities.read`)
+
+## Dynatrace Documentation
+
+- RUM setup and configuration for web applications - https://www.dynatrace.com/support/help/how-to-use-dynatrace/real-user-monitoring/setup-and-configuration/web-applications
+
+- Web application configuration API for Key User Actions - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/rum/web-application-configuration-api#edit-key-user-actions-list
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_key_user_action` downloads all existing Key User Actions
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+The following example showcases how to manage Key User Actions separately from Web Applications using a dedicated resource.
+While it is still possible to embed `key_user_actions` into the resource `dynatrace_web_application`, doing so is discouraged.
+
+{{ tffile "dynatrace/api/v1/config/applications/web/keyuseractions/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
