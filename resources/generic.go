@@ -322,10 +322,9 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 	if contextGetter, ok := service.(settings.ContextGetter[settings.Settings]); ok {
 		if ctx.Value(settings.ContextKeyStateConfig) == nil {
 			stateConfig := me.Settings()
-			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err != nil {
-				return diag.FromErr(err)
+			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 			}
-			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
 		err = contextGetter.GetWithContext(ctx, d.Id(), sttngs)
 	} else {
