@@ -29,7 +29,6 @@ output "Service_List" {
 
 ### Optional
 
-- `entities` (Block List) (see [below for nested schema](#nestedblock--entities))
 - `entity_selector` (String) An entity selector that filters the entities of interest. You cannot use `type` and `entity_selector` at the same time
 - `from` (String) Limits the time frame entities are queried for - specifically the start of the requested timeframe. Defaults to `now-3y`. You can use one of the following formats:
   * Timestamp in UTC milliseconds
@@ -55,38 +54,33 @@ output "Service_List" {
 
 ### Read-Only
 
+- `entities` (List of Object) (see [below for nested schema](#nestedatt--entities))
 - `id` (String) The ID of this resource.
 
-<a id="nestedblock--entities"></a>
+<a id="nestedatt--entities"></a>
 ### Nested Schema for `entities`
-
-Optional:
-
-- `display_name` (String) The name of the entity, displayed in the UI.
-- `entity_id` (String) The ID of the entity.
-- `tags` (Block List) A set of tags assigned to the entity. (see [below for nested schema](#nestedblock--entities--tags))
-- `type` (String) The type of the entity.
 
 Read-Only:
 
-- `properties` (Map of String) Properties defining the entity.
+- `display_name` (String)
+- `entity_id` (String)
+- `properties` (Map of String)
+- `tags` (List of Object) (see [below for nested schema](#nestedobjatt--entities--tags))
+- `type` (String)
 
-<a id="nestedblock--entities--tags"></a>
+<a id="nestedobjatt--entities--tags"></a>
 ### Nested Schema for `entities.tags`
 
-Optional:
+Read-Only:
 
-- `tag` (Block List) A tag assigned to the entity (see [below for nested schema](#nestedblock--entities--tags--tag))
+- `tag` (List of Object) (see [below for nested schema](#nestedobjatt--entities--tags--tag))
 
-<a id="nestedblock--entities--tags--tag"></a>
+<a id="nestedobjatt--entities--tags--tag"></a>
 ### Nested Schema for `entities.tags.tag`
 
-Required:
+Read-Only:
 
-- `context` (String) The origin of the tag, such as AWS or Cloud Foundry. Custom tags use the `CONTEXTLESS` value
-- `key` (String) The key of the tag. Custom tags have the tag value here
-
-Optional:
-
-- `string_representation` (String) The string representation of the tag
-- `value` (String) The value of the tag. Not applicable to custom tags
+- `context` (String)
+- `key` (String)
+- `string_representation` (String)
+- `value` (String)
