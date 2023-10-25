@@ -231,10 +231,9 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	if contextUpdater, ok := service.(settings.ContextUpdater[settings.Settings]); ok {
 		if ctx.Value(settings.ContextKeyStateConfig) == nil {
 			stateConfig := me.Settings()
-			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err != nil {
-				return diag.FromErr(err)
+			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 			}
-			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
 		err = contextUpdater.UpdateWithContext(ctx, d.Id(), sttngs)
 	} else {
