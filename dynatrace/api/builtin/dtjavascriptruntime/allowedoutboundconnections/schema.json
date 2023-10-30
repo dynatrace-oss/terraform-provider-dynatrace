@@ -46,7 +46,7 @@
 				"hostList": {
 					"description": "",
 					"displayName": "Allow-list",
-					"documentation": "The Dynatrace JavaScript runtime will only be to connect to these hosts.",
+					"documentation": "The Dynatrace JavaScript runtime will only be able to connect to these hosts.",
 					"items": {
 						"constraints": [
 							{
@@ -82,5 +82,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
