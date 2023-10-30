@@ -47,6 +47,7 @@ func (me *MetadataFilterItems) UnmarshalHCL(decoder hcl.Decoder) error {
 type MetadataFilterItem struct {
 	MetadataKey   string `json:"metadataKey"`   // GET /api/v2/eventProperties for list of available keys
 	MetadataValue string `json:"metadataValue"` // Value
+	Negate        bool   `json:"negate"`
 }
 
 func (me *MetadataFilterItem) Schema() map[string]*schema.Schema {
@@ -61,19 +62,27 @@ func (me *MetadataFilterItem) Schema() map[string]*schema.Schema {
 			Description: "Value",
 			Required:    true,
 		},
+		"negate": {
+			Type:        schema.TypeBool,
+			Description: "no documentation available",
+			Optional:    true,
+			Default:     false,
+		},
 	}
 }
 
 func (me *MetadataFilterItem) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"key":   me.MetadataKey,
-		"value": me.MetadataValue,
+		"key":    me.MetadataKey,
+		"value":  me.MetadataValue,
+		"negate": me.Negate,
 	})
 }
 
 func (me *MetadataFilterItem) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"key":   &me.MetadataKey,
-		"value": &me.MetadataValue,
+		"key":    &me.MetadataKey,
+		"value":  &me.MetadataValue,
+		"negate": &me.Negate,
 	})
 }

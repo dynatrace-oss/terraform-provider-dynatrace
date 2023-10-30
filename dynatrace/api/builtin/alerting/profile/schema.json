@@ -844,9 +844,19 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				},
+				"negate": {
+					"default": false,
+					"description": "",
+					"displayName": "Negate",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
 				}
 			},
-			"summaryPattern": "{metadataKey} equals ''{metadataValue}''",
+			"summaryPattern": "{metadataKey} {negate, select, true {not } other {}}equals ''{metadataValue}''",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -965,5 +975,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.4"
+	"version": "8.4.1"
 }
