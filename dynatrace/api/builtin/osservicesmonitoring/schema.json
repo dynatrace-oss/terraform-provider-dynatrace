@@ -579,24 +579,32 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
-						"expectedValues": [
-							"RuleTypeOsService"
+						"preconditions": [
+							{
+								"property": "ruleType",
+								"type": "NULL"
+							},
+							{
+								"expectedValues": [
+									"RuleTypeOsService"
+								],
+								"property": "ruleType",
+								"type": "IN"
+							}
 						],
-						"property": "ruleType",
-						"type": "IN"
+						"type": "OR"
 					},
 					"type": {
 						"$ref": "#/enums/linuxServiceProp"
 					}
 				},
 				"ruleType": {
-					"default": "RuleTypeOsService",
 					"description": "",
 					"displayName": "Rule scope",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
-					"nullable": false,
+					"nullable": true,
 					"type": {
 						"$ref": "#/enums/RuleType"
 					}
@@ -700,24 +708,32 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
-						"expectedValues": [
-							"RuleTypeOsService"
+						"preconditions": [
+							{
+								"property": "ruleType",
+								"type": "NULL"
+							},
+							{
+								"expectedValues": [
+									"RuleTypeOsService"
+								],
+								"property": "ruleType",
+								"type": "IN"
+							}
 						],
-						"property": "ruleType",
-						"type": "IN"
+						"type": "OR"
 					},
 					"type": {
 						"$ref": "#/enums/windowsServiceProps"
 					}
 				},
 				"ruleType": {
-					"default": "RuleTypeOsService",
 					"description": "",
 					"displayName": "Rule scope",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
-					"nullable": false,
+					"nullable": true,
 					"type": {
 						"$ref": "#/enums/RuleType"
 					}
@@ -779,5 +795,5 @@
 			]
 		}
 	},
-	"version": "1.2.1"
+	"version": "1.3"
 }
