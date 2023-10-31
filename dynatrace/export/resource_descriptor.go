@@ -211,6 +211,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	unifiedservicesopentel "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/unifiedservices/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/unifiedservices/endpointmetrics"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/urlbasedsampling"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
@@ -1097,6 +1098,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		keyuseractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.UrlBasedSampling: NewResourceDescriptor(urlbasedsampling.Service),
 }
 
 var BlackListedResources = []ResourceType{

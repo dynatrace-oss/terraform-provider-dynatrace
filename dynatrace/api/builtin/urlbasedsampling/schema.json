@@ -1,0 +1,388 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP_INSTANCE",
+		"PROCESS_GROUP",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "path-or-parameters-mandatory-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "no-parameters-allowed-in-path-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "When [Adaptive traffic management](https://dt-url.net/97036pt) is activated, some PurePath® distributed traces will be discarded based on your environment licensed limit. Here you can configure the importance of specific URLs. URLs with higher importance can be treated to be captured more often and vice versa.",
+	"displayName": "URL-based sampling",
+	"documentation": "\n\nThis configuration represents an ordered list of rules. Each rule has conditions, based on request method, the URL path and query parameters. The first rule where all conditions are met will be applied. All string comparisons of the conditions are case sensitive. Use the Enabled switch to turn a rule on or off.",
+	"dynatrace": "1",
+	"enums": {
+		"HttpMethod": {
+			"description": "",
+			"displayName": "HttpMethod",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "GET",
+					"value": "GET"
+				},
+				{
+					"displayName": "POST",
+					"value": "POST"
+				},
+				{
+					"displayName": "PUT",
+					"value": "PUT"
+				},
+				{
+					"displayName": "DELETE",
+					"value": "DELETE"
+				},
+				{
+					"displayName": "HEAD",
+					"value": "HEAD"
+				},
+				{
+					"displayName": "CONNECT",
+					"value": "CONNECT"
+				},
+				{
+					"displayName": "OPTIONS",
+					"value": "OPTIONS"
+				},
+				{
+					"displayName": "TRACE",
+					"value": "TRACE"
+				},
+				{
+					"displayName": "PATCH",
+					"value": "PATCH"
+				}
+			],
+			"type": "enum"
+		},
+		"PathComparisonType": {
+			"description": "",
+			"displayName": "PathComparisonType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "Does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "Contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "Does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"displayName": "Starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "Does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"displayName": "Ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "Does not end with",
+					"value": "DOES_NOT_END_WITH"
+				}
+			],
+			"type": "enum"
+		},
+		"SamplingScaleFactor": {
+			"description": "",
+			"displayName": "SamplingScaleFactor",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Increase capturing 128 times",
+					"value": "0"
+				},
+				{
+					"displayName": "Increase capturing 64 times",
+					"value": "1"
+				},
+				{
+					"displayName": "Increase capturing 32 times",
+					"value": "2"
+				},
+				{
+					"displayName": "Increase capturing 16 times",
+					"value": "3"
+				},
+				{
+					"displayName": "Increase capturing 8 times",
+					"value": "4"
+				},
+				{
+					"displayName": "Increase capturing 4 times",
+					"value": "5"
+				},
+				{
+					"displayName": "Increase capturing 2 times",
+					"value": "6"
+				},
+				{
+					"displayName": "Reduce capturing by factor 2",
+					"value": "8"
+				},
+				{
+					"displayName": "Reduce capturing by factor 4",
+					"value": "9"
+				},
+				{
+					"displayName": "Reduce capturing by factor 8",
+					"value": "10"
+				},
+				{
+					"displayName": "Reduce capturing by factor 16",
+					"value": "11"
+				},
+				{
+					"displayName": "Reduce capturing by factor 32",
+					"value": "12"
+				},
+				{
+					"displayName": "Reduce capturing by factor 64",
+					"value": "13"
+				},
+				{
+					"displayName": "Reduce capturing by factor 128",
+					"value": "14"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 25,
+	"metadata": {
+		"minAgentVersion": "1.279"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"factor": {
+			"default": "6",
+			"description": "",
+			"displayName": "Importance of a specific URL",
+			"documentation": "Select the scaling factor for the current sampling rate of the system.",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "ignore",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/enums/SamplingScaleFactor"
+			}
+		},
+		"httpMethod": {
+			"default": [
+				"GET",
+				"POST",
+				"PUT"
+			],
+			"description": "",
+			"displayName": "HTTP method",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/HttpMethod"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "httpMethodAny",
+				"type": "EQUALS"
+			},
+			"type": "set"
+		},
+		"httpMethodAny": {
+			"default": true,
+			"description": "",
+			"displayName": "Any HTTP method",
+			"documentation": "The scaling factor for the defined URL will be applied to any HTTP method.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ignore": {
+			"default": false,
+			"description": "",
+			"displayName": "Ignore a specific URL",
+			"documentation": "The defined URL will always be ignored, also if Adaptive Traffic Management is not active.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"path": {
+			"constraints": [
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Path of the URL without query parameters.",
+			"displayName": "Path",
+			"documentation": "You can use the wildcard '**' between two path segments to ignore that part. If the path is empty, a minimum of one entry for 'Query parameters' must be specified that can be used for URL matching.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"pathComparisonType": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Path comparison condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"precondition": {
+					"property": "path",
+					"type": "NULL"
+				},
+				"type": "NOT"
+			},
+			"type": {
+				"$ref": "#/enums/PathComparisonType"
+			}
+		},
+		"queryParameters": {
+			"description": "Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.",
+			"displayName": "Query parameters",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/QueryParameter"
+				}
+			},
+			"maxObjects": 10,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:preferences"
+	],
+	"schemaId": "builtin:url-based-sampling",
+	"types": {
+		"QueryParameter": {
+			"description": "",
+			"displayName": "QueryParameter",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Query parameter name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Query parameter value",
+					"documentation": "The value must be equal for a match.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"valueIsUndefined": {
+					"default": false,
+					"description": "",
+					"displayName": "Query parameter value is undefined",
+					"documentation": "If enabled, the value is treated as undefined (/...\u0026foo), otherwise as empty (/...\u0026foo=).",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"property": "value",
+						"type": "NULL"
+					},
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "{name}{value|valueSet, select, true {={value}} other {}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}
