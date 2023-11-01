@@ -329,6 +329,8 @@ var ResourceTypes = struct {
 	UnifiedServicesMetrics              ResourceType
 	UnifiedServicesOpenTel              ResourceType
 	PlatformBucket                      ResourceType
+	KeyUserAction                       ResourceType
+	UrlBasedSampling                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -581,6 +583,8 @@ var ResourceTypes = struct {
 	"dynatrace_unified_services_metrics",
 	"dynatrace_unified_services_opentel",
 	"dynatrace_platform_bucket",
+	"dynatrace_key_user_action",
+	"dynatrace_url_based_sampling",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

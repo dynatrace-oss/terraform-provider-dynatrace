@@ -25,10 +25,14 @@ import (
 
 // Rule the configuration of an application detection rule
 type Rule struct {
-	Name                  *string       `json:"name,omitempty"`        // the unique name of the Application detection rule
+	APIName               *string       `json:"name,omitempty"`        // the unique name of the Application detection rule
 	Order                 *string       `json:"order,omitempty"`       // the order of the rule in the rules list
 	ApplicationIdentifier string        `json:"applicationIdentifier"` // the Dynatrace entity ID of the application, for example APPLICATION-4A3B43
 	FilterConfig          *FilterConfig `json:"filterConfig"`          // the condition of an application detection rule
+}
+
+func (me *Rule) Name() string {
+	return me.ApplicationIdentifier
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
@@ -70,7 +74,7 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":                   &me.Name,
+		"name":                   &me.APIName,
 		"order":                  &me.Order,
 		"application_identifier": &me.ApplicationIdentifier,
 		"filter_config":          &me.FilterConfig,

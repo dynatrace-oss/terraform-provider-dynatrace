@@ -214,6 +214,12 @@
 			"type": "float"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "disk-rules-count-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:anomaly-detection.infrastructure",
 		"group:anomaly-detection"
@@ -319,5 +325,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

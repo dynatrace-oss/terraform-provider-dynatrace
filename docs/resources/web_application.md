@@ -290,7 +290,7 @@ resource "dynatrace_web_application" "#name#" {
 ### Optional
 
 - `conversion_goals` (Block List, Max: 1) A list of conversion goals of the application (see [below for nested schema](#nestedblock--conversion_goals))
-- `key_user_actions` (Block List) User Action names to be flagged as Key User Actions (see [below for nested schema](#nestedblock--key_user_actions))
+- `key_user_actions` (Block List, Deprecated) User Action names to be flagged as Key User Actions (see [below for nested schema](#nestedblock--key_user_actions))
 - `meta_data_capture_settings` (Block List, Max: 1) Java script agent meta data capture settings (see [below for nested schema](#nestedblock--meta_data_capture_settings))
 - `real_user_monitoring_enabled` (Boolean) (Field has overlap with `dynatrace_web_app_enablement`) Real user monitoring enabled/disabled
 - `session_replay_config` (Block List, Max: 1) Settings regarding Session Replay (see [below for nested schema](#nestedblock--session_replay_config))

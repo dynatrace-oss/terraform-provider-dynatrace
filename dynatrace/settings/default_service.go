@@ -18,6 +18,7 @@
 package settings
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"strings"
@@ -41,6 +42,10 @@ type defaultService[T Settings] struct {
 	schemaID string
 	client   rest.Client
 	options  *ServiceOptions[T]
+}
+
+func (me *defaultService[T]) GetWithContext(ctx context.Context, id string, v T) error {
+	return me.Get(id, v)
 }
 
 func (me *defaultService[T]) Get(id string, v T) error {
@@ -161,6 +166,10 @@ func (me *defaultService[T]) Validate(v T) error {
 	return nil
 }
 
+func (me *defaultService[T]) CreateWithContext(ctx context.Context, v T) (*api.Stub, error) {
+	return me.Create(v)
+}
+
 func (me *defaultService[T]) Create(v T) (*api.Stub, error) {
 	if me.options != nil && me.options.Lock != nil && me.options.Unlock != nil {
 		me.options.Lock()
@@ -277,6 +286,10 @@ func (me *defaultService[T]) Update(id string, v T) error {
 		return me.options.OnChanged(me.client, id, v)
 	}
 	return nil
+}
+
+func (me *defaultService[T]) UpdateWithContext(ctx context.Context, id string, v T) error {
+	return me.Update(id, v)
 }
 
 func (me *defaultService[T]) update(id string, v T) error {

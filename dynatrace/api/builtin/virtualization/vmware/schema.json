@@ -8,7 +8,7 @@
 	"dynatrace": "1",
 	"enums": {},
 	"keyProperty": "ipaddress",
-	"maxObjects": 100,
+	"maxObjects": 500,
 	"metadata": {
 		"addItemButton": "Connect new instance"
 	},
@@ -167,10 +167,19 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "An entry with the same values is already on the list!",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ipaddress"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:cloud-and-virtualization"
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

@@ -47,7 +47,6 @@ func DataSource() *schema.Resource {
 			"entities": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Resource{Schema: new(entity.Entity).Schema()},
-				Optional: true,
 				Computed: true,
 			},
 			"from": {

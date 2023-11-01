@@ -24,10 +24,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
@@ -172,7 +174,14 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	stub, err := me.Service(m).Create(sttngs)
+	service := me.Service(m)
+	var stub *api.Stub
+	var err error
+	if contextCreator, ok := service.(settings.ContextCreator[settings.Settings]); ok {
+		stub, err = contextCreator.CreateWithContext(ctx, sttngs)
+	} else {
+		stub, err = service.Create(sttngs)
+	}
 	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
@@ -200,18 +209,10 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 		logging.File.Printf("The resource `%s` with name `%s` and ID `%s` is not in its final state. It refers to resources that don't exist yet.", me.Type, settingName, stub.ID)
 	}
 
-	// if settings.SupportsFlawedReasons(sttngs) {
-	// 	flawedReasons := settings.GetFlawedReasons(sttngs)
-	// 	if len(flawedReasons) > 0 {
-	// 		d.Set("flawed_reasons", flawedReasons)
-	// 	} else {
-	// 		d.Set("flawed_reasons", []string{})
-	// 	}
-	// }
 	if _, ok := sttngs.(Computer); ok {
-		return me.ReadForSettings(ctx, d, m, sttngs)
+		return me.ReadForSettings(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m, sttngs)
 	}
-	return me.Read(ctx, d, m)
+	return me.Read(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m)
 }
 
 func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -225,7 +226,20 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := me.Service(m).Update(d.Id(), sttngs); err != nil {
+	service := me.Service(m)
+	var err error
+	if contextUpdater, ok := service.(settings.ContextUpdater[settings.Settings]); ok {
+		if ctx.Value(settings.ContextKeyStateConfig) == nil {
+			stateConfig := me.Settings()
+			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
+			}
+		}
+		err = contextUpdater.UpdateWithContext(ctx, d.Id(), sttngs)
+	} else {
+		err = service.Update(d.Id(), sttngs)
+	}
+	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
 			if len(vm) > 0 {
@@ -283,15 +297,6 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 			}
 		}
 	}
-	// if settings.SupportsFlawedReasons(sttngs) {
-	// 	flawedReasons := settings.GetFlawedReasons(sttngs)
-	// 	if len(flawedReasons) > 0 {
-	// 		d.Set("flawed_reasons", flawedReasons)
-	// 	} else {
-	// 		d.Set("flawed_reasons", []string{})
-	// 		delete(marshalled, "flawed_reasons")
-	// 	}
-	// }
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -310,16 +315,21 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 		return diag.Diagnostics{}
 	}
 	sttngs := me.Settings()
-	// if os.Getenv("CACHE_OFFLINE_MODE") != "true" {
-	// 	if _, ok := settings.(*vault.Credentials); ok {
-	// 		return diag.Diagnostics{}
-	// 	}
-	// 	if _, ok := settings.(*notifications.Notification); ok {
-	// 		return diag.Diagnostics{}
-	// 	}
-	// }
 	service := me.Service(m)
-	if err := service.Get(d.Id(), sttngs); err != nil {
+
+	var err error
+	if contextGetter, ok := service.(settings.ContextGetter[settings.Settings]); ok {
+		if ctx.Value(settings.ContextKeyStateConfig) == nil {
+			stateConfig := me.Settings()
+			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
+			}
+		}
+		err = contextGetter.GetWithContext(ctx, d.Id(), sttngs)
+	} else {
+		err = service.Get(d.Id(), sttngs)
+	}
+	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if restError.Code == 404 {
 				d.SetId("")

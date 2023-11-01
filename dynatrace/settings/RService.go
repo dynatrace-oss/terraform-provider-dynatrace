@@ -18,6 +18,7 @@
 package settings
 
 import (
+	"context"
 	"reflect"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -40,6 +41,22 @@ func FindByName[T Settings](service RService[T], name string) (stub *api.Stub, e
 		}
 	}
 	return nil, nil
+}
+
+type ContextKey string
+
+const ContextKeyStateConfig = ContextKey("state-config")
+
+type ContextGetter[T Settings] interface {
+	GetWithContext(ctx context.Context, id string, v T) error
+}
+
+type ContextUpdater[T Settings] interface {
+	UpdateWithContext(ctx context.Context, id string, v T) error
+}
+
+type ContextCreator[T Settings] interface {
+	CreateWithContext(ctx context.Context, v T) (*api.Stub, error)
 }
 
 type CRUDService[T Settings] interface {
