@@ -148,6 +148,10 @@ Required:
 - `key` (String) GET /api/v2/eventProperties for list of available keys
 - `value` (String) Value
 
+Optional:
+
+- `negate` (Boolean) no documentation available
+
 
 
 
