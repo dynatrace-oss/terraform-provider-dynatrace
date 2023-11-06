@@ -59,11 +59,7 @@ type KeyUserAction struct {
 
 type QueryForWebAppIDResponse struct {
 	Entities []struct {
-		FromRelationships struct {
-			IsApplicationMethodOf []struct {
-				ID string `json:"id"`
-			} `json:"isApplicationMethodOf"`
-		} `json:"fromRelationships"`
+		EntityID string `json:"entityId"`
 	} `json:"entities"`
 }
 
@@ -76,15 +72,17 @@ func (me *service) Get(id string, v *keyuseractions.Settings) error {
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), 200).Finish(&kuaList); err != nil {
 		return err
 	}
-	for _, keyUserAction := range kuaList.Values {
-		if keyUserAction.MEIdentifier == id {
-			v.ApplicationID = applicationID
-			if len(keyUserAction.Domain) > 0 {
-				v.Domain = &keyUserAction.Domain
+	if len(kuaList.Values) > 0 {
+		for _, keyUserAction := range kuaList.Values {
+			if keyUserAction.MEIdentifier == id {
+				v.ApplicationID = applicationID
+				if len(keyUserAction.Domain) > 0 {
+					v.Domain = &keyUserAction.Domain
+				}
+				v.Name = keyUserAction.Name
+				v.Type = keyuseractions.Type(keyUserAction.ActionType)
+				return nil
 			}
-			v.Name = keyUserAction.Name
-			v.Type = keyuseractions.Type(keyUserAction.ActionType)
-			return nil
 		}
 	}
 	return rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found", id)}
@@ -93,24 +91,14 @@ func (me *service) Get(id string, v *keyuseractions.Settings) error {
 func (me *service) fetchApplicationID(id string) (string, error) {
 	var err error
 	var response QueryForWebAppIDResponse
-	entitySelector := fmt.Sprintf("type(APPLICATION_METHOD),entityId(%s)", id)
-	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?from=now-3y&entitySelector=%s&fields=fromRelationships`, entitySelector), 200).Finish(&response); err != nil {
+	entitySelector := fmt.Sprintf("type(APPLICATION),toRelationships.isApplicationMethodOf(type(APPLICATION_METHOD),entityId(%s))", id)
+	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?from=now-10y&entitySelector=%s&fields=fromRelationships`, url.QueryEscape(entitySelector)), 200).Finish(&response); err != nil {
 		return "", err
 	}
 	if len(response.Entities) == 0 {
 		return "", rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found", id)}
 	}
-	applicationMethodOfs := response.Entities[0].FromRelationships.IsApplicationMethodOf
-	if len(applicationMethodOfs) == 0 {
-		return "", rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found (reason: no relationship to web app found)", id)}
-	}
-	applicationID := applicationMethodOfs[0].ID
-	if len(applicationID) == 0 {
-		return "", rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found (reason: no relationship to web app found)", id)}
-	}
-
-	return applicationID, nil
-
+	return response.Entities[0].EntityID, nil
 }
 
 func (me *service) Validate(v *keyuseractions.Settings) error {
@@ -133,7 +121,35 @@ func (me *service) Delete(id string) error {
 	if err != nil {
 		return nil
 	}
-	return me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+	me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+	var maxTries = 100
+	var successes = 0
+	var requiredSuccesses = 10
+
+	for i := 0; i < maxTries; i++ {
+		var kua keyuseractions.Settings
+		if err := me.Get(id, &kua); err != nil {
+			if resterr, ok := err.(rest.Error); ok {
+				if resterr.Code == 404 {
+					successes++
+					if successes >= requiredSuccesses {
+						break
+					}
+					time.Sleep(time.Duration(200+i*100) * time.Millisecond)
+					continue
+				}
+			} else {
+				successes = 0
+				me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+				time.Sleep(time.Duration(200+i*100) * time.Millisecond)
+			}
+		} else {
+			successes = 0
+			me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+			time.Sleep(time.Duration(200+i*100) * time.Millisecond)
+		}
+	}
+	return nil
 }
 
 type KeyUserActionCreateResponse struct {
@@ -149,7 +165,7 @@ func (me *service) Create(v *keyuseractions.Settings) (*api.Stub, error) {
 	stub := &api.Stub{ID: createReponse.ID}
 	var maxTries = 100
 	var successes = 0
-	var requiredSuccesses = 5
+	var requiredSuccesses = 10
 
 	for i := 0; i < maxTries; i++ {
 		var kua keyuseractions.Settings
@@ -159,15 +175,17 @@ func (me *service) Create(v *keyuseractions.Settings) (*api.Stub, error) {
 				if successes >= requiredSuccesses {
 					break
 				}
-				time.Sleep(time.Duration(200+i*20) * time.Millisecond)
+				time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 				continue
 			} else {
 				successes = 0
-				time.Sleep(time.Duration(200+i*20) * time.Millisecond)
+				me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
+				time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 			}
 		} else {
 			successes = 0
-			time.Sleep(time.Duration(200+i*20) * time.Millisecond)
+			me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
+			time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 		}
 	}
 	return stub, nil
