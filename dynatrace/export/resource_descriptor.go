@@ -453,6 +453,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ManagementZone,
 		// Dependencies.Service,
 		Dependencies.ID(ResourceTypes.SLO),
+		Dependencies.ID(ResourceTypes.JSONDashboard),
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
