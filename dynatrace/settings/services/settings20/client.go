@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -174,6 +175,13 @@ func (c client) Create(ctx context.Context, scope string, data []byte) (Response
 }
 
 func (c client) Update(ctx context.Context, id string, data []byte) (Response, error) {
+	sou := SettingsObjectUpdate{
+		Value: json.RawMessage(data),
+	}
+	dsou, e := json.Marshal(sou)
+	if e != nil {
+		return Response{api.Response{StatusCode: 0, Data: nil, Request: rest.RequestInfo{}}, "", nil}, e
+	}
 
 	logger := logr.FromContextOrDiscard(ctx)
 
@@ -183,7 +191,7 @@ func (c client) Update(ctx context.Context, id string, data []byte) (Response, e
 	for i := 0; i < c.retrySettings.maxRetries; i++ {
 		logger.V(1).Info(fmt.Sprintf("Trying to update setting with id %q (%d/%d retries)", id, i+1, c.retrySettings.maxRetries))
 
-		resp, err = c.update(ctx, id, data)
+		resp, err = c.update(ctx, id, dsou)
 		if err != nil {
 			return Response{}, err
 		}
@@ -309,7 +317,7 @@ type SettingsObjectResponse struct {
 	Error struct {
 		Code    int    `json:"code"`
 		Message string `json:"message"`
-	}
+	} `json:"error"`
 }
 
 func (sor SettingsObjectResponse) RequiresOAuth() bool {
@@ -322,7 +330,7 @@ func (sor SettingsObjectResponse) RequiresOAuth() bool {
 	return sor.Error.Message == "No OAuth token provided"
 }
 
-func RequiresOAuth(response Response) bool {
+func CreateRequiresOAuth(response Response) bool {
 	if response.StatusCode != http.StatusBadRequest {
 		return false
 	}
@@ -344,13 +352,28 @@ func RequiresOAuth(response Response) bool {
 	return false
 }
 
+func UpdateRequiresOAuth(response Response) bool {
+	if response.StatusCode != http.StatusBadRequest {
+		return false
+	}
+	if len(response.Data) == 0 {
+		return false
+	}
+	sor := SettingsObjectResponse{}
+	if err := json.Unmarshal(response.Data, &sor); err != nil {
+		logging.File.Println(err)
+		return false
+	}
+	return sor.RequiresOAuth()
+}
+
 func (c Client) Create(ctx context.Context, scope string, data []byte) (Response, error) {
 	if c.tokenClient != nil {
 		response, err := c.tokenClient.Create(ctx, scope, data)
 		if err != nil {
 			return response, err
 		}
-		if RequiresOAuth(response) && c.oAuthClient != nil {
+		if CreateRequiresOAuth(response) && c.oAuthClient != nil {
 			return c.oAuthClient.Create(ctx, scope, data)
 		}
 		return response, err
@@ -367,7 +390,7 @@ func (c Client) Update(ctx context.Context, id string, data []byte) (Response, e
 		if err != nil {
 			return response, err
 		}
-		if RequiresOAuth(response) && c.oAuthClient != nil {
+		if UpdateRequiresOAuth(response) && c.oAuthClient != nil {
 			return c.oAuthClient.Update(ctx, id, data)
 		}
 		return response, err

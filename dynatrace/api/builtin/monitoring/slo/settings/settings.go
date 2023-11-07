@@ -18,6 +18,8 @@
 package slo
 
 import (
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -127,7 +129,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"custom_description":     &me.CustomDescription,
 		"enabled":                &me.Enabled,
 		"error_budget_burn_rate": &me.ErrorBudgetBurnRate,
@@ -141,4 +143,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"target_warning":         &me.TargetWarning,
 		"legacy_id":              &me.LegacyID,
 	})
+	me.MetricExpression = strings.TrimSpace(me.MetricExpression)
+	return err
 }

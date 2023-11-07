@@ -72,14 +72,11 @@ func CreateExportCredentials() (*Credentials, error) {
 	}
 	if environmentURL == "" {
 		environmentURL = os.Getenv("DYNATRACE_ENV_URL")
-		if environmentURL == "" {
-			return nil, errors.New("the environment variable DYNATRACE_ENV_URL or DYNATRACE_SOURCE_ENV_URL needs to be set")
-		}
 	}
 	environmentURL = strings.TrimSuffix(strings.TrimSuffix(environmentURL, " "), "/")
 	if len(environmentURL) != 0 {
 		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
+		if match := re.FindStringSubmatch(environmentURL); len(match) > 0 {
 			environmentURL = fmt.Sprintf("https://%s.live.dynatrace.com", match[1])
 		}
 	}
@@ -90,9 +87,6 @@ func CreateExportCredentials() (*Credentials, error) {
 	}
 	if apiToken == "" {
 		apiToken = os.Getenv("DYNATRACE_API_TOKEN")
-		if apiToken == "" {
-			return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
-		}
 	}
 	automationEnvironmentURL := os.Getenv("DT_AUTOMATION_ENVIRONMENT_URL")
 	if len(automationEnvironmentURL) == 0 {
@@ -104,7 +98,7 @@ func CreateExportCredentials() (*Credentials, error) {
 	}
 	if len(automationEnvironmentURL) == 0 {
 		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
+		if match := re.FindStringSubmatch(environmentURL); len(match) > 0 {
 			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
 		}
@@ -134,6 +128,13 @@ func CreateExportCredentials() (*Credentials, error) {
 	automation_client_secret := getEnv("AUTOMATION_CLIENT_SECRET", "DYNATRACE_AUTOMATION_CLIENT_SECRET", "DT_AUTOMATION_CLIENT_SECRET", "DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET")
 	if len(automation_client_secret) == 0 {
 		automation_client_secret = client_secret
+	}
+
+	if environmentURL == "" && iam_account_id == "" {
+		return nil, errors.New("the environment variable DYNATRACE_ENV_URL or DYNATRACE_SOURCE_ENV_URL needs to be set")
+	}
+	if apiToken == "" && iam_client_id == "" && iam_client_secret == "" {
+		return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
 	}
 
 	credentials := &Credentials{
@@ -177,7 +178,7 @@ func CreateCredentials() (*Credentials, error) {
 	automationTokenURL := os.Getenv("DT_AUTOMATION_TOKEN_URL")
 	if len(automationEnvironmentURL) == 0 {
 		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-		if match := re.FindStringSubmatch(environmentURL); match != nil && len(match) > 0 {
+		if match := re.FindStringSubmatch(environmentURL); len(match) > 0 {
 			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
 		}
