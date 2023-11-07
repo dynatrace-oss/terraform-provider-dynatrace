@@ -49,6 +49,8 @@ type Environment struct {
 	Flags                 Flags
 	ResArgs               map[string][]string
 	ChildResourceOverride bool
+	PrevStateMapCommon    *StateMap
+	PrevNamesByModule     map[string][]string
 }
 
 func (me *Environment) TenantID() string {
@@ -88,6 +90,11 @@ func (me *Environment) DataSource(id string) *DataSource {
 }
 
 func (me *Environment) Export() (err error) {
+
+	if err = me.PreProcess(); err != nil {
+		return err
+	}
+
 	if err = me.InitialDownload(); err != nil {
 		return err
 	}
@@ -99,6 +106,34 @@ func (me *Environment) Export() (err error) {
 	if err = me.Finish(); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (me *Environment) PreProcess() error {
+	return me.ProcessPrevState()
+}
+
+func (me *Environment) ProcessPrevState() error {
+	if PREV_STATE_ON {
+		// pass
+	} else {
+		return nil
+	}
+
+	stateThis, err := LoadStateThis()
+	if err != nil {
+		return err
+	}
+	stateLinked, err := LoadStateLinked()
+	if err != nil {
+		return err
+	}
+
+	stateMapThis := BuildStateMap(stateThis)
+	stateMapLinked := BuildStateMap(stateLinked)
+
+	me.PrevStateMapCommon, me.PrevNamesByModule = stateMapThis.ExtractCommonStates(stateMapLinked)
+
 	return nil
 }
 
@@ -692,6 +727,8 @@ func (me *Environment) executeImportV2() error {
 		state.Resources = append(state.Resources, resList...)
 	}
 
+	me.importPrevResources(&state)
+
 	bytes, err := json.MarshalIndent(state, "", "  ")
 	if err != nil {
 		return err
@@ -710,6 +747,31 @@ func (me *Environment) executeImportV2() error {
 	}
 
 	return nil
+}
+
+func (me *Environment) importPrevResources(state *state) {
+	if PREV_STATE_ON {
+		for _, statePrev := range me.PrevStateMapCommon.resources {
+			if statePrev.Used {
+				continue
+			}
+
+			module, found := me.Modules[ResourceType(statePrev.Resource.Type)]
+			if found {
+
+			} else {
+				fmt.Println("ERROR: [importPrevResources] Could not find Module: ", statePrev.Resource.Type)
+				continue
+			}
+
+			isWritten := module.namer.SetNameWritten(statePrev.Resource.Name)
+			if isWritten {
+				continue
+			}
+			fmt.Println("[importPrevResources] Post-Writing resource: ", statePrev.Resource.Name, statePrev.Resource.Type)
+			state.Resources = append(state.Resources, statePrev.Resource)
+		}
+	}
 }
 
 func genPlanCmd() *exec.Cmd {

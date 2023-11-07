@@ -60,13 +60,30 @@ func (me *Resource) IsReferencedAsDataSource() bool {
 	return me.Module.IsReferencedAsDataSource()
 }
 
-func (me *Resource) SetName(name string) *Resource {
+func (me *Resource) genUniqueName(settngs settings.Settings) (string, bool) {
+	name := ""
+	prevName, nameProvided := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
+	if nameProvided {
+		name = prevName
+	} else {
+		name = settings.Name(settngs, me.ID)
+	}
+	return name, nameProvided
+}
+
+func (me *Resource) SetName(name string, nameProvided bool) *Resource {
 	if me.Name == name {
 		return me
 	}
 	me.Name = name
-	terraformName := toTerraformName(name)
-	me.UniqueName = me.Module.namer.Name(terraformName)
+
+	if nameProvided {
+		me.UniqueName = name
+	} else {
+		terraformName := toTerraformName(name)
+		me.UniqueName = me.Module.namer.Name(terraformName)
+	}
+
 	me.Status = ResourceStati.Discovered
 	return me
 }
@@ -204,7 +221,9 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
-	me.SetName(settings.Name(settngs, me.ID))
+	name, name_provided := me.genUniqueName(settngs)
+	me.SetName(name, name_provided)
+
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
 		me.LegacyID = *legacyID

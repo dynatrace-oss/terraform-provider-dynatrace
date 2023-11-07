@@ -629,12 +629,25 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 
 	}
 
+	me.blockPrevNames()
+
 	err = me.downloadResources(resourcesToDownload, multiThreaded)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (me *Module) blockPrevNames() {
+	if PREV_STATE_ON {
+		names, found := me.Environment.PrevNamesByModule[fmt.Sprintf("module.%s", me.Type.Trim())]
+		if found {
+			for _, name := range names {
+				me.namer.BlockName(name)
+			}
+		}
+	}
 }
 
 func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThreaded bool) error {
@@ -757,7 +770,7 @@ func (me *Module) Discover() error {
 		if stub.Name == "" {
 			panic(me.Type)
 		}
-		res := me.Resource(stub.ID).SetName(stub.Name)
+		res := me.Resource(stub.ID).SetName(stub.Name, false)
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
 		}
@@ -797,19 +810,20 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		return nil, nil
 	}
 
-	uniqueNameExists := map[string]bool{}
-
 	resList = make(resources, 0, len(me.Resources))
 
 	for _, res := range me.Resources {
 		if !res.Status.IsOneOf(ResourceStati.PostProcessed) {
 			continue
 		}
-		if uniqueNameExists[res.UniqueName] {
-			fmt.Println("ERROR: ExecuteImportV2 Duplicate UniqueName for ", string(me.Type), res.UniqueName)
+
+		isWrittenAlready := me.namer.SetNameWritten(res.UniqueName)
+
+		if isWrittenAlready {
+			fmt.Println("ERROR: [ExecuteImportV2] Duplicate UniqueName for ", string(me.Type), res.UniqueName)
 			continue
+
 		}
-		uniqueNameExists[res.UniqueName] = true
 
 		providerSource := os.Getenv("DYNATRACE_PROVIDER_SOURCE")
 		if len(providerSource) == 0 {
