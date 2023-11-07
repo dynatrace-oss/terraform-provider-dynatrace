@@ -365,6 +365,7 @@ func diffSuppressedContent(content string) string {
 		}
 	}
 	denullmap(m)
+	delete(m, "metadata")
 	enrm(m, "", true)
 	if DYNATRACE_DASHBOARD_TESTS {
 		if tiles, found := m["tiles"]; found {
@@ -389,12 +390,26 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Contains the JSON Code of the Dashboard",
 			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if len(old) == 0 && len(new) != 0 {
+					return false
+				}
+				if len(old) != 0 && len(new) == 0 {
+					return false
+				}
+				if !json.Valid([]byte(old)) || !json.Valid([]byte(new)) {
+					return false
+				}
 				old = diffSuppressedContent(old)
 				new = diffSuppressedContent(new)
-				return hcl.JSONStringsEqual(old, new)
+				result := hcl.JSONStringsEqual(old, new)
+				return result
 			},
 			StateFunc: func(val any) string {
-				return diffSuppressedContent(val.(string))
+				if json.Valid([]byte(val.(string))) {
+					content := diffSuppressedContent(val.(string))
+					return content
+				}
+				return val.(string)
 			},
 		},
 	}
