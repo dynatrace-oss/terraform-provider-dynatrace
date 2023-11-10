@@ -94,7 +94,7 @@ func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
 }
 
 func (me *service) Update(id string, v *networkzones.NetworkZone) error {
-	if id != strings.ToLower(*v.NetworkZoneName) {
+	if v.NetworkZoneName != nil && id != strings.ToLower(*v.NetworkZoneName) {
 		return fmt.Errorf("Network zone name cannot be modified, please destroy and create with the new name")
 	}
 	if err := me.client.Put(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
