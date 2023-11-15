@@ -31,6 +31,7 @@ type Dependency interface {
 	Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any)
 	ResourceType() ResourceType
 	DataSourceType() DataSourceType
+	IsParent() bool
 }
 
 func Coalesce(d Dependency) Dependency {
@@ -43,9 +44,10 @@ func Coalesce(d Dependency) Dependency {
 
 var Dependencies = struct {
 	ManagementZone       Dependency
+	DashboardLinkID      func(parent bool) Dependency
 	LegacyID             func(resourceType ResourceType) Dependency
 	ID                   func(resourceType ResourceType) Dependency
-	ResourceID           func(resourceType ResourceType) Dependency
+	ResourceID           func(resourceType ResourceType, parent bool) Dependency
 	ServiceMethod        Dependency
 	Service              Dependency
 	HostGroup            Dependency
@@ -67,9 +69,10 @@ var Dependencies = struct {
 	Tenant                    Dependency
 }{
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
+	DashboardLinkID:      func(parent bool) Dependency { return &dashlinkdep{ResourceTypes.JSONDashboardBase, parent} },
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
 	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
-	ResourceID:           func(resourceType ResourceType) Dependency { return &resourceIDDep{resourceType} },
+	ResourceID:           func(resourceType ResourceType, parent bool) Dependency { return &resourceIDDep{resourceType, parent} },
 	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
 	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
 	HostGroup:            &entityds{"HOST_GROUP", "HOST_GROUP-[A-Z0-9]{16}", false},
@@ -93,6 +96,10 @@ var Dependencies = struct {
 
 type mgmzdep struct {
 	resourceType ResourceType
+}
+
+func (me *mgmzdep) IsParent() bool {
+	return false
 }
 
 func (me *mgmzdep) ResourceType() ResourceType {
@@ -167,8 +174,68 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 	return s, resources
 }
 
+type dashlinkdep struct {
+	resourceType ResourceType
+	parent       bool
+}
+
+func (me *dashlinkdep) IsParent() bool {
+	return me.parent
+}
+
+func (me *dashlinkdep) ResourceType() ResourceType {
+	return me.resourceType
+}
+
+func (me *dashlinkdep) DataSourceType() DataSourceType {
+	return ""
+}
+
+func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+	replacePattern := "${%s.%s.id}"
+	resources := []any{}
+	for id, resource := range environment.Module(me.resourceType).Resources {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+		if resource.Type == replacingIn {
+			replacePattern = "${%s.%s.id}"
+		} else {
+			if resource.IsReferencedAsDataSource() {
+				resOrDsType = func() string {
+					return string(me.resourceType.AsDataSource())
+				}
+				replacePattern = "${data.%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${data.%s.%s.id}"
+				}
+			} else {
+				replacePattern = "${%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${%s.%s.id}"
+				}
+			}
+		}
+		found := false
+		m1 := regexp.MustCompile(fmt.Sprintf(`link_id(.*)=(.*)"%s"`, id))
+		replaced := m1.ReplaceAllString(s, fmt.Sprintf("link_id$1=$2\"%s\"", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
+		if replaced != s {
+			s = replaced
+			found = true
+		}
+		if found {
+			resources = append(resources, resource)
+		}
+	}
+	return s, resources
+}
+
 type legacyID struct {
 	resourceType ResourceType
+}
+
+func (me *legacyID) IsParent() bool {
+	return false
 }
 
 func (me *legacyID) ResourceType() ResourceType {
@@ -229,6 +296,10 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 
 type iddep struct {
 	resourceType ResourceType
+}
+
+func (me *iddep) IsParent() bool {
+	return false
 }
 
 func (me *iddep) ResourceType() ResourceType {
@@ -293,6 +364,11 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 
 type resourceIDDep struct {
 	resourceType ResourceType
+	parent       bool
+}
+
+func (me *resourceIDDep) IsParent() bool {
+	return me.parent
 }
 
 func (me *resourceIDDep) ResourceType() ResourceType {
@@ -344,6 +420,10 @@ func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn
 type tenantds struct {
 }
 
+func (me *tenantds) IsParent() bool {
+	return false
+}
+
 func (me *tenantds) ResourceType() ResourceType {
 	return ""
 }
@@ -374,6 +454,10 @@ type entityds struct {
 	Type     string
 	Pattern  string
 	Coalesce bool
+}
+
+func (me *entityds) IsParent() bool {
+	return false
 }
 
 func (me *entityds) ResourceType() ResourceType {
@@ -415,6 +499,10 @@ func (me *entityds) Replace(environment *Environment, s string, replacingIn Reso
 
 type reqAttName struct {
 	resourceType ResourceType
+}
+
+func (me *reqAttName) IsParent() bool {
+	return false
 }
 
 func (me *reqAttName) ResourceType() ResourceType {

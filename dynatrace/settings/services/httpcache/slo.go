@@ -40,7 +40,7 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 			return err
 		}
 		if stub == nil {
-			return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+			return rest.Error{Code: 404, Message: fmt.Sprintf("slo_Tar %s not found", me.ID)}
 		}
 		wrapper := struct {
 			Downloaded struct {
@@ -63,7 +63,7 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 		})
 		return nil
 	}
-	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+	return rest.Error{Code: 404, Message: fmt.Sprintf("slo_Tar Nil %s not found", me.ID)}
 }
 
 func (me *GetSLORequest) Expect(codes ...int) rest.Request {

@@ -272,6 +272,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboards"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboardsbase"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
@@ -448,13 +449,18 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
 	),
-	ResourceTypes.JSONDashboard: NewResourceDescriptor(
+	ResourceTypes.JSONDashboardBase: NewResourceDescriptor(
+		jsondashboardsbase.Service,
+	),
+	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
+		ResourceTypes.JSONDashboardBase,
+		Dependencies.DashboardLinkID(true),
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
 		// Dependencies.Service,
 		Dependencies.ID(ResourceTypes.SLO),
-		Dependencies.ID(ResourceTypes.JSONDashboard),
+		Dependencies.ID(ResourceTypes.JSONDashboardBase),
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
@@ -467,8 +473,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.DashboardSharing: NewChildResourceDescriptor(
 		sharing.Service,
-		ResourceTypes.JSONDashboard,
-		Dependencies.ResourceID(ResourceTypes.JSONDashboard),
+		ResourceTypes.JSONDashboardBase,
+		Dependencies.ResourceID(ResourceTypes.JSONDashboardBase, true),
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),

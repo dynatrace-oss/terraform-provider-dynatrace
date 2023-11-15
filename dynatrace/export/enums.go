@@ -129,6 +129,7 @@ var ResourceTypes = struct {
 	Credentials                         ResourceType
 	Dashboard                           ResourceType
 	JSONDashboard                       ResourceType
+	JSONDashboardBase                   ResourceType
 	CalculatedServiceMetric             ResourceType
 	CalculatedWebMetric                 ResourceType
 	CalculatedMobileMetric              ResourceType
@@ -383,6 +384,7 @@ var ResourceTypes = struct {
 	"dynatrace_credentials",
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
+	"dynatrace_json_dashboard_base",
 	"dynatrace_calculated_service_metric",
 	"dynatrace_calculated_web_metric",
 	"dynatrace_calculated_mobile_metric",

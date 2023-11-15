@@ -60,28 +60,41 @@ func (me *Resource) IsReferencedAsDataSource() bool {
 	return me.Module.IsReferencedAsDataSource()
 }
 
-func (me *Resource) genUniqueName(settngs settings.Settings) (string, bool) {
-	name := ""
-	prevName, nameProvided := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
-	if nameProvided {
-		name = prevName
-	} else {
-		name = settings.Name(settngs, me.ID)
-	}
-	return name, nameProvided
-}
-
-func (me *Resource) SetName(name string, nameProvided bool) *Resource {
+func (me *Resource) SetName(name string) *Resource {
 	if me.Name == name {
 		return me
 	}
 	me.Name = name
 
-	if nameProvided {
-		me.UniqueName = name
+	var parentUniqueNameFound bool = false
+	var parentUniqueName string = ""
+
+	parentType, parentFound := me.Module.Environment.ChildParentGroups[me.Module.Type]
+	nameModule := me.Module
+
+	if parentFound {
+		nameModule = me.Module.Environment.Module(parentType)
+		nameModule.ChildParentMutex.Lock()
+		parentUniqueName, parentUniqueNameFound = nameModule.ChildParentIDNameMap[me.ID]
+	}
+
+	if parentUniqueNameFound {
+		me.UniqueName = parentUniqueName
 	} else {
-		terraformName := toTerraformName(name)
-		me.UniqueName = me.Module.namer.Name(terraformName)
+
+		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
+		if prevUniqueName == "" {
+			terraformName := toTerraformName(name)
+			me.UniqueName = nameModule.namer.Name(terraformName)
+		} else {
+			me.UniqueName = prevUniqueName
+		}
+	}
+	if parentFound && !parentUniqueNameFound {
+		nameModule.ChildParentIDNameMap[me.ID] = me.UniqueName
+	}
+	if parentFound {
+		nameModule.ChildParentMutex.Unlock()
 	}
 
 	me.Status = ResourceStati.Discovered
@@ -90,28 +103,35 @@ func (me *Resource) SetName(name string, nameProvided bool) *Resource {
 
 func (me *Resource) GetResourceReferences() []*Resource {
 	resources := map[string]*Resource{}
+
+	resources = me.getResourceReferences(resources)
+
+	result := []*Resource{}
+	for _, resource := range resources {
+		result = append(result, resource)
+	}
+	return result
+}
+
+func (me *Resource) getResourceReferences(resources map[string]*Resource) map[string]*Resource {
 	if len(me.ResourceReferences) == 0 {
-		return []*Resource{}
+		return resources
 	}
 	for _, resource := range me.ResourceReferences {
 		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
 		key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
-		resources[key] = resource
-		for _, resource := range resource.GetResourceReferences() {
-			if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
-				continue
-			}
-			key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
-			resources[key] = resource
+		_, foundReference := resources[key]
+		if foundReference {
+			continue
 		}
+		resources[key] = resource
+
+		resources = resource.getResourceReferences(resources)
 	}
-	result := []*Resource{}
-	for _, resource := range resources {
-		result = append(result, resource)
-	}
-	return result
+
+	return resources
 }
 
 func (me *Resource) RefersTo(other *Resource) bool {
@@ -221,8 +241,8 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
-	name, name_provided := me.genUniqueName(settngs)
-	me.SetName(name, name_provided)
+	name := settings.Name(settngs, me.ID)
+	me.SetName(name)
 
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
@@ -368,7 +388,9 @@ func (me *Resource) PostProcess() error {
 					if err = typedItem.Download(); err != nil {
 						return err
 					}
-					me.XParent = typedItem
+					if dependency.IsParent() {
+						me.XParent = typedItem
+					}
 					me.ResourceReferences = append(me.ResourceReferences, typedItem)
 				case *DataSource:
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)

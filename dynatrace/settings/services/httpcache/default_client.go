@@ -54,6 +54,7 @@ var REGEX_CALCULATED_METRICS_SERVICE_LIST, _ = regexp.Compile(`\/api\/config\/v1
 var REGEX_CALCULATED_METRICS_SERVICE_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/service\/([^\/]*)$`)
 var REGEX_DASHBOARDS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/dashboards$`)
 var REGEX_DASHBOARDS_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)$`)
+var REGEX_DASHBOARD_SHARING_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)\/shareSettings$`)
 var REGEX_REQUEST_ATTRIBUTES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes$`)
 var REGEX_REQUEST_ATTRIBUTES_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes\/([^\/?]*)\?includeProcessGroupReferences=true$`)
 var REGEX_CONDITIONAL_NAMING_HOST_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host$`)
@@ -126,6 +127,8 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return doGet("calculated-metrics-service", m[1])
 	} else if m := REGEX_DASHBOARDS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return Request(&ListDashboardsV1{})
+	} else if m := REGEX_DASHBOARD_SHARING_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("dashboard-sharing", m[1])
 	} else if m := REGEX_DASHBOARDS_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("dashboard", m[1])
 	} else if m := REGEX_REQUEST_ATTRIBUTES_LIST.FindStringSubmatch(url); len(m) == 1 {

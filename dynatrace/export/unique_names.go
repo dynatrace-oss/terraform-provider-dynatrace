@@ -78,23 +78,22 @@ func (me *nameCounter) Name(name string) string {
 		if !found {
 			me.m[strings.ToLower(name)] = 0
 			outName = name
-			break
 		} else {
 			me.m[strings.ToLower(name)] = cnt + 1
+
+			if me.replace == nil {
+				outName = DefaultReplace(name, me.m[strings.ToLower(name)])
+			} else {
+				outName = me.replace(name, me.m[strings.ToLower(name)])
+			}
 		}
 
-		if me.replace == nil {
-			outName = DefaultReplace(name, me.m[strings.ToLower(name)])
-		} else {
-			outName = me.replace(name, me.m[strings.ToLower(name)])
-		}
-
-		_, foundFull := me.mFull[outName]
+		_, foundFull := me.mFull[strings.ToLower(outName)]
 		if foundFull {
 			continue
 		}
 
-		me.mFull[outName] = true
+		me.mFull[strings.ToLower(outName)] = true
 		break
 	}
 
@@ -105,7 +104,7 @@ func (me *nameCounter) BlockName(name string) {
 	me.mutex.Lock()
 	defer me.mutex.Unlock()
 
-	me.mFull[name] = true
+	me.mFull[strings.ToLower(name)] = true
 
 }
 
@@ -113,8 +112,8 @@ func (me *nameCounter) SetNameWritten(name string) bool {
 	me.mutex.Lock()
 	defer me.mutex.Unlock()
 
-	isWritten := me.mWritten[name]
-	me.mWritten[name] = true
+	isWritten := me.mWritten[strings.ToLower(name)]
+	me.mWritten[strings.ToLower(name)] = true
 
 	return isWritten
 

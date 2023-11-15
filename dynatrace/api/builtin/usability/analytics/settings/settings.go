@@ -28,7 +28,7 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	return "usability_analytics"
+	return *me.ApplicationID
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

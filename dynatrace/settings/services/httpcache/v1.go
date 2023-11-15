@@ -31,7 +31,7 @@ func (me *GetV1) Finish(v any) error {
 			return err
 		}
 		if stub == nil {
-			return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found for %s", me.ID, me.SchemaID)}
+			return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar %s not found for %s", me.ID, me.SchemaID)}
 		}
 		wrapper := struct {
 			Downloaded struct {
@@ -53,7 +53,7 @@ func (me *GetV1) Finish(v any) error {
 		})
 		return nil
 	}
-	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found for %s", me.ID, me.SchemaID)}
+	return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar Nil %s not found for %s", me.ID, me.SchemaID)}
 }
 
 type ListV1 struct {

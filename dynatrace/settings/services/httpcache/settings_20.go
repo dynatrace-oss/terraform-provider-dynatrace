@@ -37,7 +37,7 @@ func (me *GetSettings20Request) Finish(vs ...any) error {
 			return err
 		}
 		if stub == nil {
-			return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+			return rest.Error{Code: 404, Message: fmt.Sprintf("20_Tar: %s not found", me.ID)}
 		}
 		wrapper := struct {
 			Downloaded json.RawMessage `json:"downloaded"`
@@ -50,7 +50,7 @@ func (me *GetSettings20Request) Finish(vs ...any) error {
 		}
 		return nil
 	}
-	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+	return rest.Error{Code: 404, Message: fmt.Sprintf("20_Tar Nil: %s not found", me.ID)}
 }
 
 func (me *GetSettings20Request) Expect(codes ...int) rest.Request {

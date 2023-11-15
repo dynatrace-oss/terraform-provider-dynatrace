@@ -47,8 +47,7 @@ func NewStateMap() *StateMap {
 }
 
 func (sm *StateMap) AddToStateMapByName(res resource) {
-	key := fmt.Sprintf("%s|||%s|||%s",
-		res.Module,
+	key := fmt.Sprintf("%s|||%s",
 		res.Type,
 		res.Name)
 
@@ -56,8 +55,10 @@ func (sm *StateMap) AddToStateMapByName(res resource) {
 }
 
 func (sm *StateMap) AddToStateMapByID(res resource) {
-	key := fmt.Sprintf("%s|||%s|||%s",
-		res.Module,
+	if len(res.Instances) <= 0 {
+		return
+	}
+	key := fmt.Sprintf("%s|||%s",
 		res.Type,
 		res.Instances[0].Attributes.Id)
 
@@ -82,32 +83,30 @@ func (sm *StateMap) ExtractCommonStates(smLinked *StateMap) (*StateMap, map[stri
 		if found {
 			commonStateMap.AddToStateMapByID(stateResource.Resource)
 
-			list, found := namesByModule[stateResource.Resource.Module]
+			list, found := namesByModule[stateResource.Resource.Type]
 			if found {
 				// pass
 			} else {
 				list = []string{}
 			}
 			list = append(list, stateResource.Resource.Name)
-			namesByModule[stateResource.Resource.Module] = list
+			namesByModule[stateResource.Resource.Type] = list
 		}
 	}
 
 	return commonStateMap, namesByModule
 }
 
-func (sm *StateMap) GetPrevUniqueName(res *Resource) (string, bool) {
+func (sm *StateMap) GetPrevUniqueName(res *Resource) string {
 	name := ""
-	nameProvided := false
 
 	if PREV_STATE_ON {
 		// pass
 	} else {
-		return name, nameProvided
+		return name
 	}
 
-	key := fmt.Sprintf("%s|||%s|||%s",
-		fmt.Sprintf("module.%s", res.Type.Trim()),
+	key := fmt.Sprintf("%s|||%s",
 		string(res.Type),
 		res.ID)
 
@@ -118,11 +117,10 @@ func (sm *StateMap) GetPrevUniqueName(res *Resource) (string, bool) {
 		resFound.Used = true
 		sm.resources[key] = resFound
 		name = resFound.Resource.Name
-		nameProvided = true
 	}
 	sm.mutex.Unlock()
 
-	return name, nameProvided
+	return name
 }
 
 func LoadStateThis() (*state, error) {

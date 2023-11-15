@@ -38,15 +38,17 @@ import (
 )
 
 type Module struct {
-	Environment *Environment
-	Type        ResourceType
-	Resources   map[string]*Resource
-	DataSources map[string]*DataSource
-	namer       UniqueNamer
-	Status      ModuleStatus
-	Error       error
-	Descriptor  *ResourceDescriptor
-	Service     settings.CRUDService[settings.Settings]
+	Environment          *Environment
+	Type                 ResourceType
+	Resources            map[string]*Resource
+	DataSources          map[string]*DataSource
+	namer                UniqueNamer
+	Status               ModuleStatus
+	Error                error
+	Descriptor           *ResourceDescriptor
+	Service              settings.CRUDService[settings.Settings]
+	ChildParentIDNameMap map[string]string
+	ChildParentMutex     *sync.Mutex
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -100,8 +102,11 @@ func (me *Module) ContainsPostProcessedResources() bool {
 
 func (me *Module) GetResourcesReferencedFromOtherModules() []*Resource {
 	resources := []*Resource{}
-	for _, resource := range me.Resources {
-		if me.Environment.RefersTo(resource) {
+
+	myResources := me.GetResourcesAndChildOfResources()
+
+	for _, resource := range myResources {
+		if me.Environment.RefersTo(resource, me.Type) {
 			resources = append(resources, resource)
 		}
 	}
@@ -114,7 +119,7 @@ func (me *Module) GetResourcesReferencedFromOtherModules() []*Resource {
 func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	resourceTypes := map[ResourceType]ResourceType{}
 	for _, referencedResource := range me.GetResourceReferences() {
-		if referencedResource.Type == me.Type {
+		if referencedResource.Type == me.Type || (referencedResource.XParent != nil && referencedResource.XParent.Type == me.Type) {
 			continue
 		}
 		resourceTypes[referencedResource.Type] = referencedResource.Type
@@ -129,12 +134,28 @@ func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	return result
 }
 
+func (me *Module) GetResourcesAndChildOfResources() []*Resource {
+	resources := make([]*Resource, 0, len(me.Resources))
+
+	for _, resource := range me.Resources {
+		resources = append(resources, resource)
+	}
+
+	childResourcesList := me.GetChildOfResources()
+	resources = append(resources, childResourcesList...)
+
+	return resources
+
+}
+
 func (me *Module) GetResourceReferences() []*Resource {
 	resources := map[string]*Resource{}
-	if len(me.Resources) == 0 {
+	myResources := me.GetResourcesAndChildOfResources()
+
+	if len(myResources) == 0 {
 		return []*Resource{}
 	}
-	for _, resource := range me.Resources {
+	for _, resource := range myResources {
 		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
@@ -301,6 +322,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	}()
 
 	if ATOMIC_DEPENDENCIES {
+		uniqueNameExists := map[string]bool{}
 		referencedResources := me.GetResourceReferences()
 		if len(referencedResources) == 0 {
 			return nil
@@ -316,9 +338,16 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 			return referencedResources[i].UniqueName < referencedResources[j].UniqueName
 		})
 		for _, resource := range referencedResources {
-			if resource.Type == me.Type {
+			if resource.Type == me.Type || (resource.XParent != nil && resource.XParent.Type == me.Type) {
 				continue
 			}
+
+			typeAndUniqueName := resource.Type.Trim() + resource.UniqueName
+			if uniqueNameExists[typeAndUniqueName] {
+				continue
+			}
+			uniqueNameExists[typeAndUniqueName] = true
+
 			if !me.Environment.Module(resource.Type).IsReferencedAsDataSource() {
 				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s_%s" {
 	type = any
@@ -505,7 +534,13 @@ func (me *Module) WriteResourcesFile() (err error) {
 
 	if ATOMIC_DEPENDENCIES {
 
+		uniqueNameExists := map[string]bool{}
 		for _, resource := range referencedResources {
+
+			if uniqueNameExists[resource.UniqueName] {
+				continue
+			}
+			uniqueNameExists[resource.UniqueName] = true
 
 			if _, err = resourcesFile.WriteString(fmt.Sprintf(`output "resources_%s" {
   value = {
@@ -548,11 +583,11 @@ func (me *Module) WriteResourcesFile() (err error) {
 	return nil
 }
 
-func (me *Module) RefersTo(resource *Resource) bool {
+func (me *Module) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
-	if me.Type == resource.Type {
+	if me.Type == resource.Type || (me.Descriptor.Parent != nil && *me.Descriptor.Parent == parentType) {
 		return false
 	}
 	for _, res := range me.Resources {
@@ -561,6 +596,27 @@ func (me *Module) RefersTo(resource *Resource) bool {
 		}
 	}
 	return false
+}
+
+func (me *Module) GetChildOfResources() []*Resource {
+	resources := []*Resource{}
+	if me.Environment.ChildResourceOverride {
+		return resources
+	}
+
+	for _, module := range me.Environment.Modules {
+		childDescriptor := module.Descriptor
+		isParent := !me.Environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
+		if isParent {
+			for _, resource := range module.Resources {
+				if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
+					resources = append(resources, resource)
+				}
+			}
+		}
+	}
+
+	return resources
 }
 
 func (me *Module) GetChildResources() []*Resource {
@@ -629,8 +685,6 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 
 	}
 
-	me.blockPrevNames()
-
 	err = me.downloadResources(resourcesToDownload, multiThreaded)
 	if err != nil {
 		return err
@@ -641,7 +695,7 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 
 func (me *Module) blockPrevNames() {
 	if PREV_STATE_ON {
-		names, found := me.Environment.PrevNamesByModule[fmt.Sprintf("module.%s", me.Type.Trim())]
+		names, found := me.Environment.PrevNamesByModule[string(me.Type)]
 		if found {
 			for _, name := range names {
 				me.namer.BlockName(name)
@@ -770,7 +824,7 @@ func (me *Module) Discover() error {
 		if stub.Name == "" {
 			panic(me.Type)
 		}
-		res := me.Resource(stub.ID).SetName(stub.Name, false)
+		res := me.Resource(stub.ID).SetName(stub.Name)
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
 		}
@@ -820,7 +874,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		isWrittenAlready := me.namer.SetNameWritten(res.UniqueName)
 
 		if isWrittenAlready {
-			fmt.Println("ERROR: [ExecuteImportV2] Duplicate UniqueName for ", string(me.Type), res.UniqueName)
+			fmt.Println("ERROR: [ExecuteImportV2] Duplicate UniqueName for ", string(me.Type), res.UniqueName, res.ID)
 			continue
 
 		}
@@ -832,8 +886,13 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 			providerSource = fmt.Sprintf(`provider["%s"]`, providerSource)
 		}
 
+		moduleValue := fmt.Sprintf("module.%s", me.Type.Trim())
+		if me.Descriptor.Parent != nil {
+			moduleValue = fmt.Sprintf("module.%s", me.Descriptor.Parent.Trim())
+		}
+
 		resList = append(resList, resource{
-			Module: fmt.Sprintf("module.%s", me.Type.Trim()),
+			Module: moduleValue,
 			Mode:   "managed",
 			Type:   string(me.Type),
 			Name:   res.UniqueName,

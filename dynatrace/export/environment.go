@@ -51,6 +51,7 @@ type Environment struct {
 	ChildResourceOverride bool
 	PrevStateMapCommon    *StateMap
 	PrevNamesByModule     map[string][]string
+	ChildParentGroups     map[ResourceType]ResourceType
 }
 
 func (me *Environment) TenantID() string {
@@ -110,7 +111,18 @@ func (me *Environment) Export() (err error) {
 }
 
 func (me *Environment) PreProcess() error {
+	me.ProcessChildParentGroups()
+
 	return me.ProcessPrevState()
+}
+func (me *Environment) ProcessChildParentGroups() {
+	me.ChildParentGroups = map[ResourceType]ResourceType{}
+	for resType, resource := range AllResources {
+		if resource.Parent != nil {
+			me.ChildParentGroups[resType] = *resource.Parent
+			me.ChildParentGroups[*resource.Parent] = *resource.Parent
+		}
+	}
 }
 
 func (me *Environment) ProcessPrevState() error {
@@ -142,6 +154,7 @@ func (me *Environment) InitialDownload() error {
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
 		resourceTypes = append(resourceTypes, string(resourceType))
+		me.Module(ResourceType(resourceType)).blockPrevNames()
 	}
 	sort.Strings(resourceTypes)
 
@@ -309,12 +322,14 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		return stored
 	}
 	module := &Module{
-		Type:        resType,
-		Resources:   map[string]*Resource{},
-		DataSources: map[string]*DataSource{},
-		namer:       NewUniqueNamer().Replace(ResourceName),
-		Status:      ModuleStati.Untouched,
-		Environment: me,
+		Type:                 resType,
+		Resources:            map[string]*Resource{},
+		DataSources:          map[string]*DataSource{},
+		namer:                NewUniqueNamer().Replace(ResourceName),
+		Status:               ModuleStati.Untouched,
+		Environment:          me,
+		ChildParentIDNameMap: map[string]string{},
+		ChildParentMutex:     new(sync.Mutex),
 	}
 	me.Modules[resType] = module
 	return module
@@ -337,12 +352,12 @@ func (me *Environment) GetFlawedFolder() string {
 	return path.Join(me.OutputFolder, ".flawed")
 }
 
-func (me *Environment) RefersTo(resource *Resource) bool {
+func (me *Environment) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
 	for _, module := range me.Modules {
-		if module.RefersTo(resource) {
+		if module.RefersTo(resource, parentType) {
 			return true
 		}
 	}
@@ -487,9 +502,11 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 		m[k] = module
 	}
 	for k, module := range m {
-		if module.IsReferencedAsDataSource() || (!module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil) {
+		if module.IsReferencedAsDataSource() {
 			module.PurgeFolder()
 			delete(me.Modules, k)
+		} else if !module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil {
+			module.PurgeFolder()
 		} else if len(module.GetPostProcessedResources()) == 0 {
 			module.PurgeFolder()
 			delete(me.Modules, k)
@@ -656,12 +673,11 @@ func (me *Environment) WriteMainFile() error {
 					if me.Module(referencedResource.Type).IsReferencedAsDataSource() {
 						continue
 					}
-					if referencedResource.Type == resourceType {
+					if referencedResource.Type == resourceType || (referencedResource.XParent != nil && referencedResource.XParent.Type == resourceType) {
 						continue
 					}
 					typeAndUniqueName := referencedResource.Type.Trim() + referencedResource.UniqueName
 					if uniqueNameExists[typeAndUniqueName] {
-						fmt.Println("ERROR: WriteMainFile Duplicate UniqueName for ", string(referencedResource.Type), referencedResource.UniqueName)
 						continue
 					}
 					uniqueNameExists[typeAndUniqueName] = true
