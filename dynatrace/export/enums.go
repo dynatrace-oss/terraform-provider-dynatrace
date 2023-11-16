@@ -315,6 +315,7 @@ var ResourceTypes = struct {
 	AutomationSchedulingRule            ResourceType
 	CustomTags                          ResourceType
 	HostMonitoringMode                  ResourceType
+	HostMonitoringAdvanced              ResourceType
 	IPAddressMasking                    ResourceType
 	AppSecVulnerabilitySettings         ResourceType
 	AppSecVulnerabilityThirdParty       ResourceType
@@ -569,6 +570,7 @@ var ResourceTypes = struct {
 	"dynatrace_automation_scheduling_rule",
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
+	"dynatrace_host_monitoring_advanced",
 	"dynatrace_ip_address_masking",
 	"dynatrace_vulnerability_settings",
 	"dynatrace_vulnerability_third_party",
