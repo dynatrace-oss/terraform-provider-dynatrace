@@ -58,6 +58,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
+	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
@@ -1105,6 +1106,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		hostmonitoringadvanced.Service,
 		Coalesce(Dependencies.Host),
 	),
+	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
 }
 
 var BlackListedResources = []ResourceType{

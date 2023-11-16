@@ -332,6 +332,7 @@ var ResourceTypes = struct {
 	PlatformBucket                      ResourceType
 	KeyUserAction                       ResourceType
 	UrlBasedSampling                    ResourceType
+	AttributeAllowList                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -587,6 +588,7 @@ var ResourceTypes = struct {
 	"dynatrace_platform_bucket",
 	"dynatrace_key_user_action",
 	"dynatrace_url_based_sampling",
+	"dynatrace_attribute_allow_list",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
