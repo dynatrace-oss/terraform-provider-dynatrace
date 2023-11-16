@@ -44,6 +44,7 @@ var AgentItemNames = struct {
 	ContainerImageName                 AgentItemName
 	ContainerImageVersion              AgentItemName
 	ContainerName                      AgentItemName
+	DatasourceMonitoringConfigId       AgentItemName
 	DeclarativeId                      AgentItemName
 	DotnetCommand                      AgentItemName
 	DotnetCommandPath                  AgentItemName
@@ -145,6 +146,7 @@ var AgentItemNames = struct {
 	"CONTAINER_IMAGE_NAME",
 	"CONTAINER_IMAGE_VERSION",
 	"CONTAINER_NAME",
+	"DATASOURCE_MONITORING_CONFIG_ID",
 	"DECLARATIVE_ID",
 	"DOTNET_COMMAND",
 	"DOTNET_COMMAND_PATH",
