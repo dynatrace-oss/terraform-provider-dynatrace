@@ -23,9 +23,8 @@ import (
 )
 
 type Settings struct {
-	AutoInjection bool   `json:"autoInjection"`    // An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.
-	Enabled       bool   `json:"enabled"`          // This setting is enabled (`true`) or disabled (`false`)
-	HostID        string `json:"-" scope:"hostId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	Enabled bool   `json:"enabled"`          // This setting is enabled (`true`) or disabled (`false`)
+	HostID  string `json:"-" scope:"hostId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 }
 
 func (me *Settings) Name() string {
@@ -37,7 +36,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"auto_injection": {
 			Type:        schema.TypeBool,
 			Description: "An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
-			Required:    true,
+			Optional:    true,
+			Deprecated:  "This field has been moved to a new schema, please utilize the resource `dynatrace_host_monitoring_advanced` to configure this field.",
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -61,16 +61,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"auto_injection": me.AutoInjection,
-		"enabled":        me.Enabled,
-		"host_id":        me.HostID,
+		"enabled": me.Enabled,
+		"host_id": me.HostID,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"auto_injection": &me.AutoInjection,
-		"enabled":        &me.Enabled,
-		"host_id":        &me.HostID,
+		"enabled": &me.Enabled,
+		"host_id": &me.HostID,
 	})
 }

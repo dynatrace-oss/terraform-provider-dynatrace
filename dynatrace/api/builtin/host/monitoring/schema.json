@@ -10,16 +10,6 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
-		"autoInjection": {
-			"default": true,
-			"description": "An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
-			"displayName": "Auto-injection",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "boolean"
-		},
 		"enabled": {
 			"default": true,
 			"description": "Turn on monitoring to gain visibility into this host, its processes, services, and applications.",
@@ -36,5 +26,5 @@
 	],
 	"schemaId": "builtin:host.monitoring",
 	"types": {},
-	"version": "1.3"
+	"version": "1.4"
 }
