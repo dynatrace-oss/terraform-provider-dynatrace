@@ -25,6 +25,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_attribute_allow_list` and `dynatrace_attribute_masking` instead."
+}
+
 type Settings struct {
 	AttributeKeys RuleItems `json:"attributeKeys,omitempty"` // Attribute key allow-list
 }
