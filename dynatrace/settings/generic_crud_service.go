@@ -82,6 +82,13 @@ func (me *GenericCRUDService[T]) Delete(id string) error {
 	return me.Service.Delete(id)
 }
 
+func (me *GenericCRUDService[T]) DeleteWithContext(ctx context.Context, id string) error {
+	if contextDeleter, ok := me.Service.(ContextDeleter[T]); ok {
+		return contextDeleter.DeleteWithContext(ctx, id)
+	}
+	return me.Service.Delete(id)
+}
+
 func (me *GenericCRUDService[T]) SchemaID() string {
 	return me.Service.SchemaID()
 }
