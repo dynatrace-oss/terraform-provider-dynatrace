@@ -19,8 +19,6 @@ package azure
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -28,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 const SchemaID = "v1:config:credentials:azure"
@@ -62,61 +61,26 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(v *azure.AzureCredentials) (*api.Stub, error) {
-	return me.service.Create(v)
-}
-
-var updateRegex = regexp.MustCompile("Invalid generic services configuration: You can't set up (.*) services using this endpoint")
-
-type blackList []string
-
-func (me blackList) Allows(v *azure.AzureSupportingService) bool {
-	if len(me) == 0 {
-		return true
+	stub, err := me.service.Create(v)
+	if err != nil {
+		return nil, err
 	}
-	for _, elem := range me {
-		if v.Name != nil && strings.TrimSpace(elem) == strings.TrimSpace(*v.Name) {
-			return false
+	logging.File.Println("RemoveDefault:", v.RemoveDefaults)
+	if v.RemoveDefaults {
+		if err := me.client.Put(fmt.Sprintf("%s/%s/services", BasePath, stub.ID), struct {
+			Services []string `json:"services"`
+		}{Services: []string{}}, 204).Finish(); err != nil {
+			me.Delete(stub.ID)
+			return nil, err
 		}
 	}
-	return true
+	return stub, err
 }
 
 func (me *service) Update(id string, v *azure.AzureCredentials) error {
-	if v.SupportingServicesManagedInDynatrace {
-		var creds azure.AzureCredentials
-		if err := me.client.Get(fmt.Sprintf("%s/%s", BasePath, id), 200).Finish(&creds); err != nil {
-			return err
-		}
-		v.SupportingServices = creds.SupportingServices
-	}
-	if err := me.service.Update(id, v); err != nil {
-		if matches := updateRegex.FindStringSubmatch(err.Error()); len(matches) > 1 {
-			if len(v.SupportingServices) == 0 {
-				return err
-			}
-			var serviceStr string
-			if serviceStr = matches[1]; len(serviceStr) == 0 {
-				return err
-			}
-			blacklist := blackList{}
-			for _, service := range strings.Split(serviceStr, ",") {
-				blacklist = append(blacklist, strings.TrimSpace(service))
-			}
-			supportingServices := []*azure.AzureSupportingService{}
-			for _, supportingservice := range v.SupportingServices {
-				if blacklist.Allows(supportingservice) {
-					supportingServices = append(supportingServices, supportingservice)
-				}
-			}
-			if len(v.SupportingServices) == len(supportingServices) {
-				return err
-			}
-			v.SupportingServices = supportingServices
-			return me.service.Update(id, v)
-		}
-		return err
-	}
-	return nil
+	// by not sending supported services they won't get changed
+	v.SupportingServices = nil
+	return me.service.Update(id, v)
 }
 
 func (me *service) Delete(id string) error {
