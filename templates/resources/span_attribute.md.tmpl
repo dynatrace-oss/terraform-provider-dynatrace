@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_span_attribute Resource - terraform-provider-dynatrace"
-subcategory: "OpenTelemetry & OpenTracing"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_span_attribute` covers configuration for span attributes
 ---
 
 # dynatrace_span_attribute (Resource)
+
+!> This resource API endpoint has been deprecated, please use [dynatrace_attribute_allow_list](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/attribute_allow_list) and [dynatrace_attribute_masking](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/attribute_masking) instead.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 

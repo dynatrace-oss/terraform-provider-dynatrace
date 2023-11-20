@@ -1117,6 +1117,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
 	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
 	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
+	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
 
 	// Deprecated resources due to better alternatives
 	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies
