@@ -22,6 +22,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_attribute_allow_list` and `dynatrace_attribute_masking` instead."
+}
+
 type Settings struct {
 	Key     string      `json:"key"`     // Key of the span event attribute to store
 	Masking MaskingType `json:"masking"` // Possible Values: `MASK_ENTIRE_VALUE`, `MASK_ONLY_CONFIDENTIAL_DATA`, `NOT_MASKED`
