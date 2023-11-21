@@ -60,9 +60,29 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	if err := decoder.DecodeAll(map[string]any{
 		"description": &me.Description,
 		"name":        &me.Name,
 		"rules":       &me.Rules,
-	})
+	}); err != nil {
+		return err
+	}
+	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
+	// Only known workaround is to ignore these blocks
+	// Side node: This issue doesn't emerge upon first `terraform apply`
+	//            It occurs when changes are happening (UPDATE)
+	if len(me.Rules) > 0 {
+		rules := Rules{}
+		for _, rule := range me.Rules {
+			// value_format AND rule type normally are required to contain SOMETHING
+			// if they're nil/empty, we know it's because of the bug in the SDK
+			if rule.ValueFormat == nil && len(rule.Type) == 0 {
+				continue
+			}
+			rules = append(rules, rule)
+		}
+		me.Rules = rules
+	}
+
+	return nil
 }
