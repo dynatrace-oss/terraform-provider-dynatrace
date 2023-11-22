@@ -27,7 +27,6 @@ The full documentation of the export feature is available [here](https://registr
 ```terraform
 resource "dynatrace_host_monitoring" "#name#" {
   enabled        = true
-  auto_injection = false
   host_id        = "HOST-1234567890000000"
 }
 ```
@@ -37,12 +36,12 @@ resource "dynatrace_host_monitoring" "#name#" {
 
 ### Required
 
-- `auto_injection` (Boolean) An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `host_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 
 ### Optional
 
+- `auto_injection` (Boolean, Deprecated) An auto-injection disabled with [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.
 - `full_stack` (Boolean, Deprecated) Dynatrace uses full-stack monitoring by default, to monitor every aspect of your environment, including all processes, services, and applications detected on your hosts. 
 
 If you turn off full-stack monitoring, Dynatrace will only monitor your infrastructure. You will lose access to application performance, user experience data, code-level visibility and PurePath insights. 
