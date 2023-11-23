@@ -135,5 +135,16 @@ func (assc *AWSSupportingServiceConfig) UnmarshalHCL(decoder hcl.Decoder) error 
 	if err := decoder.DecodeSlice("monitored_metrics", &assc.MonitoredMetrics); err != nil {
 		return err
 	}
+	metrics := []*AWSSupportingServiceMetric{}
+	for _, metric := range assc.MonitoredMetrics {
+		if len(metric.Name) == 0 {
+			continue
+		}
+		metrics = append(metrics, metric)
+	}
+	assc.MonitoredMetrics = metrics
+	if len(assc.MonitoredMetrics) == 0 {
+		assc.MonitoredMetrics = nil
+	}
 	return nil
 }

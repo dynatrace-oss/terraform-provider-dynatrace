@@ -82,7 +82,7 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 			},
 		},
 		"supporting_services_to_monitor": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "supporting services to be monitored",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(AWSSupportingServiceConfig).Schema()},
@@ -295,6 +295,14 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("supporting_services_to_monitor", &awscc.SupportingServicesToMonitor); err != nil {
 		return err
 	}
+	services := []*AWSSupportingServiceConfig{}
+	for _, service := range awscc.SupportingServicesToMonitor {
+		if len(service.Name) == 0 {
+			continue
+		}
+		services = append(services, service)
+	}
+	awscc.SupportingServicesToMonitor = services
 	if value, ok := decoder.GetOk("tagged_only"); ok {
 		awscc.TaggedOnly = opt.NewBool(value.(bool))
 	}
