@@ -28,7 +28,7 @@ import (
 var ATOMIC_DEPENDENCIES = os.Getenv("DYNATRACE_ATOMIC_DEPENDENCIES") == "true"
 
 type Dependency interface {
-	Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any)
+	Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any)
 	ResourceType() ResourceType
 	DataSourceType() DataSourceType
 	IsParent() bool
@@ -45,6 +45,7 @@ func Coalesce(d Dependency) Dependency {
 var Dependencies = struct {
 	ManagementZone       Dependency
 	DashboardLinkID      func(parent bool) Dependency
+	HyperLinkDashboardID func() Dependency
 	LegacyID             func(resourceType ResourceType) Dependency
 	ID                   func(resourceType ResourceType) Dependency
 	ResourceID           func(resourceType ResourceType, parent bool) Dependency
@@ -70,6 +71,7 @@ var Dependencies = struct {
 }{
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
 	DashboardLinkID:      func(parent bool) Dependency { return &dashlinkdep{ResourceTypes.JSONDashboardBase, parent} },
+	HyperLinkDashboardID: func() Dependency { return &dashdep{ResourceTypes.JSONDashboardBase, false} },
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
 	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
 	ResourceID:           func(resourceType ResourceType, parent bool) Dependency { return &resourceIDDep{resourceType, parent} },
@@ -110,7 +112,7 @@ func (me *mgmzdep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.name}"
@@ -191,10 +193,20 @@ func (me *dashlinkdep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	replacePattern := "${%s.%s.id}"
 	resources := []any{}
-	for id, resource := range environment.Module(me.resourceType).Resources {
+
+	resourcesMap := map[string]*Resource{}
+
+	resource, found := environment.Module(me.resourceType).Resources[resourceId]
+	if found {
+		resourcesMap[resourceId] = resource
+	} else {
+		return s, resources
+	}
+
+	for id, resource := range resourcesMap {
 		resOrDsType := func() string {
 			return string(me.resourceType)
 		}
@@ -230,6 +242,94 @@ func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn R
 	return s, resources
 }
 
+type dashdep struct {
+	resourceType ResourceType
+	parent       bool
+}
+
+func (me *dashdep) IsParent() bool {
+	return me.parent
+}
+
+func (me *dashdep) ResourceType() ResourceType {
+	return me.resourceType
+}
+
+func (me *dashdep) DataSourceType() DataSourceType {
+	return ""
+}
+
+var dashboardHyperLinkIdRegex = regexp.MustCompile(`#dashboard;[^)]*id=([^${;)-]+-[^;)-]+-[^;)-]+-[^;)-]+-[^-;)]+)`)
+
+func (me *dashdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+	resources := []any{}
+
+	resourcesMap := map[string]*Resource{}
+
+	matches := dashboardHyperLinkIdRegex.FindAllStringSubmatch(s, -1)
+
+	for _, match := range matches {
+		dashId := match[1]
+		resource, found := environment.Module(me.resourceType).Resources[dashId]
+		if found {
+			resourcesMap[dashId] = resource
+		} else {
+			return s, resources
+		}
+	}
+
+	childDescriptor := environment.Module(replacingIn).Descriptor
+	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
+
+	var replacePattern string
+	if ATOMIC_DEPENDENCIES {
+		replacePattern = "${var.%s_%s.value.id}"
+	} else {
+		replacePattern = "${var.%s.%s.id}"
+	}
+
+	if environment.Flags.Flat || isParent {
+		replacePattern = "${%s.%s.id}"
+	}
+
+	for id, resource := range resourcesMap {
+		resOrDsType := func() string {
+			return string(me.resourceType)
+		}
+		if resource.Type == replacingIn {
+			replacePattern = "${%s.%s.id}"
+		} else {
+			if resource.IsReferencedAsDataSource() {
+				resOrDsType = func() string {
+					return string(me.resourceType.AsDataSource())
+				}
+				replacePattern = "${data.%s.%s.id}"
+				if environment.Flags.Flat {
+					replacePattern = "${data.%s.%s.id}"
+				}
+			} else {
+				if ATOMIC_DEPENDENCIES {
+					replacePattern = "${var.%s_%s.value.id}"
+				} else {
+					replacePattern = "${var.%s.%s.id}"
+				}
+				if environment.Flags.Flat || isParent {
+					replacePattern = "${%s.%s.id}"
+				}
+			}
+		}
+		found := false
+		if strings.Contains(s, id) {
+			s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
+			found = true
+		}
+		if found {
+			resources = append(resources, resource)
+		}
+	}
+	return s, resources
+}
+
 type legacyID struct {
 	resourceType ResourceType
 }
@@ -246,7 +346,7 @@ func (me *legacyID) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.legacy_id}"
@@ -310,7 +410,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	childDescriptor := environment.Module(replacingIn).Descriptor
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
@@ -379,10 +479,20 @@ func (me *resourceIDDep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	replacePattern := "${%s.%s.id}"
 	resources := []any{}
-	for id, resource := range environment.Module(me.resourceType).Resources {
+
+	resourcesMap := map[string]*Resource{}
+
+	resource, found := environment.Module(me.resourceType).Resources[resourceId]
+	if found {
+		resourcesMap[resourceId] = resource
+	} else {
+		return s, resources
+	}
+
+	for id, resource := range resourcesMap {
 		resOrDsType := func() string {
 			return string(me.resourceType)
 		}
@@ -432,7 +542,7 @@ func (me *tenantds) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *tenantds) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *tenantds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	tenantID := environment.TenantID()
 	if len(tenantID) == 0 {
 		return s, []any{}
@@ -468,7 +578,7 @@ func (me *entityds) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
@@ -513,7 +623,7 @@ func (me *reqAttName) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType) (string, []any) {
+func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.name}"

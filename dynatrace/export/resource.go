@@ -369,7 +369,7 @@ func (me *Resource) PostProcess() error {
 		fileHeader := fileContents[:idx]
 		fileBody := fileContents[idx:]
 
-		if modifiedFileContents, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type); len(foundItemsInFileContents) > 0 {
+		if modifiedFileContents, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID); len(foundItemsInFileContents) > 0 {
 			var outputFile *os.File
 			if outputFile, err = me.CreateFile(); err != nil {
 				return err

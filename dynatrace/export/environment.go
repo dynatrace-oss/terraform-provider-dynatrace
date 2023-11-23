@@ -228,43 +228,102 @@ func (me *Environment) InitialDownload() error {
 
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
 	resources := me.GetNonPostProcessedResources()
-	for len(resources) > 0 {
-		if shutdown.System.Stopped() {
-			return nil
-		}
-		m := map[ResourceType][]*Resource{}
-		for _, resource := range resources {
-			var reslist []*Resource
-			if rl, found := m[resource.Type]; !found {
-				reslist = []*Resource{}
-			} else {
-				reslist = rl
-			}
-			reslist = append(reslist, resource)
-			m[resource.Type] = reslist
-		}
-		const ClearLine = "\033[2K"
-		for k, reslist := range m {
-			fmt.Printf("- [POSTPROCESS] %s (0 of %d)", k, len(reslist))
-			for idx, resource := range reslist {
-				if shutdown.System.Stopped() {
+
+	if parallel {
+		for len(resources) > 0 {
+
+			m := getResMap(resources)
+			for _, reslist := range m {
+
+				var wg sync.WaitGroup
+				itemCount := len(reslist)
+				channel := make(chan *Resource, itemCount)
+				maxThreads := 50
+				if maxThreads > itemCount {
+					maxThreads = itemCount
+				}
+				wg.Add(maxThreads)
+
+				processItem := func(resource *Resource) error {
+					if shutdown.System.Stopped() {
+						return nil
+					}
+					if err := resource.PostProcess(); err != nil {
+						return err
+					}
+					fmt.Print("\r")
+					fmt.Printf("- [POSTPROCESS] %s - %s", resource.Type, resource.UniqueName)
+
 					return nil
 				}
-				if err := resource.PostProcess(); err != nil {
-					return err
+
+				for i := 0; i < maxThreads; i++ {
+
+					go func() error {
+
+						for {
+							res, ok := <-channel
+							if !ok {
+								wg.Done()
+								return nil
+							}
+							if shutdown.System.Stopped() {
+								wg.Done()
+								return nil
+							}
+
+							err := processItem(res)
+
+							if err != nil {
+								wg.Done()
+								return err
+							}
+						}
+					}()
+
+				}
+
+				for _, res := range reslist {
+					channel <- res
+				}
+
+				close(channel)
+				wg.Wait()
+			}
+
+			resources = me.GetNonPostProcessedResources()
+		}
+
+	} else {
+		for len(resources) > 0 {
+			if shutdown.System.Stopped() {
+				return nil
+			}
+			m := getResMap(resources)
+			const ClearLine = "\033[2K"
+			for k, reslist := range m {
+				fmt.Printf("- [POSTPROCESS] %s (0 of %d)", k, len(reslist))
+				for idx, resource := range reslist {
+					if shutdown.System.Stopped() {
+						return nil
+					}
+					if err := resource.PostProcess(); err != nil {
+						return err
+					}
+					fmt.Print(ClearLine)
+					fmt.Print("\r")
+					fmt.Printf("- [POSTPROCESS] %s (%d of %d)", k, idx+1, len(reslist))
+
 				}
 				fmt.Print(ClearLine)
 				fmt.Print("\r")
-				fmt.Printf("- [POSTPROCESS] %s (%d of %d)", k, idx+1, len(reslist))
-
+				fmt.Printf("- [POSTPROCESS] %s\n", k)
 			}
-			fmt.Print(ClearLine)
-			fmt.Print("\r")
-			fmt.Printf("- [POSTPROCESS] %s\n", k)
-		}
 
-		resources = me.GetNonPostProcessedResources()
+			resources = me.GetNonPostProcessedResources()
+		}
 	}
 
 	for _, resource := range me.GetChildResources() {
@@ -287,6 +346,21 @@ func (me *Environment) PostProcess() error {
 		}
 	}
 	return nil
+}
+
+func getResMap(resources []*Resource) map[ResourceType][]*Resource {
+	m := map[ResourceType][]*Resource{}
+	for _, resource := range resources {
+		var reslist []*Resource
+		if rl, found := m[resource.Type]; !found {
+			reslist = []*Resource{}
+		} else {
+			reslist = rl
+		}
+		reslist = append(reslist, resource)
+		m[resource.Type] = reslist
+	}
+	return m
 }
 
 func (me *Environment) Finish() (err error) {
