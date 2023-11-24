@@ -20,6 +20,8 @@ package customdevice
 import (
 	"fmt"
 	"net/url"
+	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -40,21 +42,41 @@ type service struct {
 	credentials *settings.Credentials
 }
 
+const DT_CUSTOM_DEVICE_APPLY_TIMEOUT = "DT_CUSTOM_DEVICE_APPLY_TIMEOUT"
+const DefaultApplyTimeout = 100
+const MinApplyTimeout = 100
+const MaxApplyTimeout = 500
+
 func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 
+	applyTimeout := DefaultApplyTimeout
+	sApplyTimeout := os.Getenv(DT_CUSTOM_DEVICE_APPLY_TIMEOUT)
+	if len(sApplyTimeout) > 0 {
+		if timeOutValue, err := strconv.Atoi(sApplyTimeout); err == nil {
+			if timeOutValue < MinApplyTimeout {
+				timeOutValue = MinApplyTimeout
+			} else if timeOutValue > MaxApplyTimeout {
+				timeOutValue = MaxApplyTimeout
+			}
+			applyTimeout = timeOutValue
+		}
+	}
+
+	maxIteration := applyTimeout / 5
+
 	// The result from the GET API enpoint is not very stable, so attepting to get the custom device once is not enough.
 	// 20 is an arbitraty number (it takes 40s before the method gives up) that should be long enough for the endpoint to return a value.
-	for i := 0; i < 20; i++ {
+	for i := 0; i < maxIteration; i++ {
 		req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships", url.QueryEscape(entitySelector))).Expect(200)
 		req.Finish(&CustomDeviceGetResponse)
 		if len(CustomDeviceGetResponse.Entities) != 0 {
 			break
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 
 	if len(CustomDeviceGetResponse.Entities) == 0 {
@@ -72,13 +94,13 @@ func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 				DisplayName string `json:"displayName"`
 			}{}
 
-			for i := 0; i < 20; i++ {
+			for i := 0; i < maxIteration; i++ {
 				req := client.Get(fmt.Sprintf("/api/v2/entities/%s?from=now-3y", *isInstance.ID)).Expect(200)
 				req.Finish(&listResponse)
 				if listResponse.DisplayName != "" {
 					break
 				}
-				time.Sleep(2 * time.Second)
+				time.Sleep(5 * time.Second)
 			}
 			v.Group = &listResponse.DisplayName
 
@@ -206,10 +228,24 @@ func (me *service) Create(v *customdevice.CustomDevice) (*api.Stub, error) {
 		return nil, err
 	}
 
+	applyTimeout := DefaultApplyTimeout
+	sApplyTimeout := os.Getenv(DT_CUSTOM_DEVICE_APPLY_TIMEOUT)
+	if len(sApplyTimeout) > 0 {
+		if timeOutValue, err := strconv.Atoi(sApplyTimeout); err == nil {
+			if timeOutValue < MinApplyTimeout {
+				timeOutValue = MinApplyTimeout
+			} else if timeOutValue > MaxApplyTimeout {
+				timeOutValue = MaxApplyTimeout
+			}
+			applyTimeout = timeOutValue
+		}
+	}
+
+	maxIteration := applyTimeout / 5
 	// Check the custom device was indeed created before finishing up
-	for i := 0; i < 50; i++ {
+	for i := 0; i < maxIteration; i++ {
 		me.CheckGet(v.CustomDeviceID, v)
-		time.Sleep(2 * time.Second)
+		time.Sleep(5 * time.Second)
 		if v.EntityId != "" {
 			break
 		}
