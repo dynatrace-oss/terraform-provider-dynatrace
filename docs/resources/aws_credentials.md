@@ -180,7 +180,7 @@ resource "dynatrace_aws_credentials" "#name#" {
 
 - `label` (String) The name of the credentials
 - `supporting_services_managed_in_dynatrace` (Boolean) If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.
-- `supporting_services_to_monitor` (Block List) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
+- `supporting_services_to_monitor` (Block Set) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
 - `tags_to_monitor` (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 
