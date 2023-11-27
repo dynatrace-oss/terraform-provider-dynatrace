@@ -326,6 +326,9 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			}
 		}
 		if err = contextGetter.GetWithContext(ctx, d.Id(), sttngs); err != nil {
+			if err.Error() == "inaccessible" {
+				return diag.Diagnostics{}
+			}
 			if strings.Contains(err.Error(), "re-run with confighcl") {
 				tfConfig := me.Settings()
 				if err = tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, me.Resource())); err == nil {

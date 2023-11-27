@@ -18,7 +18,9 @@
 package slo
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -112,6 +114,17 @@ func (me *service) Delete(id string) error {
 type sloGet struct {
 	slo_env2.SLO
 	MetricKey string `json:"metricKey"`
+}
+
+func (me *service) GetWithContext(ctx context.Context, id string, v *slo.Settings) error {
+	err := me.Get(id, v)
+	if err != nil {
+		if err.Error() == "Cannot access a disabled SLO." {
+			return errors.New("inaccessible")
+		}
+		return err
+	}
+	return nil
 }
 
 func (me *service) Get(id string, v *slo.Settings) error {
