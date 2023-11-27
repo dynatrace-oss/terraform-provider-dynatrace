@@ -18,10 +18,16 @@
 package workflows
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+	"os"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
@@ -37,7 +43,46 @@ type service struct {
 	credentials *settings.Credentials
 }
 
+type MyRoundTripper struct {
+	RoundTripper http.RoundTripper
+}
+
+var lock sync.Mutex
+
+func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	lock.Lock()
+	rest.Logger.Println(req.Method, req.URL)
+	if req.Body != nil {
+		buf := new(bytes.Buffer)
+		io.Copy(buf, req.Body)
+		data := buf.Bytes()
+		rest.Logger.Println("  ", string(data))
+		req.Body = io.NopCloser(bytes.NewBuffer(data))
+	}
+	lock.Unlock()
+	resp, err := rt.RoundTripper.RoundTrip(req)
+	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		if resp.Body != nil {
+			buf := new(bytes.Buffer)
+			io.Copy(buf, resp.Body)
+			data := buf.Bytes()
+			resp.Body = io.NopCloser(bytes.NewBuffer(data))
+			rest.Logger.Println(resp.Status, string(data))
+		} else {
+			rest.Logger.Println(resp.Status)
+		}
+	}
+	return resp, err
+}
+
 func (me *service) client() *automation.Client {
+	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
+		if http.DefaultClient.Transport == nil {
+			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultTransport}
+		} else {
+			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultClient.Transport}
+		}
+	}
 	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
 		ClientID:     me.credentials.Automation.ClientID,
 		ClientSecret: me.credentials.Automation.ClientSecret,
