@@ -22,6 +22,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -39,6 +40,7 @@ type AWSCredentialsConfig struct {
 	TagsToMonitor                        []*AWSConfigTag               `json:"tagsToMonitor"`                         // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
 	ConnectionStatus                     *ConnectionStatus             `json:"connectionStatus,omitempty"`            // The status of the connection to the AWS environment.   * `CONNECTED`: There was a connection within last 10 minutes.  * `DISCONNECTED`: A problem occurred with establishing connection using these credentials. Check whether the data is correct.  * `UNINITIALIZED`: The successful connection has never been established for these credentials.
 	SupportingServicesManagedInDynatrace bool                          `json:"-"`
+	RemoveDefaults                       bool                          `json:"-"`
 	Unknowns                             map[string]json.RawMessage    `json:"-"`
 }
 
@@ -91,12 +93,23 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 					return false
 				}
 				ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
-				return ssmid.(bool)
+				bssmid := ssmid.(bool)
+				rmd, _ := d.GetOk("remove_defaults")
+				brmd := rmd.(bool)
+
+				return bssmid || brmd
 			},
+			Deprecated: "Managing supporting services directly within AWS Credentials has been deprecated within the REST API. Consider using the resource `dynatrace_aws_service` instead and set either `supporting_services_managed_in_dynatrace` or `remove_defaults` to `true`",
 		},
 		"supporting_services_managed_in_dynatrace": {
 			Type:        schema.TypeBool,
 			Description: "If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.",
+			Optional:    true,
+			Default:     false,
+		},
+		"remove_defaults": {
+			Type:        schema.TypeBool,
+			Description: "Instructs the provider to remove the supporting services Dynatrace applies by default to newly created AWS Credentials. Supporting Services applied by via `dynatrace_aws_service` subsequently won't get touched.",
 			Optional:    true,
 			Default:     false,
 		},
@@ -325,6 +338,10 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			awscc.TagsToMonitor = append(awscc.TagsToMonitor, entry)
 		}
 	}
+	if value, ok := decoder.GetOk("remove_defaults"); ok {
+		awscc.RemoveDefaults = value.(bool)
+	}
+	logging.File.Println("RemoveDefault:", awscc.RemoveDefaults)
 	return nil
 }
 
