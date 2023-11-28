@@ -336,6 +336,12 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 				}
 				err = contextGetter.GetWithContext(ctx, d.Id(), sttngs)
 			} else {
+				if restError, ok := err.(rest.Error); ok {
+					if restError.Code == 404 {
+						d.SetId("")
+						return diag.Diagnostics{}
+					}
+				}
 				return diag.FromErr(err)
 			}
 		}
