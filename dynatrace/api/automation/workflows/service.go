@@ -61,15 +61,20 @@ func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	}
 	lock.Unlock()
 	resp, err := rt.RoundTripper.RoundTrip(req)
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-		if resp.Body != nil {
-			buf := new(bytes.Buffer)
-			io.Copy(buf, resp.Body)
-			data := buf.Bytes()
-			resp.Body = io.NopCloser(bytes.NewBuffer(data))
-			rest.Logger.Println(resp.Status, string(data))
-		} else {
-			rest.Logger.Println(resp.Status)
+	if err != nil {
+		rest.Logger.Println(err.Error())
+	}
+	if resp != nil {
+		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+			if resp.Body != nil {
+				buf := new(bytes.Buffer)
+				io.Copy(buf, resp.Body)
+				data := buf.Bytes()
+				resp.Body = io.NopCloser(bytes.NewBuffer(data))
+				rest.Logger.Println(resp.Status, string(data))
+			} else {
+				rest.Logger.Println(resp.Status)
+			}
 		}
 	}
 	return resp, err
