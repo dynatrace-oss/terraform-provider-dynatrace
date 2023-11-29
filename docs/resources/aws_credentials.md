@@ -179,8 +179,9 @@ resource "dynatrace_aws_credentials" "#name#" {
 ### Optional
 
 - `label` (String) The name of the credentials
+- `remove_defaults` (Boolean) Instructs the provider to remove the supporting services Dynatrace applies by default to newly created AWS Credentials. Supporting Services applied by via `dynatrace_aws_service` subsequently won't get touched.
 - `supporting_services_managed_in_dynatrace` (Boolean) If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.
-- `supporting_services_to_monitor` (Block Set) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
+- `supporting_services_to_monitor` (Block Set, Deprecated) supporting services to be monitored (see [below for nested schema](#nestedblock--supporting_services_to_monitor))
 - `tags_to_monitor` (Block List, Max: 10) AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true` (see [below for nested schema](#nestedblock--tags_to_monitor))
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 

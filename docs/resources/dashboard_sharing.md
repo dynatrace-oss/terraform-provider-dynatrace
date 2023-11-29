@@ -27,9 +27,9 @@ description: |-
 
 ### Optional
 
-- `enabled` (Boolean) The dashboard is shared (`true`) or private (`false`)
+- `enabled` (Boolean) The dashboard is shared (`true`) or private (`false`). Make sure that this value is aligned with the attribute `shared` of the resources `dynatrace_dashboard` and `dynatrace_json_dashboard`. Otherwise you will encounter non-empty plans.
 - `permissions` (Block List, Max: 1) Access permissions of the dashboard (see [below for nested schema](#nestedblock--permissions))
-- `preset` (Boolean) If `true` the dashboard will be marked as preset
+- `preset` (Boolean) If `true` the dashboard will be marked as preset. Setting this attribute to `true` will automatically enforce a specific set of permissions - Dashboards flagged as Preset are shared by default. Make sure that this value is aligned with the attribute `preset` of the resources `dynatrace_dashboard` and `dynatrace_json_dashboard`. Otherwise you will encounter non-empty plans.
 - `public` (Block List, Max: 1) Configuration of the [anonymous access](https://dt-url.net/ov03sf1) to the dashboard (see [below for nested schema](#nestedblock--public))
 
 ### Read-Only
