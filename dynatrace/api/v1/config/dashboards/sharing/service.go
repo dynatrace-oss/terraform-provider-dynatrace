@@ -28,7 +28,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	sharing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/sharing/settings"
@@ -125,12 +124,6 @@ func (me *service) update(id string, v *sharing.DashboardSharing, retry int) err
 	var dbm DashbordMeta
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
 		return err
-	}
-
-	if dbm.DashboardMetaData.Preset {
-		logging.File.Println("dbm.DashboardMetaData.Preset:", dbm.DashboardMetaData.Preset)
-		v.Muted = true
-		return nil
 	}
 
 	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
