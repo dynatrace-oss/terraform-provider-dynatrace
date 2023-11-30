@@ -34,67 +34,70 @@ const BasePath = "/api/config/v1/aws/credentials"
 var mu sync.Mutex
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCredentialsConfig] {
-	return settings.NewCRUDService(
-		credentials,
-		SchemaID,
-		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
-			WithStubs(&api.Stubs{}).
-			WithMutex(mu.Lock, mu.Unlock).
-			WithOnBeforeUpdate(func(id string, v *aws.AWSCredentialsConfig) error {
-				if v.SupportingServicesManagedInDynatrace {
-					var creds aws.AWSCredentialsConfig
-					client := rest.DefaultClient(credentials.URL, credentials.Token)
+	return &service{
+		service: settings.NewCRUDService(
+			credentials,
+			SchemaID,
+			settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
+				WithStubs(&api.Stubs{}).
+				WithMutex(mu.Lock, mu.Unlock).
+				WithOnBeforeUpdate(func(id string, v *aws.AWSCredentialsConfig) error {
+					if v.SupportingServicesManagedInDynatrace {
+						var creds aws.AWSCredentialsConfig
+						client := rest.DefaultClient(credentials.URL, credentials.Token)
 
-					if err := client.Get(fmt.Sprintf("%s/%s", BasePath, "id"), 200).Finish(&creds); err != nil {
-						return err
+						if err := client.Get(fmt.Sprintf("%s/%s", BasePath, "id"), 200).Finish(&creds); err != nil {
+							return err
+						}
+						v.SupportingServicesToMonitor = creds.SupportingServicesToMonitor
 					}
-					v.SupportingServicesToMonitor = creds.SupportingServicesToMonitor
-				}
-				return nil
-			}).
-			WithAfterCreate(func(client rest.Client, stub *api.Stub) (*api.Stub, error) {
-				// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
-				// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created
-				// Last resort is to populate that value right after GET has happened (see below) - which is already cheating
-				var cfg aws.AWSCredentialsConfig
-				numRetries := 0
-				configIsValid := false
-				for !configIsValid && numRetries < 30 {
-					client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
-					if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
-						configIsValid = true
-						break
-					}
-					numRetries++
-					time.Sleep(2 * time.Second)
-				}
-				return stub, nil
-			}).
-			WithDuplicates(Duplicates).
-			WithCompleteGet(func(client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
-				// This is a sanity (last resort) function
-				// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
-				// ... even after a miniute of waiting
-				// If all of that fails, we're correcting that right after we've fetched the current state
-				// because that `externalId` IS available globally elsewhere
-				if v.AuthenticationData == nil {
 					return nil
-				}
-				if v.AuthenticationData.RoleBasedAuthentication == nil {
-					return nil
-				}
-				if (v.AuthenticationData.RoleBasedAuthentication.ExternalID == nil) || len(*v.AuthenticationData.RoleBasedAuthentication.ExternalID) == 0 {
-					tokenResponse := struct {
-						Token string `json:"token"`
-					}{}
-					client.Get("/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
-					if len(tokenResponse.Token) > 0 {
-						v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
+				}).
+				WithAfterCreate(func(client rest.Client, stub *api.Stub) (*api.Stub, error) {
+					// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
+					// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created
+					// Last resort is to populate that value right after GET has happened (see below) - which is already cheating
+					var cfg aws.AWSCredentialsConfig
+					numRetries := 0
+					configIsValid := false
+					for !configIsValid && numRetries < 30 {
+						client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
+						if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
+							configIsValid = true
+							break
+						}
+						numRetries++
+						time.Sleep(2 * time.Second)
 					}
-				}
-				return nil
-			}),
-	)
+					return stub, nil
+				}).
+				WithDuplicates(Duplicates).
+				WithCompleteGet(func(client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
+					// This is a sanity (last resort) function
+					// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
+					// ... even after a miniute of waiting
+					// If all of that fails, we're correcting that right after we've fetched the current state
+					// because that `externalId` IS available globally elsewhere
+					if v.AuthenticationData == nil {
+						return nil
+					}
+					if v.AuthenticationData.RoleBasedAuthentication == nil {
+						return nil
+					}
+					if (v.AuthenticationData.RoleBasedAuthentication.ExternalID == nil) || len(*v.AuthenticationData.RoleBasedAuthentication.ExternalID) == 0 {
+						tokenResponse := struct {
+							Token string `json:"token"`
+						}{}
+						client.Get("/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
+						if len(tokenResponse.Token) > 0 {
+							v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
+						}
+					}
+					return nil
+				}),
+		),
+		client: rest.DefaultClient(credentials.URL, credentials.Token),
+	}
 }
 
 func Duplicates(service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWSCredentialsConfig) (*api.Stub, error) {
@@ -122,4 +125,41 @@ func Duplicates(service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWS
 		}
 	}
 	return nil, nil
+}
+
+type service struct {
+	service settings.CRUDService[*aws.AWSCredentialsConfig]
+	client  rest.Client
+}
+
+func (me *service) List() (api.Stubs, error) {
+	return me.service.List()
+}
+
+func (me *service) Get(id string, v *aws.AWSCredentialsConfig) error {
+	return me.service.Get(id, v)
+}
+
+func (me *service) SchemaID() string {
+	return me.service.SchemaID()
+}
+
+func (me *service) Create(v *aws.AWSCredentialsConfig) (*api.Stub, error) {
+	stub, err := me.service.Create(v)
+	if v.RemoveDefaults {
+		err = me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}, 204).Finish()
+	}
+	return stub, err
+}
+
+func (me *service) Update(id string, v *aws.AWSCredentialsConfig) error {
+	return me.service.Update(id, v)
+}
+
+func (me *service) Delete(id string) error {
+	return me.service.Delete(id)
+}
+
+func (me *service) Name() string {
+	return me.service.Name()
 }

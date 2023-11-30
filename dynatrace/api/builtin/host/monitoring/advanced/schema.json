@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"HOST"
+	],
+	"description": "You can switch off the injection of the ProcessAgent and of CodeModules.",
+	"displayName": "Advanced Settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"processAgentInjection": {
+			"default": true,
+			"description": "Disabling this via [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
+			"displayName": "ProcessAgent injection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:host-monitoring"
+	],
+	"schemaId": "builtin:host.monitoring.advanced",
+	"types": {},
+	"version": "0.0.1"
+}

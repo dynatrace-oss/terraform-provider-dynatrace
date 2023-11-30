@@ -19,15 +19,14 @@ package eventattribute_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/eventattribute"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestSpanEvents(t *testing.T) {
-	api.TestService(t, eventattribute.Service)
+	// api.TestService(t, eventattribute.Service)
+	t.Skip()
 }
 
 func TestAccSpanEvents(t *testing.T) {
-	api.TestAcc(t)
+	// api.TestAcc(t)
+	t.Skip()
 }

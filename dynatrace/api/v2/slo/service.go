@@ -18,6 +18,7 @@
 package slo
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -44,6 +45,17 @@ type service struct {
 	credentials *settings.Credentials
 }
 
+func (me *service) GetWithContext(ctx context.Context, id string, v *slo.SLO) error {
+	err := me.Get(id, v)
+	if err != nil {
+		if err.Error() == "Cannot access a disabled SLO." {
+			return errors.New("inaccessible")
+		}
+		return err
+	}
+	return nil
+}
+
 func (me *service) Get(id string, v *slo.SLO) error {
 	var err error
 
@@ -52,29 +64,6 @@ func (me *service) Get(id string, v *slo.SLO) error {
 	if err = req.Finish(v); err != nil {
 		return err
 	}
-
-	// numRequiredSuccesses := 10
-	// for numRequiredSuccesses > 0 {
-	// 	length := 0
-
-	// 	for length == 0 {
-	// 		req = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200)
-	// 		var slos sloList
-	// 		if err = req.Finish(&slos); err != nil {
-	// 			return err
-	// 		}
-	// 		length = len(slos.SLOs)
-	// 		if length == 0 {
-	// 			time.Sleep(time.Second * 2)
-	// 		}
-	// 		for _, stub := range slos.SLOs {
-	// 			v.Timeframe = stub.SLO.Timeframe
-	// 		}
-	// 	}
-	// 	numRequiredSuccesses--
-	// 	time.Sleep(200 * time.Millisecond)
-	// }
-
 	return nil
 }
 
@@ -160,40 +149,42 @@ func (me *service) Create(v *slo.SLO) (*api.Stub, error) {
 			retry = false
 		}
 	}
-	length := 0
-	for length == 0 {
-		var slos sloList
-		if err = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200).Finish(&slos); err != nil {
-			return &api.Stub{ID: id, Name: v.Name}, err
-		}
-		length = len(slos.SLOs)
-		if length == 0 {
-			time.Sleep(time.Second * 2)
-			if shutdown.System.Stopped() {
-				return &api.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
-			}
-		}
-		for _, stub := range slos.SLOs {
-			v.Timeframe = stub.SLO.Timeframe
-		}
-	}
-
-	retry = true
-	numRequiredSuccesses := 20
-	for retry {
-		req = client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
-		if err = req.Finish(v); err != nil {
-			if !strings.Contains(err.Error(), "not found") {
+	if v.Enabled {
+		length := 0
+		for length == 0 {
+			var slos sloList
+			if err = client.Get(fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200).Finish(&slos); err != nil {
 				return &api.Stub{ID: id, Name: v.Name}, err
 			}
-			time.Sleep(2 * time.Second)
-			if shutdown.System.Stopped() {
-				return &api.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+			length = len(slos.SLOs)
+			if length == 0 {
+				time.Sleep(time.Second * 2)
+				if shutdown.System.Stopped() {
+					return &api.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+				}
 			}
-		} else {
-			numRequiredSuccesses--
-			if numRequiredSuccesses < 0 {
-				retry = false
+			for _, stub := range slos.SLOs {
+				v.Timeframe = stub.SLO.Timeframe
+			}
+		}
+
+		retry = true
+		numRequiredSuccesses := 20
+		for retry {
+			req = client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
+			if err = req.Finish(v); err != nil {
+				if !strings.Contains(err.Error(), "not found") {
+					return &api.Stub{ID: id, Name: v.Name}, err
+				}
+				time.Sleep(2 * time.Second)
+				if shutdown.System.Stopped() {
+					return &api.Stub{ID: id, Name: v.Name}, errors.New("execution interrupted")
+				}
+			} else {
+				numRequiredSuccesses--
+				if numRequiredSuccesses < 0 {
+					retry = false
+				}
 			}
 		}
 	}

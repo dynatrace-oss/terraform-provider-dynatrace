@@ -59,6 +59,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
+	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
+	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
@@ -93,6 +95,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
+	hostmonitoringadvanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostmonitoringmode "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/mode"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
@@ -1107,6 +1110,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.UrlBasedSampling: NewResourceDescriptor(urlbasedsampling.Service),
+	ResourceTypes.HostMonitoringAdvanced: NewResourceDescriptor(
+		hostmonitoringadvanced.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
+	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
 }
 
 var blackListedResources = []ResourceType{
@@ -1115,6 +1124,9 @@ var blackListedResources = []ResourceType{
 	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
 	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
 	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
+	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
+	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
+	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
 
 	// Deprecated resources due to better alternatives
 	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies

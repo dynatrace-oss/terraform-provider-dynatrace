@@ -43,10 +43,11 @@ func (me *DashboardSharing) Name() string {
 }
 
 func diffsuppress(k, oldValue, newValue string, d *schema.ResourceData) bool {
-	if v, ok := d.GetOk("muted"); ok {
-		return v.(bool)
-	}
 	return false
+	// if v, ok := d.GetOk("muted"); ok {
+	// 	return v.(bool)
+	// }
+	// return false
 }
 
 func (me *DashboardSharing) Schema() map[string]*schema.Schema {
@@ -59,13 +60,13 @@ func (me *DashboardSharing) Schema() map[string]*schema.Schema {
 		"enabled": {
 			Type:             schema.TypeBool,
 			Optional:         true,
-			Description:      "The dashboard is shared (`true`) or private (`false`)",
+			Description:      "The dashboard is shared (`true`) or private (`false`). Make sure that this value is aligned with the attribute `shared` of the resources `dynatrace_dashboard` and `dynatrace_json_dashboard`. Otherwise you will encounter non-empty plans.",
 			DiffSuppressFunc: diffsuppress,
 		},
 		"preset": {
 			Type:             schema.TypeBool,
 			Optional:         true,
-			Description:      "If `true` the dashboard will be marked as preset",
+			Description:      "If `true` the dashboard will be marked as preset. Setting this attribute to `true` will automatically enforce a specific set of permissions - Dashboards flagged as Preset are shared by default. Make sure that this value is aligned with the attribute `preset` of the resources `dynatrace_dashboard` and `dynatrace_json_dashboard`. Otherwise you will encounter non-empty plans.",
 			DiffSuppressFunc: diffsuppress,
 		},
 		"muted": {
@@ -169,7 +170,9 @@ func (me *DashboardSharing) UnmarshalHCL(decoder hcl.Decoder) error {
 							if err := permission.UnmarshalHCL(hcl.NewDecoder(decoder, fmt.Sprintf("permissions.0.permission.%d", hash))); err != nil {
 								return err
 							} else {
-								me.Permissions = append(me.Permissions, permission)
+								if len(permission.Type) > 0 {
+									me.Permissions = append(me.Permissions, permission)
+								}
 							}
 						}
 					}

@@ -480,6 +480,9 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_remote_access":              remoteaccess.Resource(),
 			"dynatrace_key_user_action":                    resources.NewGeneric(export.ResourceTypes.KeyUserAction).Resource(),
 			"dynatrace_url_based_sampling":                 resources.NewGeneric(export.ResourceTypes.UrlBasedSampling).Resource(),
+			"dynatrace_host_monitoring_advanced":           resources.NewGeneric(export.ResourceTypes.HostMonitoringAdvanced).Resource(),
+			"dynatrace_attribute_allow_list":               resources.NewGeneric(export.ResourceTypes.AttributeAllowList).Resource(),
+			"dynatrace_attribute_masking":                  resources.NewGeneric(export.ResourceTypes.AttributeMasking).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

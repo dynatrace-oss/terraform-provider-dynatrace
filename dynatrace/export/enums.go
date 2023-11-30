@@ -316,6 +316,7 @@ var ResourceTypes = struct {
 	AutomationSchedulingRule            ResourceType
 	CustomTags                          ResourceType
 	HostMonitoringMode                  ResourceType
+	HostMonitoringAdvanced              ResourceType
 	IPAddressMasking                    ResourceType
 	AppSecVulnerabilitySettings         ResourceType
 	AppSecVulnerabilityThirdParty       ResourceType
@@ -332,6 +333,8 @@ var ResourceTypes = struct {
 	PlatformBucket                      ResourceType
 	KeyUserAction                       ResourceType
 	UrlBasedSampling                    ResourceType
+	AttributeAllowList                  ResourceType
+	AttributeMasking                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -571,6 +574,7 @@ var ResourceTypes = struct {
 	"dynatrace_automation_scheduling_rule",
 	"dynatrace_custom_tags",
 	"dynatrace_host_monitoring_mode",
+	"dynatrace_host_monitoring_advanced",
 	"dynatrace_ip_address_masking",
 	"dynatrace_vulnerability_settings",
 	"dynatrace_vulnerability_third_party",
@@ -587,6 +591,8 @@ var ResourceTypes = struct {
 	"dynatrace_platform_bucket",
 	"dynatrace_key_user_action",
 	"dynatrace_url_based_sampling",
+	"dynatrace_attribute_allow_list",
+	"dynatrace_attribute_masking",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

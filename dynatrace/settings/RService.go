@@ -59,6 +59,10 @@ type ContextCreator[T Settings] interface {
 	CreateWithContext(ctx context.Context, v T) (*api.Stub, error)
 }
 
+type ContextDeleter[T Settings] interface {
+	DeleteWithContext(ctx context.Context, id string) error
+}
+
 type CRUDService[T Settings] interface {
 	List() (api.Stubs, error)
 	Get(id string, v T) error

@@ -11,5 +11,5 @@ resource "dynatrace_azure_credentials" "#name#" {
     name  = "string"
     value = "string"
   }
-  supporting_services_managed_in_dynatrace = true
+  remove_defaults = true
 }

@@ -38,7 +38,7 @@ resource "dynatrace_azure_credentials" "#name#" {
     name  = "string"
     value = "string"
   }
-  supporting_services_managed_in_dynatrace = true
+  remove_defaults = true
 }
 ```
 
@@ -59,8 +59,9 @@ resource "dynatrace_azure_credentials" "#name#" {
 - `label` (String) The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed
 - `monitor_only_excluding_tag_pairs` (Block List, Max: 20) A list of Azure tags to be excluded from monitoring.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`. (see [below for nested schema](#nestedblock--monitor_only_excluding_tag_pairs))
 - `monitor_only_tag_pairs` (Block List, Max: 20) A list of Azure tags to be monitored.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--monitor_only_tag_pairs))
-- `supporting_services` (Block List) A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server. (see [below for nested schema](#nestedblock--supporting_services))
-- `supporting_services_managed_in_dynatrace` (Boolean) If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.
+- `remove_defaults` (Boolean) Instructs the provider to remove the supporting services Dynatrace applies by default to newly created Azure Credentials. Supporting Services applied by via `dynatrace_azure_service` subsequently won't get touched.
+- `supporting_services` (Block List, Deprecated) A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server. (see [below for nested schema](#nestedblock--supporting_services))
+- `supporting_services_managed_in_dynatrace` (Boolean, Deprecated) If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.
 - `unknowns` (String) Any attributes that aren't yet supported by this provider
 
 ### Read-Only

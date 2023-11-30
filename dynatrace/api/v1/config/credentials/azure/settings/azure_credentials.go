@@ -40,6 +40,7 @@ type AzureCredentials struct {
 	MonitorOnlyTaggedEntities            *bool                      `json:"monitorOnlyTaggedEntities"`    // Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
 	SupportingServices                   []*AzureSupportingService  `json:"supportingServices,omitempty"` // A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.
 	SupportingServicesManagedInDynatrace bool                       `json:"-"`
+	RemoveDefaults                       bool                       `json:"-"`
 	Unknowns                             map[string]json.RawMessage `json:"-"`
 }
 
@@ -116,10 +117,18 @@ func (ac *AzureCredentials) Schema() map[string]*schema.Schema {
 				// ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
 				// return ssmid.(bool)
 			},
+			Deprecated: "Assigning supported services directly when creating Azure Credentials is deprecated. Use the resource `dynatrace_azure_service` instead.",
 		},
 		"supporting_services_managed_in_dynatrace": {
 			Type:        schema.TypeBool,
 			Description: "If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.",
+			Optional:    true,
+			Deprecated:  "This attribute is deprecated and has no effect any more. It always defaults to `true`.",
+			Default:     true,
+		},
+		"remove_defaults": {
+			Type:        schema.TypeBool,
+			Description: "Instructs the provider to remove the supporting services Dynatrace applies by default to newly created Azure Credentials. Supporting Services applied by via `dynatrace_azure_service` subsequently won't get touched.",
 			Optional:    true,
 			Default:     false,
 		},
@@ -338,6 +347,9 @@ func (ac *AzureCredentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("monitor_only_tagged_entities", opt.Bool(ac.MonitorOnlyTaggedEntities)); err != nil {
 		return err
 	}
+	if err := properties.Encode("supporting_services_managed_in_dynatrace", true); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -406,8 +418,9 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("monitor_only_tagged_entities"); ok {
 		ac.MonitorOnlyTaggedEntities = opt.NewBool(value.(bool))
 	}
-	if value, ok := decoder.GetOk("supporting_services_managed_in_dynatrace"); ok {
-		ac.SupportingServicesManagedInDynatrace = value.(bool)
+	ac.SupportingServicesManagedInDynatrace = true
+	if value, ok := decoder.GetOk("remove_defaults"); ok {
+		ac.RemoveDefaults = value.(bool)
 	}
 	return nil
 }

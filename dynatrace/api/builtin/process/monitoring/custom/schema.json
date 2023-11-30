@@ -354,6 +354,10 @@
 					"value": "RKE2_TYPE"
 				},
 				{
+					"displayName": "Datasource monitoring config ID",
+					"value": "DATASOURCE_MONITORING_CONFIG_ID"
+				},
+				{
 					"displayName": "Equinox config path",
 					"value": "EQUINOX_CONFIG_PATH"
 				},
@@ -619,5 +623,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.6"
+	"version": "0.4.7"
 }
