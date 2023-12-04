@@ -19,6 +19,10 @@
 		{
 			"customValidatorId": "problem-notification-header-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "problem-notification-secret-header-and-url-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Although the Dynatrace mobile app is the preferred method for receiving real-time notifications related to problems in your environment, if your organization uses email or a different ticket/incident management system for alerting, click Add notification to configure integration with Dynatrace.",
@@ -1664,6 +1668,38 @@
 					"subType": "datasource",
 					"type": "text"
 				},
+				"secretUrl": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid URI",
+							"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Not a valid http(s) URL",
+							"pattern": "^https?://.*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "The secret URL of the webhook endpoint.",
+					"displayName": "Webhook URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "urlContainsSecret",
+						"type": "EQUALS"
+					},
+					"type": "secret"
+				},
 				"url": {
 					"constraints": [
 						{
@@ -1683,15 +1719,38 @@
 						}
 					],
 					"default": "",
-					"description": "The URL of the WebHook endpoint.",
+					"description": "The URL of the webhook endpoint.",
 					"displayName": "Webhook URL",
 					"documentation": "",
 					"forceSecretResubmission": true,
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"property": "urlContainsSecret",
+								"type": "NULL"
+							},
+							{
+								"expectedValue": false,
+								"property": "urlContainsSecret",
+								"type": "EQUALS"
+							}
+						],
+						"type": "OR"
+					},
 					"subType": "url",
 					"type": "text"
+				},
+				"urlContainsSecret": {
+					"description": "",
+					"displayName": "Secret webhook URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
 				},
 				"useOAuth2": {
 					"description": "",
@@ -1889,5 +1948,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4.11"
+	"version": "1.5"
 }
