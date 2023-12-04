@@ -23,21 +23,20 @@ import (
 )
 
 type Settings struct {
-	ContainerTimezoneHeuristicEnabled bool    `json:"LAConfigContainerTimezoneHeuristicEnabled"` // Detect container time zones
-	ContainersLogsDetectionEnabled    bool    `json:"LAConfigContainersLogsDetectionEnabled"`    // Detect logs of containerized applications
+	ContainerTimezoneHeuristicEnabled bool    `json:"LAConfigContainerTimezoneHeuristicEnabled"` // Enables automatic detection of timezone in container's logs if it is not explicitly defined in content or configured.
+	ContainersLogsDetectionEnabled    bool    `json:"LAConfigContainersLogsDetectionEnabled"`    // Allows detection of log messages written to the containerized application's stdout/stderr streams.
 	DateSearchLimit_Bytes             int     `json:"LAConfigDateSearchLimit_Bytes"`             // Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
 	DefaultTimezone                   string  `json:"LAConfigDefaultTimezone"`                   // Default timezone for agent if more specific configurations is not defined.
 	EventLogQueryTimeout_Sec          int     `json:"LAConfigEventLogQueryTimeout_Sec"`          // Defines the maximum timeout value, in seconds, for the query extracting Windows Event Logs
-	IISDetectionEnabled               bool    `json:"LAConfigIISDetectionEnabled"`               // Detect IIS logs
-	LogScannerLinuxNfsEnabled         bool    `json:"LAConfigLogScannerLinuxNfsEnabled"`         // Detect logs on Network File Systems (NFS)
+	IISDetectionEnabled               bool    `json:"LAConfigIISDetectionEnabled"`               // Allows detection of logs and event logs written by IIS server.
+	LogScannerLinuxNfsEnabled         bool    `json:"LAConfigLogScannerLinuxNfsEnabled"`         // Allows detection of logs written to mounted network storage drives.
 	MaxLgisPerEntityCount             int     `json:"LAConfigMaxLgisPerEntityCount"`             // Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.
 	MinBinaryDetectionLimit_Bytes     int     `json:"LAConfigMinBinaryDetectionLimit_Bytes"`     // Defines the minimum number of bytes in log file required for binary detection.
 	MonitorOwnLogsEnabled             bool    `json:"LAConfigMonitorOwnLogsEnabled"`             // Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).
-	OpenLogFilesDetectionEnabled      bool    `json:"LAConfigOpenLogFilesDetectionEnabled"`      // Detect open log files
+	OpenLogFilesDetectionEnabled      bool    `json:"LAConfigOpenLogFilesDetectionEnabled"`      // Automatically detect logs written by important processes. For more details, check our [documentation](https://dt-url.net/7v02z76)
 	SeverityDetectionLimit_Bytes      int     `json:"LAConfigSeverityDetectionLimit_Bytes"`      // Defines the number of characters in every log line (starting from the first character in the line) where severity is searched.
 	SeverityDetectionLinesLimit       int     `json:"LAConfigSeverityDetectionLinesLimit"`       // Defines the number of the first lines of every log entry where severity is searched.
-	SystemLogsDetectionEnabled        bool    `json:"LAConfigSystemLogsDetectionEnabled"`        // (Linux: syslog, message log) (Windows: system, application, security event logs)
-	UTCAsDefaultContainerTimezone     bool    `json:"LAConfigUTCAsDefaultContainerTimezone"`     // Deprecated for OneAgent 1.247+
+	SystemLogsDetectionEnabled        bool    `json:"LAConfigSystemLogsDetectionEnabled"`        // Linux: syslog, message log Windows: system, application, security event logs
 	Scope                             *string `json:"-" scope:"scope"`                           // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
@@ -49,12 +48,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"container_timezone_heuristic_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect container time zones",
+			Description: "Enables automatic detection of timezone in container's logs if it is not explicitly defined in content or configured.",
 			Required:    true,
 		},
 		"containers_logs_detection_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect logs inside containers",
+			Description: "Allows detection of log messages written to the containerized application's stdout/stderr streams.",
 			Required:    true,
 		},
 		"date_search_limit_bytes": {
@@ -74,12 +73,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"iisdetection_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect IIS logs",
+			Description: "Allows detection of logs and event logs written by IIS server.",
 			Required:    true,
 		},
 		"log_scanner_linux_nfs_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect logs on Network File Systems (NFS)",
+			Description: "Allows detection of logs written to mounted network storage drives.",
 			Required:    true,
 		},
 		"max_lgis_per_entity_count": {
@@ -99,7 +98,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"open_log_files_detection_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect open log files",
+			Description: "Automatically detect logs written by important processes. For more details, check our [documentation](https://dt-url.net/7v02z76)",
 			Required:    true,
 		},
 		"severity_detection_limit_bytes": {
@@ -114,12 +113,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"system_logs_detection_enabled": {
 			Type:        schema.TypeBool,
-			Description: "(Linux: syslog, message log) (Windows: system, application, security event logs)",
-			Required:    true,
-		},
-		"utcas_default_container_timezone": {
-			Type:        schema.TypeBool,
-			Description: "Deprecated for OneAgent 1.247+",
+			Description: "Linux: syslog, message log Windows: system, application, security event logs",
 			Required:    true,
 		},
 		"scope": {
@@ -148,7 +142,6 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"severity_detection_limit_bytes":       me.SeverityDetectionLimit_Bytes,
 		"severity_detection_lines_limit":       me.SeverityDetectionLinesLimit,
 		"system_logs_detection_enabled":        me.SystemLogsDetectionEnabled,
-		"utcas_default_container_timezone":     me.UTCAsDefaultContainerTimezone,
 		"scope":                                me.Scope,
 	})
 }
@@ -169,7 +162,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"severity_detection_limit_bytes":       &me.SeverityDetectionLimit_Bytes,
 		"severity_detection_lines_limit":       &me.SeverityDetectionLinesLimit,
 		"system_logs_detection_enabled":        &me.SystemLogsDetectionEnabled,
-		"utcas_default_container_timezone":     &me.UTCAsDefaultContainerTimezone,
 		"scope":                                &me.Scope,
 	})
 }

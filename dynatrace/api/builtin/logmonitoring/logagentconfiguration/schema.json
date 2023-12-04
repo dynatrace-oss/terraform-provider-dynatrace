@@ -5,7 +5,7 @@
 		"environment"
 	],
 	"description": "Configure OneAgent options for Dynatrace Log Monitoring",
-	"displayName": "Advanced settings",
+	"displayName": "Advanced log settings",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -14,7 +14,7 @@
 	"properties": {
 		"LAConfigContainerTimezoneHeuristicEnabled": {
 			"default": true,
-			"description": "",
+			"description": "Enables automatic detection of timezone in container's logs if it is not explicitly defined in content or configured.",
 			"displayName": "Detect container time zones",
 			"documentation": "",
 			"maxObjects": 1,
@@ -27,7 +27,7 @@
 		},
 		"LAConfigContainersLogsDetectionEnabled": {
 			"default": true,
-			"description": "Enabling this option configures OneAgent to detect log messages written to the containerized application's stdout/stderr streams.",
+			"description": "Allows detection of log messages written to the containerized application's stdout/stderr streams.",
 			"displayName": "Detect logs of containerized applications",
 			"documentation": "",
 			"maxObjects": 1,
@@ -78,9 +78,6 @@
 			"displayName": "Default timezone for agents",
 			"documentation": "",
 			"maxObjects": 1,
-			"metadata": {
-				"minAgentVersion": "1.247"
-			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"subType": "datasource",
@@ -108,7 +105,7 @@
 		},
 		"LAConfigIISDetectionEnabled": {
 			"default": true,
-			"description": "",
+			"description": "Allows detection of logs and event logs written by IIS server.",
 			"displayName": "Detect IIS logs",
 			"documentation": "",
 			"maxObjects": 1,
@@ -118,8 +115,8 @@
 		},
 		"LAConfigLogScannerLinuxNfsEnabled": {
 			"default": false,
-			"description": "",
-			"displayName": "Detect logs on Network File Systems (NFS)",
+			"description": "Allows detection of logs written to mounted network storage drives.",
+			"displayName": "Detect logs on network file systems",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -175,13 +172,10 @@
 		},
 		"LAConfigOpenLogFilesDetectionEnabled": {
 			"default": true,
-			"description": "",
+			"description": "Automatically detect logs written by important processes. For more details, check our [documentation](https://dt-url.net/7v02z76)",
 			"displayName": "Detect open log files",
 			"documentation": "",
 			"maxObjects": 1,
-			"metadata": {
-				"minAgentVersion": "1.237"
-			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "boolean"
@@ -225,18 +219,8 @@
 		},
 		"LAConfigSystemLogsDetectionEnabled": {
 			"default": true,
-			"description": "(Linux: syslog, message log) (Windows: system, application, security event logs)",
+			"description": "Linux: syslog, message log Windows: system, application, security event logs",
 			"displayName": "Detect system logs",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "boolean"
-		},
-		"LAConfigUTCAsDefaultContainerTimezone": {
-			"default": true,
-			"description": "Deprecated for OneAgent 1.247+",
-			"displayName": "Set UTC as the default time zone for containers",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -250,5 +234,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.15"
+	"version": "1.1.16"
 }
