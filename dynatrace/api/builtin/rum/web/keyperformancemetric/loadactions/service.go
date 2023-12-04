@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.9"
+const SchemaVersion = "1.1"
 const SchemaID = "builtin:rum.web.key-performance-metric-load-actions"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*loadactions.Settings] {

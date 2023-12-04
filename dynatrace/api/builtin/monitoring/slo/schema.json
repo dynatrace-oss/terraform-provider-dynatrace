@@ -130,6 +130,7 @@
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"subType": "multiline",
 			"type": "text"
 		},
 		"metricExpression": {
@@ -334,5 +335,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "6.0.13"
+	"version": "6.0.14"
 }

@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.4.8"
+const SchemaVersion = "0.4.10"
 const SchemaID = "builtin:appsec.notification-integration"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*notificationintegration.Settings] {

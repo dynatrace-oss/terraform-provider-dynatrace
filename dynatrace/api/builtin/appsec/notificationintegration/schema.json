@@ -13,7 +13,7 @@
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Integrate security notifications with your existing incident-management system or team-collaboration channel. Within security integrations, use vulnerability and attack alerting profiles to filter the total number of alerts down to those relevant for your team.\n\nTo learn more, visit [Third-party integrations](https://dt-url.net/j803tgc).",
+	"description": "Integrate security notifications with your existing incident-management system or team-collaboration channel. Within security integrations, use vulnerability and attack alerting profiles to filter the total number of alerts down to those relevant for your team.\n\nTo learn more, visit [Security notifications](https://dt-url.net/ly039s4).",
 	"displayName": "Security notifications",
 	"documentation": "",
 	"dynatrace": "1",
@@ -997,5 +997,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.8"
+	"version": "0.4.10"
 }

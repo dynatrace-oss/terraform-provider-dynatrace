@@ -38,7 +38,7 @@
 				},
 				{
 					"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-					"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+					"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
 					"type": "PATTERN"
 				}
 			],
@@ -181,5 +181,5 @@
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

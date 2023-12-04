@@ -36,7 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
-const SchemaVersion = "6.0.13"
+const SchemaVersion = "6.0.14"
 const SchemaID = "builtin:monitoring.slo"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*slo.Settings] {

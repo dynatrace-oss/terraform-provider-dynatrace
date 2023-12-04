@@ -27,9 +27,10 @@
 		}
 	},
 	"schemaGroups": [
+		"group:network-and-discovery",
 		"group:monitoring"
 	],
 	"schemaId": "builtin:nettracer.traffic",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
