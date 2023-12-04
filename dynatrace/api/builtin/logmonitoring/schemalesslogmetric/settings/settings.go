@@ -23,7 +23,7 @@ import (
 )
 
 type Settings struct {
-	Dimensions       []string `json:"dimensions,omitempty"`
+	Dimensions       []string `json:"dimensions,omitempty"`       // To enable splitting on your metric, add desired dimensions.\n\nYou can select a dimension name from the list or set it to any value. To extract fields from logs, you can use [log processing](builtin:logmonitoring.log-dpp-rules).
 	Enabled          bool     `json:"enabled"`                    // This setting is enabled (`true`) or disabled (`false`)
 	Key              string   `json:"key"`                        // Metric key
 	Measure          Measure  `json:"measure"`                    // Possible Values: `OCCURRENCE`, `ATTRIBUTE`
@@ -39,7 +39,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"dimensions": {
 			Type:        schema.TypeSet,
-			Description: "no documentation available",
+			Description: "To enable splitting on your metric, add desired dimensions.\n\nYou can select a dimension name from the list or set it to any value. To extract fields from logs, you can use [log processing](builtin:logmonitoring.log-dpp-rules).",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
