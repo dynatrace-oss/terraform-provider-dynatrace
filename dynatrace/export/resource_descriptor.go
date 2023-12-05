@@ -120,6 +120,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/query"
+	mobilenotifications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mobile/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
@@ -1115,7 +1116,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		masking.Service,
 		Coalesce(Dependencies.ProcessGroup),
 	),
-	ResourceTypes.HubSubscriptions: NewResourceDescriptor(subscriptions.Service),
+	ResourceTypes.HubSubscriptions:    NewResourceDescriptor(subscriptions.Service),
+	ResourceTypes.MobileNotifications: NewResourceDescriptor(mobilenotifications.Service),
 }
 
 var BlackListedResources = []ResourceType{

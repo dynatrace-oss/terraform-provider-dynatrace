@@ -1,0 +1,31 @@
+{
+	"allowedScopes": [
+		"environment",
+		"environment-default"
+	],
+	"description": "The Dynatrace mobile application for iOS and Android enables users to receive customized push notifications on their mobile devices. Refer to the instructions below to set up the Dynatrace mobile app's access within this environment.",
+	"displayName": "Dynatrace mobile app",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "Enables mobile push notifications for Davis® problems. On Dynatrace Managed environments, additionally enables mobile QR code generation.",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:integration"
+	],
+	"schemaId": "builtin:mobile.notifications",
+	"types": {},
+	"version": "1"
+}
