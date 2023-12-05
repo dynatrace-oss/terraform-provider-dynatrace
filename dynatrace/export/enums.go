@@ -334,6 +334,7 @@ var ResourceTypes = struct {
 	UrlBasedSampling                    ResourceType
 	AttributeAllowList                  ResourceType
 	AttributeMasking                    ResourceType
+	OneAgentSideMasking                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -591,6 +592,7 @@ var ResourceTypes = struct {
 	"dynatrace_url_based_sampling",
 	"dynatrace_attribute_allow_list",
 	"dynatrace_attribute_masking",
+	"dynatrace_oneagent_side_masking",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

@@ -1,0 +1,65 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP",
+		"environment"
+	],
+	"description": "Use the settings on this page to exclude sensitive data from URLs captured directly by OneAgent, so it never leaves your environment. The settings below are executed directly on the OneAgent and will exclude the data points from being sent to Dynatrace servers. These data points will no longer be available to you in Dynatrace.\n\nNote: The RUM JavaScript is **not** affected by these settings!",
+	"displayName": "OneAgent side masking",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.277"
+	},
+	"multiObject": false,
+	"properties": {
+		"isEmailMaskingEnabled": {
+			"default": false,
+			"description": "Exclude email addresses from URLs",
+			"displayName": "Email addresses",
+			"documentation": "Enables masking of emails and user information in URLs.\n\nExamples: https://the-internet.com/mail/admin@the-internet.com/newItems\n-\u003e [https://the-internet.com/mail/\u003cmasked\u003e/newItems]()\n\nftp://user:hunter2@domain.com -\u003e [ftp://\u003cmasked\u003e@domain.com]() (Domain is not masked, as it's recognised as part of the authority.)\n\n\n",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"isFinancialMaskingEnabled": {
+			"default": false,
+			"description": "Exclude IBANs and payment card numbers from URLs",
+			"displayName": "Financial and payment card numbers",
+			"documentation": "Enables masking of IBAN- and payment card-like strings (numbers).\n\nExample: [https://the-internet.com/CC/1234 4321 5678 8756/test]() -\u003e\n[https://the-internet.com/CC/\u003cmasked\u003e/test]()\n",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"isNumbersMaskingEnabled": {
+			"default": false,
+			"description": "Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs",
+			"displayName": "IDs and numbers",
+			"documentation": "Numbers can contain symbols **-**, **.**, **:**, ' '(whitespace) between digits, these are not counted. Maximum value is 255.\n\nExample: https://the-internet.com/IP/123:12:32:65 -\u003e [https://the-internet.com/IP/\u003cmasked\u003e]()",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"isQueryMaskingEnabled": {
+			"default": false,
+			"description": "Exclude query parameters from URLs and web requests",
+			"displayName": "Query parameters",
+			"documentation": "Enables masking values of query parameters in URLs. \n\nExample: **?key1=value1\u0026key2=value2** -\u003e **?key1=\u003cmasked\u003e\u0026key2=\u003cmasked\u003e**.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences",
+		"group:privacy-settings"
+	],
+	"schemaId": "builtin:oneagent.side.masking.settings",
+	"types": {},
+	"version": "1"
+}

@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_oneagent_side_masking Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
+description: |-
+  The resource `dynatrace_oneagent_side_masking` covers configuration for OneAgent data masking
+---
+
+# dynatrace_oneagent_side_masking (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Data privacy and security - https://www.dynatrace.com/support/help/manage/data-privacy-and-security
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:oneagent.side.masking.settings`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_oneagent_side_masking` downloads all existing OneAgent data masking configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/oneagent/masking/testdata/terraform/001-create.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

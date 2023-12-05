@@ -137,6 +137,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/nettracer/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/opentelemetrymetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	ownership_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
@@ -1109,6 +1110,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
 	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.OneAgentSideMasking: NewResourceDescriptor(
+		masking.Service,
+		Coalesce(Dependencies.ProcessGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{
