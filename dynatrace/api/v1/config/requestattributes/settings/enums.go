@@ -484,10 +484,12 @@ var ServiceTechnologys = struct {
 	CloudFoundryAuctioneer               ServiceTechnology
 	CloudFoundryBosh                     ServiceTechnology
 	CloudFoundryGorouter                 ServiceTechnology
+	CodeIgniter                          ServiceTechnology
 	Coldfusion                           ServiceTechnology
 	ConfluentKafkaClient                 ServiceTechnology
 	Containerd                           ServiceTechnology
 	CoreDNS                              ServiceTechnology
+	CosmosDB                             ServiceTechnology
 	Couchbase                            ServiceTechnology
 	Crio                                 ServiceTechnology
 	Cxf                                  ServiceTechnology
@@ -537,6 +539,7 @@ var ServiceTechnologys = struct {
 	IISAppPool                           ServiceTechnology
 	Istio                                ServiceTechnology
 	Java                                 ServiceTechnology
+	JavaHTTPURLConnection                ServiceTechnology
 	JaxWs                                ServiceTechnology
 	JBoss                                ServiceTechnology
 	JBossEap                             ServiceTechnology
@@ -689,10 +692,12 @@ var ServiceTechnologys = struct {
 	"CLOUDFOUNDRY_AUCTIONEER",
 	"CLOUDFOUNDRY_BOSH",
 	"CLOUDFOUNDRY_GOROUTER",
+	"CODEIGNITER",
 	"COLDFUSION",
 	"CONFLUENT_KAFKA_CLIENT",
 	"CONTAINERD",
 	"CORE_DNS",
+	"COSMOSDB",
 	"COUCHBASE",
 	"CRIO",
 	"CXF",
@@ -742,6 +747,7 @@ var ServiceTechnologys = struct {
 	"IIS_APP_POOL",
 	"ISTIO",
 	"JAVA",
+	"JAVA_HTTPURLCONNETION",
 	"JAX_WS",
 	"JBOSS",
 	"JBOSS_EAP",
