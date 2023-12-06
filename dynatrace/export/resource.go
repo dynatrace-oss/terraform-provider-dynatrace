@@ -81,8 +81,12 @@ func (me *Resource) SetName(name string) *Resource {
 	if parentUniqueNameFound {
 		me.UniqueName = parentUniqueName
 	} else {
+		typeOfId := string(me.Type)
+		if parentFound {
+			typeOfId = string(parentType)
+		}
 
-		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
+		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me, typeOfId)
 		if prevUniqueName == "" {
 			terraformName := toTerraformName(name)
 			me.UniqueName = nameModule.namer.Name(terraformName)

@@ -848,7 +848,7 @@ func (me *Environment) importPrevResources(state *state) {
 
 			module, found := me.Modules[ResourceType(statePrev.Resource.Type)]
 			if found {
-
+				// pass
 			} else {
 				fmt.Println("ERROR: [importPrevResources] Could not find Module: ", statePrev.Resource.Type)
 				continue

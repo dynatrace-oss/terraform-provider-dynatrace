@@ -97,7 +97,7 @@ func (sm *StateMap) ExtractCommonStates(smLinked *StateMap) (*StateMap, map[stri
 	return commonStateMap, namesByModule
 }
 
-func (sm *StateMap) GetPrevUniqueName(res *Resource) string {
+func (sm *StateMap) GetPrevUniqueName(res *Resource, nameType string) string {
 	name := ""
 
 	if PREV_STATE_ON {
@@ -106,21 +106,54 @@ func (sm *StateMap) GetPrevUniqueName(res *Resource) string {
 		return name
 	}
 
-	key := fmt.Sprintf("%s|||%s",
-		string(res.Type),
-		res.ID)
-
 	sm.mutex.Lock()
-	resFound, found := sm.resources[key]
 
-	if found {
-		resFound.Used = true
-		sm.resources[key] = resFound
-		name = resFound.Resource.Name
+	resKey, resource, isResourceFound := getResource(res, sm)
+	nameResource, isNameResourceFound := getNameResource(res, nameType, sm, resKey, isResourceFound, resource, name)
+
+	if isNameResourceFound {
+
+		if isResourceFound {
+			resource.Used = true
+			sm.resources[resKey] = resource
+		}
+
+		name = nameResource.Resource.Name
 	}
 	sm.mutex.Unlock()
 
 	return name
+}
+
+func getNameResource(res *Resource, nameType string, sm *StateMap, resKey string, isResourceFound bool, resource StateResource, name string) (StateResource, bool) {
+
+	nameKey := fmt.Sprintf("%s|||%s",
+		nameType,
+		res.ID)
+
+	nameResource, isNameResourceFound := sm.resources[nameKey]
+
+	if isNameResourceFound {
+		// pass
+	} else if nameKey != resKey {
+		if isResourceFound {
+			nameResource = resource
+			isNameResourceFound = isResourceFound
+			fmt.Printf("\n??? No Parent but child: name: %s, ID: %s, Used: %v, typeOfId: %s, resType: %s", name, res.ID, sm.resources[resKey], nameType, res.Type)
+		}
+	}
+	return nameResource, isNameResourceFound
+}
+
+func getResource(res *Resource, sm *StateMap) (string, StateResource, bool) {
+	resType := string(res.Type)
+
+	resKey := fmt.Sprintf("%s|||%s",
+		resType,
+		res.ID)
+
+	resource, isResourceFound := sm.resources[resKey]
+	return resKey, resource, isResourceFound
 }
 
 func LoadStateThis() (*state, error) {
