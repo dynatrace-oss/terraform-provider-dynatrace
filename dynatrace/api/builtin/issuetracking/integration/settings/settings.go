@@ -18,6 +18,7 @@
 package integration
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -93,17 +94,19 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"enabled":            me.Enabled,
-		"issuelabel":         me.Issuelabel,
-		"issuequery":         me.Issuequery,
-		"issuetheme":         me.Issuetheme,
-		"issuetrackersystem": me.Issuetrackersystem,
-		"password":           me.Password,
-		"token":              "${state.secret_value}",
-		"url":                me.Url,
-		"username":           me.Username,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(), map[string]any{
+			"enabled":            me.Enabled,
+			"issuelabel":         me.Issuelabel,
+			"issuequery":         me.Issuequery,
+			"issuetheme":         me.Issuetheme,
+			"issuetrackersystem": me.Issuetrackersystem,
+			"password":           me.Password,
+			"token":              "${state.secret_value}",
+			"url":                me.Url,
+			"username":           me.Username,
+		},
+	))
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -89,15 +90,18 @@ func (me *CloudFoundryCredentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	return properties.EncodeAll(map[string]any{
-		"login_url": me.LoginURL,
-		"api_url":   me.APIURL,
-		"password":  "${state.secret_value}",
-		"active":    me.Active,
-		"name":      me.Name,
-		"username":  me.Username,
-		"unknowns":  me.Unknowns,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"login_url": me.LoginURL,
+			"api_url":   me.APIURL,
+			"password":  "${state.secret_value}",
+			"active":    me.Active,
+			"name":      me.Name,
+			"username":  me.Username,
+			"unknowns":  me.Unknowns,
+		},
+	))
 }
 
 func (me *CloudFoundryCredentials) UnmarshalHCL(decoder hcl.Decoder) error {

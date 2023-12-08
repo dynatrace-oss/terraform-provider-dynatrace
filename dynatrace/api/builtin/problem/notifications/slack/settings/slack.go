@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -92,15 +93,18 @@ func (me *Slack) MarshalHCL(properties hcl.Properties) error { // The url field 
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored url here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State
 	// As a result any plans would be non-empty
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"message": me.Message,
-		"channel": me.Channel,
-		"url":     me.URL,
-	})
+			"message": me.Message,
+			"channel": me.Channel,
+			"url":     me.URL,
+		},
+	))
 }
 
 func (me *Slack) UnmarshalHCL(decoder hcl.Decoder) error {

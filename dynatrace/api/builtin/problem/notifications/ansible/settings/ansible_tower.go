@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -103,17 +104,20 @@ func (me *AnsibleTower) MarshalHCL(properties hcl.Properties) error { // The pas
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored password here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State
 	// As a result any plans would be non-empty
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"insecure":         me.Insecure,
-		"custom_message":   me.CustomMessage,
-		"job_template_url": me.JobTemplateURL,
-		"password":         me.Password,
-		"username":         me.Username,
-	})
+			"insecure":         me.Insecure,
+			"custom_message":   me.CustomMessage,
+			"job_template_url": me.JobTemplateURL,
+			"password":         me.Password,
+			"username":         me.Username,
+		},
+	))
 }
 
 func (me *AnsibleTower) UnmarshalHCL(decoder hcl.Decoder) error {

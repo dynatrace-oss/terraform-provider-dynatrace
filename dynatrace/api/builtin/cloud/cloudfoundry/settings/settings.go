@@ -18,6 +18,7 @@
 package cloudfoundry
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -74,15 +75,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"active_gate_group": me.ActiveGateGroup,
-		"api_url":           me.ApiUrl,
-		"enabled":           me.Enabled,
-		"label":             me.Label,
-		"login_url":         me.LoginUrl,
-		"password":          "${state.secret_value}",
-		"username":          me.Username,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"active_gate_group": me.ActiveGateGroup,
+			"api_url":           me.ApiUrl,
+			"enabled":           me.Enabled,
+			"label":             me.Label,
+			"login_url":         me.LoginUrl,
+			"password":          "${state.secret_value}",
+			"username":          me.Username,
+		},
+	))
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -122,20 +123,23 @@ func (me *ServiceNow) MarshalHCL(properties hcl.Properties) error { // The passw
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored password here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State
 	// As a result any plans would be non-empty
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"format_problem_details_as_text": me.FormatProblemDetailsAsText,
-		"events":                         me.SendEvents,
-		"incidents":                      me.SendIncidents,
-		"url":                            me.URL,
-		"username":                       me.Username,
-		"instance":                       me.InstanceName,
-		"message":                        me.Message,
-		"password":                       me.Password,
-	})
+			"format_problem_details_as_text": me.FormatProblemDetailsAsText,
+			"events":                         me.SendEvents,
+			"incidents":                      me.SendIncidents,
+			"url":                            me.URL,
+			"username":                       me.Username,
+			"instance":                       me.InstanceName,
+			"message":                        me.Message,
+			"password":                       me.Password,
+		},
+	))
 }
 
 func (me *ServiceNow) HandlePreconditions() error {

@@ -90,6 +90,11 @@ func toTerraformName(s string) string {
 			result = result + "_"
 		}
 	}
+
+	if len(result) == 0 {
+		result = "unnamed"
+	}
+
 	first := []rune(result)[0]
 	if !unicode.IsLetter(first) && first != '_' {
 		result = "_" + result

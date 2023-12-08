@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -56,12 +57,16 @@ func (me *OAuth2Credentials) Schema() map[string]*schema.Schema {
 }
 
 func (me *OAuth2Credentials) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"access_token_url": me.AccessTokenUrl,
-		"client_id":        me.ClientID,
-		"client_secret":    "${state.secret_value}",
-		"scope":            me.Scope,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
+		me.Schema(),
+		map[string]any{
+			"access_token_url": me.AccessTokenUrl,
+			"client_id":        me.ClientID,
+			"client_secret":    "${state.secret_value}",
+			"scope":            me.Scope,
+		},
+		[]string{"client_secret"},
+	))
 }
 
 func (me *OAuth2Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
