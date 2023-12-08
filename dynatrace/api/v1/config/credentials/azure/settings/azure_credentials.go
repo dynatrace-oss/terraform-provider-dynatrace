@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -350,6 +351,13 @@ func (ac *AzureCredentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("supporting_services_managed_in_dynatrace", true); err != nil {
 		return err
 	}
+	if err := sensitive.ConditionalIgnoreChangesSingle(
+		ac.Schema(),
+		&properties,
+	); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -20,6 +20,7 @@ package kubernetes
 import (
 	"fmt"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -167,26 +168,28 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"active_gate_group":                  me.ActiveGateGroup,
-		"auth_token":                         me.AuthToken,
-		"certificate_check_enabled":          me.CertificateCheckEnabled,
-		"cloud_application_pipeline_enabled": me.CloudApplicationPipelineEnabled,
-		"cluster_id":                         me.ClusterID,
-		"cluster_id_enabled":                 me.ClusterIdEnabled,
-		"enabled":                            me.Enabled,
-		"endpoint_url":                       me.EndpointUrl,
-		"event_patterns":                     me.EventPatterns,
-		"event_processing_active":            me.EventProcessingActive,
-		"filter_events":                      me.FilterEvents,
-		"hostname_verification_enabled":      me.HostnameVerificationEnabled,
-		"include_all_fdi_events":             me.IncludeAllFdiEvents,
-		"label":                              me.Label,
-		"open_metrics_builtin_enabled":       me.OpenMetricsBuiltinEnabled,
-		"open_metrics_pipeline_enabled":      me.OpenMetricsPipelineEnabled,
-		"pvc_monitoring_enabled":             me.PvcMonitoringEnabled,
-		"scope":                              me.Scope,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(), map[string]any{
+			"active_gate_group":                  me.ActiveGateGroup,
+			"auth_token":                         me.AuthToken,
+			"certificate_check_enabled":          me.CertificateCheckEnabled,
+			"cloud_application_pipeline_enabled": me.CloudApplicationPipelineEnabled,
+			"cluster_id":                         me.ClusterID,
+			"cluster_id_enabled":                 me.ClusterIdEnabled,
+			"enabled":                            me.Enabled,
+			"endpoint_url":                       me.EndpointUrl,
+			"event_patterns":                     me.EventPatterns,
+			"event_processing_active":            me.EventProcessingActive,
+			"filter_events":                      me.FilterEvents,
+			"hostname_verification_enabled":      me.HostnameVerificationEnabled,
+			"include_all_fdi_events":             me.IncludeAllFdiEvents,
+			"label":                              me.Label,
+			"open_metrics_builtin_enabled":       me.OpenMetricsBuiltinEnabled,
+			"open_metrics_pipeline_enabled":      me.OpenMetricsPipelineEnabled,
+			"pvc_monitoring_enabled":             me.PvcMonitoringEnabled,
+			"scope":                              me.Scope,
+		},
+	))
 }
 
 func (me *Settings) HandlePreconditions() error {

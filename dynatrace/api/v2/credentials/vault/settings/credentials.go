@@ -22,6 +22,7 @@ import (
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings/externalvault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -145,6 +146,13 @@ func (me *Credentials) EnsurePredictableOrder() {
 
 func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("name", me.Name); err != nil {
+		return err
+	}
+	if err := sensitive.ConditionalIgnoreChangesSinglePlus(
+		me.Schema(),
+		&properties,
+		[]string{"certificate", "format"},
+	); err != nil {
 		return err
 	}
 	if me.Description != nil && len(*me.Description) > 0 {

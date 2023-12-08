@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -181,6 +182,12 @@ func (kc *KubernetesCredentials) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if err := properties.Encode("events_field_selectors", kc.EventsFieldSelectors); err != nil {
+		return err
+	}
+	if err := sensitive.ConditionalIgnoreChangesSingle(
+		kc.Schema(),
+		&properties,
+	); err != nil {
 		return err
 	}
 	return nil
