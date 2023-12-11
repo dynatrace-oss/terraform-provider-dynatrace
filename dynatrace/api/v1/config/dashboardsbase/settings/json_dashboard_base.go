@@ -23,6 +23,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -195,17 +196,7 @@ func (me *JSONDashboardBase) Schema() map[string]*schema.Schema {
 	}
 }
 
-type LifeCycle struct {
-	IgnoreChanges []string
-}
-
-func (me *LifeCycle) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"ignore_changes": me.IgnoreChanges,
-	})
-}
-
-var lifecycleIgnoreChanges = LifeCycle{
+var lifecycleIgnoreChanges = settings.LifeCycle{
 	IgnoreChanges: []string{
 		"contents",
 	},
