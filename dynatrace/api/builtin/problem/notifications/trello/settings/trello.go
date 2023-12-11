@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -115,19 +116,23 @@ func (me *Trello) MarshalHCL(properties hcl.Properties) error { // The authoriza
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored authorization_token here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State
 	// As a result any plans would be non-empty
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"resolved_list_id":    me.ResolvedListID,
-		"text":                me.Text,
-		"application_key":     me.ApplicationKey,
-		"board_id":            me.BoardID,
-		"description":         me.Description,
-		"list_id":             me.ListID,
-		"authorization_token": me.AuthorizationToken,
-	})
+			"resolved_list_id":    me.ResolvedListID,
+			"text":                me.Text,
+			"application_key":     me.ApplicationKey,
+			"board_id":            me.BoardID,
+			"description":         me.Description,
+			"list_id":             me.ListID,
+			"authorization_token": me.AuthorizationToken,
+		},
+		[]string{"authorization_token"},
+	))
 }
 
 func (me *Trello) UnmarshalHCL(decoder hcl.Decoder) error {

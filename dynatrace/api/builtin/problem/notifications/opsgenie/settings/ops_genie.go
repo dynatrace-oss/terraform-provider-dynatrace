@@ -20,6 +20,7 @@ package notifications
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -94,15 +95,18 @@ func (me *OpsGenie) MarshalHCL(properties hcl.Properties) error { // The api_key
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored api_key here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State
 	// As a result any plans would be non-empty
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"domain":  me.Domain,
-		"message": me.Message,
-		"api_key": me.APIKey,
-	})
+			"domain":  me.Domain,
+			"message": me.Message,
+			"api_key": me.APIKey,
+		},
+	))
 }
 
 func (me *OpsGenie) UnmarshalHCL(decoder hcl.Decoder) error {

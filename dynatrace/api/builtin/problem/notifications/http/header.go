@@ -20,6 +20,7 @@ package http
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -126,6 +127,12 @@ func (me *Header) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 		if err := properties.Encode("value", ""); err != nil {
+			return err
+		}
+		if err := sensitive.ConditionalIgnoreChangesSingle(
+			me.Schema(),
+			&properties,
+		); err != nil {
 			return err
 		}
 	} else {
