@@ -1,0 +1,118 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Here you can manage your subscriptions to extend the available apps or releases listed in [Dynatrace Hub](https://www.dynatrace.com/support/help/manage/hub). Add a new token to enroll your subscription.",
+	"displayName": "Hub subscriptions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"tokenSubscriptions": {
+			"description": "",
+			"displayName": "Subscriptions",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/TokenSubscription"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add subscription"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:hub-channel.subscriptions",
+	"types": {
+		"TokenSubscription": {
+			"description": "",
+			"displayName": "TokenSubscription",
+			"documentation": "",
+			"properties": {
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "multiline",
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"name": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name of subscription",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"token": {
+					"constraints": [
+						{
+							"customMessage": "Token has to be exactly 36 characters long",
+							"maxLength": 36,
+							"minLength": 36,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Subscription token",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

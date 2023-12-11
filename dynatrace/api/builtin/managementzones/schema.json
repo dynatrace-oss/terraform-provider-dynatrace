@@ -10,7 +10,7 @@
 	],
 	"description": "Management zones enable defining fine grained access rights to parts of an environment. A Management zone consists of a set of entities like applications, hosts, process groups, or services.",
 	"displayName": "Management zones settings",
-	"documentation": "For each Management zone you can define which user groups have access to them. This way you can ensure the confidentiality of certain parts of an environment and still keep an end to end view across all components for the users that need it.\n\nFor value suggestions based on entity data and preview functionality, environment-wide \"Access environment\" permission is required.",
+	"documentation": "For each Management zone you can define which user groups have access to them. This way you can ensure the confidentiality of certain parts of an environment and still keep an end to end view across all components for the users that need it.\n\nFor value suggestions based on entity data and preview functionality, environment-wide \"Access environment\" permission is required. \n\nManagement zone rules are executed periodically in the background, for a limited timeframe. Any entity that matches a management zone rule will receive the specific zone assigned to it, while removing zones from entities that no longer match. Be aware that for any condition that requires the relationship between multiple entities, all entities in this scope need to be present in this timeframe! \n\nDepending on environment-size, rule count (Management zones, as well as tagging and naming rules) and rule complexity, the application of all management zones might be delayed!",
 	"dynatrace": "1",
 	"enums": {
 		"Attribute": {
@@ -1567,7 +1567,8 @@
 									"APPMON_SERVER_NAME",
 									"APPMON_SYSTEM_PROFILE_NAME",
 									"QUEUE_NAME",
-									"QUEUE_VENDOR"
+									"QUEUE_VENDOR",
+									"AZURE_ENTITY_NAME"
 								],
 								"property": "key",
 								"type": "IN"
@@ -2598,5 +2599,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

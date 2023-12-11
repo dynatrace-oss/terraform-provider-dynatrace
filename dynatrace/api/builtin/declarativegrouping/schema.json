@@ -127,7 +127,7 @@
 					"constraints": [
 						{
 							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-							"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+							"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
 							"type": "PATTERN"
 						},
 						{
@@ -255,5 +255,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.20"
+	"version": "1.0.21"
 }

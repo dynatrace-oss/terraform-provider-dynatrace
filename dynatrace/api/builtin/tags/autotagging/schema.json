@@ -10,7 +10,7 @@
 	],
 	"description": "Tags simplify searches for related services, process groups, and hosts. They also facilitate the collection of related metrics into meaningful groups for analysis.",
 	"displayName": "Automatically applied tags",
-	"documentation": "In dynamic or large environments, manual tagging of such entities is often impractical. In such cases, it's recommended that you use automated rule-based tags.\n\nRule-based tags behave just like manually-applied tags, except they're applied automatically to new entities that match defined rules. Automated rule-based tags can't be removed manually from individual services, process groups, or hosts. Rule-based tags are removed automatically once an entity no longer matches a defined rule.\n\nFor value suggestions based on entity data and preview functionality, environment-wide \"Access environment\" permission is required.",
+	"documentation": "In dynamic or large environments, manual tagging of such entities is often impractical. In such cases, it's recommended that you use automated rule-based tags.\n\nRule-based tags behave just like manually-applied tags, except they're applied automatically to new entities that match defined rules. Automated rule-based tags can't be removed manually from individual services, process groups, or hosts. Rule-based tags are removed automatically once an entity no longer matches a defined rule.\n\nFor value suggestions based on entity data and preview functionality, environment-wide \"Access environment\" permission is required.\n\nTagging rules are executed periodically in the background, for a limited timeframe. Any entity that matches a tagging rule will receive the specific tag, while removing tags from entities that no longer match. Be aware that for any condition that requires the relationship between multiple entities, all entities in this scope need to be present in this timeframe! \n\nDepending on environment-size, rule count (tagging rules, as well as management zone and naming rules) and rule complexity, the application of all tags might be delayed! For faster, unchanging tagging, please utilize the tagging REST API!",
 	"dynatrace": "1",
 	"enums": {
 		"Attribute": {
@@ -1473,7 +1473,8 @@
 									"APPMON_SERVER_NAME",
 									"APPMON_SYSTEM_PROFILE_NAME",
 									"QUEUE_NAME",
-									"QUEUE_VENDOR"
+									"QUEUE_VENDOR",
+									"AZURE_ENTITY_NAME"
 								],
 								"property": "key",
 								"type": "IN"
@@ -2376,5 +2377,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.12"
+	"version": "1.0.13"
 }

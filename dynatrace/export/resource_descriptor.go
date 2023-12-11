@@ -99,6 +99,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
 	hostmonitoringmode "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/mode"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hub/subscriptions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
@@ -120,6 +121,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/query"
+	mobilenotifications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mobile/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
@@ -138,6 +140,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/nettracer/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/opentelemetrymetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	ownership_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
@@ -1116,6 +1119,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
 	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.OneAgentSideMasking: NewResourceDescriptor(
+		masking.Service,
+		Coalesce(Dependencies.ProcessGroup),
+	),
+	ResourceTypes.HubSubscriptions:    NewResourceDescriptor(subscriptions.Service),
+	ResourceTypes.MobileNotifications: NewResourceDescriptor(mobilenotifications.Service),
 }
 
 var blackListedResources = []ResourceType{

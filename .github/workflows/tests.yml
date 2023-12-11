@@ -85,6 +85,32 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/attribute/allowlist
+      - name: TestHubSubscriptions
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/hub/subscriptions
+      - name: TestMobileNotifications
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/mobile/notifications
       - name: TestAttributeMasking
         if: success() || failure()
         env:
@@ -1745,6 +1771,19 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/deployment/activegate/updates
+      - name: TestOneAgentSideMasking
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/oneagent/masking
       - name: TestOneAgentDefaultVersion
         if: success() || failure()
         env:

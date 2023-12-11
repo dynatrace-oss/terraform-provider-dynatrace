@@ -114,6 +114,15 @@
 			"type": "list"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "This name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:processes-and-containers.processes",
 		"group:processes-and-containers"
@@ -129,7 +138,7 @@
 					"constraints": [
 						{
 							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-							"pattern": "^\\$eq\\(.+\\)$|^\\$prefix\\(.+\\)$|^\\$suffix\\(.+\\)$|^\\$contains\\(.+\\)$",
+							"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
 							"type": "PATTERN"
 						},
 						{
@@ -238,5 +247,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

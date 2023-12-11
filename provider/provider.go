@@ -483,6 +483,9 @@ func Provider() *schema.Provider {
 			"dynatrace_host_monitoring_advanced":           resources.NewGeneric(export.ResourceTypes.HostMonitoringAdvanced).Resource(),
 			"dynatrace_attribute_allow_list":               resources.NewGeneric(export.ResourceTypes.AttributeAllowList).Resource(),
 			"dynatrace_attribute_masking":                  resources.NewGeneric(export.ResourceTypes.AttributeMasking).Resource(),
+			"dynatrace_oneagent_side_masking":              resources.NewGeneric(export.ResourceTypes.OneAgentSideMasking).Resource(),
+			"dynatrace_hub_subscriptions":                  resources.NewGeneric(export.ResourceTypes.HubSubscriptions).Resource(),
+			"dynatrace_mobile_notifications":               resources.NewGeneric(export.ResourceTypes.MobileNotifications).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

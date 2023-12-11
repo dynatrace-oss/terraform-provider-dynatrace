@@ -19,16 +19,14 @@ package builtinprocessmonitoringrule_test
 
 import (
 	"testing"
-
-	builtinprocessmonitoringrule "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestBuiltinProcessMonitoring(t *testing.T) {
-	api.TestService(t, builtinprocessmonitoringrule.Service)
+	// Temporarily disabled - releasing prior to availability on test tenant
+	// api.TestService(t, builtinprocessmonitoringrule.Service)
 }
 
 func TestAccBuiltinProcessMonitoring(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - releasing prior to availability on test tenant
+	// api.TestAcc(t)
 }

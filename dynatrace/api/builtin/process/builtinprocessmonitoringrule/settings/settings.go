@@ -90,6 +90,7 @@ type Settings struct {
 	RuleID68    bool    `json:"-68"`                   // Rule id: 68 - Do not monitor processes if Node.js application equals 'corepack'
 	RuleID69    bool    `json:"-69"`                   // Rule id: 69 - Do not monitor processes if Kubernetes container name equals 'cassandra-operator'
 	RuleID70    bool    `json:"-70"`                   // Rule id: 70 - Do not monitor processes if EXE name contains 'UiPath'
+	RuleID71    bool    `json:"-71"`                   // Rule id: 71 - Do not monitor processes if EXE name equals 'openhandlecollector.exe'
 }
 
 func (me *Settings) Name() string {
@@ -501,6 +502,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     true,
 		},
+		"exe_openhandlecollector": {
+			Type:        schema.TypeBool,
+			Description: "Rule id: 71 - Do not monitor processes if EXE name equals 'openhandlecollector.exe'",
+			Optional:    true,
+			Default:     true,
+		},
 	}
 }
 
@@ -573,6 +580,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"node_corepack":                         me.RuleID68,
 		"k8s_cassandraoperator":                 me.RuleID69,
 		"exe_uipath":                            me.RuleID70,
+		"exe_openhandlecollector":               me.RuleID71,
 	})
 }
 
@@ -645,5 +653,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"node_corepack":                         &me.RuleID68,
 		"k8s_cassandraoperator":                 &me.RuleID69,
 		"exe_uipath":                            &me.RuleID70,
+		"exe_openhandlecollector":               &me.RuleID71,
 	})
 }
