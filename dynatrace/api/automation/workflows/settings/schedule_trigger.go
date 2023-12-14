@@ -55,7 +55,7 @@ func (me *ScheduleTrigger) Schema(prefix string) map[string]*schema.Schema {
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.interval_minutes", prefix + ".0.between_start", prefix + ".0.between_end"},
 		},
 		"interval_minutes": {
-			Type:          schema.TypeString,
+			Type:          schema.TypeInt,
 			Description:   "Triggers the schedule every n minutes within a given time frame. Minimum: 1, Maximum: 720. Required with `between_start` and `between_end`. Conflicts with `cron` and `time`",
 			Optional:      true,
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.cron"},
