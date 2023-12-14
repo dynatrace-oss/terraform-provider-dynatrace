@@ -32,7 +32,7 @@ type Workflow struct {
 
 	Actor         string   `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the workflow will happen with
 	Owner         string   `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this workflow
-	Private       bool     `json:"isPrivate,omitempty" default:"true"`           // Defines whether this workflow is private to the owner or not. Default is `true`
+	Private       bool     `json:"isPrivate" default:"true"`                     // Defines whether this workflow is private to the owner or not. Default is `true`
 	SchemaVersion int      `json:"schemaVersion,omitempty"`                      //
 	Trigger       *Trigger `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
 	Tasks         Tasks    `json:"tasks,omitempty"`                              // The tasks to run for every execution of this workflow
@@ -126,7 +126,7 @@ func (me *Workflow) MarshalJSON() ([]byte, error) {
 
 		Actor         string   `json:"actor,omitempty"`
 		Owner         string   `json:"owner,omitempty"`
-		Private       bool     `json:"isPrivate,omitempty"`
+		Private       bool     `json:"isPrivate"`
 		SchemaVersion int      `json:"schemaVersion,omitempty"`
 		Trigger       *Trigger `json:"trigger,omitempty"`
 		Tasks         Tasks    `json:"tasks,omitempty"`
