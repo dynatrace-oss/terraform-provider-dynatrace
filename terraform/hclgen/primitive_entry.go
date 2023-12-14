@@ -71,6 +71,7 @@ func finalizeString(s string, indent string) string {
 	finalString = strings.ReplaceAll(finalString, "${dynatrace_", "DOLLAR_DYNATRACE")
 
 	finalString = strings.ReplaceAll(finalString, "${", "$${")
+	finalString = strings.ReplaceAll(finalString, "%{", "%%{")
 
 	finalString = strings.ReplaceAll(finalString, "DOLLAR_DATA_DOT", "${data.")
 	finalString = strings.ReplaceAll(finalString, "DOLLAR_DYNATRACE", "${dynatrace_")
