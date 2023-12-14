@@ -23,11 +23,11 @@ import (
 )
 
 type Schedule struct {
-	Active           bool                      `json:"isActive"`           // The trigger is enabled (`true`) or not (`false`). Default is `false`
-	Trigger          *ScheduleTrigger          `json:"trigger"`            // Detailed configuration about the timing constraints that trigger the execution
-	Rule             string                    `json:"rule" format:"uuid"` // Refers to a configured rule that determines at which days the schedule should be active. If not specified it implies that the schedule is valid every day
-	FilterParameters *ScheduleFilterParameters `json:"filterParameters"`   // Advanced restrictions for the schedule to trigger executions
-	Timezone         string                    `json:"timezone"`           // A time zone the scheduled times to align with. If not specified it will be chosen automatically based on the location of the Dynatrace Server
+	Active           bool                      `json:"isActive"`                     // The trigger is enabled (`true`) or not (`false`). Default is `false`
+	Trigger          *ScheduleTrigger          `json:"trigger"`                      // Detailed configuration about the timing constraints that trigger the execution
+	Rule             *string                   `json:"rule,omitempty" format:"uuid"` // Refers to a configured rule that determines at which days the schedule should be active. If not specified it implies that the schedule is valid every day
+	FilterParameters *ScheduleFilterParameters `json:"filterParameters"`             // Advanced restrictions for the schedule to trigger executions
+	Timezone         *string                   `json:"timezone,omitempty"`           // A time zone the scheduled times to align with. If not specified it will be chosen automatically based on the location of the Dynatrace Server
 
 	// Inputs        *ScheduleInputs `json:"inputs"`                           //
 	// Faulty        bool            `json:"isFaulty" flags:"readonly"`        // Signals that the configuration of this trigger is faulty
