@@ -8,9 +8,9 @@ import (
 )
 
 type Settings struct {
-	Enabled                  bool          `json:"enabled"`                            // Enable process group availability monitoring
-	AlertingMode             *AlertingMode `json:"alertingMode,omitempty"`             // **if any process becomes unavailable:**\nDynatrace will open a new problem if a single process in this group shuts down or crashes. \n\n**if minimum threshold is not met:**\nDynatrace tracks the number of process instances that comprise this process group and treats the group as a cluster. This setting enables you to define a minimum number of process instances that must be available. A problem will be opened if this process group has fewer than the minimum number of required process instances. \n\n Details of the related impact on service requests will be included in the problem summary.\n\n**Note:** If a process is intentionally shutdown or retired while this setting is active, you'll need to manually close the problem.
-	MinimumInstanceThreshold *int          `json:"minimumInstanceThreshold,omitempty"` // Open a new problem if the number of active process instances in the group is fewer than:
+	Enabled                  bool          `json:"enabled"`                            // Enable (`true`) or disable (`false`) process group availability monitoring
+	AlertingMode             *AlertingMode `json:"alertingMode,omitempty"`             // Possible Values: `ON_INSTANCE_COUNT_VIOLATION`, `ON_PGI_UNAVAILABILITY`
+	MinimumInstanceThreshold *int          `json:"minimumInstanceThreshold,omitempty"` // Open a new problem if the number of active process instances in the group is fewer than X
 	ProcessGroupId           string        `json:"-"`
 }
 
@@ -28,17 +28,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Enable process group availability monitoring",
+			Description: "Enable (`true`) or disable (`false`) process group availability monitoring",
 			Required:    true,
 		},
 		"alerting_mode": {
 			Type:        schema.TypeString,
-			Description: "**if any process becomes unavailable:**\nDynatrace will open a new problem if a single process in this group shuts down or crashes. \n\n**if minimum threshold is not met:**\nDynatrace tracks the number of process instances that comprise this process group and treats the group as a cluster. This setting enables you to define a minimum number of process instances that must be available. A problem will be opened if this process group has fewer than the minimum number of required process instances. \n\n Details of the related impact on service requests will be included in the problem summary.\n\n**Note:** If a process is intentionally shutdown or retired while this setting is active, you'll need to manually close the problem.",
+			Description: "Possible Values: `ON_INSTANCE_COUNT_VIOLATION`, `ON_PGI_UNAVAILABILITY`",
 			Optional:    true,
 		},
 		"minimum_instance_threshold": {
 			Type:        schema.TypeInt,
-			Description: "Open a new problem if the number of active process instances in the group is fewer than:",
+			Description: "Open a new problem if the number of active process instances in the group is fewer than X",
 			Optional:    true,
 		},
 	}
