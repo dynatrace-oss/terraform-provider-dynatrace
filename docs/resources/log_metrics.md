@@ -47,7 +47,9 @@ resource "dynatrace_log_metrics" "#name#" {
 
 ### Optional
 
-- `dimensions` (Set of String) no documentation available
+- `dimensions` (Set of String) To enable splitting on your metric, add desired dimensions.
+
+You can select a dimension name from the list or set it to any value. To extract fields from logs, you can use [log processing](builtin:logmonitoring.log-dpp-rules).
 - `measure_attribute` (String) Attribute
 
 ### Read-Only

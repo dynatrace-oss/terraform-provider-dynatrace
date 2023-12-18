@@ -76,6 +76,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
 - `exe_metron` (Boolean) Rule id: 14 - Do monitor processes if EXE name equals 'metron'
 - `exe_mqsi` (Boolean) Rule id: 48 - Do not monitor processes if EXE name begins with 'mqsi'
 - `exe_oc` (Boolean) Rule id: 44 - Do not monitor processes if EXE name equals 'oc'
+- `exe_openhandlecollector` (Boolean) Rule id: 71 - Do not monitor processes if EXE name equals 'openhandlecollector.exe'
 - `exe_optcnibinhostlocal` (Boolean) Rule id: 46 - Do not monitor processes if EXE path equals '/opt/cni/bin/host-local'
 - `exe_packetbeat` (Boolean) Rule id: 51 - Do not monitor processes if EXE name equals 'packetbeat'
 - `exe_phpcgi` (Boolean) Rule id: 2 - Do not monitor processes if EXE name equals 'php-cgi'

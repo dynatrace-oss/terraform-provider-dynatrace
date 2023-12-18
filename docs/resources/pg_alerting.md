@@ -38,21 +38,13 @@ resource "dynatrace_pg_alerting" "#name#" {
 
 ### Required
 
-- `enabled` (Boolean) Enable process group availability monitoring
+- `enabled` (Boolean) Enable (`true`) or disable (`false`) process group availability monitoring
 - `process_group` (String) The process group ID for availability monitoring
 
 ### Optional
 
-- `alerting_mode` (String) **if any process becomes unavailable:**
-Dynatrace will open a new problem if a single process in this group shuts down or crashes. 
-
-**if minimum threshold is not met:**
-Dynatrace tracks the number of process instances that comprise this process group and treats the group as a cluster. This setting enables you to define a minimum number of process instances that must be available. A problem will be opened if this process group has fewer than the minimum number of required process instances. 
-
- Details of the related impact on service requests will be included in the problem summary.
-
-**Note:** If a process is intentionally shutdown or retired while this setting is active, you'll need to manually close the problem.
-- `minimum_instance_threshold` (Number) Open a new problem if the number of active process instances in the group is fewer than:
+- `alerting_mode` (String) Possible Values: `ON_INSTANCE_COUNT_VIOLATION`, `ON_PGI_UNAVAILABILITY`
+- `minimum_instance_threshold` (Number) Open a new problem if the number of active process instances in the group is fewer than X
 
 ### Read-Only
 
