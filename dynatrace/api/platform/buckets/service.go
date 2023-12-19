@@ -22,6 +22,8 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -121,7 +123,31 @@ func (me *service) Validate(v *buckets.Bucket) error {
 	return nil // no endpoint for that
 }
 
-const maxConfirmationRetries = 180
+const DefaultNumRequiredSuccesses = 10
+const MinNumRequiredSuccesses = 10
+const MaxNumRequiredSuccesses = 50
+
+const DefaultMaxConfirmationRetries = 180
+const MaxMaxConfirmationRetries = 360
+const MinMaxConfirmationRetries = 180
+
+func getEnv(key string, def int, min int, max int) int {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return def
+	}
+	iValue, err := strconv.Atoi(strings.TrimSpace(value))
+	if err != nil {
+		return def
+	}
+	if iValue > max {
+		iValue = max
+	}
+	if iValue < min {
+		iValue = min
+	}
+	return iValue
+}
 
 func (me *service) Create(v *buckets.Bucket) (stub *api.Stub, err error) {
 	var data []byte
@@ -137,15 +163,23 @@ func (me *service) Create(v *buckets.Bucket) (stub *api.Stub, err error) {
 		return nil, rest.Envelope(response.Data, me.credentials.Automation.EnvironmentURL, "POST")
 	}
 
+	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
+	numRequiredSuccesses := getEnv("DT_BUCKETS_NUM_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
+	requiredSuccessesLeft := numRequiredSuccesses
 	retries := 0
 	var responseBucket buckets.Bucket
-	for len(responseBucket.Status) == 0 || responseBucket.Status == buckets.Statuses.Creating {
+	for requiredSuccessesLeft > 0 || len(responseBucket.Status) == 0 || responseBucket.Status == buckets.Statuses.Creating {
 		responseBucket = buckets.Bucket{}
 		response, err := client.Get(context.TODO(), v.Name)
 		if err != nil {
 			return nil, err
 		}
 		json.Unmarshal(response.Data, &responseBucket)
+		if responseBucket.Status == buckets.Statuses.Active {
+			requiredSuccessesLeft--
+		} else {
+			requiredSuccessesLeft = numRequiredSuccesses
+		}
 		retries++
 		if retries > maxConfirmationRetries {
 			break
@@ -175,8 +209,8 @@ func (me *service) Update(id string, v *buckets.Bucket) (err error) {
 	if !response.IsSuccess() {
 		return rest.Envelope(response.Data, me.credentials.Automation.EnvironmentURL, "PUT")
 	}
+	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	retries := 0
-
 	for {
 		var bucket buckets.Bucket
 		err = me.Get(id, &bucket)
@@ -203,6 +237,7 @@ func (me *service) Delete(id string) error {
 	if err != nil {
 		return err
 	}
+	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	retries := 0
 	response, err := client.Get(context.TODO(), id)
 	for response.StatusCode != 404 {
