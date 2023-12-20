@@ -20,6 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/spf13/afero"
@@ -28,6 +30,7 @@ import (
 var PREV_STATE_ON = os.Getenv("DYNATRACE_PREV_STATE_ON") == "true"
 var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
 var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
+var IMPORT_STATE_PATH = os.Getenv("DYNATRACE_IMPORT_STATE_PATH")
 
 type StateMap struct {
 	mutex     *sync.Mutex
@@ -97,7 +100,9 @@ func (sm *StateMap) ExtractCommonStates(smLinked *StateMap) (*StateMap, map[stri
 	return commonStateMap, namesByModule
 }
 
-func (sm *StateMap) GetPrevUniqueName(res *Resource, nameType string) string {
+func (sm *StateMap) GetPrevUniqueName(res *Resource) string {
+
+	typeOfReference := res.getTypeOfReference()
 	name := ""
 
 	if PREV_STATE_ON {
@@ -108,49 +113,115 @@ func (sm *StateMap) GetPrevUniqueName(res *Resource, nameType string) string {
 
 	sm.mutex.Lock()
 
-	resKey, resource, isResourceFound := getResource(res, sm)
-	nameResource, isNameResourceFound := getNameResource(res, nameType, sm, resKey, isResourceFound, resource, name)
+	resKey, resource, isResourceFound := getResourceByID(res, sm)
+	resourceOfReference, isResourceOfReferenceFound := getResourceOfReferenceByID(res, typeOfReference, sm, resKey, isResourceFound, resource, name)
 
-	if isNameResourceFound {
+	if isResourceOfReferenceFound {
 
 		if isResourceFound {
 			resource.Used = true
 			sm.resources[resKey] = resource
 		}
 
-		name = nameResource.Resource.Name
+		name = resourceOfReference.Resource.Name
 	}
 	sm.mutex.Unlock()
 
 	return name
 }
 
-func getNameResource(res *Resource, nameType string, sm *StateMap, resKey string, isResourceFound bool, resource StateResource, name string) (StateResource, bool) {
+func getResourceOfReferenceByID(res *Resource, typeOfReference string, sm *StateMap, resKey string, isResourceFound bool, resource StateResource, name string) (StateResource, bool) {
 
 	nameKey := fmt.Sprintf("%s|||%s",
-		nameType,
+		typeOfReference,
 		res.ID)
 
-	nameResource, isNameResourceFound := sm.resources[nameKey]
+	return getResourceOfReference(nameKey, res, typeOfReference, sm, resKey, isResourceFound, resource, name)
+}
 
-	if isNameResourceFound {
+func getResourceOfReferenceByUniqueName(res *Resource, typeOfReference string, sm *StateMap, resKey string, isResourceFound bool, resource StateResource, name string) (StateResource, bool) {
+
+	nameKey := fmt.Sprintf("%s|||%s",
+		typeOfReference,
+		res.UniqueName)
+
+	return getResourceOfReference(nameKey, res, typeOfReference, sm, resKey, isResourceFound, resource, name)
+}
+
+func getResourceOfReference(nameKey string, res *Resource, typeOfReference string, sm *StateMap, resKey string, isResourceFound bool, resource StateResource, name string) (StateResource, bool) {
+
+	resourceOfReference, isResourceOfReferenceFound := sm.resources[nameKey]
+
+	if isResourceOfReferenceFound {
 		// pass
 	} else if nameKey != resKey {
 		if isResourceFound {
-			nameResource = resource
-			isNameResourceFound = isResourceFound
-			fmt.Printf("\n??? No Parent but child: name: %s, ID: %s, Used: %v, typeOfId: %s, resType: %s", name, res.ID, sm.resources[resKey], nameType, res.Type)
+			resourceOfReference = resource
+			isResourceOfReferenceFound = isResourceFound
+			fmt.Printf("\n??? No Parent but child: name: %s, ID: %s, Used: %v, typeOfId: %s, resType: %s", name, res.ID, sm.resources[resKey], typeOfReference, res.Type)
 		}
 	}
-	return nameResource, isNameResourceFound
+	return resourceOfReference, isResourceOfReferenceFound
 }
 
-func getResource(res *Resource, sm *StateMap) (string, StateResource, bool) {
+func (sm *StateMap) GetResourceSplitId(res *Resource) (int, bool) {
+	if IMPORT_STATE_PATH == "" {
+		return -1, false
+	}
+
+	typeOfReference := res.getTypeOfReference()
+
+	resKey, resource, isResourceFound := getResourceByUniqueName(res, sm)
+	resourceOfReference, isResourceOfReferenceFound := getResourceOfReferenceByUniqueName(res, typeOfReference, sm, resKey, isResourceFound, resource, "")
+
+	if isResourceOfReferenceFound {
+		return extractSplitID(resourceOfReference), true
+	}
+
+	return -1, false
+}
+
+func extractSplitID(resource StateResource) int {
+	resType := ResourceType(resource.Resource.Type).Trim()
+	resModule := fmt.Sprintf("module.%s", resType)
+
+	module := resource.Resource.Module
+
+	if resModule == module {
+		return 0
+	}
+
+	prefix := fmt.Sprintf("%s_", resModule)
+
+	if strings.HasPrefix(module, prefix) {
+
+		numberStr := strings.TrimPrefix(module, prefix)
+
+		if num, err := strconv.Atoi(numberStr); err == nil {
+			return num
+		}
+	}
+
+	return -1
+}
+
+func getResourceByID(res *Resource, sm *StateMap) (string, StateResource, bool) {
 	resType := string(res.Type)
 
 	resKey := fmt.Sprintf("%s|||%s",
 		resType,
 		res.ID)
+
+	resource, isResourceFound := sm.resources[resKey]
+	return resKey, resource, isResourceFound
+}
+
+func getResourceByUniqueName(res *Resource, sm *StateMap) (string, StateResource, bool) {
+	resType := string(res.Type)
+
+	resKey := fmt.Sprintf("%s|||%s",
+		resType,
+		res.UniqueName)
 
 	resource, isResourceFound := sm.resources[resKey]
 	return resKey, resource, isResourceFound

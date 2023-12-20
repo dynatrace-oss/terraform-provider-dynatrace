@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"os"
 	"os/exec"
 	"path"
@@ -38,17 +39,19 @@ import (
 )
 
 type Module struct {
-	Environment          *Environment
-	Type                 ResourceType
-	Resources            map[string]*Resource
-	DataSources          map[string]*DataSource
-	namer                UniqueNamer
-	Status               ModuleStatus
-	Error                error
-	Descriptor           *ResourceDescriptor
-	Service              settings.CRUDService[settings.Settings]
-	ChildParentIDNameMap map[string]string
-	ChildParentMutex     *sync.Mutex
+	Environment            *Environment
+	Type                   ResourceType
+	Resources              map[string]*Resource
+	DataSources            map[string]*DataSource
+	namer                  UniqueNamer
+	Status                 ModuleStatus
+	Error                  error
+	Descriptor             *ResourceDescriptor
+	Service                settings.CRUDService[settings.Settings]
+	ChildParentIDNameMap   map[string]string
+	ModuleMutex            *sync.Mutex
+	SplitPathModuleNameMap map[string]string
+	SplitList              *splitList
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -232,12 +235,22 @@ func (me *Module) GetFile(name string) string {
 	return path.Join(me.GetFolder(), name)
 }
 
+func (me *Module) GetFileSpecificPath(name string, specificPath string) string {
+	return path.Join(specificPath, name)
+}
+
 func (me *Module) OpenFile(name string) (file *os.File, err error) {
 	return os.OpenFile(me.GetFile(name), os.O_APPEND|os.O_CREATE, 0666)
 }
 
 func (me *Module) CreateFile(name string) (*os.File, error) {
 	fileName := me.GetFile(name)
+	os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
+	return os.Create(fileName)
+}
+
+func (me *Module) CreateFileSpecificPath(name string, specificPath string) (*os.File, error) {
+	fileName := me.GetFileSpecificPath(name, specificPath)
 	os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
 	return os.Create(fileName)
 }
@@ -255,11 +268,29 @@ func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 	if logToScreen {
 		fmt.Println("- " + me.Type)
 	}
+	err = me.writeProviderFile(me.GetFolder())
+	if err != nil {
+		return err
+	}
+	if me.SplitPathModuleNameMap != nil {
+		for specificPath := range me.SplitPathModuleNameMap {
+			err = me.writeProviderFile(specificPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (me *Module) writeProviderFile(specificPath string) error {
+	var err error
+
 	if err = me.MkdirAll(false); err != nil {
 		return err
 	}
 	var outputFile *os.File
-	if outputFile, err = me.CreateFile("___providers___.tf"); err != nil {
+	if outputFile, err = me.CreateFileSpecificPath("___providers___.tf", specificPath); err != nil {
 		return err
 	}
 	defer func() {
@@ -287,6 +318,7 @@ func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 `, providerSource, providerVersion)); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -704,19 +736,85 @@ func (me *Module) blockPrevNames() {
 	}
 }
 
+func (me *Module) CreateBundleFile(bundle bundleToDownload) (*os.File, error) {
+	me.MkdirAll(false)
+	file, err := me.GetBundleFile(bundle)
+	if err != nil {
+		return nil, err
+	}
+
+	return os.Create(file)
+}
+
+func (me *Module) GetBundleFileName(bundle bundleToDownload) string {
+	return fileSystemName(fmt.Sprintf("bundle_%d.%s.tf", bundle.bundleId, me.Type.Trim()))
+}
+
+func (me *Module) GetBundleFile(bundle bundleToDownload) (string, error) {
+	folderPath := me.GetFolder()
+
+	if bundle.splitId > 0 {
+		folderPath = fmt.Sprintf("%s_%d", folderPath, bundle.splitId)
+		err := os.MkdirAll(folderPath, os.ModePerm)
+		if err != nil {
+			return "", err
+		}
+		splitName := fmt.Sprintf("%s_%d", me.Type.Trim(), bundle.splitId)
+		me.saveSplitPath(folderPath, splitName)
+	}
+
+	return path.Join(folderPath, me.GetBundleFileName(bundle)), nil
+}
+
+func (me *Module) saveSplitPath(folderPath string, splitName string) {
+	me.ModuleMutex.Lock()
+	if me.SplitPathModuleNameMap == nil {
+		me.SplitPathModuleNameMap = map[string]string{}
+	}
+	me.SplitPathModuleNameMap[folderPath] = splitName
+	me.ModuleMutex.Unlock()
+}
+
+type bundleToDownload struct {
+	bundleId int
+	splitId  int
+}
+
 func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThreaded bool) error {
 	length := len(me.Resources)
-	if multiThreaded {
-		fmt.Printf("Downloading \"%s\" Count:  %d\n", me.Type, length)
-	} else {
-		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+	resourcesCount := len(resourcesToDownload)
+	maxThreads := 50
+
+	bundleConfig := me.getResourcesPerBundle(resourcesCount, maxThreads)
+	bundleText := ""
+	if bundleConfig.resourcesPerBundle > 1 {
+		bundleText = fmt.Sprintf(" in %d bundles of %d resources", bundleConfig.bundlesCount, bundleConfig.resourcesPerBundle)
 	}
+	splitText := ""
+	if bundleConfig.splitCount > 1 {
+		splitText = fmt.Sprintf(" in %d splits of %d bundles ", bundleConfig.splitCount, bundleConfig.bundlesPerSplitModule)
+	}
+
+	if me.SplitList == nil {
+		me.SplitList = &splitList{
+			folders:      make(map[int]*splitFolder, bundleConfig.splitCount),
+			folderMutex:  new(sync.Mutex),
+			bundleConfig: bundleConfig,
+		}
+		defer me.closeLastBundleFiles()
+	}
+
+	if multiThreaded {
+		fmt.Printf("Downloading \"%s\" Count:  %d %s %s\n", me.Type, resourcesCount, bundleText, splitText)
+	} else {
+		fmt.Printf("Downloading \"%s\" (0 of %d) %s %s", me.Type, resourcesCount, bundleText, splitText)
+	}
+
 	idx := 0
 	var wg sync.WaitGroup
 	itemCount := len(resourcesToDownload)
 	channel := make(chan *Resource, itemCount)
 	mutex := sync.Mutex{}
-	maxThreads := 50
 	if !multiThreaded {
 		maxThreads = 1
 	}
@@ -781,6 +879,242 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 		fmt.Printf("Downloading \"%s\"\n", me.Type)
 	}
 	return nil
+}
+
+type splitList struct {
+	folders      map[int]*splitFolder
+	folderMutex  *sync.Mutex
+	bundleConfig bundlingConfig
+}
+
+type splitFolder struct {
+	splitId               int
+	currentBundleId       int
+	currentBundleFile     *os.File
+	currentBundleResCount int
+	splitList             *splitList
+	splitMutex            *sync.Mutex
+}
+
+func (me *splitList) getSplitFolder(splitIdRes int) *splitFolder {
+	(*me).folderMutex.Lock()
+	defer (*me).folderMutex.Unlock()
+
+	folder, found := (*me).folders[splitIdRes]
+
+	if found {
+		// pass
+	} else {
+		folder = &splitFolder{
+			splitId:               splitIdRes,
+			currentBundleId:       -1,
+			currentBundleFile:     nil,
+			currentBundleResCount: 0,
+			splitList:             me,
+			splitMutex:            new(sync.Mutex),
+		}
+		(*me).folders[splitIdRes] = folder
+	}
+
+	return folder
+}
+
+func (me *Module) getLockBundleFile(resource *Resource) (*splitFolder, error) {
+
+	splitId, importSplitFound := me.Environment.ImportStateMap.GetResourceSplitId(resource)
+
+	hasSplitOrBundles := me.SplitList.bundleConfig.splitCount > 1 || me.SplitList.bundleConfig.resourcesPerBundle > 1
+
+	if importSplitFound {
+		if splitId == 0 {
+			if hasSplitOrBundles {
+				// pass
+			} else {
+				return nil, nil
+			}
+		}
+	} else {
+		if hasSplitOrBundles {
+			splitId = getSplitID(resource.UniqueName, me.SplitList.bundleConfig.splitCount)
+		} else {
+			return nil, nil
+		}
+	}
+
+	splitFolder := me.SplitList.getSplitFolder(splitId)
+
+	splitFolder.splitMutex.Lock()
+
+	if splitFolder.currentBundleFile == nil {
+		var err error
+		splitFolder.currentBundleId += 1
+		splitFolder.currentBundleFile, err = me.CreateBundleFile(bundleToDownload{
+			splitId:  splitFolder.splitId,
+			bundleId: splitFolder.currentBundleId,
+		})
+		splitFolder.currentBundleResCount = 0
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return splitFolder, nil
+}
+
+func (me *splitFolder) releaseUnlockBundleFile() error {
+	defer me.splitMutex.Unlock()
+
+	me.currentBundleResCount++
+
+	if me.currentBundleResCount >= me.splitList.bundleConfig.resourcesPerBundle {
+		var err error
+		me.currentBundleResCount = 0
+
+		err = me.currentBundleFile.Close()
+		if err != nil {
+			return err
+		}
+
+		me.currentBundleFile = nil
+	}
+
+	return nil
+}
+
+func (me *Module) closeLastBundleFiles() error {
+	me.SplitList.folderMutex.Lock()
+	defer me.SplitList.folderMutex.Unlock()
+
+	for _, splitFolder := range me.SplitList.folders {
+		err := splitFolder.closeLastFile()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (me *splitFolder) closeLastFile() error {
+	me.splitMutex.Lock()
+	defer me.splitMutex.Unlock()
+
+	if me.currentBundleFile != nil {
+		err := me.currentBundleFile.Close()
+		me.currentBundleFile = nil
+		return err
+	}
+
+	return nil
+}
+
+func getHash(input string) uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(input))
+	return h.Sum32()
+}
+
+func getSplitID(input string, splitCount int) int {
+	hashValue := getHash(input)
+	splitID := int(hashValue % uint32(splitCount))
+	return splitID
+}
+
+type bundlingConfig struct {
+	resourcesPerBundle    int
+	bundlesPerSplitModule int
+	bundlesCount          int
+	splitCount            int
+}
+
+func (me *Module) getResourcesPerBundle(resourcesCount int, maxThreads int) bundlingConfig {
+	resourcesPerBundle := 1
+	bundlesPerSplitModule := resourcesCount
+
+	if me.IsBundleImpossible() {
+		return bundlingConfig{
+			resourcesPerBundle:    resourcesPerBundle,
+			bundlesPerSplitModule: bundlesPerSplitModule,
+			bundlesCount:          1,
+			splitCount:            1,
+		}
+	}
+
+	resourcesForSplitModuleMin := 100
+	splitCountMax := maxThreads
+	bundlingDivisor := 10
+
+	resourcesForBundlingMin := 30
+	resourcesPerBundlingMax := 100
+
+	if resourcesCount > resourcesForBundlingMin {
+		resourcesPerBundle = CeilDivide(resourcesCount, bundlingDivisor)
+		if resourcesPerBundle > resourcesPerBundlingMax {
+			resourcesPerBundle = resourcesPerBundlingMax
+		}
+	}
+
+	bundlesCount := CeilDivide(resourcesCount, resourcesPerBundle)
+	splitCount := CeilDivide(resourcesCount, resourcesForSplitModuleMin)
+	if splitCount > splitCountMax {
+		splitCount = splitCountMax
+	}
+
+	if resourcesCount > resourcesForSplitModuleMin {
+		bundlesPerSplitModule = CeilDivide(bundlesCount, splitCount)
+	} else {
+		bundlesPerSplitModule = bundlesCount
+	}
+
+	return bundlingConfig{
+		resourcesPerBundle:    resourcesPerBundle,
+		bundlesPerSplitModule: bundlesPerSplitModule,
+		bundlesCount:          bundlesCount,
+		splitCount:            splitCount,
+	}
+}
+
+func (me *Module) IsBundleImpossible() bool {
+	resourceDefinition := AllResources[me.Type]
+
+	if ULTRA_PARALLEL {
+		// pass
+	} else {
+		return true
+	}
+
+	if me.Environment.HasDependenciesTo[me.Type] {
+		return true
+	}
+
+	if len(resourceDefinition.Dependencies) > 0 {
+
+		hasEntityIdsDepsOnly := true
+		for _, d := range resourceDefinition.Dependencies {
+			switch d.(type) {
+			case *entityds:
+				continue
+			}
+			hasEntityIdsDepsOnly = false
+		}
+
+		if hasEntityIdsDepsOnly {
+			// pass
+		} else {
+			return true
+		}
+	}
+
+	if resourceDefinition.Parent != nil {
+		return true
+	}
+
+	if me.Environment.IsParentMap[me.Type] {
+		return true
+	}
+
+	return false
 }
 
 func (me *Module) Discover() error {
@@ -890,6 +1224,9 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		if me.Descriptor.Parent != nil {
 			moduleValue = fmt.Sprintf("module.%s", me.Descriptor.Parent.Trim())
 		}
+		if res.SplitId > 0 {
+			moduleValue = fmt.Sprintf("%s_%d", moduleValue, res.SplitId)
+		}
 
 		resList = append(resList, resource{
 			Module: moduleValue,
@@ -917,3 +1254,14 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 }
 
 func hide(v any) {}
+
+func CeilDivide(a, b int) int {
+	quotient := a / b
+
+	remainder := a % b
+	if remainder > 0 {
+		quotient++
+	}
+
+	return quotient
+}

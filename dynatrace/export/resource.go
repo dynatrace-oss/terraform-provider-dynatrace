@@ -47,6 +47,8 @@ type Resource struct {
 	OutputFileAbs        string
 	Flawed               bool
 	XParent              *Resource
+	SplitId              int
+	BundleFilePath       string
 }
 
 func (me *Resource) GetParent() *Resource {
@@ -74,19 +76,14 @@ func (me *Resource) SetName(name string) *Resource {
 
 	if parentFound {
 		nameModule = me.Module.Environment.Module(parentType)
-		nameModule.ChildParentMutex.Lock()
+		nameModule.ModuleMutex.Lock()
 		parentUniqueName, parentUniqueNameFound = nameModule.ChildParentIDNameMap[me.ID]
 	}
 
 	if parentUniqueNameFound {
 		me.UniqueName = parentUniqueName
 	} else {
-		typeOfId := string(me.Type)
-		if parentFound {
-			typeOfId = string(parentType)
-		}
-
-		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me, typeOfId)
+		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
 		if prevUniqueName == "" {
 			terraformName := toTerraformName(name)
 			me.UniqueName = nameModule.namer.Name(terraformName)
@@ -98,11 +95,21 @@ func (me *Resource) SetName(name string) *Resource {
 		nameModule.ChildParentIDNameMap[me.ID] = me.UniqueName
 	}
 	if parentFound {
-		nameModule.ChildParentMutex.Unlock()
+		nameModule.ModuleMutex.Unlock()
 	}
 
 	me.Status = ResourceStati.Discovered
 	return me
+}
+
+func (me *Resource) getTypeOfReference() string {
+	parentType, parentFound := me.Module.Environment.ChildParentGroups[me.Module.Type]
+
+	typeOfId := string(me.Type)
+	if parentFound {
+		typeOfId = string(parentType)
+	}
+	return typeOfId
 }
 
 func (me *Resource) GetResourceReferences() []*Resource {
@@ -166,7 +173,11 @@ func (me *Resource) GetFileName() string {
 }
 
 func (me *Resource) GetFile() string {
-	return path.Join(me.Module.GetFolder(), me.GetFileName())
+	if me.BundleFilePath == "" {
+		return path.Join(me.Module.GetFolder(), me.GetFileName())
+	}
+
+	return me.BundleFilePath
 }
 
 func (me *Resource) GetAttentionFile() string {
@@ -292,11 +303,29 @@ func (me *Resource) Download() error {
 
 	me.Module.MkdirAll(me.Flawed)
 
-	var outputFile *os.File
-	if outputFile, err = me.CreateFile(); err != nil {
+	splitFolder, err := me.Module.getLockBundleFile(me)
+	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
+
+	var outputFile *os.File
+	if splitFolder != nil {
+		me.SplitId = splitFolder.splitId
+		outputFile = splitFolder.currentBundleFile
+	}
+
+	if outputFile != nil {
+		me.BundleFilePath = outputFile.Name()
+		outputFile.Write([]byte("# BUNDLE-ITEM\n"))
+		defer splitFolder.releaseUnlockBundleFile()
+	} else {
+		me.BundleFilePath = ""
+		me.SplitId = 0
+		if outputFile, err = me.CreateFile(); err != nil {
+			return err
+		}
+		defer outputFile.Close()
+	}
 
 	if err = hclgen.ExportResource(settngs, outputFile, string(me.Type), me.UniqueName, finalComments...); err != nil {
 		return err

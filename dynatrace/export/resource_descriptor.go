@@ -465,7 +465,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
 		// Dependencies.Service,
-		Dependencies.ID(ResourceTypes.SLO),
+		Dependencies.LegacyID(ResourceTypes.SLOV2),
 		Dependencies.HyperLinkDashboardID(),
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
