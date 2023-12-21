@@ -27,7 +27,7 @@ If you want to configure a different set of metrics for a specific service, a se
 Just be aware of the fact, that Dynatrace enforces for most services a recommended set of metrics. All of them need to be part of your configuration in order to end up with a non-empty plan.
 
 ```terraform
-resource "dynatrace_aws_service" "TERRAFORM_SAMPLE" {
+resource "dynatrace_aws_credentials" "TERRAFORM_SAMPLE" {
   label          = "TERRAFORM-TEST-001"
   partition_type = "AWS_DEFAULT"
   tagged_only    = false
@@ -35,6 +35,7 @@ resource "dynatrace_aws_service" "TERRAFORM_SAMPLE" {
     account_id = "246186168471"
     iam_role   = "Dynatrace_monitoring_role_demo1"
   }
+  remove_defaults = true
 }
 
 data "dynatrace_aws_supported_services" "supported_services" {    
@@ -42,7 +43,7 @@ data "dynatrace_aws_supported_services" "supported_services" {
 
 resource "dynatrace_aws_service" "TERRAFORM_SAMPLE_services" {
   for_each = data.dynatrace_aws_supported_services.supported_services.services
-  credentials_id = dynatrace_aws_service.TERRAFORM_SAMPLE.id
+  credentials_id = dynatrace_aws_credentials.TERRAFORM_SAMPLE.id
   use_recommended_metrics = true
   name           = each.key
 }
