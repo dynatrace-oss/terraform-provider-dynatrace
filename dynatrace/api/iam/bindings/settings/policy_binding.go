@@ -13,6 +13,10 @@ type PolicyBinding struct {
 	PolicyIDs   []string `json:"policyUuids"`
 }
 
+func (me *PolicyBinding) Name() string {
+	return me.GroupID
+}
+
 func (me *PolicyBinding) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"group": {

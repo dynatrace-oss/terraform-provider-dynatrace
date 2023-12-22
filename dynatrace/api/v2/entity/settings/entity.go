@@ -13,6 +13,7 @@ type Entity struct {
 	DisplayName *string        `json:"displayName,omitempty"` // The name of the entity, displayed in the UI.
 	Tags        Tags           `json:"tags,omitempty"`        // A set of tags assigned to the entity.
 	Properties  map[string]any `json:"properties"`
+	LastSeenTms *int64         `json:"lastSeenTms,omitempty"` // The timestamp at which the entity was last seen, in UTC milliseconds.
 }
 
 func (me *Entity) Schema() map[string]*schema.Schema {
@@ -46,15 +47,21 @@ func (me *Entity) Schema() map[string]*schema.Schema {
 			Computed:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
+		"last_seen_tms": {
+			Type:        schema.TypeInt,
+			Description: "The timestamp at which the entity was last seen, in UTC milliseconds.",
+			Optional:    true,
+		},
 	}
 }
 
 func (me *Entity) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.EncodeAll(map[string]any{
-		"entity_id":    me.EntityId,
-		"type":         me.Type,
-		"display_name": me.DisplayName,
-		"tags":         me.Tags,
+		"entity_id":     me.EntityId,
+		"type":          me.Type,
+		"display_name":  me.DisplayName,
+		"tags":          me.Tags,
+		"last_seen_tms": me.LastSeenTms,
 	}); err != nil {
 		return err
 	}
@@ -70,9 +77,10 @@ func (me *Entity) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Entity) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"entity_id":    &me.EntityId,
-		"type":         &me.Type,
-		"display_name": &me.DisplayName,
-		"tags":         &me.Tags,
+		"entity_id":     &me.EntityId,
+		"type":          &me.Type,
+		"display_name":  &me.DisplayName,
+		"tags":          &me.Tags,
+		"last_seen_tms": &me.LastSeenTms,
 	})
 }

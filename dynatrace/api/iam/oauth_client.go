@@ -53,7 +53,7 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 		"grant_type=client_credentials&client_id=%s&client_secret=%s&scope=%s&resource=%s",
 		url.QueryEscape(auth.ClientID()),
 		url.QueryEscape(auth.ClientSecret()),
-		url.QueryEscape("account-idm-read account-idm-write iam:policies:read iam:policies:write iam-policies-management"),
+		url.QueryEscape("account-env-read account-idm-read account-idm-write iam:policies:read iam:policies:write iam-policies-management"),
 		url.QueryEscape("urn:dtaccount:"+strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")),
 	)
 	payload := strings.NewReader(payloadStr)

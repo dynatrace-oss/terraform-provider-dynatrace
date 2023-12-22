@@ -55,12 +55,12 @@ func (me *service) Get(id string, v *entities.Settings) (err error) {
 
 	var dataObj entities.Settings
 	if len(me.entitySelector) > 0 {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties`, to, url.QueryEscape(from), url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	} else {
 		entitySelector := fmt.Sprintf("type(\"%s\")", me.entityType)
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	}

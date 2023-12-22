@@ -64,6 +64,7 @@ Read-Only:
 
 - `display_name` (String)
 - `entity_id` (String)
+- `last_seen_tms` (Number)
 - `properties` (Map of String)
 - `tags` (List of Object) (see [below for nested schema](#nestedobjatt--entities--tags))
 - `type` (String)

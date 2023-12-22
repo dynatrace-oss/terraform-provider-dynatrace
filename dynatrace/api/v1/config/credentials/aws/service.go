@@ -41,18 +41,6 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 			settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
 				WithStubs(&api.Stubs{}).
 				WithMutex(mu.Lock, mu.Unlock).
-				WithOnBeforeUpdate(func(id string, v *aws.AWSCredentialsConfig) error {
-					if v.SupportingServicesManagedInDynatrace {
-						var creds aws.AWSCredentialsConfig
-						client := rest.DefaultClient(credentials.URL, credentials.Token)
-
-						if err := client.Get(fmt.Sprintf("%s/%s", BasePath, "id"), 200).Finish(&creds); err != nil {
-							return err
-						}
-						v.SupportingServicesToMonitor = creds.SupportingServicesToMonitor
-					}
-					return nil
-				}).
 				WithAfterCreate(func(client rest.Client, stub *api.Stub) (*api.Stub, error) {
 					// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
 					// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created

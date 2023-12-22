@@ -57,43 +57,6 @@ type servicesResponse struct {
 	Services []*services.Settings `json:"services"`
 }
 
-func cloneMetric(m *services.AWSMonitoredMetric) *services.AWSMonitoredMetric {
-	cl := services.AWSMonitoredMetric{
-		Name:       m.Name,
-		Dimensions: []string{},
-	}
-	for _, d := range m.Dimensions {
-		cl.Dimensions = append(cl.Dimensions, d)
-	}
-	return &cl
-}
-
-func cloneMetrics(m []*services.AWSMonitoredMetric) []*services.AWSMonitoredMetric {
-	cl := []*services.AWSMonitoredMetric{}
-	for _, m := range m {
-		cl = append(cl, cloneMetric(m))
-	}
-	return cl
-}
-
-func cloneService(s *services.Settings) *services.Settings {
-	return &services.Settings{
-		CredentialsID:    s.CredentialsID,
-		Name:             s.Name,
-		MonitoredMetrics: cloneMetrics(s.MonitoredMetrics),
-		BuiltIn:          s.BuiltIn,
-		RequiredMetrics:  s.RequiredMetrics,
-	}
-}
-
-func (me servicesResponse) clone() servicesResponse {
-	var cl servicesResponse
-	for _, s := range me.Services {
-		cl.Services = append(cl.Services, cloneService(s))
-	}
-	return cl
-}
-
 func (me *service) List() (api.Stubs, error) {
 	var stubs api.Stubs
 	var credentialStubs api.Stubs
@@ -114,8 +77,8 @@ func (me *service) List() (api.Stubs, error) {
 }
 
 func (me *service) Get(id string, v *services.Settings) error {
-	smu.Lock()
-	defer smu.Unlock()
+	// smu.Lock()
+	// defer smu.Unlock()
 	parts := strings.Split(id, "#")
 	credentialsID := parts[0]
 	serviceName := parts[1]

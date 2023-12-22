@@ -28,15 +28,15 @@ type ScheduleTrigger struct {
 	Type ScheduleTriggerType `json:"type"`
 
 	// TimeTrigger - type <= time
-	Time string `json:"time" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"` // Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23:59`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`
+	Time *string `json:"time,omitempty" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"` // Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23:59`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`
 
 	// CronTrigger - type <= cron
-	Cron string `json:"cron" example:"0 0 * * *"` // Configures using cron syntax. Conflicts with `time`, `interval_minutes`, `between_start` and `between_end`.
+	Cron *string `json:"cron,omitempty" example:"0 0 * * *"` // Configures using cron syntax. Conflicts with `time`, `interval_minutes`, `between_start` and `between_end`.
 
 	// IntervalTrigger - type <= interval
-	IntervalMinutes int    `json:"intervalMinutes" minimum:"1" maximum:"720"`                            // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `between_start` and `between_end`.
-	BetweenStart    string `json:"betweenStart,omitempty" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"` // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`.
-	BetweenEnd      string `json:"betweenEnd,omitempty" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"`   // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `between_start` and `interval_minutes`.
+	IntervalMinutes *int    `json:"intervalMinutes,omitempty" minimum:"1" maximum:"720"`                  // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `between_start` and `between_end`.
+	BetweenStart    *string `json:"betweenStart,omitempty" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"` // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`.
+	BetweenEnd      *string `json:"betweenEnd,omitempty" pattern:"^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"`   // Triggers the schedule every n minutes within a given time frame. Conflicts with `cron` and `time`. Required with `between_start` and `interval_minutes`.
 }
 
 func (me *ScheduleTrigger) Schema(prefix string) map[string]*schema.Schema {
@@ -55,7 +55,7 @@ func (me *ScheduleTrigger) Schema(prefix string) map[string]*schema.Schema {
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.interval_minutes", prefix + ".0.between_start", prefix + ".0.between_end"},
 		},
 		"interval_minutes": {
-			Type:          schema.TypeString,
+			Type:          schema.TypeInt,
 			Description:   "Triggers the schedule every n minutes within a given time frame. Minimum: 1, Maximum: 720. Required with `between_start` and `between_end`. Conflicts with `cron` and `time`",
 			Optional:      true,
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.cron"},
@@ -89,11 +89,21 @@ func (me *ScheduleTrigger) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ScheduleTrigger) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"time":             &me.Time,
 		"cron":             &me.Cron,
 		"interval_minutes": &me.IntervalMinutes,
 		"between_start":    &me.BetweenStart,
 		"between_end":      &me.BetweenEnd,
 	})
+
+	if me.Time != nil {
+		me.Type = ScheduleTriggerTypes.Time
+	} else if me.Cron != nil {
+		me.Type = ScheduleTriggerTypes.Cron
+	} else if me.IntervalMinutes != nil {
+		me.Type = ScheduleTriggerTypes.Interval
+	}
+
+	return err
 }

@@ -60,7 +60,7 @@ resource "dynatrace_alerting" "Default" {
 
 ### Optional
 
-- `authorization_token` (String) The application token for the Trello account
+- `authorization_token` (String, Sensitive) The application token for the Trello account
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only

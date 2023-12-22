@@ -114,8 +114,79 @@ func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBindi
 	return nil
 }
 
+type DataStub struct {
+	ID string `json:"id"`
+}
+
+type ListEnvResponse struct {
+	Data []DataStub `json:"data"`
+}
+
+type PolicyBindingStub struct {
+	Groups []string `json:"groups"`
+}
+
+type ListPolicyBindingsResponse struct {
+	PolicyBindings []PolicyBindingStub `json:"policyBindings"`
+}
+
 func (me *BindingServiceClient) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
+	var err error
+	var responseBytes []byte
+	client := iam.NewIAMClient(me)
+
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", me.AccountID()), 200, false); err != nil {
+		return nil, err
+	}
+
+	var envResponse ListEnvResponse
+	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
+		return nil, err
+	}
+
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", me.AccountID()), 200, false); err != nil {
+		return nil, err
+	}
+
+	var response ListPolicyBindingsResponse
+	if err = json.Unmarshal(responseBytes, &response); err != nil {
+		return nil, err
+	}
+
+	var stubs api.Stubs
+	groupIds := map[string]bool{}
+	for _, policy := range response.PolicyBindings {
+		for _, group := range policy.Groups {
+			if _, exists := groupIds[group]; !exists {
+				id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", me.AccountID())
+				stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
+				groupIds[group] = true
+			}
+		}
+	}
+
+	for _, environment := range envResponse.Data {
+		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environment.ID), 200, false); err != nil {
+			return nil, err
+		}
+
+		var response ListPolicyBindingsResponse
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
+			return nil, err
+		}
+
+		groupIds := map[string]bool{}
+		for _, policy := range response.PolicyBindings {
+			for _, group := range policy.Groups {
+				if _, exists := groupIds[group]; !exists {
+					id := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environment.ID)
+					stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
+					groupIds[group] = true
+				}
+			}
+		}
+	}
+	return stubs, nil
 }
 
 func (me *BindingServiceClient) Delete(id string) error {

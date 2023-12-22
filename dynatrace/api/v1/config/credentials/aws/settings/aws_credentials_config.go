@@ -19,10 +19,7 @@ package aws
 
 import (
 	"encoding/json"
-	"sort"
-	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -32,16 +29,14 @@ import (
 
 // AWSCredentialsConfig Configuration of an AWS credentials.
 type AWSCredentialsConfig struct {
-	Label                                string                        `json:"label"`                                 // The name of the credentials.
-	SupportingServicesToMonitor          []*AWSSupportingServiceConfig `json:"supportingServicesToMonitor,omitempty"` // A list of supporting services to be monitored.
-	TaggedOnly                           *bool                         `json:"taggedOnly"`                            // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
-	AuthenticationData                   *AWSAuthenticationData        `json:"authenticationData"`                    // A credentials for the AWS authentication.
-	PartitionType                        PartitionType                 `json:"partitionType"`                         // The type of the AWS partition.
-	TagsToMonitor                        []*AWSConfigTag               `json:"tagsToMonitor"`                         // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
-	ConnectionStatus                     *ConnectionStatus             `json:"connectionStatus,omitempty"`            // The status of the connection to the AWS environment.   * `CONNECTED`: There was a connection within last 10 minutes.  * `DISCONNECTED`: A problem occurred with establishing connection using these credentials. Check whether the data is correct.  * `UNINITIALIZED`: The successful connection has never been established for these credentials.
-	SupportingServicesManagedInDynatrace bool                          `json:"-"`
-	RemoveDefaults                       bool                          `json:"-"`
-	Unknowns                             map[string]json.RawMessage    `json:"-"`
+	Label              string                     `json:"label"`                      // The name of the credentials.
+	TaggedOnly         *bool                      `json:"taggedOnly"`                 // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
+	AuthenticationData *AWSAuthenticationData     `json:"authenticationData"`         // A credentials for the AWS authentication.
+	PartitionType      PartitionType              `json:"partitionType"`              // The type of the AWS partition.
+	TagsToMonitor      []*AWSConfigTag            `json:"tagsToMonitor"`              // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
+	ConnectionStatus   *ConnectionStatus          `json:"connectionStatus,omitempty"` // The status of the connection to the AWS environment.   * `CONNECTED`: There was a connection within last 10 minutes.  * `DISCONNECTED`: A problem occurred with establishing connection using these credentials. Check whether the data is correct.  * `UNINITIALIZED`: The successful connection has never been established for these credentials.
+	RemoveDefaults     bool                       `json:"-"`
+	Unknowns           map[string]json.RawMessage `json:"-"`
 }
 
 func (awscc *AWSCredentialsConfig) Name() string {
@@ -84,28 +79,20 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 			},
 		},
 		"supporting_services_to_monitor": {
-			Type:        schema.TypeSet,
-			Description: "supporting services to be monitored",
-			Optional:    true,
-			Elem:        &schema.Resource{Schema: new(AWSSupportingServiceConfig).Schema()},
-			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-				if d.IsNewResource() {
-					return false
-				}
-				ssmid, _ := d.GetOk("supporting_services_managed_in_dynatrace")
-				bssmid := ssmid.(bool)
-				rmd, _ := d.GetOk("remove_defaults")
-				brmd := rmd.(bool)
-
-				return bssmid || brmd
-			},
-			Deprecated: "Managing supporting services directly within AWS Credentials has been deprecated within the REST API. Consider using the resource `dynatrace_aws_service` instead and set either `supporting_services_managed_in_dynatrace` or `remove_defaults` to `true`",
+			Type:             schema.TypeSet,
+			Description:      "supporting services to be monitored",
+			Optional:         true,
+			Elem:             &schema.Resource{Schema: new(AWSSupportingServiceConfig).Schema()},
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
+			Deprecated:       "Managing supporting services directly within AWS Credentials has been deprecated within the REST API. This attribute just exists for backwards compatibility. It no longer has an effect. For managing services use the resource `dynatrace_aws_service`",
 		},
 		"supporting_services_managed_in_dynatrace": {
-			Type:        schema.TypeBool,
-			Description: "If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.",
-			Optional:    true,
-			Default:     false,
+			Type:             schema.TypeBool,
+			Description:      "If enabled (`true`) the attribute `supporting_services` will not get synchronized with Dynatrace. You will be able to manage them via WebUI without interference by Terraform.",
+			Optional:         true,
+			Default:          false,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
+			Deprecated:       "Supporting Services are no longer getting managed via this resource. Regardless of the value set here, this resource won't affect the supporting services during updates",
 		},
 		"remove_defaults": {
 			Type:        schema.TypeBool,
@@ -138,11 +125,8 @@ func (awscc *AWSCredentialsConfig) MarshalJSON() ([]byte, error) {
 		}
 		m["label"] = rawMessage
 	}
-	if awscc.SupportingServicesToMonitor != nil {
-		rawMessage, err := json.Marshal(awscc.SupportingServicesToMonitor)
-		if err != nil {
-			return nil, err
-		}
+	{
+		rawMessage, _ := json.Marshal([]string{})
 		m["supportingServicesToMonitor"] = rawMessage
 	}
 	if rawMessage, err := json.Marshal(opt.Bool(awscc.TaggedOnly)); err == nil {
@@ -184,18 +168,6 @@ func (awscc *AWSCredentialsConfig) UnmarshalJSON(data []byte) error {
 	if v, found := m["label"]; found {
 		if err := json.Unmarshal(v, &awscc.Label); err != nil {
 			return err
-		}
-	}
-	if v, found := m["supportingServicesToMonitor"]; found {
-		if err := json.Unmarshal(v, &awscc.SupportingServicesToMonitor); err != nil {
-			return err
-		}
-		if awscc.SupportingServicesToMonitor != nil {
-			sort.Slice(awscc.SupportingServicesToMonitor, func(i, j int) bool {
-				a := awscc.SupportingServicesToMonitor[i]
-				b := awscc.SupportingServicesToMonitor[j]
-				return strings.Compare(a.Name, b.Name) == -1
-			})
 		}
 	}
 	if v, found := m["taggedOnly"]; found {
@@ -259,9 +231,6 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if err := properties.EncodeSlice("supporting_services_to_monitor", awscc.SupportingServicesToMonitor); err != nil {
-		return err
-	}
 	if err := properties.Encode("label", awscc.Label); err != nil {
 		return err
 	}
@@ -299,23 +268,9 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			awscc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("supporting_services_managed_in_dynatrace"); ok {
-		awscc.SupportingServicesManagedInDynatrace = value.(bool)
-	}
 	if value, ok := decoder.GetOk("label"); ok {
 		awscc.Label = value.(string)
 	}
-	if err := decoder.DecodeSlice("supporting_services_to_monitor", &awscc.SupportingServicesToMonitor); err != nil {
-		return err
-	}
-	services := []*AWSSupportingServiceConfig{}
-	for _, service := range awscc.SupportingServicesToMonitor {
-		if len(service.Name) == 0 {
-			continue
-		}
-		services = append(services, service)
-	}
-	awscc.SupportingServicesToMonitor = services
 	if value, ok := decoder.GetOk("tagged_only"); ok {
 		awscc.TaggedOnly = opt.NewBool(value.(bool))
 	}
@@ -341,7 +296,6 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("remove_defaults"); ok {
 		awscc.RemoveDefaults = value.(bool)
 	}
-	logging.File.Println("RemoveDefault:", awscc.RemoveDefaults)
 	return nil
 }
 

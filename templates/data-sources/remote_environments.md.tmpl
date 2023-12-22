@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title: "dynatrace_remote_environments Data Source - terraform-provider-dynatrace"
+subcategory: "Integrations"
+description: |-
+  The data source `dynatrace_remote_environments` covers queries for remote environments
+---
+
+# dynatrace_remote_environments (Data Source)
+
+The remote environments data source allows retrieval of all remote environments.
+
+## Example Usage
+
+```terraform
+data "dynatrace_remote_environments" "example" {
+}
+
+output "remote_environments" {
+  value = data.dynatrace_remote_environments.example
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}

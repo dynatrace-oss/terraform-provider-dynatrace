@@ -35,7 +35,8 @@ type Credentials struct {
 	Name                   string                `json:"name"`                             // The name of the credentials set.
 	Description            *string               `json:"description,omitempty"`            // A short description of the credentials set..
 	OwnerAccessOnly        bool                  `json:"ownerAccessOnly"`                  // The credentials set is available to every user (`false`) or to owner only (`true`).
-	Scope                  Scope                 `json:"scope"`                            // The scope of the credentials set
+	Scope                  Scope                 `json:"scope,omitempty"`                  // Deprecated(v279), please use `scopes` instead. The scope of the credentials set
+	Scopes                 []Scope               `json:"scopes,omitempty"`                 // The set of scopes of the credentials set.
 	Type                   CredentialsType       `json:"type"`                             // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
 	Token                  *string               `json:"token,omitempty"`                  // Token in the string format.
 	Password               *string               `json:"password,omitempty"`               // The password of the credential (Base64 encoded).
@@ -72,7 +73,14 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`",
-			Required:    true,
+			Optional:    true,
+			Deprecated:  "Deprecated(v279), please use `scopes` instead.",
+		},
+		"scopes": {
+			Type:        schema.TypeSet,
+			Description: "The set of scopes of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`",
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"token": {
 			Type:          schema.TypeString,
@@ -168,6 +176,9 @@ func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("scope", string(me.Scope)); err != nil {
 		return err
 	}
+	if err := properties.Encode("scopes", me.Scopes); err != nil {
+		return err
+	}
 	if me.Token != nil && len(*me.Token) > 0 {
 		if err := properties.Encode("token", me.Token); err != nil {
 			return err
@@ -234,6 +245,9 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("scope"); ok {
 		me.Scope = Scope(value.(string))
+	}
+	if err := decoder.Decode("scopes", &me.Scopes); err != nil {
+		return err
 	}
 	if value, ok := decoder.GetOk("token"); ok {
 		me.Token = opt.NewString(value.(string))

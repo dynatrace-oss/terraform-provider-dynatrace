@@ -103,24 +103,67 @@ func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
 	return nil
 }
 
+type DataStub struct {
+	ID string `json:"id"`
+}
+
+type ListEnvResponse struct {
+	Data []DataStub `json:"data"`
+}
+
+type PolicyStub struct {
+	UUID        string `json:"uuid"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ListPoliciesResponse struct {
+	Policies []PolicyStub `json:"policies"`
+}
+
 func (me *PolicyServiceClient) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
-	// var err error
-	// var responseBytes []byte
+	var err error
+	var responseBytes []byte
+	client := iam.NewIAMClient(me)
 
-	// if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", me.AccountID()), 200, false); err != nil {
-	// 	return nil, err
-	// }
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", me.AccountID()), 200, false); err != nil {
+		return nil, err
+	}
 
-	// var response ListUsersResponse
-	// if err = json.Unmarshal(responseBytes, &response); err != nil {
-	// 	return nil, err
-	// }
-	// var stubs api.Stubs
-	// for _, item := range response.Items {
-	// 	stubs = append(stubs, &api.Stub{ID: item.UID, Name: item.Email})
-	// }
-	// return stubs, nil
+	var envResponse ListEnvResponse
+	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
+		return nil, err
+	}
+
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", me.AccountID()), 200, false); err != nil {
+		return nil, err
+	}
+
+	var response ListPoliciesResponse
+	if err = json.Unmarshal(responseBytes, &response); err != nil {
+		return nil, err
+	}
+
+	var stubs api.Stubs
+	for _, policy := range response.Policies {
+		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "account", me.AccountID()), Name: policy.Name})
+	}
+
+	for _, environment := range envResponse.Data {
+		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/policies", environment.ID), 200, false); err != nil {
+			return nil, err
+		}
+
+		var response ListPoliciesResponse
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
+			return nil, err
+		}
+
+		for _, policy := range response.Policies {
+			stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "environment", environment.ID), Name: policy.Name})
+		}
+	}
+	return stubs, nil
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {

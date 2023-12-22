@@ -116,7 +116,7 @@ Optional:
 
 Required:
 
-- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
+- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `REGEX_MATCHES`, `ENDS_WITH` and `STRING_EQUALS`
 - `value` (String) The value to compare to
 
 Optional:
@@ -160,7 +160,7 @@ Optional:
 
 Required:
 
-- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `CONTAINS_REGEX`, `ENDS_WITH` and `EQUALS`
+- `operator` (String) Operator of the comparison.   You can reverse it by setting **negate** to `true`. Possible values are `BEGINS_WITH`, `CONTAINS`, `REGEX_MATCHES`, `ENDS_WITH` and `STRING_EQUALS`
 - `value` (String) The value to compare to
 
 Optional:

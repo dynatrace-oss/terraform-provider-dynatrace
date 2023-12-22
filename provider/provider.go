@@ -43,6 +43,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mobileapplication"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/remoteenvironments"
 	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestnaming"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
@@ -210,6 +211,7 @@ func Provider() *schema.Provider {
 			"dynatrace_tenant":                       tenant.DataSource(),
 			"dynatrace_vulnerability_alerting":       vulnerabilityalerting.DataSource(),
 			"dynatrace_attack_alerting":              attackalerting.DataSource(),
+			"dynatrace_remote_environments":          remoteenvironments.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

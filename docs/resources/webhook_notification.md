@@ -82,7 +82,6 @@ resource "dynatrace_alerting" "Default" {
 - `name` (String) The name of the notification configuration
 - `payload` (String) The content of the notification message. You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
 - `profile` (String) The ID of the associated alerting profile
-- `url` (String) The URL of the WebHook endpoint
 
 ### Optional
 
@@ -94,6 +93,9 @@ resource "dynatrace_alerting" "Default" {
 - `oauth_2_credentials` (Block List, Max: 1) To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).
 
 The obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload. (see [below for nested schema](#nestedblock--oauth_2_credentials))
+- `secret_url` (String, Sensitive) The secret URL of the webhook endpoint.
+- `url` (String) The URL of the WebHook endpoint
+- `url_contains_secret` (Boolean) Secret webhook URL
 - `use_oauth_2` (Boolean) Use OAuth 2.0 for authentication
 
 ### Read-Only
@@ -128,7 +130,7 @@ Required:
 
 - `access_token_url` (String) Access token URL
 - `client_id` (String) Client ID
-- `client_secret` (String) Client secret
+- `client_secret` (String, Sensitive) Client secret
 
 Optional:
 

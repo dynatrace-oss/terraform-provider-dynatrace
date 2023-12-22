@@ -50,21 +50,20 @@ resource "dynatrace_log_oneagent" "#name#" {
 
 ### Required
 
-- `container_timezone_heuristic_enabled` (Boolean) Detect container time zones
-- `containers_logs_detection_enabled` (Boolean) Detect logs inside containers
+- `container_timezone_heuristic_enabled` (Boolean) Enables automatic detection of timezone in container's logs if it is not explicitly defined in content or configured.
+- `containers_logs_detection_enabled` (Boolean) Allows detection of log messages written to the containerized application's stdout/stderr streams.
 - `date_search_limit_bytes` (Number) Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
 - `default_timezone` (String) Default timezone for agent if more specific configurations is not defined.
 - `event_log_query_timeout_sec` (Number) Defines the maximum timeout value, in seconds, for the query extracting Windows Event Logs
-- `iisdetection_enabled` (Boolean) Detect IIS logs
-- `log_scanner_linux_nfs_enabled` (Boolean) Detect logs on Network File Systems (NFS)
+- `iisdetection_enabled` (Boolean) Allows detection of logs and event logs written by IIS server.
+- `log_scanner_linux_nfs_enabled` (Boolean) Allows detection of logs written to mounted network storage drives.
 - `max_lgis_per_entity_count` (Number) Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.
 - `min_binary_detection_limit_bytes` (Number) Defines the minimum number of bytes in log file required for binary detection.
 - `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).
-- `open_log_files_detection_enabled` (Boolean) Detect open log files
+- `open_log_files_detection_enabled` (Boolean) Automatically detect logs written by important processes. For more details, check our [documentation](https://dt-url.net/7v02z76)
 - `severity_detection_limit_bytes` (Number) Defines the number of characters in every log line (starting from the first character in the line) where severity is searched.
 - `severity_detection_lines_limit` (Number) Defines the number of the first lines of every log entry where severity is searched.
-- `system_logs_detection_enabled` (Boolean) (Linux: syslog, message log) (Windows: system, application, security event logs)
-- `utcas_default_container_timezone` (Boolean) Deprecated for OneAgent 1.247+
+- `system_logs_detection_enabled` (Boolean) Linux: syslog, message log Windows: system, application, security event logs
 
 ### Optional
 
