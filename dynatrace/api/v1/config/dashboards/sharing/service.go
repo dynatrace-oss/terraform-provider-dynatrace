@@ -100,7 +100,6 @@ func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 		dashboardName = dashboard.Name()
 	}
 
-	//v.Name = "ShareSettings for " + dashboardName
 	v.DashboardName = dashboardName
 	return nil
 }
@@ -180,11 +179,6 @@ func (me *service) List() (api.Stubs, error) {
 	if stubs, err = me.dashboardService.List(); err != nil {
 		return nil, err
 	}
-	/*
-		for _, stub := range stubs {
-			stub.Name = "ShareSettings for " + stub.Name
-		}
-	*/
 	return stubs.ToStubs(), nil
 }
 

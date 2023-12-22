@@ -70,12 +70,6 @@ func (al *AddressMap) AddToAddressMap(a Address) {
 
 	key := a.getKey()
 	al.mutex.Lock()
-	/*
-		value, found := al.addresses[key]
-		if found {
-			//fmt.Printf("ERROR: Duplicate for key: %v, value: %v \n", key, value)
-		}
-	*/
 	al.addresses[key] = a
 	al.mutex.Unlock()
 }
@@ -120,11 +114,6 @@ func SaveCompletedMap(OutputFolder string) error {
 		if exists {
 			completedMap.addresses[key].(*AddressComplete).AddressOriginal.OriginalSchemaID = item.(*AddressOriginal).OriginalSchemaID
 		}
-		/*
-			 else {
-				fmt.Printf("ERROR: Missing key: %v", key)
-			}
-		*/
 	}
 	addressMap := map[string]map[string]Address{}
 	for _, item := range completedMap.addresses {

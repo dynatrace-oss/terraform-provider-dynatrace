@@ -77,6 +77,7 @@ func (me *Resource) SetName(name string) *Resource {
 	if parentFound {
 		nameModule = me.Module.Environment.Module(parentType)
 		nameModule.ModuleMutex.Lock()
+		defer nameModule.ModuleMutex.Unlock()
 		parentUniqueName, parentUniqueNameFound = nameModule.ChildParentIDNameMap[me.ID]
 	}
 
@@ -93,9 +94,6 @@ func (me *Resource) SetName(name string) *Resource {
 	}
 	if parentFound && !parentUniqueNameFound {
 		nameModule.ChildParentIDNameMap[me.ID] = me.UniqueName
-	}
-	if parentFound {
-		nameModule.ModuleMutex.Unlock()
 	}
 
 	me.Status = ResourceStati.Discovered
