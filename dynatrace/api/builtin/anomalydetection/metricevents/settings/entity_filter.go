@@ -24,7 +24,7 @@ import (
 
 type EntityFilter struct {
 	Conditions   EntityFilterConditions `json:"conditions,omitempty"`
-	DimensionKey *string                `json:"dimensionKey,omitempty"` // Dimension key of entity type to filter
+	DimensionKey string                 `json:"dimensionKey,omitempty"` // Dimension key of entity type to filter
 }
 
 func (me *EntityFilter) Schema() map[string]*schema.Schema {
