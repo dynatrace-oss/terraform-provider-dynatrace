@@ -340,6 +340,7 @@ var ResourceTypes = struct {
 	HubSubscriptions                    ResourceType
 	MobileNotifications                 ResourceType
 	CrashdumpAnalytics                  ResourceType
+	AppMonitoring                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -603,6 +604,7 @@ var ResourceTypes = struct {
 	"dynatrace_hub_subscriptions",
 	"dynatrace_mobile_notifications",
 	"dynatrace_crashdump_analytics",
+	"dynatrace_app_monitoring",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

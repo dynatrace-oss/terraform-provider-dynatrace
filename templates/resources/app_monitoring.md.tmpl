@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_app_monitoring Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
+description: |-
+  The resource `dynatrace_app_monitoring` covers configuration for Dynatrace app monitoring
+---
+
+# dynatrace_app_monitoring (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Dynatrace app monitoring - https://developer.dynatrace.com/develop/troubleshooting/self-monitoring/#accessing-app-function-logs
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:dt-javascript-runtime.app-monitoring`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_app_monitoring` downloads existing configuration for Dynatrace app monitoring
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/dtjavascriptruntime/appmonitoring/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
