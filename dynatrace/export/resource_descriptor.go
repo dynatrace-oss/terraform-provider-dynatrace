@@ -59,6 +59,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
+	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
@@ -1111,6 +1112,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 	),
 	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
+	ResourceTypes.AttributeBlockList: NewResourceDescriptor(attributeblocklist.Service),
 	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
 	ResourceTypes.OneAgentSideMasking: NewResourceDescriptor(
 		masking.Service,

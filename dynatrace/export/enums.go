@@ -333,6 +333,7 @@ var ResourceTypes = struct {
 	KeyUserAction                       ResourceType
 	UrlBasedSampling                    ResourceType
 	AttributeAllowList                  ResourceType
+	AttributeBlockList                  ResourceType
 	AttributeMasking                    ResourceType
 	OneAgentSideMasking                 ResourceType
 	HubSubscriptions                    ResourceType
@@ -593,6 +594,7 @@ var ResourceTypes = struct {
 	"dynatrace_key_user_action",
 	"dynatrace_url_based_sampling",
 	"dynatrace_attribute_allow_list",
+	"dynatrace_attribute_block_list",
 	"dynatrace_attribute_masking",
 	"dynatrace_oneagent_side_masking",
 	"dynatrace_hub_subscriptions",
