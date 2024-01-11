@@ -485,6 +485,7 @@ func Provider() *schema.Provider {
 			"dynatrace_attribute_allow_list":               resources.NewGeneric(export.ResourceTypes.AttributeAllowList).Resource(),
 			"dynatrace_attribute_block_list":               resources.NewGeneric(export.ResourceTypes.AttributeBlockList).Resource(),
 			"dynatrace_attribute_masking":                  resources.NewGeneric(export.ResourceTypes.AttributeMasking).Resource(),
+			"dynatrace_attributes_preferences":             resources.NewGeneric(export.ResourceTypes.AttributesPreferences).Resource(),
 			"dynatrace_oneagent_side_masking":              resources.NewGeneric(export.ResourceTypes.OneAgentSideMasking).Resource(),
 			"dynatrace_hub_subscriptions":                  resources.NewGeneric(export.ResourceTypes.HubSubscriptions).Resource(),
 			"dynatrace_mobile_notifications":               resources.NewGeneric(export.ResourceTypes.MobileNotifications).Resource(),

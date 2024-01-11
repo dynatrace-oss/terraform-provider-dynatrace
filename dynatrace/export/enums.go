@@ -335,6 +335,7 @@ var ResourceTypes = struct {
 	AttributeAllowList                  ResourceType
 	AttributeBlockList                  ResourceType
 	AttributeMasking                    ResourceType
+	AttributesPreferences               ResourceType
 	OneAgentSideMasking                 ResourceType
 	HubSubscriptions                    ResourceType
 	MobileNotifications                 ResourceType
@@ -596,6 +597,7 @@ var ResourceTypes = struct {
 	"dynatrace_attribute_allow_list",
 	"dynatrace_attribute_block_list",
 	"dynatrace_attribute_masking",
+	"dynatrace_attributes_preferences",
 	"dynatrace_oneagent_side_masking",
 	"dynatrace_hub_subscriptions",
 	"dynatrace_mobile_notifications",

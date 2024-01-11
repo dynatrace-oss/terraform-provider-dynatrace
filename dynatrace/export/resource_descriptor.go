@@ -61,6 +61,7 @@ import (
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
+	attributespreferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/preferences"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
@@ -1111,9 +1112,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		hostmonitoringadvanced.Service,
 		Coalesce(Dependencies.Host),
 	),
-	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
-	ResourceTypes.AttributeBlockList: NewResourceDescriptor(attributeblocklist.Service),
-	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.AttributeAllowList:    NewResourceDescriptor(attributeallowlist.Service),
+	ResourceTypes.AttributeBlockList:    NewResourceDescriptor(attributeblocklist.Service),
+	ResourceTypes.AttributeMasking:      NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.AttributesPreferences: NewResourceDescriptor(attributespreferences.Service),
 	ResourceTypes.OneAgentSideMasking: NewResourceDescriptor(
 		masking.Service,
 		Coalesce(Dependencies.ProcessGroup),
