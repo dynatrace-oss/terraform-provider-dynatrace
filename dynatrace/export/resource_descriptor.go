@@ -127,6 +127,7 @@ import (
 	mobilenotifications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mobile/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/grail/securitycontext"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/dotnet"
 	golang "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/go"
@@ -1128,7 +1129,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		crashdumpanalytics.Service,
 		Coalesce(Dependencies.Host),
 	),
-	ResourceTypes.AppMonitoring: NewResourceDescriptor(appmonitoring.Service),
+	ResourceTypes.AppMonitoring:        NewResourceDescriptor(appmonitoring.Service),
+	ResourceTypes.GrailSecurityContext: NewResourceDescriptor(securitycontext.Service),
 }
 
 var BlackListedResources = []ResourceType{

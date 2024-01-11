@@ -491,6 +491,7 @@ func Provider() *schema.Provider {
 			"dynatrace_mobile_notifications":               resources.NewGeneric(export.ResourceTypes.MobileNotifications).Resource(),
 			"dynatrace_crashdump_analytics":                resources.NewGeneric(export.ResourceTypes.CrashdumpAnalytics).Resource(),
 			"dynatrace_app_monitoring":                     resources.NewGeneric(export.ResourceTypes.AppMonitoring).Resource(),
+			"dynatrace_grail_security_context":             resources.NewGeneric(export.ResourceTypes.GrailSecurityContext).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

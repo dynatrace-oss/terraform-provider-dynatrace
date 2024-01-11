@@ -1,0 +1,90 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure specific overrides of the security context here...",
+	"displayName": "Grail Security Context",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add Security Context override",
+		"itemDisplayName": "New override"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"destinationProperty": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": true,
+				"identifier": "grail-security-context-attribute",
+				"resetValue": "NEVER",
+				"useApiSearch": true,
+				"validate": false
+			},
+			"default": "managementZones",
+			"description": "The case-sensitive name of a property of the destination type.",
+			"displayName": "Destination property",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "datasource",
+			"type": "text"
+		},
+		"entityType": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Type name must start with a letter and end with a letter or number.",
+					"pattern": "^[A-Za-z].*[A-Za-z\\d]$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must be lower case only.",
+					"pattern": "^[^A-Z]*$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Type name must only contain valid special chars (':', '-', '_', ).",
+					"pattern": "^[\\w:-]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Type of the entity whose security context to override.",
+			"displayName": "Entity Type name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "genericType",
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:topology-model"
+	],
+	"schemaId": "builtin:monitoredentities.grail.security.context",
+	"types": {},
+	"version": "1.0.1"
+}
