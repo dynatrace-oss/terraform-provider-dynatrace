@@ -406,7 +406,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.",
+					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.277",
@@ -539,7 +539,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.",
+					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -665,7 +665,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.",
+					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -795,5 +795,5 @@
 			]
 		}
 	},
-	"version": "1.3"
+	"version": "1.3.1"
 }
