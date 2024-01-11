@@ -76,6 +76,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/registry"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
+	crashdumpanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/crashdump/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/customunit"
 	dashboardsgeneral "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general"
@@ -1122,6 +1123,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.HubSubscriptions:    NewResourceDescriptor(subscriptions.Service),
 	ResourceTypes.MobileNotifications: NewResourceDescriptor(mobilenotifications.Service),
+	ResourceTypes.CrashdumpAnalytics: NewResourceDescriptor(
+		crashdumpanalytics.Service,
+		Coalesce(Dependencies.Host),
+	),
 }
 
 var BlackListedResources = []ResourceType{

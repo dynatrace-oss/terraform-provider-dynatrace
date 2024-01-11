@@ -339,6 +339,7 @@ var ResourceTypes = struct {
 	OneAgentSideMasking                 ResourceType
 	HubSubscriptions                    ResourceType
 	MobileNotifications                 ResourceType
+	CrashdumpAnalytics                  ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -601,6 +602,7 @@ var ResourceTypes = struct {
 	"dynatrace_oneagent_side_masking",
 	"dynatrace_hub_subscriptions",
 	"dynatrace_mobile_notifications",
+	"dynatrace_crashdump_analytics",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
