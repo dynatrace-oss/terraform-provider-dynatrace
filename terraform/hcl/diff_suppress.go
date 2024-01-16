@@ -19,7 +19,7 @@ func equalLineByLine(s1, s2 string) bool {
 	s1 = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s1, "\r\n", "\n"), "\r", "\n"))
 	s1 = strings.TrimSuffix(s1, "\n")
 	s2 = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s2, "\r\n", "\n"), "\r", "\n"))
-	s2 = strings.TrimSuffix(s1, "\n")
+	s2 = strings.TrimSuffix(s2, "\n")
 
 	parts1 := strings.Split(s1, "\n")
 	parts2 := strings.Split(s2, "\n")
