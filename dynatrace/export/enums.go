@@ -343,6 +343,7 @@ var ResourceTypes = struct {
 	AppMonitoring                       ResourceType
 	GrailSecurityContext                ResourceType
 	SiteReliabilityGuardian             ResourceType
+	JiraForWorkflows                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -609,6 +610,7 @@ var ResourceTypes = struct {
 	"dynatrace_app_monitoring",
 	"dynatrace_grail_security_context",
 	"dynatrace_site_reliability_guardian",
+	"dynatrace_automation_workflow_jira",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

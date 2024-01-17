@@ -1,0 +1,200 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter token/password to save the new configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Credentials for the Jira App",
+	"displayName": "Jira Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Basic Authentication (Jira Server)",
+					"value": "basic"
+				},
+				{
+					"displayName": "Personal Access Token (PAT for Jira Server)",
+					"value": "pat"
+				},
+				{
+					"displayName": "Access Token (Jira Cloud)",
+					"value": "cloud-token"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Jira for Workflows"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of the Jira connection",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"password": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Password of the Jira user",
+			"displayName": "Password",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "basic",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "secret"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "Token has to be between 45 and 1000 characters long",
+					"maxLength": 1000,
+					"minLength": 20,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Token for the selected authentication type",
+			"displayName": "Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"pat",
+					"cloud-token"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
+		"type": {
+			"default": "basic",
+			"description": "Type of authentication method that should be used",
+			"displayName": "Type",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		},
+		"url": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The Jira URL must be secure (https://) and must not contain a trailing slash.",
+					"pattern": "^https://.*[^/]$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "URL of the Jira server",
+			"displayName": "Jira URL",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		},
+		"user": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Username or E-Mail address",
+			"displayName": "User",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"basic",
+					"cloud-token"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.jira:connection",
+	"types": {},
+	"version": "0.0.10"
+}

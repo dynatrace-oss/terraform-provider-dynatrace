@@ -1,0 +1,82 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Authentication details for Slack API",
+	"displayName": "Slack Connections",
+	"documentation": "(for more information read the [Slack api documentation](https://api.slack.com/authentication/basics/ \"Visit Slack document\"))",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Slack for Workflows"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of the Slack connection",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "Token has to be between 5 and 500 characters long",
+					"maxLength": 500,
+					"minLength": 5,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Not a valid Slack bot token",
+					"pattern": "^xoxb-.*$",
+					"type": "PATTERN"
+				},
+				{
+					"customValidatorId": "validate-connection-schema",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "The bot token obtained from the Slack App Management UI",
+			"displayName": "Bot token",
+			"documentation": "Bot token in the format `xoxb-******`",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.slack:connection",
+	"types": {},
+	"version": "0.0.12"
+}
