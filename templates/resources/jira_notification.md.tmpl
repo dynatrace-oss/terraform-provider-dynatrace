@@ -8,6 +8,8 @@ description: |-
 
 # dynatrace_jira_notification (Resource)
 
+-> This resource requires the `Jira for Workflows` app to be installed via the Dynatrace Hub.
+
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
