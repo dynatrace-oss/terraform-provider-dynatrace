@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package connection
+package slackconnection
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -46,7 +46,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":  me.Name,
-		"token": me.Token,
+		"token": "${state.secret_value}",
 	})
 }
 
@@ -55,4 +55,9 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"name":  &me.Name,
 		"token": &me.Token,
 	})
+}
+
+func (me *Settings) FillDemoValues() []string {
+	me.Token = "#######"
+	return []string{"REST API didn't provide token data"}
 }

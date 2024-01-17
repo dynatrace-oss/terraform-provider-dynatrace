@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
@@ -1135,6 +1136,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.GrailSecurityContext:    NewResourceDescriptor(securitycontext.Service),
 	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
 	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
+	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
 }
 
 var BlackListedResources = []ResourceType{

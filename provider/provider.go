@@ -494,6 +494,7 @@ func Provider() *schema.Provider {
 			"dynatrace_grail_security_context":             resources.NewGeneric(export.ResourceTypes.GrailSecurityContext).Resource(),
 			"dynatrace_site_reliability_guardian":          resources.NewGeneric(export.ResourceTypes.SiteReliabilityGuardian).Resource(),
 			"dynatrace_automation_workflow_jira":           resources.NewGeneric(export.ResourceTypes.JiraForWorkflows).Resource(),
+			"dynatrace_automation_workflow_slack":          resources.NewGeneric(export.ResourceTypes.SlackForWorkflows).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
