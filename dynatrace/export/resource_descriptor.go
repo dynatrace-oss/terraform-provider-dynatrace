@@ -1213,6 +1213,11 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.AppSecAttackRules,
 	ResourceTypes.AppSecAttackAllowlist,
 
+	// Excluding resources that require apps from Dynatrace Hub
+	ResourceTypes.SiteReliabilityGuardian,
+	ResourceTypes.JiraForWorkflows,
+	ResourceTypes.SlackForWorkflows,
+
 	// Incubator
 	ResourceTypes.GenericSetting,
 	ResourceTypes.PlatformBucket,
