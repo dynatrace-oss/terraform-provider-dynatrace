@@ -22,12 +22,11 @@ import (
 )
 
 func TestSlackForWorkflows(t *testing.T) {
-	// api.TestService(t, slackconnection.Service)
+	// Skipping tests since endpoint validates token
 	t.Skip()
 }
 
 func TestAccSlackForWorkflows(t *testing.T) {
 	// Skipping tests since endpoint validates token
-	// api.TestAcc(t)
 	t.Skip()
 }

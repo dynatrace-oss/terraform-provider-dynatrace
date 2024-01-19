@@ -19,14 +19,15 @@ package incoming_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestBizEventsOneAgent(t *testing.T) {
-	// api.TestService(t, incoming.Service)
-	t.Skip()
+	api.TestService(t, incoming.Service)
 }
 
 func TestAccBizEventsOneAgent(t *testing.T) {
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

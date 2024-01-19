@@ -19,14 +19,15 @@ package subscriptions_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hub/subscriptions"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestHubSubscriptions(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, subscriptions.Service)
+	api.TestService(t, subscriptions.Service)
 }
 
 func TestAccHubSubscriptions(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }

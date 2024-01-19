@@ -791,6 +791,19 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/logmonitoring/schemalesslogmetric
+      - name: TestLogBuckets
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/logmonitoring/logbucketsrules
       - name: TestBrowserMonitorPerformanceThresholds
         if: success() || failure()
         env:
@@ -1762,6 +1775,71 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/disk/analytics/extension
+      - name: TestBizEventsOneAgent
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/bizevents/http/incoming
+      - name: TestBizEventsBuckets
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/bizevents/processing/buckets
+      - name: TestBizEventsMetrics
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/bizevents/processing/metrics
+      - name: TestBizEventsProcessing
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/bizevents/processing/pipelines
+      - name: TestProcessGroupAlerting
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/availability/processgroupalerting
       - name: TestNetworkTraffic
         if: success() || failure()
         env:

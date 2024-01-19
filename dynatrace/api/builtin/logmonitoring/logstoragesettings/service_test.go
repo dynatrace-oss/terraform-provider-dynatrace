@@ -22,9 +22,11 @@ import (
 )
 
 func TestLogStorage(t *testing.T) {
+	// Deprecated - schema no longer exists
 	t.Skip()
 }
 
 func TestAccLogStorage(t *testing.T) {
+	// Deprecated - schema no longer exists
 	t.Skip()
 }

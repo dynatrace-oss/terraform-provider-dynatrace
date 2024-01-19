@@ -22,11 +22,11 @@ import (
 )
 
 func TestCustomDevice(t *testing.T) {
-	// api.TestService(t, customdevice.Service)
+	// Endpoint doesn't allow delete
 	t.Skip()
 }
 
 func TestAccCustomDevice(t *testing.T) {
-	// api.TestAcc(t)
+	// Endpoint doesn't allow delete
 	t.Skip()
 }

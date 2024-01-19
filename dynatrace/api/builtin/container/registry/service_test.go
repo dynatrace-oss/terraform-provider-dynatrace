@@ -19,14 +19,15 @@ package registry_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/registry"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestContainerRegistry(t *testing.T) {
-	t.Skip() // Skipping until it exists in test environment
-	// api.TestService(t, registry.Service)
+	api.TestService(t, registry.Service)
 }
 
 func TestAccContainerRegistry(t *testing.T) {
-	t.Skip() // Skipping until it exists in test environment
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }

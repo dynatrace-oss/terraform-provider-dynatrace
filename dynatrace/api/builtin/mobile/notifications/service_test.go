@@ -19,14 +19,15 @@ package notifications_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mobile/notifications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestMobileNotifications(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, notifications.Service)
+	api.TestService(t, notifications.Service)
 }
 
 func TestAccMobileNotifications(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }

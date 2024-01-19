@@ -22,11 +22,9 @@ import (
 )
 
 func TestSpanAttributes(t *testing.T) {
-	// api.TestService(t, attribute.Service)
 	t.Skip()
 }
 
 func TestAccSpanAttributes(t *testing.T) {
-	// api.TestAcc(t)
 	t.Skip()
 }

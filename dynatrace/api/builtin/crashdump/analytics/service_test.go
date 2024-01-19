@@ -22,11 +22,13 @@ import (
 )
 
 func TestCrashdumpAnalytics(t *testing.T) {
-	t.Skip() // Skipping until it exists in test environment
+	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestService(t, analytics.Service)
+	t.Skip()
 }
 
 func TestAccCrashdumpAnalytics(t *testing.T) {
-	t.Skip() // Skipping until it exists in test environment
+	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)
+	t.Skip()
 }

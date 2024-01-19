@@ -24,11 +24,9 @@ import (
 )
 
 func TestFailureDetectionRules(t *testing.T) {
-	// api.TestService(t, rules.Service)
 	t.Skip()
 }
 
 func TestAccFailureDetectionRules(t *testing.T) {
-	// api.TestAcc(t)
 	t.Skip()
 }

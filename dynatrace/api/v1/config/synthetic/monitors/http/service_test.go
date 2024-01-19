@@ -20,13 +20,11 @@ package http_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestHTTPMonitors(t *testing.T) {
 	t.Skip()
-	api.TestService(t, http.Service)
 }
 
 func TestAccHTTPMonitors(t *testing.T) {
