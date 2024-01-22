@@ -923,7 +923,10 @@ func (me *Module) getLockBundleFile(resource *Resource) (*splitFolder, error) {
 
 	splitId, importSplitFound := me.Environment.ImportStateMap.GetResourceSplitId(resource)
 
-	hasSplitOrBundles := me.SplitList.bundleConfig.splitCount > 1 || me.SplitList.bundleConfig.resourcesPerBundle > 1
+	hasSplitOrBundles := false
+	if me.SplitList != nil {
+		hasSplitOrBundles = me.SplitList.bundleConfig.splitCount > 1 || me.SplitList.bundleConfig.resourcesPerBundle > 1
+	}
 
 	if importSplitFound {
 		if splitId == 0 {
