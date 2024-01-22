@@ -231,7 +231,10 @@ func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn R
 			}
 		}
 		found := false
-		m1 := regexp.MustCompile(fmt.Sprintf(`link_id(.*)=(.*)"%s"`, id))
+
+		escaped := regexp.QuoteMeta(id)
+
+		m1 := regexp.MustCompile(fmt.Sprintf(`link_id(.*)=(.*)"%s"`, escaped))
 		replaced := m1.ReplaceAllString(s, fmt.Sprintf("link_id$1=$2\"%s\"", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
