@@ -22,7 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -131,13 +130,6 @@ func (aad *AWSAuthenticationData) MarshalHCL(properties hcl.Properties) error {
 		if err := properties.Encode("secret_key", "${state.secret_value}"); err != nil {
 			return err
 		}
-		if err := sensitive.ConditionalIgnoreChangesSingle(
-			aad.Schema(),
-			&properties,
-		); err != nil {
-			return err
-		}
-
 	}
 	if aad.RoleBasedAuthentication != nil {
 		if err := properties.Encode("account_id", aad.RoleBasedAuthentication.AccountID); err != nil {

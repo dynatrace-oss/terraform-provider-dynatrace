@@ -20,7 +20,6 @@ package http
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -46,6 +45,31 @@ func (me Headers) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Headers) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("header", me)
+}
+
+func (me *Headers) GenIgnoreChanges(propertyName string) []string {
+
+	ignoreChangesList := []string{}
+
+	/*
+		This will not work as headers is written as a set, not a list ({} instead of [])
+		But using $${state.secret_value} seems to never overwrite what is already in the tenant
+		For now, disabling this code, will have to block all headers as sensitive
+
+		for idx := range *me {
+			ignoreChangesList = append(ignoreChangesList, fmt.Sprintf("%s[%d].header.secret_value", propertyName, idx))
+		}
+	*/
+
+	// Blocking all header changes will prevent overwriting a secret that is already provided
+	// It is imperfect but it could be a big problems for clients if they lose their secrets because another header is being added and waste time getting them back
+	for _, hder := range *me {
+		if hder.Secret {
+			return []string{propertyName}
+		}
+	}
+
+	return ignoreChangesList
 }
 
 type Header struct {
@@ -127,12 +151,6 @@ func (me *Header) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 		if err := properties.Encode("value", ""); err != nil {
-			return err
-		}
-		if err := sensitive.ConditionalIgnoreChangesSingle(
-			me.Schema(),
-			&properties,
-		); err != nil {
 			return err
 		}
 	} else {

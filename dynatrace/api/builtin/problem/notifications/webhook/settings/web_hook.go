@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -151,22 +152,30 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 }
 
 func (me *WebHook) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
 
-		"notify_event_merges":    me.NotifyEventMergesEnabled,
-		"insecure":               me.Insecure,
-		"headers":                me.Headers,
-		"payload":                me.Payload,
-		"url":                    me.URL,
-		"notify_closed_problems": me.NotifyClosedProblems,
-		"use_oauth_2":            me.UseOAuth2,
-		"oauth_2_credentials":    me.OAuth2Credentials,
-		"secret_url":             me.SecretUrl,
-		"url_contains_secret":    me.UrlContainsSecret,
-	})
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
+
+			"notify_event_merges":    me.NotifyEventMergesEnabled,
+			"insecure":               me.Insecure,
+			"headers":                me.Headers,
+			"payload":                me.Payload,
+			"url":                    me.URL,
+			"notify_closed_problems": me.NotifyClosedProblems,
+			"use_oauth_2":            me.UseOAuth2,
+			"oauth_2_credentials":    me.OAuth2Credentials,
+			"secret_url":             me.SecretUrl,
+			"url_contains_secret":    me.UrlContainsSecret,
+		},
+		append(
+			me.Headers.GenIgnoreChanges("headers"),
+			"oauth_2_credentials",
+		),
+	))
 }
 
 func (me *WebHook) HandlePreconditions() error {
