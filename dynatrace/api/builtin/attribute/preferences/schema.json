@@ -1,0 +1,56 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define the default behavior of persisting OpenTelemetry attributes. You can either choose to store all attributes except certain blocked attributes or only store explicitly allowed attributes.",
+	"displayName": "Preferences",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"options": {
+			"description": "",
+			"displayName": "options",
+			"documentation": "",
+			"items": [
+				{
+					"description": "All OpenTelemetry attributes are allowed except what you add to the [Blocked attributes](builtin:attribute-block-list) list (recommended setting).",
+					"displayName": "Allow all attributes",
+					"value": "ALLOW_ALL_ATTRIBUTES"
+				},
+				{
+					"description": "Only store OpenTelemetry attributes added to the [Allowed attributes](builtin:attribute-allow-list) list, and block everything else.",
+					"displayName": "Block all attributes",
+					"value": "BLOCK_ALL_ATTRIBUTES"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"metadata": {
+		"reloadUi": "enabled"
+	},
+	"multiObject": false,
+	"properties": {
+		"persistenceMode": {
+			"default": "BLOCK_ALL_ATTRIBUTES",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "radio",
+			"type": {
+				"$ref": "#/enums/options"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:service-monitoring.spans"
+	],
+	"schemaId": "builtin:attributes-preferences",
+	"types": {},
+	"version": "0.0.4"
+}

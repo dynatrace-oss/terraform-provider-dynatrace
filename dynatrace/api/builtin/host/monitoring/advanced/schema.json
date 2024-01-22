@@ -10,6 +10,16 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"codeModuleInjection": {
+			"default": false,
+			"description": "Inject CodeModules in Discovery mode.",
+			"displayName": "CodeModule injection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"processAgentInjection": {
 			"default": true,
 			"description": "Disabling this via [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.",
@@ -26,5 +36,5 @@
 	],
 	"schemaId": "builtin:host.monitoring.advanced",
 	"types": {},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }

@@ -1,5 +1,5 @@
 {
-  "bucketName": "default_bizevents_medium",
+  "bucketName": "default_bizevents",
   "enabled": true,
   "matcher": "matchesValue(event.type, \"com.easytrade.buy-assets\")",
   "ruleName": "${randomize}"

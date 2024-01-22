@@ -19,16 +19,15 @@ package extension_test
 
 import (
 	"testing"
-	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
-	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestDiskAnalytics(t *testing.T) {
-	t.Skip()
-	// api.TestService(t, extension.Service)
+	api.TestService(t, extension.Service)
 }
 
 func TestAccDiskAnalytics(t *testing.T) {
-	t.Skip()
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }

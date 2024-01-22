@@ -22,6 +22,9 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
@@ -60,7 +63,9 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
+	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
+	attributespreferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/preferences"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
@@ -75,6 +80,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/registry"
 	containertechnology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
+	crashdumpanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/crashdump/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/customunit"
 	dashboardsgeneral "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general"
@@ -88,6 +94,7 @@ import (
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/appmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
@@ -124,6 +131,7 @@ import (
 	mobilenotifications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mobile/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	generictypes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/grail/securitycontext"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/dotnet"
 	golang "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/go"
@@ -1117,14 +1125,25 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		hostmonitoringadvanced.Service,
 		Coalesce(Dependencies.Host),
 	),
-	ResourceTypes.AttributeAllowList: NewResourceDescriptor(attributeallowlist.Service),
-	ResourceTypes.AttributeMasking:   NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.AttributeAllowList:    NewResourceDescriptor(attributeallowlist.Service),
+	ResourceTypes.AttributeBlockList:    NewResourceDescriptor(attributeblocklist.Service),
+	ResourceTypes.AttributeMasking:      NewResourceDescriptor(attributemasking.Service),
+	ResourceTypes.AttributesPreferences: NewResourceDescriptor(attributespreferences.Service),
 	ResourceTypes.OneAgentSideMasking: NewResourceDescriptor(
 		masking.Service,
 		Coalesce(Dependencies.ProcessGroup),
 	),
 	ResourceTypes.HubSubscriptions:    NewResourceDescriptor(subscriptions.Service),
 	ResourceTypes.MobileNotifications: NewResourceDescriptor(mobilenotifications.Service),
+	ResourceTypes.CrashdumpAnalytics: NewResourceDescriptor(
+		crashdumpanalytics.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.AppMonitoring:           NewResourceDescriptor(appmonitoring.Service),
+	ResourceTypes.GrailSecurityContext:    NewResourceDescriptor(securitycontext.Service),
+	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
+	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
+	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
 }
 
 var blackListedResources = []ResourceType{
@@ -1197,6 +1216,11 @@ var blackListedResources = []ResourceType{
 	ResourceTypes.AppSecAttackSettings,
 	ResourceTypes.AppSecAttackRules,
 	ResourceTypes.AppSecAttackAllowlist,
+
+	// Excluding resources that require apps from Dynatrace Hub
+	ResourceTypes.SiteReliabilityGuardian,
+	ResourceTypes.JiraForWorkflows,
+	ResourceTypes.SlackForWorkflows,
 
 	// Incubator
 	ResourceTypes.GenericSetting,

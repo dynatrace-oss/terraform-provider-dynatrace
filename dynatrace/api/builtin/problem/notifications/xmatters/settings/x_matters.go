@@ -19,6 +19,7 @@ package notifications
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -105,16 +106,20 @@ func (me *XMatters) Schema() map[string]*schema.Schema {
 }
 
 func (me *XMatters) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"active":  me.Enabled,
-		"profile": me.ProfileID,
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
+		me.Schema(),
+		map[string]any{
+			"name":    me.Name,
+			"active":  me.Enabled,
+			"profile": me.ProfileID,
 
-		"url":      me.URL,
-		"insecure": me.Insecure,
-		"headers":  me.Headers,
-		"payload":  me.Payload,
-	})
+			"url":      me.URL,
+			"insecure": me.Insecure,
+			"headers":  me.Headers,
+			"payload":  me.Payload,
+		},
+		me.Headers.GenIgnoreChanges("headers"),
+	))
 }
 
 func (me *XMatters) UnmarshalHCL(decoder hcl.Decoder) error {

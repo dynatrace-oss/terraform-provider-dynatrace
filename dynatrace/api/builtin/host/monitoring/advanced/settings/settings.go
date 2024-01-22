@@ -23,6 +23,7 @@ import (
 )
 
 type Settings struct {
+	CodeModuleInjection   bool   `json:"codeModuleInjection"`   // Inject CodeModules in Discovery mode.
 	HostID                string `json:"-" scope:"hostId"`      // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 	ProcessAgentInjection bool   `json:"processAgentInjection"` // Disabling this via [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.
 }
@@ -33,6 +34,11 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"code_module_injection": {
+			Type:        schema.TypeBool,
+			Description: "Inject CodeModules in Discovery mode.",
+			Optional:    true,
+		},
 		"host_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
@@ -48,6 +54,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"code_module_injection":   me.CodeModuleInjection,
 		"host_id":                 me.HostID,
 		"process_agent_injection": me.ProcessAgentInjection,
 	})
@@ -55,6 +62,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"code_module_injection":   &me.CodeModuleInjection,
 		"host_id":                 &me.HostID,
 		"process_agent_injection": &me.ProcessAgentInjection,
 	})

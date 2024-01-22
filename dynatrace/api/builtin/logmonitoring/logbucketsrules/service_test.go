@@ -19,14 +19,15 @@ package logbucketsrules_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestLogBuckets(t *testing.T) {
-	// api.TestService(t, logbucketsrules.Service)
-	t.Skip()
+	api.TestService(t, logbucketsrules.Service)
 }
 
 func TestAccLogBuckets(t *testing.T) {
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

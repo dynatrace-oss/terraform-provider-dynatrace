@@ -19,16 +19,15 @@ package urlbasedsampling_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/urlbasedsampling"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestURLBasedSampling(t *testing.T) {
-	t.Skip()
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, urlbasedsampling.Service)
+	api.TestService(t, urlbasedsampling.Service)
 }
 
 func TestAccURLBasedSampling(t *testing.T) {
-	t.Skip()
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }

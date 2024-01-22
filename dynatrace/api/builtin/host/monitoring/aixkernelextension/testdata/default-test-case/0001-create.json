@@ -1,5 +1,5 @@
 {
   "hostId": "HOST-1234567890000000",
-  "useGlobalSettings": true,
-  "enabled": false
+  "useGlobalSettings": false,
+  "enabled": true
 }

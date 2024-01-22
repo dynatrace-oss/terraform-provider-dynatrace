@@ -1,6 +1,6 @@
 {
   "bucketName": "default_logs",
   "enabled": true,
-  "matcher": "*",
-  "ruleName": "default"
+  "matcher": "matchesPhrase(content, \"error\")",
+  "ruleName": "error_logs"
 }

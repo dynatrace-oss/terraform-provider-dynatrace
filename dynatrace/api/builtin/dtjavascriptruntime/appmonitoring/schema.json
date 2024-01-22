@@ -1,0 +1,52 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure the monitoring settings for custom Dynatrace Apps. This setting determines if logs for custom Dynatrace Apps are retained within this environment.\n\n[Check out the documentation for more details and how to find the logs](https://developer.dynatrace.com/develop/troubleshooting/self-monitoring/#accessing-app-function-logs).",
+	"displayName": "App Monitoring",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"DefaultLogLevel": {
+			"description": "Default log level for custom apps. OFF means that no logging will happen.",
+			"displayName": "Default log level",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Turn off logging in custom apps.",
+					"displayName": "OFF",
+					"value": "off"
+				},
+				{
+					"description": "Enable all logs in custom apps.",
+					"displayName": "ALL",
+					"value": "all"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"defaultLogLevel": {
+			"default": "all",
+			"description": "",
+			"displayName": "Default log level",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/DefaultLogLevel"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:dt-javascript-runtime",
+		"group:preferences"
+	],
+	"schemaId": "builtin:dt-javascript-runtime.app-monitoring",
+	"types": {},
+	"version": "1"
+}

@@ -508,7 +508,7 @@
 				"threshold": {
 					"constraints": [
 						{
-							"maximum": 100,
+							"maximum": 1000000,
 							"minimum": 0,
 							"type": "RANGE"
 						}
@@ -1330,5 +1330,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.10"
+	"version": "1.10.1"
 }

@@ -16,8 +16,13 @@ func equalLineByLine(s1, s2 string) bool {
 	if len(s1) == 0 && len(s2) == 0 {
 		return false
 	}
-	parts1 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s1, "\r\n", "\n"), "\r", "\n")), "\n")
-	parts2 := strings.Split(strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s2, "\r\n", "\n"), "\r", "\n")), "\n")
+	s1 = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s1, "\r\n", "\n"), "\r", "\n"))
+	s1 = strings.TrimSuffix(s1, "\n")
+	s2 = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s2, "\r\n", "\n"), "\r", "\n"))
+	s2 = strings.TrimSuffix(s2, "\n")
+
+	parts1 := strings.Split(s1, "\n")
+	parts2 := strings.Split(s2, "\n")
 	if len(parts1) != len(parts2) {
 		return false
 	}

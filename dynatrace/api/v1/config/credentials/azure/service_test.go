@@ -20,13 +20,11 @@ package azure_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAzureCredentials(t *testing.T) {
 	t.Skip()
-	api.TestService(t, azure.Service)
 }
 
 func TestAccAzureCredentials(t *testing.T) {

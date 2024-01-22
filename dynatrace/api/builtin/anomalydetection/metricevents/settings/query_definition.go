@@ -19,6 +19,7 @@ package metricevents
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -27,7 +28,7 @@ import (
 type QueryDefinition struct {
 	Aggregation     *Aggregation     `json:"aggregation,omitempty"`     // Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
 	DimensionFilter DimensionFilters `json:"dimensionFilter,omitempty"` // Dimension filter
-	EntityFilter    *EntityFilter    `json:"entityFilter,omitempty"`    // Use rule-based filters to define the scope this event monitors.
+	EntityFilter    *EntityFilter    `json:"entityFilter"`              // Use rule-based filters to define the scope this event monitors.
 	ManagementZone  *string          `json:"managementZone,omitempty"`  // Management zone
 	MetricKey       *string          `json:"metricKey,omitempty"`       // Metric key
 	MetricSelector  *string          `json:"metricSelector,omitempty"`  // To learn more, visit [Metric Selector](https://dt-url.net/metselad)
@@ -57,6 +58,40 @@ func (me *QueryDefinition) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(EntityFilter).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				if !strings.HasSuffix(k, ".#") {
+					return false
+				}
+				if oldValue != "1" || newValue != "0" {
+					return false
+				}
+
+				efkprefix := strings.TrimSuffix(k, "#") + "0"
+				val, ok := d.GetOk(efkprefix)
+				if !ok {
+					return false
+				}
+				mapval := val.(map[string]any)
+				if len(mapval) == 0 {
+					return false
+				}
+				utcondval := mapval["conditions"]
+				if utcondval != nil {
+					condval := utcondval.([]any)
+					if len(condval) != 0 {
+						return false
+					}
+				}
+				utdimkeyval := mapval["dimension_key"]
+				if utdimkeyval != nil {
+					dimkeyval := utdimkeyval.(string)
+					if len(dimkeyval) != 0 {
+						return false
+					}
+				}
+
+				return true
+			},
 		},
 		"management_zone": {
 			Type:        schema.TypeString,
@@ -120,7 +155,7 @@ func (me *QueryDefinition) HandlePreconditions() error {
 }
 
 func (me *QueryDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"aggregation":      &me.Aggregation,
 		"dimension_filter": &me.DimensionFilter,
 		"entity_filter":    &me.EntityFilter,
@@ -130,4 +165,8 @@ func (me *QueryDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
 		"query_offset":     &me.QueryOffset,
 		"type":             &me.Type,
 	})
+	if me.Type == Types.MetricKey && me.EntityFilter == nil {
+		me.EntityFilter = new(EntityFilter)
+	}
+	return err
 }

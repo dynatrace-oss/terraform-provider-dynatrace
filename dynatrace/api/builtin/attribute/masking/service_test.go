@@ -19,16 +19,15 @@ package masking_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAttributeMasking(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, masking.Service)
-	t.Skip()
+	api.TestService(t, masking.Service)
 }
 
 func TestAccAttributeMasking(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

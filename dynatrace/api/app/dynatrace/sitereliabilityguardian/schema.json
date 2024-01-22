@@ -1,0 +1,389 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "validate-dql-variables",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Create new guardians and add objectives. [See documentation](https://dt-url.net/site-reliability-guardian)",
+	"displayName": "Site Reliability Guardian",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ComparisonOperator": {
+			"description": "",
+			"displayName": "Comparison operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Greater than or equal",
+					"value": "GREATER_THAN_OR_EQUAL"
+				},
+				{
+					"displayName": "Less than or equal",
+					"value": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"type": "enum"
+		},
+		"ObjectiveType": {
+			"description": "",
+			"displayName": "Objective type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "DQL",
+					"value": "DQL"
+				},
+				{
+					"displayName": "Reference SLO",
+					"value": "REFERENCE_SLO"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add Site Reliability Guardian",
+		"appName": "Site Reliability Guardian"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 250,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "New reliability guardian",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"objectives": {
+			"constraints": [
+				{
+					"customMessage": "There is another objective in this guardian with an identical name defined. Please make your objective name unique to save your changes.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"name"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Objectives",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Objective"
+				}
+			},
+			"maxObjects": 25,
+			"metadata": {
+				"addItemButton": "Add objective"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"tags": {
+			"description": "Define key/value pairs that further describe this guardian.",
+			"displayName": "Tags",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"customValidatorId": "universal-tag-validator",
+						"type": "CUSTOM_VALIDATOR_REF"
+					},
+					{
+						"maxLength": 500,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"subType": "tag",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add tag"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"variables": {
+			"constraints": [
+				{
+					"customMessage": "There is another variable in this guardian with an identical name defined. Please make your variable name unique to save your changes.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"name"
+					]
+				}
+			],
+			"description": "Define variables for dynamically defining DQL queries",
+			"displayName": "DQL variables",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Variable"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add variable"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "There is another guardian with an identical name defined. Please make your guardian name unique to save your changes.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.site.reliability.guardian:guardians",
+	"types": {
+		"Objective": {
+			"constraints": [
+				{
+					"customValidatorId": "validate-objective-target-warning",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Objective",
+			"documentation": "",
+			"properties": {
+				"comparisonOperator": {
+					"default": "GREATER_THAN_OR_EQUAL",
+					"description": "",
+					"displayName": "Comparison operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ComparisonOperator"
+					}
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 250,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"dqlQuery": {
+					"constraints": [
+						{
+							"maxLength": 2000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "validate-dql-query",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "DQL query",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DQL",
+						"property": "objectiveType",
+						"type": "EQUALS"
+					},
+					"subType": "code",
+					"type": "text"
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "New objective name",
+					"description": "",
+					"displayName": "Objective name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"objectiveType": {
+					"default": "DQL",
+					"description": "",
+					"displayName": "Objective type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ObjectiveType"
+					}
+				},
+				"referenceSlo": {
+					"constraints": [
+						{
+							"maxLength": 800,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "validate-metric-key",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'",
+					"displayName": "Reference SLO",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "REFERENCE_SLO",
+						"property": "objectiveType",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"target": {
+					"description": "",
+					"displayName": "Target",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "float"
+				},
+				"warning": {
+					"description": "",
+					"displayName": "Warning",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "float"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Variable": {
+			"description": "",
+			"displayName": "Variable",
+			"documentation": "",
+			"properties": {
+				"definition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"pattern": "^[A-Za-z0-9_]+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.1.2"
+}

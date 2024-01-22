@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_automation_workflow_jira Resource - terraform-provider-dynatrace"
+subcategory: "Automation"
+description: |-
+  The resource `dynatrace_automation_workflow_jira` covers configuration for Jira for Workflows
+---
+
+# dynatrace_automation_workflow_jira (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Jira for Workflows - https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/jira
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.jira:connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_automation_workflow_jira` downloads existing Jira for Workflows configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/jiraconnection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

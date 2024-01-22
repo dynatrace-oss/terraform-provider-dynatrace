@@ -1,0 +1,74 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "attribute-block-list-add-enable-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "While Dynatrace automatically captures all OpenTelemetry attributes, to prevent the accidental storage of personal data, you may exclude certain attribute keys for which the values must not be persisted. This enables you to meet your privacy requirements while controlling the amount of monitoring data that's persisted. For further details on Dynatrace's privacy settings, visit the [Data privacy and security](https://dt-url.net/bo210srx) documentation.",
+	"displayName": "Blocked attributes",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 2000,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "If this is true, the value of the specified key is not persisted.",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"key": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "prohibit-always-captured-attributes-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Key of the attribute that should not be persisted",
+			"displayName": "Attribute key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Attribute keys must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:service-monitoring.spans"
+	],
+	"schemaId": "builtin:attribute-block-list",
+	"types": {},
+	"version": "0.0.1"
+}

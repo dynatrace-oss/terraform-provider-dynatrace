@@ -1404,6 +1404,7 @@
 		}
 	],
 	"schemaGroups": [
+		"group:management-zones",
 		"group:preferences"
 	],
 	"schemaId": "builtin:management-zones",
@@ -2599,5 +2600,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

@@ -334,10 +334,18 @@ var ResourceTypes = struct {
 	KeyUserAction                       ResourceType
 	UrlBasedSampling                    ResourceType
 	AttributeAllowList                  ResourceType
+	AttributeBlockList                  ResourceType
 	AttributeMasking                    ResourceType
+	AttributesPreferences               ResourceType
 	OneAgentSideMasking                 ResourceType
 	HubSubscriptions                    ResourceType
 	MobileNotifications                 ResourceType
+	CrashdumpAnalytics                  ResourceType
+	AppMonitoring                       ResourceType
+	GrailSecurityContext                ResourceType
+	SiteReliabilityGuardian             ResourceType
+	JiraForWorkflows                    ResourceType
+	SlackForWorkflows                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -595,10 +603,18 @@ var ResourceTypes = struct {
 	"dynatrace_key_user_action",
 	"dynatrace_url_based_sampling",
 	"dynatrace_attribute_allow_list",
+	"dynatrace_attribute_block_list",
 	"dynatrace_attribute_masking",
+	"dynatrace_attributes_preferences",
 	"dynatrace_oneagent_side_masking",
 	"dynatrace_hub_subscriptions",
 	"dynatrace_mobile_notifications",
+	"dynatrace_crashdump_analytics",
+	"dynatrace_app_monitoring",
+	"dynatrace_grail_security_context",
+	"dynatrace_site_reliability_guardian",
+	"dynatrace_automation_workflow_jira",
+	"dynatrace_automation_workflow_slack",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

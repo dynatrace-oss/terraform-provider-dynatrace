@@ -14,5 +14,4 @@ resource "dynatrace_log_oneagent" "#name#" {
   severity_detection_limit_bytes       = 100
   severity_detection_lines_limit       = 2
   system_logs_detection_enabled        = true
-  utcas_default_container_timezone     = true
 }

@@ -20,6 +20,7 @@ package managementzones
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -125,11 +126,18 @@ func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 	if _, ok := decoder.GetOk("type"); !ok {
 		return errors.New("invalid")
 	}
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"enabled":         &me.Enabled,
 		"type":            &me.Type,
 		"attribute_rule":  &me.AttributeRule,
 		"dimension_rule":  &me.DimensionRule,
 		"entity_selector": &me.EntitySelector,
 	})
+	if err != nil {
+		return err
+	}
+	if me.EntitySelector != nil {
+		*me.EntitySelector = strings.TrimSuffix(*me.EntitySelector, "\n")
+	}
+	return nil
 }
