@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -63,7 +63,7 @@ func ConditionalIgnoreChangesSinglePlus(schema map[string]*schema.Schema, proper
 	return nil
 }
 
-func buildIgnoreSensitiveFromSchema(schema map[string]*schema.Schema, additionalIgnoreFields []string) settings.LifeCycle {
+func buildIgnoreSensitiveFromSchema(schema map[string]*schema.Schema, additionalIgnoreFields []string) meta.LifeCycle {
 	sensitiveFields := []string{}
 
 	sensitiveFields = append(sensitiveFields, additionalIgnoreFields...)
@@ -74,7 +74,7 @@ func buildIgnoreSensitiveFromSchema(schema map[string]*schema.Schema, additional
 		}
 	}
 
-	lifeCycleIgnoreChanges := settings.LifeCycle{
+	lifeCycleIgnoreChanges := meta.LifeCycle{
 		IgnoreChanges: sensitiveFields,
 	}
 	return lifeCycleIgnoreChanges

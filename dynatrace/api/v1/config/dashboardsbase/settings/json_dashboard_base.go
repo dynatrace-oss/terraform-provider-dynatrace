@@ -23,7 +23,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -196,7 +196,7 @@ func (me *JSONDashboardBase) Schema() map[string]*schema.Schema {
 	}
 }
 
-var lifecycleIgnoreChanges = settings.LifeCycle{
+var lifecycleIgnoreChanges = meta.LifeCycle{
 	IgnoreChanges: []string{
 		"contents",
 	},

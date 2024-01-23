@@ -1,3 +1,20 @@
+/**
+* @license
+* Copyright 2024 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
 package httpcache
 
 import (
@@ -40,6 +57,10 @@ var REGEX_APPLICATIONS_WEB_KEY_USER_ACTIONS_GET, _ = regexp.Compile(`\/api\/conf
 var REGEX_APPLICATIONS_WEB_ERROR_RULES_GET, _ = regexp.Compile(`\/api\/config\/v1\/applications\/web\/([^\/]*)\/errorRules$`)
 var REGEX_APPLICATION_DETECTION_RULES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/applicationDetectionRules$`)
 var REGEX_APPLICATION_DETECTION_RULES_GET, _ = regexp.Compile(`\/api\/config\/v1\/applicationDetectionRules\/([^\/]*)$`)
+var REGEX_AWS_CREDENTIALS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/aws\/credentials$`)
+var REGEX_AWS_CREDENTIALS_GET, _ = regexp.Compile(`\/api\/config\/v1\/aws\/credentials\/([^\/]*)$`)
+var REGEX_AZURE_CREDENTIALS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/azure\/credentials$`)
+var REGEX_AZURE_CREDENTIALS_GET, _ = regexp.Compile(`\/api\/config\/v1\/azure\/credentials\/([^\/]*)$`)
 var REGEX_CUSTOM_SERVICE_NODEJS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/nodeJS$`)
 var REGEX_CUSTOM_SERVICE_NODEJS_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/nodeJS\/([^\/]*)$`)
 var REGEX_CUSTOM_SERVICE_DOTNET_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/dotNet$`)
@@ -52,17 +73,31 @@ var REGEX_CUSTOM_SERVICE_PHP_LIST, _ = regexp.Compile(`\/api\/config\/v1\/servic
 var REGEX_CUSTOM_SERVICE_PHP_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/customServices\/php\/([^\/]*)$`)
 var REGEX_CALCULATED_METRICS_SERVICE_LIST, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/service$`)
 var REGEX_CALCULATED_METRICS_SERVICE_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/service\/([^\/]*)$`)
+var REGEX_CALCULATED_METRICS_SYNTHETIC_LIST, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/synthetic$`)
+var REGEX_CALCULATED_METRICS_SYNTHETIC_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/synthetic\/([^\/]*)$`)
+var REGEX_CALCULATED_METRICS_MOBILE_LIST, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/mobile$`)
+var REGEX_CALCULATED_METRICS_MOBILE_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/mobile\/([^\/]*)$`)
+var REGEX_CALCULATED_METRICS_RUM_LIST, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/rum$`)
+var REGEX_CALCULATED_METRICS_RUM_GET, _ = regexp.Compile(`\/api\/config\/v1\/calculatedMetrics\/rum\/([^\/]*)$`)
+var REGEX_CONDITIONAL_NAMING_HOST_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host$`)
+var REGEX_CONDITIONAL_NAMING_HOST_GET, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host\/([^\/]*)$`)
+var REGEX_CONDITIONAL_NAMING_PG_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/processGroup$`)
+var REGEX_CONDITIONAL_NAMING_PG_GET, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/processGroup\/([^\/]*)$`)
+var REGEX_CONDITIONAL_NAMING_SERVICE_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/service$`)
+var REGEX_CONDITIONAL_NAMING_SERVICE_GET, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/service\/([^\/]*)$`)
+var REGEX_CREDENTIALS_VAULT_LIST, _ = regexp.Compile(`\/api\/v2\/credentials$`)
+var REGEX_CREDENTIALS_VAULT_GET, _ = regexp.Compile(`\/api\/v2\/credentials\/([^\/]*)$`)
 var REGEX_DASHBOARDS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/dashboards$`)
 var REGEX_DASHBOARDS_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)$`)
 var REGEX_DASHBOARD_SHARING_GET, _ = regexp.Compile(`\/api\/config\/v1\/dashboards\/([^\/]*)\/shareSettings$`)
 var REGEX_REQUEST_ATTRIBUTES_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes$`)
 var REGEX_REQUEST_ATTRIBUTES_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestAttributes\/([^\/?]*)\?includeProcessGroupReferences=true$`)
-var REGEX_CONDITIONAL_NAMING_HOST_LIST, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host$`)
-var REGEX_CONDITIONAL_NAMING_HOST_GET, _ = regexp.Compile(`\/api\/config\/v1\/conditionalNaming\/host\/([^\/]*)$`)
 var REGEX_REQUEST_NAMING_LIST, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestNaming$`)
 var REGEX_REQUEST_NAMING_GET, _ = regexp.Compile(`\/api\/config\/v1\/service\/requestNaming\/([^\/]*)$`)
 var REGEX_REQUEST_SLO_LIST, _ = regexp.Compile(`\/api\/v2\/slo\?pageSize`)
 var REGEX_REQUEST_SLO_GET, _ = regexp.Compile(`\/api\/v2\/slo\/([^\/]*)$`)
+var REGEX_NETWORK_ZONES_LIST, _ = regexp.Compile(`\/api\/v2\/networkZones`)
+var REGEX_NETWORK_ZONES_GET, _ = regexp.Compile(`\/api\/v2\/networkZones\/([^\/]*)$`)
 var REGEX_BROWSER_MONITOR_LIST, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\?type=BROWSER$`)
 var REGEX_MONITOR_GET, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\/([^\/]*)$`)
 var REGEX_HTTP_MONITOR_LIST, _ = regexp.Compile(`\/api\/v1\/synthetic\/monitors\?type=HTTP$`)
@@ -101,6 +136,14 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return List("app-detection-rule")
 	} else if m := REGEX_APPLICATION_DETECTION_RULES_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("app-detection-rule", m[1])
+	} else if m := REGEX_AWS_CREDENTIALS_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("aws-credentials")
+	} else if m := REGEX_AWS_CREDENTIALS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("aws-credentials", m[1])
+	} else if m := REGEX_AZURE_CREDENTIALS_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("azure-credentials")
+	} else if m := REGEX_AZURE_CREDENTIALS_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("azure-credentials", m[1])
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("custom-service-nodejs")
 	} else if m := REGEX_CUSTOM_SERVICE_NODEJS_GET.FindStringSubmatch(url); len(m) == 2 {
@@ -125,20 +168,48 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 		return List("calculated-metrics-service")
 	} else if m := REGEX_CALCULATED_METRICS_SERVICE_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("calculated-metrics-service", m[1])
+	} else if m := REGEX_CALCULATED_METRICS_SYNTHETIC_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("calculated-metrics-synthetic")
+	} else if m := REGEX_CALCULATED_METRICS_SYNTHETIC_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("calculated-metrics-synthetic", m[1])
+	} else if m := REGEX_CALCULATED_METRICS_MOBILE_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("calculated-metrics-application-mobile")
+	} else if m := REGEX_CALCULATED_METRICS_MOBILE_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("calculated-metrics-application-mobile", m[1])
+	} else if m := REGEX_CALCULATED_METRICS_RUM_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("calculated-metrics-application-web")
+	} else if m := REGEX_CALCULATED_METRICS_RUM_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("calculated-metrics-application-web", m[1])
+	} else if m := REGEX_CONDITIONAL_NAMING_HOST_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("conditional-naming-host")
+	} else if m := REGEX_CONDITIONAL_NAMING_HOST_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("conditional-naming-host", m[1])
+	} else if m := REGEX_CONDITIONAL_NAMING_PG_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("conditional-naming-processgroup")
+	} else if m := REGEX_CONDITIONAL_NAMING_PG_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("conditional-naming-processgroup", m[1])
+	} else if m := REGEX_CONDITIONAL_NAMING_SERVICE_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("conditional-naming-service")
+	} else if m := REGEX_CONDITIONAL_NAMING_SERVICE_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("conditional-naming-service", m[1])
+	} else if m := REGEX_CREDENTIALS_VAULT_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return &ListCredentialsVaultRequest{SchemaID: "credentials-vault"}
+	} else if m := REGEX_CREDENTIALS_VAULT_GET.FindStringSubmatch(url); len(m) == 2 {
+		return &GetCredentialsVaultRequest{SchemaID: "credentials-vault", ID: m[1], ServiceSchemaID: me.schemaID}
 	} else if m := REGEX_DASHBOARDS_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return Request(&ListDashboardsV1{})
 	} else if m := REGEX_DASHBOARD_SHARING_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("dashboard-sharing", m[1])
 	} else if m := REGEX_DASHBOARDS_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("dashboard", m[1])
+	} else if m := REGEX_NETWORK_ZONES_LIST.FindStringSubmatch(url); len(m) == 1 {
+		return List("network-zone")
+	} else if m := REGEX_NETWORK_ZONES_GET.FindStringSubmatch(url); len(m) == 2 {
+		return doGet("network-zone", m[1])
 	} else if m := REGEX_REQUEST_ATTRIBUTES_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("request-attributes")
 	} else if m := REGEX_REQUEST_ATTRIBUTES_GET.FindStringSubmatch(url); len(m) == 2 {
 		return doGet("request-attributes", m[1])
-	} else if m := REGEX_CONDITIONAL_NAMING_HOST_LIST.FindStringSubmatch(url); len(m) == 1 {
-		return List("conditional-naming-host")
-	} else if m := REGEX_CONDITIONAL_NAMING_HOST_GET.FindStringSubmatch(url); len(m) == 2 {
-		return doGet("conditional-naming-host", m[1])
 	} else if m := REGEX_REQUEST_NAMING_LIST.FindStringSubmatch(url); len(m) == 1 {
 		return List("request-naming-service")
 	} else if m := REGEX_REQUEST_NAMING_GET.FindStringSubmatch(url); len(m) == 2 {

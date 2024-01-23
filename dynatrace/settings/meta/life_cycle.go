@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package settings
+package meta
 
 import "github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
