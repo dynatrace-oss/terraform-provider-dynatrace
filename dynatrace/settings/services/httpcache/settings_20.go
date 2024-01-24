@@ -9,6 +9,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type GetSettings20Request struct {
@@ -37,6 +38,8 @@ func (me *GetSettings20Request) Finish(vs ...any) error {
 			return err
 		}
 		if stub == nil {
+			logging.Debug.Info.Printf("[HTTP_CACHE_20_Tar] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+			logging.Debug.Warn.Printf("[HTTP_CACHE_20_Tar] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
 			return rest.Error{Code: 404, Message: fmt.Sprintf("20_Tar: %s not found", me.ID)}
 		}
 		wrapper := struct {
@@ -50,6 +53,8 @@ func (me *GetSettings20Request) Finish(vs ...any) error {
 		}
 		return nil
 	}
+	logging.Debug.Info.Printf("[HTTP_CACHE_20_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+	logging.Debug.Warn.Printf("[HTTP_CACHE_20_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
 	return rest.Error{Code: 404, Message: fmt.Sprintf("20_Tar Nil: %s not found", me.ID)}
 }
 

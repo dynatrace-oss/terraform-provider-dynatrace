@@ -42,7 +42,7 @@ const SchemaID = "builtin:monitoring.slo"
 func Service(credentials *settings.Credentials) settings.CRUDService[*slo.Settings] {
 	return &service{
 		credentials: credentials,
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
 	}
 }
 

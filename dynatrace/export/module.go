@@ -1165,6 +1165,9 @@ func (me *Module) Discover() error {
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
 		}
+		if stub.ParentID != nil {
+			res.ParentID = stub.ParentID
+		}
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)

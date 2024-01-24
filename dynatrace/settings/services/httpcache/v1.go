@@ -11,6 +11,7 @@ import (
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type GetV1 struct {
@@ -31,6 +32,8 @@ func (me *GetV1) Finish(v any) error {
 			return err
 		}
 		if stub == nil {
+			logging.Debug.Info.Printf("[HTTP_CACHE_V1_Tar] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+			logging.Debug.Warn.Printf("[HTTP_CACHE_V1_Tar] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
 			return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar %s not found for %s", me.ID, me.SchemaID)}
 		}
 		wrapper := struct {
@@ -53,6 +56,8 @@ func (me *GetV1) Finish(v any) error {
 		})
 		return nil
 	}
+	logging.Debug.Info.Printf("[HTTP_CACHE_V1_Tar Nil] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+	logging.Debug.Warn.Printf("[HTTP_CACHE_V1_Tar Nil] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
 	return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar Nil %s not found for %s", me.ID, me.SchemaID)}
 }
 

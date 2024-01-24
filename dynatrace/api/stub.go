@@ -27,6 +27,7 @@ type Stub struct {
 	EntityID string  `json:"entityId,omitempty"`
 	Value    any     `json:"-"`
 	LegacyID *string `json:"legacyID,omitempty"`
+	ParentID *string `json:"parentID,omitempty"`
 }
 
 type Stubs []*Stub
@@ -50,7 +51,7 @@ func (me *Stubs) ToStubs() Stubs {
 		if len(stub.ID) == 0 && len(stub.EntityID) != 0 {
 			stub.ID = stub.EntityID
 		}
-		res = append(res, &Stub{ID: stub.ID, Name: stub.Name, Value: stub.Value, EntityID: stub.EntityID, LegacyID: stub.LegacyID})
+		res = append(res, &Stub{ID: stub.ID, Name: stub.Name, Value: stub.Value, EntityID: stub.EntityID, LegacyID: stub.LegacyID, ParentID: stub.ParentID})
 	}
 	return res
 }

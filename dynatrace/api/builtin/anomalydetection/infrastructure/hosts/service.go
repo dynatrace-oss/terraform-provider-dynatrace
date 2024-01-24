@@ -26,6 +26,7 @@ import (
 	hosts "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/hosts/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
@@ -38,7 +39,7 @@ const SchemaID = "builtin:anomaly-detection.infrastructure-hosts"
 func Service(credentials *settings.Credentials) settings.CRUDService[*hosts.Settings] {
 	return &service{
 		credentials: credentials,
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
 	}
 }
 

@@ -28,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
@@ -45,7 +46,7 @@ const SchemaVersion = "1.0.17"
 func Service(credentials *settings.Credentials) settings.CRUDService[*eventattribute.Settings] {
 	return &service{
 		credentials: credentials,
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
 	}
 }
 

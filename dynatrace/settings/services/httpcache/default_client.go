@@ -18,10 +18,12 @@
 package httpcache
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type client struct {
@@ -235,6 +237,9 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	if STRICT_CACHE {
 		return &rest.StriclyForbidden{Method: "GET", URL: url}
 	}
+	logging.Debug.Info.Printf("[HTTP_CACHE] [%s] [FAILED] [%s] Could not find a cache match", me.schemaID, url)
+	logging.Debug.Warn.Printf("[HTTP_CACHE] [%s] [FAILED] [%s] Could not find a cache match", me.schemaID, url)
+	fmt.Printf("\nERROR: Could not find a cache match for: %s, url: %s", me.schemaID, url)
 	return me.client.Get(url, expectedStatusCodes...)
 }
 

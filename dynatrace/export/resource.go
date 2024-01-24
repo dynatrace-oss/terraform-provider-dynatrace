@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -47,6 +48,7 @@ type Resource struct {
 	OutputFileAbs        string
 	Flawed               bool
 	XParent              *Resource
+	ParentID             *string
 	SplitId              int
 	BundleFilePath       string
 }
@@ -216,7 +218,10 @@ func (me *Resource) Download() error {
 	var service = me.Module.Service
 
 	settngs := me.Module.Descriptor.NewSettings()
-	if err = service.Get(me.ID, settngs); err != nil {
+
+	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
+
+	if err = service.Get(getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
 				me.Status = ResourceStati.Erronous

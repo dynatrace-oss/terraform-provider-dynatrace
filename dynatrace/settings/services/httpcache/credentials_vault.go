@@ -28,6 +28,7 @@ import (
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type GetCredentialsVaultRequest struct {
@@ -57,6 +58,8 @@ func (me *GetCredentialsVaultRequest) Finish(vs ...any) error {
 			return err
 		}
 		if stub == nil {
+			logging.Debug.Info.Printf("[HTTP_CACHE_CredentialsVault_Tar] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+			logging.Debug.Warn.Printf("[HTTP_CACHE_CredentialsVault_Tar] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
 			return rest.Error{Code: 404, Message: fmt.Sprintf("CredentialsVault_Tar %s not found", me.ID)}
 		}
 		wrapper := struct {
@@ -80,6 +83,8 @@ func (me *GetCredentialsVaultRequest) Finish(vs ...any) error {
 		})
 		return nil
 	}
+	logging.Debug.Info.Printf("[HTTP_CACHE_CredentialsVault_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+	logging.Debug.Warn.Printf("[HTTP_CACHE_CredentialsVault_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
 	return rest.Error{Code: 404, Message: fmt.Sprintf("CredentialsVault_Tar Nil %s not found", me.ID)}
 }
 
