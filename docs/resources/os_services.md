@@ -130,6 +130,8 @@ Available logic operations:
 - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.
 - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.
 - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.
+
+Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `host_metadata_condition` (Block List, Max: 1) Custom metadata (see [below for nested schema](#nestedblock--detection_conditions_linux--linux_detection_condition--host_metadata_condition))
 - `property` (String) Possible Values: `ServiceName`, `StartupType`
 - `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeOsService`
@@ -164,6 +166,8 @@ Available logic operations:
 - `$not($eq(production))` – Matches if the host metadata value is different from `production`.
 - `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
 - `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+
+Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
 
 
@@ -192,6 +196,8 @@ Available logic operations:
 - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.
 - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.
 - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.
+
+Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `host_metadata_condition` (Block List, Max: 1) Custom metadata (see [below for nested schema](#nestedblock--detection_conditions_windows--detection_conditions_window--host_metadata_condition))
 - `property` (String) Possible Values: `DisplayName`, `Manufacturer`, `Path`, `ServiceName`, `StartupType`
 - `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeOsService`
@@ -229,6 +235,8 @@ Available logic operations:
 - `$not($eq(production))` – Matches if the host metadata value is different from `production`.
 - `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
 - `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+
+Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
 
 
