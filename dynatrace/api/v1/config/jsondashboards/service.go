@@ -96,9 +96,13 @@ func (me *service) Create(v *dashboards.JSONDashboard) (*api.Stub, error) {
 }
 
 func (me *service) Update(id string, v *dashboards.JSONDashboard) error {
-	if id != strings.ToLower(v.LinkID) {
-		return fmt.Errorf("Dashboard ID cannot be modified, please destroy and create with the new ID")
+
+	if len(v.LinkID) > 0 {
+		if id != strings.ToLower(v.LinkID) {
+			return fmt.Errorf("dashboard ID cannot be modified, please destroy and create with the new ID")
+		}
 	}
+
 	jsonDashboard := v
 	oldContents := jsonDashboard.Contents
 	jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
