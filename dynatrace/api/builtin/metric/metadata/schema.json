@@ -191,8 +191,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Only uppercase and lowercase letters are allowed in units",
-					"pattern": "^[a-zA-Z]+$",
+					"customMessage": "Only uppercase and lowercase letters, digits and characters %, [, ], {, }, / and _ are allowed in units",
+					"pattern": "^[a-zA-Z0-9%\\[\\]{}/_]+$",
 					"type": "PATTERN"
 				}
 			],
@@ -390,5 +390,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "4.26"
+	"version": "4.27"
 }

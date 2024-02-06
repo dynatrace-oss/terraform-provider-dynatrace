@@ -4,7 +4,7 @@
 	],
 	"constraints": [
 		{
-			"customValidatorId": "validate-dql-variables",
+			"customValidatorId": "validate-complex-props",
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -108,7 +108,7 @@
 					"$ref": "#/types/Objective"
 				}
 			},
-			"maxObjects": 25,
+			"maxObjects": 50,
 			"metadata": {
 				"addItemButton": "Add objective"
 			},
@@ -191,12 +191,6 @@
 	"schemaId": "app:dynatrace.site.reliability.guardian:guardians",
 	"types": {
 		"Objective": {
-			"constraints": [
-				{
-					"customValidatorId": "validate-objective-target-warning",
-					"type": "CUSTOM_VALIDATOR_REF"
-				}
-			],
 			"description": "",
 			"displayName": "Objective",
 			"documentation": "",
@@ -235,10 +229,6 @@
 							"maxLength": 2000,
 							"minLength": 1,
 							"type": "LENGTH"
-						},
-						{
-							"customValidatorId": "validate-dql-query",
-							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -291,10 +281,6 @@
 							"maxLength": 800,
 							"minLength": 1,
 							"type": "LENGTH"
-						},
-						{
-							"customValidatorId": "validate-metric-key",
-							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -385,5 +371,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1.2"
+	"version": "1.2"
 }

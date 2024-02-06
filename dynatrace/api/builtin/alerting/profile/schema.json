@@ -903,6 +903,10 @@
 					"customMessage": "Value must be a valid regular expression",
 					"customValidatorId": "alerting-profile-text-filter-regex-validator",
 					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "alerting-profile-text-filter-dangerous-regex-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"description": "",
@@ -975,5 +979,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.4.1"
+	"version": "8.4.2"
 }

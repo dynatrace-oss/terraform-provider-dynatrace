@@ -59,6 +59,11 @@
 					"type": "TRIMMED"
 				},
 				{
+					"customMessage": "Cloud Foundry API Target must not contain the characters '?' or '#'.",
+					"customValidatorId": "cloudfoundry-valid-endpoint-url",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
 					"customMessage": "Not a valid URI",
 					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
 					"type": "PATTERN"
@@ -134,6 +139,11 @@
 				{
 					"customMessage": "No leading or trailing whitespaces are allowed.",
 					"type": "TRIMMED"
+				},
+				{
+					"customMessage": "Cloud Foundry Authentication Endpoint must not contain the characters '?' or '#'.",
+					"customValidatorId": "cloudfoundry-valid-endpoint-url",
+					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customMessage": "Not a valid URI",
@@ -245,5 +255,5 @@
 	],
 	"schemaId": "builtin:cloud.cloudfoundry",
 	"types": {},
-	"version": "1.0.5"
+	"version": "1.1"
 }
