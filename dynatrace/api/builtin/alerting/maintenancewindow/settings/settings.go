@@ -19,7 +19,9 @@ package maintenancewindow
 
 import (
 	"encoding/json"
+	"fmt"
 	"sort"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -34,7 +36,21 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	return me.GeneralProperties.Name
+	name := me.GeneralProperties.Name
+
+	if me.Schedule != nil && me.Schedule.OnceRecurrence != nil {
+		return fmt.Sprintf("%s_from_%s_to_%s_once", name, toUnixTimestampString(me.Schedule.OnceRecurrence.StartTime), toUnixTimestampString(me.Schedule.OnceRecurrence.EndTime))
+	}
+	return name
+}
+
+func toUnixTimestampString(timestamp string) string {
+	t, err := time.Parse("2006-01-02T15:04:05", timestamp)
+	time_from := "unknown"
+	if err == nil {
+		time_from = fmt.Sprint(t.Unix())
+	}
+	return time_from
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

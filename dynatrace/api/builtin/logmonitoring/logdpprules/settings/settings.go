@@ -18,6 +18,9 @@
 package logdpprules
 
 import (
+	"strings"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -73,14 +76,30 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *Settings) genIgnoreChanges() []string {
+
+	ignoreChangesList := []string{}
+
+	if strings.HasPrefix(me.RuleName, "[Built-in]") {
+		ignoreChangesList = []string{"rule_name", "query"}
+	}
+
+	return ignoreChangesList
+}
+
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"enabled":              me.Enabled,
-		"processor_definition": me.ProcessorDefinition,
-		"query":                me.Query,
-		"rule_name":            me.RuleName,
-		"rule_testing":         me.RuleTesting,
-	})
+
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
+		me.Schema(),
+		map[string]any{
+			"enabled":              me.Enabled,
+			"processor_definition": me.ProcessorDefinition,
+			"query":                me.Query,
+			"rule_name":            me.RuleName,
+			"rule_testing":         me.RuleTesting,
+		},
+		me.genIgnoreChanges(),
+	))
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {

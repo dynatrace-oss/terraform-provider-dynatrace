@@ -41,7 +41,10 @@ func ConditionalIgnoreChangesMapPlus(schema map[string]*schema.Schema, itemsToEn
 		if lifeCycleFound {
 			fmt.Printf("ERROR: Ignore Changes: lifecycle already exists: %v, overwriting with: %v", currentlifeCycle, lifeCycleIgnoreChanges)
 		}
-		itemsToEncode["lifecycle"] = &lifeCycleIgnoreChanges
+
+		if len(lifeCycleIgnoreChanges.IgnoreChanges) > 0 {
+			itemsToEncode["lifecycle"] = &lifeCycleIgnoreChanges
+		}
 	}
 
 	return itemsToEncode
