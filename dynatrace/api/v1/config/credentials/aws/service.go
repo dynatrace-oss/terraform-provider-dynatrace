@@ -141,7 +141,16 @@ func (me *service) Create(v *aws.AWSCredentialsConfig) (*api.Stub, error) {
 }
 
 func (me *service) Update(id string, v *aws.AWSCredentialsConfig) error {
-	return me.service.Update(id, v)
+	var updv aws.AWSCredentialsConfigUpdate
+	if err := me.client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id)).Finish(&updv); err != nil {
+		return err
+	}
+	updv.AuthenticationData = v.AuthenticationData
+	updv.Label = v.Label
+	updv.PartitionType = v.PartitionType
+	updv.TaggedOnly = v.TaggedOnly
+	updv.TagsToMonitor = v.TagsToMonitor
+	return me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv).Finish()
 }
 
 func (me *service) Delete(id string) error {
