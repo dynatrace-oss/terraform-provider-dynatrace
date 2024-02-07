@@ -105,18 +105,15 @@ import (
 // }
 
 func main() {
-	var debug bool
-	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
-	flag.Parse()
-
-	// if tf2json(os.Args) {
-	// 	return
-	// }
 	defer export.CleanUp.Finish()
 
 	if dynatrace.Export(os.Args) {
 		return
 	}
+
+	var debug bool
+	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	flag.Parse()
 
 	plugin.Serve(&plugin.ServeOpts{
 		Debug:        debug,
