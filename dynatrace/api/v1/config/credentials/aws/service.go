@@ -150,7 +150,7 @@ func (me *service) Update(id string, v *aws.AWSCredentialsConfig) error {
 	updv.PartitionType = v.PartitionType
 	updv.TaggedOnly = v.TaggedOnly
 	updv.TagsToMonitor = v.TagsToMonitor
-	return me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv).Finish()
+	return me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
 func (me *service) Delete(id string) error {
