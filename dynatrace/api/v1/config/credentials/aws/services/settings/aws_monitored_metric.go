@@ -44,7 +44,7 @@ func (amm *AWSMonitoredMetric) Schema() map[string]*schema.Schema {
 			Default:     "AVERAGE",
 		},
 		"dimensions": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Description: "a list of metric's dimensions names",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
