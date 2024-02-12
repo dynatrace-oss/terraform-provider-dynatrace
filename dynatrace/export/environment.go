@@ -1059,6 +1059,7 @@ func (me *Environment) RunTerraformInit() error {
 
 	cmd := exec.Command(exePath, cmdOptions...)
 	cmd.Dir = me.OutputFolder
+	cmd.Env = os.Environ()
 	outs, err := cmd.StderrPipe()
 	if err != nil {
 		return err
