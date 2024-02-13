@@ -31,7 +31,24 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	return uuid.NewString()
+	name := ""
+	if me.ProcessDetection != nil {
+		if me.ProcessDetection.Property != "" {
+			name = me.ProcessDetection.Property
+		}
+		if me.ProcessDetection.ContainedString != "" {
+			if name != "" {
+				name += "_"
+			}
+			name += me.ProcessDetection.ContainedString
+		}
+	}
+
+	if name == "" {
+		return uuid.NewString()
+	}
+
+	return name
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

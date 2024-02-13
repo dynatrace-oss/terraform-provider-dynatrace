@@ -18,6 +18,8 @@
 package detection
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -32,7 +34,21 @@ type Rule struct {
 }
 
 func (me *Rule) Name() string {
-	return me.ApplicationIdentifier
+	name := me.ApplicationIdentifier
+
+	if me.FilterConfig != nil {
+		if me.FilterConfig.ApplicationMatchTarget != "" {
+			name = fmt.Sprintf("%s_%s", name, me.FilterConfig.ApplicationMatchTarget)
+		}
+		if me.FilterConfig.ApplicationMatchType != "" {
+			name = fmt.Sprintf("%s_%s", name, me.FilterConfig.ApplicationMatchType)
+		}
+		if me.FilterConfig.Pattern != "" {
+			name = fmt.Sprintf("%s_%s", name, me.FilterConfig.Pattern)
+		}
+	}
+
+	return name
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
