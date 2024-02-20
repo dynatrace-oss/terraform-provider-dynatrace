@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.6"
+const SchemaVersion = "0.0.8"
 const SchemaID = "builtin:attribute-allow-list"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*allowlist.Settings] {

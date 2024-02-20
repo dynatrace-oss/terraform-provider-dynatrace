@@ -2,6 +2,12 @@
 	"allowedScopes": [
 		"environment"
 	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
 	"description": "Use this page to connect your VMware vCenter, standalone ESXi hosts to Dynatrace for monitoring. For VMware instances, connect all vCenter servers that manage virtual machines where Dynatrace OneAgent is installed. You don't need to add ESXi hosts if they are managed by a vCenter server that is connected to Dynatrace.",
 	"displayName": "VMware",
 	"documentation": "",
@@ -181,5 +187,5 @@
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

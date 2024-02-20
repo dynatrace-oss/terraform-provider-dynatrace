@@ -75,5 +75,5 @@
 	],
 	"schemaId": "builtin:attribute-allow-list",
 	"types": {},
-	"version": "0.0.6"
+	"version": "0.0.8"
 }

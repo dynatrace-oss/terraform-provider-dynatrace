@@ -399,17 +399,16 @@
 						},
 						{
 							"customMessage": "This value does not match the required format.",
-							"customValidatorId": "OSServicesGeneralRule",
+							"customValidatorId": "ConditionGeneralRule",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+					"documentation": "This string has to match a required format.\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"metadata": {
-						"minAgentVersion": "1.277",
 						"placeholder": "Required"
 					},
 					"modificationPolicy": "DEFAULT",
@@ -436,7 +435,6 @@
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"minAgentVersion": "1.277",
 						"placeholder": "Required"
 					},
 					"modificationPolicy": "DEFAULT",
@@ -532,7 +530,7 @@
 						},
 						{
 							"customMessage": "This value does not match the required format.",
-							"customValidatorId": "OSServicesGeneralRule",
+							"customValidatorId": "ConditionGeneralRule",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -555,8 +553,11 @@
 				"hostMetadataCondition": {
 					"description": "",
 					"displayName": "Custom metadata",
-					"documentation": "",
+					"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
 					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.277"
+					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
@@ -639,7 +640,7 @@
 					"type": "text"
 				}
 			},
-			"summaryPattern": "{ruleType}: {hostMetadataCondition}{property}{hostMetadataCondition/metadataKey} match {condition}{startupCondition}{hostMetadataCondition/metadataCondition}",
+			"summaryPattern": "{ruleType}: {hostMetadataCondition}{property}{hostMetadataCondition/metadataKey} matches {condition}{startupCondition}{hostMetadataCondition/metadataCondition}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -658,7 +659,7 @@
 						},
 						{
 							"customMessage": "This value does not match the required format.",
-							"customValidatorId": "OSServicesGeneralRule",
+							"customValidatorId": "ConditionGeneralRule",
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -768,7 +769,7 @@
 					"type": "text"
 				}
 			},
-			"summaryPattern": "{ruleType}: {hostMetadataCondition}{property}{hostMetadataCondition/metadataKey} match {condition}{startupCondition}{hostMetadataCondition/metadataCondition}",
+			"summaryPattern": "{ruleType}: {hostMetadataCondition}{property}{hostMetadataCondition/metadataKey} matches {condition}{startupCondition}{hostMetadataCondition/metadataCondition}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -795,5 +796,5 @@
 			]
 		}
 	},
-	"version": "1.3.1"
+	"version": "1.3.3"
 }
