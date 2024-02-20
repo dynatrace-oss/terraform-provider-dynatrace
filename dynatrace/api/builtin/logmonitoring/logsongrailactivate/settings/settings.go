@@ -23,7 +23,7 @@ import (
 )
 
 func (me *Settings) Deprecated() string {
-	return "This resource API endpoint has been deprecated since it is only meant to be used for the initial Logs powered by Grail activation."
+	return "This resource API endpoint has been deprecated since it was only meant to be used for the initial Logs powered by Grail activation."
 }
 
 type Settings struct {
