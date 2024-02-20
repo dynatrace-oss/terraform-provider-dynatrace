@@ -30,6 +30,7 @@ type IAMClient interface {
 	PUT(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
 	GET(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
 	DELETE(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
+	DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error)
 }
 
 type iamClient struct {
@@ -63,22 +64,26 @@ func (me *iamClient) authenticate(httpRequest *http.Request, forceNew bool) erro
 }
 
 func (me *iamClient) POST(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPost, expectedResponseCode, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
+	return me.request(url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
 }
 
 func (me *iamClient) PUT(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPut, expectedResponseCode, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
+	return me.request(url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
 }
 
 func (me *iamClient) GET(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodGet, expectedResponseCode, forceNewBearer, nil, nil)
+	return me.request(url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, nil, nil)
 }
 
 func (me *iamClient) DELETE(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodDelete, expectedResponseCode, forceNewBearer, nil, nil)
+	return me.request(url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, nil, nil)
 }
 
-func (me *iamClient) request(url string, method string, expectedResponseCode int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
+	return me.request(url, http.MethodDelete, expectedResponseCodes, forceNewBearer, nil, nil)
+}
+
+func (me *iamClient) request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
 
 	num504Retries := 0
 
@@ -128,21 +133,29 @@ func (me *iamClient) request(url string, method string, expectedResponseCode int
 		if httpResponse.StatusCode == 504 {
 			num504Retries++
 			if num504Retries > 5 {
-				return nil, fmt.Errorf("response code %d (expected: %d)", 504, expectedResponseCode)
+				return nil, fmt.Errorf("response code %d (expected: %d)", 504, expectedResponseCodes)
 			}
 			time.Sleep(time.Second)
 			continue
 		}
 
-		if httpResponse.StatusCode != expectedResponseCode {
+		isNotExpectedResponseCode := true
+		for _, erc := range expectedResponseCodes {
+			if httpResponse.StatusCode == erc {
+				isNotExpectedResponseCode = false
+				break
+			}
+		}
+
+		if isNotExpectedResponseCode {
 			var iamErr IAMError
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
 				if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
-					return me.request(url, method, expectedResponseCode, true, payload, headers)
+					return me.request(url, method, expectedResponseCodes, true, payload, headers)
 				}
 				return nil, iamErr
 			} else {
-				return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCode)
+				return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)
 			}
 		}
 
