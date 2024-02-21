@@ -350,6 +350,7 @@ var ResourceTypes = struct {
 	GrailMetricsAllowlist               ResourceType
 	WebAppBeaconEndpoint                ResourceType
 	WebAppCustomConfigProperties        ResourceType
+	WebAppInjectionCookie               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -623,6 +624,7 @@ var ResourceTypes = struct {
 	"dynatrace_grail_metrics_allowlist",
 	"dynatrace_web_app_beacon_endpoint",
 	"dynatrace_web_app_custom_config_properties",
+	"dynatrace_web_app_injection_cookie",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

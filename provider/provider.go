@@ -500,6 +500,7 @@ func Provider() *schema.Provider {
 			"dynatrace_grail_metrics_allowlist":            resources.NewGeneric(export.ResourceTypes.GrailMetricsAllowlist).Resource(),
 			"dynatrace_web_app_beacon_endpoint":            resources.NewGeneric(export.ResourceTypes.WebAppBeaconEndpoint).Resource(),
 			"dynatrace_web_app_custom_config_properties":   resources.NewGeneric(export.ResourceTypes.WebAppCustomConfigProperties).Resource(),
+			"dynatrace_web_app_injection_cookie":           resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
