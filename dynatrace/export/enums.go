@@ -346,6 +346,7 @@ var ResourceTypes = struct {
 	JiraForWorkflows                    ResourceType
 	SlackForWorkflows                   ResourceType
 	KubernetesApp                       ResourceType
+	GrailMetricsAllowall                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -615,6 +616,7 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_jira",
 	"dynatrace_automation_workflow_slack",
 	"dynatrace_kubernetes_app",
+	"dynatrace_grail_metrics_allowall",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
