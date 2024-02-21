@@ -196,6 +196,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	webappbeaconendpoint "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beaconendpoint"
+	webappcustomconfigproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties"
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customrumjavascriptversion"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
@@ -1149,6 +1150,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.GrailMetricsAllowlist: NewResourceDescriptor(grailmetricsallowlist.Service),
 	ResourceTypes.WebAppBeaconEndpoint: NewResourceDescriptor(
 		webappbeaconendpoint.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.WebAppCustomConfigProperties: NewResourceDescriptor(
+		webappcustomconfigproperties.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 }
