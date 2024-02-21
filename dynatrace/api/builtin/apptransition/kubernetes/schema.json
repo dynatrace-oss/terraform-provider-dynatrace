@@ -1,0 +1,64 @@
+{
+	"allowedScopes": [
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "Unlock an improved experience with the new Kubernetes app.",
+	"displayName": "Kubernetes app",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minActiveGateVersion": "1.279"
+	},
+	"multiObject": false,
+	"properties": {
+		"kubernetesAppOptions": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/KubernetesAppOptions"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-and-virtualization"
+	],
+	"schemaId": "builtin:app-transition.kubernetes",
+	"types": {
+		"KubernetesAppOptions": {
+			"description": "",
+			"displayName": "KubernetesAppOptions",
+			"documentation": "",
+			"properties": {
+				"enableKubernetesApp": {
+					"constraints": [
+						{
+							"customMessage": "You need a Dynatrace Platform Subscription with Kubernetes Monitoring Capability in order to enable this setting.",
+							"customValidatorId": "kubernetes-k8s-ops-licensing",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": false,
+					"description": "",
+					"displayName": "New Kubernetes experience",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}

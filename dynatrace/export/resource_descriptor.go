@@ -61,6 +61,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
+	kubernetesapp "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apptransition/kubernetes"
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
@@ -1137,6 +1138,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
 	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
 	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
+	ResourceTypes.KubernetesApp: NewResourceDescriptor(
+		kubernetesapp.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 var BlackListedResources = []ResourceType{
