@@ -102,6 +102,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	grailmetricsallowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall"
+	grailmetricsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowlist"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostmonitoringadvanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
@@ -1143,7 +1144,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesapp.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.GrailMetricsAllowall: NewResourceDescriptor(grailmetricsallowall.Service),
+	ResourceTypes.GrailMetricsAllowall:  NewResourceDescriptor(grailmetricsallowall.Service),
+	ResourceTypes.GrailMetricsAllowlist: NewResourceDescriptor(grailmetricsallowlist.Service),
 }
 
 var BlackListedResources = []ResourceType{

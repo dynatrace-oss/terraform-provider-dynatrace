@@ -1,0 +1,129 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Custom metrics in this list will be ingested to Grail regardless of [Classic limits](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/metric-v2/best-practices#avoid-high-cardinality-limits).",
+	"displayName": "Grail metrics allow list",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"pattern": {
+			"description": "",
+			"displayName": "Pattern",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "startsWith",
+					"value": "STARTSWITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"metadata": {
+		"appName": "Grail metric allow list"
+	},
+	"multiObject": false,
+	"properties": {
+		"allowRules": {
+			"constraints": [
+				{
+					"customMessage": "The metric key must be unique (case insensitive)",
+					"customValidatorId": "unique-metric-key-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Specify rules for forwarding metrics",
+			"displayName": "Allow Rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Allow Rule",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/allowRule"
+				}
+			},
+			"maxObjects": 30,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics",
+		"group:metrics.grail-metrics"
+	],
+	"schemaId": "builtin:grail.metrics.allow-list",
+	"types": {
+		"allowRule": {
+			"description": "",
+			"displayName": "Allow Rule",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"maxLength": 255,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NO_WHITESPACE"
+						},
+						{
+							"customMessage": "Key may contain only alphanumeric characters, underscores ('_'), hyphens ('-'), dots ('.') and colons (':'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+							"pattern": "^[.:A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"pattern": {
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Pattern",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/pattern"
+					}
+				}
+			},
+			"summaryPattern": "{pattern}: {metricKey}",
+			"type": "object",
+			"version": "1",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.2"
+}
