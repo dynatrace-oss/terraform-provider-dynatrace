@@ -235,6 +235,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
 	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
@@ -655,10 +656,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.IAMPermission),
 		Dependencies.Tenant,
 	),
-	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
-	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
-	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
-	ResourceTypes.DDUPool:           NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMPermission:       NewResourceDescriptor(permissions.Service),
+	ResourceTypes.IAMPolicy:           NewResourceDescriptor(policies.Service),
+	ResourceTypes.IAMPolicyBindings:   NewResourceDescriptor(bindings.Service),
+	ResourceTypes.IAMPolicyBindingsV2: NewResourceDescriptor(v2bindings.Service),
+	ResourceTypes.DDUPool:             NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -1176,6 +1178,7 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPermission,
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
+	ResourceTypes.IAMPolicyBindingsV2,
 
 	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard

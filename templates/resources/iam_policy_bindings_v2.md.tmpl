@@ -1,12 +1,12 @@
 ---
 layout: ""
-page_title: "dynatrace_iam_policy_bindings Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_iam_policy_bindings_v2 Resource - terraform-provider-dynatrace"
 subcategory: "IAM"
 description: |-
-  The resource `dynatrace_iam_policy_bindings` covers binding policies to user groups via Account Management API for SaaS Accounts. If you want to assign parameters or metadata to your policy bindings, please use `dynatrace_iam_policy_bindings_v2`
+  The resource `dynatrace_iam_policy_bindings_v2` covers binding policies to user groups via Account Management API for SaaS Accounts. This resource works similar to `dynatrace_iam_policy_bindings`, but also allows for specifying parameters and metadata to the bindings.
 ---
 
-# dynatrace_iam_policy_bindings (Resource)
+# dynatrace_iam_policy_bindings_v2 (Resource)
 
 -> This resource is excluded by default in the export utility since it is part of the account management API. You can, of course, specify that resource explicitly in order to export it. In that case, don't forget to specify the environment variables `DT_CLIENT_ID`, `DT_ACCOUNT_ID` and `DT_CLIENT_SECRET` for authentication.
 
@@ -65,10 +65,21 @@ resource "dynatrace_iam_policy" "acc_policy" {
   statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"string\";"
 }
 
-resource "dynatrace_iam_policy_bindings" "acc_bindings" {
+resource "dynatrace_iam_policy_bindings_v2" "acc_bindings" {
   group       = dynatrace_iam_group.my_group.id
   account     = "########-####-####-####-############"
-  policies    = [dynatrace_iam_policy.acc_policy.id]
+  policy {
+    id = dynatrace_iam_policy.acc_policy.id
+  }
+  policy {
+    id = dynatrace_iam_policy.acc_policy.id
+    parameters = {
+      "prop-b" : "value-b"
+    }
+    metadata = {
+      "prop-b" : "value-c"
+    }
+  }   
 }
 ```
 
@@ -99,7 +110,12 @@ resource "dynatrace_iam_policy" "acc_policy" {
 resource "dynatrace_iam_policy_bindings" "bindings" {
   group       = dynatrace_iam_group.my_group.id
   account     = "########-####-####-####-############"
-  policies    = [dynatrace_iam_policy.acc_policy.id, dynatrace_iam_policy.env_policy.id] # INVALID, because `dynatrace_iam_policy.env_policy` is not defined for the account level
+  policy {
+    id = dynatrace_iam_policy.acc_policy.id
+  }
+  policy {
+    id = dynatrace_iam_policy.env_policy.id # INVALID, because `dynatrace_iam_policy.env_policy` is not defined for the account level
+  }
 }
 ```
 
