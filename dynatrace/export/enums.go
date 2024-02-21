@@ -348,6 +348,7 @@ var ResourceTypes = struct {
 	KubernetesApp                       ResourceType
 	GrailMetricsAllowall                ResourceType
 	GrailMetricsAllowlist               ResourceType
+	WebAppBeaconEndpoint                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -619,6 +620,7 @@ var ResourceTypes = struct {
 	"dynatrace_kubernetes_app",
 	"dynatrace_grail_metrics_allowall",
 	"dynatrace_grail_metrics_allowlist",
+	"dynatrace_web_app_beacon_endpoint",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

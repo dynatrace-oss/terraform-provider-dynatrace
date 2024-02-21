@@ -498,6 +498,7 @@ func Provider() *schema.Provider {
 			"dynatrace_kubernetes_app":                     resources.NewGeneric(export.ResourceTypes.KubernetesApp).Resource(),
 			"dynatrace_grail_metrics_allowall":             resources.NewGeneric(export.ResourceTypes.GrailMetricsAllowall).Resource(),
 			"dynatrace_grail_metrics_allowlist":            resources.NewGeneric(export.ResourceTypes.GrailMetricsAllowlist).Resource(),
+			"dynatrace_web_app_beacon_endpoint":            resources.NewGeneric(export.ResourceTypes.WebAppBeaconEndpoint).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
