@@ -325,6 +325,12 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 			entry.Entries = append(entry.Entries, &primitiveEntry{Key: xk, Value: xv, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)})
 		}
 		*e = append(*e, entry)
+	case map[string]string:
+		if len(v) == 0 {
+			return
+		}
+		entry := &stringMapEntry{Key: key, Values: v}
+		*e = append(*e, entry)
 	default:
 		rv := reflect.ValueOf(v)
 		switch rv.Kind() {
