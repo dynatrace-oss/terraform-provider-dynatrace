@@ -229,6 +229,8 @@ func (me *primitiveEntry) IsLessThan(other exportEntry) bool {
 		return strings.Compare(sk(me.Key), sk(ro.Key)) < 0
 	case *resourceEntry:
 		return true
+	case *stringMapEntry:
+		return true
 	}
 	return false
 }

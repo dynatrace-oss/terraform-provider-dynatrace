@@ -236,11 +236,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
 	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
@@ -661,10 +663,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.IAMPermission),
 		Dependencies.Tenant,
 	),
-	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
-	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
-	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
-	ResourceTypes.DDUPool:           NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMPermission:       NewResourceDescriptor(permissions.Service),
+	ResourceTypes.IAMPolicy:           NewResourceDescriptor(policies.Service),
+	ResourceTypes.IAMPolicyBindings:   NewResourceDescriptor(bindings.Service),
+	ResourceTypes.IAMPolicyBindingsV2: NewResourceDescriptor(v2bindings.Service),
+	ResourceTypes.DDUPool:             NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -1143,6 +1146,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
 	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
 	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
+	ResourceTypes.Policy:                  NewResourceDescriptor(onprempolicies.Service),
 	ResourceTypes.KubernetesApp: NewResourceDescriptor(
 		kubernetesapp.Service,
 		Coalesce(Dependencies.K8sCluster),
@@ -1200,6 +1204,10 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPermission,
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
+	ResourceTypes.IAMPolicyBindingsV2,
+
+	// Cluster Resources
+	ResourceTypes.Policy,
 
 	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard

@@ -50,11 +50,9 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	httpClient := http.DefaultClient
 
 	payloadStr := fmt.Sprintf(
-		"grant_type=client_credentials&client_id=%s&client_secret=%s&scope=%s&resource=%s",
+		"grant_type=client_credentials&client_id=%s&client_secret=%s",
 		url.QueryEscape(auth.ClientID()),
 		url.QueryEscape(auth.ClientSecret()),
-		url.QueryEscape("account-env-read account-idm-read account-idm-write iam:policies:read iam:policies:write iam-policies-management"),
-		url.QueryEscape("urn:dtaccount:"+strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")),
 	)
 	payload := strings.NewReader(payloadStr)
 
@@ -69,19 +67,17 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	if body, err = io.ReadAll(httpRes.Body); err != nil {
 		return "", err
 	}
+	if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" {
+		debugPayloadStr := fmt.Sprintf(
+			"grant_type=client_credentials&client_id=%s&client_secret=%s",
+			url.QueryEscape(auth.ClientID()),
+			url.QueryEscape("<hidden>"),
+		)
+		rest.Logger.Println("POST https://sso.dynatrace.com/sso/oauth2/token")
+		rest.Logger.Println("  " + debugPayloadStr)
+		rest.Logger.Println("  -> " + string(body))
+	}
 	if httpRes.StatusCode == 400 {
-		if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" {
-			debugPayloadStr := fmt.Sprintf(
-				"grant_type=client_credentials&client_id=%s&client_secret=%s&scope=%s&resource=%s",
-				url.QueryEscape(auth.ClientID()),
-				url.QueryEscape("<hidden>"),
-				url.QueryEscape("account-idm-read account-idm-write iam:policies:read iam:policies:write iam-policies-management"),
-				url.QueryEscape("urn:dtaccount:"+strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")),
-			)
-			rest.Logger.Println("POST https://sso.dynatrace.com/sso/oauth2/token")
-			rest.Logger.Println("  " + debugPayloadStr)
-			rest.Logger.Println("  -> " + string(body))
-		}
 		return "", errors.New(msgInvalidOAuthCredentials)
 	}
 	response := oauthResponse{}

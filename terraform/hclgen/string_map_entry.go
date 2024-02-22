@@ -18,52 +18,52 @@
 package hclgen
 
 import (
-	"sort"
+	"fmt"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 )
 
-type mapEntry struct {
+type stringMapEntry struct {
 	Indent      string
 	Key         string
 	BreadCrumbs string
 	Optional    bool
-	Entries     exportEntries
+	Values      map[string]string
 }
 
-func (me *mapEntry) IsOptional() bool {
+func (me *stringMapEntry) IsOptional() bool {
 	return false
 }
 
-func (me *mapEntry) IsComputed() bool {
+func (me *stringMapEntry) IsComputed() bool {
 	return false
 }
 
-func (me *mapEntry) IsDefault() bool {
+func (me *stringMapEntry) IsDefault() bool {
 	return false
 }
 
-func (me *mapEntry) IsLessThan(other exportEntry) bool {
+func (me *stringMapEntry) IsLessThan(other exportEntry) bool {
 	switch ro := other.(type) {
 	case *primitiveEntry:
 		return false
-	case *stringMapEntry:
-		return strings.Compare(me.Key, ro.Key) < 0
 	case *resourceEntry:
 		return strings.Compare(me.Key, ro.Key) < 0
 	case *mapEntry:
+		return strings.Compare(me.Key, ro.Key) < 0
+	case *stringMapEntry:
 		return strings.Compare(me.Key, ro.Key) < 0
 	}
 	return false
 }
 
-func (me *mapEntry) Write(w *hclwrite.Body, indent string) error {
-	sort.SliceStable(me.Entries, me.Entries.Less)
+func (me *stringMapEntry) Write(w *hclwrite.Body, indent string) error {
 	objTokens := []hclwrite.ObjectAttrTokens{}
-	for _, entry := range me.Entries {
-		primEntry := entry.(*primitiveEntry)
-		objTokens = append(objTokens, hclwrite.ObjectAttrTokens{Name: hclwrite.TokensForIdentifier(primEntry.Key), Value: hclwrite.TokensForValue(ctyVal(primEntry.Value, ""))})
+	for key, value := range me.Values {
+		fmt.Println(key)
+		fmt.Println(value)
+		objTokens = append(objTokens, hclwrite.ObjectAttrTokens{Name: hclwrite.TokensForValue(ctyVal(key, "")), Value: hclwrite.TokensForValue(ctyVal(value, ""))})
 	}
 
 	tokens := hclwrite.TokensForObject(objTokens)

@@ -154,6 +154,7 @@ var ResourceTypes = struct {
 	IAMPermission                       ResourceType
 	IAMPolicy                           ResourceType
 	IAMPolicyBindings                   ResourceType
+	IAMPolicyBindingsV2                 ResourceType
 	ProcessGroupAnomalies               ResourceType
 	DDUPool                             ResourceType
 	ProcessGroupAlerting                ResourceType
@@ -345,6 +346,7 @@ var ResourceTypes = struct {
 	SiteReliabilityGuardian             ResourceType
 	JiraForWorkflows                    ResourceType
 	SlackForWorkflows                   ResourceType
+	Policy                              ResourceType
 	KubernetesApp                       ResourceType
 	GrailMetricsAllowall                ResourceType
 	GrailMetricsAllowlist               ResourceType
@@ -428,6 +430,7 @@ var ResourceTypes = struct {
 	"dynatrace_iam_permission",
 	"dynatrace_iam_policy",
 	"dynatrace_iam_policy_bindings",
+	"dynatrace_iam_policy_bindings_v2",
 	"dynatrace_pg_anomalies",
 	"dynatrace_ddu_pool",
 	"dynatrace_pg_alerting",
@@ -619,6 +622,7 @@ var ResourceTypes = struct {
 	"dynatrace_site_reliability_guardian",
 	"dynatrace_automation_workflow_jira",
 	"dynatrace_automation_workflow_slack",
+	"dynatrace_policy",
 	"dynatrace_kubernetes_app",
 	"dynatrace_grail_metrics_allowall",
 	"dynatrace_grail_metrics_allowlist",

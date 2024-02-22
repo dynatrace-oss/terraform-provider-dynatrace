@@ -51,6 +51,10 @@ type Credentials struct {
 		TokenURL       string
 		EnvironmentURL string
 	}
+	Cluster struct {
+		URL   string
+		Token string
+	}
 }
 
 func getEnv(names ...string) string {
@@ -137,6 +141,9 @@ func CreateExportCredentials() (*Credentials, error) {
 		return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
 	}
 
+	clusterAPIToken := getEnv("DYNATRACE_CLUSTER_API_TOKEN", "DT_CLUSTER_API_TOKEN")
+	clusterURL := getEnv("DYNATRACE_CLUSTER_URL", "DT_CLUSTER_URL")
+
 	credentials := &Credentials{
 		URL:   environmentURL,
 		Token: apiToken,
@@ -159,6 +166,13 @@ func CreateExportCredentials() (*Credentials, error) {
 			ClientSecret:   automation_client_secret,
 			EnvironmentURL: automationEnvironmentURL,
 			TokenURL:       automationTokenURL,
+		},
+		Cluster: struct {
+			URL   string
+			Token string
+		}{
+			URL:   clusterURL,
+			Token: clusterAPIToken,
 		},
 	}
 	return credentials, nil
