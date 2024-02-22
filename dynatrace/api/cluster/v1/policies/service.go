@@ -7,6 +7,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 type PolicyServiceClient struct {
@@ -15,6 +16,44 @@ type PolicyServiceClient struct {
 
 func NewPolicyService(baseURL string, apiToken string) *PolicyServiceClient {
 	return &PolicyServiceClient{client: rest.DefaultClient(baseURL, apiToken)}
+}
+
+func Service(credentials *settings.Credentials) settings.CRUDService[*policies.Policy] {
+	return &service{
+		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/cluster/v2"), credentials.Cluster.Token),
+	}
+}
+
+type service struct {
+	serviceClient *PolicyServiceClient
+}
+
+func (me *service) List() (api.Stubs, error) {
+	return me.serviceClient.List()
+}
+
+func (me *service) Get(id string, v *policies.Policy) error {
+	return me.serviceClient.Get(id, v)
+}
+
+func (me *service) SchemaID() string {
+	return "accounts:policies"
+}
+
+func (me *service) Create(v *policies.Policy) (*api.Stub, error) {
+	return me.serviceClient.Create(v)
+}
+
+func (me *service) Update(id string, v *policies.Policy) error {
+	return me.serviceClient.Update(id, v)
+}
+
+func (me *service) Delete(id string) error {
+	return me.serviceClient.Delete(id)
+}
+
+func (me *service) Name() string {
+	return me.SchemaID()
 }
 
 func (me *PolicyServiceClient) SchemaID() string {
@@ -66,7 +105,53 @@ func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
 }
 
 func (me *PolicyServiceClient) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
+	var err error
+	var stubs api.Stubs
+
+	clusterInfoResponse := struct {
+		ClusterUUID string `json:"clusterUuid"`
+	}{}
+
+	if err = me.client.Get("/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
+		return stubs, err
+	}
+	policiesResponse := struct {
+		Policies []struct {
+			UUID string `json:"uuid"`
+			Name string `json:"name"`
+		} `json:"policies"`
+	}{}
+	if err = me.client.Get(fmt.Sprintf("/iam/repo/cluster/%s/policies", clusterInfoResponse.ClusterUUID), 200).Finish(&policiesResponse); err != nil {
+		return stubs, err
+	}
+	for _, policy := range policiesResponse.Policies {
+		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "cluster", clusterInfoResponse.ClusterUUID), Name: policy.Name})
+	}
+
+	environmentsResponse := struct {
+		Environments []struct {
+			ID string `json:"id"`
+		} `json:"environments"`
+	}{}
+	if err = me.client.Get("/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
+		return stubs, err
+	}
+	for _, environment := range environmentsResponse.Environments {
+		policiesResponse := struct {
+			Policies []struct {
+				UUID string `json:"uuid"`
+				Name string `json:"name"`
+			} `json:"policies"`
+		}{}
+		if err = me.client.Get(fmt.Sprintf("/iam/repo/environment/%s/policies", environment.ID), 200).Finish(&policiesResponse); err != nil {
+			return stubs, err
+		}
+		for _, policy := range policiesResponse.Policies {
+			stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "environment", environment.ID), Name: policy.Name})
+		}
+	}
+
+	return stubs, nil
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {

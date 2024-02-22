@@ -230,6 +230,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -1139,6 +1140,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
 	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
 	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
+	ResourceTypes.Policy:                  NewResourceDescriptor(onprempolicies.Service),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1179,6 +1181,9 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
 	ResourceTypes.IAMPolicyBindingsV2,
+
+	// Cluster Resources
+	ResourceTypes.Policy,
 
 	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
