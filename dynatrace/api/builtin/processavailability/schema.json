@@ -9,6 +9,26 @@
 	"documentation": "\n\nIn order to monitor the availability of a certain group of processes, you must first define a monitoring rule. Give your monitoring rule a unique name and add its detection rules to which Dynatrace will match the processes on your host.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37)",
 	"dynatrace": "1",
 	"enums": {
+		"OperatingSystem": {
+			"description": "",
+			"displayName": "Operating System",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Windows",
+					"value": "WINDOWS"
+				},
+				{
+					"displayName": "Linux",
+					"value": "LINUX"
+				},
+				{
+					"displayName": "AIX",
+					"value": "AIX"
+				}
+			],
+			"type": "enum"
+		},
 		"ProcessItem": {
 			"description": "",
 			"displayName": "ProcessItem",
@@ -25,6 +45,26 @@
 				{
 					"displayName": "Command line",
 					"value": "commandLine"
+				},
+				{
+					"displayName": "User",
+					"value": "user"
+				}
+			],
+			"type": "enum"
+		},
+		"RuleType": {
+			"description": "",
+			"displayName": "Rule scope",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Process",
+					"value": "RuleTypeProcess"
+				},
+				{
+					"displayName": "Host",
+					"value": "RuleTypeHost"
 				}
 			],
 			"type": "enum"
@@ -71,6 +111,25 @@
 			"nullable": false,
 			"type": "set"
 		},
+		"minimumProcesses": {
+			"constraints": [
+				{
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 1,
+			"description": "",
+			"displayName": "Minimum number of matching processes",
+			"documentation": "Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.287"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
 		"name": {
 			"constraints": [
 				{
@@ -90,6 +149,32 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "text"
+		},
+		"operatingSystem": {
+			"default": [
+				"AIX",
+				"LINUX",
+				"WINDOWS"
+			],
+			"description": "",
+			"displayName": "Operating system",
+			"documentation": "Select the operating systems on which the monitoring rule should be applied.",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/OperatingSystem"
+				}
+			},
+			"maxObjects": 3,
+			"metadata": {
+				"minAgentVersion": "1.287"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
 		},
 		"rules": {
 			"description": "Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.",
@@ -157,7 +242,41 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"RuleTypeProcess"
+								],
+								"property": "ruleType",
+								"type": "IN"
+							}
+						],
+						"type": "OR"
+					},
 					"type": "text"
+				},
+				"hostMetadataCondition": {
+					"description": "",
+					"displayName": "Custom metadata",
+					"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.287",
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"RuleTypeHost"
+						],
+						"property": "ruleType",
+						"type": "IN"
+					},
+					"type": {
+						"$ref": "#/types/HostMetadataCondition"
+					}
 				},
 				"property": {
 					"default": "executable",
@@ -167,12 +286,98 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValues": [
+									"RuleTypeProcess"
+								],
+								"property": "ruleType",
+								"type": "IN"
+							}
+						],
+						"type": "OR"
+					},
 					"type": {
 						"$ref": "#/enums/ProcessItem"
 					}
+				},
+				"ruleType": {
+					"default": "RuleTypeProcess",
+					"description": "",
+					"displayName": "Rule scope",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/RuleType"
+					}
 				}
 			},
-			"summaryPattern": "{property} {condition}",
+			"summaryPattern": "{ruleType}: {hostMetadataCondition}{property}{hostMetadataCondition/metadataKey} matches {condition}{hostMetadataCondition/metadataCondition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HostMetadataCondition": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataCondition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "ConditionGeneralRule",
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Condition",
+					"documentation": "This string has to match a required format.\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				},
+				"metadataKey": {
+					"constraints": [
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Custom metadata ",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -247,5 +452,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.5"
 }
