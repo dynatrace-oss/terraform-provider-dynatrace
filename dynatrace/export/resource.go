@@ -34,6 +34,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
+var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
+
 type Resource struct {
 	ID                   string
 	LegacyID             string
@@ -168,8 +170,28 @@ func (me *Resource) ReadFile() ([]byte, error) {
 	return os.ReadFile(me.GetFile())
 }
 
+const MAX_PATH_LENGTH_FILENAME_SHORTER = 240
+
 func (me *Resource) GetFileName() string {
-	return fileSystemName(fmt.Sprintf("%s.%s.tf", strings.TrimSpace(me.UniqueName), me.Type.Trim()))
+	filename := fileSystemName(fmt.Sprintf("%s.%s.tf", strings.TrimSpace(me.UniqueName), me.Type.Trim()))
+
+	if SHORTER_NAMES {
+		filename = me.getShorterFileName(filename)
+	}
+
+	return filename
+}
+
+func (me *Resource) getShorterFileName(filename string) string {
+	folderPath, err := filepath.Abs(me.Module.GetFolder())
+	if err != nil {
+		folderPath = me.Module.GetFolder()
+	}
+
+	if (len(folderPath) + len(filename)) > MAX_PATH_LENGTH_FILENAME_SHORTER {
+		filename = fileSystemName(fmt.Sprintf("%s.%s.tf", GetHashName(strings.TrimSpace(me.UniqueName)), me.Type.Trim()))
+	}
+	return filename
 }
 
 func (me *Resource) GetFile() string {

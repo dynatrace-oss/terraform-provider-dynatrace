@@ -21,7 +21,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"hash/fnv"
 	"os"
 	"os/exec"
 	"path"
@@ -1012,14 +1011,8 @@ func (me *splitFolder) closeLastFile() error {
 	return nil
 }
 
-func getHash(input string) uint32 {
-	h := fnv.New32a()
-	h.Write([]byte(input))
-	return h.Sum32()
-}
-
 func getSplitID(input string, splitCount int) int {
-	hashValue := getHash(input)
+	hashValue := GetHash32(input)
 	splitID := int(hashValue % uint32(splitCount))
 	return splitID
 }

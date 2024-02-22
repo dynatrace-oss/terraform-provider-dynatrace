@@ -82,9 +82,23 @@ func (sm *StateMap) ExtractCommonStates(smLinked *StateMap) (*StateMap, map[stri
 	namesByModule := map[string][]string{}
 
 	for key, stateResource := range sm.resources {
-		_, found := smLinked.resources[key]
+		stateResourceLinked, found := smLinked.resources[key]
 		if found {
 			commonStateMap.AddToStateMapByID(stateResource.Resource)
+
+			// Certain types of configs have a name and ID
+			// But that ID is not only a config ID, it is also an entity ID
+			// This means the ID will have changed on the second run of the Config Manager
+			// This would then break matching
+			// The terraform provider would show an Add action on new ID and Destroy on old ID, instead of Done or Change
+			linkedResourceType := ResourceType(stateResourceLinked.Resource.Type)
+			if linkedResourceType == ResourceTypes.WebApplication ||
+				linkedResourceType == ResourceTypes.MobileApplication ||
+				linkedResourceType == ResourceTypes.BrowserMonitor ||
+				linkedResourceType == ResourceTypes.HTTPMonitor {
+
+				commonStateMap.AddToStateMapByID(stateResourceLinked.Resource)
+			}
 
 			list, found := namesByModule[stateResource.Resource.Type]
 			if found {
