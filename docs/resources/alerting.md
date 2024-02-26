@@ -80,7 +80,7 @@ resource "dynatrace_alerting" "#name#" {
 
 - `filters` (Block List, Max: 1) The list of event filters.  For all filters that are *negated* inside of these event filters, that is all `Predefined` as well as `Custom` (Title and/or Description) ones the AND logic applies. For all *non-negated* ones the OR logic applies. Between these two groups, negated and non-negated, the AND logic applies.  If you specify both severity rule and event filter, the AND logic applies (see [below for nested schema](#nestedblock--filters))
 - `legacy_id` (String) The ID of this setting when referred to by the Config REST API V1
-- `management_zone` (String) The ID of the management zone to which the alerting profile applies
+- `management_zone` (String) Entities which are part of the configured management zones will match this alerting profile. It is recommended to use manual tags instead.
 - `rules` (Block List, Max: 1) A list of rules for management zone usage.  Each rule is evaluated independently of all other rules (see [below for nested schema](#nestedblock--rules))
 
 ### Read-Only
@@ -203,4 +203,4 @@ Required:
 
 Optional:
 
-- `tags` (Set of String) A set of tags you want to filter by. You can also specify a tag value alongside the tag name using the syntax `name:value`.
+- `tags` (Set of String) Entities which contain any/all of the configured tags will match this alerting profile. It is recommended to use manual tags.

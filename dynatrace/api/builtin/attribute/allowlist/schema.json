@@ -13,7 +13,7 @@
 			"customValidatorId": "attribute-allow-list-delete-validator"
 		}
 	],
-	"description": "While Dynatrace automatically captures all OpenTracing and OpenTelemetry attributes, to prevent the accidental storage of personal data, only the values of attributes for which a related key is specified in the allow-list below are persisted. This enables you to meet your privacy requirements while controlling the amount of monitoring data that's persisted. For further details on Dynatrace's privacy settings, visit the [Data privacy and security](https://dt-url.net/bo210srx) documentation.",
+	"description": "While Dynatrace automatically captures all OpenTelemetry attributes, to prevent the accidental storage of personal data, only the values of attributes for which a related key is specified in the allow-list below are persisted. This enables you to meet your privacy requirements while controlling the amount of monitoring data that's persisted. For further details on Dynatrace's privacy settings, visit the [Data privacy and security](https://dt-url.net/bo210srx) documentation.",
 	"displayName": "Allowed attributes",
 	"documentation": "",
 	"dynatrace": "1",
@@ -75,5 +75,5 @@
 	],
 	"schemaId": "builtin:attribute-allow-list",
 	"types": {},
-	"version": "0.0.5"
+	"version": "0.0.8"
 }

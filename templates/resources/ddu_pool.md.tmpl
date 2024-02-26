@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_ddu_pool Resource - terraform-provider-dynatrace"
-subcategory: "Environment Settings"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_ddu_pool` covers configuration for Davis Data Unit Pools
 ---
 
 # dynatrace_ddu_pool (Resource)
+
+!> This resource API endpoint has been deprecated.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 

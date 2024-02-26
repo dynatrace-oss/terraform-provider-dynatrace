@@ -3,7 +3,7 @@ layout: ""
 page_title: "dynatrace_iam_policy_bindings Resource - terraform-provider-dynatrace"
 subcategory: "IAM"
 description: |-
-  The resource `dynatrace_iam_policy_bindings` covers binding policies to user groups via Account Management API for SaaS Accounts
+  The resource `dynatrace_iam_policy_bindings` covers binding policies to user groups via Account Management API for SaaS Accounts. If you want to assign parameters or metadata to your policy bindings, please use `dynatrace_iam_policy_bindings_v2`
 ---
 
 # dynatrace_iam_policy_bindings (Resource)

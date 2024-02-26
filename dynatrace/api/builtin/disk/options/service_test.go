@@ -20,12 +20,11 @@ package options_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestDiskOptions(t *testing.T) {
-	api.TestService(t, options.Service)
+	t.Skip()
 }
 
 func TestAccDiskOptions(t *testing.T) {

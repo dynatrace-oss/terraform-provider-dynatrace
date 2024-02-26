@@ -49,7 +49,7 @@ type SeverityRule struct {
 	SeverityLevel        SeverityLevel        `json:"severityLevel"`        // Problem severity level
 	DelayInMinutes       int32                `json:"delayInMinutes"`       // Send a notification if a problem remains open longer than X minutes. Must be between 0 and 10000.
 	TagFilterIncludeMode TagFilterIncludeMode `json:"tagFilterIncludeMode"` // Possible values are `NONE`, `INCLUDE_ANY` and `INCLUDE_ALL`
-	Tags                 []string             `json:"tagFilter"`            // SET / no documentation available
+	Tags                 []string             `json:"tagFilter"`            // Entities which contain any/all of the configured tags will match this alerting profile. It is recommended to use manual tags.
 }
 
 func (me *SeverityRule) Schema() map[string]*schema.Schema {
@@ -71,7 +71,7 @@ func (me *SeverityRule) Schema() map[string]*schema.Schema {
 		},
 		"tags": {
 			Type:        schema.TypeSet,
-			Description: "A set of tags you want to filter by. You can also specify a tag value alongside the tag name using the syntax `name:value`.",
+			Description: "Entities which contain any/all of the configured tags will match this alerting profile. It is recommended to use manual tags.",
 			MinItems:    1,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},

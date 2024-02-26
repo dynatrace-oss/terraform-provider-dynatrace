@@ -77,6 +77,6 @@ Required:
 
 Optional:
 
-- `dimensions` (Set of String) a list of metric's dimensions names
+- `dimensions` (List of String) a list of metric's dimensions names
 - `statistic` (String) Possible values are `AVERAGE`, `AVG_MIN_MAX`, `MAXIMUM`, `MINIMUM`, `SAMPLE_COUNT` and `SUM`
  

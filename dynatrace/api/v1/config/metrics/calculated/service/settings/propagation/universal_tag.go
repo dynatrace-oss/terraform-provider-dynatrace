@@ -100,10 +100,10 @@ func (me *UniversalTag) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return properties.UnmarshalAll(map[string]any{
-		"key":     me.Key,
-		"value":   me.Value,
-		"tagKey":  me.TagKey,
-		"context": me.Context,
+		"key":     &me.Key,
+		"value":   &me.Value,
+		"tagKey":  &me.TagKey,
+		"context": &me.Context,
 	})
 }
 

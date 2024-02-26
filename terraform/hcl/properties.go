@@ -181,6 +181,12 @@ func (me Properties) Encode(key string, v any) error {
 		} else {
 			me[key] = nil
 		}
+	case map[string]string:
+		if len(t) > 0 {
+			me[key] = t
+		} else {
+			me[key] = nil
+		}
 	case []string, []int, []int8, []int16, []int32, []int64, []uint, []uint8, []uint16, []uint32, []uint64, []float32, []float64, []bool:
 		me.setPrimitiveSlice(key, t)
 	case string:

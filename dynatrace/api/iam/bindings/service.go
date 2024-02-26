@@ -135,7 +135,7 @@ func (me *BindingServiceClient) List() (api.Stubs, error) {
 	var responseBytes []byte
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -144,7 +144,7 @@ func (me *BindingServiceClient) List() (api.Stubs, error) {
 		return nil, err
 	}
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 

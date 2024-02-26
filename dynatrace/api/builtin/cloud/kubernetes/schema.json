@@ -5,6 +5,7 @@
 	"constraints": [
 		{
 			"checkAllProperties": false,
+			"customMessage": "For security reasons, please re-enter all secret token(s) before saving the settings.",
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
@@ -162,6 +163,11 @@
 					"type": "NOT_BLANK"
 				},
 				{
+					"customMessage": "Kubernetes API URL Target must not contain the characters '?' or '#'.",
+					"customValidatorId": "kubernetes-valid-endpoint-url",
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
 					"customMessage": "Not a valid URI",
 					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
 					"type": "PATTERN"
@@ -181,6 +187,7 @@
 			"description": "Get the API URL for [Kubernetes](https://dt-url.net/kz23snj \"Kubernetes\") or [OpenShift](https://dt-url.net/d623xgw \"OpenShift\").",
 			"displayName": "Kubernetes API URL Target",
 			"documentation": "",
+			"forceSecretResubmission": true,
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -267,5 +274,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.0.1"
+	"version": "3.1"
 }

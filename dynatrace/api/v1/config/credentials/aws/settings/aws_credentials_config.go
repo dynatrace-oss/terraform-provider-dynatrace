@@ -71,13 +71,11 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 			},
 		},
 		"tags_to_monitor": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "AWS tags to be monitored. You can specify up to 10 tags. Only applicable when the **tagged_only** parameter is set to `true`",
 			Optional:    true,
 			MaxItems:    10,
-			Elem: &schema.Resource{
-				Schema: new(AWSConfigTag).Schema(),
-			},
+			Elem:        &schema.Resource{Schema: new(AWSConfigTag).Schema()},
 		},
 		"supporting_services_to_monitor": {
 			Type:             schema.TypeSet,
@@ -291,16 +289,19 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("partition_type"); ok {
 		awscc.PartitionType = PartitionType(value.(string))
 	}
-	if result, ok := decoder.GetOk("tags_to_monitor.#"); ok {
-		awscc.TagsToMonitor = []*AWSConfigTag{}
-		for idx := 0; idx < result.(int); idx++ {
-			entry := new(AWSConfigTag)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "tags_to_monitor", idx)); err != nil {
-				return err
-			}
-			awscc.TagsToMonitor = append(awscc.TagsToMonitor, entry)
-		}
+	if err := decoder.DecodeSlice("tags_to_monitor", &awscc.TagsToMonitor); err != nil {
+		return err
 	}
+	// if result, ok := decoder.GetOk("tags_to_monitor.#"); ok {
+	// 	awscc.TagsToMonitor = []*AWSConfigTag{}
+	// 	for idx := 0; idx < result.(int); idx++ {
+	// 		entry := new(AWSConfigTag)
+	// 		if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "tags_to_monitor", idx)); err != nil {
+	// 			return err
+	// 		}
+	// 		awscc.TagsToMonitor = append(awscc.TagsToMonitor, entry)
+	// 	}
+	// }
 	if value, ok := decoder.GetOk("remove_defaults"); ok {
 		awscc.RemoveDefaults = value.(bool)
 	}

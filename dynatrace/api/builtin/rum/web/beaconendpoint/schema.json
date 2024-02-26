@@ -1,0 +1,100 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"description": "Define where OneAgent is to send your web application monitoring data.\nLearn more about how to [configure the beacon endpoint](https://dt-url.net/yp036lb).",
+	"displayName": "Beacon endpoint settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"WebBeaconEndpointType": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Default settings",
+					"value": "DEFAULT_CONFIG"
+				},
+				{
+					"displayName": "Cluster ActiveGate",
+					"value": "ACTIVEGATE"
+				},
+				{
+					"displayName": "OneAgent",
+					"value": "ONEAGENT"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"type": {
+			"default": "DEFAULT_CONFIG",
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/WebBeaconEndpointType"
+			}
+		},
+		"url": {
+			"constraints": [
+				{
+					"maxLength": 512,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The beacon endpoint URL must be either absolute, root-relative or relative and must not contain a query string or a fragment",
+					"customValidatorId": "rumBeaconEndpointSettingsUrlValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "You can specify either path segments or an absolute URL.",
+			"displayName": "URL",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": ""
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ONEAGENT",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"useCors": {
+			"default": false,
+			"description": "",
+			"displayName": "Send beacon data via CORS",
+			"documentation": "Learn more about [sending beacon data via CORS](https://dt-url.net/r7038sa)",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "ONEAGENT",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:rum-settings"
+	],
+	"schemaId": "builtin:rum.web.beacon-endpoint",
+	"types": {},
+	"version": "1"
+}

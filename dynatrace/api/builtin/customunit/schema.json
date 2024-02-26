@@ -67,8 +67,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Only uppercase and lowercase letters are allowed in units.",
-					"pattern": "^[a-zA-Z]+$",
+					"customMessage": "Only uppercase and lowercase letters, digits and characters %, [, ], {, }, / and _ are allowed in units.",
+					"pattern": "^[a-zA-Z0-9%\\[\\]{}/_]+$",
 					"type": "PATTERN"
 				}
 			],
@@ -92,8 +92,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Only uppercase and lowercase letters are allowed in units.",
-					"pattern": "^[a-zA-Z]+$",
+					"customMessage": "Only uppercase and lowercase letters, digits and characters %, [, ], {, }, / and _ are allowed in units.",
+					"pattern": "^[a-zA-Z0-9%\\[\\]{}/_]+$",
 					"type": "PATTERN"
 				}
 			],
@@ -117,8 +117,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Only uppercase and lowercase letters, as well as / and ^ symbols are allowed in units.",
-					"pattern": "^[a-zA-Z][a-zA-Z\\/\\^]*$",
+					"customMessage": "Only uppercase and lowercase letters, digits and characters %, [, ], {, }, / and _ are allowed in unit symbols.",
+					"pattern": "^[a-zA-Z0-9%\\[\\]{}/_]+$",
 					"type": "PATTERN"
 				}
 			],
@@ -132,10 +132,36 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Unit names have to be unique (case-insensitive).",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"newUnitName"
+			]
+		},
+		{
+			"customMessage": "Unit symbols have to be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"newUnitSymbol"
+			]
+		},
+		{
+			"customMessage": "Unit names have to be unique (case-insensitive).",
+			"customValidatorId": "unique-unit-name-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Unit symbols have to be unique.",
+			"customValidatorId": "unique-unit-symbol-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:metrics"
 	],
 	"schemaId": "builtin:custom-unit",
 	"types": {},
-	"version": "0.3"
+	"version": "0.5"
 }

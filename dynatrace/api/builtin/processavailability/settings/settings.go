@@ -23,11 +23,13 @@ import (
 )
 
 type Settings struct {
-	Enabled  bool                `json:"enabled"`            // This setting is enabled (`true`) or disabled (`false`)
-	Metadata MetadataItems       `json:"metadata,omitempty"` // Set of additional key-value properties to be attached to the triggered event.
-	Name     string              `json:"name"`               // Monitored rule name
-	Rules    DetectionConditions `json:"rules,omitempty"`    // Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.
-	Scope    *string             `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Enabled          bool                `json:"enabled"`            // This setting is enabled (`true`) or disabled (`false`)
+	Metadata         MetadataItems       `json:"metadata,omitempty"` // Set of additional key-value properties to be attached to the triggered event.
+	Name             string              `json:"name"`               // Monitored rule name
+	Rules            DetectionConditions `json:"rules,omitempty"`    // Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.
+	Scope            *string             `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	MinimumProcesses int                 `json:"minimumProcesses"`   // Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
+	OperatingSystem  []OperatingSystem   `json:"operatingSystem"`    // Select the operating systems on which the monitoring rule should be applied.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -65,25 +67,60 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"minimum_processes": {
+			Type:        schema.TypeInt,
+			Description: "Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.",
+			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				// minimum_processes was introduced in v286 as a required field, added code below to have successful results for old/new tenants.
+				return newValue == "0"
+			},
+			// Default: 1,
+		},
+		"operating_system": {
+			Type:        schema.TypeSet,
+			Description: "Select the operating systems on which the monitoring rule should be applied.",
+			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				// operating_system was introduced in v286 as a required field, added code below to have successful results for old/new tenants.
+				if newValue == "0" || newValue == "" {
+					return true
+				}
+				return false
+			},
+			Elem: &schema.Schema{Type: schema.TypeString},
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":  me.Enabled,
-		"metadata": me.Metadata,
-		"name":     me.Name,
-		"rules":    me.Rules,
-		"scope":    me.Scope,
+		"enabled":           me.Enabled,
+		"metadata":          me.Metadata,
+		"name":              me.Name,
+		"rules":             me.Rules,
+		"scope":             me.Scope,
+		"minimum_processes": me.MinimumProcesses,
+		"operating_system":  me.OperatingSystem,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"enabled":  &me.Enabled,
-		"metadata": &me.Metadata,
-		"name":     &me.Name,
-		"rules":    &me.Rules,
-		"scope":    &me.Scope,
+	err := decoder.DecodeAll(map[string]any{
+		"enabled":           &me.Enabled,
+		"metadata":          &me.Metadata,
+		"name":              &me.Name,
+		"rules":             &me.Rules,
+		"scope":             &me.Scope,
+		"minimum_processes": &me.MinimumProcesses,
+		"operating_system":  &me.OperatingSystem,
 	})
+	// MinimumProcesses and OperatingSystem were introduced in v286 as required fields, added code below to have successful results for old/new tenants.
+	if me.MinimumProcesses == 0 {
+		me.MinimumProcesses = 1
+	}
+	if len(me.OperatingSystem) == 0 {
+		me.OperatingSystem = []OperatingSystem{"AIX", "LINUX", "WINDOWS"}
+	}
+	return err
 }

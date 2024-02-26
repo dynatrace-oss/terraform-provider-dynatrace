@@ -54,6 +54,8 @@ resource "dynatrace_process_availability" "#name#" {
 ### Optional
 
 - `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--metadata))
+- `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
+- `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied.
 - `rules` (Block List, Max: 1) Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--rules))
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
@@ -88,7 +90,7 @@ Required:
 <a id="nestedblock--rules--rule"></a>
 ### Nested Schema for `rules.rule`
 
-Required:
+Optional:
 
 - `condition` (String) - $contains(svc) – Matches if svc appears anywhere in the process property value.
 - $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.
@@ -98,5 +100,31 @@ Required:
 For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
 
 For more details, see [Process availability](https://dt-url.net/v923x37).
-- `property` (String) Possible Values: `Executable`, `ExecutablePath`, `CommandLine`
+- `host_metadata_condition` (Block List, Max: 1) Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
+
+By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
+
+See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw). (see [below for nested schema](#nestedblock--rules--rule--host_metadata_condition))
+- `property` (String) Possible Values: `CommandLine`, `Executable`, `ExecutablePath`, `User`
+- `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeProcess`
+
+<a id="nestedblock--rules--rule--host_metadata_condition"></a>
+### Nested Schema for `rules.rule.host_metadata_condition`
+
+Required:
+
+- `metadata_condition` (String) This string has to match a required format.
+
+- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
+- `$eq(production)` – Matches if `production` matches the host metadata value exactly.
+- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
+- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.
+
+Available logic operations:
+- `$not($eq(production))` – Matches if the host metadata value is different from `production`.
+- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
+- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+
+Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
+- `metadata_key` (String) Key
  

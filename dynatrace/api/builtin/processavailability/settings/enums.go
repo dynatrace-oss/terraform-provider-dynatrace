@@ -17,14 +17,38 @@
 
 package processavailability
 
+type OperatingSystem string
+
+var OperatingSystems = struct {
+	Aix     OperatingSystem
+	Linux   OperatingSystem
+	Windows OperatingSystem
+}{
+	"AIX",
+	"LINUX",
+	"WINDOWS",
+}
+
 type ProcessItem string
 
 var ProcessItems = struct {
 	Commandline    ProcessItem
 	Executable     ProcessItem
 	Executablepath ProcessItem
+	User           ProcessItem
 }{
-	"CommandLine",
-	"Executable",
-	"ExecutablePath",
+	"commandLine",
+	"executable",
+	"executablePath",
+	"user",
+}
+
+type RuleType string
+
+var RuleTypes = struct {
+	Ruletypehost    RuleType
+	Ruletypeprocess RuleType
+}{
+	"RuleTypeHost",
+	"RuleTypeProcess",
 }

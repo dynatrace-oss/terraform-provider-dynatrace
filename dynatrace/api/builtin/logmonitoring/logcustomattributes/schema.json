@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Dynatrace log monitoring gives you the ability to define custom attributes for log data that is ingested. Custom log attributes are extracted from the log data during log data ingestion and become available within Dynatrace. You can use these attributes as filters in the log viewer, as dimensions while creating log metrics, and as properties while creating log events.",
+	"description": "Dynatrace log monitoring gives you the ability to define custom attributes for ingested logs.",
 	"displayName": "Log custom attributes",
 	"documentation": "",
 	"dynatrace": "1",
@@ -32,14 +32,13 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Key may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-'), dots ('.') and colons (':'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
-					"pattern": "^[.:a-z0-9_\\-]+$",
-					"type": "PATTERN"
-				},
-				{
 					"customMessage": "A hyphen cannot be the first character of a part.",
 					"pattern": "^((?!\\.-).)+$",
 					"type": "PATTERN"
+				},
+				{
+					"customValidatorId": "attribute-key-pattern-with-case-sensitivity-validator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "attribute-key-allowed-validator",
@@ -79,5 +78,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-custom-attributes",
 	"types": {},
-	"version": "1.0.12"
+	"version": "1.0.13"
 }

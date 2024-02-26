@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.2.7"
+const SchemaVersion = "1.2.9"
 const SchemaID = "builtin:disk.options"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*options.Settings] {
