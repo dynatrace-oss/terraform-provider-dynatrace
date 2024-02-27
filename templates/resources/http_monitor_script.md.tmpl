@@ -1,0 +1,32 @@
+---
+layout: ""
+page_title: dynatrace_http_monitor_script Resource - terraform-provider-dynatrace"
+subcategory: "HTTP Monitors"
+description: |-
+  The resource `dynatrace_http_monitor_script` covers configuration for HTTP monitor scripts
+---
+
+# dynatrace_http_monitor_script (Resource)
+
+-> This resource allows you to manage the script of your HTTP monitor separately from the `dynatrace_http_monitor` resource. To utilize this resource, please omit the `script` block and set `no_script=true` in your `dynatrace_http_monitor` resource.
+
+-> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+
+## Dynatrace Documentation
+
+- Synthetic Monitoring - HTTP monitors - https://www.dynatrace.com/support/help/shortlink/synthetic-hub#http-monitors
+
+- Synthetic Monitors API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/synthetic/synthetic-monitors
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_http_monitor_script` downloads all existing HTTP monitor script configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/v1/config/synthetic/monitors/http/script/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

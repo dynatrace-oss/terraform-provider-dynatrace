@@ -140,6 +140,7 @@ var ResourceTypes = struct {
 	RequestNaming                       ResourceType
 	BrowserMonitor                      ResourceType
 	HTTPMonitor                         ResourceType
+	HTTPMonitorScript                   ResourceType
 	DashboardSharing                    ResourceType
 	ApplicationDetection                ResourceType
 	ApplicationErrorRules               ResourceType
@@ -416,6 +417,7 @@ var ResourceTypes = struct {
 	"dynatrace_request_naming",
 	"dynatrace_browser_monitor",
 	"dynatrace_http_monitor",
+	"dynatrace_http_monitor_script",
 	"dynatrace_dashboard_sharing",
 	"dynatrace_application_detection_rule",
 	"dynatrace_application_error_rules",

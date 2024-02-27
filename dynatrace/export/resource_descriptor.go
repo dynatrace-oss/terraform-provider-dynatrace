@@ -297,6 +297,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
+	httpscript "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/script"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault"
 
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
@@ -1164,6 +1165,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppInjectionCookie: NewResourceDescriptor(
 		webappinjectioncookie.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.HTTPMonitorScript: NewResourceDescriptor(
+		httpscript.Service,
+		Dependencies.ID(ResourceTypes.HTTPMonitor),
 	),
 }
 

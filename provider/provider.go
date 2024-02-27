@@ -502,6 +502,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_beacon_endpoint":            resources.NewGeneric(export.ResourceTypes.WebAppBeaconEndpoint).Resource(),
 			"dynatrace_web_app_custom_config_properties":   resources.NewGeneric(export.ResourceTypes.WebAppCustomConfigProperties).Resource(),
 			"dynatrace_web_app_injection_cookie":           resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
+			"dynatrace_http_monitor_script":                resources.NewGeneric(export.ResourceTypes.HTTPMonitorScript).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
