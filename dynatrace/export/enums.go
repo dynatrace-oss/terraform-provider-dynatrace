@@ -354,6 +354,7 @@ var ResourceTypes = struct {
 	WebAppBeaconEndpoint                ResourceType
 	WebAppCustomConfigProperties        ResourceType
 	WebAppInjectionCookie               ResourceType
+	UserGroup                           ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -631,6 +632,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_beacon_endpoint",
 	"dynatrace_web_app_custom_config_properties",
 	"dynatrace_web_app_injection_cookie",
+	"dynatrace_user_group",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

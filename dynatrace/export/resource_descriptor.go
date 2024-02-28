@@ -236,6 +236,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onpremusergroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -1170,6 +1171,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		httpscript.Service,
 		Dependencies.ID(ResourceTypes.HTTPMonitor),
 	),
+	ResourceTypes.UserGroup: NewResourceDescriptor(onpremusergroups.Service),
 }
 
 var BlackListedResources = []ResourceType{
