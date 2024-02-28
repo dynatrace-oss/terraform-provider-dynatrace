@@ -47,6 +47,7 @@ func (me *AnonymousAccess) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeMap,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Computed:    true,
+			Optional:    true,
 			Description: "A list of URLs for anonymous access to the dashboard indexed by management zone name",
 		},
 	}
