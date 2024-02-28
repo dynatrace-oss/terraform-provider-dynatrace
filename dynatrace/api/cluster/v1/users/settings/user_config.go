@@ -15,6 +15,10 @@ type UserConfig struct {
 	Groups    []string `json:"groups,omitempty"` // List of user's user group IDs
 }
 
+func (me *UserConfig) Name() string {
+	return me.UserName
+}
+
 func (me *UserConfig) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"user_name": {

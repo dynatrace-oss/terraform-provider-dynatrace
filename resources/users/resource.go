@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
+	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -35,7 +36,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        new(users.UserConfig).Schema(),
+		Schema:        new(settings.UserConfig).Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -56,7 +57,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(users.UserConfig)
+	config := new(settings.UserConfig)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -64,7 +65,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(objStub.UserName)
+	d.SetId(objStub.ID)
 	return Read(ctx, d, m)
 }
 
@@ -74,7 +75,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(users.UserConfig)
+	config := new(settings.UserConfig)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -91,8 +92,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config, err := NewService(m).Get(d.Id())
-	if err != nil {
+	var config settings.UserConfig
+	if err := NewService(m).Get(d.Id(), &config); err != nil {
 		if strings.HasSuffix(err.Error(), " doesn't exist") {
 			errMsg := fmt.Sprintf("The user '%s' doesn't exist. Perhaps it has been deleted manually. You should remove it from your state using 'terraform state rm'.", d.Id())
 			err = errors.New(errMsg)
