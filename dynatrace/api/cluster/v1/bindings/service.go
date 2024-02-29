@@ -8,18 +8,59 @@ import (
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
+
+const SchemaID = "accounts:policy-bindings"
+
+func Service(credentials *settings.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+	return &service{
+		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/cluster/v2"), credentials.Cluster.Token),
+	}
+}
 
 type BindingServiceClient struct {
 	client rest.Client
+}
+
+func (me *service) Create(v *bindings.PolicyBinding) (*api.Stub, error) {
+	return me.serviceClient.Create(v)
+}
+
+func (me *service) Update(id string, v *bindings.PolicyBinding) error {
+	return me.serviceClient.Update(id, v)
+}
+
+func (me *service) Delete(id string) error {
+	return me.serviceClient.Delete(id)
+}
+
+func (me *service) List() (api.Stubs, error) {
+	return me.serviceClient.List()
+}
+
+func (me *service) Get(id string, v *bindings.PolicyBinding) error {
+	return me.serviceClient.Get(id, v)
+}
+
+func (me *service) Name() string {
+	return me.SchemaID()
+}
+
+func (me *service) SchemaID() string {
+	return SchemaID
 }
 
 func NewPolicyService(baseURL string, apiToken string) *BindingServiceClient {
 	return &BindingServiceClient{client: rest.DefaultClient(baseURL, apiToken)}
 }
 
+type service struct {
+	serviceClient *BindingServiceClient
+}
+
 func (me *BindingServiceClient) SchemaID() string {
-	return "accounts:policy-bindings"
+	return SchemaID
 }
 
 type PolicyCreateResponse struct {
@@ -83,7 +124,65 @@ func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBindi
 }
 
 func (me *BindingServiceClient) List() (api.Stubs, error) {
-	return api.Stubs{}, nil
+	var err error
+	var stubs api.Stubs
+
+	clusterInfoResponse := struct {
+		ClusterUUID string `json:"clusterUuid"`
+	}{}
+	if err = me.client.Get("/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
+		return stubs, err
+	}
+	bindingsResponse := struct {
+		PolicyBindings []struct {
+			PolicyUUID string   `json:"policyUuid"`
+			Groups     []string `json:"groups"`
+		} `json:"policyBindings"`
+	}{}
+	if err = me.client.Get(fmt.Sprintf("/iam/repo/cluster/%s/bindings", clusterInfoResponse.ClusterUUID), 200).Finish(&bindingsResponse); err != nil {
+		return stubs, err
+	}
+	bindingsMap := map[string]bool{}
+	for _, bindings := range bindingsResponse.PolicyBindings {
+		for _, group := range bindings.Groups {
+			joinedId := fmt.Sprintf("%s#-#%s#-#%s", group, "cluster", clusterInfoResponse.ClusterUUID)
+			if _, exists := bindingsMap[joinedId]; !exists {
+				stubs = append(stubs, &api.Stub{ID: joinedId, Name: joinedId})
+				bindingsMap[joinedId] = true
+			}
+		}
+	}
+
+	environmentsResponse := struct {
+		Environments []struct {
+			ID string `json:"id"`
+		} `json:"environments"`
+	}{}
+	if err = me.client.Get("/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
+		return stubs, err
+	}
+	for _, environment := range environmentsResponse.Environments {
+		bindingsResponse := struct {
+			PolicyBindings []struct {
+				PolicyUUID string   `json:"policyUuid"`
+				Groups     []string `json:"groups"`
+			} `json:"policyBindings"`
+		}{}
+		if err = me.client.Get(fmt.Sprintf("/iam/repo/environment/%s/bindings", environment.ID), 200).Finish(&bindingsResponse); err != nil {
+			return stubs, err
+		}
+		for _, bindings := range bindingsResponse.PolicyBindings {
+			for _, group := range bindings.Groups {
+				joinedId := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environment.ID)
+				if _, exists := bindingsMap[joinedId]; !exists {
+					stubs = append(stubs, &api.Stub{ID: joinedId, Name: joinedId})
+					bindingsMap[joinedId] = true
+				}
+			}
+		}
+	}
+
+	return stubs, nil
 }
 
 func (me *BindingServiceClient) Delete(id string) error {

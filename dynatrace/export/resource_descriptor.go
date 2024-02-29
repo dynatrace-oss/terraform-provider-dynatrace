@@ -236,6 +236,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onprempolicybindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings"
 	onpremusergroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
@@ -1176,6 +1177,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.User: NewResourceDescriptor(
 		onpremusers.Service,
 		Dependencies.ID(ResourceTypes.UserGroup),
+	),
+	ResourceTypes.PolicyBinding: NewResourceDescriptor(
+		onprempolicybindings.Service,
+		Dependencies.ID(ResourceTypes.Policy),
 	),
 }
 

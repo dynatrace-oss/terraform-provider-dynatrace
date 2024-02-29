@@ -356,6 +356,7 @@ var ResourceTypes = struct {
 	WebAppInjectionCookie               ResourceType
 	UserGroup                           ResourceType
 	User                                ResourceType
+	PolicyBinding                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -635,6 +636,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_injection_cookie",
 	"dynatrace_user_group",
 	"dynatrace_user",
+	"dynatrace_policy_bindings",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
