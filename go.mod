@@ -1,6 +1,6 @@
 module github.com/dynatrace-oss/terraform-provider-dynatrace
 
-go 1.21
+go 1.22
 
 require (
 	github.com/dlclark/regexp2 v1.11.0
