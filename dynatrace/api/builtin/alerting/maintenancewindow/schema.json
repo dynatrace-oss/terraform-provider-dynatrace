@@ -260,9 +260,9 @@
 					"type": "text"
 				},
 				"entityTags": {
-					"description": "Entities which contain all of the configured tags will match this maintenance window.",
+					"description": "Entities which contain all of the configured tags will match this maintenance window. It is recommended to use manual tags.",
 					"displayName": "Entity tags",
-					"documentation": "",
+					"documentation": "**Note:** Automatically applied tags may experience delays or inconsistencies due to rule complexity and attribute variability. Entities may not be immediately tagged, impacting filter effectiveness.\n\nIt is recommended to use manual tags instead.\n\nFor more information, visit our [best practices for tagging documentation page](https://dt-url.net/8203d4x).",
 					"items": {
 						"constraints": [
 							{
@@ -316,9 +316,9 @@
 					"type": "text"
 				},
 				"managementZones": {
-					"description": "Entities which are part of all the configured management zones will match this maintenance window.",
+					"description": "Entities which are part of all the configured management zones will match this maintenance window. It is recommended to use manual tags instead.",
 					"displayName": "Management zones",
-					"documentation": "",
+					"documentation": "**Note:** Management zones may experience delays or inconsistencies due to rule complexity and attribute variability. Entities may not be immediately assigned to management zones, impacting filter effectiveness.\n\nIt is recommended to use manual tags instead.\n\nFor more information, visit our [best practices for management zones documentation page](https://dt-url.net/8203d4x).",
 					"items": {
 						"constraints": [
 							{
@@ -815,5 +815,5 @@
 			]
 		}
 	},
-	"version": "2.14.4"
+	"version": "2.14.5"
 }

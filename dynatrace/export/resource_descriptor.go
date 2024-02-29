@@ -61,6 +61,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
+	kubernetesapp "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apptransition/kubernetes"
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
@@ -100,6 +101,8 @@ import (
 	networktraffic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
+	grailmetricsallowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall"
+	grailmetricsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowlist"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostmonitoringadvanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
@@ -192,9 +195,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
+	webappbeaconendpoint "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beaconendpoint"
+	webappcustomconfigproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties"
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customrumjavascriptversion"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
+	webappinjectioncookie "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/injection/cookie"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/customactions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/loadactions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/xhractions"
@@ -230,11 +236,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onpremusergroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
+	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
+	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
 	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
@@ -289,6 +299,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
+	httpscript "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/script"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault"
 
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
@@ -655,10 +666,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.IAMPermission),
 		Dependencies.Tenant,
 	),
-	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
-	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
-	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
-	ResourceTypes.DDUPool:           NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMPermission:       NewResourceDescriptor(permissions.Service),
+	ResourceTypes.IAMPolicy:           NewResourceDescriptor(policies.Service),
+	ResourceTypes.IAMPolicyBindings:   NewResourceDescriptor(bindings.Service),
+	ResourceTypes.IAMPolicyBindingsV2: NewResourceDescriptor(v2bindings.Service),
+	ResourceTypes.DDUPool:             NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -1137,6 +1149,34 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SiteReliabilityGuardian: NewResourceDescriptor(sitereliabilityguardian.Service),
 	ResourceTypes.JiraForWorkflows:        NewResourceDescriptor(jiraconnection.Service),
 	ResourceTypes.SlackForWorkflows:       NewResourceDescriptor(slackconnection.Service),
+	ResourceTypes.Policy:                  NewResourceDescriptor(onprempolicies.Service),
+	ResourceTypes.KubernetesApp: NewResourceDescriptor(
+		kubernetesapp.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.GrailMetricsAllowall:  NewResourceDescriptor(grailmetricsallowall.Service),
+	ResourceTypes.GrailMetricsAllowlist: NewResourceDescriptor(grailmetricsallowlist.Service),
+	ResourceTypes.WebAppBeaconEndpoint: NewResourceDescriptor(
+		webappbeaconendpoint.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.WebAppCustomConfigProperties: NewResourceDescriptor(
+		webappcustomconfigproperties.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.WebAppInjectionCookie: NewResourceDescriptor(
+		webappinjectioncookie.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.HTTPMonitorScript: NewResourceDescriptor(
+		httpscript.Service,
+		Dependencies.ID(ResourceTypes.HTTPMonitor),
+	),
+	ResourceTypes.UserGroup: NewResourceDescriptor(onpremusergroups.Service),
+	ResourceTypes.User: NewResourceDescriptor(
+		onpremusers.Service,
+		Dependencies.ID(ResourceTypes.UserGroup),
+	),
 }
 
 var BlackListedResources = []ResourceType{
@@ -1176,6 +1216,10 @@ var BlackListedResources = []ResourceType{
 	ResourceTypes.IAMPermission,
 	ResourceTypes.IAMPolicy,
 	ResourceTypes.IAMPolicyBindings,
+	ResourceTypes.IAMPolicyBindingsV2,
+
+	// Cluster Resources
+	ResourceTypes.Policy,
 
 	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard

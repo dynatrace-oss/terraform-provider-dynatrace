@@ -106,6 +106,10 @@
 				{
 					"maxLength": 1024,
 					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "logMonitoringSensitiveDataMaskingRuleNameValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
@@ -126,7 +130,7 @@
 			"displayName": "Active",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
+			"modificationPolicy": "ALWAYS",
 			"nullable": false,
 			"type": "boolean"
 		},
@@ -343,6 +347,7 @@
 			"columns": [
 				{
 					"displayName": "Masking type",
+					"id": "maskingType",
 					"propertyRef": "masking/type"
 				}
 			],
@@ -351,5 +356,5 @@
 			}
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

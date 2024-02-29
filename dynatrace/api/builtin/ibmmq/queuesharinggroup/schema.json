@@ -83,7 +83,7 @@
 				"documentation": "",
 				"type": "text"
 			},
-			"maxObjects": 1000,
+			"maxObjects": 3000,
 			"metadata": {
 				"addItemButton": "Add shared queue"
 			},
@@ -93,10 +93,19 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Queue sharing group name must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:mainframe"
 	],
 	"schemaId": "builtin:ibmmq.queue-sharing-group",
 	"types": {},
-	"version": "0.0.6"
+	"version": "1.0.1"
 }

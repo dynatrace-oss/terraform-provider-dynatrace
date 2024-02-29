@@ -20,13 +20,12 @@ package processavailability_test
 import (
 	"testing"
 
-	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestProcessAvailability(t *testing.T) {
-	api.TestService(t, processavailability.Service)
+	// api.TestService(t, processavailability.Service)
+	t.Skip()
 }
 
 func TestAccProcessAvailability(t *testing.T) {

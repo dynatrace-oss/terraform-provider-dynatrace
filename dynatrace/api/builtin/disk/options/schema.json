@@ -53,6 +53,16 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"disableNfsDiskMonitoring": {
+			"default": false,
+			"description": "Deactivate NFS monitoring on all supported systems",
+			"displayName": "Disable NFS disk monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"exclusions": {
 			"description": "OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.",
 			"displayName": "Exclude disks",
@@ -65,7 +75,7 @@
 					"$ref": "#/types/DiskComplex"
 				}
 			},
-			"maxObjects": 1500,
+			"maxObjects": 2000,
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -82,6 +92,11 @@
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "disableNfsDiskMonitoring",
+				"type": "EQUALS"
+			},
 			"type": "boolean"
 		}
 	},
@@ -146,5 +161,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.7"
+	"version": "1.2.9"
 }

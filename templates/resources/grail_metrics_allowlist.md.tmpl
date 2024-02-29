@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_grail_metrics_allowlist Resource - terraform-provider-dynatrace"
+subcategory: "Platform"
+description: |-
+  The resource `dynatrace_grail_metrics_allowlist` covers allow list configuration of custom metric ingestion to Grail
+---
+
+# dynatrace_grail_metrics_allowlist (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Grail - https://docs.dynatrace.com/docs/platform/grail
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:grail.metrics.allow-list`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_grail_metrics_allowlist` downloads existing grail metrics configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/grail/metrics/allowlist/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

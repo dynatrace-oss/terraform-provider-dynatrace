@@ -49,6 +49,8 @@ func (me *resourceEntry) IsLessThan(other exportEntry) bool {
 	switch ro := other.(type) {
 	case *primitiveEntry:
 		return false
+	case *stringMapEntry:
+		return false
 	case *resourceEntry:
 		return strings.Compare(me.Key, ro.Key) < 0
 	}

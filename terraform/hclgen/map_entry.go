@@ -48,6 +48,8 @@ func (me *mapEntry) IsLessThan(other exportEntry) bool {
 	switch ro := other.(type) {
 	case *primitiveEntry:
 		return false
+	case *stringMapEntry:
+		return strings.Compare(me.Key, ro.Key) < 0
 	case *resourceEntry:
 		return strings.Compare(me.Key, ro.Key) < 0
 	case *mapEntry:
@@ -66,25 +68,5 @@ func (me *mapEntry) Write(w *hclwrite.Body, indent string) error {
 
 	tokens := hclwrite.TokensForObject(objTokens)
 	w.SetAttributeRaw(me.Key, tokens)
-	// block := w.AppendNewBlock(me.Key, nil)
-	// body := block.Body()
-
-	// sort.SliceStable(me.Entries, me.Entries.Less)
-	// for _, entry := range me.Entries {
-	// 	if !entry.IsComputed() {
-	// 		if !(entry.IsOptional() && entry.IsDefault()) {
-	// 			if err := entry.Write(body, indent+"  "); err != nil {
-	// 				return err
-	// 			}
-	// 		} else {
-	// 			body.AppendUnstructuredTokens(hclwrite.Tokens{
-	// 				&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
-	// 			})
-	// 			if err := entry.Write(body, indent+"  "); err != nil {
-	// 				return err
-	// 			}
-	// 		}
-	// 	}
-	// }
 	return nil
 }

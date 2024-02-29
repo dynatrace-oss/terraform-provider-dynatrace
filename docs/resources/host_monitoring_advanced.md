@@ -28,6 +28,7 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_host_monitoring_advanced" "#name#" {
   host_id        = "HOST-1234567890000000"
   process_agent_injection     = true
+  code_module_injection = true
 }
 ```
 
@@ -38,6 +39,10 @@ resource "dynatrace_host_monitoring_advanced" "#name#" {
 
 - `host_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `process_agent_injection` (Boolean) Disabling this via [oneagentctl](https://dt-url.net/oneagentctl) takes precedence over this setting and cannot be changed from the Dynatrace web UI.
+
+### Optional
+
+- `code_module_injection` (Boolean) Inject CodeModules in Discovery mode.
 
 ### Read-Only
 

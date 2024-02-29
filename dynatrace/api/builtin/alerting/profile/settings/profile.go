@@ -33,7 +33,7 @@ import (
 type Profile struct {
 	ID             string        `json:"-"`
 	Name           string        `json:"name"`                   // The name of the Alerting Profile
-	ManagementZone *string       `json:"managementZone"`         // Define management zone filter for profile
+	ManagementZone *string       `json:"managementZone"`         // Entities which are part of the configured management zones will match this alerting profile. It is recommended to use manual tags instead.
 	SeverityRules  SeverityRules `json:"severityRules"`          // Define severity rules for profile. A maximum of 100 severity rules is allowed.
 	EventFilters   EventFilters  `json:"eventFilters,omitempty"` // Define event filters for profile. A maximum of 100 event filters is allowed.
 	LegacyID       *string       `json:"-"`
@@ -49,7 +49,7 @@ func (me *Profile) Schema() map[string]*schema.Schema {
 		},
 		"management_zone": {
 			Type:        schema.TypeString,
-			Description: "The ID of the management zone to which the alerting profile applies",
+			Description: "Entities which are part of the configured management zones will match this alerting profile. It is recommended to use manual tags instead.",
 			Optional:    true,
 		},
 		"rules": {

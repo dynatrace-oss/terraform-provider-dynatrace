@@ -32,6 +32,9 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
+	if me.Scope == nil {
+		return "environment"
+	}
 	return *me.Scope
 }
 

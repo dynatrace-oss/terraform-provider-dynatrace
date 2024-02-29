@@ -25,7 +25,7 @@ import (
 )
 
 const SchemaID = "builtin:ibmmq.queue-sharing-group"
-const SchemaVersion = "0.0.6"
+const SchemaVersion = "1.0.1"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*queuesharinggroup.Settings] {
 	return settings20.Service[*queuesharinggroup.Settings](credentials, SchemaID, SchemaVersion)

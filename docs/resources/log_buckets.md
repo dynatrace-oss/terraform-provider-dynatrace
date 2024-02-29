@@ -28,7 +28,7 @@ The full documentation of the export feature is available [here](https://registr
 resource "dynatrace_log_buckets" "#name#" {
   enabled     = true
   bucket_name = "default_logs"
-  matcher     = "*"
+  matcher     = "matchesPhrase(content, \"error\")"
   rule_name   = "#name#"
 }
 ```

@@ -50,8 +50,8 @@
 						"type": "LENGTH"
 					},
 					{
-						"customMessage": "Dimension may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-') and dots ('.'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
-						"pattern": "^[.a-z0-9_\\-]+$",
+						"customMessage": "Dimension may contain only lowercase alphanumeric characters, underscores ('_'), hyphens ('-'), dots ('.') and colon (':'). Characters must be from the Latin alphabet, with no diacritics; characters such as 'ö' are not allowed.",
+						"pattern": "^[.:a-z0-9_\\-]+$",
 						"type": "PATTERN"
 					},
 					{
@@ -259,5 +259,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.schemaless-log-metric",
 	"types": {},
-	"version": "8.0.49"
+	"version": "8.0.50"
 }

@@ -1,0 +1,34 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Custom metrics will be ingested to Grail regardless of [Classic limits](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/metric-v2/best-practices#avoid-high-cardinality-limits).",
+	"displayName": "Grail metrics allow all",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"appName": "Grail metric allow all"
+	},
+	"multiObject": false,
+	"properties": {
+		"allowAll": {
+			"default": false,
+			"description": "When enabled every custom metric will be ingested to Grail. Warning: this setting can cause [unexpected billing!](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/metric-v2/best-practices#avoid-high-cardinality-limits)",
+			"displayName": "Allow all",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics",
+		"group:metrics.grail-metrics"
+	],
+	"schemaId": "builtin:grail.metrics.allow-all",
+	"types": {},
+	"version": "0.1"
+}

@@ -71,7 +71,15 @@ func (me *Resource) SetName(name string) *Resource {
 	return me
 }
 
-func (me *Resource) GetResourceReferences() []*Resource {
+func (me *Resource) GetResourceReferences(trackedIds ...map[string]string) []*Resource {
+	tracked := map[string]string{}
+	if len(trackedIds) > 0 {
+		tracked = trackedIds[0]
+	}
+	if _, found := tracked[me.ID]; found {
+		return []*Resource{}
+	}
+	tracked[me.ID] = me.ID
 	resources := map[string]*Resource{}
 	if len(me.ResourceReferences) == 0 {
 		return []*Resource{}
@@ -82,7 +90,7 @@ func (me *Resource) GetResourceReferences() []*Resource {
 		}
 		key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
 		resources[key] = resource
-		for _, resource := range resource.GetResourceReferences() {
+		for _, resource := range resource.GetResourceReferences(tracked) {
 			if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 				continue
 			}

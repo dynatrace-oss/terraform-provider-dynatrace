@@ -30,7 +30,8 @@ import (
 // SyntheticMonitor HTTP synthetic monitor update. Some fields are inherited from base `SyntheticMonitorUpdate` model
 type SyntheticMonitor struct {
 	monitors.SyntheticMonitor
-	Script *Script `json:"script,omitempty"`
+	Script   *Script `json:"script,omitempty"`
+	NoScript *bool   `json:"-"` // No script block - handle requests via `dynatrace_http_monitor_script` resource
 }
 
 func (me *SyntheticMonitor) GetType() monitors.Type {
@@ -115,8 +116,19 @@ func (me *SyntheticMonitor) Schema() map[string]*schema.Schema {
 			Description: "The HTTP Script",
 			Optional:    true,
 			MaxItems:    1,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				return d.Get("no_script") == true
+			},
 			Elem: &schema.Resource{
 				Schema: new(Script).Schema(),
+			},
+		},
+		"no_script": {
+			Type:        schema.TypeBool,
+			Description: "No script block - handle requests via `dynatrace_http_monitor_script` resource",
+			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				return oldValue == "false"
 			},
 		},
 	}
@@ -159,6 +171,9 @@ func (me *SyntheticMonitor) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("script", me.Script); err != nil {
 		return err
 	}
+	if err := properties.Encode("no_script", me.NoScript); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -194,6 +209,9 @@ func (me *SyntheticMonitor) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("script", &me.Script); err != nil {
+		return err
+	}
+	if err := decoder.Decode("no_script", &me.NoScript); err != nil {
 		return err
 	}
 	return nil

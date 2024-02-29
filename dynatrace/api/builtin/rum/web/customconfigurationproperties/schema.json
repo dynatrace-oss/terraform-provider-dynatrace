@@ -1,0 +1,69 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"description": "Here you can set additional JavaScript tag properties that are specific to your application. To do this, type key-value pairs defined using (=).",
+	"displayName": "Custom configuration properties",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add a custom configuration property"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"customProperty": {
+			"constraints": [
+				{
+					"customMessage": "Custom configuration property must be key-value pair, separated by =.",
+					"pattern": "^[A-Za-z0-9]+=.+$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Custom configuration property must not contain any | characters.",
+					"pattern": "^[^\\|]*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Custom configuration property",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, cux=1"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"customProperty"
+			]
+		},
+		{
+			"customMessage": "Duplicate keys are not allowed in custom configuration properties.",
+			"customValidatorId": "rumCustomConfigurationPropertiesValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"schemaGroups": [
+		"group:capturing",
+		"group:web-and-mobile-monitoring",
+		"group:web-and-mobile-monitoring.capturing"
+	],
+	"schemaId": "builtin:rum.web.custom-configuration-properties",
+	"types": {},
+	"version": "1"
+}

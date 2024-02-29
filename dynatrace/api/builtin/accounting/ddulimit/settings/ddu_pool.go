@@ -5,6 +5,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *DDUPool) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 // DDUPool TODO: documentation
 type DDUPool struct {
 	MetricsPool       DDUPoolConfig `json:"metrics"`

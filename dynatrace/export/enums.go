@@ -140,6 +140,7 @@ var ResourceTypes = struct {
 	RequestNaming                       ResourceType
 	BrowserMonitor                      ResourceType
 	HTTPMonitor                         ResourceType
+	HTTPMonitorScript                   ResourceType
 	DashboardSharing                    ResourceType
 	ApplicationDetection                ResourceType
 	ApplicationErrorRules               ResourceType
@@ -154,6 +155,7 @@ var ResourceTypes = struct {
 	IAMPermission                       ResourceType
 	IAMPolicy                           ResourceType
 	IAMPolicyBindings                   ResourceType
+	IAMPolicyBindingsV2                 ResourceType
 	ProcessGroupAnomalies               ResourceType
 	DDUPool                             ResourceType
 	ProcessGroupAlerting                ResourceType
@@ -345,6 +347,15 @@ var ResourceTypes = struct {
 	SiteReliabilityGuardian             ResourceType
 	JiraForWorkflows                    ResourceType
 	SlackForWorkflows                   ResourceType
+	Policy                              ResourceType
+	KubernetesApp                       ResourceType
+	GrailMetricsAllowall                ResourceType
+	GrailMetricsAllowlist               ResourceType
+	WebAppBeaconEndpoint                ResourceType
+	WebAppCustomConfigProperties        ResourceType
+	WebAppInjectionCookie               ResourceType
+	UserGroup                           ResourceType
+	User                                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -408,6 +419,7 @@ var ResourceTypes = struct {
 	"dynatrace_request_naming",
 	"dynatrace_browser_monitor",
 	"dynatrace_http_monitor",
+	"dynatrace_http_monitor_script",
 	"dynatrace_dashboard_sharing",
 	"dynatrace_application_detection_rule",
 	"dynatrace_application_error_rules",
@@ -422,6 +434,7 @@ var ResourceTypes = struct {
 	"dynatrace_iam_permission",
 	"dynatrace_iam_policy",
 	"dynatrace_iam_policy_bindings",
+	"dynatrace_iam_policy_bindings_v2",
 	"dynatrace_pg_anomalies",
 	"dynatrace_ddu_pool",
 	"dynatrace_pg_alerting",
@@ -613,6 +626,15 @@ var ResourceTypes = struct {
 	"dynatrace_site_reliability_guardian",
 	"dynatrace_automation_workflow_jira",
 	"dynatrace_automation_workflow_slack",
+	"dynatrace_policy",
+	"dynatrace_kubernetes_app",
+	"dynatrace_grail_metrics_allowall",
+	"dynatrace_grail_metrics_allowlist",
+	"dynatrace_web_app_beacon_endpoint",
+	"dynatrace_web_app_custom_config_properties",
+	"dynatrace_web_app_injection_cookie",
+	"dynatrace_user_group",
+	"dynatrace_user",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

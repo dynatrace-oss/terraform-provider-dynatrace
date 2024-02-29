@@ -1,0 +1,88 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"description": "Dynatrace RUM uses cookies to correlate user actions with backend performance metrics. You can change the cookie settings here. Learn more about RUM cookies in our [documentation](https://dt-url.net/wmq1pti).",
+	"displayName": "Cookie",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"SameSiteCookieAttribute": {
+			"description": "Define if your cookie should be restricted to a first-party or same-site context. Learn more about [SameSite cookies and available values](https://dt-url.net/yds1p8u).",
+			"displayName": "SameSite cookie attribute",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Not set",
+					"value": "NOTSET"
+				},
+				{
+					"displayName": "None",
+					"value": "NONE"
+				},
+				{
+					"displayName": "Lax",
+					"value": "LAX"
+				},
+				{
+					"displayName": "Strict",
+					"value": "STRICT"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cookiePlacementDomain": {
+			"constraints": [
+				{
+					"maxLength": 150,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Please enter a valid domain.",
+					"customValidatorId": "rumInjectionCookieDomainValidator",
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Specify an alternative domain for cookies set by Dynatrace. Keep in mind that your browser may not allow placement of cookies on certain domains (for example, top-level domains). Before typing a domain name here, confirm that the domain will accept cookies from your browser. For details, see the list of [forbidden top-level domains](https://dt-url.net/9n6b0pfz).",
+			"displayName": "Domain to be used for cookie placement",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"sameSiteCookieAttribute": {
+			"default": "NOTSET",
+			"description": "Define if your cookie should be restricted to a first-party or same-site context. Learn more about [SameSite cookies and available values](https://dt-url.net/yds1p8u).",
+			"displayName": "SameSite cookie attribute",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/SameSiteCookieAttribute"
+			}
+		},
+		"useSecureCookieAttribute": {
+			"default": false,
+			"description": "",
+			"displayName": "Use the Secure cookie attribute for cookies set by Dynatrace",
+			"documentation": "If your application is only accessible via SSL, you can add the Secure attribute to all cookies set by Dynatrace. This setting prevents the display of warnings from PCI-compliance security scanners. Be aware that with this setting enabled Dynatrace correlation of user actions with server-side web requests is only possible over SSL connections.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:rum-injection"
+	],
+	"schemaId": "builtin:rum.web.injection.cookie",
+	"types": {},
+	"version": "1"
+}

@@ -18,6 +18,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace"
@@ -104,16 +105,19 @@ import (
 // }
 
 func main() {
-	// if tf2json(os.Args) {
-	// 	return
-	// }
 	defer export.CleanUp.Finish()
 
 	if dynatrace.Export(os.Args) {
 		return
 	}
 
+	var debug bool
+	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	flag.Parse()
+
 	plugin.Serve(&plugin.ServeOpts{
+		Debug:        debug,
+		ProviderAddr: "registry.terraform.io/dynatrace-oss/dynatrace",
 		ProviderFunc: func() *schema.Provider {
 			return provider.Provider()
 		},
