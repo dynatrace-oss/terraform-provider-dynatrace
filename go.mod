@@ -2,8 +2,6 @@ module github.com/dynatrace-oss/terraform-provider-dynatrace
 
 go 1.21
 
-toolchain go1.22.0
-
 require (
 	github.com/dlclark/regexp2 v1.11.0
 	github.com/dynatrace/dynatrace-configuration-as-code-core v0.2.0
