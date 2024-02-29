@@ -276,5 +276,3 @@ Optional:
 
 - `secret_value` (String, Sensitive) The secret value of the HTTP header. May contain an empty value.
 - `value` (String) The value of the HTTP header. May contain an empty value.
-
-
