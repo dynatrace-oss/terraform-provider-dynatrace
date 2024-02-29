@@ -15,14 +15,18 @@
 * limitations under the License.
  */
 
-package opentelemetrymetrics_test
+package opentelemetrymetrics
 
-import (
-	"testing"
+type Mode string
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-)
+var Modes = struct {
+	Explicit Mode
+	Additive Mode
+}{
+	"EXPLICIT",
+	"ADDITIVE",
+}
 
-func TestAccOpenTelemetryMetrics(t *testing.T) {
-	api.TestAcc(t)
+func (me Mode) Ref() *Mode {
+	return &me
 }
