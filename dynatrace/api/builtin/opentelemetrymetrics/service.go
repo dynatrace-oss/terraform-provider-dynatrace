@@ -343,5 +343,5 @@ func (me *service) Delete(id string) error {
 }
 
 func (me *service) Get(id string, v *opentelemetrymetrics.Settings) error {
-	return errors.New("`builtin:opentelemetry-metrics` Get function should not be called, please create a GitHub Issue")
+	return me.GetWithContext(context.Background(), id, v)
 }
