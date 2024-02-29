@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -237,6 +238,13 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 	}
 
 	if err := properties.Encode("authentication_data", awscc.AuthenticationData); err != nil {
+		return err
+	}
+	if err := sensitive.ConditionalIgnoreChangesSinglePlus(
+		awscc.Schema(),
+		&properties,
+		[]string{"authentication_data"},
+	); err != nil {
 		return err
 	}
 	if err := properties.Encode("partition_type", awscc.PartitionType); err != nil {

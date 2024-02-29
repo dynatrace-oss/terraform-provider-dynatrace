@@ -21,11 +21,11 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -160,7 +160,7 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 }
 
 func (me *WebHook) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
+	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
 		me.Schema(),
 		map[string]any{
 			"name":    me.Name,
@@ -178,6 +178,10 @@ func (me *WebHook) MarshalHCL(properties hcl.Properties) error {
 			"secret_url":             me.SecretUrl,
 			"url_contains_secret":    me.UrlContainsSecret,
 		},
+		append(
+			me.Headers.GenIgnoreChanges("headers"),
+			"oauth_2_credentials",
+		),
 	))
 }
 

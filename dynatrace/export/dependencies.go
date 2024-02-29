@@ -130,19 +130,21 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 			}
 		}
 
-		m1 := regexp.MustCompile(fmt.Sprintf(`"managementZone": {([\S\s]*)"name":(.*)"%s"([\S\s]*)}`, resource.Name))
+		escaped := regexp.QuoteMeta(resource.Name)
+
+		m1 := regexp.MustCompile(fmt.Sprintf(`"managementZone": {([\S\s]*)"name":(.*)"%s"([\S\s]*)}`, escaped))
 		replaced := m1.ReplaceAllString(s, fmt.Sprintf(`"managementZone": {$1"name":$2"%s"$3}`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
 		}
-		m1 = regexp.MustCompile(fmt.Sprintf(`management_zones = \[(.*)\"%s\"(.*)\]`, resource.Name))
+		m1 = regexp.MustCompile(fmt.Sprintf(`management_zones\s+= \[(.*)\"%s\"(.*)\]`, escaped))
 		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`management_zones = [ $1"%s"$2 ]`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
 		}
-		m1 = regexp.MustCompile(fmt.Sprintf(`mzName\((.*)"%s"(.*)\)`, resource.Name))
+		m1 = regexp.MustCompile(fmt.Sprintf(`mzName\((.*)"%s"(.*)\)`, escaped))
 		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`mzName($1"%s"$2)`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
@@ -423,13 +425,16 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 			}
 		}
 		found := false
-		m1 := regexp.MustCompile(fmt.Sprintf("request_attribute(.*)=(.*)\"%s\"", resource.Name))
+
+		escaped := regexp.QuoteMeta(resource.Name)
+
+		m1 := regexp.MustCompile(fmt.Sprintf("request_attribute(.*)=(.*)\"%s\"", escaped))
 		replaced := m1.ReplaceAllString(s, fmt.Sprintf("request_attribute$1=$2\"%s\"", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
 			found = true
 		}
-		m1 = regexp.MustCompile(fmt.Sprintf("{RequestAttribute:%s}", resource.Name))
+		m1 = regexp.MustCompile(fmt.Sprintf("{RequestAttribute:%s}", escaped))
 		replaced = m1.ReplaceAllString(s, fmt.Sprintf("{RequestAttribute:%s}", fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
 		if replaced != s {
 			s = replaced
