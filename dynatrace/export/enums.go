@@ -357,6 +357,7 @@ var ResourceTypes = struct {
 	UserGroup                           ResourceType
 	User                                ResourceType
 	PolicyBinding                       ResourceType
+	MgmzPermission                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -637,6 +638,7 @@ var ResourceTypes = struct {
 	"dynatrace_user_group",
 	"dynatrace_user",
 	"dynatrace_policy_bindings",
+	"dynatrace_mgmz_permission",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {

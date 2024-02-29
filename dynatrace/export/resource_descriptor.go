@@ -238,6 +238,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
 	onprempolicybindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings"
 	onpremusergroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
+	onpremmgmzpermission "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
@@ -1181,6 +1182,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.PolicyBinding: NewResourceDescriptor(
 		onprempolicybindings.Service,
 		Dependencies.ID(ResourceTypes.Policy),
+	),
+	ResourceTypes.MgmzPermission: NewResourceDescriptor(
+		onpremmgmzpermission.Service,
+		Dependencies.ID(ResourceTypes.UserGroup),
 	),
 }
 

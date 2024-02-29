@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
+	mgmzsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -33,7 +34,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        new(mgmz.Permission).Schema(),
+		Schema:        new(mgmzsettings.Permission).Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -54,15 +55,15 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(mgmz.Permission)
+	config := new(mgmzsettings.Permission)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	id, err := NewService(m).Create(config)
+	stub, err := NewService(m).Create(config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(id)
+	d.SetId(stub.ID)
 	return Read(ctx, d, m)
 }
 
@@ -72,7 +73,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(mgmz.Permission)
+	config := new(mgmzsettings.Permission)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -88,8 +89,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config, err := NewService(m).Get(d.Id())
-	if err != nil {
+	config := mgmzsettings.Permission{}
+	if err = NewService(m).Get(d.Id(), &config); err != nil {
 		return diag.FromErr(err)
 	}
 	marshalled := hcl.Properties{}
