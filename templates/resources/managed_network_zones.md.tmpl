@@ -1,0 +1,31 @@
+---
+layout: ""
+page_title: dynatrace_managed_network_zones Resource - terraform-provider-dynatrace"
+subcategory: "Cluster Management"
+description: |-
+  The resource `dynatrace_managed_network_zones` covers configuration for Managed cluster network zones
+---
+
+# dynatrace_managed_network_zones (Resource)
+
+-> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+
+## Dynatrace Documentation
+
+- Network zones - https://docs.dynatrace.com/docs/manage/network-zones
+
+- Cluster API v2 - https://www.dynatrace.com/support/help/managed-cluster/cluster-api/cluster-api-v2
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_managed_network_zones" "Test" {
+  name                              = "terraformtest"
+  description                       = "This is an example network zone"
+  alternative_zones                 = ["alternativeexample"]
+  fallback_mode                     = "ANY_ACTIVE_GATE"
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 

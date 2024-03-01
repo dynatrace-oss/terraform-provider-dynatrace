@@ -66,6 +66,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/internetproxy"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/preferences"
@@ -503,6 +504,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_custom_config_properties":   resources.NewGeneric(export.ResourceTypes.WebAppCustomConfigProperties).Resource(),
 			"dynatrace_web_app_injection_cookie":           resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
 			"dynatrace_http_monitor_script":                resources.NewGeneric(export.ResourceTypes.HTTPMonitorScript).Resource(),
+			"dynatrace_managed_network_zones":              networkzones.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

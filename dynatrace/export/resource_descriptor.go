@@ -242,6 +242,7 @@ import (
 	onpremmgmzpermission "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
+	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -1189,6 +1190,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		onpremmgmzpermission.Service,
 		Dependencies.ID(ResourceTypes.UserGroup),
 	),
+	ResourceTypes.ManagedNetworkZones: NewResourceDescriptor(managednetworkzones.Service),
 }
 
 var excludeListedResources = []ResourceType{
