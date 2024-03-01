@@ -16,5 +16,63 @@ description: |-
 
 - User management API - https://www.dynatrace.com/support/help/dynatrace-api/account-management-api/user-management-api
 
+## Prerequisites
+
+```terraform
+provider "dynatrace" {
+  dt_cluster_api_token = "######.#########################################################################################"
+  dt_cluster_url = "https://####.######.#####"
+}
+```
+
+## Resource Example Usage
+
+```terraform
+variable "cluster" {
+  default = "<the-id-of-your-dynatrace-cluster>"
+}
+
+variable "environment" {
+  default = "<the-id-of-an-environment-within-your-cluster"
+}
+
+resource "dynatrace_user_group" "terraform" {
+  name        = "Anonymous"
+  ldap_groups = ["Anonymous"]
+}
+
+resource "dynatrace_user" "terraform" {
+  email      = "me@home.com"
+  first_name = "John"
+  groups     = [dynatrace_user_group.terraform.id]
+  last_name  = "Doe"
+  user_name  = "me@home.com"
+}
+
+resource "dynatrace_policy" "terraform_cluster" {
+  name            = "terraform_cluster"
+  cluster         = var.cluster
+  statement_query = "ALLOW settings:objects:read, settings:schemas:read WHERE settings:schemaId = \"terraform-cluster\";"
+}
+
+resource "dynatrace_policy" "terraform_env" {
+  name            = "terraform_env"
+  environment     = var.environment
+  statement_query = "ALLOW environment:roles:viewer;"
+}
+
+resource "dynatrace_policy_bindings" "terraform_cluster_binding" {
+  cluster  = var.cluster
+  group    = dynatrace_user_group.terraform.id
+  policies = [dynatrace_policy.terraform_cluster.id]
+}
+
+resource "dynatrace_policy_bindings" "terraform_env_binding" {
+  environment = var.environment
+  group       = dynatrace_user_group.terraform.id
+  policies    = [dynatrace_policy.terraform_env.id]
+}
+```
+
 {{ .SchemaMarkdown | trimspace }}
  

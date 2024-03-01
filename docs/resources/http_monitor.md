@@ -468,6 +468,7 @@ You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
 
 To specify a location, use its entity ID.
 - `manually_assigned_apps` (Set of String) A set of manually assigned applications.
+- `no_script` (Boolean) No script block - handle requests via `dynatrace_http_monitor_script` resource
 - `script` (Block List, Max: 1) The HTTP Script (see [below for nested schema](#nestedblock--script))
 - `tags` (Block List) A set of tags assigned to the monitor.
 

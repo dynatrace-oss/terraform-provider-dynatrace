@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -43,6 +44,13 @@ type WebHook struct {
 	OAuth2Credentials        *OAuth2Credentials `json:"oAuth2Credentials,omitempty"` // To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).\n\nThe obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload.
 	SecretUrl                *string            `json:"secretUrl,omitempty"`         // The secret URL of the webhook endpoint.
 	UrlContainsSecret        *bool              `json:"urlContainsSecret,omitempty"` // Secret webhook URL
+}
+
+func (me *WebHook) PrepareMarshalHCL(decoder hcl.Decoder) error {
+	if url, ok := decoder.GetOk("secret_url"); ok && len(url.(string)) > 0 {
+		me.SecretUrl = opt.NewString(url.(string))
+	}
+	return nil
 }
 
 func (me *WebHook) FillDemoValues() []string {
@@ -152,7 +160,6 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 }
 
 func (me *WebHook) MarshalHCL(properties hcl.Properties) error {
-
 	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMapPlus(
 		me.Schema(),
 		map[string]any{

@@ -134,15 +134,15 @@ func CreateExportCredentials() (*Credentials, error) {
 		automation_client_secret = client_secret
 	}
 
-	if environmentURL == "" && iam_account_id == "" {
+	clusterURL := getEnv("DYNATRACE_CLUSTER_URL", "DT_CLUSTER_URL")
+	clusterAPIToken := getEnv("DYNATRACE_CLUSTER_API_TOKEN", "DT_CLUSTER_API_TOKEN")
+
+	if environmentURL == "" && clusterURL == "" && iam_account_id == "" {
 		return nil, errors.New("the environment variable DYNATRACE_ENV_URL or DYNATRACE_SOURCE_ENV_URL needs to be set")
 	}
-	if apiToken == "" && iam_client_id == "" && iam_client_secret == "" {
+	if apiToken == "" && clusterAPIToken == "" && iam_client_id == "" && iam_client_secret == "" {
 		return nil, errors.New("the environment variable DYNATRACE_API_TOKEN or DYNATRACE_SOURCE_API_TOKEN needs to be set")
 	}
-
-	clusterAPIToken := getEnv("DYNATRACE_CLUSTER_API_TOKEN", "DT_CLUSTER_API_TOKEN")
-	clusterURL := getEnv("DYNATRACE_CLUSTER_URL", "DT_CLUSTER_URL")
 
 	credentials := &Credentials{
 		URL:   environmentURL,

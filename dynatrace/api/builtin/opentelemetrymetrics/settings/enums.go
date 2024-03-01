@@ -15,6 +15,18 @@
 * limitations under the License.
  */
 
-package version
+package opentelemetrymetrics
 
-const Current = "1.51.0"
+type Mode string
+
+var Modes = struct {
+	Explicit Mode
+	Additive Mode
+}{
+	"EXPLICIT",
+	"ADDITIVE",
+}
+
+func (me Mode) Ref() *Mode {
+	return &me
+}

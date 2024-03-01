@@ -15,6 +15,16 @@
 * limitations under the License.
  */
 
-package version
+package script_test
 
-const Current = "1.51.0"
+import (
+	"testing"
+)
+
+func TestHTTPMonitorScript(t *testing.T) {
+	t.Skip()
+}
+
+func TestAccHTTPMonitorScript(t *testing.T) {
+	t.Skip()
+}

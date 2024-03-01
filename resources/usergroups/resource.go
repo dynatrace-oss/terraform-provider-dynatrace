@@ -21,7 +21,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
+	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
+	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -34,7 +35,7 @@ import (
 // Resource produces terraform resource definition for Management Zones
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        new(groups.GroupConfig).Schema(),
+		Schema:        new(settings.GroupConfig).Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -55,7 +56,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(groups.GroupConfig)
+	config := new(settings.GroupConfig)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -64,7 +65,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(*objStub.ID)
+	d.SetId(objStub.ID)
 	return Read(ctx, d, m)
 }
 
@@ -74,7 +75,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config := new(groups.GroupConfig)
+	config := new(settings.GroupConfig)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -91,8 +92,8 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config, err := NewService(m).Get(d.Id())
-	if err != nil {
+	var config settings.GroupConfig
+	if err = NewService(m).Get(d.Id(), &config); err != nil {
 		return diag.FromErr(err)
 	}
 	marshalled := hcl.Properties{}

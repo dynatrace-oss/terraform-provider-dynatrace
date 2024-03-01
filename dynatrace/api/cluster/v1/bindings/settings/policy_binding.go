@@ -1,6 +1,8 @@
 package bindings
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -11,6 +13,16 @@ type PolicyBinding struct {
 	Cluster     string   `json:"-"`
 	Environment string   `json:"-"`
 	PolicyIDs   []string `json:"policyUuids"`
+}
+
+func (me *PolicyBinding) Name() string {
+	if len(me.Cluster) > 0 {
+		return fmt.Sprintf("%s#-#%s#-#%s", me.GroupID, "cluster", me.Cluster)
+	}
+	if len(me.Environment) > 0 {
+		return fmt.Sprintf("%s#-#%s#-#%s", me.GroupID, "environment", me.Environment)
+	}
+	return fmt.Sprintf("%s#-#%s#-#%s", me.GroupID, "global", "global")
 }
 
 func (me *PolicyBinding) Schema() map[string]*schema.Schema {

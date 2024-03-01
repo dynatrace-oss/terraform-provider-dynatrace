@@ -237,7 +237,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/virtualization/vmware"
+	onprempolicybindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings"
+	onpremusergroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups"
+	onpremmgmzpermission "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
+	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -299,6 +303,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
+	httpscript "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/script"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault"
 
 	v2maintenance "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow"
@@ -1172,17 +1177,35 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		webappinjectioncookie.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.HTTPMonitorScript: NewResourceDescriptor(
+		httpscript.Service,
+		Dependencies.ID(ResourceTypes.HTTPMonitor),
+	),
+	ResourceTypes.UserGroup: NewResourceDescriptor(onpremusergroups.Service),
+	ResourceTypes.User: NewResourceDescriptor(
+		onpremusers.Service,
+		Dependencies.ID(ResourceTypes.UserGroup),
+	),
+	ResourceTypes.PolicyBinding: NewResourceDescriptor(
+		onprempolicybindings.Service,
+		Dependencies.ID(ResourceTypes.Policy),
+		Dependencies.QuotedID(ResourceTypes.UserGroup),
+	),
+	ResourceTypes.MgmzPermission: NewResourceDescriptor(
+		onpremmgmzpermission.Service,
+		Dependencies.ID(ResourceTypes.UserGroup),
+	),
 }
 
-var blackListedResources = []ResourceType{
+var excludeListedResources = []ResourceType{
 	// Officially deprecated resources (EOL)
 	ResourceTypes.AlertingProfile,   // Replaced by dynatrace_alerting
 	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
 	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
 	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
-	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
-	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
-	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
+	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
+	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
+	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
 
 	// Deprecated resources due to better alternatives
 	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies
@@ -1261,15 +1284,15 @@ var blackListedResources = []ResourceType{
 
 var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
 
-func GetBlackListedResources() []ResourceType {
+func GetExcludeListedResources() []ResourceType {
 
 	if ENABLE_EXPORT_DASHBOARD {
-		return blackListedResources
+		return excludeListedResources
 	}
 
-	// Excluded due to the potential of a large amount of dashboards (ResourceTypes.JSONDashboard)
+	// Excluded due to the potential of a large amount of dashboards
 	// Excluded since it is retrieved as a child resource of dynatrace_json_dashboard (ResourceTypes.DashboardSharing)
-	return append(blackListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing)
+	return append(excludeListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing)
 
 }
 

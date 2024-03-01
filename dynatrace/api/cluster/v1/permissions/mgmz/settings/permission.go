@@ -2,7 +2,6 @@ package mgmz
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -17,19 +16,8 @@ type Permission struct {
 	Permissions      []string
 }
 
-func (me *Permission) toID() string {
+func (me *Permission) Name() string {
 	return fmt.Sprintf("%s#-#%s#-#%s", me.EnvironmentID, me.GroupID, me.ManagementZoneID)
-}
-
-func (me *Permission) readID(id string) error {
-	parts := strings.Split(id, "#-#")
-	if len(parts) != 3 {
-		return fmt.Errorf("%s is not a valid permission ID", id)
-	}
-	me.EnvironmentID = parts[0]
-	me.GroupID = parts[1]
-	me.ManagementZoneID = parts[2]
-	return nil
 }
 
 func (me *Permission) Schema() map[string]*schema.Schema {

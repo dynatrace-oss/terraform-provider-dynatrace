@@ -141,6 +141,7 @@ var ResourceTypes = struct {
 	RequestNaming                       ResourceType
 	BrowserMonitor                      ResourceType
 	HTTPMonitor                         ResourceType
+	HTTPMonitorScript                   ResourceType
 	DashboardSharing                    ResourceType
 	ApplicationDetection                ResourceType
 	ApplicationErrorRules               ResourceType
@@ -354,6 +355,10 @@ var ResourceTypes = struct {
 	WebAppBeaconEndpoint                ResourceType
 	WebAppCustomConfigProperties        ResourceType
 	WebAppInjectionCookie               ResourceType
+	UserGroup                           ResourceType
+	User                                ResourceType
+	PolicyBinding                       ResourceType
+	MgmzPermission                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -418,6 +423,7 @@ var ResourceTypes = struct {
 	"dynatrace_request_naming",
 	"dynatrace_browser_monitor",
 	"dynatrace_http_monitor",
+	"dynatrace_http_monitor_script",
 	"dynatrace_dashboard_sharing",
 	"dynatrace_application_detection_rule",
 	"dynatrace_application_error_rules",
@@ -631,6 +637,10 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_beacon_endpoint",
 	"dynatrace_web_app_custom_config_properties",
 	"dynatrace_web_app_injection_cookie",
+	"dynatrace_user_group",
+	"dynatrace_user",
+	"dynatrace_policy_bindings",
+	"dynatrace_mgmz_permission",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
