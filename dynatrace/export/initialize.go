@@ -54,14 +54,14 @@ func Initialize() (environment *Environment, err error) {
 	resArgs := map[string][]string{}
 	if flags.Exclude {
 		for resourceType := range AllResources {
-			blackListed := false
-			for _, blackListedResourceType := range BlackListedResources {
-				if resourceType == blackListedResourceType {
-					blackListed = true
+			excludeListed := false
+			for _, excludeListedResourceType := range GetExcludeListedResources() {
+				if resourceType == excludeListedResourceType {
+					excludeListed = true
 					break
 				}
 			}
-			if !blackListed {
+			if !excludeListed {
 				resArgs[string(resourceType)] = []string{}
 			}
 		}
@@ -116,14 +116,14 @@ func Initialize() (environment *Environment, err error) {
 
 		if len(resArgs) == 0 {
 			for resourceType := range AllResources {
-				blackListed := false
-				for _, blackListedResourceType := range BlackListedResources {
-					if resourceType == blackListedResourceType {
-						blackListed = true
+				excludeListed := false
+				for _, excludeListedResourceType := range GetExcludeListedResources() {
+					if resourceType == excludeListedResourceType {
+						excludeListed = true
 						break
 					}
 				}
-				if !blackListed {
+				if !excludeListed {
 					resArgs[string(resourceType)] = []string{}
 				}
 			}

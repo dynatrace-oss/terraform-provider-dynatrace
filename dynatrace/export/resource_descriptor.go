@@ -18,6 +18,7 @@
 package export
 
 import (
+	"os"
 	"reflect"
 	"strings"
 
@@ -1189,15 +1190,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 }
 
-var BlackListedResources = []ResourceType{
+var excludeListedResources = []ResourceType{
 	// Officially deprecated resources (EOL)
 	ResourceTypes.AlertingProfile,   // Replaced by dynatrace_alerting
 	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
 	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
 	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
-	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
-	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
-	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the blacklist temporarily..
+	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
+	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
+	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
 
 	// Deprecated resources due to better alternatives
 	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies
@@ -1231,7 +1232,6 @@ var BlackListedResources = []ResourceType{
 	// Cluster Resources
 	ResourceTypes.Policy,
 
-	ResourceTypes.JSONDashboard,    // Excluded due to the potential of a large amount of dashboards
 	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
 
 	ResourceTypes.UserSettings, // Excluded since it requires a personal token
@@ -1275,6 +1275,19 @@ var BlackListedResources = []ResourceType{
 	// Incubator
 	ResourceTypes.GenericSetting,
 	ResourceTypes.PlatformBucket,
+}
+
+var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
+
+func GetExcludeListedResources() []ResourceType {
+
+	if ENABLE_EXPORT_DASHBOARD {
+		return excludeListedResources
+	}
+
+	// Excluded due to the potential of a large amount of dashboards
+	return append(excludeListedResources, ResourceTypes.JSONDashboard)
+
 }
 
 func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
