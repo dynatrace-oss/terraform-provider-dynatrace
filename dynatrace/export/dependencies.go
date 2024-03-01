@@ -42,6 +42,7 @@ var Dependencies = struct {
 	ManagementZone       Dependency
 	LegacyID             func(resourceType ResourceType) Dependency
 	ID                   func(resourceType ResourceType) Dependency
+	QuotedID             func(resourceType ResourceType) Dependency
 	ResourceID           func(resourceType ResourceType) Dependency
 	ServiceMethod        Dependency
 	Service              Dependency
@@ -65,7 +66,8 @@ var Dependencies = struct {
 }{
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
-	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType} },
+	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType: resourceType, quoted: false} },
+	QuotedID:             func(resourceType ResourceType) Dependency { return &iddep{resourceType: resourceType, quoted: true} },
 	ResourceID:           func(resourceType ResourceType) Dependency { return &resourceIDDep{resourceType} },
 	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
 	Service:              &entityds{"SERVICE", "SERVICE-[A-Z0-9]{16}", false},
@@ -209,6 +211,7 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 
 type iddep struct {
 	resourceType ResourceType
+	quoted       bool
 }
 
 func (me *iddep) ResourceType() ResourceType {
@@ -251,9 +254,18 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 			}
 		}
 		found := false
-		if strings.Contains(s, id) {
-			s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
-			found = true
+		if me.quoted {
+			quotedID := "\"" + id + "\""
+			quotedReplacePattern := "\"" + replacePattern + "\""
+			if strings.Contains(s, quotedID) {
+				s = strings.ReplaceAll(s, quotedID, fmt.Sprintf(quotedReplacePattern, resOrDsType(), resource.UniqueName))
+				found = true
+			}
+		} else {
+			if strings.Contains(s, id) {
+				s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
+				found = true
+			}
 		}
 		if found {
 			resources = append(resources, resource)

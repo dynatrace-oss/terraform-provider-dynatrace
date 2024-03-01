@@ -1183,7 +1183,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.PolicyBinding: NewResourceDescriptor(
 		onprempolicybindings.Service,
 		Dependencies.ID(ResourceTypes.Policy),
-		Dependencies.ID(ResourceTypes.UserGroup),
+		Dependencies.QuotedID(ResourceTypes.UserGroup),
 	),
 	ResourceTypes.MgmzPermission: NewResourceDescriptor(
 		onpremmgmzpermission.Service,
