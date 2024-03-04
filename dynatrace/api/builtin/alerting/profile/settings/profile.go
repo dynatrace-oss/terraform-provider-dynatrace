@@ -22,6 +22,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -51,6 +52,9 @@ func (me *Profile) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Entities which are part of the configured management zones will match this alerting profile. It is recommended to use manual tags instead.",
 			Optional:    true,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+				return newValue == settings.LegacyLongDecode(oldValue)
+			},
 		},
 		"rules": {
 			Type:        schema.TypeList,

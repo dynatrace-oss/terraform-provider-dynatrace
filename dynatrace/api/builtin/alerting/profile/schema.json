@@ -437,17 +437,6 @@
 			"type": "set"
 		},
 		"managementZone": {
-			"constraints": [
-				{
-					"pattern": "^-?\\d{1,19}$",
-					"type": "PATTERN"
-				},
-				{
-					"maxLength": 500,
-					"minLength": 1,
-					"type": "LENGTH"
-				}
-			],
 			"description": "Entities which are part of the configured management zones will match this alerting profile. It is recommended to use manual tags instead.",
 			"displayName": "Management zone",
 			"documentation": "**Note:** Management zones may experience delays or inconsistencies due to rule complexity and attribute variability. Entities may not be immediately assigned to management zones, impacting filter effectiveness.\n\nIt is recommended to use manual tags instead.\n\nFor more information, visit our [best practices for management zones documentation page](https://dt-url.net/8203d4x).",
@@ -457,9 +446,8 @@
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
-			"referencedType": "ManagementZone",
-			"subType": "config",
-			"type": "text"
+			"referencedType": "builtin:management-zones",
+			"type": "setting"
 		},
 		"name": {
 			"constraints": [
@@ -979,5 +967,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.4.3"
+	"version": "8.4.4"
 }
