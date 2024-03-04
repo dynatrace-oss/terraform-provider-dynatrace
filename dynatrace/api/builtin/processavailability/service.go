@@ -26,7 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.5"
+const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:processavailability"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*processavailability.Settings] {

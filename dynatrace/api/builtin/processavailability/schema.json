@@ -4,7 +4,7 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "This feature allows you to monitor if at least one process matching the specified monitoring rule exists on your host. If no process running on your host matches the rule, you receive an alert. If you also enable **Process instance snapshots**, you receive a detailed report on the activity of the most resource-consuming processes, as well as on the latest activity of the processes matching the rule.",
+	"description": "This feature allows you to monitor if a minimum number of processes matching the specified monitoring rule are running on your host. If there aren't enough processes matching the rule, you receive an alert. If you also enable **Process instance snapshots**, you receive a detailed report on the activity of the most resource-consuming processes, as well as on the latest activity of the processes matching the rule.",
 	"displayName": "Process availability",
 	"documentation": "\n\nIn order to monitor the availability of a certain group of processes, you must first define a monitoring rule. Give your monitoring rule a unique name and add its detection rules to which Dynatrace will match the processes on your host.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37)",
 	"dynatrace": "1",
@@ -168,9 +168,6 @@
 				}
 			},
 			"maxObjects": 3,
-			"metadata": {
-				"minAgentVersion": "1.287"
-			},
 			"minObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -262,8 +259,7 @@
 					"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
 					"maxObjects": 1,
 					"metadata": {
-						"minAgentVersion": "1.287",
-						"placeholder": "Required"
+						"minAgentVersion": "1.287"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -452,5 +448,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.7"
 }

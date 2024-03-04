@@ -2,6 +2,12 @@
 	"allowedScopes": [
 		"metric"
 	],
+	"constraints": [
+		{
+			"customValidatorId": "stored-query-limit-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "A stored metric query allows you to calculate the metrics' values through a metric expression.",
 	"displayName": "Metric query",
 	"documentation": "",
@@ -41,5 +47,5 @@
 	],
 	"schemaId": "builtin:metric.query",
 	"types": {},
-	"version": "4.0.2"
+	"version": "4.0.3"
 }

@@ -1376,7 +1376,7 @@
 					"$ref": "#/types/Rule"
 				}
 			},
-			"maxObjects": 450,
+			"maxObjects": 900,
 			"metadata": {
 				"addItemButton": "Add a new rule"
 			},
@@ -2600,5 +2600,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }
