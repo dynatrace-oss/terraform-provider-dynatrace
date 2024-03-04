@@ -1,32 +1,30 @@
 ---
 layout: ""
-page_title: "dynatrace_management_zone Data Source - terraform-provider-dynatrace"
-subcategory: "Deprecated"
+page_title: "dynatrace_management_zone_v2 Data Source - terraform-provider-dynatrace"
+subcategory: "Management Zones"
 description: |-
-  The data source `dynatrace_management_zone` covers queries for the ID of a management zone based on name
+  The data source `dynatrace_management_zone_v2` covers queries for the ID of a management zone based on name. 
 ---
 
-# dynatrace_management_zone (Data Source)
+# dynatrace_management_zone_v2 (Data Source)
 
 The management zone data source allows the management zone ID to be retrieved by its name.
 
--> This data source requires the API token scope **Read configuration** (`ReadConfig`)
-
-!> This data source is utilizing an older API endpoint, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/data-sources/dynatrace_management_zone_v2) instead.
+-> This data source requires the API token scopes **Read settings** (`settings.read`)
 
 - `name` queries for all management zones with the specified name
 
 ## Example Usage
 
 ```terraform
-data "dynatrace_management_zone" "Test" {
+data "dynatrace_management_zone_v2" "Test" {
   name = "Example"
 }
 
 resource "dynatrace_calculated_service_metric" "#name#" {
   name             = "#name#"
   enabled          = true
-  management_zones = ["${data.dynatrace_management_zone.Test.id}"]
+  management_zones = ["${data.dynatrace_management_zone_v2.Test.legacy_id}"]
   metric_key       = "calc:service.#name#"
   unit             = "MILLI_SECOND_PER_MINUTE"
   conditions {

@@ -186,6 +186,7 @@ func Provider() *schema.Provider {
 			"dynatrace_synthetic_location":           locations.UniqueDataSource(),
 			"dynatrace_service":                      serviceds.DataSource(),
 			"dynatrace_management_zone":              mgmzds.DataSource(),
+			"dynatrace_management_zone_v2":           mgmzds.DataSourceV2(),
 			"dynatrace_management_zones":             mgmzds.DataSourceMultiple(),
 			"dynatrace_application":                  application.DataSource(),
 			"dynatrace_mobile_application":           mobileapplication.DataSource(),
