@@ -51,6 +51,7 @@ var DataSourceEnums = struct {
 	RequestMethod      DataSourceEnum
 	RequestParameters  DataSourceEnum
 	RequestPath        DataSourceEnum
+	RequestURL         DataSourceEnum
 	ResponseBody       DataSourceEnum
 	ResponseHeaders    DataSourceEnum
 	ResponseStatuscode DataSourceEnum
@@ -60,6 +61,7 @@ var DataSourceEnums = struct {
 	"request.method",
 	"request.parameters",
 	"request.path",
+	"request.url",
 	"response.body",
 	"response.headers",
 	"response.statusCode",
@@ -74,6 +76,7 @@ var DataSourceWithStaticStringEnums = struct {
 	RequestMethod      DataSourceWithStaticStringEnum
 	RequestParameters  DataSourceWithStaticStringEnum
 	RequestPath        DataSourceWithStaticStringEnum
+	RequestURL         DataSourceWithStaticStringEnum
 	ResponseBody       DataSourceWithStaticStringEnum
 	ResponseHeaders    DataSourceWithStaticStringEnum
 	ResponseStatuscode DataSourceWithStaticStringEnum
@@ -84,6 +87,7 @@ var DataSourceWithStaticStringEnums = struct {
 	"request.method",
 	"request.parameters",
 	"request.path",
+	"request.url",
 	"response.body",
 	"response.headers",
 	"response.statusCode",

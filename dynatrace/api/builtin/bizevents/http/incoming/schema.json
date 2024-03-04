@@ -67,6 +67,10 @@
 					"value": "request.path"
 				},
 				{
+					"displayName": "Request - URL",
+					"value": "request.url"
+				},
+				{
 					"displayName": "Request - HTTP Method",
 					"value": "request.method"
 				},
@@ -105,6 +109,10 @@
 				{
 					"displayName": "Request - Path",
 					"value": "request.path"
+				},
+				{
+					"displayName": "Request - URL",
+					"value": "request.url"
 				},
 				{
 					"displayName": "Request - HTTP Method",
@@ -226,6 +234,14 @@
 			"documentation": "",
 			"properties": {
 				"dataSource": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "request.path",
 					"description": "",
 					"displayName": "Data source",
@@ -233,6 +249,7 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/DataSourceEnum"
 					}
@@ -329,6 +346,14 @@
 					"type": "text"
 				},
 				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "constant.string",
 					"description": "",
 					"displayName": "Data source",
@@ -336,6 +361,7 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/DataSourceWithStaticStringEnum"
 					}
@@ -403,6 +429,14 @@
 					"type": "text"
 				},
 				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "constant.string",
 					"description": "",
 					"displayName": "Data source",
@@ -410,6 +444,7 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/DataSourceWithStaticStringEnum"
 					}
@@ -543,6 +578,14 @@
 					"type": "text"
 				},
 				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "request.body",
 					"description": "",
 					"displayName": "Data source",
@@ -550,6 +593,7 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/DataSourceWithStaticStringEnum"
 					}
@@ -683,5 +727,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
