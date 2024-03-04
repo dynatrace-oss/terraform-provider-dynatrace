@@ -130,30 +130,19 @@
 			"type": "set"
 		},
 		"managementZone": {
-			"constraints": [
-				{
-					"pattern": "^-?\\d{1,19}$",
-					"type": "PATTERN"
-				},
-				{
-					"maxLength": 500,
-					"minLength": 1,
-					"type": "LENGTH"
-				}
-			],
 			"description": "",
 			"displayName": "Alert only if the following management zone is affected (optional)",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
 				"featureFlag": "com.compuware.EnableCaspNotificationsTriggerEvent.feature",
-				"maturity": "EARLY_ADOPTER"
+				"maturity": "EARLY_ADOPTER",
+				"useCombobox": "enabled"
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
-			"referencedType": "ManagementZone",
-			"subType": "config",
-			"type": "text"
+			"referencedType": "builtin:management-zones",
+			"type": "setting"
 		},
 		"name": {
 			"constraints": [
@@ -179,5 +168,5 @@
 	],
 	"schemaId": "builtin:appsec.notification-alerting-profile",
 	"types": {},
-	"version": "0.1.3"
+	"version": "0.1.4"
 }
