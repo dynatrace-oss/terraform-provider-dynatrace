@@ -228,3 +228,15 @@ var KeyUserActionTypes = struct {
 	"Load",
 	"Xhr",
 }
+
+type SameSiteCookieAttribute string
+
+var SameSiteCookieAttributes = struct {
+	Lax    SameSiteCookieAttribute
+	None   SameSiteCookieAttribute
+	Strict SameSiteCookieAttribute
+}{
+	"LAX",
+	"NONE",
+	"STRICT",
+}
