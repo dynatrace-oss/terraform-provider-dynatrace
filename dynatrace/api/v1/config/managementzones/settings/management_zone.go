@@ -30,7 +30,7 @@ import (
 )
 
 func (me *ManagementZone) Deprecated() string {
-	return "This resource is utilizing an older API endpoint, please use `dynatrace_management_zone_v2` instead."
+	return "This resource API endpoint has been deprecated, please use `dynatrace_management_zone_v2` instead."
 }
 
 // ManagementZone The configuration of the management zone. It defines how the management zone applies.
