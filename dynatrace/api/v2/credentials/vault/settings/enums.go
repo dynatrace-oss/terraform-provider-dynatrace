@@ -99,10 +99,12 @@ var Scopes = struct {
 	All       Scope
 	Extension Scope
 	Synthetic Scope
+	AppEngine Scope
 	Unknown   Scope
 }{
 	Scope("ALL"),
 	Scope("EXTENSION"),
 	Scope("SYNTHETIC"),
+	Scope("APP_ENGINE"),
 	Scope("UNKNOWN"),
 }

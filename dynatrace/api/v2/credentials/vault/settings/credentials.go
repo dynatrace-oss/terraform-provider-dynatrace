@@ -32,19 +32,20 @@ import (
 )
 
 type Credentials struct {
-	Name                   string                `json:"name"`                             // The name of the credentials set.
-	Description            *string               `json:"description,omitempty"`            // A short description of the credentials set..
-	OwnerAccessOnly        bool                  `json:"ownerAccessOnly"`                  // The credentials set is available to every user (`false`) or to owner only (`true`).
-	Scope                  Scope                 `json:"scope,omitempty"`                  // Deprecated(v279), please use `scopes` instead. The scope of the credentials set
-	Scopes                 []Scope               `json:"scopes,omitempty"`                 // The set of scopes of the credentials set.
-	Type                   CredentialsType       `json:"type"`                             // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
-	Token                  *string               `json:"token,omitempty"`                  // Token in the string format.
-	Password               *string               `json:"password,omitempty"`               // The password of the credential (Base64 encoded).
-	Username               *string               `json:"user,omitempty"`                   // The username of the credentials set.
-	Certificate            *string               `json:"certificate,omitempty"`            // The certificate in the string (Base64) format.
-	CertificateFormat      *CertificateFormat    `json:"certificateFormat,omitempty"`      // The certificate format.
-	ExternalVault          *externalvault.Config `json:"externalVault,omitempty"`          // Configuration for external vault synchronization
-	CredentialUsageSummary UsageSummary          `json:"credentialUsageSummary,omitempty"` //The list contains summary data related to the use of credentials
+	Name                     string                `json:"name"`                               // The name of the credentials set.
+	Description              *string               `json:"description,omitempty"`              // A short description of the credentials set..
+	OwnerAccessOnly          bool                  `json:"ownerAccessOnly"`                    // The credentials set is available to every user (`false`) or to owner only (`true`).
+	Scope                    Scope                 `json:"scope,omitempty"`                    // Deprecated(v279), please use `scopes` instead. The scope of the credentials set
+	Scopes                   []Scope               `json:"scopes,omitempty"`                   // The set of scopes of the credentials set.
+	Type                     CredentialsType       `json:"type"`                               // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
+	Token                    *string               `json:"token,omitempty"`                    // Token in the string format.
+	Password                 *string               `json:"password,omitempty"`                 // The password of the credential (Base64 encoded).
+	Username                 *string               `json:"user,omitempty"`                     // The username of the credentials set.
+	Certificate              *string               `json:"certificate,omitempty"`              // The certificate in the string (Base64) format.
+	CertificateFormat        *CertificateFormat    `json:"certificateFormat,omitempty"`        // The certificate format.
+	ExternalVault            *externalvault.Config `json:"externalVault,omitempty"`            // Configuration for external vault synchronization
+	CredentialUsageSummary   UsageSummary          `json:"credentialUsageSummary,omitempty"`   // The list contains summary data related to the use of credentials
+	AllowContextlessRequests *bool                 `json:"allowContextlessRequests,omitempty"` // Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).
 }
 
 func (me *Credentials) Schema() map[string]*schema.Schema {
@@ -132,6 +133,11 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 			MaxItems:    2,
 			Elem:        &schema.Resource{Schema: new(CredentialUsageObj).Schema()},
 			Deprecated:  "`credential_usage_summary` will be removed in future versions. It's not getting filled anymore, because it's runtime data",
+		},
+		"allow_contextless_requests": {
+			Type:        schema.TypeBool,
+			Description: "Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).",
+			Optional:    true,
 		},
 	}
 }
@@ -223,6 +229,10 @@ func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
+	if err := properties.Encode("allow_contextless_requests", me.AllowContextlessRequests); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -280,6 +290,9 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		} else {
 			me.Type = CredentialsTypes.Certificate
 		}
+	}
+	if value, ok := decoder.GetOk("allow_contextless_requests"); ok {
+		me.AllowContextlessRequests = opt.NewBool(value.(bool))
 	}
 	// if result, ok := decoder.GetOk("credential_usage_summary.#"); ok {
 	// 	me.CredentialUsageSummary = []*CredentialUsageObj{}
