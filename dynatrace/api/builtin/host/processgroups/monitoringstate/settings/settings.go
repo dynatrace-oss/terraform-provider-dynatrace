@@ -18,6 +18,8 @@
 package monitoringstate
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -29,7 +31,7 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	return me.HostID
+	return fmt.Sprintf("%s_on_%s", me.ProcessGroup, me.HostID)
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

@@ -219,6 +219,7 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
 			"dynatrace_dashboard":                          resources.NewGeneric(export.ResourceTypes.Dashboard).Resource(),
 			"dynatrace_json_dashboard":                     resources.NewGeneric(export.ResourceTypes.JSONDashboard).Resource(),
+			"dynatrace_json_dashboard_base":                resources.NewGeneric(export.ResourceTypes.JSONDashboardBase).Resource(),
 			"dynatrace_management_zone":                    resources.NewGeneric(export.ResourceTypes.ManagementZone).Resource(),
 			"dynatrace_management_zone_v2":                 resources.NewGeneric(export.ResourceTypes.ManagementZoneV2).Resource(),
 			"dynatrace_maintenance_window":                 resources.NewGeneric(export.ResourceTypes.MaintenanceWindow).Resource(),

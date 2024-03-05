@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -64,10 +65,14 @@ type QueryForWebAppIDResponse struct {
 }
 
 func (me *service) Get(id string, v *keyuseractions.Settings) error {
-	applicationID, err := me.fetchApplicationID(id)
+
+	applicationID, realId, err := getIDs(id, me)
 	if err != nil {
 		return err
 	}
+
+	id = realId
+
 	var kuaList KeyUserActionsList
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), 200).Finish(&kuaList); err != nil {
 		return err
@@ -86,6 +91,20 @@ func (me *service) Get(id string, v *keyuseractions.Settings) error {
 		}
 	}
 	return rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found", id)}
+}
+
+func getIDs(id string, me *service) (string, string, error) {
+	found, applicationID, realId := multiuse.ExtractIDParent(id)
+	if found {
+		return applicationID, realId, nil
+	}
+
+	applicationID, err := me.fetchApplicationID(id)
+	if err != nil {
+		return "", "", err
+	}
+
+	return applicationID, id, nil
 }
 
 func (me *service) fetchApplicationID(id string) (string, error) {
@@ -204,7 +223,11 @@ func (me *service) List() (api.Stubs, error) {
 			return nil, err
 		}
 		for _, keyUserAction := range kuaList.Values {
-			stubs = append(stubs, &api.Stub{ID: keyUserAction.MEIdentifier, Name: fmt.Sprintf("KeyUserAction " + keyUserAction.Name + " for " + appStub.Name)})
+			stubs = append(stubs, &api.Stub{
+				ID:       keyUserAction.MEIdentifier,
+				Name:     fmt.Sprintf("KeyUserAction " + keyUserAction.Name + " for " + appStub.Name),
+				ParentID: &appStub.ID,
+			})
 		}
 	}
 	return stubs.ToStubs(), nil

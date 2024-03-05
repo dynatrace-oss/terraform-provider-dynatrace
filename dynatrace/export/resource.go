@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -32,6 +33,8 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
+
+var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
 
 type Resource struct {
 	ID                   string
@@ -47,6 +50,9 @@ type Resource struct {
 	OutputFileAbs        string
 	Flawed               bool
 	XParent              *Resource
+	ParentID             *string
+	SplitId              int
+	BundleFilePath       string
 }
 
 func (me *Resource) GetParent() *Resource {
@@ -65,44 +71,80 @@ func (me *Resource) SetName(name string) *Resource {
 		return me
 	}
 	me.Name = name
-	terraformName := toTerraformName(name)
-	me.UniqueName = me.Module.namer.Name(terraformName)
+
+	var parentUniqueNameFound bool = false
+	var parentUniqueName string = ""
+
+	parentType, parentFound := me.Module.Environment.ChildParentGroups[me.Module.Type]
+	nameModule := me.Module
+
+	if parentFound {
+		nameModule = me.Module.Environment.Module(parentType)
+		nameModule.ModuleMutex.Lock()
+		defer nameModule.ModuleMutex.Unlock()
+		parentUniqueName, parentUniqueNameFound = nameModule.ChildParentIDNameMap[me.ID]
+	}
+
+	if parentUniqueNameFound {
+		me.UniqueName = parentUniqueName
+	} else {
+		prevUniqueName := me.Module.Environment.PrevStateMapCommon.GetPrevUniqueName(me)
+		if prevUniqueName == "" {
+			terraformName := toTerraformName(name)
+			me.UniqueName = nameModule.namer.Name(terraformName)
+		} else {
+			me.UniqueName = prevUniqueName
+		}
+	}
+	if parentFound && !parentUniqueNameFound {
+		nameModule.ChildParentIDNameMap[me.ID] = me.UniqueName
+	}
+
 	me.Status = ResourceStati.Discovered
 	return me
 }
 
-func (me *Resource) GetResourceReferences(trackedIds ...map[string]string) []*Resource {
-	tracked := map[string]string{}
-	if len(trackedIds) > 0 {
-		tracked = trackedIds[0]
+func (me *Resource) getTypeOfReference() string {
+	parentType, parentFound := me.Module.Environment.ChildParentGroups[me.Module.Type]
+
+	typeOfId := string(me.Type)
+	if parentFound {
+		typeOfId = string(parentType)
 	}
-	if _, found := tracked[me.ID]; found {
-		return []*Resource{}
-	}
-	tracked[me.ID] = me.ID
+	return typeOfId
+}
+
+func (me *Resource) GetResourceReferences() []*Resource {
 	resources := map[string]*Resource{}
+
+	resources = me.getResourceReferences(resources)
+
+	result := []*Resource{}
+	for _, resource := range resources {
+		result = append(result, resource)
+	}
+	return result
+}
+
+func (me *Resource) getResourceReferences(resources map[string]*Resource) map[string]*Resource {
 	if len(me.ResourceReferences) == 0 {
-		return []*Resource{}
+		return resources
 	}
 	for _, resource := range me.ResourceReferences {
 		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
 		key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
-		resources[key] = resource
-		for _, resource := range resource.GetResourceReferences(tracked) {
-			if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
-				continue
-			}
-			key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
-			resources[key] = resource
+		_, foundReference := resources[key]
+		if foundReference {
+			continue
 		}
+		resources[key] = resource
+
+		resources = resource.getResourceReferences(resources)
 	}
-	result := []*Resource{}
-	for _, resource := range resources {
-		result = append(result, resource)
-	}
-	return result
+
+	return resources
 }
 
 func (me *Resource) RefersTo(other *Resource) bool {
@@ -128,12 +170,36 @@ func (me *Resource) ReadFile() ([]byte, error) {
 	return os.ReadFile(me.GetFile())
 }
 
+const MAX_PATH_LENGTH_FILENAME_SHORTER = 240
+
 func (me *Resource) GetFileName() string {
-	return fileSystemName(fmt.Sprintf("%s.%s.tf", strings.TrimSpace(me.UniqueName), me.Type.Trim()))
+	filename := fileSystemName(fmt.Sprintf("%s.%s.tf", strings.TrimSpace(me.UniqueName), me.Type.Trim()))
+
+	if SHORTER_NAMES {
+		filename = me.getShorterFileName(filename)
+	}
+
+	return filename
+}
+
+func (me *Resource) getShorterFileName(filename string) string {
+	folderPath, err := filepath.Abs(me.Module.GetFolder())
+	if err != nil {
+		folderPath = me.Module.GetFolder()
+	}
+
+	if (len(folderPath) + len(filename)) > MAX_PATH_LENGTH_FILENAME_SHORTER {
+		filename = fileSystemName(fmt.Sprintf("%s.%s.tf", GetHashName(strings.TrimSpace(me.UniqueName)), me.Type.Trim()))
+	}
+	return filename
 }
 
 func (me *Resource) GetFile() string {
-	return path.Join(me.Module.GetFolder(), me.GetFileName())
+	if me.BundleFilePath == "" {
+		return path.Join(me.Module.GetFolder(), me.GetFileName())
+	}
+
+	return me.BundleFilePath
 }
 
 func (me *Resource) GetAttentionFile() string {
@@ -174,7 +240,10 @@ func (me *Resource) Download() error {
 	var service = me.Module.Service
 
 	settngs := me.Module.Descriptor.NewSettings()
-	if err = service.Get(me.ID, settngs); err != nil {
+
+	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
+
+	if err = service.Get(getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
 				me.Status = ResourceStati.Erronous
@@ -212,7 +281,9 @@ func (me *Resource) Download() error {
 		}
 		return err
 	}
-	me.SetName(settings.Name(settngs, me.ID))
+	name := settings.Name(settngs, me.ID)
+	me.SetName(name)
+
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
 		me.LegacyID = *legacyID
@@ -257,11 +328,29 @@ func (me *Resource) Download() error {
 
 	me.Module.MkdirAll(me.Flawed)
 
-	var outputFile *os.File
-	if outputFile, err = me.CreateFile(); err != nil {
+	splitFolder, err := me.Module.getLockBundleFile(me)
+	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
+
+	var outputFile *os.File
+	if splitFolder != nil {
+		me.SplitId = splitFolder.splitId
+		outputFile = splitFolder.currentBundleFile
+	}
+
+	if outputFile != nil {
+		me.BundleFilePath = outputFile.Name()
+		outputFile.Write([]byte("# BUNDLE-ITEM\n"))
+		defer splitFolder.releaseUnlockBundleFile()
+	} else {
+		me.BundleFilePath = ""
+		me.SplitId = 0
+		if outputFile, err = me.CreateFile(); err != nil {
+			return err
+		}
+		defer outputFile.Close()
+	}
 
 	if err = hclgen.ExportResource(settngs, outputFile, string(me.Type), me.UniqueName, finalComments...); err != nil {
 		return err
@@ -338,7 +427,7 @@ func (me *Resource) PostProcess() error {
 		fileHeader := fileContents[:idx]
 		fileBody := fileContents[idx:]
 
-		if modifiedFileContents, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type); len(foundItemsInFileContents) > 0 {
+		if modifiedFileContents, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID); len(foundItemsInFileContents) > 0 {
 			var outputFile *os.File
 			if outputFile, err = me.CreateFile(); err != nil {
 				return err
@@ -357,7 +446,9 @@ func (me *Resource) PostProcess() error {
 					if err = typedItem.Download(); err != nil {
 						return err
 					}
-					me.XParent = typedItem
+					if dependency.IsParent() {
+						me.XParent = typedItem
+					}
 					me.ResourceReferences = append(me.ResourceReferences, typedItem)
 				case *DataSource:
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)

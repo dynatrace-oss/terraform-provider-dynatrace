@@ -35,7 +35,11 @@ type DashboardSharing struct {
 	Muted        bool             `json:"-"`            // Internal field keeping track of whether this resource should get updated
 
 	// not part of payload - used by export
-	Name string `json:"-"`
+	DashboardName string `json:"-"`
+}
+
+func (me *DashboardSharing) Name() string {
+	return me.DashboardName
 }
 
 func diffsuppress(k, oldValue, newValue string, d *schema.ResourceData) bool {

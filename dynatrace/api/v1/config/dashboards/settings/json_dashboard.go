@@ -34,6 +34,7 @@ import (
 
 type JSONDashboard struct {
 	name     string
+	LinkID   string
 	Contents string
 }
 
@@ -385,6 +386,12 @@ func diffSuppressedContent(content string) string {
 
 func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"link_id": {
+			Type:        schema.TypeString,
+			Description: "ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks.",
+			Optional:    true,
+			Computed:    true,
+		},
 		"contents": {
 			Type:        schema.TypeString,
 			Required:    true,
@@ -416,13 +423,20 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 }
 
 func (me *JSONDashboard) MarshalHCL(properties hcl.Properties) error {
-	return properties.Encode("contents", me.Contents)
+	return properties.EncodeAll(map[string]any{
+		"link_id":  me.LinkID,
+		"contents": me.Contents,
+	})
 }
 
 func (me *JSONDashboard) UnmarshalHCL(decoder hcl.Decoder) error {
 	v, ok := decoder.GetOk("contents")
 	if ok {
 		me.Contents = v.(string)
+	}
+	v, ok = decoder.GetOk("link_id")
+	if ok {
+		me.LinkID = v.(string)
 	}
 	return nil
 }
@@ -432,6 +446,17 @@ func (me *JSONDashboard) MarshalJSON() ([]byte, error) {
 }
 
 func (me *JSONDashboard) UnmarshalJSON(data []byte) error {
+	var err error
+
+	mid := struct {
+		ID string `json:"id,omitempty"`
+	}{}
+	err = json.Unmarshal(data, &mid)
+	if err != nil {
+		return err
+	}
+	me.LinkID = mid.ID
+
 	reduced := struct {
 		Metadata *DashboardMetadata `json:"dashboardMetadata"`
 		Tiles    []map[string]any   `json:"tiles"`
@@ -441,7 +466,6 @@ func (me *JSONDashboard) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var err error
 	for _, tile := range reduced.Tiles {
 		if v, found := tile["nameSize"]; found && v == nil {
 			delete(tile, "nameSize")
@@ -511,6 +535,7 @@ func (me *JSONDashboard) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	me.name = md.Metadata.Name
+
 	me.Contents = string(data)
 	return nil
 }

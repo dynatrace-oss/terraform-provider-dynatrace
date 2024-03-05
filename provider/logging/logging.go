@@ -19,6 +19,7 @@ package logging
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -45,6 +46,16 @@ type void struct{}
 func (v *void) Write(p []byte) (n int, err error) { return 0, nil }
 
 func createDebugLogger(name string) *log.Logger {
+
+	prefix := "terraform-provider-dynatrace"
+
+	logDebugPrefix := os.Getenv("DYNATRACE_LOG_DEBUG_PREFIX")
+	if len(logDebugPrefix) > 0 && logDebugPrefix != "false" {
+		prefix = logDebugPrefix
+	}
+
+	name = fmt.Sprintf("%s.%s", prefix, name)
+
 	if os.Getenv("DYNATRACE_DEBUG") != "true" {
 		return log.New(&void{}, "", log.LstdFlags)
 	}
@@ -58,8 +69,8 @@ var Debug = struct {
 	Info *log.Logger
 	Warn *log.Logger
 }{
-	Info: createDebugLogger("terraform-provider-dynatrace.export.log"),
-	Warn: createDebugLogger("terraform-provider-dynatrace.warnings.log"),
+	Info: createDebugLogger("export.log"),
+	Warn: createDebugLogger("warnings.log"),
 }
 
 var odl = &onDemandLogger{name: "terraform-provider-dynatrace.log"}

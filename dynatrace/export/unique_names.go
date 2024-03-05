@@ -37,16 +37,20 @@ func ResourceName(s string, cnt int) string {
 type UniqueNamer interface {
 	Name(string) string
 	Replace(ReplaceFunc) UniqueNamer
+	BlockName(string)
+	SetNameWritten(string) bool
 }
 
 func NewUniqueNamer() UniqueNamer {
-	return &nameCounter{m: map[string]int{}, mutex: new(sync.Mutex)}
+	return &nameCounter{m: map[string]int{}, mFull: map[string]bool{}, mWritten: map[string]bool{}, mutex: new(sync.Mutex)}
 }
 
 type nameCounter struct {
-	m       map[string]int
-	replace ReplaceFunc
-	mutex   *sync.Mutex
+	m        map[string]int
+	mFull    map[string]bool
+	mWritten map[string]bool
+	replace  ReplaceFunc
+	mutex    *sync.Mutex
 }
 
 func (me *nameCounter) Replace(replace ReplaceFunc) UniqueNamer {
@@ -67,15 +71,50 @@ func (me *nameCounter) Name(name string) string {
 		}
 	}
 
-	cnt, found := me.m[strings.ToLower(name)]
-	if !found {
-		me.m[strings.ToLower(name)] = 0
-		return name
-	} else {
-		me.m[strings.ToLower(name)] = cnt + 1
+	outName := ""
+
+	for {
+		cnt, found := me.m[strings.ToLower(name)]
+		if !found {
+			me.m[strings.ToLower(name)] = 0
+			outName = name
+		} else {
+			me.m[strings.ToLower(name)] = cnt + 1
+
+			if me.replace == nil {
+				outName = DefaultReplace(name, me.m[strings.ToLower(name)])
+			} else {
+				outName = me.replace(name, me.m[strings.ToLower(name)])
+			}
+		}
+
+		_, foundFull := me.mFull[strings.ToLower(outName)]
+		if foundFull {
+			continue
+		}
+
+		me.mFull[strings.ToLower(outName)] = true
+		break
 	}
-	if me.replace == nil {
-		return DefaultReplace(name, me.m[strings.ToLower(name)])
-	}
-	return me.replace(name, me.m[strings.ToLower(name)])
+
+	return outName
+}
+
+func (me *nameCounter) BlockName(name string) {
+	me.mutex.Lock()
+	defer me.mutex.Unlock()
+
+	me.mFull[strings.ToLower(name)] = true
+
+}
+
+func (me *nameCounter) SetNameWritten(name string) bool {
+	me.mutex.Lock()
+	defer me.mutex.Unlock()
+
+	isWritten := me.mWritten[strings.ToLower(name)]
+	me.mWritten[strings.ToLower(name)] = true
+
+	return isWritten
+
 }

@@ -18,6 +18,7 @@
 package export
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -29,6 +30,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -40,6 +42,10 @@ import (
 )
 
 var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
+var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
+var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
+
+const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
 type Environment struct {
 	mu                    sync.Mutex
@@ -49,6 +55,12 @@ type Environment struct {
 	Flags                 Flags
 	ResArgs               map[string][]string
 	ChildResourceOverride bool
+	PrevStateMapCommon    *StateMap
+	PrevNamesByModule     map[string][]string
+	ImportStateMap        *StateMap
+	ChildParentGroups     map[ResourceType]ResourceType
+	IsParentMap           map[ResourceType]bool
+	HasDependenciesTo     map[ResourceType]bool
 }
 
 func (me *Environment) TenantID() string {
@@ -88,6 +100,11 @@ func (me *Environment) DataSource(id string) *DataSource {
 }
 
 func (me *Environment) Export() (err error) {
+
+	if err = me.PreProcess(); err != nil {
+		return err
+	}
+
 	if err = me.InitialDownload(); err != nil {
 		return err
 	}
@@ -102,32 +119,150 @@ func (me *Environment) Export() (err error) {
 	return nil
 }
 
+func (me *Environment) PreProcess() error {
+	me.ProcessChildParentGroups()
+	me.ProcessHasDependenciesTo()
+	err := me.LoadImportState()
+	if err != nil {
+		return err
+	}
+	err = me.ProcessPrevState()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *Environment) ProcessChildParentGroups() {
+	me.ChildParentGroups = map[ResourceType]ResourceType{}
+	me.IsParentMap = map[ResourceType]bool{}
+
+	for resType, resource := range AllResources {
+		if resource.Parent != nil {
+			me.ChildParentGroups[resType] = *resource.Parent
+			me.ChildParentGroups[*resource.Parent] = *resource.Parent
+			me.IsParentMap[*resource.Parent] = true
+		}
+	}
+}
+
+func (me *Environment) ProcessHasDependenciesTo() {
+	me.HasDependenciesTo = map[ResourceType]bool{}
+
+	for _, resource := range AllResources {
+		for _, dep := range resource.Dependencies {
+			resSource := dep.ResourceType()
+			if resSource == "" {
+				continue
+			}
+
+			me.HasDependenciesTo[resSource] = true
+
+		}
+	}
+}
+
+func (me *Environment) LoadImportState() error {
+	if IMPORT_STATE_PATH == "" {
+		return nil
+	}
+
+	state, err := LoadStateFile(IMPORT_STATE_PATH)
+	if err != nil {
+		return err
+	}
+
+	stateMap := BuildStateMap(state)
+
+	me.ImportStateMap = stateMap
+
+	return nil
+}
+
+func (me *Environment) ProcessPrevState() error {
+	if PREV_STATE_ON {
+		// pass
+	} else {
+		return nil
+	}
+
+	stateThis, err := LoadStateThis()
+	if err != nil {
+		return err
+	}
+	stateLinked, err := LoadStateLinked()
+	if err != nil {
+		return err
+	}
+
+	stateMapThis := BuildStateMap(stateThis)
+	stateMapLinked := BuildStateMap(stateLinked)
+
+	me.PrevStateMapCommon, me.PrevNamesByModule = stateMapThis.ExtractCommonStates(stateMapLinked)
+
+	return nil
+}
+
 func (me *Environment) InitialDownload() error {
 	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
 		resourceTypes = append(resourceTypes, string(resourceType))
+		me.Module(ResourceType(resourceType)).blockPrevNames()
 	}
 	sort.Strings(resourceTypes)
 
 	if parallel {
 		var wg sync.WaitGroup
-		wg.Add(len(resourceTypes))
-		for _, sResourceType := range resourceTypes {
-			go func(sResourceType string) error {
-				defer wg.Done()
-				if shutdown.System.Stopped() {
-					return nil
-				}
-
-				keys := me.ResArgs[sResourceType]
-				module := me.Module(ResourceType(sResourceType))
-				if err := module.Download(false, keys...); err != nil {
-					return err
-				}
-				return nil
-			}(sResourceType)
+		itemCount := len(resourceTypes)
+		channel := make(chan string, itemCount)
+		maxThreads := 10
+		if maxThreads > itemCount {
+			maxThreads = itemCount
 		}
+		wg.Add(maxThreads)
+
+		processItem := func(sResourceType string) error {
+			keys := me.ResArgs[sResourceType]
+			module := me.Module(ResourceType(sResourceType))
+			if err := module.Download(parallel, keys...); err != nil {
+				return err
+			}
+			return nil
+		}
+
+		for i := 0; i < maxThreads; i++ {
+
+			go func() error {
+
+				for {
+					sResourceTypeLoop, ok := <-channel
+					if !ok {
+						wg.Done()
+						return nil
+					}
+					if shutdown.System.Stopped() {
+						wg.Done()
+						return nil
+					}
+
+					err := processItem(sResourceTypeLoop)
+
+					if err != nil {
+						wg.Done()
+						return err
+					}
+				}
+			}()
+
+		}
+
+		for _, sResourceType := range resourceTypes {
+			channel <- sResourceType
+		}
+
+		close(channel)
 		wg.Wait()
 	} else {
 		for _, sResourceType := range resourceTypes {
@@ -137,7 +272,7 @@ func (me *Environment) InitialDownload() error {
 
 			keys := me.ResArgs[sResourceType]
 			module := me.Module(ResourceType(sResourceType))
-			if err := module.Download(true, keys...); err != nil {
+			if err := module.Download(parallel, keys...); err != nil {
 				return err
 			}
 		}
@@ -148,45 +283,105 @@ func (me *Environment) InitialDownload() error {
 
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
 	resources := me.GetNonPostProcessedResources()
-	for len(resources) > 0 {
-		if shutdown.System.Stopped() {
-			return nil
-		}
-		m := map[ResourceType][]*Resource{}
-		for _, resource := range resources {
-			var reslist []*Resource
-			if rl, found := m[resource.Type]; !found {
-				reslist = []*Resource{}
-			} else {
-				reslist = rl
-			}
-			reslist = append(reslist, resource)
-			m[resource.Type] = reslist
-		}
-		const ClearLine = "\033[2K"
-		for k, reslist := range m {
-			fmt.Printf("- [POSTPROCESS] %s (0 of %d)", k, len(reslist))
-			for idx, resource := range reslist {
-				if shutdown.System.Stopped() {
+
+	if parallel {
+		for len(resources) > 0 {
+
+			m := getResMap(resources)
+			for _, reslist := range m {
+
+				var wg sync.WaitGroup
+				itemCount := len(reslist)
+				channel := make(chan *Resource, itemCount)
+				maxThreads := 50
+				if maxThreads > itemCount {
+					maxThreads = itemCount
+				}
+				wg.Add(maxThreads)
+
+				processItem := func(resource *Resource) error {
+					if shutdown.System.Stopped() {
+						return nil
+					}
+					if err := resource.PostProcess(); err != nil {
+						return err
+					}
+					fmt.Print("\r")
+					fmt.Printf("- [POSTPROCESS] %s - %s", resource.Type, resource.UniqueName)
+
 					return nil
 				}
-				if err := resource.PostProcess(); err != nil {
-					return err
+
+				for i := 0; i < maxThreads; i++ {
+
+					go func() error {
+
+						for {
+							res, ok := <-channel
+							if !ok {
+								wg.Done()
+								return nil
+							}
+							if shutdown.System.Stopped() {
+								wg.Done()
+								return nil
+							}
+
+							err := processItem(res)
+
+							if err != nil {
+								wg.Done()
+								return err
+							}
+						}
+					}()
+
+				}
+
+				for _, res := range reslist {
+					channel <- res
+				}
+
+				close(channel)
+				wg.Wait()
+			}
+
+			resources = me.GetNonPostProcessedResources()
+		}
+
+	} else {
+		for len(resources) > 0 {
+			if shutdown.System.Stopped() {
+				return nil
+			}
+			m := getResMap(resources)
+			const ClearLine = "\033[2K"
+			for k, reslist := range m {
+				fmt.Printf("- [POSTPROCESS] %s (0 of %d)", k, len(reslist))
+				for idx, resource := range reslist {
+					if shutdown.System.Stopped() {
+						return nil
+					}
+					if err := resource.PostProcess(); err != nil {
+						return err
+					}
+					fmt.Print(ClearLine)
+					fmt.Print("\r")
+					fmt.Printf("- [POSTPROCESS] %s (%d of %d)", k, idx+1, len(reslist))
+
 				}
 				fmt.Print(ClearLine)
 				fmt.Print("\r")
-				fmt.Printf("- [POSTPROCESS] %s (%d of %d)", k, idx+1, len(reslist))
-
+				fmt.Printf("- [POSTPROCESS] %s\n", k)
 			}
-			fmt.Print(ClearLine)
-			fmt.Print("\r")
-			fmt.Printf("- [POSTPROCESS] %s\n", k)
-		}
 
-		resources = me.GetNonPostProcessedResources()
+			resources = me.GetNonPostProcessedResources()
+		}
 	}
 
+	fmt.Println("Post-Processing Resources - Group child configs with parent configs ...")
 	for _, resource := range me.GetChildResources() {
 		if resource.GetParent().Status == ResourceStati.Erronous {
 			continue
@@ -209,7 +404,23 @@ func (me *Environment) PostProcess() error {
 	return nil
 }
 
+func getResMap(resources []*Resource) map[ResourceType][]*Resource {
+	m := map[ResourceType][]*Resource{}
+	for _, resource := range resources {
+		var reslist []*Resource
+		if rl, found := m[resource.Type]; !found {
+			reslist = []*Resource{}
+		} else {
+			reslist = rl
+		}
+		reslist = append(reslist, resource)
+		m[resource.Type] = reslist
+	}
+	return m
+}
+
 func (me *Environment) Finish() (err error) {
+	fmt.Println("Finishing touches ...")
 	if shutdown.System.Stopped() {
 		return nil
 	}
@@ -242,12 +453,14 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		return stored
 	}
 	module := &Module{
-		Type:        resType,
-		Resources:   map[string]*Resource{},
-		DataSources: map[string]*DataSource{},
-		namer:       NewUniqueNamer().Replace(ResourceName),
-		Status:      ModuleStati.Untouched,
-		Environment: me,
+		Type:                 resType,
+		Resources:            map[string]*Resource{},
+		DataSources:          map[string]*DataSource{},
+		namer:                NewUniqueNamer().Replace(ResourceName),
+		Status:               ModuleStati.Untouched,
+		Environment:          me,
+		ChildParentIDNameMap: map[string]string{},
+		ModuleMutex:          new(sync.Mutex),
 	}
 	me.Modules[resType] = module
 	return module
@@ -270,12 +483,12 @@ func (me *Environment) GetFlawedFolder() string {
 	return path.Join(me.OutputFolder, ".flawed")
 }
 
-func (me *Environment) RefersTo(resource *Resource) bool {
+func (me *Environment) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
 	for _, module := range me.Modules {
-		if module.RefersTo(resource) {
+		if module.RefersTo(resource, parentType) {
 			return true
 		}
 	}
@@ -415,14 +628,19 @@ func (me *Environment) WriteResourceFiles() (err error) {
 }
 
 func (me *Environment) RemoveNonReferencedModules() (err error) {
+	fmt.Println("Remove Non-Referenced Modules ...")
 	m := map[ResourceType]*Module{}
 	for k, module := range me.Modules {
 		m[k] = module
 	}
 	for k, module := range m {
-		if module.IsReferencedAsDataSource() || (!module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil) {
+		if module.IsReferencedAsDataSource() {
 			module.PurgeFolder()
 			delete(me.Modules, k)
+		} else if !module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil {
+			if me.Flags.FollowReferences {
+				module.PurgeFolder()
+			}
 		} else if len(module.GetPostProcessedResources()) == 0 {
 			module.PurgeFolder()
 			delete(me.Modules, k)
@@ -432,9 +650,52 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 }
 
 func (me *Environment) WriteProviderFiles() (err error) {
-	fmt.Println("Writing ___providers___.tf")
 
+	if QUICK_INIT {
+		// pass
+	} else {
+		err = me.WriteMainProviderFile()
+		if err != nil {
+			return err
+		}
+	}
+
+	if me.Flags.Flat {
+		return nil
+	}
+
+	fmt.Println("Writing modules ___providers___.tf")
+	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	if parallel {
+		var wg sync.WaitGroup
+		wg.Add(len(me.Modules))
+		for _, module := range me.Modules {
+			go func(module *Module) error {
+				defer wg.Done()
+				if shutdown.System.Stopped() {
+					return nil
+				}
+				if err = module.WriteProviderFile(false); err != nil {
+					return err
+				}
+				return nil
+			}(module)
+		}
+		wg.Wait()
+	} else {
+		for _, module := range me.Modules {
+			if err = module.WriteProviderFile(true); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (me *Environment) WriteMainProviderFile() error {
+	fmt.Println("Writing main ___providers___.tf")
 	var outputFile *os.File
+	var err error = nil
 	if outputFile, err = me.CreateFile("___providers___.tf"); err != nil {
 		return err
 	}
@@ -465,34 +726,7 @@ func (me *Environment) WriteProviderFiles() (err error) {
 `, providerSource, providerVersion)); err != nil {
 		return err
 	}
-	if me.Flags.Flat {
-		return nil
-	}
 
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
-	if parallel {
-		var wg sync.WaitGroup
-		wg.Add(len(me.Modules))
-		for _, module := range me.Modules {
-			go func(module *Module) error {
-				defer wg.Done()
-				if shutdown.System.Stopped() {
-					return nil
-				}
-				if err = module.WriteProviderFile(false); err != nil {
-					return err
-				}
-				return nil
-			}(module)
-		}
-		wg.Wait()
-	} else {
-		for _, module := range me.Modules {
-			if err = module.WriteProviderFile(true); err != nil {
-				return err
-			}
-		}
-	}
 	return nil
 }
 
@@ -576,30 +810,72 @@ func (me *Environment) WriteMainFile() error {
 		if len(me.Module(resourceType).GetPostProcessedResources()) == 0 {
 			continue
 		}
-		mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", resourceType.Trim()))
-		module := me.Module(resourceType)
-		mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", module.GetFolder(true)))
-		referencedResourceTypes := module.GetReferencedResourceTypes()
-		if len(referencedResourceTypes) > 0 {
-			for _, referencedResourceType := range referencedResourceTypes {
-				if me.Module(referencedResourceType).IsReferencedAsDataSource() {
-					continue
-				}
-				if referencedResourceType == resourceType {
-					continue
-				}
-				mainFile.WriteString(fmt.Sprintf("  %s = module.%s.resources\n", referencedResourceType, referencedResourceType.Trim()))
 
+		module := me.Module(resourceType)
+		me.writeOpeningMainSection(mainFile, resourceType.Trim(), module.GetFolder(true))
+
+		if ATOMIC_DEPENDENCIES {
+
+			uniqueNameExists := map[string]bool{}
+			referencedResources := module.GetResourceReferences()
+			if len(referencedResources) > 0 {
+				for _, referencedResource := range referencedResources {
+					if me.Module(referencedResource.Type).IsReferencedAsDataSource() {
+						continue
+					}
+					if referencedResource.Type == resourceType || (referencedResource.XParent != nil && referencedResource.XParent.Type == resourceType) {
+						continue
+					}
+					typeAndUniqueName := referencedResource.Type.Trim() + referencedResource.UniqueName
+					if uniqueNameExists[typeAndUniqueName] {
+						continue
+					}
+					uniqueNameExists[typeAndUniqueName] = true
+					mainFile.WriteString(fmt.Sprintf("  %s_%s = module.%s.resources_%s\n", referencedResource.Type, referencedResource.UniqueName, referencedResource.Type.Trim(), referencedResource.UniqueName))
+				}
+			}
+		} else {
+			referencedResourceTypes := module.GetReferencedResourceTypes()
+			if len(referencedResourceTypes) > 0 {
+				for _, referencedResourceType := range referencedResourceTypes {
+					if me.Module(referencedResourceType).IsReferencedAsDataSource() {
+						continue
+					}
+					if referencedResourceType == resourceType {
+						continue
+					}
+					mainFile.WriteString(fmt.Sprintf("  %s = module.%s.resources\n", referencedResourceType, referencedResourceType.Trim()))
+
+				}
 			}
 		}
-		mainFile.WriteString("}\n\n")
+		writeClosingMainSection(mainFile)
+
+		if module.SplitPathModuleNameMap != nil {
+			for _, splitName := range module.SplitPathModuleNameMap {
+				me.writeOpeningMainSection(mainFile, splitName, fmt.Sprintf("./modules/%s", splitName))
+				writeClosingMainSection(mainFile)
+			}
+		}
 	}
 	return nil
 }
 
+func (me *Environment) writeOpeningMainSection(mainFile *os.File, trimmedResourceType string, resourceFolder string) {
+	mainFile.WriteString(fmt.Sprintf("module \"%s\" {\n", trimmedResourceType))
+	mainFile.WriteString(fmt.Sprintf("  source = \"./%s\"\n", resourceFolder))
+}
+
+func writeClosingMainSection(mainFile *os.File) {
+	mainFile.WriteString("}\n\n")
+}
+
 func (me *Environment) ExecuteImport() error {
 	if me.Flags.ImportStateV2 {
-		return me.executeImportV2()
+		fmt.Println("Importing Resources into Terraform State ...")
+		err := me.executeImportV2()
+		fmt.Println("Imported Resources into Terraform State ...")
+		return err
 	}
 
 	return nil
@@ -636,6 +912,8 @@ func (me *Environment) executeImportV2() error {
 		state.Resources = append(state.Resources, resList...)
 	}
 
+	me.importPrevResources(&state)
+
 	bytes, err := json.MarshalIndent(state, "", "  ")
 	if err != nil {
 		return err
@@ -654,6 +932,31 @@ func (me *Environment) executeImportV2() error {
 	}
 
 	return nil
+}
+
+func (me *Environment) importPrevResources(state *state) {
+	if PREV_STATE_ON {
+		for _, statePrev := range me.PrevStateMapCommon.resources {
+			if statePrev.Used {
+				continue
+			}
+
+			module, found := me.Modules[ResourceType(statePrev.Resource.Type)]
+			if found {
+				// pass
+			} else {
+				fmt.Println("ERROR: [importPrevResources] Could not find Module: ", statePrev.Resource.Type)
+				continue
+			}
+
+			isWritten := module.namer.SetNameWritten(statePrev.Resource.Name)
+			if isWritten {
+				continue
+			}
+			fmt.Println("[importPrevResources] Post-Writing resource: ", statePrev.Resource.Name, statePrev.Resource.Type)
+			state.Resources = append(state.Resources, statePrev.Resource)
+		}
+	}
 }
 
 func genPlanCmd() *exec.Cmd {
@@ -714,4 +1017,156 @@ func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
 	}
 
 	return nil
+}
+
+func (me *Environment) FinishExport() error {
+
+	fmt.Println("Finish Export ...")
+	address.SaveOriginalMap(me.OutputFolder)
+	address.SaveCompletedMap(me.OutputFolder)
+
+	if QUICK_INIT {
+		err := me.WriteQuickModulesJSON()
+		if err != nil {
+			return err
+		}
+	} else if me.Flags.SkipTerraformInit {
+		// pass
+	} else {
+		err := me.RunTerraformInit()
+		if err != nil {
+			return err
+		}
+	}
+
+	if me.Flags.ImportStateV2 {
+		if err := me.ExecuteImport(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (me *Environment) RunTerraformInit() error {
+	exePath, _ := exec.LookPath("terraform")
+	fmt.Println("Terraform executable path: ", exePath)
+	cmdOptions := []string{"init", "-no-color"}
+
+	customProviderLocation := os.Getenv(ENV_VAR_CUSTOM_PROVIDER_LOCATION)
+	if len(customProviderLocation) != 0 && customProviderLocation != "" {
+		cmdOptions = append(cmdOptions, fmt.Sprint("-plugin-dir=", customProviderLocation))
+	}
+
+	cmd := exec.Command(exePath, cmdOptions...)
+	cmd.Dir = me.OutputFolder
+	cmd.Env = os.Environ()
+	outs, err := cmd.StderrPipe()
+	if err != nil {
+		return err
+	}
+	err = cmd.Start()
+	if err != nil {
+		fmt.Println("Terraform CLI not installed - skipping import")
+		return nil
+	} else {
+		fmt.Println("Executing 'terraform init'")
+		defer func() {
+			cmd.Wait()
+		}()
+
+		go readStuff(bufio.NewScanner(outs))
+	}
+	return nil
+}
+
+type TerraformInitModuleList struct {
+	Modules []TerraformInitModule `json:"Modules"`
+}
+type TerraformInitModule struct {
+	Key    string `json:"Key"`
+	Source string `json:"Source"`
+	Dir    string `json:"Dir"`
+}
+
+func (me *Environment) RunQuickInit() error {
+
+	if QUICK_INIT {
+		// pass
+	} else {
+		return nil
+	}
+
+	fmt.Println("Executing Quick Init ...")
+	err := me.WriteMainProviderFile()
+	if err != nil {
+		return err
+	}
+
+	err = me.RunTerraformInit()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *Environment) WriteQuickModulesJSON() error {
+
+	if QUICK_INIT {
+		// pass
+	} else {
+		return nil
+	}
+
+	modules := []TerraformInitModule{}
+	modules = append(modules, TerraformInitModule{Key: "", Source: "", Dir: ""})
+
+	for _, module := range me.Modules {
+		moduleNameTrimmed := module.Type.Trim()
+		modules = appendModule(modules, moduleNameTrimmed)
+
+		if module.SplitPathModuleNameMap != nil {
+			for _, splitName := range module.SplitPathModuleNameMap {
+				modules = appendModule(modules, splitName)
+			}
+		}
+
+	}
+
+	tfInitModules := TerraformInitModuleList{
+		Modules: modules,
+	}
+
+	bytes, err := json.MarshalIndent(tfInitModules, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	modulesDir := filepath.Join(me.OutputFolder, ".terraform", "modules")
+	os.MkdirAll(modulesDir, os.ModePerm)
+	fs := afero.NewOsFs()
+	filename := fmt.Sprint(filepath.Join(modulesDir, "modules.json"))
+	err = afero.WriteFile(fs, filename, bytes, 0664)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func readStuff(scanner *bufio.Scanner) {
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+	}
+}
+
+func appendModule(modules []TerraformInitModule, moduleNameTrimmed string) []TerraformInitModule {
+	modules = append(modules, TerraformInitModule{
+		Key:    moduleNameTrimmed,
+		Source: fmt.Sprintf("./modules/%s", moduleNameTrimmed),
+		Dir:    fmt.Sprintf("modules/%s", moduleNameTrimmed),
+	})
+	return modules
 }

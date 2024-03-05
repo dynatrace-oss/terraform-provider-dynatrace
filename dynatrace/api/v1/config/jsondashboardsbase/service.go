@@ -15,31 +15,29 @@
 * limitations under the License.
  */
 
-package jsondashboards
+package jsondashboardsbase
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
+	dashboardsbase "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboardsbase/settings"
 )
 
-const SchemaID = "v1:config:json-dashboards"
+const SchemaID = "v1:config:json-dashboards-base"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*dashboards.JSONDashboard] {
+func Service(credentials *settings.Credentials) settings.CRUDService[*dashboardsbase.JSONDashboardBase] {
 	return &service{settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*dashboards.JSONDashboard]("/api/config/v1/dashboards").WithStubs(&dashboards.DashboardList{}),
+		settings.DefaultServiceOptions[*dashboardsbase.JSONDashboardBase]("/api/config/v1/dashboards").WithStubs(&dashboardsbase.DashboardList{}),
 	)}
 }
 
 type service struct {
-	service settings.CRUDService[*dashboards.JSONDashboard]
+	service settings.CRUDService[*dashboardsbase.JSONDashboardBase]
 }
 
 func (me *service) List() (api.Stubs, error) {
@@ -56,53 +54,25 @@ func (me *service) List() (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *service) Get(id string, v *dashboards.JSONDashboard) error {
+func (me *service) Get(id string, v *dashboardsbase.JSONDashboardBase) error {
 	if err := me.service.Get(id, v); err != nil {
 		return err
 	}
-	v.DeNull()
 	return nil
 }
 
-func (me *service) Validate(v *dashboards.JSONDashboard) error {
-	if validator, ok := me.service.(settings.Validator[*dashboards.JSONDashboard]); ok {
+func (me *service) Validate(v *dashboardsbase.JSONDashboardBase) error {
+	if validator, ok := me.service.(settings.Validator[*dashboardsbase.JSONDashboardBase]); ok {
 		return validator.Validate(v)
 	}
 	return nil
 }
 
-func (me *service) Create(v *dashboards.JSONDashboard) (*api.Stub, error) {
-	doCreateService := true
-	var stub *api.Stub = nil
-	var err error = nil
-
-	if len(v.LinkID) > 0 {
-		doCreateService = false
-
-		err = me.Update(v.LinkID, v)
-		stub = &api.Stub{ID: v.LinkID}
-
-		if restError, ok := err.(rest.Error); ok {
-			if restError.Code == 404 {
-				doCreateService = true
-			}
-		}
-	}
-	if doCreateService {
-		stub, err = me.service.Create(v.EnrichRequireds())
-	}
-
-	return stub, err
+func (me *service) Create(v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
+	return me.service.Create(v.EnrichRequireds())
 }
 
-func (me *service) Update(id string, v *dashboards.JSONDashboard) error {
-
-	if len(v.LinkID) > 0 {
-		if id != strings.ToLower(v.LinkID) {
-			return fmt.Errorf("dashboard ID cannot be modified, please destroy and create with the new ID")
-		}
-	}
-
+func (me *service) Update(id string, v *dashboardsbase.JSONDashboardBase) error {
 	jsonDashboard := v
 	oldContents := jsonDashboard.Contents
 	jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)

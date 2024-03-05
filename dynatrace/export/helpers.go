@@ -27,6 +27,9 @@ import (
 // To speed things up when using Dynatrace Config Manager
 var HCL_NO_FORMAT = os.Getenv("DYNATRACE_HCL_NO_FORMAT") == "true"
 
+// To get more unique names when using Dynatrace Config Manager
+var NAME_REPLACE_DASH = os.Getenv("DYNATRACE_NAME_REPLACE_DASH") == "true"
+
 func format(name string, force bool) {
 	if HCL_NO_FORMAT {
 		return
@@ -53,30 +56,34 @@ func fileSystemName(filename string) string {
 }
 
 func toTerraformName(s string) string {
+	replaceChar := "_"
+	if NAME_REPLACE_DASH {
+		replaceChar = "-"
+	}
 	result := ""
 
 	// s = strings.ReplaceAll(s, "@", "_at_")
-	s = strings.ReplaceAll(s, "@", "_")
+	s = strings.ReplaceAll(s, "@", replaceChar)
 	// s = strings.ReplaceAll(s, "/", "_slash_")
-	s = strings.ReplaceAll(s, "/", "_")
+	s = strings.ReplaceAll(s, "/", replaceChar)
 	// s = strings.ReplaceAll(s, "(", "_lrb_")
-	s = strings.ReplaceAll(s, "(", "_")
+	s = strings.ReplaceAll(s, "(", replaceChar)
 	// s = strings.ReplaceAll(s, ")", "_rrb_")
-	s = strings.ReplaceAll(s, ")", "_")
+	s = strings.ReplaceAll(s, ")", replaceChar)
 	// s = strings.ReplaceAll(s, "{", "_lcb_")
-	s = strings.ReplaceAll(s, "{", "_")
+	s = strings.ReplaceAll(s, "{", replaceChar)
 	// s = strings.ReplaceAll(s, "}", "_rcb_")
-	s = strings.ReplaceAll(s, "}", "_")
+	s = strings.ReplaceAll(s, "}", replaceChar)
 	// s = strings.ReplaceAll(s, "[", "_ldb_")
-	s = strings.ReplaceAll(s, "[", "_")
+	s = strings.ReplaceAll(s, "[", replaceChar)
 	// s = strings.ReplaceAll(s, "]", "_rdb_")
-	s = strings.ReplaceAll(s, "]", "_")
+	s = strings.ReplaceAll(s, "]", replaceChar)
 	// s = strings.ReplaceAll(s, "|", "_P_")
-	s = strings.ReplaceAll(s, "|", "_")
+	s = strings.ReplaceAll(s, "|", replaceChar)
 	// s = strings.ReplaceAll(s, ":", "_colon_")
-	s = strings.ReplaceAll(s, ":", "_")
+	s = strings.ReplaceAll(s, ":", replaceChar)
 	// s = strings.ReplaceAll(s, ".", "_dot_")
-	s = strings.ReplaceAll(s, ".", "_")
+	s = strings.ReplaceAll(s, ".", replaceChar)
 	for _, ch := range s {
 		if unicode.IsDigit(ch) {
 			result = result + string(ch)
@@ -95,12 +102,21 @@ func toTerraformName(s string) string {
 		result = "unnamed"
 	}
 
+	for strings.Contains(result, "__") {
+		result = strings.ReplaceAll(result, "__", "_")
+	}
+	for strings.Contains(result, "--") {
+		result = strings.ReplaceAll(result, "--", "-")
+	}
+	for strings.Contains(result, "_-") {
+		result = strings.ReplaceAll(result, "_-", "-")
+	}
+	for strings.Contains(result, "-_") {
+		result = strings.ReplaceAll(result, "-_", "-")
+	}
 	first := []rune(result)[0]
 	if !unicode.IsLetter(first) && first != '_' {
 		result = "_" + result
-	}
-	for strings.Contains(result, "__") {
-		result = strings.ReplaceAll(result, "__", "_")
 	}
 	return strings.TrimSuffix(result, "_")
 }

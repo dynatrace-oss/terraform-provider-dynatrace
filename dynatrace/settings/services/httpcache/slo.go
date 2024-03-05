@@ -11,6 +11,7 @@ import (
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type GetSLORequest struct {
@@ -40,7 +41,9 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 			return err
 		}
 		if stub == nil {
-			return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+			logging.Debug.Info.Printf("[HTTP_CACHE_slo_Tar] [%s] [FAILED] [%s] 404 not found, Note that we Cannot access a disabled SLO through API v2", me.SchemaID, me.ID)
+			logging.Debug.Warn.Printf("[HTTP_CACHE_slo_Tar] [%s] [FAILED] [%s] 404 not found, Note that we Cannot access a disabled SLO through API v2", me.SchemaID, me.ID)
+			return rest.Error{Code: 404, Message: fmt.Sprintf("slo_Tar %s not found", me.ID)}
 		}
 		wrapper := struct {
 			Downloaded struct {
@@ -63,7 +66,9 @@ func (me *GetSLORequest) Finish(vs ...any) error {
 		})
 		return nil
 	}
-	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+	logging.Debug.Info.Printf("[HTTP_CACHE_slo_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+	logging.Debug.Warn.Printf("[HTTP_CACHE_slo_Tar Nil] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ID)
+	return rest.Error{Code: 404, Message: fmt.Sprintf("slo_Tar Nil %s not found", me.ID)}
 }
 
 func (me *GetSLORequest) Expect(codes ...int) rest.Request {

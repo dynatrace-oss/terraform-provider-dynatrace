@@ -8,8 +8,10 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 type GetV1 struct {
@@ -30,7 +32,9 @@ func (me *GetV1) Finish(v any) error {
 			return err
 		}
 		if stub == nil {
-			return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+			logging.Debug.Info.Printf("[HTTP_CACHE_V1_Tar] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+			logging.Debug.Warn.Printf("[HTTP_CACHE_V1_Tar] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+			return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar %s not found for %s", me.ID, me.SchemaID)}
 		}
 		wrapper := struct {
 			Downloaded struct {
@@ -52,7 +56,9 @@ func (me *GetV1) Finish(v any) error {
 		})
 		return nil
 	}
-	return &rest.Error{Code: 404, Message: fmt.Sprintf("%s not found", me.ID)}
+	logging.Debug.Info.Printf("[HTTP_CACHE_V1_Tar Nil] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+	logging.Debug.Warn.Printf("[HTTP_CACHE_V1_Tar Nil] [%s] [%s] [FAILED] [%s] 404 not found", me.SchemaID, me.ServiceSchemaID, me.ID)
+	return rest.Error{Code: 404, Message: fmt.Sprintf("V1_Tar Nil %s not found for %s", me.ID, me.SchemaID)}
 }
 
 type ListV1 struct {
@@ -60,9 +66,7 @@ type ListV1 struct {
 }
 
 func (me *ListV1) Finish(v any) error {
-	if me.SchemaID == "synthetic-monitor" {
-		fmt.Println(me.SchemaID)
-	}
+
 	stubList := &api.StubList{Values: []*api.Stub{}}
 
 	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/" + strings.ReplaceAll(me.SchemaID, ":", ""))
@@ -160,6 +164,38 @@ func (me *ListPrivateSyntheticLocationsV1) Finish(v any) error {
 		}
 	}
 	data, err := json.Marshal(map[string]any{"locations": locations})
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	return nil
+}
+
+type ListDashboardsV1 struct{}
+
+func (me *ListDashboardsV1) Finish(v any) error {
+	stubList := &dashboards.DashboardList{Dashboards: []*dashboards.DashboardStub{}}
+
+	tarFolder, _, err := tar.NewExisting(CACHE_FOLDER + "/dashboard")
+	if err != nil {
+		return err
+	}
+
+	if tarFolder != nil {
+		stubs, err := tarFolder.List()
+		if err != nil {
+			return err
+		}
+
+		for _, stub := range stubs {
+			stubList.Dashboards = append(stubList.Dashboards, &dashboards.DashboardStub{ID: stub.ID, Name: &stub.Name, Owner: &stub.EntityID})
+		}
+	}
+
+	data, err := json.Marshal(stubList)
 	if err != nil {
 		return err
 	}

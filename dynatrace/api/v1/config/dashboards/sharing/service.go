@@ -86,12 +86,13 @@ func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 		}
 	}
 	for _, stub := range stubs {
+
 		if stub.ID == id {
 			dashboardName = stub.Name
 			break
 		}
 	}
-	if len(dashboardName) == 0 {
+	if len(dashboardName) == 0 || dashboardName == id {
 		dashboard := dashboards.JSONDashboard{}
 		if err := me.dashboardService.Get(id, &dashboard); err != nil {
 			return err
@@ -99,7 +100,7 @@ func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 		dashboardName = dashboard.Name()
 	}
 
-	v.Name = "ShareSettings for " + dashboardName
+	v.DashboardName = dashboardName
 	return nil
 }
 
@@ -177,9 +178,6 @@ func (me *service) List() (api.Stubs, error) {
 	var stubs api.Stubs
 	if stubs, err = me.dashboardService.List(); err != nil {
 		return nil, err
-	}
-	for _, stub := range stubs {
-		stub.Name = "ShareSettings for " + stub.Name
 	}
 	return stubs.ToStubs(), nil
 }

@@ -38,15 +38,19 @@ import (
 )
 
 type Module struct {
-	Environment *Environment
-	Type        ResourceType
-	Resources   map[string]*Resource
-	DataSources map[string]*DataSource
-	namer       UniqueNamer
-	Status      ModuleStatus
-	Error       error
-	Descriptor  *ResourceDescriptor
-	Service     settings.CRUDService[settings.Settings]
+	Environment            *Environment
+	Type                   ResourceType
+	Resources              map[string]*Resource
+	DataSources            map[string]*DataSource
+	namer                  UniqueNamer
+	Status                 ModuleStatus
+	Error                  error
+	Descriptor             *ResourceDescriptor
+	Service                settings.CRUDService[settings.Settings]
+	ChildParentIDNameMap   map[string]string
+	ModuleMutex            *sync.Mutex
+	SplitPathModuleNameMap map[string]string
+	SplitList              *splitList
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -100,8 +104,11 @@ func (me *Module) ContainsPostProcessedResources() bool {
 
 func (me *Module) GetResourcesReferencedFromOtherModules() []*Resource {
 	resources := []*Resource{}
-	for _, resource := range me.Resources {
-		if me.Environment.RefersTo(resource) {
+
+	myResources := me.GetResourcesAndChildOfResources()
+
+	for _, resource := range myResources {
+		if me.Environment.RefersTo(resource, me.Type) {
 			resources = append(resources, resource)
 		}
 	}
@@ -114,7 +121,7 @@ func (me *Module) GetResourcesReferencedFromOtherModules() []*Resource {
 func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	resourceTypes := map[ResourceType]ResourceType{}
 	for _, referencedResource := range me.GetResourceReferences() {
-		if referencedResource.Type == me.Type {
+		if referencedResource.Type == me.Type || (referencedResource.XParent != nil && referencedResource.XParent.Type == me.Type) {
 			continue
 		}
 		resourceTypes[referencedResource.Type] = referencedResource.Type
@@ -129,12 +136,28 @@ func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	return result
 }
 
+func (me *Module) GetResourcesAndChildOfResources() []*Resource {
+	resources := make([]*Resource, 0, len(me.Resources))
+
+	for _, resource := range me.Resources {
+		resources = append(resources, resource)
+	}
+
+	childResourcesList := me.GetChildOfResources()
+	resources = append(resources, childResourcesList...)
+
+	return resources
+
+}
+
 func (me *Module) GetResourceReferences() []*Resource {
 	resources := map[string]*Resource{}
-	if len(me.Resources) == 0 {
+	myResources := me.GetResourcesAndChildOfResources()
+
+	if len(myResources) == 0 {
 		return []*Resource{}
 	}
-	for _, resource := range me.Resources {
+	for _, resource := range myResources {
 		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
@@ -211,12 +234,22 @@ func (me *Module) GetFile(name string) string {
 	return path.Join(me.GetFolder(), name)
 }
 
+func (me *Module) GetFileSpecificPath(name string, specificPath string) string {
+	return path.Join(specificPath, name)
+}
+
 func (me *Module) OpenFile(name string) (file *os.File, err error) {
 	return os.OpenFile(me.GetFile(name), os.O_APPEND|os.O_CREATE, 0666)
 }
 
 func (me *Module) CreateFile(name string) (*os.File, error) {
 	fileName := me.GetFile(name)
+	os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
+	return os.Create(fileName)
+}
+
+func (me *Module) CreateFileSpecificPath(name string, specificPath string) (*os.File, error) {
+	fileName := me.GetFileSpecificPath(name, specificPath)
 	os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
 	return os.Create(fileName)
 }
@@ -234,11 +267,29 @@ func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 	if logToScreen {
 		fmt.Println("- " + me.Type)
 	}
+	err = me.writeProviderFile(me.GetFolder())
+	if err != nil {
+		return err
+	}
+	if me.SplitPathModuleNameMap != nil {
+		for specificPath := range me.SplitPathModuleNameMap {
+			err = me.writeProviderFile(specificPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (me *Module) writeProviderFile(specificPath string) error {
+	var err error
+
 	if err = me.MkdirAll(false); err != nil {
 		return err
 	}
 	var outputFile *os.File
-	if outputFile, err = me.CreateFile("___providers___.tf"); err != nil {
+	if outputFile, err = me.CreateFileSpecificPath("___providers___.tf", specificPath); err != nil {
 		return err
 	}
 	defer func() {
@@ -266,6 +317,7 @@ func (me *Module) WriteProviderFile(logToScreen bool) (err error) {
 `, providerSource, providerVersion)); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -282,37 +334,83 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	if !me.ContainsPostProcessedResources() {
 		return
 	}
-	referencedResourceTypes := me.GetReferencedResourceTypes()
-	if len(referencedResourceTypes) == 0 {
-		return nil
-	}
-	if logToScreen {
-		fmt.Println("- " + me.Type)
-	}
 	var variablesFile *os.File
 	if variablesFile, err = me.CreateFile("___variables___.tf"); err != nil {
 		return err
 	}
+
 	defer func() {
 		variablesFile.Close()
 
-		exePath, _ := exec.LookPath("terraform.exe")
-		cmd := exec.Command(exePath, "fmt", variablesFile.Name())
-		cmd.Start()
-		cmd.Wait()
+		if HCL_NO_FORMAT {
+			// pass
+		} else {
+			exePath, _ := exec.LookPath("terraform.exe")
+			cmd := exec.Command(exePath, "fmt", variablesFile.Name())
+			cmd.Start()
+			cmd.Wait()
+		}
 	}()
 
-	sort.Slice(referencedResourceTypes, func(i, j int) bool {
-		return referencedResourceTypes[i] < referencedResourceTypes[j]
-	})
-	for _, resourceType := range referencedResourceTypes {
-		if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
-			if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
-				type = any
+	if ATOMIC_DEPENDENCIES {
+		uniqueNameExists := map[string]bool{}
+		referencedResources := me.GetResourceReferences()
+		if len(referencedResources) == 0 {
+			return nil
+		}
+		if logToScreen {
+			fmt.Println("- " + me.Type)
+		}
+
+		sort.Slice(referencedResources, func(i, j int) bool {
+			if referencedResources[i].UniqueName == referencedResources[j].UniqueName {
+				return referencedResources[i].UniqueName < referencedResources[j].UniqueName
 			}
-			
-			`, resourceType)); err != nil {
-				return err
+			return referencedResources[i].UniqueName < referencedResources[j].UniqueName
+		})
+		for _, resource := range referencedResources {
+			if resource.Type == me.Type || (resource.XParent != nil && resource.XParent.Type == me.Type) {
+				continue
+			}
+
+			typeAndUniqueName := resource.Type.Trim() + resource.UniqueName
+			if uniqueNameExists[typeAndUniqueName] {
+				continue
+			}
+			uniqueNameExists[typeAndUniqueName] = true
+
+			if !me.Environment.Module(resource.Type).IsReferencedAsDataSource() {
+				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s_%s" {
+	type = any
+}
+				
+`, resource.Type, resource.UniqueName)); err != nil {
+					return err
+				}
+			}
+		}
+	} else {
+		referencedResourceTypes := me.GetReferencedResourceTypes()
+		if len(referencedResourceTypes) == 0 {
+			return nil
+		}
+
+		if logToScreen {
+			fmt.Println("- " + me.Type)
+		}
+
+		sort.Slice(referencedResourceTypes, func(i, j int) bool {
+			return referencedResourceTypes[i] < referencedResourceTypes[j]
+		})
+		for _, resourceType := range referencedResourceTypes {
+			if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
+				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
+	type = any
+}
+		
+`, resourceType)); err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -465,31 +563,62 @@ func (me *Module) WriteResourcesFile() (err error) {
 		format(resourcesFile.Name(), true)
 	}()
 
-	if _, err = resourcesFile.WriteString(`output "resources" {
+	if ATOMIC_DEPENDENCIES {
+
+		uniqueNameExists := map[string]bool{}
+		for _, resource := range referencedResources {
+
+			if uniqueNameExists[resource.UniqueName] {
+				continue
+			}
+			uniqueNameExists[resource.UniqueName] = true
+
+			if _, err = resourcesFile.WriteString(fmt.Sprintf(`output "resources_%s" {
+  value = {
+  `, resource.UniqueName)); err != nil {
+				return err
+			}
+
+			if _, err = resourcesFile.WriteString(fmt.Sprintf(`  value = %s.%s
+	  `, resource.Type, resource.UniqueName)); err != nil {
+				return err
+			}
+
+			if _, err = resourcesFile.WriteString(`}
+  }
+`); err != nil {
+				return err
+			}
+		}
+	} else {
+		if _, err = resourcesFile.WriteString(`output "resources" {
   value = {
   `); err != nil {
-		return err
-	}
-
-	for _, resource := range referencedResources {
-		if _, err = resourcesFile.WriteString(fmt.Sprintf(`  %s = %s.%s
-  `, resource.UniqueName, resource.Type, resource.UniqueName)); err != nil {
 			return err
 		}
-	}
-	if _, err = resourcesFile.WriteString(`}
-}
-	`); err != nil {
-		return err
+
+		for _, resource := range referencedResources {
+			if _, err = resourcesFile.WriteString(fmt.Sprintf(`  %s = %s.%s
+			  `, resource.UniqueName, resource.Type, resource.UniqueName)); err != nil {
+				return err
+			}
+		}
+		if _, err = resourcesFile.WriteString(`}
+  }
+`); err != nil {
+
+			return err
+		}
+
 	}
 	return nil
 }
 
-func (me *Module) RefersTo(resource *Resource) bool {
+func (me *Module) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
-	if me.Type == resource.Type {
+	if me.Type == resource.Type || (me.Descriptor.Parent != nil && *me.Descriptor.Parent == parentType) {
 		return false
 	}
 	for _, res := range me.Resources {
@@ -498,6 +627,27 @@ func (me *Module) RefersTo(resource *Resource) bool {
 		}
 	}
 	return false
+}
+
+func (me *Module) GetChildOfResources() []*Resource {
+	resources := []*Resource{}
+	if me.Environment.ChildResourceOverride {
+		return resources
+	}
+
+	for _, module := range me.Environment.Modules {
+		childDescriptor := module.Descriptor
+		isParent := !me.Environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
+		if isParent {
+			for _, resource := range module.Resources {
+				if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
+					resources = append(resources, resource)
+				}
+			}
+		}
+	}
+
+	return resources
 }
 
 func (me *Module) GetChildResources() []*Resource {
@@ -533,6 +683,8 @@ func (me *Module) GetPostProcessedResources() []*Resource {
 	return resources
 }
 
+const ClearLine = "\033[2K"
+
 func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 	if shutdown.System.Stopped() {
 		return nil
@@ -547,84 +699,178 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		}
 	}
 
-	const ClearLine = "\033[2K"
-	if len(keys) == 0 {
-		length := len(me.Resources)
-		if multiThreaded {
-			fmt.Printf("Downloading \"%s\"\n", me.Type)
-		} else {
-			fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
-		}
-		idx := 0
-		var wg sync.WaitGroup
-		wg.Add(len(me.Resources))
-		if len(me.Resources) > 0 {
-			logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
-		}
-		for _, resource := range me.Resources {
-			go func(resource *Resource) error {
-				defer wg.Done()
-				if shutdown.System.Stopped() {
-					return nil
-				}
-				if err := resource.Download(); err != nil {
-					return err
-				}
-				idx++
-				if !multiThreaded {
-					fmt.Print(ClearLine)
-					fmt.Print("\r")
-					fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-				}
-				return nil
-			}(resource)
-		}
-		wg.Wait()
-		if !multiThreaded {
-			fmt.Print(ClearLine)
-			fmt.Print("\r")
-			fmt.Printf("Downloading \"%s\"\n", me.Type)
-		}
-		return nil
-	}
 	resourcesToDownload := []*Resource{}
-	for _, key := range keys {
+
+	if len(keys) == 0 {
 		for _, resource := range me.Resources {
-			if resource.ID == key {
-				resourcesToDownload = append(resourcesToDownload, resource)
+			resourcesToDownload = append(resourcesToDownload, resource)
+		}
+	} else {
+		for _, key := range keys {
+			for _, resource := range me.Resources {
+				if resource.ID == key {
+					resourcesToDownload = append(resourcesToDownload, resource)
+				}
+			}
+		}
+
+	}
+
+	err = me.downloadResources(resourcesToDownload, multiThreaded)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *Module) blockPrevNames() {
+	if PREV_STATE_ON {
+		names, found := me.Environment.PrevNamesByModule[string(me.Type)]
+		if found {
+			for _, name := range names {
+				me.namer.BlockName(name)
 			}
 		}
 	}
-	length := len(me.Resources)
-	if multiThreaded {
-		fmt.Printf("Downloading \"%s\"\n", me.Type)
-	} else {
-		fmt.Printf("Downloading \"%s\" (0 of %d)", me.Type, length)
+}
+
+func (me *Module) CreateBundleFile(bundle bundleToDownload) (*os.File, error) {
+	me.MkdirAll(false)
+	file, err := me.GetBundleFile(bundle)
+	if err != nil {
+		return nil, err
 	}
+
+	return os.Create(file)
+}
+
+func (me *Module) GetBundleFileName(bundle bundleToDownload) string {
+	return fileSystemName(fmt.Sprintf("bundle_%d.%s.tf", bundle.bundleId, me.Type.Trim()))
+}
+
+func (me *Module) GetBundleFile(bundle bundleToDownload) (string, error) {
+	folderPath := me.GetFolder()
+
+	if bundle.splitId > 0 {
+		folderPath = fmt.Sprintf("%s_%d", folderPath, bundle.splitId)
+		err := os.MkdirAll(folderPath, os.ModePerm)
+		if err != nil {
+			return "", err
+		}
+		splitName := fmt.Sprintf("%s_%d", me.Type.Trim(), bundle.splitId)
+		me.saveSplitPath(folderPath, splitName)
+	}
+
+	return path.Join(folderPath, me.GetBundleFileName(bundle)), nil
+}
+
+func (me *Module) saveSplitPath(folderPath string, splitName string) {
+	me.ModuleMutex.Lock()
+	if me.SplitPathModuleNameMap == nil {
+		me.SplitPathModuleNameMap = map[string]string{}
+	}
+	me.SplitPathModuleNameMap[folderPath] = splitName
+	me.ModuleMutex.Unlock()
+}
+
+type bundleToDownload struct {
+	bundleId int
+	splitId  int
+}
+
+func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThreaded bool) error {
+	length := len(me.Resources)
+	resourcesCount := len(resourcesToDownload)
+	maxThreads := 50
+
+	bundleConfig := me.getResourcesPerBundle(resourcesCount, maxThreads)
+	bundleText := ""
+	if bundleConfig.resourcesPerBundle > 1 {
+		bundleText = fmt.Sprintf(" in %d bundles of %d resources", bundleConfig.bundlesCount, bundleConfig.resourcesPerBundle)
+	}
+	splitText := ""
+	if bundleConfig.splitCount > 1 {
+		splitText = fmt.Sprintf(" in %d splits of %d bundles ", bundleConfig.splitCount, bundleConfig.bundlesPerSplitModule)
+	}
+
+	if me.SplitList == nil {
+		me.SplitList = &splitList{
+			folders:      make(map[int]*splitFolder, bundleConfig.splitCount),
+			folderMutex:  new(sync.Mutex),
+			bundleConfig: bundleConfig,
+		}
+		defer me.closeLastBundleFiles()
+	}
+
+	if multiThreaded {
+		fmt.Printf("Downloading \"%s\" Count:  %d %s %s\n", me.Type, resourcesCount, bundleText, splitText)
+	} else {
+		fmt.Printf("Downloading \"%s\" (0 of %d) %s %s", me.Type, resourcesCount, bundleText, splitText)
+	}
+
 	idx := 0
 	var wg sync.WaitGroup
-	wg.Add(len(resourcesToDownload))
+	itemCount := len(resourcesToDownload)
+	channel := make(chan *Resource, itemCount)
+	mutex := sync.Mutex{}
+	if !multiThreaded {
+		maxThreads = 1
+	}
+	if maxThreads > itemCount {
+		maxThreads = itemCount
+	}
+	wg.Add(maxThreads)
+
+	processItem := func(resource *Resource) error {
+		if err := resource.Download(); err != nil {
+			return err
+		}
+		mutex.Lock()
+		idx++
+		if !multiThreaded {
+			fmt.Print(ClearLine)
+			fmt.Print("\r")
+			fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
+		}
+		mutex.Unlock()
+		return nil
+	}
+
+	for i := 0; i < maxThreads; i++ {
+
+		go func() error {
+
+			for {
+				resourceLoop, ok := <-channel
+				if !ok {
+					wg.Done()
+					return nil
+				}
+				if shutdown.System.Stopped() {
+					wg.Done()
+					return nil
+				}
+
+				err := processItem(resourceLoop)
+
+				if err != nil {
+					wg.Done()
+					return err
+				}
+			}
+		}()
+
+	}
+
 	if len(resourcesToDownload) > 0 {
 		logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
 	}
 	for _, resource := range resourcesToDownload {
-		go func(resource *Resource) error {
-			defer wg.Done()
-			if shutdown.System.Stopped() {
-				return nil
-			}
-			if err := resource.Download(); err != nil {
-				return err
-			}
-			idx++
-			if !multiThreaded {
-				fmt.Print(ClearLine)
-				fmt.Print("\r")
-				fmt.Printf("Downloading \"%s\" (%d of %d)", me.Type, idx, length)
-			}
-			return nil
-		}(resource)
+		channel <- resource
 	}
+
+	close(channel)
 	wg.Wait()
 	if !multiThreaded {
 		fmt.Print(ClearLine)
@@ -632,6 +878,239 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		fmt.Printf("Downloading \"%s\"\n", me.Type)
 	}
 	return nil
+}
+
+type splitList struct {
+	folders      map[int]*splitFolder
+	folderMutex  *sync.Mutex
+	bundleConfig bundlingConfig
+}
+
+type splitFolder struct {
+	splitId               int
+	currentBundleId       int
+	currentBundleFile     *os.File
+	currentBundleResCount int
+	splitList             *splitList
+	splitMutex            *sync.Mutex
+}
+
+func (me *splitList) getSplitFolder(splitIdRes int) *splitFolder {
+	(*me).folderMutex.Lock()
+	defer (*me).folderMutex.Unlock()
+
+	folder, found := (*me).folders[splitIdRes]
+
+	if found {
+		// pass
+	} else {
+		folder = &splitFolder{
+			splitId:               splitIdRes,
+			currentBundleId:       -1,
+			currentBundleFile:     nil,
+			currentBundleResCount: 0,
+			splitList:             me,
+			splitMutex:            new(sync.Mutex),
+		}
+		(*me).folders[splitIdRes] = folder
+	}
+
+	return folder
+}
+
+func (me *Module) getLockBundleFile(resource *Resource) (*splitFolder, error) {
+
+	splitId, importSplitFound := me.Environment.ImportStateMap.GetResourceSplitId(resource)
+
+	hasSplitOrBundles := false
+	if me.SplitList != nil {
+		hasSplitOrBundles = me.SplitList.bundleConfig.splitCount > 1 || me.SplitList.bundleConfig.resourcesPerBundle > 1
+	}
+
+	if importSplitFound {
+		if splitId == 0 {
+			if hasSplitOrBundles {
+				// pass
+			} else {
+				return nil, nil
+			}
+		}
+	} else {
+		if hasSplitOrBundles {
+			splitId = getSplitID(resource.UniqueName, me.SplitList.bundleConfig.splitCount)
+		} else {
+			return nil, nil
+		}
+	}
+
+	splitFolder := me.SplitList.getSplitFolder(splitId)
+
+	splitFolder.splitMutex.Lock()
+
+	if splitFolder.currentBundleFile == nil {
+		var err error
+		splitFolder.currentBundleId += 1
+		splitFolder.currentBundleFile, err = me.CreateBundleFile(bundleToDownload{
+			splitId:  splitFolder.splitId,
+			bundleId: splitFolder.currentBundleId,
+		})
+		splitFolder.currentBundleResCount = 0
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return splitFolder, nil
+}
+
+func (me *splitFolder) releaseUnlockBundleFile() error {
+	defer me.splitMutex.Unlock()
+
+	me.currentBundleResCount++
+
+	if me.currentBundleResCount >= me.splitList.bundleConfig.resourcesPerBundle {
+		var err error
+		me.currentBundleResCount = 0
+
+		err = me.currentBundleFile.Close()
+		if err != nil {
+			return err
+		}
+
+		me.currentBundleFile = nil
+	}
+
+	return nil
+}
+
+func (me *Module) closeLastBundleFiles() error {
+	me.SplitList.folderMutex.Lock()
+	defer me.SplitList.folderMutex.Unlock()
+
+	for _, splitFolder := range me.SplitList.folders {
+		err := splitFolder.closeLastFile()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (me *splitFolder) closeLastFile() error {
+	me.splitMutex.Lock()
+	defer me.splitMutex.Unlock()
+
+	if me.currentBundleFile != nil {
+		err := me.currentBundleFile.Close()
+		me.currentBundleFile = nil
+		return err
+	}
+
+	return nil
+}
+
+func getSplitID(input string, splitCount int) int {
+	hashValue := GetHash32(input)
+	splitID := int(hashValue % uint32(splitCount))
+	return splitID
+}
+
+type bundlingConfig struct {
+	resourcesPerBundle    int
+	bundlesPerSplitModule int
+	bundlesCount          int
+	splitCount            int
+}
+
+func (me *Module) getResourcesPerBundle(resourcesCount int, maxThreads int) bundlingConfig {
+	resourcesPerBundle := 1
+	bundlesPerSplitModule := resourcesCount
+
+	if me.IsBundleImpossible() {
+		return bundlingConfig{
+			resourcesPerBundle:    resourcesPerBundle,
+			bundlesPerSplitModule: bundlesPerSplitModule,
+			bundlesCount:          1,
+			splitCount:            1,
+		}
+	}
+
+	resourcesForSplitModuleMin := 100
+	splitCountMax := maxThreads
+	bundlingDivisor := 10
+
+	resourcesForBundlingMin := 30
+	resourcesPerBundlingMax := 100
+
+	if resourcesCount > resourcesForBundlingMin {
+		resourcesPerBundle = CeilDivide(resourcesCount, bundlingDivisor)
+		if resourcesPerBundle > resourcesPerBundlingMax {
+			resourcesPerBundle = resourcesPerBundlingMax
+		}
+	}
+
+	bundlesCount := CeilDivide(resourcesCount, resourcesPerBundle)
+	splitCount := CeilDivide(resourcesCount, resourcesForSplitModuleMin)
+	if splitCount > splitCountMax {
+		splitCount = splitCountMax
+	}
+
+	if resourcesCount > resourcesForSplitModuleMin {
+		bundlesPerSplitModule = CeilDivide(bundlesCount, splitCount)
+	} else {
+		bundlesPerSplitModule = bundlesCount
+	}
+
+	return bundlingConfig{
+		resourcesPerBundle:    resourcesPerBundle,
+		bundlesPerSplitModule: bundlesPerSplitModule,
+		bundlesCount:          bundlesCount,
+		splitCount:            splitCount,
+	}
+}
+
+func (me *Module) IsBundleImpossible() bool {
+	resourceDefinition := AllResources[me.Type]
+
+	if ULTRA_PARALLEL {
+		// pass
+	} else {
+		return true
+	}
+
+	if me.Environment.HasDependenciesTo[me.Type] {
+		return true
+	}
+
+	if len(resourceDefinition.Dependencies) > 0 {
+
+		hasEntityIdsDepsOnly := true
+		for _, d := range resourceDefinition.Dependencies {
+			switch d.(type) {
+			case *entityds:
+				continue
+			}
+			hasEntityIdsDepsOnly = false
+		}
+
+		if hasEntityIdsDepsOnly {
+			// pass
+		} else {
+			return true
+		}
+	}
+
+	if resourceDefinition.Parent != nil {
+		return true
+	}
+
+	if me.Environment.IsParentMap[me.Type] {
+		return true
+	}
+
+	return false
 }
 
 func (me *Module) Discover() error {
@@ -679,6 +1158,9 @@ func (me *Module) Discover() error {
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
 		}
+		if stub.ParentID != nil {
+			res.ParentID = stub.ParentID
+		}
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
@@ -715,19 +1197,20 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		return nil, nil
 	}
 
-	uniqueNameExists := map[string]bool{}
-
 	resList = make(resources, 0, len(me.Resources))
 
 	for _, res := range me.Resources {
 		if !res.Status.IsOneOf(ResourceStati.PostProcessed) {
 			continue
 		}
-		if uniqueNameExists[res.UniqueName] {
-			fmt.Println("ERROR: Duplicate UniqueName for ", string(me.Type), res.UniqueName)
+
+		isWrittenAlready := me.namer.SetNameWritten(res.UniqueName)
+
+		if isWrittenAlready {
+			fmt.Println("ERROR: [ExecuteImportV2] Duplicate UniqueName for ", string(me.Type), res.UniqueName, res.ID)
 			continue
+
 		}
-		uniqueNameExists[res.UniqueName] = true
 
 		providerSource := os.Getenv("DYNATRACE_PROVIDER_SOURCE")
 		if len(providerSource) == 0 {
@@ -736,8 +1219,16 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 			providerSource = fmt.Sprintf(`provider["%s"]`, providerSource)
 		}
 
+		moduleValue := fmt.Sprintf("module.%s", me.Type.Trim())
+		if me.Descriptor.Parent != nil {
+			moduleValue = fmt.Sprintf("module.%s", me.Descriptor.Parent.Trim())
+		}
+		if res.SplitId > 0 {
+			moduleValue = fmt.Sprintf("%s_%d", moduleValue, res.SplitId)
+		}
+
 		resList = append(resList, resource{
-			Module: fmt.Sprintf("module.%s", me.Type.Trim()),
+			Module: moduleValue,
 			Mode:   "managed",
 			Type:   string(me.Type),
 			Name:   res.UniqueName,
@@ -762,3 +1253,14 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 }
 
 func hide(v any) {}
+
+func CeilDivide(a, b int) int {
+	quotient := a / b
+
+	remainder := a % b
+	if remainder > 0 {
+		quotient++
+	}
+
+	return quotient
+}

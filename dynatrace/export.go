@@ -18,13 +18,10 @@
 package dynatrace
 
 import (
-	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 )
 
@@ -43,15 +40,6 @@ func Export(args []string) bool {
 	return true
 }
 
-func readStuff(scanner *bufio.Scanner) {
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-	}
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "reading standard input:", err)
-	}
-}
-
 func runExport() (err error) {
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
@@ -59,42 +47,20 @@ func runExport() (err error) {
 	if environment, err = export.Initialize(); err != nil {
 		return err
 	}
+
+	err = environment.RunQuickInit()
+	if err != nil {
+		return err
+	}
+
 	if err = environment.Export(); err != nil {
 		return err
 	}
 
-	if environment.Flags.SkipTerraformInit {
-		return nil
-	}
-
-	exePath, _ := exec.LookPath("terraform")
-	cmd := exec.Command(exePath, "init", "-no-color")
-	cmd.Dir = environment.OutputFolder
-	outs, err := cmd.StderrPipe()
+	err = environment.FinishExport()
 	if err != nil {
 		return err
 	}
-	err = cmd.Start()
-	if err != nil {
-		fmt.Println("Terraform CLI not installed - skipping import")
-		return nil
-	} else {
-		fmt.Println("Executing 'terraform init'")
-		defer func() {
-			cmd.Wait()
-			if environment.Flags.ImportStateV2 {
-				fmt.Println("Importing Resources into Terraform State ...")
-				if err = environment.ExecuteImport(); err != nil {
-					return
-				}
-			}
-		}()
-
-		go readStuff(bufio.NewScanner(outs))
-	}
-
-	address.SaveOriginalMap(environment.OutputFolder)
-	address.SaveCompletedMap(environment.OutputFolder)
 
 	return nil
 }

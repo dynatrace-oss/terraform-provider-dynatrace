@@ -299,6 +299,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboards"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboardsbase"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
@@ -476,13 +477,18 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
 	),
-	ResourceTypes.JSONDashboard: NewResourceDescriptor(
+	ResourceTypes.JSONDashboardBase: NewResourceDescriptor(
+		jsondashboardsbase.Service,
+	),
+	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
+		ResourceTypes.JSONDashboardBase,
+		Dependencies.DashboardLinkID(true),
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
 		// Dependencies.Service,
-		Dependencies.ID(ResourceTypes.SLO),
-		Dependencies.ID(ResourceTypes.JSONDashboard),
+		Dependencies.LegacyID(ResourceTypes.SLOV2),
+		Dependencies.HyperLinkDashboardID(),
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.MobileApplication),
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
@@ -495,8 +501,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.DashboardSharing: NewChildResourceDescriptor(
 		sharing.Service,
-		ResourceTypes.JSONDashboard,
-		Dependencies.ResourceID(ResourceTypes.JSONDashboard),
+		ResourceTypes.JSONDashboardBase,
+		Dependencies.ResourceID(ResourceTypes.JSONDashboardBase, true),
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),
@@ -1235,8 +1241,6 @@ var excludeListedResources = []ResourceType{
 	// Cluster Resources
 	ResourceTypes.Policy,
 
-	ResourceTypes.DashboardSharing, // Excluded since it is retrieved as a child resource of dynatrace_json_dashboard
-
 	ResourceTypes.UserSettings, // Excluded since it requires a personal token
 
 	// Not included in export - to be discussed
@@ -1289,7 +1293,8 @@ func GetExcludeListedResources() []ResourceType {
 	}
 
 	// Excluded due to the potential of a large amount of dashboards
-	return append(excludeListedResources, ResourceTypes.JSONDashboard)
+	// Excluded since it is retrieved as a child resource of dynatrace_json_dashboard (ResourceTypes.DashboardSharing)
+	return append(excludeListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing)
 
 }
 

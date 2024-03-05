@@ -16,6 +16,18 @@ const bootstrapentry = "__bootstrap__"
 const bootstrapoffset = 512
 const indexentry = "__index__"
 
+var IN_MEMORY_TAR_FOLDERS = os.Getenv("DYNATRACE_IN_MEMORY_TAR_FOLDERS") == "true"
+
+var folderCache = FolderCache{
+	mu:      sync.Mutex{},
+	folders: map[string]*Folder{},
+}
+
+type FolderCache struct {
+	mu      sync.Mutex
+	folders map[string]*Folder
+}
+
 type Folder struct {
 	mu          sync.Mutex
 	name        string
@@ -32,6 +44,7 @@ type indexEntry struct {
 type tarIndex map[string]indexEntry
 
 func New(name string) (*Folder, bool, error) {
+
 	tf := &Folder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
 
 	if fileExists(tf.name) {
@@ -41,10 +54,39 @@ func New(name string) (*Folder, bool, error) {
 }
 
 func NewExisting(name string) (*Folder, bool, error) {
+
+	if IN_MEMORY_TAR_FOLDERS {
+		folderCache.mu.Lock()
+		folder, ok := folderCache.folders[name]
+		if ok {
+			folderCache.mu.Unlock()
+			return folder, true, nil
+		}
+		folderCache.mu.Unlock()
+	}
+
 	tf := &Folder{name: name + ".tar", index: tarIndex{}, offsetBytes: make([]byte, 4)}
 
 	if fileExists(tf.name) {
-		return tf, true, tf.initExisting()
+		err := tf.initExisting()
+		if err != nil {
+			return tf, true, err
+		}
+
+		if IN_MEMORY_TAR_FOLDERS {
+			folderCache.mu.Lock()
+
+			folder, ok := folderCache.folders[name]
+			if ok {
+				folderCache.mu.Unlock()
+				return folder, true, nil
+			}
+
+			folderCache.folders[name] = tf
+			folderCache.mu.Unlock()
+		}
+
+		return tf, true, err
 	}
 	return nil, false, nil
 }
@@ -180,6 +222,63 @@ func (me *Folder) Save(stub api.Stub, data []byte) error {
 			return err
 		}
 	}
+	return nil
+}
+
+type GetStubDataFunc func(idx int) (api.Stub, []byte, bool, error)
+
+func (me *Folder) SaveAllCallback(numItems int, getStubDataFunc GetStubDataFunc) error {
+	me.mu.Lock()
+	defer me.mu.Unlock()
+
+	file, err := os.OpenFile(me.name, os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	if _, err = file.Seek(me.indexOffset, io.SeekStart); err != nil {
+		return err
+	}
+	writer := tar.NewWriter(file)
+
+	for idx := 0; idx < numItems; idx++ {
+		stub, data, isSkipped, err := getStubDataFunc(idx)
+		if err != nil {
+			return err
+		}
+
+		if isSkipped {
+			continue
+		}
+
+		if data != nil {
+
+			me.index[stub.ID] = indexEntry{Stub: stub, Offset: me.indexOffset}
+			if err = me.write(writer, stub.ID, data); err != nil {
+				return err
+			}
+			if me.indexOffset, err = file.Seek(0, io.SeekCurrent); err != nil {
+				return err
+			}
+		} else {
+			me.index[stub.ID] = indexEntry{Stub: stub, Offset: 0}
+		}
+	}
+
+	if _, err = file.Seek(me.indexOffset, io.SeekStart); err != nil {
+		return err
+	}
+	if err = me.writeIndex(writer); err != nil {
+		return err
+	}
+	if _, err = file.Seek(bootstrapoffset, 0); err != nil {
+		return err
+	}
+	binary.LittleEndian.PutUint32(me.offsetBytes, uint32(me.indexOffset))
+	if _, err = file.Write(me.offsetBytes); err != nil {
+		return nil
+	}
+
 	return nil
 }
 
