@@ -17,7 +17,7 @@ func AsDataSource(resource *Resource) string {
 	}
 	switch resource.Type {
 	case ResourceTypes.ManagementZoneV2:
-		return fmt.Sprintf(`data "dynatrace_management_zone" "%s" {
+		return fmt.Sprintf(`data "dynatrace_management_zone_v2" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, esc(resource.Name))
 	case ResourceTypes.Alerting:

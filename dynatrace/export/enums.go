@@ -28,7 +28,7 @@ func (me ResourceType) Trim() string {
 func (me ResourceType) AsDataSource() string {
 	switch me {
 	case ResourceTypes.ManagementZoneV2:
-		return "dynatrace_management_zone"
+		return "dynatrace_management_zone_v2"
 	case ResourceTypes.ManagementZone:
 		return "dynatrace_management_zone"
 	case ResourceTypes.AlertingProfile:
