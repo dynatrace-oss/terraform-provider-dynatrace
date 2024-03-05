@@ -108,6 +108,8 @@ var Sources = struct {
 	CICSSystemId            Source
 	CICSTaskId              Source
 	CICSTransactionCallType Source
+	CICSUnitOfWorkId        Source
+	CICSUserId              Source
 	ClientIP                Source
 	CustomAttribute         Source
 	DliDbOrLtermName        Source
@@ -115,6 +117,8 @@ var Sources = struct {
 	IibLabel                Source
 	IibNode                 Source
 	ImsTransactionCallType  Source
+	ImsUnitOfWorkId         Source
+	ImsUserId               Source
 	MethodParam             Source
 	MqCorrelationId         Source
 	MqMessageId             Source
@@ -135,6 +139,8 @@ var Sources = struct {
 	"CICS_SYSTEM_ID",
 	"CICS_TASK_ID",
 	"CICS_TRANSACTION_CALL_TYPE",
+	"CICS_UNIT_OF_WORK_ID",
+	"CICS_USER_ID",
 	"CLIENT_IP",
 	"CUSTOM_ATTRIBUTE",
 	"DLI_DB_OR_LTERM_NAME",
@@ -142,6 +148,8 @@ var Sources = struct {
 	"IIB_LABEL",
 	"IIB_NODE",
 	"IMS_TRANSACTION_CALL_TYPE",
+	"IMS_UNIT_OF_WORK_ID",
+	"IMS_USER_ID",
 	"METHOD_PARAM",
 	"MQ_CORRELATION_ID",
 	"MQ_MESSAGE_ID",
@@ -431,6 +439,7 @@ func (me ServiceTechnology) Ref() *ServiceTechnology {
 
 // ServiceTechnologys offers the known enum values
 var ServiceTechnologys = struct {
+	ActiveMqClient                       ServiceTechnology
 	ActiveMq                             ServiceTechnology
 	ActiveMqArtemis                      ServiceTechnology
 	AdobeExperienceManager               ServiceTechnology
@@ -511,6 +520,7 @@ var ServiceTechnologys = struct {
 	Glassfish                            ServiceTechnology
 	Go                                   ServiceTechnology
 	GoogleCloudFunctions                 ServiceTechnology
+	GraalNativeImage                     ServiceTechnology
 	GraalTruffle                         ServiceTechnology
 	GraphQl                              ServiceTechnology
 	Grpc                                 ServiceTechnology
@@ -581,6 +591,7 @@ var ServiceTechnologys = struct {
 	Opentracing                          ServiceTechnology
 	OpenLiberty                          ServiceTechnology
 	OracleDatabase                       ServiceTechnology
+	OracleDbListener                     ServiceTechnology
 	OracleWeblogic                       ServiceTechnology
 	Owin                                 ServiceTechnology
 	Perl                                 ServiceTechnology
@@ -615,6 +626,7 @@ var ServiceTechnologys = struct {
 	Scala                                ServiceTechnology
 	Selinux                              ServiceTechnology
 	Sharepoint                           ServiceTechnology
+	Shell                                ServiceTechnology
 	Slim                                 ServiceTechnology
 	Spark                                ServiceTechnology
 	Spring                               ServiceTechnology
@@ -639,6 +651,7 @@ var ServiceTechnologys = struct {
 	ZeroMq                               ServiceTechnology
 	ZosConnect                           ServiceTechnology
 }{
+	"ACTIVEMQ_CLIENT",
 	"ACTIVE_MQ",
 	"ACTIVE_MQ_ARTEMIS",
 	"ADOBE_EXPERIENCE_MANAGER",
@@ -719,6 +732,7 @@ var ServiceTechnologys = struct {
 	"GLASSFISH",
 	"GO",
 	"GOOGLE_CLOUD_FUNCTIONS",
+	"GRAAL_NATIVE_IMAGE",
 	"GRAAL_TRUFFLE",
 	"GRAPH_QL",
 	"GRPC",
@@ -789,6 +803,7 @@ var ServiceTechnologys = struct {
 	"OPENTRACING",
 	"OPEN_LIBERTY",
 	"ORACLE_DATABASE",
+	"ORACLE_DB_LISTENER",
 	"ORACLE_WEBLOGIC",
 	"OWIN",
 	"PERL",
@@ -823,6 +838,7 @@ var ServiceTechnologys = struct {
 	"SCALA",
 	"SELINUX",
 	"SHAREPOINT",
+	"SHELL",
 	"SLIM",
 	"SPARK",
 	"SPRING",
