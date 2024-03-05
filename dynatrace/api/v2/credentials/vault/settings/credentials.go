@@ -308,7 +308,7 @@ func (me *Credentials) FillDemoValues() []string {
 		return []string{credsNotProvided}
 	case CredentialsTypes.UsernamePassword:
 		me.Username = opt.NewString("################")
-		me.Password = opt.NewString("winona00")
+		me.Password = opt.NewString("################")
 		return []string{credsNotProvided}
 	}
 	return nil
