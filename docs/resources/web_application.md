@@ -371,9 +371,11 @@ If noting specified the feature is disabled
  Specify either a relative or an absolute URL. If you use an absolute URL, data will be sent using CORS. 
 
  **Required** for auto-injected applications, optional for agentless applications. Maximum 512 characters.
+- `same_site_cookie_attribute` (String) Same site cookie attribute
 - `script_tag_cache_duration_in_hours` (Number) Time duration for the cache settings
 - `secure_cookie_attribute` (Boolean) Secure attribute usage for Dynatrace cookies enabled/disabled
 - `server_request_path_id` (String) Path to identify the server’s request ID. Maximum 150 characters.
+- `use_cors` (Boolean) Send beacon data via CORS.
 - `xml_http_request` (Boolean) `XmlHttpRequest` support enabled/disabled
 
 <a id="nestedblock--monitoring_settings--content_capture"></a>

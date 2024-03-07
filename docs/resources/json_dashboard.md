@@ -565,6 +565,10 @@ resource "dynatrace_json_dashboard" "#name#" {
 
 - `contents` (String) Contains the JSON Code of the Dashboard
 
+### Optional
+
+- `link_id` (String) ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks.
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

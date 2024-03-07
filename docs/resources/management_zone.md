@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_management_zone (Resource)
 
-!> This resource is utilizing an older API endpoint, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/management_zone_v2) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/management_zone_v2) instead.
 
 -> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 

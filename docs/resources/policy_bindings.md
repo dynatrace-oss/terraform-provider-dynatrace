@@ -16,13 +16,22 @@ description: |-
 
 ## Prerequisites
 
+The recommended way to configure the provider is via environment variables.
+Please set `DYNATRACE_CLUSTER_URL` and `DYNATRACE_CLUSTER_API_TOKEN` to use this resource.
 
+Alternatively, you can set the variables in the `provider` block - not recommended for production environments.
 ```terraform
 provider "dynatrace" {
-  dt_cluster_api_token = "######.#########################################################################################"
   dt_cluster_url = "https://####.######.#####"
+  dt_cluster_api_token = "######.#########################################################################################"
 }
 ```
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_policy_bindings` downloads all existing policy bindings
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
 
 ## Resource Example Usage
 

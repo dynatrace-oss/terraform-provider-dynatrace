@@ -42,6 +42,7 @@ resource "dynatrace_credentials" "name" {
 
 ### Optional
 
+- `allow_contextless_requests` (Boolean) Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).
 - `certificate` (String) The certificate in the string format.
 - `credential_usage_summary` (Block List, Max: 2, Deprecated) The list contains summary data related to the use of credentials (see [below for nested schema](#nestedblock--credential_usage_summary))
 - `description` (String) A short description of the credentials set
