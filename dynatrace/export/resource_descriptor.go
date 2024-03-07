@@ -1185,7 +1185,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.UserGroup: NewResourceDescriptor(onpremusergroups.Service),
 	ResourceTypes.User: NewResourceDescriptor(
 		onpremusers.Service,
-		Dependencies.ID(ResourceTypes.UserGroup),
+		Dependencies.QuotedID(ResourceTypes.UserGroup),
 	),
 	ResourceTypes.PolicyBinding: NewResourceDescriptor(
 		onprempolicybindings.Service,
