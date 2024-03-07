@@ -36,6 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
@@ -214,6 +215,7 @@ func Provider() *schema.Provider {
 			"dynatrace_vulnerability_alerting":       vulnerabilityalerting.DataSource(),
 			"dynatrace_attack_alerting":              attackalerting.DataSource(),
 			"dynatrace_remote_environments":          remoteenvironments.DataSource(),
+			"dynatrace_hub_items":                    items.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -507,6 +509,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_injection_cookie":           resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
 			"dynatrace_http_monitor_script":                resources.NewGeneric(export.ResourceTypes.HTTPMonitorScript).Resource(),
 			"dynatrace_managed_network_zones":              networkzones.Resource(),
+			"dynatrace_extension20":                        resources.NewGeneric(export.ResourceTypes.Extension20).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
