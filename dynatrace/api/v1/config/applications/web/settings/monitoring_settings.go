@@ -50,6 +50,8 @@ type MonitoringSettings struct {
 	JavaScriptInjectionRules         JavaScriptInjectionRules       `json:"javaScriptInjectionRules,omitempty"`         // Java script injection rules
 	AngularPackageName               *string                        `json:"angularPackageName,omitempty"`               // The name of the angular package
 	InstrumentedWebServer            *bool                          `json:"instrumentedWebServer,omitempty"`            // Instrumented web or app server.
+	SameSiteCookieAttribute          *SameSiteCookieAttribute       `json:"sameSiteCookieAttribute,omitempty"`          // Same site cookie attribute
+	UseCors                          *bool                          `json:"useCors,omitempty"`                          // Send beacon data via CORS.
 }
 
 func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
@@ -184,6 +186,16 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Description: "Instrumented web or app server.",
 			Optional:    true,
 		},
+		"same_site_cookie_attribute": {
+			Type:        schema.TypeString,
+			Description: "Same site cookie attribute",
+			Optional:    true,
+		},
+		"use_cors": {
+			Type:        schema.TypeBool,
+			Description: "Send beacon data via CORS.",
+			Optional:    true,
+		},
 	}
 }
 
@@ -211,6 +223,8 @@ func (me *MonitoringSettings) MarshalHCL(properties hcl.Properties) error {
 		"javascript_injection_rules":           me.JavaScriptInjectionRules,
 		"angular_package_name":                 me.AngularPackageName,
 		"instrumented_web_server":              me.InstrumentedWebServer,
+		"same_site_cookie_attribute":           me.SameSiteCookieAttribute,
+		"use_cors":                             me.UseCors,
 	}); err != nil {
 		return err
 	}
@@ -251,5 +265,7 @@ func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"javascript_injection_rules":           &me.JavaScriptInjectionRules,
 		"angular_package_name":                 &me.AngularPackageName,
 		"instrumented_web_server":              &me.InstrumentedWebServer,
+		"same_site_cookie_attribute":           &me.SameSiteCookieAttribute,
+		"use_cors":                             &me.UseCors,
 	})
 }

@@ -90,6 +90,7 @@ type Metric string
 
 // Metrics offers the known enum values
 var Metrics = struct {
+	CapturedFullServiceCalls     Metric
 	CPUTime                      Metric
 	DatabaseChildCallCount       Metric
 	DatabaseChildCallTime        Metric
@@ -117,6 +118,7 @@ var Metrics = struct {
 	SuccessfulRequestCountClient Metric
 	WaitTime                     Metric
 }{
+	"CAPTURED_FULL_SERVICE_CALLS",
 	"CPU_TIME",
 	"DATABASE_CHILD_CALL_COUNT",
 	"DATABASE_CHILD_CALL_TIME",

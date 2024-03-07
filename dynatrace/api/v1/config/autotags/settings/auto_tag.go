@@ -28,7 +28,7 @@ import (
 )
 
 func (me *AutoTag) Deprecated() string {
-	return "This resource is utilizing an older API endpoint, please use `dynatrace_autotag_v2` instead."
+	return "This resource API endpoint has been deprecated, please use `dynatrace_autotag_v2` instead."
 }
 
 // AutoTag Configuration of an auto-tag. It defines the conditions of tag usage and the tag value.

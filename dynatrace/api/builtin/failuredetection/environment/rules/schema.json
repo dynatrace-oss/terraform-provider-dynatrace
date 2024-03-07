@@ -292,23 +292,11 @@
 					"displayName": "Management zones",
 					"documentation": "",
 					"items": {
-						"constraints": [
-							{
-								"pattern": "^-?\\d{1,19}$",
-								"type": "PATTERN"
-							},
-							{
-								"maxLength": 500,
-								"minLength": 1,
-								"type": "LENGTH"
-							}
-						],
 						"description": "",
 						"displayName": "",
 						"documentation": "",
-						"referencedType": "ManagementZone",
-						"subType": "config",
-						"type": "text"
+						"referencedType": "builtin:management-zones",
+						"type": "setting"
 					},
 					"maxObjects": 100,
 					"metadata": {
@@ -491,5 +479,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

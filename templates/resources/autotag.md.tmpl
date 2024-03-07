@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_autotag (Resource)
 
-!> This resource is utilizing an older API endpoint, please use [dynatrace_autotag_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/autotag_v2) instead.
+!> This resource API endpoint has been deprecated, please use [dynatrace_autotag_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/autotag_v2) instead.
 
 -> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
 

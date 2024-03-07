@@ -18,7 +18,6 @@
 package notificationalertingprofile
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -54,9 +53,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Alert only if the following management zone is affected (optional)",
 			Optional:    true, // nullable
-			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-				return newValue == settings.LegacyLongDecode(oldValue)
-			},
 		},
 		"name": {
 			Type:        schema.TypeString,
