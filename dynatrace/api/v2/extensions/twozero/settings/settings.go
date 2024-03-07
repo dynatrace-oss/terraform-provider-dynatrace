@@ -31,7 +31,11 @@ import (
 type Settings struct {
 	Name  string `json:"-"`
 	Value string `json:"-"`
-	Scope string `json:"-"`
+	// Scope           string `json:"-"`
+	Host            string `json:"-"`
+	HostGroup       string `json:"-"`
+	ManagementZone  string `json:"-"`
+	ActiveGateGroup string `json:"-"`
 }
 
 var reg = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
@@ -44,11 +48,63 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			ForceNew:    true,
 			Required:    true,
 		},
-		"scope": {
-			Type:        schema.TypeString,
-			Description: "The scope this monitoring configuration will be defined for. This can be either a Host, a Host Group, a Management Zone or an Active Gate Group.",
-			ForceNew:    true,
-			Required:    true,
+		// "scope": {
+		// 	Type:        schema.TypeString,
+		// 	Description: "The scope this monitoring configuration will be defined for. This can be either a Host, a Host Group, a Management Zone or an Active Gate Group.",
+		// 	ForceNew:    true,
+		// 	Required:    true,
+		// },
+		"host": {
+			Type:          schema.TypeString,
+			Description:   "The ID of the host this monitoring configuration will be defined for",
+			ForceNew:      true,
+			Optional:      true,
+			ConflictsWith: []string{"active_gate_group", "management_zone", "host_group"},
+			ValidateFunc: func(i any, k string) (warnings []string, errs []error) {
+				v, ok := i.(string)
+				if !ok {
+					errs = append(errs, fmt.Errorf("expected type of %s to be string", k))
+					return warnings, errs
+				}
+				if !strings.HasPrefix(v, "HOST-") {
+					errs = append(errs, fmt.Errorf("value '%s' for %s is not the ID of a host ('HOST-#####')", v, k))
+					return warnings, errs
+				}
+				return warnings, errs
+			},
+		},
+		"host_group": {
+			Type:          schema.TypeString,
+			Description:   "The ID of the host group this monitoring configuration will be defined for",
+			ForceNew:      true,
+			Optional:      true,
+			ConflictsWith: []string{"active_gate_group", "management_zone", "host"},
+			ValidateFunc: func(i any, k string) (warnings []string, errs []error) {
+				v, ok := i.(string)
+				if !ok {
+					errs = append(errs, fmt.Errorf("expected type of %s to be string", k))
+					return warnings, errs
+				}
+				if !strings.HasPrefix(v, "HOST_GROUP-") {
+					errs = append(errs, fmt.Errorf("value '%s' for %s is not the ID of a host ('HOST_GROUP-#####')", v, k))
+					return warnings, errs
+				}
+				return warnings, errs
+			},
+		},
+		"management_zone": {
+			Type:          schema.TypeString,
+			Description:   "The name of the Management Zone this monitoring configuration will be defined for",
+			ForceNew:      true,
+			Optional:      true,
+			ConflictsWith: []string{"active_gate_group", "host_group", "host"},
+		},
+		"active_gate_group": {
+			Type:          schema.TypeString,
+			Description:   "The name of the Active Gate Group this monitoring configuration will be defined for",
+			ForceNew:      true,
+			Optional:      true,
+			ConflictsWith: []string{"management_zone", "host_group", "host"},
 		},
 		"value": {
 			Type:        schema.TypeString,
@@ -108,7 +164,11 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":  me.Name,
 		"value": me.Value,
-		"scope": me.Scope,
+		// "scope":             me.Scope,
+		"host":              me.Host,
+		"host_group":        me.HostGroup,
+		"active_gate_group": me.ActiveGateGroup,
+		"management_zone":   me.ManagementZone,
 	})
 }
 
@@ -116,6 +176,10 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"name":  &me.Name,
 		"value": &me.Value,
-		"scope": &me.Scope,
+		// "scope":             &me.Scope,
+		"host":              &me.Host,
+		"host_group":        &me.HostGroup,
+		"active_gate_group": &me.ActiveGateGroup,
+		"management_zone":   &me.ManagementZone,
 	})
 }

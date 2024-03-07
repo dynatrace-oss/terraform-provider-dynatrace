@@ -45,7 +45,7 @@ func (me *service) Get(id string, v *twozero.Settings) error {
 	if err := client.Get(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configurationID)), 200).Finish(&response); err != nil {
 		return err
 	}
-	v.Scope = response.Scope
+	injectScope(response.Scope, v)
 	v.Name = name
 	v.Value = string(response.Value)
 	return nil
@@ -96,7 +96,7 @@ func (me *service) Create(v *twozero.Settings) (*api.Stub, error) {
 	createResponse := []CreateMonitoringConfigResponse{}
 	retry := 10
 	for retry > 0 {
-		payload := []MonitoringConfigCreateDto{{Scope: v.Scope, Value: []byte(v.Value)}}
+		payload := []MonitoringConfigCreateDto{{Scope: extractScope(v), Value: []byte(v.Value)}}
 		if err := client.Post(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations", url.PathEscape(name)), &payload, 200).Finish(&createResponse); err != nil {
 			if err.Error() == fmt.Sprintf("No schema with identifier 'ext:%s'", name) {
 				time.Sleep(1 * time.Second)
@@ -180,6 +180,46 @@ func (me *service) New() *twozero.Settings {
 
 func (me *service) Name() string {
 	return me.SchemaID()
+}
+
+func injectScope(scope string, v *twozero.Settings) {
+	v.ActiveGateGroup = ""
+	v.ManagementZone = ""
+	v.Host = ""
+	v.HostGroup = ""
+
+	if strings.HasPrefix(scope, "ag_group-") {
+		v.ActiveGateGroup = strings.TrimPrefix(scope, "ag_group-")
+		return
+	}
+	if strings.HasPrefix(scope, "management_zone-") {
+		v.ManagementZone = strings.TrimPrefix(scope, "management_zone-")
+		return
+	}
+	if strings.HasPrefix(scope, "HOST-") {
+		v.Host = scope
+		return
+	}
+	if strings.HasPrefix(scope, "HOST_GROUP-") {
+		v.HostGroup = scope
+		return
+	}
+}
+
+func extractScope(v *twozero.Settings) string {
+	if len(v.ActiveGateGroup) > 0 {
+		return fmt.Sprintf("ag_group-%s", v.ActiveGateGroup)
+	}
+	if len(v.ManagementZone) > 0 {
+		return fmt.Sprintf("management_zone-%s", v.ManagementZone)
+	}
+	if len(v.Host) > 0 {
+		return v.Host
+	}
+	if len(v.HostGroup) > 0 {
+		return v.HostGroup
+	}
+	return "environment"
 }
 
 func extractVersion(v *twozero.Settings) (string, error) {
