@@ -18,6 +18,11 @@
 package twozero
 
 import (
+	"encoding/json"
+	"fmt"
+	"regexp"
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -29,7 +34,7 @@ type Settings struct {
 	Scope string `json:"-"`
 }
 
-// var reg = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
+var reg = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -49,26 +54,53 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The JSON encoded value for this monitoring configuration",
 			Required:    true,
+			ValidateFunc: func(i any, k string) (warnings []string, errs []error) {
+				v, ok := i.(string)
+				if !ok {
+					errs = append(errs, fmt.Errorf("expected type of %s to be string", k))
+					return warnings, errs
+				}
+				m := map[string]any{}
+				if err := json.Unmarshal([]byte(v), &m); err != nil {
+					errs = append(errs, fmt.Errorf("%s is not valid JSON", k))
+					return warnings, errs
+				}
+				if _, found := m["description"]; !found {
+					errs = append(errs, fmt.Errorf("%s doesn't contain a description", k))
+					return warnings, errs
+				}
+				description := ""
+				if description, ok = m["description"].(string); !ok {
+					errs = append(errs, fmt.Errorf("expected type of %s.description to be a string", k))
+					return warnings, errs
+				}
+				if len(strings.TrimSpace(description)) == 0 {
+					errs = append(errs, fmt.Errorf("%s.description must not be empty", k))
+					return warnings, errs
+				}
+
+				if _, found := m["version"]; !found {
+					errs = append(errs, fmt.Errorf("%s doesn't contain a version number", k))
+					return warnings, errs
+				}
+				version := ""
+				if version, ok = m["version"].(string); !ok {
+					errs = append(errs, fmt.Errorf("expected type of %s.version to be a string", k))
+					return warnings, errs
+				}
+				if len(strings.TrimSpace(description)) == 0 {
+					errs = append(errs, fmt.Errorf("%s.version must not be empty", k))
+					return warnings, errs
+				}
+				if !reg.MatchString(version) {
+					// this is perhaps too strict
+					// errs = append(errs, fmt.Errorf("'%s' found in %s.version is not a valid version number. Expected format: `MAJOR.MINOR.REVISION` (e.g. `1.0.0`)", version, k))
+					return warnings, errs
+				}
+
+				return warnings, errs
+			},
 		},
-		// "version": {
-		// 	Type:        schema.TypeString,
-		// 	Description: "The fully qualified name of the extension, such as `com.dynatrace.extension.jmx-liberty-cp`",
-		// 	ValidateFunc: func(i any, k string) (warnings []string, errs []error) {
-		// 		v, ok := i.(string)
-		// 		if !ok {
-		// 			errs = append(errs, fmt.Errorf("expected type of %s to be string", k))
-		// 			return warnings, errs
-		// 		}
-		// 		if !reg.MatchString(v) {
-		// 			errs = append(errs, errors.New("expected format of %s to be `MAJOR.MINOR.REVISION` (e.g. `1.0.0`)"))
-		// 			return warnings, errs
-		// 		}
-		// 		return warnings, errs
-		// 	},
-		// 	Optional: true,
-		// 	Computed: true,
-		// 	ForceNew: true,
-		// },
 	}
 }
 
