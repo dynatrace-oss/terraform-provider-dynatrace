@@ -260,6 +260,8 @@ import (
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/activegatetokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice"
+	active_version "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/active_version"
+	extension_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -1196,7 +1198,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		onpremmgmzpermission.Service,
 		Dependencies.ID(ResourceTypes.UserGroup),
 	),
-	ResourceTypes.ManagedNetworkZones: NewResourceDescriptor(managednetworkzones.Service),
+	ResourceTypes.ManagedNetworkZones:       NewResourceDescriptor(managednetworkzones.Service),
+	ResourceTypes.HubExtensionConfig:        NewResourceDescriptor(extension_config.Service),
+	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
 }
 
 var excludeListedResources = []ResourceType{

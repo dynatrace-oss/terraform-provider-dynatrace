@@ -105,30 +105,53 @@ func VisitSchemaMap(schemata map[string]*schema.Schema) map[string]*schema.Schem
 	return schemata
 }
 
+type DiffCustomizer interface {
+	CustomizeDiff(ctx context.Context, rd *schema.ResourceDiff, i any) error
+}
+
 func (me *Generic) Resource() *schema.Resource {
 	stngs := me.Descriptor.NewSettings()
 	sch := VisitSchemaMap(stngs.Schema())
+	nonUpdateableAttrs := make([]string, 0)
+	for k, v := range sch {
+		if v.ForceNew || v.Computed && !v.Optional {
+			nonUpdateableAttrs = append(nonUpdateableAttrs, k)
+		}
+	}
+	updateableAttrs := len(sch) - len(nonUpdateableAttrs)
 
 	if dep, ok := stngs.(Deprecated); ok {
-		return &schema.Resource{
+		resRes := &schema.Resource{
 			Schema:             sch,
 			CreateContext:      logging.Enable(me.Create),
-			UpdateContext:      logging.Enable(me.Update),
 			ReadContext:        logging.Enable(me.Read),
 			DeleteContext:      logging.Enable(me.Delete),
 			Importer:           &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
 			DeprecationMessage: dep.Deprecated(),
 		}
+		if updateableAttrs > 0 {
+			resRes.UpdateContext = logging.Enable(me.Update)
+		}
+		if dc, ok := stngs.(DiffCustomizer); ok {
+			resRes.CustomizeDiff = dc.CustomizeDiff
+		}
+		return resRes
 	}
 
-	return &schema.Resource{
+	resRes := &schema.Resource{
 		Schema:        sch,
 		CreateContext: logging.Enable(me.Create),
-		UpdateContext: logging.Enable(me.Update),
 		ReadContext:   logging.Enable(me.Read),
 		DeleteContext: logging.Enable(me.Delete),
 		Importer:      &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
 	}
+	if updateableAttrs > 0 {
+		resRes.UpdateContext = logging.Enable(me.Update)
+	}
+	if dc, ok := stngs.(DiffCustomizer); ok {
+		resRes.CustomizeDiff = dc.CustomizeDiff
+	}
+	return resRes
 }
 
 func (me *Generic) createCredentials(m any) *settings.Credentials {
@@ -259,6 +282,10 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	return me.Read(ctx, d, m)
 }
 
+type IDGenerator interface {
+	GenID() string
+}
+
 func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, m any, sttngs settings.Settings) diag.Diagnostics {
 	if diags := me.validateCredentials(m); len(diags) > 0 {
 		return diags
@@ -303,7 +330,6 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 	for k, v := range marshalled {
 		d.Set(k, v)
 	}
-
 	return diag.Diagnostics{}
 }
 

@@ -1,0 +1,31 @@
+---
+layout: ""
+page_title: "dynatrace_hub_items Data Source - terraform-provider-dynatrace"
+subcategory: "Extensions"
+description: |-
+  The data source `dynatrace_hub_items` covers queries for components available on the Dynatrace Hub
+---
+
+# dynatrace_hub_items (Data Source)
+
+-> This data source requires the API token scope `hub.read`)
+
+- `type` (String) The type of hub item you are interested in. Possible values are `TECHNOLOGY`, `EXTENSION1` or `EXTENSION2`. If not specified, no restriction regarding type happens
+
+## Example Usage
+
+```terraform
+data "dynatrace_hub_items" "extension-20-items" {
+  type = "EXTENSION2"
+}
+
+output "artifact-ids" {
+  value = data.dynatrace_hub_items.extension-20-items.artifacts
+}
+
+output "hub-items" {
+  value = data.dynatrace_hub_items.extension-20-items.items
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
