@@ -15,9 +15,10 @@
 * limitations under the License.
  */
 
-package twozero
+package extension_config
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"regexp"
@@ -29,9 +30,8 @@ import (
 )
 
 type Settings struct {
-	Name  string `json:"-"`
-	Value string `json:"-"`
-	// Scope           string `json:"-"`
+	Name            string `json:"-"`
+	Value           string `json:"-"`
 	Host            string `json:"-"`
 	HostGroup       string `json:"-"`
 	ManagementZone  string `json:"-"`
@@ -44,16 +44,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "The fully qualified name of the extension, such as `com.dynatrace.extension.jmx-liberty-cp`",
+			Description: "The fully qualified name of the extension, such as `com.dynatrace.extension.jmx-liberty-cp`. You can query for these names using the data source `dynatrace_hub_items`",
 			ForceNew:    true,
 			Required:    true,
 		},
-		// "scope": {
-		// 	Type:        schema.TypeString,
-		// 	Description: "The scope this monitoring configuration will be defined for. This can be either a Host, a Host Group, a Management Zone or an Active Gate Group.",
-		// 	ForceNew:    true,
-		// 	Required:    true,
-		// },
 		"host": {
 			Type:          schema.TypeString,
 			Description:   "The ID of the host this monitoring configuration will be defined for",
@@ -160,11 +154,39 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *Settings) CustomizeDiff(ctx context.Context, rd *schema.ResourceDiff, i any) error {
+	getVersion := func(tv any) string {
+		v := ""
+		var err error
+		var ok bool
+		if v, ok = tv.(string); !ok {
+			return ""
+		}
+		m := map[string]any{}
+		if err = json.Unmarshal([]byte(v), &m); err != nil {
+			return ""
+		}
+		if version, ok := m["version"]; ok {
+			if sVersion, ok := version.(string); ok {
+				return sVersion
+			}
+			return ""
+		}
+		return ""
+	}
+	prev, next := rd.GetChange("value")
+	prevVersion := getVersion(prev)
+	nextVersion := getVersion(next)
+	if len(prevVersion) > 0 && prevVersion != nextVersion {
+		rd.ForceNew("value")
+	}
+	return nil
+}
+
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":  me.Name,
-		"value": me.Value,
-		// "scope":             me.Scope,
+		"name":              me.Name,
+		"value":             me.Value,
 		"host":              me.Host,
 		"host_group":        me.HostGroup,
 		"active_gate_group": me.ActiveGateGroup,
@@ -174,9 +196,8 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":  &me.Name,
-		"value": &me.Value,
-		// "scope":             &me.Scope,
+		"name":              &me.Name,
+		"value":             &me.Value,
 		"host":              &me.Host,
 		"host_group":        &me.HostGroup,
 		"active_gate_group": &me.ActiveGateGroup,

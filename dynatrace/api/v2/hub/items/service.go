@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	items "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -47,18 +48,31 @@ func (me *service) Get(id string, v *items.HubItemList) error {
 	if len(me.opts.Type) > 0 {
 		queries["itemType"] = me.opts.Type
 	}
-	queryString := ""
-	if len(queries) > 0 {
-		for key, value := range queries {
-			if len(queryString) == 0 {
-				queryString = "?"
-			} else {
-				queryString = queryString + "&"
+	nextPageKey := opt.NewString("first")
+	for nextPageKey != nil && *nextPageKey != "" {
+		hubItemList := items.HubItemList{}
+		queryString := ""
+		if len(queries) > 0 {
+			for key, value := range queries {
+				if len(queryString) == 0 {
+					queryString = "?"
+				} else {
+					queryString = queryString + "&"
+				}
+				queryString = queryString + url.QueryEscape(key) + "=" + url.QueryEscape(value)
 			}
-			queryString = queryString + url.QueryEscape(key) + "=" + url.QueryEscape(value)
+		}
+		if err := me.client.Get(fmt.Sprintf(`/api/v2/hub/items%s`, queryString), 200).Finish(&hubItemList); err != nil {
+			return err
+		}
+		v.Items = append(v.Items, hubItemList.Items...)
+		nextPageKey = hubItemList.NextPageKey
+		queries = map[string]string{}
+		if nextPageKey != nil {
+			queries["nextPageKey"] = *nextPageKey
 		}
 	}
-	return me.client.Get(fmt.Sprintf(`/api/v2/hub/items%s`, queryString), 200).Finish(v)
+	return nil
 }
 
 func (me *service) SchemaID() string {

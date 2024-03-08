@@ -18,6 +18,8 @@
 package items
 
 import (
+	"strings"
+
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items"
 	items "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -37,6 +39,12 @@ func DataSource() *schema.Resource {
 				Description: "The items within this list",
 				Computed:    true,
 				Elem:        &schema.Resource{Schema: new(items.HubItem).Schema()},
+			},
+			"artifacts": {
+				Type:        schema.TypeMap,
+				Description: "The fully qualified names of the items as a map",
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"type": {
 				Type:         schema.TypeString,
@@ -64,11 +72,25 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		return err
 	}
 	d.SetId(service.SchemaID())
+	var finalSettings items.HubItemList
 	if len(settings.Items) != 0 {
+		for _, item := range settings.Items {
+			if len(strings.TrimSpace(item.ArtifactId)) == 0 {
+				continue
+			}
+			finalSettings.Items = append(finalSettings.Items, item)
+		}
+	}
+	if len(finalSettings.Items) != 0 {
 		marshalled := hcl.Properties{}
-		if err := settings.MarshalHCL(marshalled); err != nil {
+		if err := finalSettings.MarshalHCL(marshalled); err != nil {
 			return err
 		}
+		artifactIds := map[string]string{}
+		for _, item := range finalSettings.Items {
+			artifactIds[item.ArtifactId] = item.Description
+		}
+		d.Set("artifacts", artifactIds)
 		d.Set("items", marshalled["items"])
 	}
 	if len(opts.Type) > 0 {

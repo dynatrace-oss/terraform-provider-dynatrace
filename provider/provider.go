@@ -509,7 +509,8 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_injection_cookie":           resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
 			"dynatrace_http_monitor_script":                resources.NewGeneric(export.ResourceTypes.HTTPMonitorScript).Resource(),
 			"dynatrace_managed_network_zones":              networkzones.Resource(),
-			"dynatrace_extension20":                        resources.NewGeneric(export.ResourceTypes.Extension20).Resource(),
+			"dynatrace_hub_extension_config":               resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
+			"dynatrace_hub_extension_active_version":       resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

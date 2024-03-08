@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package twozero
+package extension_config
 
 import (
 	"encoding/json"
@@ -25,12 +25,12 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	twozero "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/extensions/twozero/settings"
+	extension_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/config/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*twozero.Settings] {
+func Service(credentials *settings.Credentials) settings.CRUDService[*extension_config.Settings] {
 	return &service{credentials}
 }
 
@@ -38,7 +38,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) Get(id string, v *twozero.Settings) error {
+func (me *service) Get(id string, v *extension_config.Settings) error {
 	name, configurationID := splitID(id)
 	var response GetMonitoringConfigurationResponse
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -82,7 +82,7 @@ func (me *service) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Create(v *twozero.Settings) (*api.Stub, error) {
+func (me *service) Create(v *extension_config.Settings) (*api.Stub, error) {
 	version, err := extractVersion(v)
 	if err != nil {
 		return nil, err
@@ -131,7 +131,7 @@ func (me *service) ensureInstalled(name string, version string) error {
 	return nil
 }
 
-func (me *service) Update(id string, v *twozero.Settings) error {
+func (me *service) Update(id string, v *extension_config.Settings) error {
 	_, configID := splitID(id)
 	version, err := extractVersion(v)
 	if err != nil {
@@ -170,19 +170,19 @@ func (me *service) SchemaID() string {
 	return "v2:extensions:twozero"
 }
 
-func (me *service) Validate(v *twozero.Settings) error {
+func (me *service) Validate(v *extension_config.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) New() *twozero.Settings {
-	return new(twozero.Settings)
+func (me *service) New() *extension_config.Settings {
+	return new(extension_config.Settings)
 }
 
 func (me *service) Name() string {
 	return me.SchemaID()
 }
 
-func injectScope(scope string, v *twozero.Settings) {
+func injectScope(scope string, v *extension_config.Settings) {
 	v.ActiveGateGroup = ""
 	v.ManagementZone = ""
 	v.Host = ""
@@ -206,7 +206,7 @@ func injectScope(scope string, v *twozero.Settings) {
 	}
 }
 
-func extractScope(v *twozero.Settings) string {
+func extractScope(v *extension_config.Settings) string {
 	if len(v.ActiveGateGroup) > 0 {
 		return fmt.Sprintf("ag_group-%s", v.ActiveGateGroup)
 	}
@@ -222,7 +222,7 @@ func extractScope(v *twozero.Settings) string {
 	return "environment"
 }
 
-func extractVersion(v *twozero.Settings) (string, error) {
+func extractVersion(v *extension_config.Settings) (string, error) {
 	valueMap := map[string]any{}
 	if err := json.Unmarshal([]byte(v.Value), &valueMap); err != nil {
 		return "", err

@@ -105,6 +105,10 @@ func VisitSchemaMap(schemata map[string]*schema.Schema) map[string]*schema.Schem
 	return schemata
 }
 
+type DiffCustomizer interface {
+	CustomizeDiff(ctx context.Context, rd *schema.ResourceDiff, i any) error
+}
+
 func (me *Generic) Resource() *schema.Resource {
 	stngs := me.Descriptor.NewSettings()
 	sch := VisitSchemaMap(stngs.Schema())
@@ -128,6 +132,9 @@ func (me *Generic) Resource() *schema.Resource {
 		if updateableAttrs > 0 {
 			resRes.UpdateContext = logging.Enable(me.Update)
 		}
+		if dc, ok := stngs.(DiffCustomizer); ok {
+			resRes.CustomizeDiff = dc.CustomizeDiff
+		}
 		return resRes
 	}
 
@@ -140,6 +147,9 @@ func (me *Generic) Resource() *schema.Resource {
 	}
 	if updateableAttrs > 0 {
 		resRes.UpdateContext = logging.Enable(me.Update)
+	}
+	if dc, ok := stngs.(DiffCustomizer); ok {
+		resRes.CustomizeDiff = dc.CustomizeDiff
 	}
 	return resRes
 }
