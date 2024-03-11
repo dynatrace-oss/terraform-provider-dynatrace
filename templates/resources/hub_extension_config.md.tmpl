@@ -1,0 +1,57 @@
+---
+layout: ""
+page_title: dynatrace_hub_extension_config Resource - terraform-provider-dynatrace"
+subcategory: "Extensions"
+description: |-
+  The resource `dynatrace_hub_extension_config` covers installing Extensions from the Dynatrace Hub and configuring Monitoring Settings
+---
+
+# dynatrace_hub_extension_config (Resource)
+
+-> This resource requires the API token scopes `extensions.write` and `extension.read`.
+
+This resource configures a monitoring configuration for the given extension with the specified version. In case the extension has not yet gotten installed for the specified version the installation happens automatically.
+
+The `name` attribute needs to refer to the fully qualified name of the extension. For a list of eligible names you can utilize the data source `dynatrace_hub_items` like in this example:
+
+```terraform
+data "dynatrace_hub_items" "extension-20-items" {
+  type = "EXTENSION2"
+}
+```
+
+You can optionally specify a scope for the extension using either one of the attributes `host`, `host_group`, `management_zone` or `active_gate_group`.
+For `host` and `host_group` you're expected to specify the IDs of these entities. You can query for these IDs using the data source `dynatrace_entity` or `dynatrace_entities` like in this example:
+
+```terraform
+data "dynatrace_entity" "my-host" {
+  type = "HOST"
+  name = "<your-host-name>"
+}
+
+output "my-host" {
+  value = data.dynatrace_entity.my-host.id
+}
+```
+for `management_zone` and `active_gate_group` you are required to specify the **name** and not the ID.
+
+The `value` attribute differs depending on the Extension you want to configure. The expected format is JSON. We recommend to navigate via WebUI to the Dynatrace Hub and configure such an Extension there - the WebUI provides you with the correct JSON code to use.
+
+For defining which version of a specific Extension should currently be active you can use the resource `dynatrace_hub_extension_active_version`.
+
+## Dynatrace Documentation
+
+- Extensions API - https://docs.dynatrace.com/docs/dynatrace-api/environment-api/extensions-20
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_hub_extension_config` downloads the settings for all configured Extensions 2.0
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/v2/hub/extension/config/testdata/terraform/example-a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

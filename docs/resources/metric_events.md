@@ -166,7 +166,7 @@ Optional:
 - `aggregation` (String) Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
 - `dimension_filter` (Block List, Max: 1) Dimension filter (see [below for nested schema](#nestedblock--query_definition--dimension_filter))
 - `entity_filter` (Block List, Max: 1) Use rule-based filters to define the scope this event monitors. (see [below for nested schema](#nestedblock--query_definition--entity_filter))
-- `management_zone` (String) Management zone
+- `management_zone` (String) The `legacy_id` of a Management Zone (as provided by the resource `dynatrace_management_zone_v2` or the data source `dynatrace_management_zone`)
 - `metric_key` (String) Metric key
 - `metric_selector` (String) To learn more, visit [Metric Selector](https://dt-url.net/metselad)
 - `query_offset` (Number) Minute offset of sliding evaluation window for metrics with latency

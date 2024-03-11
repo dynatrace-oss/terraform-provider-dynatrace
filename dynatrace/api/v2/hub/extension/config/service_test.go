@@ -15,6 +15,14 @@
 * limitations under the License.
  */
 
-package version
+package extension_config_test
 
-const Current = "1.52.0"
+import (
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+)
+
+func TestAccExtensionConfiguration(t *testing.T) {
+	api.TestAcc(t)
+}
