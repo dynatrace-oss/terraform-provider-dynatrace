@@ -14,38 +14,30 @@
  * limitations under the License.
  */
 
-package automation
+package document
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/rest"
 )
 
-// Response is a "general" Response type holding the ID and the response payload
 type Response struct {
-	// ID is the identifier that will be used when creating a new automation object
-	ID string `json:"id"`
-	// Data is the whole body of an automation object
-	Data []byte `json:"-"`
-}
-
-// UnmarshalJSON de-serializes JSON payload into [Response] type
-func (r *Response) UnmarshalJSON(data []byte) error {
-	var rawMap map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawMap); err != nil {
-		return err
-	}
-	if err := json.Unmarshal(rawMap["id"], &r.ID); err != nil {
-		return err
-	}
-	r.Data = data
-	return nil
+	ID      string `json:"id"`
+	Actor   string `json:"actor"`
+	Owner   string `json:"owner"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Content string `json:"content"`
+	Version int    `json:"version"`
 }
 
 type listResponse struct {
@@ -65,7 +57,7 @@ func NewClient(url string, client *http.Client) *Client {
 	return &Client{url: url, client: client, resources: resources}
 }
 
-// LIST returns all automation objects
+// LIST returns all document objects
 func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 	var retVal []Response
 	var result listResponse
@@ -111,6 +103,7 @@ func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 // GET returns one specific automation object
 func (a Client) GET(resourceType ResourceType, id string) (res *Response, err error) {
 	var resp rest.Response
+	var e Response
 
 	if resp, err = rest.Get(a.client, a.url+a.resources[resourceType].Path+"/"+id); err != nil {
 		return nil, fmt.Errorf("unable to get object with ID %s: %w", id, err)
@@ -120,20 +113,61 @@ func (a Client) GET(resourceType ResourceType, id string) (res *Response, err er
 		return nil, ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to get automation object", Data: resp.Body}
 	}
 
-	var e Response
-	err = json.Unmarshal(resp.Body, &e)
+	contentType := resp.Headers["Content-Type"][0]
+	boundaryIndex := strings.Index(contentType, "boundary=")
+	if boundaryIndex == -1 {
+		return nil, fmt.Errorf("no boundary parameter found in Content-Type header")
+	}
+	boundary := contentType[boundaryIndex+len("boundary="):]
+
+	r := multipart.NewReader(bytes.NewReader(resp.Body), boundary)
+
+	form, err := r.ReadForm(0)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read multipart form: %w", err)
+	}
+
+	if len(form.Value["metadata"]) == 0 {
+		return nil, fmt.Errorf("metadata field not found in response")
+	}
+
+	err = json.Unmarshal([]byte(form.Value["metadata"][0]), &e)
+	if err != nil {
+		return &e, fmt.Errorf("unable to unmarshal metadata: %w", err)
+	}
+
+	file, err := form.File["content"][0].Open()
+	if err != nil {
+		return &e, fmt.Errorf("unable to open file: %w", err)
+	}
+	defer file.Close()
+
+	fileContent := new(bytes.Buffer)
+	_, err = fileContent.ReadFrom(file)
+	if err != nil {
+		return &e, fmt.Errorf("unable to read file: %w", err)
+	}
+
+	e.Content = fileContent.String()
+
 	return &e, err
 }
 
 // UPDATE updates a given automation object
-func (a Client) UPDATE(resourceType ResourceType, id string, data []byte) (err error) {
+func (a Client) UPDATE(resourceType ResourceType, id string, data *bytes.Buffer, contentType string) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
 	}
-	if err := rmIDField(&data); err != nil {
-		return fmt.Errorf("unable to remove id field from payload in order to update object with ID %s: %w", id, err)
+
+	doc, err := a.GET(resourceType, id)
+	if err != nil {
+		return fmt.Errorf("unable to get object with ID %s: %w", id, err)
 	}
-	resp, err := rest.Put(a.client, a.url+a.resources[resourceType].Path+"/"+id, data)
+
+	var urlParams = make(map[string]string)
+	urlParams["optimistic-locking-version"] = fmt.Sprint(doc.Version)
+
+	resp, err := rest.PatchMultiPartFile(a.client, a.url+a.resources[resourceType].Path+"/"+id, data, contentType, urlParams)
 	if err != nil {
 		return fmt.Errorf("unable to update object with ID %s: %w", id, err)
 	}
@@ -141,28 +175,25 @@ func (a Client) UPDATE(resourceType ResourceType, id string, data []byte) (err e
 	if resp.Success() {
 		return nil
 	}
-	return ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to insert automation object", Data: resp.Body}
+	return ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to update document object", Data: resp.Body}
 }
 
-// UPSERT creates a given automation object
-func (a Client) INSERT(resourceType ResourceType, data []byte) (id string, err error) {
-	if err := rmIDField(&data); err != nil {
-		return "", fmt.Errorf("unable to remove id field from payload in when creating object: %w", err)
-	}
-
-	resp, err := rest.Post(a.client, a.url+a.resources[resourceType].Path, data)
+// INSERT creates a given document object
+func (a Client) INSERT(resourceType ResourceType, data *bytes.Buffer, contentType string) (id string, err error) {
+	resp, err := rest.PostMultiPartFile(a.client, a.url+a.resources[resourceType].Path, data, contentType)
 	if err != nil {
 		return "", err
 	}
 
 	// handle response err
 	if !resp.Success() {
-		return id, ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to upsert automation object", Data: resp.Body}
+		return id, ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to insert document object", Data: resp.Body}
 	}
 
 	// de-serialize response
 	var e Response
 	err = json.Unmarshal(resp.Body, &e)
+
 	return e.ID, err
 }
 
@@ -172,32 +203,19 @@ func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
 		return fmt.Errorf("id must be non empty")
 	}
 
-	var urlParams map[string]string
+	doc, err := a.GET(resourceType, id)
+	if err != nil {
+		return fmt.Errorf("unable to get object with ID %s: %w", id, err)
+	}
+
+	var urlParams = make(map[string]string)
+	urlParams["optimistic-locking-version"] = fmt.Sprint(doc.Version)
+
 	if err = rest.DeleteConfig(a.client, a.url+a.resources[resourceType].Path, id, urlParams); err != nil {
 		return fmt.Errorf("unable to delete object with ID %s: %w", id, err)
 	}
 
 	return nil
-}
-
-func setIDField(id string, data *[]byte) (err error) {
-	var m map[string]any
-	if err = json.Unmarshal(*data, &m); err != nil {
-		return err
-	}
-	m["id"] = id
-	*data, err = json.Marshal(m)
-	return err
-}
-
-func rmIDField(data *[]byte) (err error) {
-	var m map[string]any
-	if err = json.Unmarshal(*data, &m); err != nil {
-		return err
-	}
-	delete(m, "id")
-	*data, err = json.Marshal(m)
-	return err
 }
 
 func NextPageURL(baseURL, path string, offset int) (string, error) {

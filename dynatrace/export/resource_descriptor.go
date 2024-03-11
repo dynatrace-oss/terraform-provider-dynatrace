@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/documents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows"
 	ddupool "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
@@ -479,6 +480,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.JSONDashboardBase: NewResourceDescriptor(
 		jsondashboardsbase.Service,
+	),
+	ResourceTypes.Documents: NewResourceDescriptor(
+		documents.Service,
 	),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,

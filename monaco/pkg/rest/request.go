@@ -44,13 +44,19 @@ func Get(client *http.Client, url string) (response Response, err error) {
 }
 
 // the name delete() would collide with the built-in function
-func DeleteConfig(client *http.Client, url string, id string) error {
+func DeleteConfig(client *http.Client, url string, id string, urlParams map[string]string) error {
 	fullPath := url + "/" + id
 	req, err := request(http.MethodDelete, fullPath)
 
 	if err != nil {
 		return err
 	}
+
+	q := req.URL.Query()
+	for key, value := range urlParams {
+		q.Add(key, value)
+	}
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := executeRequest(client, req)
 
@@ -98,6 +104,24 @@ func Put(client *http.Client, url string, data []byte) (Response, error) {
 	if err != nil {
 		return Response{}, err
 	}
+
+	return executeRequest(client, req)
+}
+
+func PatchMultiPartFile(client *http.Client, url string, data *bytes.Buffer, contentType string, urlParams map[string]string) (Response, error) {
+	req, err := requestWithBody(http.MethodPatch, url, data)
+
+	if err != nil {
+		return Response{}, err
+	}
+
+	q := req.URL.Query()
+	for key, value := range urlParams {
+		q.Add(key, value)
+	}
+	req.URL.RawQuery = q.Encode()
+
+	req.Header.Set("Content-type", contentType)
 
 	return executeRequest(client, req)
 }
