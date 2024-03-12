@@ -20,11 +20,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/rest"
@@ -41,8 +39,9 @@ type Response struct {
 }
 
 type listResponse struct {
-	Count   int        `json:"count"`
-	Results []Response `json:"results"`
+	TotalCount  int        `json:"totalCount"`
+	Documents   []Response `json:"documents"`
+	NextPageKey string     `json:"nextPageKey"`
 }
 
 // Client can be used to interact with the Automation API
@@ -61,11 +60,14 @@ func NewClient(url string, client *http.Client) *Client {
 func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 	var retVal []Response
 	var result listResponse
-	result.Count = 1
+	result.NextPageKey = "initial"
 
-	for len(retVal) < result.Count {
+	for result.NextPageKey != "" {
+		if result.NextPageKey == "initial" {
+			result.NextPageKey = ""
+		}
 
-		u, err := NextPageURL(a.url, a.resources[resourceType].Path, len(retVal))
+		u, err := NextPageURL(a.url, a.resources[resourceType].Path, result.NextPageKey)
 		if err != nil {
 			return nil, err
 		}
@@ -90,13 +92,10 @@ func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 		if err != nil {
 			return nil, err
 		}
-		retVal = append(retVal, result.Results...)
+
+		retVal = append(retVal, result.Documents...)
 	}
 
-	if len(retVal) != result.Count {
-		log.Printf("[WARN] Total count of items returned for Automation API %q does not match count of actually received items. Expected: %d Got: %d.", resources[resourceType].Path, result.Count, len(retVal))
-
-	}
 	return retVal, nil
 }
 
@@ -218,7 +217,7 @@ func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
 	return nil
 }
 
-func NextPageURL(baseURL, path string, offset int) (string, error) {
+func NextPageURL(baseURL, path string, nextPageKey string) (string, error) {
 	u, e := url.Parse(baseURL)
 	if e != nil {
 		return "", e
@@ -230,8 +229,31 @@ func NextPageURL(baseURL, path string, offset int) (string, error) {
 	}
 
 	q := u.Query()
-	q.Add("offset", strconv.Itoa(offset))
+	q.Add("page-key", nextPageKey)
 	u.RawQuery = q.Encode()
 
 	return u.String(), nil
+}
+
+func (r *listResponse) UnmarshalJSON(data []byte) error {
+	type Alias listResponse
+
+	var aux struct {
+		*Alias
+		NextPageKey *string `json:"nextPageKey"`
+	}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	if aux.NextPageKey == nil {
+		aux.NextPageKey = new(string)
+	}
+
+	r.TotalCount = aux.TotalCount
+	r.Documents = aux.Documents
+	r.NextPageKey = *aux.NextPageKey
+
+	return nil
 }

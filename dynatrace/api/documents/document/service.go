@@ -31,7 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/documents/settings"
+	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document"
 )
@@ -131,8 +131,9 @@ func (me *service) List() (api.Stubs, error) {
 		document.Owner = r.Owner
 		document.Type = r.Type
 		document.Version = r.Version
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: document.Name})
+		stubs = append(stubs, &api.Stub{ID: r.ID, Name: document.Name, Value: &document})
 	}
+
 	return stubs, nil
 }
 
