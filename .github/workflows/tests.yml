@@ -1584,30 +1584,30 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/logmonitoring/logdpprules
-      # - name: TestLogSecurityContext
-      #   if: success() || failure()
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     TF_ACC: true
-      #     DYNATRACE_DEBUG: true
-      #     DT_NO_REPAIR_INPUT: true
-      #     DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-      #     DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-      #     IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
-      #     IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
-      #     IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-      #   run: go test -v ./dynatrace/api/builtin/logmonitoring/logsecuritycontextrules
-      # - name: TestLogCustomAttributes
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     TF_ACC: true
-      #     DYNATRACE_DEBUG: true
-      #     DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-      #     DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-      #     IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
-      #     IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
-      #     IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-      #   run: go test -v ./dynatrace/api/builtin/logmonitoring/logcustomattributes
+      - name: TestLogSecurityContext
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/logmonitoring/logsecuritycontextrules
+      - name: TestLogCustomAttributes
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/logmonitoring/logcustomattributes
       - name: TestLogEvents
         if: success() || failure()
         env:
@@ -1634,17 +1634,6 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/logmonitoring/timestampconfiguration
-      # - name: TestLogStorage
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     TF_ACC: true
-      #     DYNATRACE_DEBUG: true
-      #     DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-      #     DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-      #     IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
-      #     IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
-      #     IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-      #   run: go test -v ./dynatrace/api/builtin/logmonitoring/logstoragesettings
       - name: TestEULASettings
         if: success() || failure()
         env:
@@ -2334,17 +2323,17 @@ jobs:
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/virtualization/vmware
-      # - name: TestLogCustomSource
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     TF_ACC: true
-      #     DYNATRACE_DEBUG: true
-      #     DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-      #     DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-      #     IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
-      #     IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
-      #     IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-      #   run: go test -v ./dynatrace/api/builtin/logmonitoring/customlogsourcesettings
+      - name: TestLogCustomSource
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/builtin/logmonitoring/customlogsourcesettings
       - name: TestAlerting
         if: success() || failure()
         env:
@@ -3408,16 +3397,16 @@ jobs:
           name: TestPlatformBucketsResults
           path: ./dynatrace/api/platform/buckets/terraform_provider_dynatrace.http.log
           retention-days: 5
-      # - name: TestCustomDevices
-      #   if: success() || failure()
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     TF_ACC: true
-      #     DYNATRACE_DEBUG: true
-      #     DT_NO_REPAIR_INPUT: true
-      #     DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-      #     DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-      #     IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
-      #     IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
-      #     IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-      #   run: go test -v ./dynatrace/api/v2/customdevice
+      - name: TestCustomDevices
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: true
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
+          IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
+          IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/v2/customdevice
