@@ -223,8 +223,6 @@ func Provider() *schema.Provider {
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
 			"dynatrace_dashboard":                          resources.NewGeneric(export.ResourceTypes.Dashboard).Resource(),
 			"dynatrace_json_dashboard":                     resources.NewGeneric(export.ResourceTypes.JSONDashboard).Resource(),
-			"dynatrace_document":                           resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
-			"dynatrace_direct_shares":                      resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
 			"dynatrace_json_dashboard_base":                resources.NewGeneric(export.ResourceTypes.JSONDashboardBase).Resource(),
 			"dynatrace_management_zone":                    resources.NewGeneric(export.ResourceTypes.ManagementZone).Resource(),
 			"dynatrace_management_zone_v2":                 resources.NewGeneric(export.ResourceTypes.ManagementZoneV2).Resource(),
@@ -515,6 +513,8 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_network_zones":              networkzones.Resource(),
 			"dynatrace_hub_extension_config":               resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
 			"dynatrace_hub_extension_active_version":       resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
+			"dynatrace_document":                           resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
+			"dynatrace_direct_shares":                      resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

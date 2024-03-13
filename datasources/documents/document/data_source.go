@@ -28,7 +28,8 @@ import (
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		Description: "Retrieve a list of all documents.",
+		Read:        logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"values": {
 				Type:     schema.TypeList,
@@ -38,22 +39,22 @@ func DataSource() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "The unique identifier of the document.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "The name of the document.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "The type of the document. This could be a specific format or category the document belongs to.",
 						},
 						"owner": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "The owner of the document. This could be a user or a group that has ownership rights over the document.",
 						},
 					},
 				},
