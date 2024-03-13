@@ -22,7 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type ContactDetailss []*ContactDetails
@@ -121,9 +120,9 @@ func (me *ContactDetails) HandlePreconditions() error {
 	if me.SlackChannel == nil && string(me.IntegrationType) == "SLACK" {
 		return fmt.Errorf("'slack_channel' must be specified if 'integration_type' is set to '%v'", me.IntegrationType)
 	}
-	if me.Url == nil && slices.Contains([]string{"SLACK", "JIRA", "MS_TEAMS"}, string(me.IntegrationType)) {
-		return fmt.Errorf("'url' must be specified if 'integration_type' is set to '%v'", me.IntegrationType)
-	}
+	// if me.Url == nil && slices.Contains([]string{"SLACK", "JIRA", "MS_TEAMS"}, string(me.IntegrationType)) {
+	// 	return fmt.Errorf("'url' must be specified if 'integration_type' is set to '%v'", me.IntegrationType)
+	// }
 	return nil
 }
 

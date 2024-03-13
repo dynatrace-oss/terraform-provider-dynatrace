@@ -52,6 +52,7 @@ func Service[T settings.Settings](credentials *settings.Credentials, schemaID st
 type SettingsObjectUpdate struct {
 	SchemaVersion string `json:"schemaVersion,omitempty"`
 	Value         any    `json:"value"`
+	InsertAfter   string `json:"insertAfter,omitempty"`
 }
 
 type SettingsObjectCreate struct {
@@ -59,6 +60,7 @@ type SettingsObjectCreate struct {
 	SchemaID      string `json:"schemaId"`
 	Scope         string `json:"scope,omitempty"`
 	Value         any    `json:"value"`
+	InsertAfter   string `json:"insertAfter,omitempty"`
 }
 
 type SettingsObjectCreateResponse struct {
@@ -95,12 +97,122 @@ func (me *service[T]) Get(id string, v T) error {
 	if me.options != nil && me.options.LegacyID != nil {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
+	insertBefore, insertAfter, err := me.getInsertIDs(id)
+	if err != nil {
+		return err
+	}
+	if insertBefore != nil {
+		settings.SetInsertBefore(v, *insertBefore)
+	}
+	if insertAfter != nil {
+		settings.SetInsertAfter(v, *insertAfter)
+	}
 
 	return nil
 }
 
+func (me *service[T]) getInsertIDs(id string, optIds ...[]string) (*string, *string, error) {
+	if len(id) == 0 {
+		return nil, nil, nil
+	}
+	var ids []string
+	if len(optIds) > 0 {
+		ids = optIds[0]
+	} else {
+		listedIDs, err := me.listIDs()
+		if err != nil {
+			return nil, nil, nil
+		}
+		ids = listedIDs
+	}
+	insertAfter, err := me.getInsertAfter(ids, id)
+	if err != nil {
+		return nil, nil, nil
+	}
+	insertBefore, err := me.getInsertBefore(ids, id)
+	if err != nil {
+		return nil, nil, nil
+	}
+	return insertBefore, insertAfter, nil
+}
+
+func (me *service[T]) getInsertBefore(ids []string, id string) (*string, error) {
+	if len(id) == 0 {
+		return nil, nil
+	}
+	prevIDWasMatching := false
+	for _, curID := range ids {
+		if prevIDWasMatching {
+			insertBeforeID := curID
+			if len(insertBeforeID) == 0 {
+				return nil, nil
+			}
+			return &insertBeforeID, nil
+		}
+		prevIDWasMatching = (curID == id)
+	}
+	return nil, nil
+}
+
+func (me *service[T]) getInsertAfter(ids []string, id string) (*string, error) {
+	if len(id) == 0 {
+		return nil, nil
+	}
+	prevID := ""
+	for _, curID := range ids {
+		if curID == id {
+			if len(prevID) == 0 {
+				return nil, nil
+			}
+			return &prevID, nil
+		}
+		prevID = curID
+	}
+	return nil, nil
+}
+
+func (me *service[T]) listIDs() ([]string, error) {
+	var err error
+
+	ids := []string{}
+	nextPage := true
+
+	var nextPageKey *string
+	for nextPage {
+		var sol SettingsObjectList
+		var urlStr string
+		if nextPageKey != nil {
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?nextPageKey=%s", url.QueryEscape(*nextPageKey))
+		} else {
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,scope,schemaVersion"))
+		}
+		req := me.client.Get(urlStr, 200)
+		if err = req.Finish(&sol); err != nil {
+			return nil, err
+		}
+		if shutdown.System.Stopped() {
+			return ids, nil
+		}
+
+		if len(sol.Items) > 0 {
+			for _, item := range sol.Items {
+				ids = append(ids, item.ObjectID)
+			}
+		}
+		nextPageKey = sol.NextPageKey
+		nextPage = (nextPageKey != nil)
+	}
+
+	return ids, nil
+}
+
 func (me *service[T]) List() (api.Stubs, error) {
 	var err error
+
+	ids, err := me.listIDs()
+	if err != nil {
+		return api.Stubs{}, err
+	}
 
 	stubs := api.Stubs{}
 	nextPage := true
@@ -132,6 +244,16 @@ func (me *service[T]) List() (api.Stubs, error) {
 					settings.SetLegacyID(item.ObjectID, me.options.LegacyID, newItem)
 				}
 				settings.SetScope(newItem, item.Scope)
+				insertBefore, insertAfter, err := me.getInsertIDs(item.ObjectID, ids)
+				if err != nil {
+					return api.Stubs{}, err
+				}
+				if insertBefore != nil {
+					settings.SetInsertBefore(newItem, *insertBefore)
+				}
+				if insertAfter != nil {
+					settings.SetInsertAfter(newItem, *insertAfter)
+				}
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
 					if itemName, err = me.options.Name(item.ObjectID, newItem); err != nil {
@@ -158,14 +280,14 @@ func (me *service[T]) Validate(v T) error {
 }
 
 func (me *service[T]) Create(v T) (*api.Stub, error) {
-	return me.create(v, false)
+	return me.create(v, false, false)
 }
 
 type Matcher interface {
 	Match(o any) bool
 }
 
-func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
+func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
 		dupStub, dupErr := me.options.Duplicates(me, v)
@@ -214,6 +336,11 @@ func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
 		Value:         v,
 	}
 	soc.Scope = settings.GetScope(v)
+	if !noInsertAfter {
+		if insertAfter := settings.GetInsertAfter(v); insertAfter != nil {
+			soc.InsertAfter = *insertAfter
+		}
+	}
 
 	var req rest.Request
 	if NO_REPAIR_INPUT {
@@ -225,9 +352,13 @@ func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
 	objectID := []SettingsObjectCreateResponse{}
 
 	if oerr := req.Finish(&objectID); oerr != nil {
+		if isInvalidInsertAfter(oerr) {
+			return me.create(v, retry, true)
+		}
+
 		if me.options != nil && me.options.CreateRetry != nil && !retry {
 			if modifiedPayload := me.options.CreateRetry(v, oerr); !reflect.ValueOf(modifiedPayload).IsNil() {
-				return me.create(modifiedPayload, true)
+				return me.create(modifiedPayload, true, noInsertAfter)
 			}
 		}
 		if me.options != nil && me.options.HijackOnCreate != nil {
@@ -249,13 +380,50 @@ func (me *service[T]) create(v T, retry bool) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service[T]) Update(id string, v T) error {
-	return me.update(id, v, false)
+func isInvalidInsertAfter(err error) bool {
+	if err == nil {
+		return false
+	}
+	switch resterr := err.(type) {
+	case *rest.Error:
+		return isInvalidInsertAfterRestErr(resterr)
+	case rest.Error:
+		return isInvalidInsertAfterRestErr(&resterr)
+	default:
+		return false
+	}
 }
 
-func (me *service[T]) update(id string, v T, retry bool) error {
+func isInvalidInsertAfterRestErr(resterr *rest.Error) bool {
+	if resterr == nil {
+		return false
+	}
+	if resterr.Code == 404 && resterr.Message == "Settings not found" {
+		return true
+	}
+	if len(resterr.ConstraintViolations) == 0 {
+		return false
+	}
+	for _, constraingViolation := range resterr.ConstraintViolations {
+		if constraingViolation.Message == "Setting value cannot be inserted to the specified position" {
+			return true
+		}
+	}
+	return false
+}
+
+func (me *service[T]) Update(id string, v T) error {
+	return me.update(id, v, false, false)
+}
+
+func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) error {
 	sou := SettingsObjectUpdate{Value: v, SchemaVersion: me.schemaVersion}
 
+	if !noInsertAfter {
+		if insertAfter := settings.GetInsertAfter(v); insertAfter != nil {
+			sou.InsertAfter = *insertAfter
+		}
+	}
 	var req rest.Request
 	if NO_REPAIR_INPUT {
 		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
@@ -264,9 +432,12 @@ func (me *service[T]) update(id string, v T, retry bool) error {
 	}
 
 	if err := req.Finish(); err != nil {
+		if isInvalidInsertAfter(err) {
+			return me.update(id, v, retry, true)
+		}
 		if me.options != nil && me.options.UpdateRetry != nil && !retry {
 			if modifiedPayload := me.options.UpdateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
-				return me.update(id, modifiedPayload, true)
+				return me.update(id, modifiedPayload, true, noInsertAfter)
 			}
 		}
 		return err

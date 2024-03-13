@@ -149,6 +149,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 					Anonymize(remoteSettings)
 					Anonymize(createSettings)
 					settings.ClearLegacyID(remoteSettings)
+					settings.ClearInsertAfter(remoteSettings)
 
 					assert.Equals(createSettings, remoteSettings)
 
@@ -171,6 +172,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 						FillDemoValues(remoteSettings)
 						Anonymize(updateSettings)
 						settings.ClearLegacyID(remoteSettings)
+						settings.ClearInsertAfter(remoteSettings)
 						assert.Equals(updateSettings, remoteSettings)
 					}
 

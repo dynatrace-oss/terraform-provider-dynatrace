@@ -21,6 +21,28 @@ func NewService(baseURL string, token string) *ServiceClient {
 	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
 }
 
+func evalRetry(rerr *rest.Error, environment *Environment) bool {
+	if len(rerr.ConstraintViolations) > 0 {
+		for _, violation := range rerr.ConstraintViolations {
+			if violation.Message == "Cannot set Synthetic monitors quota as Synthetic monitors are not allowed for this license." {
+				environment.Quotas.Synthetic = nil
+				return true
+			} else if violation.Message == "Cannot set DEM units quota as DEM units are not allowed for this license." {
+				environment.Quotas.DEMUnits = nil
+				return true
+			} else if violation.Message == "Cannot set Log Monitoring retention as Log Monitoring is not configured for this cluster." {
+				environment.Storage.LogMonitoringRetention = nil
+				environment.Storage.LogMonitoringStorage = nil
+				return true
+			} else if violation.Message == "Cannot set Log Monitoring quota as Log Monitoring is not allowed for this license." {
+				environment.Quotas.LogMonitoring = nil
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // Create TODO: documentation
 func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
 	var err error
@@ -29,64 +51,42 @@ func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
 		return nil, errors.New("you MUST NOT provide an ID within the Dashboard payload upon creation")
 	}
 	var stub api.Stub
-	if err = cs.client.Post("/environments", environment, 201).Finish(&stub); err != nil {
-		retry := false
-		switch rerr := err.(type) {
-		case *rest.Error:
-			if len(rerr.ConstraintViolations) > 0 {
-				for _, violation := range rerr.ConstraintViolations {
-					if violation.Message == "Cannot set Synthetic monitors quota as Synthetic monitors are not allowed for this license." {
-						environment.Quotas.Synthetic = nil
-						retry = true
-					} else if violation.Message == "Cannot set DEM units quota as DEM units are not allowed for this license." {
-						environment.Quotas.DEMUnits = nil
-						retry = true
-					} else if violation.Message == "Cannot set Log Monitoring quota as Log Monitoring is not allowed for this license." {
-						environment.Quotas.LogMonitoring = nil
-						retry = true
-					}
-				}
+	retry := true
+	for retry {
+		if err = cs.client.Post("/environments", environment, 201).Finish(&stub); err != nil {
+			switch rerr := err.(type) {
+			case *rest.Error:
+				retry = evalRetry(rerr, environment)
+			case rest.Error:
+				retry = evalRetry(&rerr, environment)
+			default:
+				return nil, err
 			}
-			if retry {
-				return cs.Create(environment)
-			}
-		default:
-			return nil, err
+		} else {
+			retry = false
 		}
-		return nil, err
 	}
 	return &stub, nil
 }
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(environment *Environment) error {
-	if err := cs.client.Put(fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
-		retry := false
-		switch rerr := err.(type) {
-		case *rest.Error:
-			if len(rerr.ConstraintViolations) > 0 {
-				for _, violation := range rerr.ConstraintViolations {
-					if violation.Message == "Cannot set Synthetic monitors quota as Synthetic monitors are not allowed for this license." {
-						environment.Quotas.Synthetic = nil
-						retry = true
-					} else if violation.Message == "Cannot set DEM units quota as DEM units are not allowed for this license." {
-						environment.Quotas.DEMUnits = nil
-						retry = true
-					} else if violation.Message == "Cannot set Log Monitoring quota as Log Monitoring is not allowed for this license." {
-						environment.Quotas.LogMonitoring = nil
-						retry = true
-					}
-				}
-			}
-			if retry {
-				return cs.Update(environment)
-			}
-		default:
-			return err
-		}
-		return err
-	}
+	retry := true
 
+	for retry {
+		if err := cs.client.Put(fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
+			switch rerr := err.(type) {
+			case *rest.Error:
+				retry = evalRetry(rerr, environment)
+			case rest.Error:
+				retry = evalRetry(&rerr, environment)
+			default:
+				return err
+			}
+		} else {
+			retry = false
+		}
+	}
 	return nil
 }
 
@@ -101,8 +101,20 @@ func (cs *ServiceClient) Delete(id string) error {
 	}
 	if env.State == States.Enabled {
 		env.State = States.Disabled
-		if err = cs.Update(env); err != nil {
-			return err
+		retry := true
+		for retry {
+			if err = cs.Update(env); err != nil {
+				switch rerr := err.(type) {
+				case *rest.Error:
+					retry = evalRetry(rerr, env)
+				case rest.Error:
+					retry = evalRetry(&rerr, env)
+				default:
+					return err
+				}
+			} else {
+				retry = false
+			}
 		}
 	}
 	if err := cs.client.Delete(fmt.Sprintf("/environments/%s", id), 204).Finish(); err != nil {
