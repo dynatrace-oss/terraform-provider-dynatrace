@@ -34,22 +34,31 @@ func ToJSON[T Settings](v T) ([]byte, error) {
 	if storer, ok := any(v).(Storer); ok {
 		return storer.Store()
 	}
+
+	insertAfterField := getInsertAfterField(v)
 	scopeField, scopeTag := getScopeField(v)
-	if scopeField.IsValid() {
+	if scopeField.IsValid() || insertAfterField != nil {
 		var data []byte
 		var err error
 		if data, err = json.Marshal(v); err != nil {
 			return nil, err
 		}
+
 		m := map[string]json.RawMessage{}
 		if err = json.Unmarshal(data, &m); err != nil {
 			return nil, err
 		}
-		scope := GetScope(v)
-		if data, err = json.Marshal(scope); err != nil {
-			return nil, err
+		if scopeField.IsValid() {
+			scope := GetScope(v)
+			if data, err = json.Marshal(scope); err != nil {
+				return nil, err
+			}
+			m[scopeTag] = data
 		}
-		m[scopeTag] = data
+		if insertAfter := GetInsertAfter(v); insertAfter != nil {
+			insertAfterBytes, _ := json.Marshal(*insertAfter)
+			m["insertAfter"] = insertAfterBytes
+		}
 		return json.MarshalIndent(m, "", "  ")
 	}
 	return json.Marshal(v)
@@ -60,7 +69,8 @@ func FromJSON[T Settings](data []byte, v T) error {
 		return loader.Load(data)
 	}
 	scopeField, scopeTag := getScopeField(v)
-	if scopeField.IsValid() {
+	insertAfterField := getInsertAfterField(v)
+	if scopeField.IsValid() || insertAfterField != nil {
 		if err := json.Unmarshal(data, &v); err != nil {
 			return err
 		}
@@ -68,8 +78,17 @@ func FromJSON[T Settings](data []byte, v T) error {
 		if err := json.Unmarshal(data, &m); err != nil {
 			return err
 		}
-		if scope, found := m[scopeTag]; found {
-			SetScope(v, scope.(string))
+		if scopeField.IsValid() {
+			if scope, found := m[scopeTag]; found {
+				SetScope(v, scope.(string))
+			}
+		}
+		if insertAfterField != nil {
+			if insertAfter, found := m["insertAfter"]; found {
+				if sInsertAfter, ok := insertAfter.(string); ok {
+					SetInsertAfter(v, sInsertAfter)
+				}
+			}
 		}
 		return nil
 	}
