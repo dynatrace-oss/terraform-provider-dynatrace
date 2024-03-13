@@ -31,6 +31,7 @@ type Settings struct {
 	Query               string               `json:"query"`               // Matcher
 	RuleName            string               `json:"ruleName"`            // Rule name
 	RuleTesting         *RuleTesting         `json:"RuleTesting"`         // ## Rule testing\n### 1. Paste a log / JSON sample
+	InsertAfter         string               `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -73,6 +74,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems: 1,
 			MaxItems: 1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+		},
 	}
 }
 
@@ -97,6 +103,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 			"query":                me.Query,
 			"rule_name":            me.RuleName,
 			"rule_testing":         me.RuleTesting,
+			"insert_after":         me.InsertAfter,
 		},
 		me.genIgnoreChanges(),
 	))
@@ -109,5 +116,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"query":                &me.Query,
 		"rule_name":            &me.RuleName,
 		"rule_testing":         &me.RuleTesting,
+		"insert_after":         &me.InsertAfter,
 	})
 }
