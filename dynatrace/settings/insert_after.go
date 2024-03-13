@@ -82,7 +82,23 @@ func GetInsertAfter(settings Settings) *string {
 	return nil
 }
 
-func getInsertAfterField(settings Settings) *reflect.Value {
+func ClearInsertAfter(v any) {
+	if v == nil {
+		return
+	}
+	if field := getInsertAfterField(v); field.IsValid() {
+		switch field.Type() {
+		case stringPointerType:
+			var nilstr *string
+			field.Set(reflect.ValueOf(nilstr))
+		case stringType:
+			var s string
+			field.Set(reflect.ValueOf(s))
+		}
+	}
+}
+
+func getInsertAfterField(settings any) *reflect.Value {
 	rv := unref(reflect.ValueOf(settings))
 	t := rv.Type()
 	for idx := 0; idx < t.NumField(); idx++ {
