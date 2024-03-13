@@ -86,14 +86,17 @@ func ClearInsertAfter(v any) {
 	if v == nil {
 		return
 	}
-	if field := getInsertAfterField(v); field.IsValid() {
-		switch field.Type() {
-		case stringPointerType:
-			var nilstr *string
-			field.Set(reflect.ValueOf(nilstr))
-		case stringType:
-			var s string
-			field.Set(reflect.ValueOf(s))
+	if pField := getInsertAfterField(v); pField != nil {
+		field := *pField
+		if field.IsValid() {
+			switch field.Type() {
+			case stringPointerType:
+				var nilstr *string
+				field.Set(reflect.ValueOf(nilstr))
+			case stringType:
+				var s string
+				field.Set(reflect.ValueOf(s))
+			}
 		}
 	}
 }
