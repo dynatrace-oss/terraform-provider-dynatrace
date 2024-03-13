@@ -27,13 +27,13 @@ import (
 const SchemaVersion = 3
 
 type Document struct {
-	Name          string `json:"name" maxlength:"200"`                         // The name of the document
-	Content       string `json:"content,omitempty"`                            // The content of the document
-	Type          string `json:"type"`                                         // Type of the document
-	Actor         string `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the document will happen with
-	Owner         string `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this document
-	Version       int    `json:"version,omitempty"`                            // The version of the document
-	SchemaVersion int    `json:"schemaVersion,omitempty"`                      //
+	Name          string `json:"name" maxlength:"200"`
+	Content       string `json:"content,omitempty"`
+	Type          string `json:"type"`
+	Actor         string `json:"actor,omitempty" maxlength:"36" format:"uuid"`
+	Owner         string `json:"owner,omitempty" format:"uuid"`
+	Version       int    `json:"version,omitempty"`
+	SchemaVersion int    `json:"schemaVersion,omitempty"`
 }
 
 func (me *Document) Schema() map[string]*schema.Schema {
@@ -66,7 +66,6 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Document content",
 			Required:    true,
-			//ValidateDiagFunc: ValidateUUID, @todo: implement a custom validation function
 		},
 		"version": {
 			Type:        schema.TypeInt,
@@ -99,7 +98,7 @@ func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 func (me *Document) MarshalJSON() ([]byte, error) {
-	wf := struct {
+	d := struct {
 		Name          string `json:"name"`
 		Content       string `json:"content,omitempty"`
 		Type          string `json:"type"`
@@ -108,7 +107,7 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 		Version       int    `json:"version,omitempty"`
 		SchemaVersion int    `json:"schemaVersion,omitempty"`
 	}{
-		SchemaVersion: SchemaVersion, // adding the Schema Version is the purpose of this custome `MarshalJSON` function
+		SchemaVersion: SchemaVersion,
 		Name:          me.Name,
 		Content:       me.Content,
 		Type:          me.Type,
@@ -116,5 +115,5 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 		Owner:         me.Owner,
 		Version:       me.Version,
 	}
-	return json.Marshal(wf)
+	return json.Marshal(d)
 }

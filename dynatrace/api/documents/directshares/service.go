@@ -15,28 +15,28 @@
 * limitations under the License.
  */
 
-package documents
+package directshares
 
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"encoding/json"
 	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
+	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
-	document "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/documents"
+	directshare "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/directshares"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*documents.Document] {
+func Service(credentials *settings.Credentials) settings.CRUDService[*directshares.DirectShare] {
 	return &service{credentials}
 }
 
@@ -81,7 +81,7 @@ func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-func (me *service) client() *document.Client {
+func (me *service) client() *directshare.Client {
 	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
 		if http.DefaultClient.Transport == nil {
 			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultTransport}
@@ -94,106 +94,67 @@ func (me *service) client() *document.Client {
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
 	})
-	return document.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
+	return directshare.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
 }
 
-func (me *service) Get(id string, v *documents.Document) (err error) {
-	var result *document.Response
-	if result, err = me.client().GET(document.Documents, id); err != nil {
+func (me *service) Get(id string, v *directshares.DirectShare) (err error) {
+	var result *directshare.Response
+	if result, err = me.client().GET(directshare.DirectShares, id); err != nil {
 		return err
 	}
 
-	v.Actor = result.Actor
-	v.Content = result.Content
-	v.Name = result.Name
-	v.Owner = result.Owner
-	v.Type = result.Type
-	v.Version = result.Version
+	v.DocumentId = result.DocumentId
+	v.ID = result.ID
+	v.Access = strings.Join(result.Access, "-")
+	v.Recipients = result.Recipients
 
 	return nil
 }
 
 func (me *service) SchemaID() string {
-	return "document:documents"
+	return "document:direct-shares"
 }
 
 func (me *service) List() (api.Stubs, error) {
-	result, err := me.client().LIST(document.Documents)
-	if err != nil {
-		return nil, err
-	}
 	var stubs api.Stubs
-	for _, r := range result {
-		var document documents.Document
-		document.Actor = r.Actor
-		document.Content = r.Content
-		document.Name = r.Name
-		document.Owner = r.Owner
-		document.Type = r.Type
-		document.Version = r.Version
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: document.Name, Value: &document})
-	}
+	return stubs, nil // not implemented
 
-	return stubs, nil
 }
 
-func (me *service) Validate(v *documents.Document) error {
+func (me *service) Validate(v *directshares.DirectShare) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *documents.Document) (stub *api.Stub, err error) {
+func (me *service) Create(v *directshares.DirectShare) (stub *api.Stub, err error) {
 	var id string
 
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	writer.WriteField("type", v.Type)
-	writer.WriteField("name", v.Name)
-
-	part, err := writer.CreatePart(map[string][]string{
-		"Content-Type":        {"application/json"},
-		"Content-Disposition": {fmt.Sprintf(`form-data; name="content"; filename="%s"`, v.Name)},
-	})
+	data, err := json.Marshal(v)
 	if err != nil {
-		panic(err)
-	}
-
-	part.Write([]byte(v.Content))
-	writer.Close()
-
-	if id, err = me.client().INSERT(document.Documents, body, writer.FormDataContentType()); err != nil {
 		return nil, err
 	}
-	return &api.Stub{ID: id, Name: v.Name}, nil
+
+	if id, err = me.client().INSERT(directshare.DirectShares, data); err != nil {
+		return nil, err
+	}
+	return &api.Stub{ID: id}, nil
 }
 
-func (me *service) Update(id string, v *documents.Document) (err error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
+func (me *service) Update(id string, v *directshares.DirectShare) (err error) {
 
-	writer.WriteField("type", v.Type)
-	writer.WriteField("name", v.Name)
-
-	part, err := writer.CreatePart(map[string][]string{
-		"Content-Type":        {"application/json"},
-		"Content-Disposition": {fmt.Sprintf(`form-data; name="content"; filename="%s"`, v.Name)},
-	})
+	data, err := json.Marshal(v)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	part.Write([]byte(v.Content))
-	writer.Close()
-
-	return me.client().UPDATE(document.Documents, id, body, writer.FormDataContentType())
+	return me.client().UPDATE(directshare.DirectShares, id, data)
 }
 
 func (me *service) Delete(id string) error {
-	return me.client().DELETE(document.Documents, id)
+	return me.client().DELETE(directshare.DirectShares, id)
 }
 
-func (me *service) New() *documents.Document {
-	return new(documents.Document)
+func (me *service) New() *directshares.DirectShare {
+	return new(directshares.DirectShare)
 }
 
 func (me *service) Name() string {

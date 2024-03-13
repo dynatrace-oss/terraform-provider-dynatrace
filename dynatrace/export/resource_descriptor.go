@@ -243,6 +243,8 @@ import (
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
+
+	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
@@ -485,6 +487,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.Documents: NewResourceDescriptor(
 		documents.Service,
+	),
+	ResourceTypes.DirectShares: NewResourceDescriptor(
+		directshares.Service,
 	),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,

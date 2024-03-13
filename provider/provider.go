@@ -32,7 +32,7 @@ import (
 	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
-	document "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
@@ -224,6 +224,7 @@ func Provider() *schema.Provider {
 			"dynatrace_dashboard":                          resources.NewGeneric(export.ResourceTypes.Dashboard).Resource(),
 			"dynatrace_json_dashboard":                     resources.NewGeneric(export.ResourceTypes.JSONDashboard).Resource(),
 			"dynatrace_document":                           resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
+			"dynatrace_direct_shares":                      resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
 			"dynatrace_json_dashboard_base":                resources.NewGeneric(export.ResourceTypes.JSONDashboardBase).Resource(),
 			"dynatrace_management_zone":                    resources.NewGeneric(export.ResourceTypes.ManagementZone).Resource(),
 			"dynatrace_management_zone_v2":                 resources.NewGeneric(export.ResourceTypes.ManagementZoneV2).Resource(),

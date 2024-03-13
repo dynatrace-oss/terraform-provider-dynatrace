@@ -15,32 +15,14 @@
 * limitations under the License.
  */
 
-package documents
+package directshares_test
 
 import (
-	"encoding/json"
-	"fmt"
-	"strconv"
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-type VarInt string // pattern: ^{{.+}}$
-
-func (me VarInt) MarshalJSON() ([]byte, error) {
-	if i, err := strconv.Atoi(string(me)); err == nil {
-		return json.Marshal(i)
-	}
-	return json.Marshal(string(me))
-}
-
-func (me *VarInt) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err == nil {
-		*me = VarInt(s)
-	}
-	var i int
-	if err := json.Unmarshal(data, &i); err != nil {
-		return err
-	}
-	*me = VarInt(fmt.Sprintf("%d", i))
-	return nil
+func TestAccWorkflows(t *testing.T) {
+	api.TestAcc(t)
 }

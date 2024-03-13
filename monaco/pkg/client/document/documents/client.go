@@ -44,7 +44,6 @@ type listResponse struct {
 	NextPageKey string     `json:"nextPageKey"`
 }
 
-// Client can be used to interact with the Automation API
 type Client struct {
 	url       string
 	client    *http.Client
@@ -72,13 +71,11 @@ func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 			return nil, err
 		}
 
-		// try to get the list of resources
 		resp, err := rest.Get(a.client, u)
 		if err != nil {
 			return nil, err
 		}
 
-		// handle http error
 		if !resp.Success() {
 			return nil, ResponseErr{
 				StatusCode: resp.StatusCode,
@@ -87,7 +84,6 @@ func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
 			}
 		}
 
-		// unmarshal and return result
 		err = json.Unmarshal(resp.Body, &result)
 		if err != nil {
 			return nil, err
@@ -152,7 +148,7 @@ func (a Client) GET(resourceType ResourceType, id string) (res *Response, err er
 	return &e, err
 }
 
-// UPDATE updates a given automation object
+// UPDATE updates a given document object
 func (a Client) UPDATE(resourceType ResourceType, id string, data *bytes.Buffer, contentType string) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
@@ -184,19 +180,17 @@ func (a Client) INSERT(resourceType ResourceType, data *bytes.Buffer, contentTyp
 		return "", err
 	}
 
-	// handle response err
 	if !resp.Success() {
 		return id, ResponseErr{StatusCode: resp.StatusCode, Message: "Failed to insert document object", Data: resp.Body}
 	}
 
-	// de-serialize response
 	var e Response
 	err = json.Unmarshal(resp.Body, &e)
 
 	return e.ID, err
 }
 
-// DELETE removes a given automation object by ID
+// DELETE removes a given document object by ID
 func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
