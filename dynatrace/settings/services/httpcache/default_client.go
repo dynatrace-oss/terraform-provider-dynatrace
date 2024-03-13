@@ -19,6 +19,7 @@ package httpcache
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 
@@ -253,4 +254,8 @@ func (me *client) Put(url string, payload any, expectedStatusCodes ...int) rest.
 
 func (me *client) Delete(url string, expectedStatusCodes ...int) rest.Request {
 	return &rest.Forbidden{Method: "DELETE"}
+}
+
+func (me *client) Upload(url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) rest.Request {
+	return &rest.Forbidden{Method: "Upload"}
 }

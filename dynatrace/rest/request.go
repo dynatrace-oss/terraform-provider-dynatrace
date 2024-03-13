@@ -26,9 +26,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -119,6 +121,8 @@ type request struct {
 	expect     statuscodes
 	method     string
 	payload    any
+	upload     io.ReadCloser
+	fileName   string
 	headers    map[string]string
 	onResponse func(resp *http.Response)
 }
@@ -211,11 +215,25 @@ func (me *request) Raw() ([]byte, error) {
 	// logger.Println(me.method, url)
 	// }
 
+	contentType := ""
+	if me.upload != nil {
+		wbody := &bytes.Buffer{}
+		writer := multipart.NewWriter(wbody)
+		part, _ := writer.CreateFormFile("file", filepath.Base(me.fileName))
+		io.Copy(part, me.upload)
+		writer.Close()
+		contentType = writer.FormDataContentType()
+		body = bytes.NewBuffer(wbody.Bytes())
+	}
+
 	var req *http.Request
 	if req, err = http.NewRequest(me.method, url, body); err != nil {
 		return nil, err
 	}
 	me.authenticate(req)
+	if me.upload != nil {
+		req.Header.Add("Content-Type", contentType)
+	}
 	if len(me.headers) > 0 {
 		for headerName, headerValue := range me.headers {
 			req.Header.Add(headerName, headerValue)

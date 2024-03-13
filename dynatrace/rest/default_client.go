@@ -17,6 +17,8 @@
 
 package rest
 
+import "io"
+
 type ClientFactory func(envURL, apiToken, schemaID string) Client
 
 func DefaultClient(envURL string, apiToken string) Client {
@@ -54,6 +56,14 @@ func (me *defaultClient) Put(url string, payload any, expectedStatusCodes ...int
 
 func (me *defaultClient) Delete(url string, expectedStatusCodes ...int) Request {
 	req := &request{client: me, url: url, method: "DELETE"}
+	if len(expectedStatusCodes) > 0 {
+		req.expect = statuscodes(expectedStatusCodes)
+	}
+	return req
+}
+
+func (me *defaultClient) Upload(url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request {
+	req := &request{client: me, url: url, method: "POST", upload: reader, fileName: fileName, headers: map[string]string{"Content-Type": "application/json"}}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
