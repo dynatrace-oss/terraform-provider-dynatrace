@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Failure detection parameters that determine whether a service call is considered successful or failed. Use [failure detection rules](/ui/settings/builtin:failure-detection.environment.rules) to configure which services these parameters apply to.",
+	"description": "Failure detection parameters that determine whether a service call is considered successful or failed. Use [failure detection rules](/ui/settings/builtin:failure-detection.environment.rules) to configure which services these parameters apply to.\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).",
 	"displayName": "Failure detection parameters",
 	"documentation": "",
 	"dynatrace": "1",
@@ -575,5 +575,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }
