@@ -140,31 +140,32 @@ func (me *request) Finish(vs ...any) error {
 		// about unknown properties we may be able to
 		// retry with payload that doesn't contain these
 		// properties
-		if CorrectPayload(err, me) {
-			return me.finishRetry(1, vs...)
-		}
+		// if CorrectPayload(err, me) {
+		// 	return me.finishRetry(1, vs...)
+		// }
 		return err
 	}
 	return nil
 }
 
-func (me *request) finishRetry(numRetries int, vs ...any) error {
-	if err := me.finish(vs...); err != nil {
-		// If the Settings 2.0 API returned with an error
-		// that contains constraint violations complaining
-		// about unknown properties we may be able to
-		// retry with payload that doesn't contain these
-		// properties
-		if CorrectPayload(err, me) {
-			if numRetries > 5 {
-				return err
-			}
-			return me.finishRetry(numRetries+1, vs...)
-		}
-		return err
-	}
-	return nil
-}
+// func (me *request) finishRetry(numRetries int, vs ...any) error {
+// 	if err := me.finish(vs...); err != nil {
+// 		// If the Settings 2.0 API returned with an error
+// 		// that contains constraint violations complaining
+// 		// about unknown properties we may be able to
+// 		// retry with payload that doesn't contain these
+// 		// properties
+// 		if CorrectPayload(err, me) {
+// 			if numRetries > 5 {
+// 				return err
+// 			}
+// 			return me.finishRetry(numRetries+1, vs...)
+// 		}
+// 		return err
+// 	}
+// 	return nil
+// }
+
 func (me *request) finish(vs ...any) error {
 	if shutdown.System.Stopped() {
 		return nil

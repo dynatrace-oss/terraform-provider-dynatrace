@@ -225,7 +225,12 @@ func (c client) Delete(ctx context.Context, id string) (Response, error) {
 }
 
 func (c client) create(ctx context.Context, data []byte) (rest.Response, error) {
-	r, err := c.client.POST(ctx, endpointPath, bytes.NewReader(data), rest.RequestOptions{})
+	options := rest.RequestOptions{}
+	if !NO_REPAIR_INPUT {
+		options.QueryParams = url.Values{"repairInput": []string{"true"}}
+	}
+	r, err := c.client.POST(ctx, endpointPath, bytes.NewReader(data), options)
+
 	if err != nil {
 		return rest.Response{}, fmt.Errorf("failed to create object: %w", err)
 	}
@@ -276,7 +281,11 @@ func (c client) update(ctx context.Context, id string, data []byte) (rest.Respon
 	}
 
 	// make PUT request
-	return c.client.PUT(ctx, path, bytes.NewReader(data), rest.RequestOptions{})
+	options := rest.RequestOptions{}
+	if !NO_REPAIR_INPUT {
+		options.QueryParams = url.Values{"repairInput": []string{"true"}}
+	}
+	return c.client.PUT(ctx, path, bytes.NewReader(data), options)
 }
 
 // unmarshalJSONList unmarshals JSON data into a listResponse struct.

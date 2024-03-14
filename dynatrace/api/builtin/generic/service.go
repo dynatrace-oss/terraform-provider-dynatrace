@@ -42,9 +42,6 @@ import (
 	"net/url"
 )
 
-// var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
-var NO_REPAIR_INPUT = true
-
 func Service(credentials *settings.Credentials) settings.CRUDService[*generic.Settings] {
 	return &service{credentials: credentials}
 }
@@ -244,7 +241,6 @@ func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
-	// TODO: REPAIR_INPUT
 	response, err := me.Client(v.SchemaID).Create(context.TODO(), scope, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
@@ -264,7 +260,6 @@ func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
 }
 
 func (me *service) Update(id string, v *generic.Settings) error {
-	// TODO: REPAIR_INPUT
 	response, err := me.Client("").Update(context.TODO(), id, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {

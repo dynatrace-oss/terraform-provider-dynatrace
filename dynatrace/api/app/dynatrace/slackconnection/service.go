@@ -152,7 +152,6 @@ func (me *service) Create(v *slackconnection.Settings) (*api.Stub, error) {
 		return nil, err
 	}
 
-	// TODO: REPAIR_INPUT
 	response, err := me.Client(SchemaID).Create(context.TODO(), scope, data)
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
@@ -173,7 +172,6 @@ func (me *service) Update(id string, v *slackconnection.Settings) error {
 	if err != nil {
 		return err
 	}
-	// TODO: REPAIR_INPUT
 	response, err := me.Client("").Update(context.TODO(), id, data)
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
