@@ -29,8 +29,8 @@ type Settings struct {
 	Factor             *SamplingScaleFactor `json:"factor,omitempty"`             // Select the scaling factor for the current sampling rate of the system. Possible values: `IncreaseCapturing128Times`, `IncreaseCapturing64Times`, `IncreaseCapturing32Times`, `IncreaseCapturing16Times`, `IncreaseCapturing8Times`, `IncreaseCapturing4Times`, `IncreaseCapturing2Times`, `ReduceCapturingByFactor2`, `ReduceCapturingByFactor4`, `ReduceCapturingByFactor8`, `ReduceCapturingByFactor16`, `ReduceCapturingByFactor32`, `ReduceCapturingByFactor64`, `ReduceCapturingByFactor128`
 	HttpMethod         []HttpMethod         `json:"httpMethod,omitempty"`         // Possible values: `GET`, `POST`, `PUT`, `DELETE`, `HEAD`, `CONNECT`, `OPTIONS`, `TRACE`, `PATCH`
 	HttpMethodAny      bool                 `json:"httpMethodAny"`                // The scaling factor for the defined URL will be applied to any HTTP method.
-	Ignore             bool                 `json:"ignore"`                       // The defined URL will always be ignored, also if Adaptive Traffic Management is not active.
-	Path               *string              `json:"path,omitempty"`               // Path of the URL without query parameters
+	Ignore             bool                 `json:"ignore"`                       // The matching URLs will always be ignored, also if Adaptive Traffic Management is not active.
+	Path               *string              `json:"path,omitempty"`               // Path of the URL.
 	PathComparisonType *PathComparisonType  `json:"pathComparisonType,omitempty"` // Path comparison condition. Possible values: `EQUALS`, `DOES_NOT_EQUAL`, `CONTAINS`, `DOES_NOT_CONTAIN`, `STARTS_WITH`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `DOES_NOT_END_WITH`
 	QueryParameters    QueryParameters      `json:"queryParameters"`              // Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.
 	Scope              *string              `json:"-" scope:"scope"`              // The scope of this setting (PROCESS_GROUP_INSTANCE, PROCESS_GROUP). Omit this property if you want to cover the whole environment.
@@ -61,12 +61,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"ignore": {
 			Type:        schema.TypeBool,
-			Description: "The defined URL will always be ignored, also if Adaptive Traffic Management is not active.",
+			Description: "The matching URLs will always be ignored, also if Adaptive Traffic Management is not active.",
 			Required:    true,
 		},
 		"path": {
 			Type:        schema.TypeString,
-			Description: "Path of the URL without query parameters",
+			Description: "Path of the URL.",
 			Optional:    true,
 		},
 		"path_comparison_type": {

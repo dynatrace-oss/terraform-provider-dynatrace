@@ -2,6 +2,9 @@
 	"allowedScopes": [
 		"PROCESS_GROUP_INSTANCE",
 		"PROCESS_GROUP",
+		"CLOUD_APPLICATION",
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
 		"environment"
 	],
 	"constraints": [
@@ -14,7 +17,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "When [Adaptive traffic management](https://dt-url.net/97036pt) is activated, some PurePath® distributed traces will be discarded based on your environment licensed limit. Here you can configure the importance of specific URLs. URLs with higher importance can be treated to be captured more often and vice versa.",
+	"description": "When [Adaptive traffic management](https://dt-url.net/97036pt) is activated, some PurePath® distributed traces will be discarded based on your environment licensed limit. Here you can configure the importance of specific URLs. URLs with higher importance can be treated to be captured more often and vice versa.\n\nHint: Use [this Multi-dimensional analysis](/ui/diagnostictools/mda?mdaId=atm) to get an overview over the current sample rates per URL. Additionally use the context-menu of the URLs to up- or downscale certain URLs in a convenient way.",
 	"displayName": "URL-based sampling",
 	"documentation": "\n\nThis configuration represents an ordered list of rules. Each rule has conditions, based on request method, the URL path and query parameters. The first rule where all conditions are met will be applied. All string comparisons of the conditions are case sensitive. Use the Enabled switch to turn a rule on or off.",
 	"dynatrace": "1",
@@ -170,7 +173,9 @@
 	},
 	"maxObjects": 25,
 	"metadata": {
-		"minAgentVersion": "1.279"
+		"addItemButton": "Add URL",
+		"itemDisplayName": "URL",
+		"minAgentVersion": "1.281"
 	},
 	"multiObject": true,
 	"ordered": true,
@@ -237,7 +242,7 @@
 			"default": true,
 			"description": "",
 			"displayName": "Any HTTP method",
-			"documentation": "The scaling factor for the defined URL will be applied to any HTTP method.",
+			"documentation": "The scaling factor for the matching URLs will be applied to any HTTP method.",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -246,8 +251,8 @@
 		"ignore": {
 			"default": false,
 			"description": "",
-			"displayName": "Ignore a specific URL",
-			"documentation": "The defined URL will always be ignored, also if Adaptive Traffic Management is not active.",
+			"displayName": "Ignore URLs with specific path and/or query parameters",
+			"documentation": "The matching URLs will always be ignored, also if Adaptive Traffic Management is not active.",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -264,9 +269,9 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "Path of the URL without query parameters.",
+			"description": "Path of the URL.",
 			"displayName": "Path",
-			"documentation": "You can use the wildcard '**' between two path segments to ignore that part. If the path is empty, a minimum of one entry for 'Query parameters' must be specified that can be used for URL matching.",
+			"documentation": "Specify only the URL path without including any preceding or subsequent elements of the URL. You can use the wildcard '**' between two path segments to ignore that part. If the path is empty, at least one query parameter must be specified that can be used for URL matching.",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
@@ -384,5 +389,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }

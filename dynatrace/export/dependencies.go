@@ -66,6 +66,7 @@ var Dependencies = struct {
 	// SyntheticTest             Dependency
 	// HttpCheck                 Dependency
 	K8sCluster                Dependency
+	CloudApplication          Dependency
 	CloudApplicationNamespace Dependency
 	EnvironmentActiveGate     Dependency
 	Tenant                    Dependency
@@ -93,6 +94,7 @@ var Dependencies = struct {
 	// SyntheticTest:             &entityds{"SYNTHETIC_TEST", "SYNTHETIC_TEST-[A-Z0-9]{16}", false},
 	// HttpCheck:                 &entityds{"HTTP_CHECK", "HTTP_CHECK-[A-Z0-9]{16}", false},
 	K8sCluster:                &entityds{"KUBERNETES_CLUSTER", "KUBERNETES_CLUSTER-[A-Z0-9]{16}", false},
+	CloudApplication:          &entityds{"CLOUD_APPLICATION", "CLOUD_APPLICATION-[A-Z0-9]{16}", false},
 	CloudApplicationNamespace: &entityds{"CLOUD_APPLICATION_NAMESPACE", "CLOUD_APPLICATION_NAMESPACE-[A-Z0-9]{16}", false},
 	EnvironmentActiveGate:     &entityds{"ENVIRONMENT_ACTIVE_GATE", "ENVIRONMENT_ACTIVE_GATE-[A-Z0-9]{16}", false},
 	Tenant:                    &tenantds{},
