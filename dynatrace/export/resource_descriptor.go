@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
+	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
@@ -1213,6 +1214,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubExtensionConfig:        NewResourceDescriptor(extension_config.Service),
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
 	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
+	ResourceTypes.InfraOpsAppFeatureFlags:   NewResourceDescriptor(infraopsfeatureflags.Service),
 }
 
 var excludeListedResources = []ResourceType{
