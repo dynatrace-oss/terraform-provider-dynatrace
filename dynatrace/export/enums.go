@@ -362,6 +362,7 @@ var ResourceTypes = struct {
 	ManagedNetworkZones                 ResourceType
 	HubExtensionConfig                  ResourceType
 	HubActiveExtensionVersion           ResourceType
+	DatabaseAppFeatureFlags             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -647,6 +648,7 @@ var ResourceTypes = struct {
 	"dynatrace_managed_network_zones",
 	"dynatrace_hub_extension_config",
 	"dynatrace_hub_extension_active_version",
+	"dynatrace_db_app_feature_flags",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
