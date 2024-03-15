@@ -19,7 +19,6 @@ package simpledetectionrule
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -32,7 +31,22 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	return uuid.NewString()
+	name := string(me.RuleType)
+
+	if me.GroupIdentifier != "" {
+		name += "_"
+		name += me.GroupIdentifier
+	}
+	if me.InstanceIdentifier != "" {
+		name += "_"
+		name += me.InstanceIdentifier
+	}
+	if me.ProcessType != nil && (*me.ProcessType) != "" {
+		name += "_"
+		name += (*me.ProcessType)
+	}
+
+	return name
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
