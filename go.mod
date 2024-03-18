@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/dlclark/regexp2 v1.11.0
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.2.0
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.5.0
 	github.com/go-logr/logr v1.4.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -103,7 +104,8 @@ func (c client) Get(ctx context.Context, id string) (Response, error) {
 	if err != nil {
 		return Response{}, err
 	}
-	return Response{api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, id, nil}, nil
+	responseBody, err := body(resp)
+	return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, err
 }
 
 func (c client) List(ctx context.Context) (Response, error) {
@@ -159,7 +161,7 @@ func (c client) Create(ctx context.Context, scope string, data []byte) (Response
 	}
 	dsoc, e := json.Marshal([]SettingsObjectCreate{soc})
 	if e != nil {
-		return Response{api.Response{StatusCode: 0, Data: nil, Request: rest.RequestInfo{}}, "", nil}, e
+		return Response{api.Response{StatusCode: 0, Data: nil, Request: RequestInfo(nil)}, "", nil}, e
 	}
 	resp, err := c.create(ctx, dsoc)
 	if err != nil {
@@ -168,10 +170,14 @@ func (c client) Create(ctx context.Context, scope string, data []byte) (Response
 	tmp := []struct {
 		ID string `json:"objectId"`
 	}{}
-	if err := json.Unmarshal(resp.Payload, &tmp); err != nil {
-		return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, ID: ""}, err
+	responseBody, err := body(resp)
+	if err != nil {
+		return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, ID: ""}, err
 	}
-	return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, ID: tmp[0].ID}, nil
+	if err := json.Unmarshal(responseBody, &tmp); err != nil {
+		return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, ID: ""}, err
+	}
+	return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, ID: tmp[0].ID}, nil
 }
 
 func (c client) Update(ctx context.Context, id string, data []byte) (Response, error) {
@@ -180,13 +186,14 @@ func (c client) Update(ctx context.Context, id string, data []byte) (Response, e
 	}
 	dsou, e := json.Marshal(sou)
 	if e != nil {
-		return Response{api.Response{StatusCode: 0, Data: nil, Request: rest.RequestInfo{}}, "", nil}, e
+		return Response{api.Response{StatusCode: 0, Data: nil, Request: RequestInfo(nil)}, "", nil}, e
 	}
 
 	logger := logr.FromContextOrDiscard(ctx)
 
-	var resp rest.Response
+	var resp *http.Response
 	var err error
+	var responseBody []byte
 
 	for i := 0; i < c.retrySettings.maxRetries; i++ {
 		logger.V(1).Info(fmt.Sprintf("Trying to update setting with id %q (%d/%d retries)", id, i+1, c.retrySettings.maxRetries))
@@ -195,18 +202,23 @@ func (c client) Update(ctx context.Context, id string, data []byte) (Response, e
 		if err != nil {
 			return Response{}, err
 		}
-
-		if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden || resp.StatusCode == http.StatusBadRequest {
-			return Response{api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, id, nil}, nil
+		responseBody, err = body(resp)
+		if err != nil {
+			return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, err
 		}
 
-		if resp.IsSuccess() {
+		if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden || resp.StatusCode == http.StatusBadRequest {
+			return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, nil
+		}
+
+		if IsSuccess(resp) {
 			logger.Info(fmt.Sprintf("Updated setting with id %q", id))
-			return Response{api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, id, nil}, nil
+
+			return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, err
 		}
 		time.Sleep(c.retrySettings.waitDuration)
 	}
-	return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}}, err
+	return Response{Response: api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}}, err
 }
 
 func (c client) Delete(ctx context.Context, id string) (Response, error) {
@@ -221,10 +233,14 @@ func (c client) Delete(ctx context.Context, id string) (Response, error) {
 	if err != nil {
 		return Response{}, fmt.Errorf("unable to delete object with id %q: %w", id, err)
 	}
-	return Response{api.Response{StatusCode: resp.StatusCode, Data: resp.Payload, Request: resp.RequestInfo}, id, nil}, err
+	responseBody, err := body(resp)
+	if err != nil {
+		return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, err
+	}
+	return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, nil
 }
 
-func (c client) create(ctx context.Context, data []byte) (rest.Response, error) {
+func (c client) create(ctx context.Context, data []byte) (*http.Response, error) {
 	options := rest.RequestOptions{}
 	if !NO_REPAIR_INPUT {
 		options.QueryParams = url.Values{"repairInput": []string{"true"}}
@@ -232,21 +248,21 @@ func (c client) create(ctx context.Context, data []byte) (rest.Response, error) 
 	r, err := c.client.POST(ctx, endpointPath, bytes.NewReader(data), options)
 
 	if err != nil {
-		return rest.Response{}, fmt.Errorf("failed to create object: %w", err)
+		return r, fmt.Errorf("failed to create object: %w", err)
 	}
 	return r, nil
 }
 
-func (c client) get(ctx context.Context, id string) (rest.Response, error) {
+func (c client) get(ctx context.Context, id string) (*http.Response, error) {
 	path, err := url.JoinPath(endpointPath, id)
 	if err != nil {
-		return rest.Response{}, fmt.Errorf("failed to create URL: %w", err)
+		return nil, fmt.Errorf("failed to create URL: %w", err)
 	}
 	return c.client.GET(ctx, path, rest.RequestOptions{})
 }
 
 func (c client) list(ctx context.Context, nextPageKey string) (listResponse, error) {
-	var resp rest.Response
+	var resp *http.Response
 	var err error
 	var requestOptions rest.RequestOptions
 	if len(nextPageKey) == 0 {
@@ -264,20 +280,20 @@ func (c client) list(ctx context.Context, nextPageKey string) (listResponse, err
 	if err != nil {
 		return listResponse{}, fmt.Errorf("failed to list objects:%w", err)
 	}
-	l, err := unmarshalJSONList(&resp)
+	l, err := unmarshalJSONList(resp)
 	if err != nil {
 		return listResponse{}, fmt.Errorf("failed to parse list response:%w", err)
 	}
 	return l, nil
 }
 
-func (c client) update(ctx context.Context, id string, data []byte) (rest.Response, error) {
+func (c client) update(ctx context.Context, id string, data []byte) (*http.Response, error) {
 	var err error
 
 	// construct path for PUT request
 	path, err := url.JoinPath(endpointPath, id)
 	if err != nil {
-		return rest.Response{}, fmt.Errorf("failed to join URL: %w", err)
+		return nil, fmt.Errorf("failed to join URL: %w", err)
 	}
 
 	// make PUT request
@@ -289,15 +305,19 @@ func (c client) update(ctx context.Context, id string, data []byte) (rest.Respon
 }
 
 // unmarshalJSONList unmarshals JSON data into a listResponse struct.
-func unmarshalJSONList(raw *rest.Response) (listResponse, error) {
+func unmarshalJSONList(raw *http.Response) (listResponse, error) {
 	var r listResponse
-	err := json.Unmarshal(raw.Payload, &r)
+	responseBody, err := body(raw)
+	if err != nil {
+		return listResponse{}, err
+	}
+	err = json.Unmarshal(responseBody, &r)
 	if err != nil {
 		return listResponse{}, fmt.Errorf("failed to unmarshal response: %w", err)
 	}
-	r.Data = raw.Payload
+	r.Data = responseBody
 	r.StatusCode = raw.StatusCode
-	r.Request = raw.RequestInfo
+	r.Request = RequestInfo(raw.Request)
 	return r, nil
 }
 
@@ -418,4 +438,24 @@ func (c Client) Delete(ctx context.Context, id string) (Response, error) {
 		return c.oAuthClient.Delete(ctx, id)
 	}
 	return Response{}, errors.New("no client configured")
+}
+
+func RequestInfo(request *http.Request) rest.RequestInfo {
+	if request == nil {
+		return rest.RequestInfo{}
+	}
+	return rest.RequestInfo{Method: http.MethodGet, URL: request.URL.String()}
+}
+
+// IsSuccess returns true if the response indicates a successful HTTP status code.
+// A status code between 200 and 299 (inclusive) is considered a success.
+func IsSuccess(resp *http.Response) bool {
+	return resp.StatusCode >= 200 && resp.StatusCode <= 299
+}
+
+func body(response *http.Response) ([]byte, error) {
+	if response == nil || response.Body == nil {
+		return []byte{}, nil
+	}
+	return io.ReadAll(response.Body)
 }

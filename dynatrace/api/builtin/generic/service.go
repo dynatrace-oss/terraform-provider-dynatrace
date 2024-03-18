@@ -186,7 +186,9 @@ func (me *service) List() (api.Stubs, error) {
 		return nil, err
 	}
 	var schemata schemataResponse
-	json.Unmarshal(response.Payload, &schemata)
+	if response.Body != nil {
+		json.NewDecoder(response.Body).Decode(&schemata)
+	}
 	if len(schemata.Items) == 0 {
 		return api.Stubs{}, nil
 	}
