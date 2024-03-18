@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestAppMonitoring(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, appmonitoring.Service)
-	t.Skip()
-}
-
 func TestAccAppMonitoring(t *testing.T) {
 	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)

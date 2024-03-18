@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestCrashdumpAnalytics(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, analytics.Service)
-	t.Skip()
-}
-
 func TestAccCrashdumpAnalytics(t *testing.T) {
 	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)
