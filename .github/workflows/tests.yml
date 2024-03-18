@@ -27,7 +27,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -44,7 +44,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -61,7 +61,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -78,7 +78,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -95,7 +95,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -108,7 +108,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -121,7 +121,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -134,7 +134,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -147,7 +147,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -160,7 +160,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -173,7 +173,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -186,7 +186,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -199,7 +199,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -212,7 +212,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -225,7 +225,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -238,7 +238,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -251,7 +251,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -264,7 +264,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -277,7 +277,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -290,7 +290,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -303,7 +303,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -316,7 +316,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -329,7 +329,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -342,7 +342,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -355,7 +355,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -368,7 +368,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -381,7 +381,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -394,7 +394,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -407,7 +407,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -420,7 +420,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -433,7 +433,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -446,7 +446,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -459,7 +459,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -472,7 +472,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -485,7 +485,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -498,7 +498,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -511,7 +511,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -524,7 +524,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -537,7 +537,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -550,7 +550,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -563,7 +563,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -576,7 +576,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -589,7 +589,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -602,7 +602,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -615,7 +615,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -628,7 +628,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -641,7 +641,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -654,7 +654,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -667,7 +667,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -680,7 +680,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -693,7 +693,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -706,7 +706,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -719,7 +719,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -732,7 +732,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -745,7 +745,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -758,7 +758,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -771,7 +771,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -784,7 +784,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -797,7 +797,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -810,7 +810,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -823,7 +823,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -836,7 +836,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -849,7 +849,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -862,7 +862,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -875,7 +875,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -888,7 +888,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -901,7 +901,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -914,7 +914,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -927,7 +927,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -940,7 +940,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -953,7 +953,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -966,7 +966,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -979,7 +979,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -992,7 +992,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1005,7 +1005,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1018,7 +1018,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1031,7 +1031,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1044,7 +1044,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1057,7 +1057,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1070,7 +1070,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1083,7 +1083,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1096,7 +1096,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1109,7 +1109,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1122,7 +1122,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1135,7 +1135,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1148,7 +1148,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1161,7 +1161,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1174,7 +1174,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1187,7 +1187,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1200,7 +1200,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1213,7 +1213,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1226,7 +1226,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1239,7 +1239,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1252,7 +1252,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1265,7 +1265,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1278,7 +1278,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1291,7 +1291,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1304,7 +1304,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1317,7 +1317,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1330,7 +1330,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1343,7 +1343,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1356,7 +1356,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1369,7 +1369,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1382,7 +1382,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1395,7 +1395,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1408,7 +1408,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1421,7 +1421,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1434,7 +1434,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1447,7 +1447,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1460,7 +1460,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1473,7 +1473,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1486,7 +1486,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1499,7 +1499,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1512,7 +1512,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1525,7 +1525,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1538,7 +1538,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1551,7 +1551,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1564,7 +1564,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1577,7 +1577,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1590,7 +1590,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1603,7 +1603,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1616,7 +1616,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1640,7 +1640,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1653,7 +1653,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1666,7 +1666,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1679,7 +1679,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1692,7 +1692,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1705,7 +1705,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1718,7 +1718,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1731,7 +1731,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1744,7 +1744,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1757,7 +1757,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1770,7 +1770,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1783,7 +1783,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1796,7 +1796,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1809,7 +1809,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1822,7 +1822,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1835,7 +1835,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1848,7 +1848,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1861,7 +1861,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1874,7 +1874,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1887,7 +1887,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1900,7 +1900,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1913,7 +1913,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1926,7 +1926,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1939,7 +1939,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1952,7 +1952,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1965,7 +1965,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1978,7 +1978,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -1991,7 +1991,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2004,7 +2004,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2017,7 +2017,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2030,7 +2030,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2043,7 +2043,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2056,7 +2056,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2069,7 +2069,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2082,7 +2082,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2095,7 +2095,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2108,7 +2108,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2121,7 +2121,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2134,7 +2134,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2147,7 +2147,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2160,7 +2160,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2173,7 +2173,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2186,7 +2186,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2199,7 +2199,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2212,7 +2212,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2225,7 +2225,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2238,7 +2238,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2251,7 +2251,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2264,7 +2264,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2277,7 +2277,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2290,7 +2290,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2303,7 +2303,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2316,7 +2316,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2329,7 +2329,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2342,7 +2342,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2366,7 +2366,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2379,7 +2379,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2392,7 +2392,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2405,7 +2405,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2418,7 +2418,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2431,7 +2431,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2444,7 +2444,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2457,7 +2457,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2470,7 +2470,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2483,7 +2483,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2496,7 +2496,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2509,7 +2509,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2522,7 +2522,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2535,7 +2535,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2548,7 +2548,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2561,7 +2561,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2574,7 +2574,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2587,7 +2587,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2600,7 +2600,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2613,7 +2613,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2626,7 +2626,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2639,7 +2639,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2652,7 +2652,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2665,7 +2665,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2678,7 +2678,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2691,7 +2691,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2704,7 +2704,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2717,7 +2717,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2730,7 +2730,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2743,7 +2743,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2756,7 +2756,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2769,7 +2769,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2782,7 +2782,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2795,7 +2795,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2808,7 +2808,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2821,7 +2821,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2834,7 +2834,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2847,7 +2847,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2860,7 +2860,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2873,7 +2873,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2886,7 +2886,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2899,7 +2899,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2912,7 +2912,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2925,7 +2925,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2938,7 +2938,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2951,7 +2951,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2964,7 +2964,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2977,7 +2977,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -2990,7 +2990,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3003,7 +3003,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3016,7 +3016,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3029,7 +3029,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3042,7 +3042,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3055,7 +3055,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3068,7 +3068,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3081,7 +3081,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3094,7 +3094,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3107,7 +3107,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3120,7 +3120,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3133,7 +3133,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3146,7 +3146,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3159,7 +3159,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3172,7 +3172,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3185,7 +3185,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3198,7 +3198,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3211,7 +3211,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3224,7 +3224,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3237,7 +3237,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3250,7 +3250,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3263,7 +3263,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3276,7 +3276,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3289,7 +3289,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3302,7 +3302,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3315,7 +3315,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3328,7 +3328,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3341,7 +3341,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3354,7 +3354,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3367,7 +3367,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3380,7 +3380,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
@@ -3393,7 +3393,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -3407,7 +3407,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           DYNATRACE_AUTOMATION_CLIENT_ID: ${{ secrets.DYNATRACE_AUTOMATION_CLIENT_ID }}
@@ -3429,7 +3429,7 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: true
           DYNATRACE_DEBUG: true
-          DT_NO_REPAIR_INPUT: true
+          DT_NO_REPAIR_INPUT: false
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
           DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
