@@ -20,13 +20,8 @@ package slack_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/slack"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSlackNotifications(t *testing.T) {
-	api.TestService(t, slack.Service)
-}
 
 func TestAccSlackNotifications(t *testing.T) {
 	api.TestAcc(t)

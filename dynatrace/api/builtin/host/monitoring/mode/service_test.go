@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestHostMonitorinMode(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccHostMonitoringMode(t *testing.T) {
 	t.Skip()
 }

@@ -20,14 +20,8 @@ package advanceddetectionrule_test
 import (
 	"testing"
 
-	advanceddetectionrule "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAdvancedProcessGroupDetectionRules(t *testing.T) {
-	api.TestService(t, advanceddetectionrule.Service)
-}
 
 func TestAccAdvancedProcessGroupDetectionRules(t *testing.T) {
 	api.TestAcc(t)

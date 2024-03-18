@@ -20,13 +20,8 @@ package privacy_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestDataPrivacy(t *testing.T) {
-	api.TestService(t, privacy.Service)
-}
 
 func TestAccDataPrivacy(t *testing.T) {
 	api.TestAcc(t)

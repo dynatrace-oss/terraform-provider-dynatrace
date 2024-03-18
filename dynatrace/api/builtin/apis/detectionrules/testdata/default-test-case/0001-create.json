@@ -1,7 +1,0 @@
-{
-  "apiColor": "#ffe11c",
-  "apiName": "${randomize}",
-  "conditions": [],
-  "technology": "Nodejs",
-  "thirdPartyApi": true
-}

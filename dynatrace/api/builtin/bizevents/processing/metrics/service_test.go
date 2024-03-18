@@ -20,13 +20,8 @@ package metrics_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/metrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBizEventsMetrics(t *testing.T) {
-	api.TestService(t, metrics.Service)
-}
 
 func TestAccBizEventsMetrics(t *testing.T) {
 	api.TestAcc(t)

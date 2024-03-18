@@ -20,13 +20,8 @@ package cluster_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sClusterAnomalies(t *testing.T) {
-	api.TestService(t, cluster.Service)
-}
 
 func TestAccK8sClusterAnomalies(t *testing.T) {
 	api.TestAcc(t)

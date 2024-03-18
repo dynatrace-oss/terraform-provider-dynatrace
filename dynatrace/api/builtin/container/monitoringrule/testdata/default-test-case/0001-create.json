@@ -1,7 +1,0 @@
-{
-    "enabled": true,
-    "mode": "MONITORING_OFF",
-    "operator": "EQUALS",
-    "property": "KUBERNETES_CONTAINERNAME",
-    "value": "TerraformK8s"
-  }

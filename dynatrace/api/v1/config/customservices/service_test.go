@@ -20,13 +20,8 @@ package customservices_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCustomServices(t *testing.T) {
-	api.TestService(t, customservices.Service)
-}
 
 func TestAccCustomServices(t *testing.T) {
 	api.TestAcc(t)

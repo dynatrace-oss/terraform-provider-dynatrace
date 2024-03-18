@@ -23,10 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestDiskOptions(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccDiskOptions(t *testing.T) {
 	api.TestAcc(t)
 }

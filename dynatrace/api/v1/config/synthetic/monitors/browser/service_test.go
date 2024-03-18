@@ -20,13 +20,8 @@ package browser_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBrowserMonitors(t *testing.T) {
-	api.TestService(t, browser.Service)
-}
 
 func TestAccBrowserMonitors(t *testing.T) {
 	api.TestAcc(t)

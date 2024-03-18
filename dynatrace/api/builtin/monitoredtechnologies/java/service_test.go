@@ -20,13 +20,8 @@ package java_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/java"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesJava(t *testing.T) {
-	api.TestService(t, java.Service)
-}
 
 func TestAccMonitoredTechnologiesJava(t *testing.T) {
 	api.TestAcc(t)

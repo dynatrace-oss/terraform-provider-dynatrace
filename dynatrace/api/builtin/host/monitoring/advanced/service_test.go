@@ -20,13 +20,8 @@ package advanced_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHostMonitoringAdvanced(t *testing.T) {
-	api.TestService(t, advanced.Service)
-}
 
 func TestAccHostMonitoringAdvanced(t *testing.T) {
 	api.TestAcc(t)

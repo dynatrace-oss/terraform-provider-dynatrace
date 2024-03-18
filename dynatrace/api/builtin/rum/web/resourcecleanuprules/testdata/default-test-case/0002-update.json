@@ -1,5 +1,0 @@
-{
-    "name": "${randomize}",
-    "regularExpression": "([a-z]+)TerraformUpdate",
-    "replaceWith": "$1"
-}

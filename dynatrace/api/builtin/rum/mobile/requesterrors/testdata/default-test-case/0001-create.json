@@ -1,8 +1,0 @@
-{
-    "errorRules": [
-        {
-            "errorCodes": "406"
-        }
-    ],
-    "scope": "MOBILE_APPLICATION-1234567890000000"
-}

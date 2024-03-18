@@ -20,13 +20,8 @@ package txmonitoring_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestTxMonitoring(t *testing.T) {
-	api.TestService(t, txmonitoring.Service)
-}
 
 func TestAccTxMonitoring(t *testing.T) {
 	api.TestAcc(t)

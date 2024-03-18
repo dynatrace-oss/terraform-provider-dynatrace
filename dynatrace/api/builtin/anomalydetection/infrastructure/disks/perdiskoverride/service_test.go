@@ -20,13 +20,8 @@ package perdiskoverride_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/perdiskoverride"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestInfraPerDiskAnomalyDetection(t *testing.T) {
-	api.TestService(t, perdiskoverride.Service)
-}
 
 func TestAccInfraPerDiskAnomalyDetection(t *testing.T) {
 	api.TestAcc(t)

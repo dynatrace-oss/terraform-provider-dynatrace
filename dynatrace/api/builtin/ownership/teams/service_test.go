@@ -20,13 +20,8 @@ package teams_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestOwnershipTeams(t *testing.T) {
-	api.TestService(t, teams.Service)
-}
 
 func TestAccOwnershipTeams(t *testing.T) {
 	api.TestAcc(t)

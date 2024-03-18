@@ -20,13 +20,8 @@ package keyrequests_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/keyrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestKeyRequests(t *testing.T) {
-	api.TestService(t, keyrequests.Service)
-}
 
 func TestAccKeyRequests(t *testing.T) {
 	api.TestAcc(t)

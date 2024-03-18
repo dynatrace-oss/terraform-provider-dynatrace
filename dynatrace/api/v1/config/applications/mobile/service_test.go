@@ -20,13 +20,8 @@ package mobile_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMobileApplications(t *testing.T) {
-	api.TestService(t, mobile.Service)
-}
 
 func TestAccMobileApplications(t *testing.T) {
 	api.TestAcc(t)

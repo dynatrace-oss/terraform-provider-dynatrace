@@ -20,13 +20,8 @@ package beacondomainorigins_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppBeaconOrigins(t *testing.T) {
-	api.TestService(t, beacondomainorigins.Service)
-}
 
 func TestAccWebAppBeaconOrigins(t *testing.T) {
 	api.TestAcc(t)

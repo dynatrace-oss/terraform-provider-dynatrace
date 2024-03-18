@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestHTTPMonitorScript(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccHTTPMonitorScript(t *testing.T) {
 	t.Skip()
 }

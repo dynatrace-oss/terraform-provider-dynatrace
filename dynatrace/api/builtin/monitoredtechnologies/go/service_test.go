@@ -20,13 +20,8 @@ package golang_test
 import (
 	"testing"
 
-	golang "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/go"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesGo(t *testing.T) {
-	api.TestService(t, golang.Service)
-}
 
 func TestAccMonitoredTechnologiesGo(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package processgroups_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestConditionalProcessGroupNaming(t *testing.T) {
-	api.TestService(t, processgroups.Service)
-}
 
 func TestAccConditionalProcessGroupNaming(t *testing.T) {
 	api.TestAcc(t)

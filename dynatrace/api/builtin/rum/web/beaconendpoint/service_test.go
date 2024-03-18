@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestWebAppBeaconEndpoint(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccWebAppBeaconEndpoint(t *testing.T) {
 	// Temporarily disabled, not available in test environment
 	// api.TestAcc(t)

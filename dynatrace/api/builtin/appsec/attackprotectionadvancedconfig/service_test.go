@@ -20,13 +20,8 @@ package attackprotectionadvancedconfig_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionadvancedconfig"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecAttackProtectionRules(t *testing.T) {
-	api.TestService(t, attackprotectionadvancedconfig.Service)
-}
 
 func TestAccAppSecAttackProtectionRules(t *testing.T) {
 	api.TestAcc(t)

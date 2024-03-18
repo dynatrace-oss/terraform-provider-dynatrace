@@ -1,5 +1,0 @@
-{
-  "detectFrequentIssuesInApplications": true,
-  "detectFrequentIssuesInTransactionsAndServices": true,
-  "detectFrequentIssuesInInfrastructure": false
-}

@@ -20,13 +20,8 @@ package wsmb_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesWSMB(t *testing.T) {
-	api.TestService(t, wsmb.Service)
-}
 
 func TestAccMonitoredTechnologiesWSMB(t *testing.T) {
 	api.TestAcc(t)

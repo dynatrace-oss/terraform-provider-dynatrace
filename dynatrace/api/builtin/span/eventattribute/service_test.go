@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestSpanEvents(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccSpanEvents(t *testing.T) {
 	t.Skip()
 }

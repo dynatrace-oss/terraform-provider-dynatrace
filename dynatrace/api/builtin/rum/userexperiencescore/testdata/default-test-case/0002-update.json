@@ -1,6 +1,0 @@
-{
-    "considerLastAction": true,
-    "considerRageClick": false,
-    "maxFrustratedUserActionsThreshold": 25,
-    "minSatisfiedUserActionsThreshold": 55
-  }

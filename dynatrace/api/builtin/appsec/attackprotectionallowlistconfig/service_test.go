@@ -20,13 +20,8 @@ package attackprotectionallowlistconfig_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionallowlistconfig"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecAttackProtectionAllowlist(t *testing.T) {
-	api.TestService(t, attackprotectionallowlistconfig.Service)
-}
 
 func TestAccAppSecAttackProtectionAllowlist(t *testing.T) {
 	api.TestAcc(t)

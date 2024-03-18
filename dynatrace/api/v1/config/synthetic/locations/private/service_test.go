@@ -20,13 +20,8 @@ package locations_test
 import (
 	"testing"
 
-	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private"
 	api "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSyntheticLocations(t *testing.T) {
-	api.TestService(t, locations.Service)
-}
 
 func TestAccSyntheticLocations(t *testing.T) {
 	api.TestAcc(t)

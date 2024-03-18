@@ -1,9 +1,0 @@
-{
-    "monitorAllIncomingWebRequests": false,
-    "monitorAllCtgProtocols": false,
-    "groupCicsRegions": true,
-    "zosCicsServiceDetectionUsesTransactionId": false,
-    "groupImsRegions": false,
-    "zosImsServiceDetectionUsesTransactionId": false,
-    "nodeLimit": 500
-}

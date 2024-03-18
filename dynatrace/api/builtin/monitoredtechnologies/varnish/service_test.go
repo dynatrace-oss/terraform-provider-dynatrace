@@ -20,13 +20,8 @@ package varnish_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesVarnish(t *testing.T) {
-	api.TestService(t, varnish.Service)
-}
 
 func TestAccMonitoredTechnologiesVarnish(t *testing.T) {
 	api.TestAcc(t)

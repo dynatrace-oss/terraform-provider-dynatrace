@@ -20,13 +20,8 @@ package workload_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sWorkloadAnomalies(t *testing.T) {
-	api.TestService(t, workload.Service)
-}
 
 func TestAccK8sWorkloadAnomalies(t *testing.T) {
 	api.TestAcc(t)

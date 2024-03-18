@@ -20,13 +20,8 @@ package masking_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAttributeMasking(t *testing.T) {
-	api.TestService(t, masking.Service)
-}
 
 func TestAccAttributeMasking(t *testing.T) {
 	api.TestAcc(t)

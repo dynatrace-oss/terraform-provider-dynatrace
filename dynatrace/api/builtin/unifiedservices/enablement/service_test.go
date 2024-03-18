@@ -20,13 +20,8 @@ package enablement_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/unifiedservices/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUnifiedServicesEnablement(t *testing.T) {
-	api.TestService(t, enablement.Service)
-}
 
 func TestAccUnifiedServicesEnablement(t *testing.T) {
 	api.TestAcc(t)

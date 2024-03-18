@@ -20,13 +20,8 @@ package overloadprevention_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/overloadprevention"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRUMOverloadPrevention(t *testing.T) {
-	api.TestService(t, overloadprevention.Service)
-}
 
 func TestAccRUMOverloadPrevention(t *testing.T) {
 	api.TestAcc(t)

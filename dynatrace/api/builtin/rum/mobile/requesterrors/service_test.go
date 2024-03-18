@@ -20,13 +20,8 @@ package requesterrors_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/requesterrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMobileAppRequestErrors(t *testing.T) {
-	api.TestService(t, requesterrors.Service)
-}
 
 func TestAccMobileAppRequestErrors(t *testing.T) {
 	api.TestAcc(t)

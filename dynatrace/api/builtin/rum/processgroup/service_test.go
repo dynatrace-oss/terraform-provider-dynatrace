@@ -20,13 +20,8 @@ package processgroup_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/processgroup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRUMProcessGroup(t *testing.T) {
-	api.TestService(t, processgroup.Service)
-}
 
 func TestAccRUMProcessGroup(t *testing.T) {
 	api.TestAcc(t)

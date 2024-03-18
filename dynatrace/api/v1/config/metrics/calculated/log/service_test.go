@@ -20,13 +20,8 @@ package log_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/log"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCalculatedLogMetrics(t *testing.T) {
-	api.TestService(t, log.Service)
-}
 
 func TestAccCalculatedLogMetrics(t *testing.T) {
 	api.TestAcc(t)

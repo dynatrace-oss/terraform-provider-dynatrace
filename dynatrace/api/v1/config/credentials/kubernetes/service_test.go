@@ -20,13 +20,8 @@ package kubernetes_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestKubernetesCredentials(t *testing.T) {
-	api.TestService(t, kubernetes.Service)
-}
 
 func TestAccKubernetesCredentials(t *testing.T) {
 	api.TestAcc(t)

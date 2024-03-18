@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestDatabaseAppFeatureFlags(t *testing.T) {
-	// Temporarily disabled - not available on test tenant
-	// api.TestService(t, database.Service)
-	t.Skip()
-}
-
 func TestAccDatabaseAppFeatureFlags(t *testing.T) {
 	// Temporarily disabled - not available on test tenant
 	// api.TestAcc(t)

@@ -20,13 +20,8 @@ package maintenance_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/maintenance"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMaintenanceWindows(t *testing.T) {
-	api.TestService(t, maintenance.Service)
-}
 
 func TestAccMaintenanceWindows(t *testing.T) {
 	api.TestAcc(t)

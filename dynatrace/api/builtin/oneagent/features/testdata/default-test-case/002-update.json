@@ -1,6 +1,0 @@
-{
-    "enabled": false,
-    "instrumentation": false,
-    "key": "SENSOR_DOTNET_ASPNET",
-    "scope": "environment"
-}

@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestCustomTags(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccCustomTags(t *testing.T) {
 	t.Skip()
 }

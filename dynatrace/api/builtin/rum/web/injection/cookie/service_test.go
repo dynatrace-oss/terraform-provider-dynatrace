@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestWebAppInjectionCookie(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccWebAppInjectionCookie(t *testing.T) {
 	// Temporarily disabled, not available in test environment
 	// api.TestAcc(t)

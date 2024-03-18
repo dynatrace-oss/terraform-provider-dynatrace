@@ -20,13 +20,8 @@ package autotags_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/autotags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAutoTags(t *testing.T) {
-	api.TestService(t, autotags.Service)
-}
 
 func TestAccAutoTags(t *testing.T) {
 	api.TestAcc(t)

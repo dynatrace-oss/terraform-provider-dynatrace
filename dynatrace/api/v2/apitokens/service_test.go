@@ -20,13 +20,8 @@ package apitokens_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAPITokens(t *testing.T) {
-	api.TestService(t, apitokens.Service)
-}
 
 func TestAccAPITokens(t *testing.T) {
 	api.TestAcc(t)

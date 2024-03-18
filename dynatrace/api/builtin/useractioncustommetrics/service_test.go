@@ -20,13 +20,8 @@ package useractioncustommetrics_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUserActionCustomMetrics(t *testing.T) {
-	api.TestService(t, useractioncustommetrics.Service)
-}
 
 func TestAccUserActionCustomMetrics(t *testing.T) {
 	api.TestAcc(t)

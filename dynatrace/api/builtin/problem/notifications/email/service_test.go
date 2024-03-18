@@ -20,13 +20,8 @@ package email_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/email"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestEmailNotifications(t *testing.T) {
-	api.TestService(t, email.Service)
-}
 
 func TestAccEmailNotifications(t *testing.T) {
 	api.TestAcc(t)

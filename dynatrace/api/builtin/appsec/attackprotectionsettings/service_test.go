@@ -20,13 +20,8 @@ package attackprotectionsettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecAttackProtectionSettings(t *testing.T) {
-	api.TestService(t, attackprotectionsettings.Service)
-}
 
 func TestAccAppSecAttackProtectionSettings(t *testing.T) {
 	api.TestAcc(t)

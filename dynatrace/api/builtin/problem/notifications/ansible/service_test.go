@@ -20,13 +20,8 @@ package ansible_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/ansible"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAnsibleTowerNotifications(t *testing.T) {
-	api.TestService(t, ansible.Service)
-}
 
 func TestAccAnsibleTowerNotifications(t *testing.T) {
 	api.TestAcc(t)

@@ -23,10 +23,6 @@ import (
 	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestFailureDetectionRules(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccFailureDetectionRules(t *testing.T) {
 	t.Skip()
 }
