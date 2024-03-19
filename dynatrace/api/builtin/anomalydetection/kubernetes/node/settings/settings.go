@@ -18,6 +18,8 @@
 package node
 
 import (
+	"os"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -56,7 +58,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"node_problematic_condition": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
+			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
 			Elem:        &schema.Resource{Schema: new(NodeProblematicCondition).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
