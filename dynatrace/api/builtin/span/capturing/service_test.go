@@ -20,13 +20,8 @@ package capturing_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/capturing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSpanCaptureRules(t *testing.T) {
-	api.TestService(t, capturing.Service)
-}
 
 func TestAccSpanCaptureRules(t *testing.T) {
 	api.TestAcc(t)

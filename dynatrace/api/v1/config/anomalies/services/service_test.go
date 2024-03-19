@@ -20,13 +20,8 @@ package services_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceAnomalies(t *testing.T) {
-	api.TestService(t, services.Service)
-}
 
 func TestAccServiceAnomalies(t *testing.T) {
 	api.TestAcc(t)

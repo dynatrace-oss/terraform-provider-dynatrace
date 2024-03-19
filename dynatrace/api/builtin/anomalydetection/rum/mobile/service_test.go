@@ -20,13 +20,8 @@ package rummobile_test
 import (
 	"testing"
 
-	mobile "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMobileAppAnomalyDetection(t *testing.T) {
-	api.TestService(t, mobile.Service)
-}
 
 func TestAccMobileAppAnomalyDetection(t *testing.T) {
 	api.TestAcc(t)

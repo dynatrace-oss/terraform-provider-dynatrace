@@ -20,13 +20,8 @@ package remote_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestExtensionExecutionControllerRemote(t *testing.T) {
-	api.TestService(t, remote.Service)
-}
 
 func TestAccExtensionExecutionControllerRemote(t *testing.T) {
 	api.TestAcc(t)

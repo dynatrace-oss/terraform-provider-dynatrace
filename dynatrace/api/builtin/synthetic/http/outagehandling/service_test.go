@@ -20,13 +20,8 @@ package outagehandling_test
 import (
 	"testing"
 
-	outagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHTTPMonitorOutageHandling(t *testing.T) {
-	api.TestService(t, outagehandling.Service)
-}
 
 func TestAccHTTPMonitorOutageHandling(t *testing.T) {
 	api.TestAcc(t)

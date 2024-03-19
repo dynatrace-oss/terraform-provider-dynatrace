@@ -20,13 +20,8 @@ package notificationattackalertingprofile_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationattackalertingprofile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecAttackAlerting(t *testing.T) {
-	api.TestService(t, notificationattackalertingprofile.Service)
-}
 
 func TestAccAppSecAttackAlerting(t *testing.T) {
 	api.TestAcc(t)

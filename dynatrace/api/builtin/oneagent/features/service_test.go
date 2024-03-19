@@ -21,11 +21,6 @@ import (
 	"testing"
 )
 
-func TestOneAgentFeatures(t *testing.T) {
-	// api.TestService(t, features.Service)
-	t.Skip()
-}
-
 func TestAccOneAgentFeatures(t *testing.T) {
 	// api.TestAcc(t)
 	t.Skip()

@@ -19,14 +19,7 @@ package presets_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/presets"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestDashboardsPresets(t *testing.T) {
-	api.TestService(t, presets.Service)
-}
 
 func TestAccDashboardsPresets(t *testing.T) {
 	// api.TestAcc(t)

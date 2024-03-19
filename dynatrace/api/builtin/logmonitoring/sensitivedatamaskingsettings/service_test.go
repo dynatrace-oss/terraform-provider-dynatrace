@@ -20,13 +20,8 @@ package sensitivedatamasking_test
 import (
 	"testing"
 
-	sensitivedatamasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/sensitivedatamaskingsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestLogSensitiveDataMasking(t *testing.T) {
-	api.TestService(t, sensitivedatamasking.Service)
-}
 
 func TestAccLogSensitiveDataMasking(t *testing.T) {
 	api.TestAcc(t)

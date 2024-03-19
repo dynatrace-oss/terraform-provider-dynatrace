@@ -20,13 +20,8 @@ package service_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCalculatedServiceMetrics(t *testing.T) {
-	api.TestService(t, service.Service)
-}
 
 func TestAccCalculatedServiceMetrics(t *testing.T) {
 	api.TestAcc(t)

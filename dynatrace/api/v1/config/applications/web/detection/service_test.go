@@ -20,13 +20,8 @@ package detection_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/detection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestApplicationDetectionRules(t *testing.T) {
-	api.TestService(t, detection.Service)
-}
 
 func TestAccApplicationDetectionRules(t *testing.T) {
 	api.TestAcc(t)

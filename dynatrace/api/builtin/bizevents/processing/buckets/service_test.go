@@ -20,13 +20,8 @@ package buckets_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/buckets"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBizEventsBuckets(t *testing.T) {
-	api.TestService(t, buckets.Service)
-}
 
 func TestAccBizEventsBuckets(t *testing.T) {
 	api.TestAcc(t)

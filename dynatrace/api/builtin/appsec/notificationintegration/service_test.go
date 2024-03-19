@@ -20,13 +20,8 @@ package notificationintegration_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecNotification(t *testing.T) {
-	api.TestService(t, notificationintegration.Service)
-}
 
 func TestAccAppSecNotification(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package pipelines_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/pipelines"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBizEventsProcessing(t *testing.T) {
-	api.TestService(t, pipelines.Service)
-}
 
 func TestAccBizEventsProcessing(t *testing.T) {
 	api.TestAcc(t)

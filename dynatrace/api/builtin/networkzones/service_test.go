@@ -19,12 +19,8 @@ package networkzones_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestNetworkZones(t *testing.T) {
+func TestAccNetworkZones(t *testing.T) {
 	t.Skip("Testing Network Zones skipped: REST API may completely remove the setting after test case. Unreliable results")
-	api.TestService(t, networkzones.Service)
 }

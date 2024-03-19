@@ -20,13 +20,8 @@ package hostheaders_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRUMHostHeaders(t *testing.T) {
-	api.TestService(t, hostheaders.Service)
-}
 
 func TestAccRUMHostHeaders(t *testing.T) {
 	api.TestAcc(t)

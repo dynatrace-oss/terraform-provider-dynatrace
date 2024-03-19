@@ -20,13 +20,8 @@ package enablement_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppEnablement(t *testing.T) {
-	api.TestService(t, enablement.Service)
-}
 
 func TestAccWebAppEnablement(t *testing.T) {
 	api.TestAcc(t)

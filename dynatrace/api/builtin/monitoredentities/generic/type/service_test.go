@@ -20,13 +20,8 @@ package generictype_test
 import (
 	"testing"
 
-	generictype "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestGenericTypes(t *testing.T) {
-	api.TestService(t, generictype.Service)
-}
 
 func TestAccGenericTypes(t *testing.T) {
 	api.TestAcc(t)

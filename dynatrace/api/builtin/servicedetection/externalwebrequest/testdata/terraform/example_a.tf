@@ -1,8 +1,30 @@
+resource "dynatrace_management_zone_v2" "my-mgmz" {
+  name = "#name#"
+  rules {
+    rule {
+      type            = "ME"
+      enabled         = true
+      entity_selector = ""
+      attribute_rule {
+        entity_type = "CLOUD_APPLICATION_NAMESPACE"
+        attribute_conditions {
+          condition {
+            case_sensitive = false
+            key            = "KUBERNETES_CLUSTER_NAME"
+            operator       = "EQUALS"
+            string_value   = "extensions"
+          }
+        }
+      }
+    }
+  }
+}
+
 resource "dynatrace_service_external_web_request" "#name#" {
   name             = "#name#"
   description      = "Created by Terraform"
   enabled          = false
-  management_zones = [ "000000000000000000" ]
+  management_zones = [ dynatrace_management_zone_v2.my-mgmz.id ]
   conditions {
     condition {
       attribute              = "ApplicationId"

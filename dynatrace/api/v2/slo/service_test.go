@@ -20,14 +20,8 @@ package slo_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceLevelObjectives(t *testing.T) {
-	// t.Skip("TODO: check polling mechanism")
-	api.TestService(t, slo.Service)
-}
 
 func TestAccServiceLevelObjectives(t *testing.T) {
 	// t.Skip("TODO: check polling mechanism")

@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestSpanAttributes(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccSpanAttributes(t *testing.T) {
 	t.Skip()
 }

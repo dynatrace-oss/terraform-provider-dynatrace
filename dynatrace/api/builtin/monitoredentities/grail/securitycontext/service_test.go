@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestGrailSecurityContext(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, securitycontext.Service)
-	t.Skip()
-}
-
 func TestAccGrailSecurityContext(t *testing.T) {
 	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)

@@ -20,13 +20,8 @@ package rumcustomcrashrateincrease_test
 import (
 	"testing"
 
-	crashrate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCustomAppCrashRate(t *testing.T) {
-	api.TestService(t, crashrate.Service)
-}
 
 func TestAccCustomAppCrashRate(t *testing.T) {
 	api.TestAcc(t)

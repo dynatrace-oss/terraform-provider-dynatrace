@@ -1,8 +1,0 @@
-{
-  "securityContextRule": {
-    "query": "matchesPhrase(content, \"${randomize}\")",
-    "ruleName": "${randomize}",
-    "value": "${randomize}",
-    "valueSource": "LITERAL"
-  }
-}

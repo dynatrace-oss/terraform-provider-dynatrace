@@ -20,13 +20,8 @@ package connectivityalerts_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/connectivityalerts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestConnectivityAlerts(t *testing.T) {
-	api.TestService(t, connectivityalerts.Service)
-}
 
 func TestAccConnectivityAlerts(t *testing.T) {
 	api.TestAcc(t)

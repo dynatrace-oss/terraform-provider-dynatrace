@@ -20,13 +20,8 @@ package normalization_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSLONormalization(t *testing.T) {
-	api.TestService(t, normalization.Service)
-}
 
 func TestAccSLONormalization(t *testing.T) {
 	api.TestAcc(t)

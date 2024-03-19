@@ -20,13 +20,8 @@ package cloudfoundry_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCloudFoundryCredentials(t *testing.T) {
-	api.TestService(t, cloudfoundry.Service)
-}
 
 func TestAccCloudFoundryCredentials(t *testing.T) {
 	api.TestAcc(t)

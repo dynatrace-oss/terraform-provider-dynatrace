@@ -20,13 +20,8 @@ package cookies_test
 import (
 	"testing"
 
-	cookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHTTPMonitorCookies(t *testing.T) {
-	api.TestService(t, cookies.Service)
-}
 
 func TestAccHTTPMonitorCookies(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package jsondashboards_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestJSONDashboards(t *testing.T) {
-	api.TestService(t, jsondashboards.Service)
-}
 
 func TestAccJSONDashboards(t *testing.T) {
 	api.TestAcc(t)

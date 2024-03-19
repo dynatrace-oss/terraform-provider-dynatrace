@@ -20,13 +20,8 @@ package httpparameters_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/httpparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceHTTPFailure(t *testing.T) {
-	api.TestService(t, httpparameters.Service)
-}
 
 func TestAccServiceHTTPFailure(t *testing.T) {
 	api.TestAcc(t)

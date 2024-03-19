@@ -20,13 +20,8 @@ package victorops_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/victorops"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestVictorOpsNotifications(t *testing.T) {
-	api.TestService(t, victorops.Service)
-}
 
 func TestAccVictorOpsNotifications(t *testing.T) {
 	api.TestAcc(t)

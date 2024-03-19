@@ -20,13 +20,8 @@ package traffic_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestExcludeNetworkTraffic(t *testing.T) {
-	api.TestService(t, traffic.Service)
-}
 
 func TestAccExcludeNetworkTraffic(t *testing.T) {
 	api.TestAcc(t)

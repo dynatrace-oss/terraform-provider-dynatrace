@@ -20,13 +20,8 @@ package rummobilecrashrateincrease_test
 import (
 	"testing"
 
-	crashrate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/crashrate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMobileAppCrashRate(t *testing.T) {
-	api.TestService(t, crashrate.Service)
-}
 
 func TestAccMobileAppCrashRate(t *testing.T) {
 	api.TestAcc(t)

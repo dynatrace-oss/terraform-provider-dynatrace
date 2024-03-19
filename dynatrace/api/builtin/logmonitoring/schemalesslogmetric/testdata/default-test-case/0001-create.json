@@ -1,7 +1,0 @@
-{
-    "dimensions": [],
-    "enabled": true,
-    "key": "log.terraformexample",
-    "measure": "OCCURRENCE",
-    "query": ""
-  }

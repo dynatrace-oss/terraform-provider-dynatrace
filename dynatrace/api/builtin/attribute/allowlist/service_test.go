@@ -20,13 +20,8 @@ package allowlist_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAttributeAllowlist(t *testing.T) {
-	api.TestService(t, allowlist.Service)
-}
 
 func TestAccAttributeAllowlist(t *testing.T) {
 	api.TestAcc(t)

@@ -511,6 +511,8 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_network_zones":              networkzones.Resource(),
 			"dynatrace_hub_extension_config":               resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
 			"dynatrace_hub_extension_active_version":       resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
+			"dynatrace_db_app_feature_flags":               resources.NewGeneric(export.ResourceTypes.DatabaseAppFeatureFlags).Resource(),
+			"dynatrace_infraops_app_feature_flags":         resources.NewGeneric(export.ResourceTypes.InfraOpsAppFeatureFlags).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

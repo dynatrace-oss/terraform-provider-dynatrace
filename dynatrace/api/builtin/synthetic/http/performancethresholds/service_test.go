@@ -20,13 +20,8 @@ package performancethresholds_test
 import (
 	"testing"
 
-	performancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHTTPMonitorPerformanceThresholds(t *testing.T) {
-	api.TestService(t, performancethresholds.Service)
-}
 
 func TestAccHTTPMonitorPerformanceThresholds(t *testing.T) {
 	api.TestAcc(t)

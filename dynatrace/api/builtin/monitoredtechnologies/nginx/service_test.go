@@ -20,13 +20,8 @@ package nginx_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nginx"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesNGINX(t *testing.T) {
-	api.TestService(t, nginx.Service)
-}
 
 func TestAccMonitoredTechnologiesNGINX(t *testing.T) {
 	api.TestAcc(t)

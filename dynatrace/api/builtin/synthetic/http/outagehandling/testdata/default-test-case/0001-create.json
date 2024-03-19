@@ -1,6 +1,0 @@
-{
-    "globalConsecutiveOutageCountThreshold": 1,
-    "globalOutages": true,
-    "localOutages": false,
-    "scope": "HTTP_CHECK-1234567890000000"
-}

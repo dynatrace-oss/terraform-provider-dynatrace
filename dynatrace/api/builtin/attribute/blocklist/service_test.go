@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestAttributeBlocklist(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, blocklist.Service)
-	t.Skip()
-}
-
 func TestAccAttributeBlocklist(t *testing.T) {
 	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)

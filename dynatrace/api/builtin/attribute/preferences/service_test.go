@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestAttributesPreferences(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestService(t, preferences.Service)
-	t.Skip()
-}
-
 func TestAccAttributesPreferences(t *testing.T) {
 	// Temporarily disabled - releasing prior to availability on test tenant
 	// api.TestAcc(t)

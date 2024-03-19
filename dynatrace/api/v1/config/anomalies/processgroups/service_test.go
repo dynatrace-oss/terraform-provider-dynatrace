@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestProcessGroupAnomalies(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccProcessGroupAnomalies(t *testing.T) {
 	t.Skip()
 }

@@ -20,13 +20,8 @@ package resourcetypes_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppResourceTypes(t *testing.T) {
-	api.TestService(t, resourcetypes.Service)
-}
 
 func TestAccWebAppResourceTypes(t *testing.T) {
 	api.TestAcc(t)

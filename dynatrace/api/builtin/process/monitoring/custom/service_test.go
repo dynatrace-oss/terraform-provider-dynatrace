@@ -20,14 +20,8 @@ package customprocessmonitoring_test
 import (
 	"testing"
 
-	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCustomMonitoringRules(t *testing.T) {
-	api.TestService(t, customprocessmonitoring.Service)
-}
 
 func TestAccCustomMonitoringRules(t *testing.T) {
 	api.TestAcc(t)

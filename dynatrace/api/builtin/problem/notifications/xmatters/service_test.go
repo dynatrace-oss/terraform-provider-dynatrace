@@ -20,13 +20,8 @@ package xmatters_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/xmatters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestXMattersNotifications(t *testing.T) {
-	api.TestService(t, xmatters.Service)
-}
 
 func TestAccXMattersNotifications(t *testing.T) {
 	api.TestAcc(t)

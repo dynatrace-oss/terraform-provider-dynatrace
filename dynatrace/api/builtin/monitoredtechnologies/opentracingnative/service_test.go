@@ -20,13 +20,8 @@ package opentracingnative_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/opentracingnative"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesOpenTracing(t *testing.T) {
-	api.TestService(t, opentracingnative.Service)
-}
 
 func TestAccMonitoredTechnologiesOpenTracing(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package alerting_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAlerting(t *testing.T) {
-	api.TestService(t, alerting.Service)
-}
 
 func TestAccAlerting(t *testing.T) {
 	api.TestAcc(t)

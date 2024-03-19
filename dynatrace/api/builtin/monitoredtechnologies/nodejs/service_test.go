@@ -20,13 +20,8 @@ package nodejs_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nodejs"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesNodeJS(t *testing.T) {
-	api.TestService(t, nodejs.Service)
-}
 
 func TestAccMonitoredTechnologiesNodeJS(t *testing.T) {
 	api.TestAcc(t)

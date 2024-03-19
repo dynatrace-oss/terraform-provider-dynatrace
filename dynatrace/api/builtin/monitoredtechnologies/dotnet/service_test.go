@@ -20,13 +20,8 @@ package dotnet_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/dotnet"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesDotNet(t *testing.T) {
-	api.TestService(t, dotnet.Service)
-}
 
 func TestAccMonitoredTechnologiesDotNet(t *testing.T) {
 	api.TestAcc(t)

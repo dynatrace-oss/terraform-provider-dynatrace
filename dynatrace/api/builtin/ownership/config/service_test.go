@@ -20,13 +20,8 @@ package config_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestOwnershipConfig(t *testing.T) {
-	api.TestService(t, config.Service)
-}
 
 func TestAccOwnershipConfig(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package technology_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestContainerTechnology(t *testing.T) {
-	api.TestService(t, technology.Service)
-}
 
 func TestAccContainerTechnology(t *testing.T) {
 	api.TestAcc(t)

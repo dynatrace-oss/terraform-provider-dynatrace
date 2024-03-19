@@ -20,13 +20,8 @@ package iis_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/iis"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesIIS(t *testing.T) {
-	api.TestService(t, iis.Service)
-}
 
 func TestAccMonitoredTechnologiesIIS(t *testing.T) {
 	api.TestAcc(t)

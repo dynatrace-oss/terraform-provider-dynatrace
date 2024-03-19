@@ -20,13 +20,8 @@ package trello_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/trello"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestTrelloNotifications(t *testing.T) {
-	api.TestService(t, trello.Service)
-}
 
 func TestAccTrelloNotifications(t *testing.T) {
 	api.TestAcc(t)

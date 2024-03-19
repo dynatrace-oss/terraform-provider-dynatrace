@@ -20,13 +20,8 @@ package usersettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usersettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUserSettings(t *testing.T) {
-	api.TestService(t, usersettings.Service)
-}
 
 func TestAccUserSettings(t *testing.T) {
 	api.TestAcc(t)

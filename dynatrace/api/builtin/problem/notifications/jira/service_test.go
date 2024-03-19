@@ -20,13 +20,8 @@ package jira_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/jira"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestJiraNotifications(t *testing.T) {
-	api.TestService(t, jira.Service)
-}
 
 func TestAccJiraNotifications(t *testing.T) {
 	api.TestAcc(t)

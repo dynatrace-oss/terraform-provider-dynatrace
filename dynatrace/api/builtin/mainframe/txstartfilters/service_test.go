@@ -20,13 +20,8 @@ package txstartfilters_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestTransactionStartFilters(t *testing.T) {
-	api.TestService(t, txstartfilters.Service)
-}
 
 func TestAccTransactionStartFilters(t *testing.T) {
 	api.TestAcc(t)

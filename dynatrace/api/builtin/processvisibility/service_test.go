@@ -20,13 +20,8 @@ package processvisibility_test
 import (
 	"testing"
 
-	processvisibility "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processvisibility"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestProcessVisibility(t *testing.T) {
-	api.TestService(t, processvisibility.Service)
-}
 
 func TestAccProcessVisibility(t *testing.T) {
 	api.TestAcc(t)

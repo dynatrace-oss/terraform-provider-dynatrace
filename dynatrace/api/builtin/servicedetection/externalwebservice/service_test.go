@@ -20,14 +20,8 @@ package externalwebservice_test
 import (
 	"testing"
 
-	externalwebservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebservice"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceExternalWebService(t *testing.T) {
-	api.TestService(t, externalwebservice.Service)
-}
 
 func TestAccServiceExternalWebService(t *testing.T) {
 	api.TestAcc(t)

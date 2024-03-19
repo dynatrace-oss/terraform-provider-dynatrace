@@ -20,13 +20,8 @@ package updates_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/activegate/updates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestActiveGateUpdates(t *testing.T) {
-	api.TestService(t, updates.Service)
-}
 
 func TestAccActiveGateUpdates(t *testing.T) {
 	api.TestAcc(t)

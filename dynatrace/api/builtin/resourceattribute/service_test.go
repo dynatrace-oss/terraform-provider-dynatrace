@@ -20,13 +20,8 @@ package resourceattribute_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/resourceattribute"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestResourceAttributes(t *testing.T) {
-	api.TestService(t, resourceattribute.Service)
-}
 
 func TestAccResourceAttributes(t *testing.T) {
 	api.TestAcc(t)

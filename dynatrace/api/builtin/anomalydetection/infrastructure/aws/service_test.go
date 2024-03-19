@@ -20,13 +20,8 @@ package aws_test
 import (
 	"testing"
 
-	aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestInfraAWSAnomalyDetection(t *testing.T) {
-	api.TestService(t, aws.Service)
-}
 
 func TestAccInfraAWSAnomalyDetection(t *testing.T) {
 	api.TestAcc(t)

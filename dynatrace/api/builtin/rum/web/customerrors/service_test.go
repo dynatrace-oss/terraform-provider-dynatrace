@@ -20,13 +20,8 @@ package customerrors_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppCustomErrors(t *testing.T) {
-	api.TestService(t, customerrors.Service)
-}
 
 func TestAccWebAppCustomErrors(t *testing.T) {
 	api.TestAcc(t)

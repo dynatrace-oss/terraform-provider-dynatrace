@@ -32,9 +32,9 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets/settings"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients"
-	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/buckets"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
+	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 	"golang.org/x/oauth2/clientcredentials"
 )
 
@@ -109,7 +109,7 @@ func (me *service) List() (api.Stubs, error) {
 		return nil, err
 	}
 	var stubs api.Stubs
-	for _, r := range result.Objects {
+	for _, r := range result.All() {
 		var bucket buckets.Bucket
 		if err := json.Unmarshal(r, &bucket); err != nil {
 			return nil, err

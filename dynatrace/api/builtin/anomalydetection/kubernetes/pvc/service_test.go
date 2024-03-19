@@ -20,13 +20,8 @@ package pvc_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/pvc"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sPVCAnomalies(t *testing.T) {
-	api.TestService(t, pvc.Service)
-}
 
 func TestAccK8sPVCAnomalies(t *testing.T) {
 	api.TestAcc(t)

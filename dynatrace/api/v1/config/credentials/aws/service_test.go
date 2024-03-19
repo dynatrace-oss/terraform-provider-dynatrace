@@ -20,13 +20,8 @@ package aws_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAWSCredentials(t *testing.T) {
-	api.TestService(t, aws.Service)
-}
 
 func TestAccAWSCredentials(t *testing.T) {
 	api.TestAcc(t)

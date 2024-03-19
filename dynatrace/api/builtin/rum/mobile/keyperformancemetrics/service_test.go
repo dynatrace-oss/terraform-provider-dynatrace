@@ -20,13 +20,8 @@ package keyperformancemetrics_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/keyperformancemetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMobileAppKeyPerformance(t *testing.T) {
-	api.TestService(t, keyperformancemetrics.Service)
-}
 
 func TestAccMobileAppKeyPerformance(t *testing.T) {
 	api.TestAcc(t)

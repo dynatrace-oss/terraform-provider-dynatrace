@@ -20,13 +20,8 @@ package servicenow_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/servicenow"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceNowNotifications(t *testing.T) {
-	api.TestService(t, servicenow.Service)
-}
 
 func TestAccServiceNowNotifications(t *testing.T) {
 	api.TestAcc(t)

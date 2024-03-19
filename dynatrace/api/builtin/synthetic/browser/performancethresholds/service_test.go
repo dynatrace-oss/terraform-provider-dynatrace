@@ -20,13 +20,8 @@ package performancethresholds_test
 import (
 	"testing"
 
-	performancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/performancethresholds"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBrowserMonitorPerformanceThresholds(t *testing.T) {
-	api.TestService(t, performancethresholds.Service)
-}
 
 func TestAccBrowserMonitorPerformanceThresholds(t *testing.T) {
 	api.TestAcc(t)

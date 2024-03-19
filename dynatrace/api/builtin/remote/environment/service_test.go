@@ -19,14 +19,7 @@ package environment_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/remote/environment"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRemoteEnvironments(t *testing.T) {
-	api.TestService(t, environment.Service)
-}
 
 func TestAccRemoteEnvironments(t *testing.T) {
 	// api.TestAcc(t)

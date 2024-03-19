@@ -20,13 +20,8 @@ package synthetic_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCalculatedSyntheticMetrics(t *testing.T) {
-	api.TestService(t, synthetic.Service)
-}
 
 func TestAccCalculatedSyntheticMetrics(t *testing.T) {
 	api.TestAcc(t)

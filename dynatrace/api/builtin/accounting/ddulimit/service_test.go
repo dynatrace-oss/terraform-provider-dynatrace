@@ -20,13 +20,8 @@ package ddulimit_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestDDUPools(t *testing.T) {
-	api.TestService(t, ddulimit.Service)
-}
 
 func TestAccDDUPools(t *testing.T) {
 	api.TestAcc(t)

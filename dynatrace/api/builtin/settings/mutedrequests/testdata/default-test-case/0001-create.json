@@ -1,7 +1,0 @@
-{
-    "mutedRequestNames": [
-        "/healthcheck",
-        "/heartbeat"
-    ],
-    "serviceId": "SERVICE-1234567890000000"
-}

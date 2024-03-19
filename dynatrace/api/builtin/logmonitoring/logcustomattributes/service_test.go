@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-func TestLogCustomAttributes(t *testing.T) {
-	// Test tenant licensing: Exceeded limit of custom attributes.
-	// api.TestService(t, logcustomattributes.Service)
-	t.Skip()
-}
-
 func TestAccLogCustomAttributes(t *testing.T) {
 	// Test tenant licensing: Exceeded limit of custom attributes.
 	// api.TestAcc(t)

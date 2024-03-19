@@ -1,9 +1,0 @@
-{
-  "allowedOutboundConnections": {
-    "enforced": true,
-    "hostList": [
-      "www.dynatrace.com",
-      "www.google.com"
-    ]
-  }
-}

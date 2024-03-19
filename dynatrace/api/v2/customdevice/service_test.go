@@ -21,11 +21,6 @@ import (
 	"testing"
 )
 
-func TestCustomDevice(t *testing.T) {
-	// Endpoint doesn't allow delete
-	t.Skip()
-}
-
 func TestAccCustomDevice(t *testing.T) {
 	// Endpoint doesn't allow delete
 	t.Skip()

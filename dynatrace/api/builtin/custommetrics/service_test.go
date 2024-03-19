@@ -20,13 +20,8 @@ package custommetrics_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUserSessionCustomMetrics(t *testing.T) {
-	api.TestService(t, custommetrics.Service)
-}
 
 func TestAccUserSessionCustomMetrics(t *testing.T) {
 	api.TestAcc(t)

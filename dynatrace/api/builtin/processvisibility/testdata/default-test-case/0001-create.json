@@ -1,5 +1,0 @@
-{
-    "enabled": true,
-    "maxProcesses": 50,
-    "scope": "environment"
-}

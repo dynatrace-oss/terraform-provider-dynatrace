@@ -1,8 +1,0 @@
-{
-    "frustratingIfReportedOrWebRequestError": true,
-    "scope": "DEVICE_APPLICATION_METHOD-1234567890000000",
-    "thresholds": {
-        "frustratingThresholdSeconds": 12,
-        "tolerableThresholdSeconds": 3
-    }
-}

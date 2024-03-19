@@ -20,13 +20,8 @@ package ipaddressmasking_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/ipaddressmasking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestIPAddressMasking(t *testing.T) {
-	api.TestService(t, ipaddressmasking.Service)
-}
 
 func TestAccIPAddressMasking(t *testing.T) {
 	api.TestAcc(t)

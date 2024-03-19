@@ -20,13 +20,8 @@ package web_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCalculatedWebMetrics(t *testing.T) {
-	api.TestService(t, web.Service)
-}
 
 func TestAccCalculatedWebMetrics(t *testing.T) {
 	api.TestAcc(t)

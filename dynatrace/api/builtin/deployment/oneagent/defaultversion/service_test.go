@@ -20,13 +20,8 @@ package defaultversion_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestOneAgentDefaultVersion(t *testing.T) {
-	api.TestService(t, defaultversion.Service)
-}
 
 func TestAccOneAgentDefaultVersion(t *testing.T) {
 	api.TestAcc(t)

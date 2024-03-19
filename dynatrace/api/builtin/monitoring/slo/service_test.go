@@ -20,13 +20,8 @@ package slo_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSLO(t *testing.T) {
-	api.TestService(t, slo.Service)
-}
 
 func TestAccSLO(t *testing.T) {
 	api.TestAcc(t)

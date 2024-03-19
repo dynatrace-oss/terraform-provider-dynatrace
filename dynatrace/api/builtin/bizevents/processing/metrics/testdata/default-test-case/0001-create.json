@@ -1,7 +1,0 @@
-{
-    "enabled": true,
-    "key": "bizevents.easyTrade.TradingVolume",
-    "matcher": "matchesValue(event.type, \"com.easytrade.buy-assets\")",
-    "measure": "ATTRIBUTE",
-    "measureAttribute": "trading_volume"
-  }

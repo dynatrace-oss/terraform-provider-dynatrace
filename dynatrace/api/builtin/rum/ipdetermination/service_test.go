@@ -20,13 +20,8 @@ package ipdetermination_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipdetermination"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRUMIPDetermination(t *testing.T) {
-	api.TestService(t, ipdetermination.Service)
-}
 
 func TestAccRUMIPDetermination(t *testing.T) {
 	api.TestAcc(t)

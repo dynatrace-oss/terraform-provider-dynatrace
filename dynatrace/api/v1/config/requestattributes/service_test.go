@@ -20,13 +20,8 @@ package requestattributes_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRequestAttributes(t *testing.T) {
-	api.TestService(t, requestattributes.Service)
-}
 
 func TestAccRequestAttributes(t *testing.T) {
 	api.TestAcc(t)

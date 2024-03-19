@@ -21,10 +21,6 @@ import (
 	"testing"
 )
 
-func TestGrailMetricsAllowlist(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccGrailMetricsAllowlist(t *testing.T) {
 	// Temporarily disabled, not available in test environment
 	// api.TestAcc(t)

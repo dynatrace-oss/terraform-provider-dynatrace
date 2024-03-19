@@ -20,13 +20,8 @@ package monitoring_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHostMonitoring(t *testing.T) {
-	api.TestService(t, monitoring.Service)
-}
 
 func TestAccHostMonitoring(t *testing.T) {
 	api.TestAcc(t)

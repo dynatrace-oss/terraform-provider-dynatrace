@@ -21,6 +21,6 @@ import (
 	"testing"
 )
 
-func TestNetworkZones(t *testing.T) {
+func TestAccNetworkZones(t *testing.T) {
 	t.Skip("Testing Network Zones requires an extension of the Testing Harness (UUIDs)")
 }
