@@ -509,7 +509,7 @@ func (me *Environment) GetChildResources() []*Resource {
 		return resources
 	}
 	for _, module := range me.Modules {
-		if module.Descriptor.Parent != nil {
+		if module != nil && module.Descriptor != nil && module.Descriptor.Parent != nil {
 			resources = append(resources, module.GetChildResources()...)
 		}
 	}
