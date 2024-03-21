@@ -97,17 +97,18 @@ func (me *service[T]) Get(id string, v T) error {
 	if me.options != nil && me.options.LegacyID != nil {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
-	insertBefore, insertAfter, err := me.getInsertIDs(id)
-	if err != nil {
-		return err
+	if settings.HasInsertAfter(v) || settings.HasInsertBefore(v) {
+		insertBefore, insertAfter, err := me.getInsertIDs(id)
+		if err != nil {
+			return err
+		}
+		if insertBefore != nil {
+			settings.SetInsertBefore(v, *insertBefore)
+		}
+		if insertAfter != nil {
+			settings.SetInsertAfter(v, *insertAfter)
+		}
 	}
-	if insertBefore != nil {
-		settings.SetInsertBefore(v, *insertBefore)
-	}
-	if insertAfter != nil {
-		settings.SetInsertAfter(v, *insertAfter)
-	}
-
 	return nil
 }
 
