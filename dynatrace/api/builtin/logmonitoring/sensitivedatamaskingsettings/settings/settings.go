@@ -28,6 +28,7 @@ type Settings struct {
 	Masking           *Masking `json:"masking"`
 	Matchers          Matchers `json:"matchers,omitempty"`
 	Scope             *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	InsertAfter       string   `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -69,25 +70,33 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":     me.Config_item_title,
-		"enabled":  me.Enabled,
-		"masking":  me.Masking,
-		"matchers": me.Matchers,
-		"scope":    me.Scope,
+		"name":         me.Config_item_title,
+		"enabled":      me.Enabled,
+		"masking":      me.Masking,
+		"matchers":     me.Matchers,
+		"scope":        me.Scope,
+		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":     &me.Config_item_title,
-		"enabled":  &me.Enabled,
-		"masking":  &me.Masking,
-		"matchers": &me.Matchers,
-		"scope":    &me.Scope,
+		"name":         &me.Config_item_title,
+		"enabled":      &me.Enabled,
+		"masking":      &me.Masking,
+		"matchers":     &me.Matchers,
+		"scope":        &me.Scope,
+		"insert_after": &me.InsertAfter,
 	})
 }

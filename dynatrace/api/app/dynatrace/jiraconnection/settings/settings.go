@@ -27,12 +27,13 @@ import (
 )
 
 type Settings struct {
-	Name     string  `json:"name"`               // The name of the Jira connection
-	Password *string `json:"password,omitempty"` // Password of the Jira user
-	Token    *string `json:"token,omitempty"`    // Token for the selected authentication type
-	Type     Type    `json:"type"`               // Possible Values: `Basic`, `Cloud_token`, `Pat`
-	Url      string  `json:"url"`                // URL of the Jira server
-	User     *string `json:"user,omitempty"`     // Username or E-Mail address
+	Name        string  `json:"name"`               // The name of the Jira connection
+	Password    *string `json:"password,omitempty"` // Password of the Jira user
+	Token       *string `json:"token,omitempty"`    // Token for the selected authentication type
+	Type        Type    `json:"type"`               // Possible Values: `Basic`, `Cloud_token`, `Pat`
+	Url         string  `json:"url"`                // URL of the Jira server
+	User        *string `json:"user,omitempty"`     // Username or E-Mail address
+	InsertAfter string  `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -69,17 +70,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Username or E-Mail address",
 			Optional:    true, // precondition
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":     me.Name,
-		"password": "${state.secret_value}",
-		"token":    "${state.secret_value}",
-		"type":     me.Type,
-		"url":      me.Url,
-		"user":     me.User,
+		"name":         me.Name,
+		"password":     "${state.secret_value}",
+		"token":        "${state.secret_value}",
+		"type":         me.Type,
+		"url":          me.Url,
+		"user":         me.User,
+		"insert_after": me.InsertAfter,
 	})
 }
 
@@ -98,12 +106,13 @@ func (me *Settings) HandlePreconditions() error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":     &me.Name,
-		"password": &me.Password,
-		"token":    &me.Token,
-		"type":     &me.Type,
-		"url":      &me.Url,
-		"user":     &me.User,
+		"name":         &me.Name,
+		"password":     &me.Password,
+		"token":        &me.Token,
+		"type":         &me.Type,
+		"url":          &me.Url,
+		"user":         &me.User,
+		"insert_after": &me.InsertAfter,
 	})
 }
 

@@ -23,11 +23,12 @@ import (
 )
 
 type Settings struct {
-	Enabled  bool             `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Event    *EventComplex    `json:"event"`           // Event meta data
-	RuleName string           `json:"ruleName"`        // Rule name
-	Scope    *string          `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	Triggers MatcherComplexes `json:"triggers"`        // Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.
+	Enabled     bool             `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
+	Event       *EventComplex    `json:"event"`           // Event meta data
+	RuleName    string           `json:"ruleName"`        // Rule name
+	Scope       *string          `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Triggers    MatcherComplexes `json:"triggers"`        // Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.
+	InsertAfter string           `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -69,25 +70,33 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":   me.Enabled,
-		"event":     me.Event,
-		"rule_name": me.RuleName,
-		"scope":     me.Scope,
-		"triggers":  me.Triggers,
+		"enabled":      me.Enabled,
+		"event":        me.Event,
+		"rule_name":    me.RuleName,
+		"scope":        me.Scope,
+		"triggers":     me.Triggers,
+		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled":   &me.Enabled,
-		"event":     &me.Event,
-		"rule_name": &me.RuleName,
-		"scope":     &me.Scope,
-		"triggers":  &me.Triggers,
+		"enabled":      &me.Enabled,
+		"event":        &me.Event,
+		"rule_name":    &me.RuleName,
+		"scope":        &me.Scope,
+		"triggers":     &me.Triggers,
+		"insert_after": &me.InsertAfter,
 	})
 }

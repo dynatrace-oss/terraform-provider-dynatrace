@@ -35,6 +35,7 @@ type Settings struct {
 	Token              *string            `json:"token,omitempty"`    // Token
 	Url                string             `json:"url"`                // For Jira, use the base URL (for example, https://jira.yourcompany.com); for GitHub, use the repository URL (for example, https://github.com/org/repo); for GitLab, use the specific project API for a single project (for example, https://gitlab.com/api/v4/projects/:projectId), and the specific group API for a multiple projects (for example, https://gitlab.com/api/v4/groups/:groupId); for ServiceNow, use your company instance URL (for example, https://yourinstance.service-now.com/)
 	Username           string             `json:"username"`           // Username
+	InsertAfter        string             `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -90,6 +91,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Username",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -105,6 +112,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 			"token":              "${state.secret_value}",
 			"url":                me.Url,
 			"username":           me.Username,
+			"insert_after":       me.InsertAfter,
 		},
 	))
 }
@@ -120,6 +128,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"token":              &me.Token,
 		"url":                &me.Url,
 		"username":           &me.Username,
+		"insert_after":       &me.InsertAfter,
 	})
 }
 

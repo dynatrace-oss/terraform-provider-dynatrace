@@ -25,6 +25,7 @@ import (
 type Settings struct {
 	DestinationProperty string `json:"destinationProperty"` // The case-sensitive name of a property of the destination type.
 	EntityType          string `json:"entityType"`          // Type of the entity whose security context to override.
+	InsertAfter         string `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -43,6 +44,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Type of the entity whose security context to override.",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -50,6 +57,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"destination_property": me.DestinationProperty,
 		"entity_type":          me.EntityType,
+		"insert_after":         me.InsertAfter,
 	})
 }
 
@@ -57,5 +65,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"destination_property": &me.DestinationProperty,
 		"entity_type":          &me.EntityType,
+		"insert_after":         &me.InsertAfter,
 	})
 }

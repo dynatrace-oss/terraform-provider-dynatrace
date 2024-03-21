@@ -39,6 +39,7 @@ type Settings struct {
 	StatusConditionLinux       *string                    `json:"statusConditionLinux,omitempty"`       // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(failed)` – Matches services that are in failed state.\n\nAvailable logic operations:\n- `$not($eq(active))` – Matches services with state different from active.\n- `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\nUse one of the following values as a parameter for this condition:\n\n- `reloading`\n- `activating`\n- `deactivating`\n- `failed`\n- `inactive`\n- `active`
 	StatusConditionWindows     *string                    `json:"statusConditionWindows,omitempty"`     // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(paused)` – Matches services that are in paused state.\n\nAvailable logic operations:\n- `$not($eq(paused))` – Matches services that are in state different from paused.\n- `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\nUse one of the following values as a parameter for this condition:\n\n- `running`\n- `stopped`\n- `start_pending`\n- `stop_pending`\n- `continue_pending`\n- `pause_pending`\n- `paused`
 	System                     System                     `json:"system"`                               // Possible Values: `LINUX`, `WINDOWS`
+	InsertAfter                string                     `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -119,6 +120,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Possible Values: `LINUX`, `WINDOWS`",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -137,6 +144,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"status_condition_linux":       me.StatusConditionLinux,
 		"status_condition_windows":     me.StatusConditionWindows,
 		"system":                       me.System,
+		"insert_after":                 me.InsertAfter,
 	})
 }
 
@@ -174,5 +182,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"status_condition_linux":       &me.StatusConditionLinux,
 		"status_condition_windows":     &me.StatusConditionWindows,
 		"system":                       &me.System,
+		"insert_after":                 &me.InsertAfter,
 	})
 }
