@@ -19,6 +19,21 @@ package settings
 
 import "reflect"
 
+func HasInsertBefore(settings Settings) bool {
+	if settings == nil {
+		return false
+	}
+	pInsertBeforeField := getInsertBeforeField(settings)
+	if pInsertBeforeField == nil {
+		return false
+	}
+	insertBeforeField := *pInsertBeforeField
+	if !insertBeforeField.IsValid() {
+		return false
+	}
+	return (insertBeforeField.Type() == stringType) || (insertBeforeField.Type() == stringPointerType)
+}
+
 func SetInsertBefore(settings Settings, insertBefore string) {
 	if settings == nil {
 		return
