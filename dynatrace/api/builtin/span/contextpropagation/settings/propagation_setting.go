@@ -26,6 +26,7 @@ import (
 // PropagationSetting Context propagation enables you to connect PurePaths through OpenTelemetry/OpenTracing. Define rules to enable context propagation for certain spans within OneAgent
 type PropagationSetting struct {
 	PropagationRule *PropagationRule `json:"contextPropagationRule"`
+	InsertAfter     string           `json:"-"`
 }
 
 func (me *PropagationSetting) Name() string {
@@ -33,14 +34,35 @@ func (me *PropagationSetting) Name() string {
 }
 
 func (me *PropagationSetting) Schema() map[string]*schema.Schema {
-	return new(PropagationRule).Schema()
+	var sch = new(PropagationRule).Schema()
+	sch["insert_after"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+		Optional:    true,
+		Computed:    true,
+	}
+	return sch
 }
 
 func (me *PropagationSetting) MarshalHCL(properties hcl.Properties) error {
-	return me.PropagationRule.MarshalHCL(properties)
+	if err := me.PropagationRule.MarshalHCL(properties); err != nil {
+		return err
+	}
+	if len(me.InsertAfter) > 0 {
+		properties["insert_after"] = me.InsertAfter
+	}
+	return nil
 }
 
 func (me *PropagationSetting) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.PropagationRule = new(PropagationRule)
-	return me.PropagationRule.UnmarshalHCL(decoder)
+	if err := me.PropagationRule.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	if v, ok := decoder.GetOk("insert_after"); ok {
+		if sv, ok := v.(string); ok {
+			me.InsertAfter = sv
+		}
+	}
+	return nil
 }
