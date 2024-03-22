@@ -22,5 +22,6 @@ import (
 )
 
 func TestAccSpanEvents(t *testing.T) {
+	// Skipping - schema deprecated
 	t.Skip()
 }

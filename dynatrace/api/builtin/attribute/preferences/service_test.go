@@ -19,10 +19,10 @@ package preferences_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccAttributesPreferences(t *testing.T) {
-	// Temporarily disabled - releasing prior to availability on test tenant
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

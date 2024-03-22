@@ -19,9 +19,10 @@ package presets_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDashboardsPresets(t *testing.T) {
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

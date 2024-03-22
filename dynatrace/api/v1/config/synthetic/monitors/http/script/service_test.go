@@ -19,8 +19,11 @@ package script_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccHTTPMonitorScript(t *testing.T) {
-	t.Skip()
+	// Skipping - TODO timing issue
+	api.TestAcc(t)
 }

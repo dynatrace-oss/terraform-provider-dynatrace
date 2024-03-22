@@ -19,10 +19,10 @@ package beaconendpoint_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccWebAppBeaconEndpoint(t *testing.T) {
-	// Temporarily disabled, not available in test environment
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

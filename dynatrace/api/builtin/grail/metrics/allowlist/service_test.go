@@ -22,7 +22,6 @@ import (
 )
 
 func TestAccGrailMetricsAllowlist(t *testing.T) {
-	// Temporarily disabled, not available in test environment
-	// api.TestAcc(t)
+	// Skipping - DPS not enabled in test environment
 	t.Skip()
 }

@@ -22,6 +22,6 @@ import (
 )
 
 func TestAccLogGrail(t *testing.T) {
-	// Deprecated - schema no longer exists
+	// Skipping - schema deprecated, no longer exists
 	t.Skip()
 }
