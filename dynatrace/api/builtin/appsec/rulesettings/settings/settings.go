@@ -23,11 +23,12 @@ import (
 )
 
 type Settings struct {
-	Enabled  bool              `json:"enabled"`  // This setting is enabled (`true`) or disabled (`false`)
-	Mode     MonitoringMode    `json:"mode"`     // Possible Values: `MONITORING_OFF`, `MONITORING_ON`
-	Operator ConditionOperator `json:"operator"` // Possible Values: `EQUALS`, `NOT_EQUALS`
-	Property Property          `json:"property"` // Possible Values: `HOST_TAG`, `MANAGEMENT_ZONE`, `PROCESS_TAG`
-	Value    string            `json:"value"`    // Condition value
+	Enabled     bool              `json:"enabled"`  // This setting is enabled (`true`) or disabled (`false`)
+	Mode        MonitoringMode    `json:"mode"`     // Possible Values: `MONITORING_OFF`, `MONITORING_ON`
+	Operator    ConditionOperator `json:"operator"` // Possible Values: `EQUALS`, `NOT_EQUALS`
+	Property    Property          `json:"property"` // Possible Values: `HOST_TAG`, `MANAGEMENT_ZONE`, `PROCESS_TAG`
+	Value       string            `json:"value"`    // Condition value
+	InsertAfter string            `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -61,25 +62,33 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Condition value",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":  me.Enabled,
-		"mode":     me.Mode,
-		"operator": me.Operator,
-		"property": me.Property,
-		"value":    me.Value,
+		"enabled":      me.Enabled,
+		"mode":         me.Mode,
+		"operator":     me.Operator,
+		"property":     me.Property,
+		"value":        me.Value,
+		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled":  &me.Enabled,
-		"mode":     &me.Mode,
-		"operator": &me.Operator,
-		"property": &me.Property,
-		"value":    &me.Value,
+		"enabled":      &me.Enabled,
+		"mode":         &me.Mode,
+		"operator":     &me.Operator,
+		"property":     &me.Property,
+		"value":        &me.Value,
+		"insert_after": &me.InsertAfter,
 	})
 }

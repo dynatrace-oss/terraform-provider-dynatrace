@@ -29,6 +29,7 @@ type Settings struct {
 	IdContributors  *IdContributorsType `json:"idContributors"`            // Contributors to the Service Identifier calculation. All of the Contributors except for the port are always applied. You can exclude the port contribution by disabling the switch.
 	ManagementZones []string            `json:"managementZones,omitempty"` // Define a management zone of the process group for which this service detection rule should be created.  Note: in case of external requests/services the PG might not always be known. See [here](https://dt-url.net/9i03b79)
 	Name            string              `json:"name"`                      // Rule name
+	InsertAfter     string              `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -70,6 +71,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Rule name",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -81,6 +88,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"id_contributors":  me.IdContributors,
 		"management_zones": me.ManagementZones,
 		"name":             me.Name,
+		"insert_after":     me.InsertAfter,
 	})
 }
 
@@ -92,5 +100,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"id_contributors":  &me.IdContributors,
 		"management_zones": &me.ManagementZones,
 		"name":             &me.Name,
+		"insert_after":     &me.InsertAfter,
 	})
 }

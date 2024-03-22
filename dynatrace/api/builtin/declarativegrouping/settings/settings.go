@@ -23,10 +23,11 @@ import (
 )
 
 type Settings struct {
-	Detection ProcessDefinitions `json:"detection,omitempty"` // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
-	Enabled   bool               `json:"enabled"`             // This setting is enabled (`true`) or disabled (`false`)
-	Name      string             `json:"name"`                // Monitored technology name
-	Scope     *string            `json:"-" scope:"scope"`     // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Detection   ProcessDefinitions `json:"detection,omitempty"` // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
+	Enabled     bool               `json:"enabled"`             // This setting is enabled (`true`) or disabled (`false`)
+	Name        string             `json:"name"`                // Monitored technology name
+	Scope       *string            `json:"-" scope:"scope"`     // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	InsertAfter string             `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -56,23 +57,31 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"detection": me.Detection,
-		"enabled":   me.Enabled,
-		"name":      me.Name,
-		"scope":     me.Scope,
+		"detection":    me.Detection,
+		"enabled":      me.Enabled,
+		"name":         me.Name,
+		"scope":        me.Scope,
+		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"detection": &me.Detection,
-		"enabled":   &me.Enabled,
-		"name":      &me.Name,
-		"scope":     &me.Scope,
+		"detection":    &me.Detection,
+		"enabled":      &me.Enabled,
+		"name":         &me.Name,
+		"scope":        &me.Scope,
+		"insert_after": &me.InsertAfter,
 	})
 }

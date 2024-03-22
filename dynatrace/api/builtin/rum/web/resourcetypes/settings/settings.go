@@ -26,6 +26,7 @@ type Settings struct {
 	PrimaryResourceType   PrimaryResourceType `json:"primaryResourceType"`             // Possible Values: `CSS`, `IMAGE`, `OTHER`, `SCRIPT`
 	RegularExpression     string              `json:"regularExpression"`               // The regular expression to detect the resource.
 	SecondaryResourceType *string             `json:"secondaryResourceType,omitempty"` // The secondary type of the resource.
+	InsertAfter           string              `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -49,6 +50,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The secondary type of the resource.",
 			Optional:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -57,6 +64,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"primary_resource_type":   me.PrimaryResourceType,
 		"regular_expression":      me.RegularExpression,
 		"secondary_resource_type": me.SecondaryResourceType,
+		"insert_after":            me.InsertAfter,
 	})
 }
 
@@ -65,5 +73,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"primary_resource_type":   &me.PrimaryResourceType,
 		"regular_expression":      &me.RegularExpression,
 		"secondary_resource_type": &me.SecondaryResourceType,
+		"insert_after":            &me.InsertAfter,
 	})
 }

@@ -24,6 +24,7 @@ import (
 
 type Settings struct {
 	SecurityContextRule *SecurityContextRule `json:"securityContextRule"`
+	InsertAfter         string               `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -36,6 +37,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -46,11 +53,13 @@ func (me *Settings) Name() string {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"security_context_rule": me.SecurityContextRule,
+		"insert_after":          me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"security_context_rule": &me.SecurityContextRule,
+		"insert_after":          &me.InsertAfter,
 	})
 }

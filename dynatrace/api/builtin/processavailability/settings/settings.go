@@ -30,6 +30,7 @@ type Settings struct {
 	Scope            *string             `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	MinimumProcesses int                 `json:"minimumProcesses"`   // Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
 	OperatingSystem  []OperatingSystem   `json:"operatingSystem"`    // Select the operating systems on which the monitoring rule should be applied.
+	InsertAfter      string              `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -90,6 +91,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			},
 			Elem: &schema.Schema{Type: schema.TypeString},
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -102,6 +109,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"scope":             me.Scope,
 		"minimum_processes": me.MinimumProcesses,
 		"operating_system":  me.OperatingSystem,
+		"insert_after":      me.InsertAfter,
 	})
 }
 
@@ -114,6 +122,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"scope":             &me.Scope,
 		"minimum_processes": &me.MinimumProcesses,
 		"operating_system":  &me.OperatingSystem,
+		"insert_after":      &me.InsertAfter,
 	})
 	// MinimumProcesses and OperatingSystem were introduced in v286 as required fields, added code below to have successful results for old/new tenants.
 	if me.MinimumProcesses == 0 {

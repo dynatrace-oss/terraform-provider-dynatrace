@@ -28,6 +28,7 @@ type Settings struct {
 	Enabled     bool           `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
 	Mode        MonitoringMode `json:"mode"`                  // Possible Values: `MONITORING_ON`, `MONITORING_OFF`
 	HostGroupID string         `json:"-" scope:"hostGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope
+	InsertAfter string         `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -61,6 +62,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -70,6 +77,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"enabled":       me.Enabled,
 		"mode":          me.Mode,
 		"host_group_id": me.HostGroupID,
+		"insert_after":  me.InsertAfter,
 	})
 }
 
@@ -79,5 +87,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":       &me.Enabled,
 		"mode":          &me.Mode,
 		"host_group_id": &me.HostGroupID,
+		"insert_after":  &me.InsertAfter,
 	})
 }

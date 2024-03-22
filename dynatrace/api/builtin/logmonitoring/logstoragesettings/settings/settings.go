@@ -28,6 +28,7 @@ type Settings struct {
 	Matchers        Matchers `json:"matchers,omitempty"`
 	Scope           *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	Send_to_storage bool     `json:"send-to-storage"` // If `true` matching logs will be included in storage. If `false` matching logs will be excluded from storage.
+	InsertAfter     string   `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -62,6 +63,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "If `true` matching logs will be included in storage. If `false` matching logs will be excluded from storage.",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -72,6 +79,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"matchers":        me.Matchers,
 		"scope":           me.Scope,
 		"send_to_storage": me.Send_to_storage,
+		"insert_after":    me.InsertAfter,
 	})
 }
 
@@ -82,5 +90,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"matchers":        &me.Matchers,
 		"scope":           &me.Scope,
 		"send_to_storage": &me.Send_to_storage,
+		"insert_after":    &me.InsertAfter,
 	})
 }

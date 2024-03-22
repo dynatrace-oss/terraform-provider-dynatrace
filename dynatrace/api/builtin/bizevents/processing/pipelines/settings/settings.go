@@ -29,6 +29,7 @@ type Settings struct {
 	RuleTesting          *RuleTesting         `json:"RuleTesting"`                    // ## Rule testing\n### 1. Paste an event sample
 	Script               string               `json:"script"`                         // [See our documentation](https://dt-url.net/pz030w5)
 	TransformationFields TransformationFields `json:"transformationFields,omitempty"` // Transformation fields
+	InsertAfter          string               `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -73,6 +74,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -84,6 +91,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"rule_testing":          me.RuleTesting,
 		"script":                me.Script,
 		"transformation_fields": me.TransformationFields,
+		"insert_after":          me.InsertAfter,
 	})
 }
 
@@ -95,5 +103,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"rule_testing":          &me.RuleTesting,
 		"script":                &me.Script,
 		"transformation_fields": &me.TransformationFields,
+		"insert_after":          &me.InsertAfter,
 	})
 }

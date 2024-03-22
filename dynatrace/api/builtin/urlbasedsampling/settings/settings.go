@@ -34,6 +34,7 @@ type Settings struct {
 	PathComparisonType *PathComparisonType  `json:"pathComparisonType,omitempty"` // Path comparison condition. Possible values: `EQUALS`, `DOES_NOT_EQUAL`, `CONTAINS`, `DOES_NOT_CONTAIN`, `STARTS_WITH`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `DOES_NOT_END_WITH`
 	QueryParameters    QueryParameters      `json:"queryParameters"`              // Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.
 	Scope              *string              `json:"-" scope:"scope"`              // The scope of this setting (PROCESS_GROUP_INSTANCE, PROCESS_GROUP). Omit this property if you want to cover the whole environment.
+	InsertAfter        string               `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -89,6 +90,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -109,6 +116,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"path_comparison_type": me.PathComparisonType,
 		"query_parameters":     me.QueryParameters,
 		"scope":                me.Scope,
+		"insert_after":         me.InsertAfter,
 	})
 	if me.Factor != nil {
 		for name, id := range SamplingScaleFactorLookup {
@@ -132,6 +140,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"path_comparison_type": &me.PathComparisonType,
 		"query_parameters":     &me.QueryParameters,
 		"scope":                &me.Scope,
+		"insert_after":         &me.InsertAfter,
 	})
 	if factor, ok := decoder.GetOk("factor"); ok {
 		if value, found := SamplingScaleFactorLookup[factor.(string)]; found {
