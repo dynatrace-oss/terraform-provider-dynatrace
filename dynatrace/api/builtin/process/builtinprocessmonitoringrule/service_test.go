@@ -20,13 +20,8 @@ package builtinprocessmonitoringrule_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBuiltinProcessMonitoring(t *testing.T) {
-	api.TestService(t, builtinprocessmonitoringrule.Service)
-}
 
 func TestAccBuiltinProcessMonitoring(t *testing.T) {
 	api.TestAcc(t)

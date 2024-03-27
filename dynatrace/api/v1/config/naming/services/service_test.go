@@ -20,13 +20,8 @@ package services_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestConditionalServiceNaming(t *testing.T) {
-	api.TestService(t, services.Service)
-}
 
 func TestAccConditionalServiceNaming(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package vault_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCredentials(t *testing.T) {
-	api.TestService(t, vault.Service)
-}
 
 func TestAccCredentials(t *testing.T) {
 	api.TestAcc(t, api.TestAccOptions{ExpectNonEmptyPlan: true})

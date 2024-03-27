@@ -20,13 +20,8 @@ package hosts_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestConditionalHostNaming(t *testing.T) {
-	api.TestService(t, hosts.Service)
-}
 
 func TestAccConditionalHostNaming(t *testing.T) {
 	api.TestAcc(t)

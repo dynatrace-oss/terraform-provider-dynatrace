@@ -20,13 +20,8 @@ package apache_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMonitoredTechnologiesApache(t *testing.T) {
-	api.TestService(t, apache.Service)
-}
 
 func TestAccMonitoredTechnologiesApache(t *testing.T) {
 	api.TestAcc(t)

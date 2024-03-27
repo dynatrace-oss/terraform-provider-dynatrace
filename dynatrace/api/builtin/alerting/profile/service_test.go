@@ -20,13 +20,8 @@ package profile_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAlerting(t *testing.T) {
-	api.TestService(t, profile.Service)
-}
 
 func TestAccAlerting(t *testing.T) {
 	api.TestAcc(t)

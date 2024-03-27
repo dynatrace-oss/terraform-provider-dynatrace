@@ -20,13 +20,8 @@ package order_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRequestNamingOrder(t *testing.T) {
-	api.TestService(t, order.Service)
-}
 
 func TestAccRequestNamingOrder(t *testing.T) {
 	api.TestAcc(t)

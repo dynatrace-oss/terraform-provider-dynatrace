@@ -20,13 +20,8 @@ package parameters_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestFailureDetectionParameters(t *testing.T) {
-	api.TestService(t, parameters.Service)
-}
 
 func TestAccFailureDetectionParameters(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package appdetection_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestApplicationDetectionRules(t *testing.T) {
-	api.TestService(t, appdetection.Service)
-}
 
 func TestAccApplicationDetectionRules(t *testing.T) {
 	api.TestAcc(t)

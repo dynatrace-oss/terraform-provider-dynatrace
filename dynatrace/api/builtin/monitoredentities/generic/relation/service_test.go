@@ -20,13 +20,8 @@ package relation_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestGenericRelationships(t *testing.T) {
-	api.TestService(t, relation.Service)
-}
 
 func TestAccGenericRelationships(t *testing.T) {
 	api.TestAcc(t)

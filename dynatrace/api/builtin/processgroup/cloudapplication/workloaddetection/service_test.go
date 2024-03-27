@@ -20,14 +20,8 @@ package workloaddetection_test
 import (
 	"testing"
 
-	workloaddetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/cloudapplication/workloaddetection"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWorkloadDetection(t *testing.T) {
-	api.TestService(t, workloaddetection.Service)
-}
 
 func TestAccWorkloadDetection(t *testing.T) {
 	api.TestAcc(t)

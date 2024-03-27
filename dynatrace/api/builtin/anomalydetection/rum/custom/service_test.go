@@ -20,13 +20,8 @@ package custom_test
 import (
 	"testing"
 
-	custom "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestCustomAppAnomalyDetection(t *testing.T) {
-	api.TestService(t, custom.Service)
-}
 
 func TestAccCustomAppAnomalyDetection(t *testing.T) {
 	api.TestAcc(t)

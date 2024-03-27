@@ -19,14 +19,10 @@ package features_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestOneAgentFeatures(t *testing.T) {
-	// api.TestService(t, features.Service)
-	t.Skip()
-}
-
 func TestAccOneAgentFeatures(t *testing.T) {
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

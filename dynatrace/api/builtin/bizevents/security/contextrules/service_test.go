@@ -20,13 +20,8 @@ package contextrules_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/security/contextrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBizEventsSecurityContext(t *testing.T) {
-	api.TestService(t, contextrules.Service)
-}
 
 func TestAccBizEventsSecurityContext(t *testing.T) {
 	api.TestAcc(t)

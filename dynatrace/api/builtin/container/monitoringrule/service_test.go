@@ -20,13 +20,8 @@ package monitoringrule_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/monitoringrule"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestContainerRule(t *testing.T) {
-	api.TestService(t, monitoringrule.Service)
-}
 
 func TestAccContainerRule(t *testing.T) {
 	api.TestAcc(t)

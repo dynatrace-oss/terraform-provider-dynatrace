@@ -1,7 +1,0 @@
-{
-    "enabled": true,
-    "mode": "MONITORING_OFF",
-    "operator": "STARTS",
-    "property": "KUBERNETES_CONTAINERNAME",
-    "value": "Terraform"
-  }

@@ -23,10 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestHTTPMonitors(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccHTTPMonitors(t *testing.T) {
 	api.TestAcc(t)
 }

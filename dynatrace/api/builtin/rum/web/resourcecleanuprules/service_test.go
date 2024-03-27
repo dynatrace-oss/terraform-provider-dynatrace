@@ -20,13 +20,8 @@ package resourcecleanuprules_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppResourceCleanup(t *testing.T) {
-	api.TestService(t, resourcecleanuprules.Service)
-}
 
 func TestAccWebAppResourceCleanup(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package logagentconfiguration_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestLogOneAgent(t *testing.T) {
-	api.TestService(t, logagentconfiguration.Service)
-}
 
 func TestAccLogOneAgent(t *testing.T) {
 	api.TestAcc(t)

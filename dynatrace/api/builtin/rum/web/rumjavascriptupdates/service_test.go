@@ -20,13 +20,8 @@ package rumjavascriptupdates_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptupdates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppJavascriptUpdates(t *testing.T) {
-	api.TestService(t, rumjavascriptupdates.Service)
-}
 
 func TestAccWebAppJavascriptUpdates(t *testing.T) {
 	api.TestAcc(t)

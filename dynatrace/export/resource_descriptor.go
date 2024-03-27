@@ -22,6 +22,8 @@ import (
 	"reflect"
 	"strings"
 
+	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
+	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
@@ -1149,7 +1151,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		keyuseractions.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.UrlBasedSampling: NewResourceDescriptor(urlbasedsampling.Service),
+	ResourceTypes.UrlBasedSampling: NewResourceDescriptor(
+		urlbasedsampling.Service,
+		Coalesce(Dependencies.ProcessGroupInstance),
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.CloudApplication),
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+	),
 	ResourceTypes.HostMonitoringAdvanced: NewResourceDescriptor(
 		hostmonitoringadvanced.Service,
 		Coalesce(Dependencies.Host),
@@ -1213,6 +1222,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ManagedNetworkZones:       NewResourceDescriptor(managednetworkzones.Service),
 	ResourceTypes.HubExtensionConfig:        NewResourceDescriptor(extension_config.Service),
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
+	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
+	ResourceTypes.InfraOpsAppFeatureFlags:   NewResourceDescriptor(infraopsfeatureflags.Service),
 }
 
 var excludeListedResources = []ResourceType{

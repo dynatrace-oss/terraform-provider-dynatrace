@@ -20,13 +20,8 @@ package jiraconnection_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestJiraForWorkflows(t *testing.T) {
-	api.TestService(t, jiraconnection.Service)
-}
 
 func TestAccJiraForWorkflows(t *testing.T) {
 	api.TestAcc(t)

@@ -1,7 +1,0 @@
-{
-    "rum": {
-      "costAndTrafficControl": 40,
-      "enabled": false
-    },
-    "scope": "environment"
-  }

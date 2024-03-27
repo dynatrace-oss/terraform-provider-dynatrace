@@ -20,13 +20,8 @@ package availability_test
 import (
 	"testing"
 
-	availability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/availability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSyntheticAvailability(t *testing.T) {
-	api.TestService(t, availability.Service)
-}
 
 func TestAccSyntheticAvailability(t *testing.T) {
 	api.TestAcc(t)

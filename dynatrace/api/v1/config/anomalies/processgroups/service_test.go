@@ -19,12 +19,10 @@ package processgroups_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestProcessGroupAnomalies(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccProcessGroupAnomalies(t *testing.T) {
-	t.Skip()
+	api.TestAcc(t)
 }

@@ -20,13 +20,8 @@ package monitoring_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sMonitoring(t *testing.T) {
-	api.TestService(t, monitoring.Service)
-}
 
 func TestAccK8sMonitoring(t *testing.T) {
 	api.TestAcc(t)

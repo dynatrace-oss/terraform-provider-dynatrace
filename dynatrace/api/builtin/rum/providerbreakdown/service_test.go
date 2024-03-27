@@ -20,13 +20,8 @@ package providerbreakdown_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestRUMProviderBreakdown(t *testing.T) {
-	api.TestService(t, providerbreakdown.Service)
-}
 
 func TestAccRUMProviderBreakdown(t *testing.T) {
 	api.TestAcc(t)

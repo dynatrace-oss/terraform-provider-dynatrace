@@ -21,6 +21,21 @@ import (
 	"reflect"
 )
 
+func HasInsertAfter(settings Settings) bool {
+	if settings == nil {
+		return false
+	}
+	pInsertAfterField := getInsertAfterField(settings)
+	if pInsertAfterField == nil {
+		return false
+	}
+	insertAfterField := *pInsertAfterField
+	if !insertAfterField.IsValid() {
+		return false
+	}
+	return (insertAfterField.Type() == stringType) || (insertAfterField.Type() == stringPointerType)
+}
+
 func SetInsertAfter(settings Settings, insertAfter string) {
 	if settings == nil {
 		return

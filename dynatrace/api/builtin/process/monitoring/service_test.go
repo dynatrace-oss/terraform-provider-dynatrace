@@ -20,14 +20,8 @@ package processmonitoring_test
 import (
 	"testing"
 
-	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestProcessMonitoring(t *testing.T) {
-	api.TestService(t, processmonitoring.Service)
-}
 
 func TestAccProcessMonitoring(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package processgroupalerting_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestProcessGroupAlerting(t *testing.T) {
-	api.TestService(t, processgroupalerting.Service)
-}
 
 func TestAccProcessGroupAlerting(t *testing.T) {
 	api.TestAcc(t)

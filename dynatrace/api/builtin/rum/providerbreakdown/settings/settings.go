@@ -28,6 +28,7 @@ type Settings struct {
 	ReportPublicImprovement bool                         `json:"reportPublicImprovement"` // Send the patterns of this provider to Dynatrace to help us improve 3rd-party detection.
 	ResourceName            string                       `json:"resourceName"`            // Resource name
 	ResourceType            ResourceType                 `json:"resourceType"`            // Possible Values: `FirstParty`, `ThirdParty`, `Cdn`
+	InsertAfter             string                       `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -65,6 +66,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Possible Values: `FirstParty`, `ThirdParty`, `Cdn`",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -75,6 +82,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"report_public_improvement": me.ReportPublicImprovement,
 		"resource_name":             me.ResourceName,
 		"resource_type":             me.ResourceType,
+		"insert_after":              me.InsertAfter,
 	})
 }
 
@@ -85,5 +93,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"report_public_improvement": &me.ReportPublicImprovement,
 		"resource_name":             &me.ResourceName,
 		"resource_type":             &me.ResourceType,
+		"insert_after":              &me.InsertAfter,
 	})
 }

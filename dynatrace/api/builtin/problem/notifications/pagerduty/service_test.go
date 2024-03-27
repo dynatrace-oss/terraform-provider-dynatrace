@@ -20,13 +20,8 @@ package pagerduty_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/pagerduty"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestPagerDutyNotifications(t *testing.T) {
-	api.TestService(t, pagerduty.Service)
-}
 
 func TestAccPagerDutyNotifications(t *testing.T) {
 	api.TestAcc(t)

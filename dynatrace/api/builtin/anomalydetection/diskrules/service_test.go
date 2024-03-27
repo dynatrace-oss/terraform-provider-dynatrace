@@ -20,13 +20,8 @@ package diskrules_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/diskrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestDiskAnomalyDetectionRules(t *testing.T) {
-	api.TestService(t, diskrules.Service)
-}
 
 func TestAccDiskAnomalyDetectionRules(t *testing.T) {
 	api.TestAcc(t)

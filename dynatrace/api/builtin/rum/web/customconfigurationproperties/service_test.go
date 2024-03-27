@@ -19,14 +19,10 @@ package customconfigurationproperties_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestWebAppCustomConfigProperties(t *testing.T) {
-	t.Skip()
-}
-
 func TestAccWebAppCustomConfigProperties(t *testing.T) {
-	// Temporarily disabled, not available in test environment
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

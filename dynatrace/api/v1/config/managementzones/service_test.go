@@ -20,13 +20,8 @@ package managementzones_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/managementzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestManagementZones(t *testing.T) {
-	api.TestService(t, managementzones.Service)
-}
 
 func TestAccManagementZones(t *testing.T) {
 	api.TestAcc(t)

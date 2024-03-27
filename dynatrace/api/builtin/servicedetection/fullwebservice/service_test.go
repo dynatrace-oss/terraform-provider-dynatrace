@@ -20,14 +20,8 @@ package fullwebservice_test
 import (
 	"testing"
 
-	fullwebservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/fullwebservice"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestServiceFullWebService(t *testing.T) {
-	api.TestService(t, fullwebservice.Service)
-}
 
 func TestAccServiceFullWebService(t *testing.T) {
 	api.TestAcc(t)

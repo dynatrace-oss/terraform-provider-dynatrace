@@ -20,13 +20,8 @@ package schemalesslogmetric_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestLogMetrics(t *testing.T) {
-	api.TestService(t, schemalesslogmetric.Service)
-}
 
 func TestAccLogMetrics(t *testing.T) {
 	api.TestAcc(t)

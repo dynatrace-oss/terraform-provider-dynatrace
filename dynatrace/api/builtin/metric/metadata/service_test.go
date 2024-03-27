@@ -20,13 +20,8 @@ package metadata_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMetricMetadata(t *testing.T) {
-	api.TestService(t, metadata.Service)
-}
 
 func TestAccMetricMetadata(t *testing.T) {
 	api.TestAcc(t)

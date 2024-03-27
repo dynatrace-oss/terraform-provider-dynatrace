@@ -21,12 +21,7 @@ import (
 	"testing"
 )
 
-func TestSlackForWorkflows(t *testing.T) {
-	// Skipping tests since endpoint validates token
-	t.Skip()
-}
-
 func TestAccSlackForWorkflows(t *testing.T) {
-	// Skipping tests since endpoint validates token
+	// Skipping - Endpoint validates token
 	t.Skip()
 }

@@ -20,6 +20,7 @@ package settings20
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 	"time"
@@ -33,8 +34,7 @@ import (
 	"net/url"
 )
 
-// var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
-var NO_REPAIR_INPUT = true
+var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
 
 func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.CRUDService[T] {
 	var opts *ServiceOptions[T]
@@ -97,17 +97,18 @@ func (me *service[T]) Get(id string, v T) error {
 	if me.options != nil && me.options.LegacyID != nil {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
-	insertBefore, insertAfter, err := me.getInsertIDs(id)
-	if err != nil {
-		return err
+	if settings.HasInsertAfter(v) || settings.HasInsertBefore(v) {
+		insertBefore, insertAfter, err := me.getInsertIDs(id)
+		if err != nil {
+			return err
+		}
+		if insertBefore != nil {
+			settings.SetInsertBefore(v, *insertBefore)
+		}
+		if insertAfter != nil {
+			settings.SetInsertAfter(v, *insertAfter)
+		}
 	}
-	if insertBefore != nil {
-		settings.SetInsertBefore(v, *insertBefore)
-	}
-	if insertAfter != nil {
-		settings.SetInsertAfter(v, *insertAfter)
-	}
-
 	return nil
 }
 

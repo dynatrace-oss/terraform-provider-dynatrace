@@ -20,13 +20,8 @@ package namespace_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/namespace"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sNamespaceAnomalies(t *testing.T) {
-	api.TestService(t, namespace.Service)
-}
 
 func TestAccK8sNamespaceAnomalies(t *testing.T) {
 	api.TestAcc(t)

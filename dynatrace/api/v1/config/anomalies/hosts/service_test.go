@@ -20,13 +20,8 @@ package hosts_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/hosts"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestHostAnomalies(t *testing.T) {
-	api.TestService(t, hosts.Service)
-}
 
 func TestAccHostAnomalies(t *testing.T) {
 	api.TestAcc(t)

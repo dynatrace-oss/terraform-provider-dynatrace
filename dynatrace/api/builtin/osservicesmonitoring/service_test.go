@@ -20,13 +20,8 @@ package osservicesmonitoring_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/osservicesmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestOSServicesMonitoring(t *testing.T) {
-	api.TestService(t, osservicesmonitoring.Service)
-}
 
 func TestAccOSServicesMonitoring(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package notifications_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestNotifications(t *testing.T) {
-	api.TestService(t, notifications.Service)
-}
 
 func TestAccNotifications(t *testing.T) {
 	api.TestAcc(t)

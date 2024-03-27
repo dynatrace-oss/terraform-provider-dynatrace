@@ -320,29 +320,14 @@
 					"displayName": "Management zones",
 					"documentation": "**Note:** Management zones may experience delays or inconsistencies due to rule complexity and attribute variability. Entities may not be immediately assigned to management zones, impacting filter effectiveness.\n\nIt is recommended to use manual tags instead.\n\nFor more information, visit our [best practices for management zones documentation page](https://dt-url.net/8203d4x).",
 					"items": {
-						"constraints": [
-							{
-								"maxLength": 500,
-								"minLength": 1,
-								"type": "LENGTH"
-							}
-						],
-						"datasource": {
-							"filterProperties": [],
-							"fullContext": false,
-							"identifier": "managementZoneDataSource",
-							"resetValue": "NEVER",
-							"useApiSearch": true,
-							"validate": true
-						},
 						"description": "",
 						"displayName": "",
 						"documentation": "",
 						"metadata": {
 							"useCombobox": "enabled"
 						},
-						"subType": "datasource",
-						"type": "text"
+						"referencedType": "builtin:management-zones",
+						"type": "setting"
 					},
 					"maxObjects": 1000,
 					"minObjects": 0,
@@ -351,7 +336,7 @@
 					"type": "set"
 				}
 			},
-			"summaryPattern": "Filter by {entityType|meTypeDisplayName} {entityId|meDisplayName} {entityTags} {managementZones}",
+			"summaryPattern": "Filter by {entityType|meTypeDisplayName} {entityId|meDisplayName} {entityTags} {managementZones|mgmtZoneDisplayName|join:', '}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -815,5 +800,5 @@
 			]
 		}
 	},
-	"version": "2.14.5"
+	"version": "2.14.6"
 }

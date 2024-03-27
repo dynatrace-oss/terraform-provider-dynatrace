@@ -515,6 +515,8 @@ func Provider() *schema.Provider {
 			"dynatrace_hub_extension_active_version":       resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
 			"dynatrace_document":                           resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
 			"dynatrace_direct_shares":                      resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
+			"dynatrace_db_app_feature_flags":               resources.NewGeneric(export.ResourceTypes.DatabaseAppFeatureFlags).Resource(),
+			"dynatrace_infraops_app_feature_flags":         resources.NewGeneric(export.ResourceTypes.InfraOpsAppFeatureFlags).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

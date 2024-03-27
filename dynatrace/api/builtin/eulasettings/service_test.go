@@ -20,13 +20,8 @@ package eulasettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestEULASettings(t *testing.T) {
-	api.TestService(t, eulasettings.Service)
-}
 
 func TestAccEULASettings(t *testing.T) {
 	api.TestAcc(t)

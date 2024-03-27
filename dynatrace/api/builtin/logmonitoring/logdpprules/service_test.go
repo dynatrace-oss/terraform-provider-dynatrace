@@ -20,13 +20,8 @@ package logdpprules_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestLogProcessing(t *testing.T) {
-	api.TestService(t, logdpprules.Service)
-}
 
 func TestAccLogProcessing(t *testing.T) {
 	api.TestAcc(t)

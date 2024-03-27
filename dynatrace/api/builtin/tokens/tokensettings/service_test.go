@@ -20,13 +20,8 @@ package tokensettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestTokenSettings(t *testing.T) {
-	api.TestService(t, tokensettings.Service)
-}
 
 func TestAccTokenSettings(t *testing.T) {
 	api.TestAcc(t)

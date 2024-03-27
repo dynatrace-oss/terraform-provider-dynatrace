@@ -20,13 +20,8 @@ package local_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestExtensionExecutionController(t *testing.T) {
-	api.TestService(t, local.Service)
-}
 
 func TestAccExtensionExecutionController(t *testing.T) {
 	api.TestAcc(t)

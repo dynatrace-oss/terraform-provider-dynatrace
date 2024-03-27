@@ -20,13 +20,8 @@ package outagehandling_test
 import (
 	"testing"
 
-	outagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/outagehandling"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestBrowserMonitorOutageHandling(t *testing.T) {
-	api.TestService(t, outagehandling.Service)
-}
 
 func TestAccBrowserMonitorOutageHandling(t *testing.T) {
 	api.TestAcc(t)

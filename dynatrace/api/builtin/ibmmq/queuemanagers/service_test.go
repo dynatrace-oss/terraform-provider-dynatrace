@@ -20,13 +20,8 @@ package queuemanagers_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestQueueManagers(t *testing.T) {
-	api.TestService(t, queuemanagers.Service)
-}
 
 func TestAccQueueManagers(t *testing.T) {
 	api.TestAcc(t)

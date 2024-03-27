@@ -1,8 +1,0 @@
-{
-  "cloudApplicationPipelineEnabled": true,
-  "eventProcessingActive": false,
-  "openMetricsBuiltinEnabled": false,
-  "openMetricsPipelineEnabled": true,
-  "pvcMonitoringEnabled": false,
-  "scope": "KUBERNETES_CLUSTER-1234567890000000"
-}

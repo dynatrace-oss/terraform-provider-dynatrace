@@ -57,6 +57,10 @@ Add a rule definition using our syntax. [In our documentation](https://dt-url.ne
 - `rule_testing` (Block List, Min: 1, Max: 1) ## Rule testing
 ### 1. Paste a log / JSON sample (see [below for nested schema](#nestedblock--rule_testing))
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

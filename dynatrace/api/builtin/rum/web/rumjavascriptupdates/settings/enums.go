@@ -21,11 +21,13 @@ type JavascriptVersion string
 
 var JavascriptVersions = struct {
 	Custom               JavascriptVersion
+	LatestIe11Supported  JavascriptVersion
 	LatestIe710Supported JavascriptVersion
 	LatestStable         JavascriptVersion
 	PreviousStable       JavascriptVersion
 }{
 	"CUSTOM",
+	"LATEST_IE11_SUPPORTED",
 	"LATEST_IE7_10_SUPPORTED",
 	"LATEST_STABLE",
 	"PREVIOUS_STABLE",

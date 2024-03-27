@@ -20,13 +20,8 @@ package node_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestK8sNodeAnomalies(t *testing.T) {
-	api.TestService(t, node.Service)
-}
 
 func TestAccK8sNodeAnomalies(t *testing.T) {
 	api.TestAcc(t)

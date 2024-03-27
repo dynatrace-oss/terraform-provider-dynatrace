@@ -20,13 +20,8 @@ package geosettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestGeolocationSettings(t *testing.T) {
-	api.TestService(t, geosettings.Service)
-}
 
 func TestAccGeolocationSettings(t *testing.T) {
 	api.TestAcc(t)

@@ -20,13 +20,8 @@ package rulesettings_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestAppSecVulnerabilityThirdParty(t *testing.T) {
-	api.TestService(t, rulesettings.Service)
-}
 
 func TestAccAppSecVulnerabilityThirdParty(t *testing.T) {
 	api.TestAcc(t)

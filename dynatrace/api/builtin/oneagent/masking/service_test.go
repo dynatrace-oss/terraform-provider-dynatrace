@@ -20,13 +20,8 @@ package masking_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/masking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestOneAgentSideMasking(t *testing.T) {
-	api.TestService(t, masking.Service)
-}
 
 func TestAccOneAgentSideMasking(t *testing.T) {
 	api.TestAcc(t)

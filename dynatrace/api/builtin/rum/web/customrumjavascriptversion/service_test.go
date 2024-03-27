@@ -21,12 +21,7 @@ import (
 	"testing"
 )
 
-func TestWebAppJavascriptVersion(t *testing.T) {
-	// Disabled since it would require constant update of JS version
-	t.Skip()
-}
-
 func TestAccWebAppJavascriptVersion(t *testing.T) {
-	// Disabled since it would require constant update of JS version
+	// Skipping - disabled since it would require constant update of JS version
 	t.Skip()
 }

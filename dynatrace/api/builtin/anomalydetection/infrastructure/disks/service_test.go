@@ -20,13 +20,8 @@ package disks_test
 import (
 	"testing"
 
-	disks "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestInfraDiskAnomalyDetection(t *testing.T) {
-	api.TestService(t, disks.Service)
-}
 
 func TestAccInfraDiskAnomalyDetection(t *testing.T) {
 	api.TestAcc(t)

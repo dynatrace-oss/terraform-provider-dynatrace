@@ -26,6 +26,7 @@ import (
 // SpanEntryPoint OpenTelemetry/OpenTracing spans can start new PurePaths. Define rules that define which spans should not be considered as entry points.\n\nNote: This config does not apply to Trace ingest
 type SpanEntryPoint struct {
 	EntryPointRule *SpanEntrypointRule `json:"entryPointRule"`
+	InsertAfter    string              `json:"-"`
 }
 
 func (me *SpanEntryPoint) Name() string {
@@ -33,14 +34,36 @@ func (me *SpanEntryPoint) Name() string {
 }
 
 func (me *SpanEntryPoint) Schema() map[string]*schema.Schema {
-	return new(SpanEntrypointRule).Schema()
+	var sch = new(SpanEntrypointRule).Schema()
+	sch["insert_after"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+		Optional:    true,
+		Computed:    true,
+	}
+	return sch
 }
 
 func (me *SpanEntryPoint) MarshalHCL(properties hcl.Properties) error {
-	return me.EntryPointRule.MarshalHCL(properties)
+	if err := me.EntryPointRule.MarshalHCL(properties); err != nil {
+		return err
+	}
+	if len(me.InsertAfter) > 0 {
+		properties["insert_after"] = me.InsertAfter
+	}
+	return nil
+
 }
 
 func (me *SpanEntryPoint) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.EntryPointRule = new(SpanEntrypointRule)
-	return me.EntryPointRule.UnmarshalHCL(decoder)
+	if err := me.EntryPointRule.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	if v, ok := decoder.GetOk("insert_after"); ok {
+		if sv, ok := v.(string); ok {
+			me.InsertAfter = sv
+		}
+	}
+	return nil
 }

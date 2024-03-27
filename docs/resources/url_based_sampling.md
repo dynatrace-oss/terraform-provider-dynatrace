@@ -51,14 +51,14 @@ resource "dynatrace_url_based_sampling" "#name#" {
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `http_method_any` (Boolean) The scaling factor for the defined URL will be applied to any HTTP method.
-- `ignore` (Boolean) The defined URL will always be ignored, also if Adaptive Traffic Management is not active.
+- `ignore` (Boolean) The matching URLs will always be ignored, also if Adaptive Traffic Management is not active.
 - `query_parameters` (Block List, Min: 1, Max: 1) Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match. (see [below for nested schema](#nestedblock--query_parameters))
 
 ### Optional
 
 - `factor` (String) Select the scaling factor for the current sampling rate of the system. Possible values: `IncreaseCapturing128Times`, `IncreaseCapturing64Times`, `IncreaseCapturing32Times`, `IncreaseCapturing16Times`, `IncreaseCapturing8Times`, `IncreaseCapturing4Times`, `IncreaseCapturing2Times`, `ReduceCapturingByFactor2`, `ReduceCapturingByFactor4`, `ReduceCapturingByFactor8`, `ReduceCapturingByFactor16`, `ReduceCapturingByFactor32`, `ReduceCapturingByFactor64`, `ReduceCapturingByFactor128`
 - `http_method` (Set of String) Possible values: `GET`, `POST`, `PUT`, `DELETE`, `HEAD`, `CONNECT`, `OPTIONS`, `TRACE`, `PATCH`
-- `path` (String) Path of the URL without query parameters
+- `path` (String) Path of the URL.
 - `path_comparison_type` (String) Path comparison condition. Possible values: `EQUALS`, `DOES_NOT_EQUAL`, `CONTAINS`, `DOES_NOT_CONTAIN`, `STARTS_WITH`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `DOES_NOT_END_WITH`
 - `scope` (String) The scope of this setting (PROCESS_GROUP_INSTANCE, PROCESS_GROUP). Omit this property if you want to cover the whole environment.
 

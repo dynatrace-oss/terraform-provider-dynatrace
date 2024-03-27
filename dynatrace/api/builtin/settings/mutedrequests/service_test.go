@@ -20,13 +20,8 @@ package mutedrequests_test
 import (
 	"testing"
 
-	mutedrequests "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/settings/mutedrequests"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestMutedRequests(t *testing.T) {
-	api.TestService(t, mutedrequests.Service)
-}
 
 func TestAccMutedRequests(t *testing.T) {
 	api.TestAcc(t)

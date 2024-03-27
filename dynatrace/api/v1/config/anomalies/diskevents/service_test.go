@@ -20,13 +20,8 @@ package diskevents_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/diskevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestDiskEventAnomalies(t *testing.T) {
-	api.TestService(t, diskevents.Service)
-}
 
 func TestAccDiskEventAnomalies(t *testing.T) {
 	api.TestAcc(t)

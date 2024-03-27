@@ -29,6 +29,7 @@ type Settings struct {
 	InstanceIdentifier string            `json:"instanceIdentifier"`    // Use a variable to identify instances within a process group.\n\nThe type of variable is the same as selected in 'Property source'.
 	ProcessType        *string           `json:"processType,omitempty"` // Note: Not all types can be detected at startup.
 	RuleType           DetectionRuleType `json:"ruleType"`              // Possible Values: `Prop`, `Env`
+	InsertAfter        string            `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -62,6 +63,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Possible Values: `Prop`, `Env`",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -72,6 +79,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"instance_identifier": me.InstanceIdentifier,
 		"process_type":        me.ProcessType,
 		"rule_type":           me.RuleType,
+		"insert_after":        me.InsertAfter,
 	})
 }
 
@@ -82,5 +90,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"instance_identifier": &me.InstanceIdentifier,
 		"process_type":        &me.ProcessType,
 		"rule_type":           &me.RuleType,
+		"insert_after":        &me.InsertAfter,
 	})
 }

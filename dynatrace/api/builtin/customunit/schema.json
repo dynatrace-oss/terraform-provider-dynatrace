@@ -134,26 +134,26 @@
 	},
 	"schemaConstraints": [
 		{
-			"customMessage": "Unit names have to be unique (case-insensitive).",
+			"customMessage": "Unit names have to be unique (case-insensitive) and must be different from unit symbols of predefined units.",
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"newUnitName"
 			]
 		},
 		{
-			"customMessage": "Unit symbols have to be unique.",
+			"customMessage": "Unit symbols have to be unique and must be different from unit symbols of predefined units.",
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"newUnitSymbol"
 			]
 		},
 		{
-			"customMessage": "Unit names have to be unique (case-insensitive).",
+			"customMessage": "Unit names have to be unique (case-insensitive) and must be different from unit symbols of predefined units.",
 			"customValidatorId": "unique-unit-name-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customMessage": "Unit symbols have to be unique.",
+			"customMessage": "Unit symbols have to be unique and must be different from unit symbols of predefined units.",
 			"customValidatorId": "unique-unit-symbol-validator",
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
@@ -163,5 +163,5 @@
 	],
 	"schemaId": "builtin:custom-unit",
 	"types": {},
-	"version": "0.5"
+	"version": "0.6"
 }

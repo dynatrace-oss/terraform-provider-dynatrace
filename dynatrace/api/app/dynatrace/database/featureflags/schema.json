@@ -1,0 +1,134 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "",
+	"displayName": "[Databases App] Allows to configure feature flags for the application",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"featureTypes": {
+			"description": "",
+			"displayName": "featureTypes",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Feature flag with on/off state",
+					"displayName": "Boolean value",
+					"value": "boolean"
+				},
+				{
+					"description": "Feature flag with numeric state",
+					"displayName": "Numeric value",
+					"value": "number"
+				},
+				{
+					"description": "Feature flag with textual value",
+					"displayName": "Text value",
+					"value": "string"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Databases"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"booleanValue": {
+			"default": false,
+			"description": "State of boolean feature flag",
+			"displayName": "Boolean feature state",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "boolean",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Name of the feature",
+			"displayName": "Feature name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"numberValue": {
+			"default": 0,
+			"description": "State of numeric feature flag",
+			"displayName": "Numeric feature state",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "number",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "integer"
+		},
+		"stringValue": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "State of textual feature flag",
+			"displayName": "Textual feature state",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "string",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"type": {
+			"default": "boolean",
+			"description": "The type of the feature",
+			"displayName": "Feature type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/featureTypes"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.database.overview:feature-flags",
+	"types": {},
+	"version": "1"
+}

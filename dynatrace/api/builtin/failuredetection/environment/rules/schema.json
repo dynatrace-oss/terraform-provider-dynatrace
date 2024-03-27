@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure rules which services certain [failure detection parameters](/ui/settings/builtin:failure-detection.environment.parameters) should apply to. For more information please refer to [Failure detection settings](https://dt-url.net/7v034gp).",
+	"description": "Configure rules which services certain [failure detection parameters](/ui/settings/builtin:failure-detection.environment.parameters) should apply to. For more information please refer to [Failure detection settings](https://dt-url.net/7v034gp).\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).",
 	"displayName": "Failure detection rules",
 	"documentation": "",
 	"dynatrace": "1",
@@ -479,5 +479,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

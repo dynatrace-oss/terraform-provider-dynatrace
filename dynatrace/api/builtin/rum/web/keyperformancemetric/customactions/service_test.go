@@ -20,13 +20,8 @@ package customactions_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/customactions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestWebAppKeyPerformanceCustom(t *testing.T) {
-	api.TestService(t, customactions.Service)
-}
 
 func TestAccWebAppKeyPerformanceCustom(t *testing.T) {
 	api.TestAcc(t)

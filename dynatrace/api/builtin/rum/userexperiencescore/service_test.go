@@ -20,13 +20,8 @@ package userexperiencescore_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUserExperienceScore(t *testing.T) {
-	api.TestService(t, userexperiencescore.Service)
-}
 
 func TestAccUserExperienceScore(t *testing.T) {
 	api.TestAcc(t)

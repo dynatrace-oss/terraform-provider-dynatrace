@@ -20,13 +20,8 @@ package queuesharinggroup_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestQueueSharingGroups(t *testing.T) {
-	api.TestService(t, queuesharinggroup.Service)
-}
 
 func TestAccQueueSharingGroups(t *testing.T) {
 	api.TestAcc(t)

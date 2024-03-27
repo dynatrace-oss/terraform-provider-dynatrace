@@ -20,13 +20,8 @@ package analytics_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestUsabilityAnalytics(t *testing.T) {
-	api.TestService(t, analytics.Service)
-}
 
 func TestAccUsabilityAnalytics(t *testing.T) {
 	api.TestAcc(t)

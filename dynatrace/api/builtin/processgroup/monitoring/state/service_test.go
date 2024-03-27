@@ -20,13 +20,8 @@ package state_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/monitoring/state"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestProcessGroupMonitoring(t *testing.T) {
-	api.TestService(t, state.Service)
-}
 
 func TestAccProcessGroupMonitoring(t *testing.T) {
 	api.TestAcc(t)

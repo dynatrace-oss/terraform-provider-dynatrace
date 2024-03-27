@@ -20,13 +20,8 @@ package sitereliabilityguardian_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestSiteReliabilityGuardian(t *testing.T) {
-	api.TestService(t, sitereliabilityguardian.Service)
-}
 
 func TestAccSiteReliabilityGuardian(t *testing.T) {
 	api.TestAcc(t)

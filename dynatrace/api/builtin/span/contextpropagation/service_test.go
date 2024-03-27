@@ -20,13 +20,8 @@ package contextpropagation_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/contextpropagation"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
-
-func TestContextPropagationSettings(t *testing.T) {
-	api.TestService(t, contextpropagation.Service)
-}
 
 func TestAccContextPropagationSettings(t *testing.T) {
 	api.TestAcc(t)

@@ -19,16 +19,10 @@ package logcustomattributes_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestLogCustomAttributes(t *testing.T) {
-	// Test tenant licensing: Exceeded limit of custom attributes.
-	// api.TestService(t, logcustomattributes.Service)
-	t.Skip()
-}
-
 func TestAccLogCustomAttributes(t *testing.T) {
-	// Test tenant licensing: Exceeded limit of custom attributes.
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }
