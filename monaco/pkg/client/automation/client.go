@@ -171,7 +171,9 @@ func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
 	}
-	if err = rest.DeleteConfig(a.client, a.url+a.resources[resourceType].Path, id); err != nil {
+
+	var urlParams map[string]string
+	if err = rest.DeleteConfig(a.client, a.url+a.resources[resourceType].Path, id, urlParams); err != nil {
 		return fmt.Errorf("unable to delete object with ID %s: %w", id, err)
 	}
 
