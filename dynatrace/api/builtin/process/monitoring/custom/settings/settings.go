@@ -32,6 +32,33 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
+	name := me.HostGroupID
+
+	if me.Condition != nil {
+		if string(me.Condition.Item) != "" {
+			if name != "" {
+				name += "_"
+			}
+			name += string(me.Condition.Item)
+		}
+		if string(me.Condition.Operator) != "" {
+			if name != "" {
+				name += "_"
+			}
+			name += string(me.Condition.Operator)
+		}
+		if me.Condition.Value != nil && (*me.Condition.Value) != "" {
+			if name != "" {
+				name += "_"
+			}
+			name += (*me.Condition.Value)
+		}
+	}
+
+	if name != "" {
+		return name
+	}
+
 	return uuid.NewString()
 }
 
