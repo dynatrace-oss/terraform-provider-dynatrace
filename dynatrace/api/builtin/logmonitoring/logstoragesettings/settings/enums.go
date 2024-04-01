@@ -23,6 +23,7 @@ var MatcherTypes = struct {
 	ContainerName          MatcherType
 	DtEntityContainerGroup MatcherType
 	DtEntityProcessGroup   MatcherType
+	HostTag                MatcherType
 	K8SContainerName       MatcherType
 	K8SDeploymentName      MatcherType
 	K8SNamespaceName       MatcherType
@@ -38,6 +39,7 @@ var MatcherTypes = struct {
 	"container.name",
 	"dt.entity.container_group",
 	"dt.entity.process_group",
+	"host.tag",
 	"k8s.container.name",
 	"k8s.deployment.name",
 	"k8s.namespace.name",
