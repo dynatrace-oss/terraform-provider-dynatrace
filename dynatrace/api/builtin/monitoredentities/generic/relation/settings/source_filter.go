@@ -48,7 +48,7 @@ func (me *SourceFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 type SourceFilter struct {
 	Condition    *string          `json:"condition,omitempty"`    // Specify a filter that needs to match in order for the extraction to happen.. Two different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', while `$prefix(value)` will ensure that the source begins with exactly 'value'.\nIf your value contains the characters '(', ')' or '\\~', you need to escape them by adding a '\\~' in front of them.
 	MappingRules MappingRules     `json:"mappingRules,omitempty"` // Specify all properties which should be compared. If all mapping rules match a relationship between entities will be created.
-	SourceType   IngestDataSource `json:"sourceType"`             // Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+	SourceType   IngestDataSource `json:"sourceType"`             // Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
 }
 
 func (me *SourceFilter) Schema() map[string]*schema.Schema {
@@ -69,7 +69,7 @@ func (me *SourceFilter) Schema() map[string]*schema.Schema {
 		},
 		"source_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`",
+			Description: "Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`",
 			Required:    true,
 		},
 	}
