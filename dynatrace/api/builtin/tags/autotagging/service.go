@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.13"
+const SchemaVersion = "1.0.14"
 const SchemaID = "builtin:tags.auto-tagging"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*autotagging.Settings] {

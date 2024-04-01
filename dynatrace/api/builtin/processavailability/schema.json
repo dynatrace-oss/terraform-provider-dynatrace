@@ -140,7 +140,7 @@
 			],
 			"default": "",
 			"description": "",
-			"displayName": "Monitored rule name",
+			"displayName": "Monitoring rule name",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
@@ -331,6 +331,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -391,6 +392,7 @@
 						{
 							"customMessage": "Unknown predefined property key.",
 							"customValidatorId": "event-property-key-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -448,5 +450,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

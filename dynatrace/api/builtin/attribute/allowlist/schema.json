@@ -5,6 +5,7 @@
 	"constraints": [
 		{
 			"customValidatorId": "attribute-allow-list-disable-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -47,6 +48,7 @@
 				},
 				{
 					"customValidatorId": "prohibit-always-captured-attributes-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -75,5 +77,5 @@
 	],
 	"schemaId": "builtin:attribute-allow-list",
 	"types": {},
-	"version": "0.0.9"
+	"version": "0.0.10"
 }

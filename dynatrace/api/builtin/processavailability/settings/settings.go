@@ -50,7 +50,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Monitored rule name",
+			Description: "Monitoring rule name",
 			Required:    true,
 		},
 		"rules": {

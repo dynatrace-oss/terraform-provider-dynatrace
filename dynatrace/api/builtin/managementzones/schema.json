@@ -5,6 +5,7 @@
 	"constraints": [
 		{
 			"customValidatorId": "rules-size-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -1389,10 +1390,12 @@
 	"schemaConstraints": [
 		{
 			"customValidatorId": "conditions-count-validator",
+			"skipAsyncValidation": true,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customValidatorId": "long-id-validator",
+			"skipAsyncValidation": true,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
@@ -1413,18 +1416,22 @@
 			"constraints": [
 				{
 					"customValidatorId": "meConditionStringValueValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "entity-id-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "tag-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "pg-dynamic-key",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -2187,6 +2194,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "metric-key-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -2284,6 +2292,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "rules-conditions-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -2558,6 +2567,7 @@
 						},
 						{
 							"customValidatorId": "entity-selector-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -2600,5 +2610,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.9"
+	"version": "1.0.10"
 }

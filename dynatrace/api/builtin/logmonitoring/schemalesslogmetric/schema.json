@@ -6,6 +6,7 @@
 		{
 			"customMessage": "Measure cannot be changed, please create a new metric instead.",
 			"customValidatorId": "measure-not-changed-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -31,7 +32,7 @@
 			"type": "enum"
 		}
 	},
-	"maxObjects": 100,
+	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add log metric"
 	},
@@ -222,11 +223,13 @@
 				},
 				{
 					"customValidatorId": "log-matcher-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customMessage": "Invisible unicode chars (for example: ZeroWidthSpace) aren't allowed.",
 					"customValidatorId": "invisible-chars-query-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -259,5 +262,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.schemaless-log-metric",
 	"types": {},
-	"version": "8.0.50"
+	"version": "8.0.51"
 }
