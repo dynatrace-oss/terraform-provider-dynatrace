@@ -23,7 +23,7 @@ import (
 )
 
 type Criteria struct {
-	AttackType   AttackType `json:"attackType"`             // Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`
+	AttackType   AttackType `json:"attackType"`             // Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`, `SSRF`
 	ProcessGroup *string    `json:"processGroup,omitempty"` // Process group
 }
 
@@ -31,7 +31,7 @@ func (me *Criteria) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attack_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`",
+			Description: "Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`, `SSRF`",
 			Required:    true,
 		},
 		"process_group": {
