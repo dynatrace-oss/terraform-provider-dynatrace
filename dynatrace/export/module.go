@@ -51,6 +51,7 @@ type Module struct {
 	ModuleMutex            *sync.Mutex
 	SplitPathModuleNameMap map[string]string
 	SplitList              *splitList
+	ChildModules           map[ResourceType]*Module
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -173,12 +174,29 @@ func (me *Module) GetResourceReferences() []*Resource {
 	}
 	result := []*Resource{}
 	for _, resource := range resources {
-		result = append(result, resource)
+		isReferedTo := false
+
+		if me.RefersTo(resource, resource.Type) {
+			isReferedTo = true
+		}
+
+		for _, childModule := range me.ChildModules {
+			if childModule.RefersTo(resource, resource.Type) {
+				isReferedTo = true
+			}
+		}
+
+		if isReferedTo {
+			result = append(result, resource)
+		}
+
 	}
 	return result
 }
 
 func (me *Module) Resource(id string) *Resource {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
 	if stored, found := me.Resources[id]; found {
 		return stored
 	}
@@ -772,6 +790,16 @@ func (me *Module) saveSplitPath(folderPath string, splitName string) {
 	}
 	me.SplitPathModuleNameMap[folderPath] = splitName
 	me.ModuleMutex.Unlock()
+}
+
+func (me *Module) saveChildModule(childModule *Module) {
+	_, exist := me.ChildModules[childModule.Type]
+
+	if exist {
+		return
+	}
+
+	me.ChildModules[childModule.Type] = childModule
 }
 
 type bundleToDownload struct {

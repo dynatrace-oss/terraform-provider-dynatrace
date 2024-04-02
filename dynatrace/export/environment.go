@@ -391,6 +391,7 @@ func (me *Environment) PostProcess() error {
 		var err error
 		if parentBytes, err = resource.GetParent().ReadFile(); err == nil {
 			if childBytes, err = resource.ReadFile(); err == nil {
+				resource.GetParent().Module.saveChildModule(resource.Module)
 				var parentFile *os.File
 				if parentFile, err = resource.GetParent().CreateFile(); err == nil {
 					defer parentFile.Close()
@@ -461,6 +462,7 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		Environment:          me,
 		ChildParentIDNameMap: map[string]string{},
 		ModuleMutex:          new(sync.Mutex),
+		ChildModules:         map[ResourceType]*Module{},
 	}
 	me.Modules[resType] = module
 	return module

@@ -18,6 +18,7 @@
 package export
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"regexp"
@@ -403,6 +404,37 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 	return s, resources
 }
 
+type optimizedIdDep struct {
+	regex            *regexp.Regexp
+	containsFunction func(string, string) bool
+}
+
+var entityExtractionRegex = regexp.MustCompile(`(((?:[A-Z]+_)?(?:[A-Z]+_)?(?:[A-Z]+_)?[A-Z]+)-[0-9A-Z]{16})`)
+var v1ConfigIdRegex = regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`)
+var calcMetricKeyRegex = regexp.MustCompile(`calc:[a-z0-9_.-]*`)
+
+var optimizedKeyRegexList = []optimizedIdDep{
+	{entityExtractionRegex, func(text string, id string) bool {
+		entityIdType := string(id[0:(len(id) - 17)])
+		return strings.Contains(text, entityIdType)
+	}},
+	{v1ConfigIdRegex, func(text string, id string) bool {
+		return true
+	}},
+	{calcMetricKeyRegex, func(text string, id string) bool {
+		return strings.Contains(text, "calc:")
+	}},
+}
+
+func findInList(item []byte, list [][]byte) bool {
+	for _, b := range list {
+		if bytes.Equal(b, item) {
+			return true
+		}
+	}
+	return false
+}
+
 type iddep struct {
 	resourceType ResourceType
 	quoted       bool
@@ -424,6 +456,36 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	childDescriptor := environment.Module(replacingIn).Descriptor
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
+	resources := []any{}
+
+	if len(environment.Module(me.resourceType).Resources) == 0 {
+		return s, resources
+	}
+
+	var optimizedMatchList [][]byte
+
+	isOptimized := false
+	for id := range environment.Module(me.resourceType).Resources {
+		for _, optimizedIdDep := range optimizedKeyRegexList {
+			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
+			if len(matchesValidation) > 0 {
+				isOptimized = true
+				if optimizedIdDep.containsFunction(s, id) {
+					optimizedMatchList = optimizedIdDep.regex.FindAll([]byte(s), -1)
+				} else {
+					optimizedMatchList = [][]byte{}
+				}
+				break
+			}
+		}
+
+		break
+	}
+
+	if isOptimized && len(optimizedMatchList) < 1 {
+		return s, resources
+	}
+
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.id}"
@@ -433,7 +495,6 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	if environment.Flags.Flat || isParent {
 		replacePattern = "${%s.%s.id}"
 	}
-	resources := []any{}
 	for id, resource := range environment.Module(me.resourceType).Resources {
 		resOrDsType := func() string {
 			return string(me.resourceType)
@@ -461,19 +522,28 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 			}
 		}
 		found := false
-		if me.quoted {
-			quotedID := "\"" + id + "\""
-			quotedReplacePattern := "\"" + replacePattern + "\""
-			if strings.Contains(s, quotedID) {
-				s = strings.ReplaceAll(s, quotedID, fmt.Sprintf(quotedReplacePattern, resOrDsType(), resource.UniqueName))
-				found = true
-			}
-		} else {
-			if strings.Contains(s, id) {
-				s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
-				found = true
+		runReplacement := true
+
+		if isOptimized {
+			runReplacement = findInList([]byte(id), optimizedMatchList)
+		}
+
+		if runReplacement {
+			if me.quoted {
+				quotedID := "\"" + id + "\""
+				quotedReplacePattern := "\"" + replacePattern + "\""
+				if strings.Contains(s, quotedID) {
+					s = strings.ReplaceAll(s, quotedID, fmt.Sprintf(quotedReplacePattern, resOrDsType(), resource.UniqueName))
+					found = true
+				}
+			} else {
+				if strings.Contains(s, id) {
+					s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
+					found = true
+				}
 			}
 		}
+
 		if found {
 			resources = append(resources, resource)
 		}
