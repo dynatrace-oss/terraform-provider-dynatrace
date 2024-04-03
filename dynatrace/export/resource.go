@@ -471,26 +471,25 @@ func (me *Resource) PostProcess() error {
 	return nil
 }
 
-func (me *Resource) GetExtractedIdsPerRegexType(idRegexType string, dependencyResourceTypeOld ResourceType, tfFileContent string, optimizers map[string]optimizedIdDep) map[string]bool {
-	dependencyResourceType := idRegexType
-
-	idMap, exists := me.ExtractedIdsPerDependencyModule[dependencyResourceType]
+func (me *Resource) GetExtractedIdsPerRegexType(idRegexType string, tfFileContent string, optimizers map[string]optimizedIdDep) map[string]bool {
+	idMap, exists := me.ExtractedIdsPerDependencyModule[idRegexType]
 
 	if exists {
 		return idMap
 	}
 
-	me.ExtractedIdsPerDependencyModule[dependencyResourceType] = map[string]bool{}
+	me.ExtractedIdsPerDependencyModule[idRegexType] = map[string]bool{}
 
 	if idRegexType == NONE {
-		return me.ExtractedIdsPerDependencyModule[dependencyResourceType]
+		return me.ExtractedIdsPerDependencyModule[idRegexType]
 	}
 
 	optimizedIdDep := optimizers[idRegexType]
+
 	optimizedMatchList := optimizedIdDep.regex.FindAll([]byte(tfFileContent), -1)
 	for _, match := range optimizedMatchList {
-		me.ExtractedIdsPerDependencyModule[dependencyResourceType][string(match)] = true
+		me.ExtractedIdsPerDependencyModule[idRegexType][string(match)] = true
 	}
 
-	return me.ExtractedIdsPerDependencyModule[dependencyResourceType]
+	return me.ExtractedIdsPerDependencyModule[idRegexType]
 }

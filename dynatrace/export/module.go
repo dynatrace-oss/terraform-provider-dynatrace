@@ -1201,8 +1201,8 @@ func (me *Module) Discover() error {
 	return nil
 }
 
-func (me *Module) GetDependencyOptimizationInfo(idGeter func(*Resource) string, optimizers map[string]optimizedIdDep) (string, bool) {
-	idRegexType := me.GetRegexType(idGeter, optimizers)
+func (me *Module) GetDependencyOptimizationInfo() (string, bool) {
+	idRegexType := me.GetRegexType()
 
 	if idRegexType == NONE {
 		return idRegexType, false
@@ -1210,7 +1210,7 @@ func (me *Module) GetDependencyOptimizationInfo(idGeter func(*Resource) string, 
 	return idRegexType, true
 }
 
-func (me *Module) GetRegexType(idGeter func(*Resource) string, optimizers map[string]optimizedIdDep) string {
+func (me *Module) GetRegexType() string {
 	me.ModuleMutex.Lock()
 	defer me.ModuleMutex.Unlock()
 
@@ -1224,14 +1224,13 @@ func (me *Module) GetRegexType(idGeter func(*Resource) string, optimizers map[st
 		return me.IdRegexType
 	}
 
-	for _, resource := range me.Resources {
-		id := idGeter(resource)
+	for id := range me.Resources {
 
 		if len(id) == 0 {
 			continue
 		}
 
-		for idRegexType, optimizedIdDep := range optimizers {
+		for idRegexType, optimizedIdDep := range OptimizedKeyRegexId {
 			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
 			if len(matchesValidation) > 0 {
 				me.IdRegexType = idRegexType
