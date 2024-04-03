@@ -26,20 +26,22 @@ func (me QueueEntryPointType) Ref() *QueueEntryPointType {
 
 // QueueEntryPointTypes offers the known enum values
 var QueueEntryPointTypes = struct {
-	IBMMQ    QueueEntryPointType
-	Jms      QueueEntryPointType
-	Kafka    QueueEntryPointType
-	MSMQ     QueueEntryPointType
-	RabbitMQ QueueEntryPointType
-	Values   func() []string
+	IBMMQ           QueueEntryPointType
+	Jms             QueueEntryPointType
+	Kafka           QueueEntryPointType
+	MSMQ            QueueEntryPointType
+	RabbitMQ        QueueEntryPointType
+	AzureServiceBus QueueEntryPointType
+	Values          func() []string
 }{
 	"IBM_MQ",
 	"JMS",
 	"KAFKA",
 	"MSMQ",
 	"RABBIT_MQ",
+	"AZURE_SERVICE_BUS",
 	func() []string {
-		return []string{"IBM_MQ", "JMS", "KAFKA", "MSMQ", "RABBIT_MQ"}
+		return []string{"IBM_MQ", "JMS", "KAFKA", "MSMQ", "RABBIT_MQ", "AZURE_SERVICE_BUS"}
 	},
 }
 
