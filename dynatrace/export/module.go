@@ -52,6 +52,8 @@ type Module struct {
 	SplitPathModuleNameMap map[string]string
 	SplitList              *splitList
 	ChildModules           map[ResourceType]*Module
+	IdRegexType            string
+	LegacyIdMap            map[string]*Resource
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -200,7 +202,7 @@ func (me *Module) Resource(id string) *Resource {
 	if stored, found := me.Resources[id]; found {
 		return stored
 	}
-	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered}
+	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered, ExtractedIdsPerDependencyModule: map[string]map[string]bool{}}
 	me.Resources[id] = res
 	return res
 }
@@ -1192,8 +1194,78 @@ func (me *Module) Discover() error {
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
+
+	SetOptimizedRegexModule(me)
+
 	logging.Debug.Info.Printf("[DISCOVER] [%s] %d items found.", me.Type, len(stubs))
 	return nil
+}
+
+func (me *Module) GetDependencyOptimizationInfo(idGeter func(*Resource) string, optimizers map[string]optimizedIdDep) (string, bool) {
+	idRegexType := me.GetRegexType(idGeter, optimizers)
+
+	if idRegexType == NONE {
+		return idRegexType, false
+	}
+	return idRegexType, true
+}
+
+func (me *Module) GetRegexType(idGeter func(*Resource) string, optimizers map[string]optimizedIdDep) string {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
+
+	if me.IdRegexType != "" {
+		return me.IdRegexType
+	}
+
+	me.IdRegexType = NONE
+
+	if len(me.Resources) == 0 {
+		return me.IdRegexType
+	}
+
+	for _, resource := range me.Resources {
+		id := idGeter(resource)
+
+		if len(id) == 0 {
+			continue
+		}
+
+		for idRegexType, optimizedIdDep := range optimizers {
+			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
+			if len(matchesValidation) > 0 {
+				me.IdRegexType = idRegexType
+				break
+			}
+		}
+		break
+	}
+
+	return me.IdRegexType
+}
+
+func (me *Module) GetLegacyIdMap() map[string]*Resource {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
+
+	if me.LegacyIdMap != nil {
+		return me.LegacyIdMap
+	}
+
+	me.LegacyIdMap = map[string]*Resource{}
+
+	if len(me.Resources) == 0 {
+		return me.LegacyIdMap
+	}
+
+	for _, resource := range me.Resources {
+		if len(resource.LegacyID) == 0 {
+			continue
+		}
+		me.LegacyIdMap[resource.LegacyID] = resource
+	}
+
+	return me.LegacyIdMap
 }
 
 type resources []resource

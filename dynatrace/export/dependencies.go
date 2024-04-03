@@ -18,11 +18,11 @@
 package export
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 // To allow -target to work with dependencies at an atomic level
@@ -158,23 +158,29 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 
 		escaped := regexp.QuoteMeta(resource.Name)
 
-		m1 := regexp.MustCompile(fmt.Sprintf(`"managementZone": {([\S\s]*)"name":(.*)"%s"([\S\s]*)}`, escaped))
-		replaced := m1.ReplaceAllString(s, fmt.Sprintf(`"managementZone": {$1"name":$2"%s"$3}`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
-		if replaced != s {
-			s = replaced
-			found = true
+		if strings.Contains(s, `"managementZone": {`) {
+			m1 := regexp.MustCompile(fmt.Sprintf(`"managementZone": {([\S\s]*)"name":(.*)"%s"([\S\s]*)}`, escaped))
+			replaced := m1.ReplaceAllString(s, fmt.Sprintf(`"managementZone": {$1"name":$2"%s"$3}`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
+			if replaced != s {
+				s = replaced
+				found = true
+			}
 		}
-		m1 = regexp.MustCompile(fmt.Sprintf(`management_zones\s+= \[(.*)\"%s\"(.*)\]`, escaped))
-		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`management_zones = [ $1"%s"$2 ]`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
-		if replaced != s {
-			s = replaced
-			found = true
+		if strings.Contains(s, `management_zones`) {
+			m1 := regexp.MustCompile(fmt.Sprintf(`management_zones\s+= \[(.*)\"%s\"(.*)\]`, escaped))
+			replaced := m1.ReplaceAllString(s, fmt.Sprintf(`management_zones = [ $1"%s"$2 ]`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
+			if replaced != s {
+				s = replaced
+				found = true
+			}
 		}
-		m1 = regexp.MustCompile(fmt.Sprintf(`mzName\((.*)"%s"(.*)\)`, escaped))
-		replaced = m1.ReplaceAllString(replaced, fmt.Sprintf(`mzName($1"%s"$2)`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
-		if replaced != s {
-			s = replaced
-			found = true
+		if strings.Contains(s, `mzName(`) {
+			m1 := regexp.MustCompile(fmt.Sprintf(`mzName\((.*)"%s"(.*)\)`, escaped))
+			replaced := m1.ReplaceAllString(s, fmt.Sprintf(`mzName($1"%s"$2)`, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName)))
+			if replaced != s {
+				s = replaced
+				found = true
+			}
 		}
 		if found {
 			resources = append(resources, resource)
@@ -367,8 +373,32 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 	if environment.Flags.Flat {
 		replacePattern = "${%s.%s.legacy_id}"
 	}
+
 	resources := []any{}
-	for _, resource := range environment.Module(me.resourceType).Resources {
+
+	regexMap := OptimizedKeyRegexV1
+	if me.resourceType == ResourceTypes.ManagementZoneV2 {
+		regexMap = OptimizedKeyRegexMzLegacy
+	}
+
+	idRegexType, _ := environment.Module(me.resourceType).GetDependencyOptimizationInfo(func(res *Resource) string { return res.LegacyID }, regexMap)
+	extractedIds := environment.Module(replacingIn).Resources[resourceId].GetExtractedIdsPerRegexType(idRegexType, me.resourceType, s, regexMap)
+
+	if len(extractedIds) < 1 {
+		return s, resources
+	}
+
+	legacyIdMap := environment.Module(me.resourceType).GetLegacyIdMap()
+
+	for extractedId, _ := range extractedIds {
+		resource, exists := legacyIdMap[extractedId]
+
+		if exists {
+			// pass
+		} else {
+			continue
+		}
+
 		resOrDsType := func() string {
 			return string(me.resourceType)
 		}
@@ -390,17 +420,11 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 				replacePattern = "${%s.%s.legacy_id}"
 			}
 		}
-		if len(resource.LegacyID) > 0 {
-			found := false
-			if strings.Contains(s, resource.LegacyID) {
-				s = strings.ReplaceAll(s, resource.LegacyID, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
-				found = true
-			}
-			if found {
-				resources = append(resources, resource)
-			}
-		}
+
+		s = strings.ReplaceAll(s, resource.LegacyID, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
+		resources = append(resources, resource)
 	}
+
 	return s, resources
 }
 
@@ -409,30 +433,85 @@ type optimizedIdDep struct {
 	containsFunction func(string, string) bool
 }
 
+var RegexMutex *sync.Mutex = new(sync.Mutex)
+
+const ENTITY_REGEX = "ENTITY_REGEX"
+const V1_CONFIG_ID_REGEX = "V1_CONFIG_ID_REGEX"
+const CALC_METRIC_REGEX = "CALC_METRIC_REGEX"
+const LEGACY_MZ_ID = "LEGACY_MZ_ID"
+const NONE = "NONE"
+
 var entityExtractionRegex = regexp.MustCompile(`(((?:[A-Z]+_)?(?:[A-Z]+_)?(?:[A-Z]+_)?[A-Z]+)-[0-9A-Z]{16})`)
 var v1ConfigIdRegex = regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`)
-var calcMetricKeyRegex = regexp.MustCompile(`calc:[a-z0-9_.-]*`)
+var calcMetricKeyRegex = regexp.MustCompile(`calc:[A-Za-z0-9_.-]*`)
 
-var optimizedKeyRegexList = []optimizedIdDep{
-	{entityExtractionRegex, func(text string, id string) bool {
+var legacyMzIdRegexFmt = `-{0,1}\d{%d,%d}`
+var minLenMzId = 0
+var maxLenMzId = 0
+
+var OptimizedKeyRegexV1 = map[string]optimizedIdDep{
+	V1_CONFIG_ID_REGEX: {v1ConfigIdRegex, func(text string, id string) bool {
+		return true
+	}},
+}
+var OptimizedKeyRegexMzLegacy = map[string]optimizedIdDep{}
+
+var OptimizedKeyRegexId = mergeMaps(OptimizedKeyRegexV1, map[string]optimizedIdDep{
+	ENTITY_REGEX: {entityExtractionRegex, func(text string, id string) bool {
 		entityIdType := string(id[0:(len(id) - 17)])
 		return strings.Contains(text, entityIdType)
 	}},
-	{v1ConfigIdRegex, func(text string, id string) bool {
-		return true
-	}},
-	{calcMetricKeyRegex, func(text string, id string) bool {
+	CALC_METRIC_REGEX: {calcMetricKeyRegex, func(text string, id string) bool {
 		return strings.Contains(text, "calc:")
 	}},
-}
+})
 
-func findInList(item []byte, list [][]byte) bool {
-	for _, b := range list {
-		if bytes.Equal(b, item) {
-			return true
+func SetOptimizedRegexModule(module *Module) {
+	if module.Type == ResourceTypes.ManagementZoneV2 {
+		RegexMutex.Lock()
+		defer RegexMutex.Unlock()
+
+		for _, resource := range module.Resources {
+			updateMinMaxMzId(resource.LegacyID)
 		}
 	}
-	return false
+}
+
+func SetOptimizedRegexResource(resource *Resource) {
+	if resource.Module.Type == ResourceTypes.ManagementZoneV2 {
+		RegexMutex.Lock()
+		defer RegexMutex.Unlock()
+
+		updateMinMaxMzId(resource.LegacyID)
+
+	}
+}
+
+func updateMinMaxMzId(id string) {
+
+	len := len(id)
+	if []byte(id)[0] == '-' {
+		len -= 1
+	}
+
+	updated := false
+
+	if len < minLenMzId || minLenMzId == 0 {
+		minLenMzId = len
+		updated = true
+	}
+	if len > maxLenMzId || maxLenMzId == 0 {
+		maxLenMzId = len
+		updated = true
+	}
+
+	if updated {
+		OptimizedKeyRegexMzLegacy = map[string]optimizedIdDep{
+			LEGACY_MZ_ID: {regexp.MustCompile(fmt.Sprintf(legacyMzIdRegexFmt, minLenMzId, maxLenMzId)), func(text string, id string) bool {
+				return true
+			}},
+		}
+	}
 }
 
 type iddep struct {
@@ -462,27 +541,10 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 		return s, resources
 	}
 
-	var optimizedMatchList [][]byte
+	idRegexType, isOptimized := environment.Module(me.resourceType).GetDependencyOptimizationInfo(func(res *Resource) string { return res.ID }, OptimizedKeyRegexId)
+	extractedIds := environment.Module(replacingIn).Resources[resourceId].GetExtractedIdsPerRegexType(idRegexType, me.resourceType, s, OptimizedKeyRegexId)
 
-	isOptimized := false
-	for id := range environment.Module(me.resourceType).Resources {
-		for _, optimizedIdDep := range optimizedKeyRegexList {
-			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
-			if len(matchesValidation) > 0 {
-				isOptimized = true
-				if optimizedIdDep.containsFunction(s, id) {
-					optimizedMatchList = optimizedIdDep.regex.FindAll([]byte(s), -1)
-				} else {
-					optimizedMatchList = [][]byte{}
-				}
-				break
-			}
-		}
-
-		break
-	}
-
-	if isOptimized && len(optimizedMatchList) < 1 {
+	if isOptimized && len(extractedIds) < 1 {
 		return s, resources
 	}
 
@@ -495,7 +557,20 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	if environment.Flags.Flat || isParent {
 		replacePattern = "${%s.%s.id}"
 	}
-	for id, resource := range environment.Module(me.resourceType).Resources {
+
+	getReplaceValues := func(id string) (string, string) {
+		valueToReplace := id
+		newValue := replacePattern
+		if me.quoted {
+			valueToReplace = "\"" + id + "\""
+			newValue = "\"" + replacePattern + "\""
+		}
+
+		return valueToReplace, newValue
+	}
+
+	applyReplacement := func(resource *Resource, id string) {
+
 		resOrDsType := func() string {
 			return string(me.resourceType)
 		}
@@ -521,33 +596,38 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 				}
 			}
 		}
-		found := false
-		runReplacement := true
 
-		if isOptimized {
-			runReplacement = findInList([]byte(id), optimizedMatchList)
-		}
+		valueToReplace, newValue := getReplaceValues(id)
+		s = strings.ReplaceAll(s, valueToReplace, fmt.Sprintf(newValue, resOrDsType(), resource.UniqueName))
 
-		if runReplacement {
-			if me.quoted {
-				quotedID := "\"" + id + "\""
-				quotedReplacePattern := "\"" + replacePattern + "\""
-				if strings.Contains(s, quotedID) {
-					s = strings.ReplaceAll(s, quotedID, fmt.Sprintf(quotedReplacePattern, resOrDsType(), resource.UniqueName))
-					found = true
-				}
-			} else {
-				if strings.Contains(s, id) {
-					s = strings.ReplaceAll(s, id, fmt.Sprintf(replacePattern, resOrDsType(), resource.UniqueName))
-					found = true
-				}
+		resources = append(resources, resource)
+	}
+
+	if isOptimized {
+
+		for extractedId := range extractedIds {
+
+			resource, exists := environment.Module(me.resourceType).Resources[extractedId]
+
+			if exists {
+				applyReplacement(resource, extractedId)
+				delete(environment.Module(replacingIn).Resources[resourceId].ExtractedIdsPerDependencyModule[idRegexType], extractedId)
 			}
+
 		}
 
-		if found {
-			resources = append(resources, resource)
+	} else {
+
+		for id, resource := range environment.Module(me.resourceType).Resources {
+
+			valueToReplace, _ := getReplaceValues(id)
+			if strings.Contains(s, valueToReplace) {
+				applyReplacement(resource, id)
+			}
+
 		}
 	}
+
 	return s, resources
 }
 
@@ -770,4 +850,16 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 		}
 	}
 	return s, resources
+}
+
+func mergeMaps(maps ...map[string]optimizedIdDep) map[string]optimizedIdDep {
+	mergedMap := make(map[string]optimizedIdDep)
+
+	for _, m := range maps {
+		for key, value := range m {
+			mergedMap[key] = value
+		}
+	}
+
+	return mergedMap
 }

@@ -507,6 +507,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		sharing.Service,
 		ResourceTypes.JSONDashboardBase,
 		Dependencies.ResourceID(ResourceTypes.JSONDashboardBase, true),
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),

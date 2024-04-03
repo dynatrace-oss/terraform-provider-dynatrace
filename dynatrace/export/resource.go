@@ -37,22 +37,23 @@ import (
 var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
 
 type Resource struct {
-	ID                   string
-	LegacyID             string
-	Name                 string
-	UniqueName           string
-	Type                 ResourceType
-	Module               *Module
-	Status               ResourceStatus
-	Error                error
-	ResourceReferences   []*Resource
-	DataSourceReferences []*DataSource
-	OutputFileAbs        string
-	Flawed               bool
-	XParent              *Resource
-	ParentID             *string
-	SplitId              int
-	BundleFilePath       string
+	ID                              string
+	LegacyID                        string
+	Name                            string
+	UniqueName                      string
+	Type                            ResourceType
+	Module                          *Module
+	Status                          ResourceStatus
+	Error                           error
+	ResourceReferences              []*Resource
+	DataSourceReferences            []*DataSource
+	OutputFileAbs                   string
+	Flawed                          bool
+	XParent                         *Resource
+	ParentID                        *string
+	SplitId                         int
+	BundleFilePath                  string
+	ExtractedIdsPerDependencyModule map[string]map[string]bool
 }
 
 func (me *Resource) GetParent() *Resource {
@@ -373,6 +374,7 @@ func (me *Resource) Download() error {
 	if me.Status != ResourceStati.Erronous {
 		me.Status = ResourceStati.Downloaded
 	}
+	SetOptimizedRegexResource(me)
 	return nil
 }
 
@@ -467,4 +469,28 @@ func (me *Resource) PostProcess() error {
 	}
 
 	return nil
+}
+
+func (me *Resource) GetExtractedIdsPerRegexType(idRegexType string, dependencyResourceTypeOld ResourceType, tfFileContent string, optimizers map[string]optimizedIdDep) map[string]bool {
+	dependencyResourceType := idRegexType
+
+	idMap, exists := me.ExtractedIdsPerDependencyModule[dependencyResourceType]
+
+	if exists {
+		return idMap
+	}
+
+	me.ExtractedIdsPerDependencyModule[dependencyResourceType] = map[string]bool{}
+
+	if idRegexType == NONE {
+		return me.ExtractedIdsPerDependencyModule[dependencyResourceType]
+	}
+
+	optimizedIdDep := optimizers[idRegexType]
+	optimizedMatchList := optimizedIdDep.regex.FindAll([]byte(tfFileContent), -1)
+	for _, match := range optimizedMatchList {
+		me.ExtractedIdsPerDependencyModule[dependencyResourceType][string(match)] = true
+	}
+
+	return me.ExtractedIdsPerDependencyModule[dependencyResourceType]
 }
