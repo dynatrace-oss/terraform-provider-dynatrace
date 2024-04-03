@@ -558,6 +558,7 @@ var ServiceTechnologys = struct {
 	JdkHTTPServer                        ServiceTechnology
 	Jersey                               ServiceTechnology
 	Jetty                                ServiceTechnology
+	Joomla                               ServiceTechnology
 	Jruby                                ServiceTechnology
 	Jython                               ServiceTechnology
 	Kubernetes                           ServiceTechnology
@@ -770,6 +771,7 @@ var ServiceTechnologys = struct {
 	"JDK_HTTP_SERVER",
 	"JERSEY",
 	"JETTY",
+	"JOOMLA",
 	"JRUBY",
 	"JYTHON",
 	"KUBERNETES",
