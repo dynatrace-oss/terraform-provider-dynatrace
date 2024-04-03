@@ -6,6 +6,7 @@
 		{
 			"customMessage": "A generic relationship must have at least one generic type.",
 			"customValidatorId": "MinOneGenericTypeValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -42,6 +43,10 @@
 				{
 					"displayName": "Events",
 					"value": "Events"
+				},
+				{
+					"displayName": "Business Events",
+					"value": "Business Events"
 				}
 			],
 			"type": "enum"
@@ -411,6 +416,7 @@
 						{
 							"customMessage": "Invalid condition. Currently only '$eq(\u003cvalue\u003e)' and '$prefix(\u003cvalue\u003e)' are allowed and you need to escape '(', ')' and '~' by prefixing them with '~'.",
 							"customValidatorId": "ValidCondition",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -432,7 +438,8 @@
 								"Logs",
 								"Spans",
 								"Entities",
-								"Topology"
+								"Topology",
+								"Business Events"
 							],
 							"property": "sourceType",
 							"type": "IN"
@@ -494,9 +501,9 @@
 			},
 			"summaryPattern": "{sourceType} source that matches {condition}",
 			"type": "object",
-			"version": "1.0.7",
+			"version": "1.1",
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.35"
+	"version": "1.1"
 }

@@ -22,5 +22,6 @@ import (
 )
 
 func TestAccHTTPMonitorScript(t *testing.T) {
+	// Skipping - TODO timing issue
 	t.Skip()
 }

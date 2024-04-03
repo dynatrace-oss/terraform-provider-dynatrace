@@ -4,7 +4,7 @@
 		"environment"
 	],
 	"description": "With [Real User Monitoring](https://dt-url.net/1n2b0prq) enabled, Dynatrace gathers details about load times and page behavior that your customers experience with your application. Only applications with injected JavaScript tags can be monitored.",
-	"displayName": "Real User Monitoring for process group (internal)",
+	"displayName": "Real User Monitoring for process group",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -28,5 +28,5 @@
 	],
 	"schemaId": "builtin:rum.processgroup",
 	"types": {},
-	"version": "2.0.2"
+	"version": "2.0.3"
 }

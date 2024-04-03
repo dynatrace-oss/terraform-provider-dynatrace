@@ -20,13 +20,15 @@ package generictype
 type IngestDataSource string
 
 var IngestDataSources = struct {
-	Entities IngestDataSource
-	Events   IngestDataSource
-	Logs     IngestDataSource
-	Metrics  IngestDataSource
-	Spans    IngestDataSource
-	Topology IngestDataSource
+	Businessevents IngestDataSource
+	Entities       IngestDataSource
+	Events         IngestDataSource
+	Logs           IngestDataSource
+	Metrics        IngestDataSource
+	Spans          IngestDataSource
+	Topology       IngestDataSource
 }{
+	"Business Events",
 	"Entities",
 	"Events",
 	"Logs",

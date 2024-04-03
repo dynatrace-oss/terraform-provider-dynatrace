@@ -138,6 +138,15 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Resource names must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"resourceName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring",
 		"group:web-and-mobile-monitoring.content-resources"
@@ -160,7 +169,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Type your domain name pattern",
-					"documentation": "Please type at least part of this content provider's URL. Asterisks (*) can be used as wildcard characters.",
+					"documentation": "Use a ends-with pattern for this content provider's domain",
 					"maxObjects": 1,
 					"metadata": {
 						"placeholder": "E.g. .domain.com"
@@ -176,5 +185,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

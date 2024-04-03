@@ -6,6 +6,7 @@
 		{
 			"customMessage": "All attributes of one type must adhere to the same pattern structure. This means that they have to be exactly the same, with the exception of the dimensions used. So e.g. 'my_{placeholder}' and 'my_{differentPlaceholder}' are fine together, but 'my_', '{placeholder}' or 'my_{placeholder}_' would not be.",
 			"customValidatorId": "HomogeneousAttributePatterns",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -42,6 +43,10 @@
 				{
 					"displayName": "Events",
 					"value": "Events"
+				},
+				{
+					"displayName": "Business Events",
+					"value": "Business Events"
 				}
 			],
 			"type": "enum"
@@ -138,6 +143,7 @@
 				{
 					"customMessage": "Type name must not be in use by a built in type.",
 					"customValidatorId": "ValidTypeName",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -211,6 +217,7 @@
 						},
 						{
 							"customValidatorId": "AttributeKeyValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -304,6 +311,7 @@
 						{
 							"customMessage": "Invalid dimension value. Currently only '$eq(\u003cvalue\u003e)' and '$prefix(\u003cvalue\u003e)' are allowed and you need to escape '(', ')' and '~' by prefixing them with '~'.",
 							"customValidatorId": "ValidCondition",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -330,6 +338,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "ExistsHasDimension",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -525,6 +534,7 @@
 						{
 							"customMessage": "Invalid condition. Currently only '$eq(\u003cvalue\u003e)', '$prefix(\u003cvalue\u003e)' and '$exists()' are allowed and you need to escape '(', ')' and '~' by prefixing them with '~'.",
 							"customValidatorId": "ValidCondition",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -545,7 +555,8 @@
 							"expectedValues": [
 								"Logs",
 								"Spans",
-								"Topology"
+								"Topology",
+								"Business Events"
 							],
 							"property": "sourceType",
 							"type": "IN"
@@ -578,9 +589,9 @@
 			},
 			"summaryPattern": "{sourceType} source that matches {condition}",
 			"type": "object",
-			"version": "1.0.8",
+			"version": "1.1",
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.77"
+	"version": "1.1"
 }

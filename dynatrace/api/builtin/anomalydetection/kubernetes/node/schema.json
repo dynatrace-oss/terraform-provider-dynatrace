@@ -348,7 +348,7 @@
 					"default": false,
 					"description": "",
 					"displayName": "Detect problematic node conditions",
-					"documentation": "Evaluates node conditions\n* MemoryPressure\n* DiskPressure\n* PIDPressure\n* OutOfDisk\n* NetworkUnavailable\n* KernelDeadlock\n* ReadonlyFilesystem\n* FrequentKubeletRestart\n* FrequentDockerRestart\n* FrequentContainerdRestart\n* KubeletUnhealthy\n* ContainerRuntimeUnhealthy",
+					"documentation": "Evaluates node conditions\n* MemoryPressure\n* DiskPressure\n* PIDPressure\n* OutOfDisk\n* NetworkUnavailable\n* KernelDeadlock\n* ReadonlyFilesystem\n* FrequentKubeletRestart\n* FrequentDockerRestart\n* FrequentContainerdRestart\n* KubeletUnhealthy\n* ContainerRuntimeUnhealthy\n* ContainerRuntimeProblem\n* CorruptDockerOverlay2\n* FilesystemCorruptionProblem\n* FrequentGcfsdRestart\n* FrequentGcfsSnapshotterRestart\n* FrequentUnregisterNetDevice\n* GcfsdUnhealthy\n* GcfsSnapshotterMissingLayer\n* GcfsSnapshotterUnhealthy\n* KubeletProblem",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -646,5 +646,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.3"
+	"version": "1.3.1"
 }

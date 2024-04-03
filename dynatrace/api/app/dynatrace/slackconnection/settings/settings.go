@@ -23,8 +23,9 @@ import (
 )
 
 type Settings struct {
-	Name  string `json:"name"`  // The name of the Slack connection
-	Token string `json:"token"` // The bot token obtained from the Slack App Management UI
+	Name        string `json:"name"`  // The name of the Slack connection
+	Token       string `json:"token"` // The bot token obtained from the Slack App Management UI
+	InsertAfter string `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -40,20 +41,28 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Required:    true,
 			Sensitive:   true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":  me.Name,
-		"token": "${state.secret_value}",
+		"name":         me.Name,
+		"token":        "${state.secret_value}",
+		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":  &me.Name,
-		"token": &me.Token,
+		"name":         &me.Name,
+		"token":        &me.Token,
+		"insert_after": &me.InsertAfter,
 	})
 }
 

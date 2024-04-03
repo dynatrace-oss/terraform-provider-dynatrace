@@ -45,7 +45,7 @@ func (me *Matchers) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Matcher struct {
-	Attribute MatcherType `json:"attribute"` // Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_content`, `Log_source`, `Process_technology`
+	Attribute MatcherType `json:"attribute"` // Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `Host_tag`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_content`, `Log_source`, `Loglevel`, `Process_technology`, `Winlog_eventid`, `Winlog_opcode`, `Winlog_provider`, `Winlog_task`
 	Operator  Operator    `json:"operator"`  // Possible Values: `MATCHES`
 	Values    []string    `json:"values"`
 }
@@ -54,7 +54,7 @@ func (me *Matcher) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attribute": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_content`, `Log_source`, `Process_technology`",
+			Description: "Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `Host_tag`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_content`, `Log_source`, `Loglevel`, `Process_technology`, `Winlog_eventid`, `Winlog_opcode`, `Winlog_provider`, `Winlog_task`",
 			Required:    true,
 		},
 		"operator": {

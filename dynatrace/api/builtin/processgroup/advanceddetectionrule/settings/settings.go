@@ -28,6 +28,7 @@ type Settings struct {
 	GroupExtraction    *ProcessGroupExtraction   `json:"groupExtraction"`    // You can define the properties that should be used to identify your process groups.
 	InstanceExtraction ProcessInstanceExtraction `json:"instanceExtraction"` // You can define the properties that should be used to identify your process instances.
 	ProcessDetection   *ProcessGroupDetection    `json:"processDetection"`   // Apply this rule to processes where the selected property contains the specified string.
+	InsertAfter        string                    `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -82,6 +83,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -91,6 +98,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"group_extraction":    me.GroupExtraction,
 		"instance_extraction": me.InstanceExtraction.AddrIfNotEmpty(),
 		"process_detection":   me.ProcessDetection,
+		"insert_after":        me.InsertAfter,
 	})
 }
 
@@ -100,5 +108,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"group_extraction":    &me.GroupExtraction,
 		"instance_extraction": &me.InstanceExtraction,
 		"process_detection":   &me.ProcessDetection,
+		"insert_after":        &me.InsertAfter,
 	})
 }

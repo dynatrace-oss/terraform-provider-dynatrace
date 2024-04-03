@@ -19,9 +19,10 @@ package logstoragesettings_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccLogStorage(t *testing.T) {
-	// Deprecated - schema no longer exists
-	t.Skip()
+	api.TestAcc(t)
 }

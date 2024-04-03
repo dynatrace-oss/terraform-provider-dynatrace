@@ -22,7 +22,6 @@ import (
 )
 
 func TestAccKubernetesApp(t *testing.T) {
-	// DPS not enabled in test environment
-	// api.TestAcc(t)
+	// Skipping - DPS not enabled in test environment
 	t.Skip()
 }

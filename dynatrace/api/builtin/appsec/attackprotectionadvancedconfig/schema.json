@@ -31,6 +31,11 @@
 					"description": "JNDI injection attack type",
 					"displayName": "JNDI injection",
 					"value": "JNDI_INJECTION"
+				},
+				{
+					"description": "SSRF attack type",
+					"displayName": "SSRF",
+					"value": "SSRF"
 				}
 			],
 			"type": "enum"
@@ -148,6 +153,14 @@
 			"documentation": "",
 			"properties": {
 				"attackType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "attackTypeDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "ANY",
 					"description": "",
 					"displayName": "Attack type",
@@ -158,6 +171,7 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/AttackType"
 					}
@@ -222,5 +236,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

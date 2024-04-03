@@ -1,4 +1,4 @@
-resource "dynatrace_remote_environments" "TerraformExample" {
+resource "dynatrace_remote_environments" "#name#" {
   name          = "TerraformExample"
   network_scope = "EXTERNAL"
   token         = "################"

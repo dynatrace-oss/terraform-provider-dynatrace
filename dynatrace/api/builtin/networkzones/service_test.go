@@ -22,5 +22,6 @@ import (
 )
 
 func TestAccNetworkZones(t *testing.T) {
-	t.Skip("Testing Network Zones skipped: REST API may completely remove the setting after test case. Unreliable results")
+	// Skipping - REST API may completely remove the setting after test case causing unreliable results
+	t.Skip()
 }

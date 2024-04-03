@@ -4,7 +4,7 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "You can include and exclude specific log sources for analysis by Dynatrace Log Monitoring. The ingest of log records is based on below rules that use matchers like log path, log levels, process groups, k8s specific selectors and more.\n\nLog files are automatically discovered but in some cases you'll need to define custom log files.",
+	"description": "You can include and exclude specific log sources for analysis by Dynatrace Log Monitoring. The ingest of log records is based on below rules that use matchers like log path, log levels, process groups, k8s specific selectors and more.\n\nTo ingest logs, create a new ingest rule. Use suggestions or type in the log source. You can review available log sources on the Process Group Instance screens. You need to define a custom log source if the required log source is not listed.",
 	"displayName": "Log ingest rules",
 	"documentation": "",
 	"dynatrace": "1",
@@ -33,6 +33,11 @@
 					"displayName": "Log record level",
 					"icon": "filter",
 					"value": "loglevel"
+				},
+				{
+					"displayName": "Host tag",
+					"icon": "filter",
+					"value": "host.tag"
 				},
 				{
 					"displayName": "K8s container name",
@@ -120,6 +125,7 @@
 				},
 				{
 					"customValidatorId": "logMonitoringLogSourceRuleNameValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -197,6 +203,14 @@
 	},
 	"types": {
 		"Matcher": {
+			"constraints": [
+				{
+					"customMessage": "Invalid host tag format: correct format 'key=value'",
+					"customValidatorId": "logMonitoringHostTagValueValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
 			"description": "",
 			"displayName": "Matcher",
 			"documentation": "",
@@ -293,5 +307,5 @@
 			}
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

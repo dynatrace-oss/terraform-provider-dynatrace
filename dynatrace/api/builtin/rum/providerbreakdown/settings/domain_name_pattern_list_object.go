@@ -45,14 +45,14 @@ func (me *DomainNamePatternListObjects) UnmarshalHCL(decoder hcl.Decoder) error 
 }
 
 type DomainNamePatternListObject struct {
-	DomainNamePattern string `json:"domainNamePattern"` // Please type at least part of this content provider's URL. Asterisks (*) can be used as wildcard characters.
+	DomainNamePattern string `json:"domainNamePattern"` // Use a ends-with pattern for this content provider's domain
 }
 
 func (me *DomainNamePatternListObject) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"pattern": {
 			Type:        schema.TypeString,
-			Description: "Please type at least part of this content provider's URL. Asterisks (*) can be used as wildcard characters.",
+			Description: "Use a ends-with pattern for this content provider's domain",
 			Required:    true,
 		},
 	}

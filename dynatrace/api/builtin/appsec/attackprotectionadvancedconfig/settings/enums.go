@@ -24,11 +24,13 @@ var AttackTypes = struct {
 	CmdInjection  AttackType
 	JndiInjection AttackType
 	SqlInjection  AttackType
+	Ssrf          AttackType
 }{
 	"ANY",
 	"CMD_INJECTION",
 	"JNDI_INJECTION",
 	"SQL_INJECTION",
+	"SSRF",
 }
 
 type BlockingStrategy string

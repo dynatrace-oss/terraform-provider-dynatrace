@@ -1,7 +1,7 @@
 resource "dynatrace_pg_anomalies" "#name#" {
-  process_group = "PROCESS_GROUP-XXXXXXXXXXXXXXXX"
+  pg_id = "PROCESS_GROUP-AA665B81183B0D7A"
   availability {
-    method            = "MINIMUM_THRESHOLD"
-    minimum_threshold = 5
+    method            = "OFF"
+    minimum_threshold = 0
   }
 }
