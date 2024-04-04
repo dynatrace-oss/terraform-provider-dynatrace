@@ -52,6 +52,7 @@ resource "dynatrace_api_detection" "#name#" {
 ### Optional
 
 - `conditions` (Block List, Max: 1) List of conditions (see [below for nested schema](#nestedblock--conditions))
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `technology` (String) Restrict this rule to a specific technology.
 
 ### Read-Only

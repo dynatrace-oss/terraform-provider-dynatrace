@@ -79,6 +79,7 @@ resource "dynatrace_service_full_web_service" "#name#" {
 
 - `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
 - `description` (String) Description
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `management_zones` (Set of String) Define a management zone of the process group for which this service detection rule should be created.
 
 ### Read-Only

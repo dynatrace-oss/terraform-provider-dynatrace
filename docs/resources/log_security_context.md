@@ -42,6 +42,10 @@ resource "dynatrace_log_security_context" "#name#" {
 
 - `security_context_rule` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--security_context_rule))
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

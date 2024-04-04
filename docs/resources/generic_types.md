@@ -68,6 +68,10 @@ resource "dynatrace_generic_types" "#name#" {
 - `name` (String) The entity type name. This type name must be unique and must not be changed after creation.
 - `rules` (Block List, Min: 1, Max: 1) Specify a list of rules which are evaluated in order. When **any** rule matches, the entity defined according to that rule will be extracted. Subsequent rules will not be evaluated. (see [below for nested schema](#nestedblock--rules))
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.
@@ -109,7 +113,7 @@ Required:
 
 Required:
 
-- `source_type` (String) Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+- `source_type` (String) Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
 
 Optional:
 

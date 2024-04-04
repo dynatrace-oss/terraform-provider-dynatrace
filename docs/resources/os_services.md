@@ -66,6 +66,7 @@ resource "dynatrace_os_services" "#name#" {
 - `alert_activation_duration` (Number) The number of **10-second measurement cycles** before alerting is triggered
 - `detection_conditions_linux` (Block List, Max: 1) Detection rules (see [below for nested schema](#nestedblock--detection_conditions_linux))
 - `detection_conditions_windows` (Block List, Max: 1) Detection rules (see [below for nested schema](#nestedblock--detection_conditions_windows))
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--metadata))
 - `not_installed_alerting` (Boolean) By default, Dynatrace does not alert if the service is not installed. Toggle the switch to enable or disable this feature
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.

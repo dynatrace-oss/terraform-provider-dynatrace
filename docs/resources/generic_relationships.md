@@ -75,7 +75,7 @@ Required:
 
 Required:
 
-- `source_type` (String) Possible Values: `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+- `source_type` (String) Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
 
 Optional:
 

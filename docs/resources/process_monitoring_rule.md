@@ -49,6 +49,7 @@ resource "dynatrace_process_monitoring_rule" "test" {
 ### Optional
 
 - `host_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 
 ### Read-Only
 

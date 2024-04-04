@@ -51,6 +51,10 @@ resource "dynatrace_attack_rules" "#name#" {
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `metadata` (Block List, Min: 1, Max: 1) Step 3: Leave comment (see [below for nested schema](#nestedblock--metadata))
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.
@@ -68,7 +72,7 @@ Required:
 
 Required:
 
-- `attack_type` (String) Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`
+- `attack_type` (String) Possible Values: `ANY`, `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`, `SSRF`
 
 Optional:
 

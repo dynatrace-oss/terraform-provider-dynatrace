@@ -25,7 +25,7 @@ The full documentation of the export feature is available [here](https://registr
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_remote_environments" "TerraformExample" {
+resource "dynatrace_remote_environments" "#name#" {
   name          = "TerraformExample"
   network_scope = "EXTERNAL"
   token         = "################"

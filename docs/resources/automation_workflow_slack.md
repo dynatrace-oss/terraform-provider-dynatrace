@@ -43,6 +43,10 @@ resource "dynatrace_automation_workflow_slack" "#name#" {
 - `name` (String) The name of the Slack connection
 - `token` (String, Sensitive) The bot token obtained from the Slack App Management UI
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.
