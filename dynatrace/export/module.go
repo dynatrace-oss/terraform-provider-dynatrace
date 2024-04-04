@@ -540,7 +540,10 @@ func (me *Module) WriteResourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
+	if me.Environment == nil {
+		return nil
+	}
+	if !me.Environment.ChildResourceOverride && me.Descriptor != nil && me.Descriptor.Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
