@@ -47,6 +47,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_dashboard"
 	case ResourceTypes.JSONDashboard:
 		return "dynatrace_dashboard"
+	case ResourceTypes.Documents:
+		return "dynatrace_document"
 	case ResourceTypes.SLO:
 		return "dynatrace_slo"
 	case ResourceTypes.CalculatedServiceMetric:
@@ -129,6 +131,8 @@ var ResourceTypes = struct {
 	Credentials                         ResourceType
 	Dashboard                           ResourceType
 	JSONDashboard                       ResourceType
+	Documents                           ResourceType
+	DirectShares                        ResourceType
 	JSONDashboardBase                   ResourceType
 	CalculatedServiceMetric             ResourceType
 	CalculatedWebMetric                 ResourceType
@@ -416,6 +420,8 @@ var ResourceTypes = struct {
 	"dynatrace_credentials",
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
+	"dynatrace_document",
+	"dynatrace_direct_share",
 	"dynatrace_json_dashboard_base",
 	"dynatrace_calculated_service_metric",
 	"dynatrace_calculated_web_metric",
