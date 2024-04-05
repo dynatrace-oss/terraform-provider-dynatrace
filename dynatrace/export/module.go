@@ -1233,8 +1233,10 @@ func (me *Module) GetRegexType() string {
 		for idRegexType, optimizedIdDep := range OptimizedKeyRegexId {
 			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
 			if len(matchesValidation) > 0 {
-				me.IdRegexType = idRegexType
-				break
+				if bytes.Equal(matchesValidation[0], []byte(id)) {
+					me.IdRegexType = idRegexType
+					break
+				}
 			}
 		}
 		break
