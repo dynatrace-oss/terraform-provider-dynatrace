@@ -376,6 +376,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Alerting: NewResourceDescriptor(
 		alerting.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.AnsibleTowerNotification: NewResourceDescriptor(
 		ansible.Service,
@@ -450,6 +451,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CustomAnomalies: NewResourceDescriptor(
 		custom_anomalies.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	).Except(func(id string, name string) bool {
 		return strings.HasPrefix(id, "builtin:") || strings.HasPrefix(id, "ruxit.") || strings.HasPrefix(id, "dynatrace.") || strings.HasPrefix(id, "custom.remote.python.") || strings.HasPrefix(id, "custom.python.")
 	}),
@@ -489,6 +491,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		ResourceTypes.JSONDashboardBase,
 		Dependencies.DashboardLinkID(true),
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
 		// Dependencies.Service,
 		Dependencies.LegacyID(ResourceTypes.SLOV2),
@@ -508,6 +511,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		ResourceTypes.JSONDashboardBase,
 		Dependencies.ResourceID(ResourceTypes.JSONDashboardBase, true),
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.DatabaseAnomalies:  NewResourceDescriptor(database_anomalies.Service),
 	ResourceTypes.DiskEventAnomalies: NewResourceDescriptor(disk_event_anomalies.Service),
@@ -555,12 +559,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Maintenance: NewResourceDescriptor(
 		v2maintenance.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.ManagementZoneV2: NewResourceDescriptor(v2managementzones.Service),
 	ResourceTypes.MetricEvents: NewResourceDescriptor(
 		metricevents.Service,
 		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.MobileApplication: NewResourceDescriptor(
 		mobile.Service,
@@ -615,6 +621,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		slo.Service,
 		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
 		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
@@ -649,11 +656,13 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MaintenanceWindow: NewResourceDescriptor(
 		maintenancev1.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.ManagementZone: NewResourceDescriptor(managementzonesv1.Service),
 	ResourceTypes.Dashboard: NewResourceDescriptor(
 		dashboards.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ManagementZone,
 		Dependencies.ID(ResourceTypes.SLO),
 		Dependencies.ID(ResourceTypes.WebApplication),
@@ -667,6 +676,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AlertingProfile: NewResourceDescriptor(
 		alertingv1.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.RequestNamings: NewResourceDescriptor(
 		order.Service,
@@ -679,6 +689,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.IAMGroup: NewResourceDescriptor(
 		groups.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.IAMPermission),
 		Dependencies.Tenant,
 	),
@@ -1037,6 +1048,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		slov2.Service,
 		Dependencies.ManagementZone,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.CalculatedServiceMetric),
 		Dependencies.ID(ResourceTypes.CalculatedWebMetric),
 		Dependencies.ID(ResourceTypes.CalculatedMobileMetric),
@@ -1131,6 +1143,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AppSecVulnerabilityAlerting: NewResourceDescriptor(
 		notificationalertingprofile.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
+		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.AppSecAttackAlerting: NewResourceDescriptor(
 		notificationattackalertingprofile.Service,

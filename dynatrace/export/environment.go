@@ -1050,8 +1050,11 @@ func (me *Environment) FinishExport() error {
 }
 
 func (me *Environment) RunTerraformInit() error {
-	exePath, _ := exec.LookPath("terraform")
+	exePath, err := exec.LookPath("terraform")
 	fmt.Println("Terraform executable path: ", exePath)
+	if err != nil {
+		fmt.Println("Terraform executable path error: ", err)
+	}
 	cmdOptions := []string{"init", "-no-color"}
 
 	customProviderLocation := os.Getenv(ENV_VAR_CUSTOM_PROVIDER_LOCATION)
@@ -1068,7 +1071,7 @@ func (me *Environment) RunTerraformInit() error {
 	}
 	err = cmd.Start()
 	if err != nil {
-		fmt.Println("Terraform CLI not installed - skipping import")
+		fmt.Println("Terraform CLI not installed - skipping import, error: ", err)
 		return nil
 	} else {
 		fmt.Println("Executing 'terraform init'")
