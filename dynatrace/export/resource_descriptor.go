@@ -1334,7 +1334,7 @@ func GetExcludeListedResources() []ResourceType {
 
 	// Excluded due to the potential of a large amount of dashboards
 	// Excluded since it is retrieved as a child resource of dynatrace_json_dashboard (ResourceTypes.DashboardSharing)
-	return append(excludeListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing)
+	return append(excludeListedResources, ResourceTypes.JSONDashboard, ResourceTypes.DashboardSharing, ResourceTypes.JSONDashboardBase)
 
 }
 
