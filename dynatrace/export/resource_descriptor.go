@@ -978,6 +978,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceFullWebRequest:     NewResourceDescriptor(fullwebrequest.Service),
 	ResourceTypes.ServiceFullWebService: NewResourceDescriptor(
 		fullwebservice.Service,
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.DashboardsAllowlist:        NewResourceDescriptor(dashboardsallowlist.Service),
@@ -985,6 +986,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.FailureDetectionRules: NewResourceDescriptor(
 		envrules.Service,
 		Dependencies.ID(ResourceTypes.FailureDetectionParameters),
+		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
 	ResourceTypes.LogOneAgent:              NewResourceDescriptor(logagentconfiguration.Service),
