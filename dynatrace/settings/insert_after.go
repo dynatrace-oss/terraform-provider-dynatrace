@@ -118,6 +118,9 @@ func ClearInsertAfter(v any) {
 
 func getInsertAfterField(settings any) *reflect.Value {
 	rv := unref(reflect.ValueOf(settings))
+	if !rv.IsValid() {
+		return nil
+	}
 	t := rv.Type()
 	for idx := 0; idx < t.NumField(); idx++ {
 		tField := t.Field(idx)
