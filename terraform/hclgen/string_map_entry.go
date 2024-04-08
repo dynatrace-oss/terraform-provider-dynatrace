@@ -18,7 +18,6 @@
 package hclgen
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
@@ -61,8 +60,6 @@ func (me *stringMapEntry) IsLessThan(other exportEntry) bool {
 func (me *stringMapEntry) Write(w *hclwrite.Body, indent string) error {
 	objTokens := []hclwrite.ObjectAttrTokens{}
 	for key, value := range me.Values {
-		fmt.Println(key)
-		fmt.Println(value)
 		objTokens = append(objTokens, hclwrite.ObjectAttrTokens{Name: hclwrite.TokensForValue(ctyVal(key, "")), Value: hclwrite.TokensForValue(ctyVal(value, ""))})
 	}
 

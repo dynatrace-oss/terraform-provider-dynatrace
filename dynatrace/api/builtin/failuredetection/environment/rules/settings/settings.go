@@ -34,13 +34,16 @@ type Settings struct {
 }
 
 func (me *Settings) Name() string {
-	objID := settings.ObjectID{ID: me.ParameterID}
-	if err := objID.Decode(); err != nil {
-		return uuid.NewString()
+	if me.RuleName != "" {
+		return me.RuleName
 	}
-	if len(objID.Key) > 0 {
+
+	objID := settings.ObjectID{ID: me.ParameterID}
+	err := objID.Decode()
+	if err == nil && len(objID.Key) > 0 {
 		return objID.Key
 	}
+
 	return uuid.NewString()
 }
 

@@ -51,6 +51,9 @@ type Module struct {
 	ModuleMutex            *sync.Mutex
 	SplitPathModuleNameMap map[string]string
 	SplitList              *splitList
+	ChildModules           map[ResourceType]*Module
+	IdRegexType            string
+	LegacyIdMap            map[string]*Resource
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -173,16 +176,33 @@ func (me *Module) GetResourceReferences() []*Resource {
 	}
 	result := []*Resource{}
 	for _, resource := range resources {
-		result = append(result, resource)
+		isReferedTo := false
+
+		if me.RefersTo(resource, resource.Type) {
+			isReferedTo = true
+		}
+
+		for _, childModule := range me.ChildModules {
+			if childModule.RefersTo(resource, resource.Type) {
+				isReferedTo = true
+			}
+		}
+
+		if isReferedTo {
+			result = append(result, resource)
+		}
+
 	}
 	return result
 }
 
 func (me *Module) Resource(id string) *Resource {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
 	if stored, found := me.Resources[id]; found {
 		return stored
 	}
-	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered}
+	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered, ExtractedIdsPerDependencyModule: map[string]map[string]bool{}}
 	me.Resources[id] = res
 	return res
 }
@@ -777,6 +797,16 @@ func (me *Module) saveSplitPath(folderPath string, splitName string) {
 	me.ModuleMutex.Unlock()
 }
 
+func (me *Module) saveChildModule(childModule *Module) {
+	_, exist := me.ChildModules[childModule.Type]
+
+	if exist {
+		return
+	}
+
+	me.ChildModules[childModule.Type] = childModule
+}
+
 type bundleToDownload struct {
 	bundleId int
 	splitId  int
@@ -1167,8 +1197,79 @@ func (me *Module) Discover() error {
 	}
 	me.Status = ModuleStati.Discovered
 	hide(stubs)
+
+	SetOptimizedRegexModule(me)
+
 	logging.Debug.Info.Printf("[DISCOVER] [%s] %d items found.", me.Type, len(stubs))
 	return nil
+}
+
+func (me *Module) GetDependencyOptimizationInfo() (string, bool) {
+	idRegexType := me.GetRegexType()
+
+	if idRegexType == NONE {
+		return idRegexType, false
+	}
+	return idRegexType, true
+}
+
+func (me *Module) GetRegexType() string {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
+
+	if me.IdRegexType != "" {
+		return me.IdRegexType
+	}
+
+	me.IdRegexType = NONE
+
+	if len(me.Resources) == 0 {
+		return me.IdRegexType
+	}
+
+	for id := range me.Resources {
+
+		if len(id) == 0 {
+			continue
+		}
+
+		for idRegexType, optimizedIdDep := range OptimizedKeyRegexId {
+			matchesValidation := optimizedIdDep.regex.FindAll([]byte(id), -1)
+			if len(matchesValidation) > 0 {
+				if bytes.Equal(matchesValidation[0], []byte(id)) {
+					me.IdRegexType = idRegexType
+					break
+				}
+			}
+		}
+		break
+	}
+
+	return me.IdRegexType
+}
+
+func (me *Module) GetLegacyIdMap() map[string]*Resource {
+	me.ModuleMutex.Lock()
+	defer me.ModuleMutex.Unlock()
+
+	if me.LegacyIdMap != nil {
+		return me.LegacyIdMap
+	}
+
+	me.LegacyIdMap = map[string]*Resource{}
+
+	if len(me.Resources) == 0 {
+		return me.LegacyIdMap
+	}
+
+	for _, resource := range me.Resources {
+		if len(resource.LegacyID) == 0 {
+			continue
+		}
+		me.LegacyIdMap[resource.LegacyID] = resource
+	}
+
+	return me.LegacyIdMap
 }
 
 type resources []resource

@@ -37,22 +37,23 @@ import (
 var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
 
 type Resource struct {
-	ID                   string
-	LegacyID             string
-	Name                 string
-	UniqueName           string
-	Type                 ResourceType
-	Module               *Module
-	Status               ResourceStatus
-	Error                error
-	ResourceReferences   []*Resource
-	DataSourceReferences []*DataSource
-	OutputFileAbs        string
-	Flawed               bool
-	XParent              *Resource
-	ParentID             *string
-	SplitId              int
-	BundleFilePath       string
+	ID                              string
+	LegacyID                        string
+	Name                            string
+	UniqueName                      string
+	Type                            ResourceType
+	Module                          *Module
+	Status                          ResourceStatus
+	Error                           error
+	ResourceReferences              []*Resource
+	DataSourceReferences            []*DataSource
+	OutputFileAbs                   string
+	Flawed                          bool
+	XParent                         *Resource
+	ParentID                        *string
+	SplitId                         int
+	BundleFilePath                  string
+	ExtractedIdsPerDependencyModule map[string]map[string]bool
 }
 
 func (me *Resource) GetParent() *Resource {
@@ -373,6 +374,7 @@ func (me *Resource) Download() error {
 	if me.Status != ResourceStati.Erronous {
 		me.Status = ResourceStati.Downloaded
 	}
+	SetOptimizedRegexResource(me)
 	return nil
 }
 
@@ -401,6 +403,20 @@ func (me *Resource) PostProcess() error {
 	if len(descriptor.Dependencies) == 0 {
 		return nil
 	}
+
+	var data []byte
+	var foundItemsInFileContents []any
+	if data, err = me.ReadFile(); err != nil {
+		return err
+	}
+	fileContents := string(data)
+
+	idx := strings.Index(fileContents, "\" {")
+	fileHeader := fileContents[:idx]
+	fileBody := fileContents[idx:]
+
+	isModifiedFile := false
+
 	for _, dependency := range descriptor.Dependencies {
 		resourceType := dependency.ResourceType()
 		if len(resourceType) > 0 {
@@ -414,32 +430,10 @@ func (me *Resource) PostProcess() error {
 				}
 			}
 		}
-		var err error
-		var data []byte
-		if data, err = me.ReadFile(); err != nil {
-			return err
-		}
-		var foundItemsInFileContents []any
-		var modifiedFileContents string
 
-		fileContents := string(data)
-		idx := strings.Index(fileContents, "\" {")
-		fileHeader := fileContents[:idx]
-		fileBody := fileContents[idx:]
+		if fileBody, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID); len(foundItemsInFileContents) > 0 {
+			isModifiedFile = true
 
-		if modifiedFileContents, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID); len(foundItemsInFileContents) > 0 {
-			var outputFile *os.File
-			if outputFile, err = me.CreateFile(); err != nil {
-				return err
-			}
-			modifiedFileContents = fileHeader + modifiedFileContents
-			defer func() {
-				outputFile.Close()
-				format(outputFile.Name(), false)
-			}()
-			if _, err = outputFile.Write([]byte(modifiedFileContents)); err != nil {
-				return err
-			}
 			for _, item := range foundItemsInFileContents {
 				switch typedItem := item.(type) {
 				case *Resource:
@@ -454,9 +448,48 @@ func (me *Resource) PostProcess() error {
 					// me.DataSourceReferences = append(me.DataSourceReferences, typedItem)
 				}
 			}
-		} else {
-			format(me.GetFile(), false)
 		}
 	}
+
+	if isModifiedFile {
+		var outputFile *os.File
+		if outputFile, err = me.CreateFile(); err != nil {
+			return err
+		}
+		fileContents = fileHeader + fileBody
+		defer func() {
+			outputFile.Close()
+			format(outputFile.Name(), false)
+		}()
+		if _, err = outputFile.Write([]byte(fileContents)); err != nil {
+			return err
+		}
+	} else {
+		format(me.GetFile(), false)
+	}
+
 	return nil
+}
+
+func (me *Resource) GetExtractedIdsPerRegexType(idRegexType string, tfFileContent string, optimizers map[string]optimizedIdDep) map[string]bool {
+	idMap, exists := me.ExtractedIdsPerDependencyModule[idRegexType]
+
+	if exists {
+		return idMap
+	}
+
+	me.ExtractedIdsPerDependencyModule[idRegexType] = map[string]bool{}
+
+	if idRegexType == NONE {
+		return me.ExtractedIdsPerDependencyModule[idRegexType]
+	}
+
+	optimizedIdDep := optimizers[idRegexType]
+
+	optimizedMatchList := optimizedIdDep.regex.FindAll([]byte(tfFileContent), -1)
+	for _, match := range optimizedMatchList {
+		me.ExtractedIdsPerDependencyModule[idRegexType][string(match)] = true
+	}
+
+	return me.ExtractedIdsPerDependencyModule[idRegexType]
 }

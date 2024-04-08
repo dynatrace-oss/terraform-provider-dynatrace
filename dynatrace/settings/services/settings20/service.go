@@ -35,6 +35,8 @@ import (
 	"net/url"
 )
 
+var DISABLE_ORDERING_SUPPORT = os.Getenv("DYNATRACE_DISABLE_ORDERING_SUPPORT") == "true"
+
 var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
 
 func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.CRUDService[T] {
@@ -98,6 +100,19 @@ func (me *service[T]) Get(id string, v T) error {
 	if me.options != nil && me.options.LegacyID != nil {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
+
+	if err = me.handleOrdering(id, v); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *service[T]) handleOrdering(id string, v T) error {
+	if DISABLE_ORDERING_SUPPORT {
+		return nil
+	}
+
 	if settings.HasInsertAfter(v) || settings.HasInsertBefore(v) {
 		insertBefore, insertAfter, err := me.getInsertIDs(id)
 		if err != nil {

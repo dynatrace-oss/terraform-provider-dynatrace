@@ -18,8 +18,10 @@
 package entity
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
+	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -39,6 +41,9 @@ type service struct {
 }
 
 func (me *service) Get(id string, v *entity.Entity) error {
+	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+		return errors.New("entity calls disabled when using Migration Cache")
+	}
 	return me.client.Get(fmt.Sprintf(`/api/v2/entities/%s`, url.QueryEscape(id)), 200).Finish(v)
 }
 
