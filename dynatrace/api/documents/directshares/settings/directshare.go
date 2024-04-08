@@ -44,7 +44,7 @@ func (me *Recipient) Schema() map[string]*schema.Schema {
 		"type": {
 			Type:             schema.TypeString,
 			Optional:         true,
-			Description:      "Type of the recipient",
+			Description:      "Type of the recipient. Possible values are `group' and `user'",
 			ValidateDiagFunc: ValidateTypePossibleValues([]string{"group", "user"}),
 		},
 	}
@@ -81,7 +81,7 @@ func (me *DirectShare) Schema() map[string]*schema.Schema {
 		},
 		"access": {
 			Type:             schema.TypeString,
-			Description:      "Access grants",
+			Description:      "Access grants. Possible values are `read` and `read-write`",
 			Optional:         true,
 			Default:          "read",
 			ValidateDiagFunc: ValidateTypePossibleValues([]string{"read", "read-write"}),
