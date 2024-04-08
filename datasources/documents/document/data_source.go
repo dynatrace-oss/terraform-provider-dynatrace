@@ -18,6 +18,8 @@
 package document
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
@@ -31,6 +33,11 @@ func DataSource() *schema.Resource {
 		Description: "Retrieve a list of all documents.",
 		Read:        logging.EnableDS(DataSourceRead),
 		Schema: map[string]*schema.Schema{
+			"type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `document` or `notebook`",
+			},
 			"values": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -65,6 +72,10 @@ func DataSource() *schema.Resource {
 
 func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	values := []map[string]any{}
+	var docType string
+	if v, ok := d.GetOk("type"); ok {
+		docType = v.(string)
+	}
 
 	creds, err := config.Credentials(m, config.CredValAutomation)
 	if err != nil {
@@ -79,6 +90,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
+			if len(docType) > 0 {
+				stubDocType := stub.Value.(*documents.Document).Type
+				if stubDocType != docType {
+					continue
+				}
+			}
 			m := map[string]any{
 				"id":    stub.ID,
 				"name":  stub.Name,
@@ -89,7 +106,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			values = append(values, m)
 		}
 
-		d.SetId("documents")
+		if len(docType) > 0 {
+			d.SetId(fmt.Sprintf("documents[%s]", docType))
+		} else {
+			d.SetId("documents")
+		}
 		d.Set("values", values)
 		return nil
 	}
