@@ -19,6 +19,7 @@ package vault
 
 import (
 	"encoding/json"
+	"slices"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings/externalvault"
@@ -179,8 +180,13 @@ func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if err := properties.Encode("scope", string(me.Scope)); err != nil {
-		return err
+	// #431: REST API still returns "scope" instead of "scopes"
+	//       Leads to non-empty plans
+	if len(me.Scope) > 0 {
+		if !slices.Contains(me.Scopes, me.Scope) {
+			me.Scopes = append(me.Scopes, me.Scope)
+		}
+		me.Scope = ""
 	}
 	if err := properties.Encode("scopes", me.Scopes); err != nil {
 		return err
