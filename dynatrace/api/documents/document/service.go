@@ -124,14 +124,7 @@ func (me *service) List() (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, r := range result {
-		var document documents.Document
-		document.Actor = r.Actor
-		document.Content = r.Content
-		document.Name = r.Name
-		document.Owner = r.Owner
-		document.Type = r.Type
-		document.Version = r.Version
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: document.Name, Value: &document})
+		stubs = append(stubs, &api.Stub{ID: r.ID, Name: r.Name})
 	}
 
 	return stubs, nil
