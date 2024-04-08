@@ -46,7 +46,7 @@ func (me *Document) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:             schema.TypeString,
-			Description:      "Type of the document",
+			Description:      "Type of the document. Possible Values are `dashboard` and `notebook`",
 			Required:         true,
 			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook"}),
 		},
@@ -54,17 +54,19 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Description:      "The user context the executions of the document will happen with",
 			Optional:         true,
+			Computed:         true,
 			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(36)),
 		},
 		"owner": {
 			Type:             schema.TypeString,
 			Description:      "The ID of the owner of this document",
 			Optional:         true,
+			Computed:         true,
 			ValidateDiagFunc: ValidateUUID,
 		},
 		"content": {
 			Type:        schema.TypeString,
-			Description: "Document content",
+			Description: "Document content as JSON",
 			Required:    true,
 		},
 		"version": {
