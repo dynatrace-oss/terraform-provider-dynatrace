@@ -44,7 +44,20 @@ func (me Headers) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Headers) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("header", me)
+	if err := decoder.DecodeSlice("header", me); err != nil {
+		return err
+	}
+	// slice may contain empty values because of SDK bug
+	hdrs := Headers{}
+	for _, header := range *me {
+		// empty value
+		if len(header.Name) == 0 && header.SecretValue == nil && header.Value == nil && !header.Secret {
+			continue
+		}
+		hdrs = append(hdrs, header)
+	}
+	*me = hdrs
+	return nil
 }
 
 func (me *Headers) GenIgnoreChanges(propertyName string) []string {
