@@ -27,7 +27,7 @@ import (
 )
 
 const SchemaID = "builtin:settings.subscriptions.service"
-const SchemaVersion = "0.1.7"
+const SchemaVersion = "0.1.8"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*keyrequests.KeyRequest] {
 	topologyService := cache.Read(toposervices.Service(credentials))
