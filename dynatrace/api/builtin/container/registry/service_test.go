@@ -24,5 +24,6 @@ import (
 )
 
 func TestAccContainerRegistry(t *testing.T) {
+	t.Skip() // schema has been removed
 	api.TestAcc(t)
 }
