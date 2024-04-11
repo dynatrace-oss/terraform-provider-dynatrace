@@ -18,7 +18,8 @@ type CustomDevice struct {
 	FaviconUrl     *string           `json:"faviconUrl,omitempty"`     // The icon to be displayed for your custom component within Smartscape. Provide the full URL of the icon file.
 	ConfigUrl      *string           `json:"configUrl,omitempty"`      // The URL of a configuration web page for the custom device, such as a login page for a firewall or router.
 	DNSNames       []string          `json:"dnsNames,omitempty"`       // The list of DNS names related to the custom device.
-	Properties     map[string]string `json:"properties,omitempty"`     // The list of key-value pair properties that will be shown beneath the infographics of your custom device.
+	UIBased        *bool             `json:"-"`
+	Properties     map[string]string `json:"properties,omitempty"` // The list of key-value pair properties that will be shown beneath the infographics of your custom device.
 }
 
 type CustomDeviceGetResponse struct {
@@ -128,6 +129,11 @@ func (me *CustomDevice) Schema() map[string]*schema.Schema {
 			Description: "The list of key-value pair properties that will be shown beneath the infographics of your custom device.",
 			Optional:    true,
 		},
+		"ui_based": {
+			Type:        schema.TypeBool,
+			Description: "If `true` the custom device will be handled as if it was created via UI. It will be refreshed automatically and won't age out. This attribute is taken into consideration when creating the custom device. Changing it afterwards won't have an effect.",
+			Optional:    true,
+		},
 	}
 }
 
@@ -173,6 +179,7 @@ func (me *CustomDevice) MarshalHCL(properties hcl.Properties) error {
 		"type":             me.Type,
 		"favicon_url":      me.FaviconUrl,
 		"dns_names":        me.DNSNames,
+		"ui_based":         me.UIBased,
 	}); err != nil {
 		return err
 	}
@@ -197,6 +204,7 @@ func (me *CustomDevice) UnmarshalHCL(decoder hcl.Decoder) error {
 		"config_url":       &me.ConfigUrl,
 		"dns_names":        &me.DNSNames,
 		"props":            &propsString,
+		"ui_based":         &me.UIBased,
 		"properties":       &me.Properties,
 	})
 	if err != nil {
