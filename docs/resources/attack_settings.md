@@ -53,4 +53,8 @@ resource "dynatrace_attack_settings" "#name#" {
 Required:
 
 - `blocking_strategy_java` (String) Possible Values: `BLOCK`, `MONITOR`, `OFF`
+
+Optional:
+
+- `blocking_strategy_dot_net` (String) (v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`
  

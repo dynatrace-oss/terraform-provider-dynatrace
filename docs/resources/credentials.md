@@ -27,7 +27,7 @@ The full documentation of the export feature is available [here](https://registr
 ```
 resource "dynatrace_credentials" "name" {
   name     = "name"
-  scope    = "SYNTHETIC"
+  scopes    = ["SYNTHETIC"]
   username = "username"
   password = "password"
 }

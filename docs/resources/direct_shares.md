@@ -3,12 +3,12 @@ layout: ""
 page_title:  Resource - terraform-provider-dynatrace"
 subcategory: "Document"
 description: |-
-  The resource `dynatrace_direct_shares` covers configuration of direct shares form Documents (dashboards and notebooks) in Dynatrace.
+  The resource `dynatrace_direct_shares` covers configuration of direct shares for Documents (dashboards and notebooks) in Dynatrace.
 ---
 
 # dynatrace_direct_shares (Resource)
 
--> This resource is excluded by default in the export utility. You can, of course, specify that resource explicitly in order to export it. In that case, don't forget to specify the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` for authentication.
+-> This resource is currently not covered by the export utility.
 
 ## Dynatrace Documentation
 
@@ -68,7 +68,7 @@ resource "dynatrace_direct_shares" "this" {
 
 ### Optional
 
-- `access` (String) Access grants
+- `access` (String) Access grants. Possible values are `read` and `read-write`
 
 ### Read-Only
 
@@ -90,4 +90,4 @@ Required:
 
 Optional:
 
-- `type` (String) Type of the recipient
+- `type` (String) Type of the recipient. Possible values are `group' and `user'

@@ -43,12 +43,6 @@ resource "dynatrace_document" "this" {
   type    = "dashboard"
   name    = "Example Dashboard"
   content = file(format("%s/example-dashboard.json", path.module))
-
-  lifecycle {
-    ignore_changes = [
-      owner
-    ]
-  }
 }
 
 data "dynatrace_documents" "all-dashboard-and-notebooks" {}
@@ -60,9 +54,9 @@ data "dynatrace_documents" "all-dashboard-and-notebooks" {}
 
 ### Required
 
-- `content` (String) Document content
+- `content` (String) Document content as JSON
 - `name` (String) The name/name of the document
-- `type` (String) Type of the document
+- `type` (String) Type of the document. Possible Values are `dashboard` and `notebook`
 
 ### Optional
 
