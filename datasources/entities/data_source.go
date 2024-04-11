@@ -93,7 +93,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 
 	var settings entities.Settings
-	service := srv.Service(entityType, entitySelector, from, to, creds)
+	service := srv.Service(entityType, "", entitySelector, from, to, creds)
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}
