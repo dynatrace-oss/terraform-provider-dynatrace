@@ -22,6 +22,11 @@
 					{
 						"minLength": 1,
 						"type": "LENGTH"
+					},
+					{
+						"customValidatorId": "muted-request-can-not-be-added-to-key-requests",
+						"skipAsyncValidation": false,
+						"type": "CUSTOM_VALIDATOR_REF"
 					}
 				],
 				"description": "",
@@ -38,5 +43,5 @@
 	},
 	"schemaId": "builtin:settings.mutedrequests",
 	"types": {},
-	"version": "0.0.4"
+	"version": "0.0.5"
 }

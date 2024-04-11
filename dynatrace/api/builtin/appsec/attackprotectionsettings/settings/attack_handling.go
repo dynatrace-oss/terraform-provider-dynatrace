@@ -24,11 +24,17 @@ import (
 
 // Default attack handling. Default settings for handling attacks.
 type AttackHandling struct {
-	BlockingStrategyJava BlockingStrategy `json:"blockingStrategyJava"` // Possible Values: `BLOCK`, `MONITOR`, `OFF`
+	BlockingStrategyDotNet *BlockingStrategy `json:"blockingStrategyDotNet,omitempty"` // (v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`
+	BlockingStrategyJava   BlockingStrategy  `json:"blockingStrategyJava"`             // Possible Values: `BLOCK`, `MONITOR`, `OFF`
 }
 
 func (me *AttackHandling) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"blocking_strategy_dot_net": {
+			Type:        schema.TypeString,
+			Description: "(v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`",
+			Optional:    true, // nullable
+		},
 		"blocking_strategy_java": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `BLOCK`, `MONITOR`, `OFF`",
@@ -39,12 +45,14 @@ func (me *AttackHandling) Schema() map[string]*schema.Schema {
 
 func (me *AttackHandling) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"blocking_strategy_java": me.BlockingStrategyJava,
+		"blocking_strategy_dot_net": me.BlockingStrategyDotNet,
+		"blocking_strategy_java":    me.BlockingStrategyJava,
 	})
 }
 
 func (me *AttackHandling) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"blocking_strategy_java": &me.BlockingStrategyJava,
+		"blocking_strategy_dot_net": &me.BlockingStrategyDotNet,
+		"blocking_strategy_java":    &me.BlockingStrategyJava,
 	})
 }

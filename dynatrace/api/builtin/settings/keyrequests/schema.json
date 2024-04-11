@@ -1,0 +1,54 @@
+{
+	"allowedScopes": [
+		"SERVICE"
+	],
+	"description": "Configuration for specifying Key requests for a particular Service. Each Service could have several Key requests.\n- Key requests can be used to have long-term metric history and dedicated dashboard tiles for charting and direct access from your dashboard. Request naming rules can affect Key requests and vice versa.\n- When you set up a Request naming rule that affects Key requests, to keep a renamed request as Key request you must provide the final name (after all Request naming rules are applied) here.\n\nYou can learn more about Key requests in our [help]( https://dt-url.net/ss03uui \"Visit dynatrace.com \").",
+	"displayName": "Key requests",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"keyRequestNames": {
+			"constraints": [
+				{
+					"customValidatorId": "global-tenant-key-requests-limit",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Key request names",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"type": "NOT_BLANK"
+					},
+					{
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customValidatorId": "key-request-can-not-be-added-to-muted-requests",
+						"skipAsyncValidation": false,
+						"type": "CUSTOM_VALIDATOR_REF"
+					}
+				],
+				"description": "",
+				"displayName": "Name(s) of the Key request(s)",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaId": "builtin:settings.subscriptions.service",
+	"types": {},
+	"version": "0.1.8"
+}

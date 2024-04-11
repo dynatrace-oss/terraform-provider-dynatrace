@@ -67,6 +67,22 @@
 			"displayName": "Default attack handling",
 			"documentation": "",
 			"properties": {
+				"blockingStrategyDotNet": {
+					"description": "",
+					"displayName": "Attack control .NET",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.enable-attack-and-code-level-vulnerability-settings-dotnet.secEnableAttackAndCodeLevelVulnerabilitySettingsDotnet.feature",
+						"maturity": "EARLY_ADOPTER",
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/BlockingStrategy"
+					}
+				},
 				"blockingStrategyJava": {
 					"default": "MONITOR",
 					"description": "",
@@ -89,5 +105,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.1"
+	"version": "2.2"
 }
