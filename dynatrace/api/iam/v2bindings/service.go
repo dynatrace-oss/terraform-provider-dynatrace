@@ -1,6 +1,7 @@
 package v2bindings
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -59,7 +60,37 @@ func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*api.Stub, er
 	return &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id}, nil
 }
 
+func getStateConfig(ctx context.Context) *bindings.PolicyBinding {
+	var stateConfig *bindings.PolicyBinding
+	cfg := ctx.Value(settings.ContextKeyStateConfig)
+	if typedConfig, ok := cfg.(*bindings.PolicyBinding); ok {
+		stateConfig = typedConfig
+	}
+	return stateConfig
+}
+
 func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error {
+	return me.GetWithContext(context.Background(), id, v)
+}
+
+func deductPolicyID(policyID string, levelType string, levelID string, existing []*bindings.Policy) string {
+	if len(existing) == 0 {
+		fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
+	}
+	for _, policy := range existing {
+		// * uuid#-#leveltype#-#levelID
+		// * uuid
+		// matches both cases.
+		// If the current state contains just the UUID we don't want to concatenate
+		if strings.Contains(policy.ID, policyID) {
+			return policy.ID
+		}
+	}
+	return fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
+}
+
+func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+	stateConfig := getStateConfig(ctx)
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -105,7 +136,12 @@ func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error 
 			continue
 		}
 		for _, policyBinding := range bindingsResponse.PolicyBindings {
-			policy := &bindings.Policy{ID: fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)}
+			// policy := &bindings.Policy{ID: fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)}
+			existingPolicies := []*bindings.Policy{}
+			if stateConfig != nil {
+				existingPolicies = stateConfig.Policies
+			}
+			policy := &bindings.Policy{ID: deductPolicyID(policyID, levelType, levelID, existingPolicies)}
 			policies = append(policies, policy)
 			if len(policyBinding.Parameters) > 0 {
 				policy.Parameters = map[string]string{}
@@ -136,7 +172,7 @@ func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) err
 	policiesList := []*bindings.Policy{}
 	for _, policy := range v.Policies {
 		policyID := policy.ID
-		policyUUID, policyLevelType, policyLevelID, err := policies.SplitID(policyID)
+		policyUUID, policyLevelType, policyLevelID, err := policies.SplitID(policyID, levelType, levelID)
 		if err != nil {
 			return err
 		}
@@ -147,13 +183,13 @@ func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) err
 	}
 
 	for _, policy := range policiesList {
-		policyUUID, _, _, _ := policies.SplitID(policy.ID)
+		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
 		if _, err = client.DELETE_MULTI_RESPONSE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), []int{204, 400, 404}, false); err != nil {
 			return err
 		}
 	}
 	for _, policy := range policiesList {
-		policyUUID, _, _, _ := policies.SplitID(policy.ID)
+		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
 		payload := struct {
 			Parameters map[string]string `json:"parameters"`
 			Metadata   map[string]string `json:"metadata"`
@@ -255,7 +291,7 @@ func (me *BindingServiceClient) Delete(id string) error {
 	}
 	policyUUIDs := map[string]string{}
 	for _, policy := range binding.Policies {
-		policyUUID, _, _, err := policies.SplitID(policy.ID)
+		policyUUID, _, _, err := policies.SplitID(policy.ID, levelType, levelID)
 		if err != nil {
 			return err
 		}

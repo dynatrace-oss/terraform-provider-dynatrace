@@ -3,6 +3,7 @@ package policies
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -68,7 +69,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	uuid, levelType, levelID, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
@@ -92,7 +93,7 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 }
 
 func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	uuid, levelType, levelID, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
@@ -169,7 +170,7 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	uuid, levelType, levelID, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
@@ -177,7 +178,26 @@ func (me *PolicyServiceClient) Delete(id string) error {
 	return err
 }
 
-func SplitID(id string) (uuid string, levelType string, levelID string, err error) {
+var uuidRegexp = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
+
+func IsValidUUID(uuid string) bool {
+	return uuidRegexp.MatchString(uuid)
+}
+
+// defLevelType and devLevelID are getting used
+// in case the passed policyID is just its UUID
+//
+// In such a case the caller needs to have access
+// to other configuration with these two strings
+// e.g. the config object the policyIDs are embedded in
+func SplitID(id string, defLevelType string, defLevelID string) (uuid string, levelType string, levelID string, err error) {
+	if IsValidUUID(id) {
+		return id, defLevelType, defLevelID, nil
+	}
+	return SplitIDNoDefaults(id)
+}
+
+func SplitIDNoDefaults(id string) (uuid string, levelType string, levelID string, err error) {
 	parts := strings.Split(id, "#-#")
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)
