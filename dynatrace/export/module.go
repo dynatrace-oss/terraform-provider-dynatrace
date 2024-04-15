@@ -660,7 +660,7 @@ func (me *Module) GetChildOfResources() []*Resource {
 
 	for _, module := range me.Environment.Modules {
 		childDescriptor := module.Descriptor
-		isParent := !me.Environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
+		isParent := !me.Environment.ChildResourceOverride && childDescriptor != nil && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
 		if isParent {
 			for _, resource := range module.Resources {
 				if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
