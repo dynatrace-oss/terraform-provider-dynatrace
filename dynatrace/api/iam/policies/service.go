@@ -63,6 +63,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	if err = json.Unmarshal(responseBytes, &pcr); err != nil {
 		return nil, err
 	}
+	v.UUID = pcr.UUID
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
@@ -86,6 +87,7 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	} else if levelType == "environment" {
 		v.Environment = levelID
 	}
+	v.UUID = uuid
 	return nil
 }
 

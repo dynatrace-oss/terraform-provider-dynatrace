@@ -1,6 +1,8 @@
 package policies
 
 import (
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -13,6 +15,7 @@ type Policy struct {
 	StatementQuery string   `json:"statementQuery"`
 	Account        string   `json:"-"`
 	Environment    string   `json:"-"`
+	UUID           string   `json:"-"`
 }
 
 func (me *Policy) Schema() map[string]*schema.Schema {
@@ -55,6 +58,11 @@ func (me *Policy) Schema() map[string]*schema.Schema {
 			ForceNew:      true,
 			Description:   "The ID of the environment (https://<environmentid>.live.dynatrace.com) if the policy should be applied to a specific environment",
 		},
+		"uuid": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The ID of this resource is a concatenation of multiple pieces of information (policy UUID, accountID, environmentID, ...). There are use cases where you JUST need the UUID of the Policy, though",
+		},
 	}
 }
 
@@ -66,6 +74,7 @@ func (me *Policy) MarshalHCL(properties hcl.Properties) error {
 		"account":         me.Account,
 		"environment":     me.Environment,
 		"tags":            me.Tags,
+		"uuid":            me.UUID,
 	})
 }
 
@@ -83,5 +92,6 @@ func (me *Policy) UnmarshalHCL(decoder hcl.Decoder) error {
 	if me.Tags == nil {
 		me.Tags = []string{}
 	}
+	me.StatementQuery = strings.TrimSpace(strings.ReplaceAll(me.StatementQuery, "\r\n", "\n"))
 	return nil
 }
