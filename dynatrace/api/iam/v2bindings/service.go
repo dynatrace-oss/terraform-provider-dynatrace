@@ -75,7 +75,7 @@ func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error 
 
 func deductPolicyID(policyID string, levelType string, levelID string, existing []*bindings.Policy) string {
 	if len(existing) == 0 {
-		fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
+		return fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
 	}
 	for _, policy := range existing {
 		// * uuid#-#leveltype#-#levelID

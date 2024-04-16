@@ -129,7 +129,7 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 	var responseBytes []byte
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -138,7 +138,7 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 		return nil, err
 	}
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -149,7 +149,7 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 
 	var stubs api.Stubs
 	for _, policy := range response.Policies {
-		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "account", me.AccountID()), Name: policy.Name})
+		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "account", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), Name: policy.Name})
 	}
 
 	for _, environment := range envResponse.Data {
@@ -165,6 +165,20 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 		for _, policy := range response.Policies {
 			stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "environment", environment.ID), Name: policy.Name})
 		}
+	}
+
+	if responseBytes, err = client.GET("https://api.dynatrace.com/iam/v1/repo/global/global/policies", 200, false); err != nil {
+		return nil, err
+	}
+
+	// ------ global policies ------
+	var globalResponse ListPoliciesResponse
+	if err = json.Unmarshal(responseBytes, &globalResponse); err != nil {
+		return nil, err
+	}
+
+	for _, policy := range globalResponse.Policies {
+		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "global", "global"), Name: policy.Name})
 	}
 	return stubs, nil
 }
