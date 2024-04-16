@@ -220,6 +220,7 @@ func Provider() *schema.Provider {
 			"dynatrace_hub_items":                    items.DataSource(),
 			"dynatrace_documents":                    document.DataSource(),
 			"dynatrace_iam_policies":                 ds_iam_policies.DataSource(),
+			"dynatrace_iam_policy":                   ds_iam_policies.DataSourceSingle(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

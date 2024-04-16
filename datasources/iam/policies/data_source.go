@@ -68,6 +68,21 @@ func DataSource() *schema.Resource {
 							Description: "The name of the policy",
 							Required:    true,
 						},
+						"account": {
+							Type:        schema.TypeString,
+							Description: "The account UUID the policy is defined for",
+							Optional:    true,
+						},
+						"environment": {
+							Type:        schema.TypeString,
+							Description: "The environment ID the policy is defined for",
+							Optional:    true,
+						},
+						"global": {
+							Type:        schema.TypeBool,
+							Description: "`true` if this is a global policy`",
+							Optional:    true,
+						},
 					},
 				},
 			},
@@ -117,18 +132,21 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 			case "global":
 				if global {
 					results = append(results, map[string]any{
-						"id":   stub.ID,
-						"name": stub.Name,
-						"uuid": uuid,
+						"id":     stub.ID,
+						"name":   stub.Name,
+						"uuid":   uuid,
+						"global": true,
 					})
 				}
 			case "environment":
 				for _, environment := range environments {
 					if environment.Matches(levelID) {
 						results = append(results, map[string]any{
-							"id":   stub.ID,
-							"name": stub.Name,
-							"uuid": uuid,
+							"id":          stub.ID,
+							"name":        stub.Name,
+							"uuid":        uuid,
+							"global":      false,
+							"environment": levelID,
 						})
 						break
 					}
@@ -137,9 +155,11 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 				for _, account := range accounts {
 					if account.Matches(levelID) {
 						results = append(results, map[string]any{
-							"id":   stub.ID,
-							"name": stub.Name,
-							"uuid": uuid,
+							"id":      stub.ID,
+							"name":    stub.Name,
+							"uuid":    uuid,
+							"global":  false,
+							"account": levelID,
 						})
 						break
 					}
