@@ -98,6 +98,7 @@ import (
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/appmonitoring"
+	ebpf "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ebpf/service/discovery"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
@@ -1246,6 +1247,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
 	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
 	ResourceTypes.InfraOpsAppFeatureFlags:   NewResourceDescriptor(infraopsfeatureflags.Service),
+	ResourceTypes.EBPFServiceDiscovery:      NewResourceDescriptor(ebpf.Service),
 }
 
 var excludeListedResources = []ResourceType{

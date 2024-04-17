@@ -368,6 +368,7 @@ var ResourceTypes = struct {
 	HubActiveExtensionVersion           ResourceType
 	DatabaseAppFeatureFlags             ResourceType
 	InfraOpsAppFeatureFlags             ResourceType
+	EBPFServiceDiscovery                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -657,6 +658,7 @@ var ResourceTypes = struct {
 	"dynatrace_hub_extension_active_version",
 	"dynatrace_db_app_feature_flags",
 	"dynatrace_infraops_app_feature_flags",
+	"dynatrace_ebpf_service_discovery",
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
