@@ -30,7 +30,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"net/url"
 )
@@ -434,11 +433,6 @@ func (me *service[T]) Update(id string, v T) error {
 }
 
 func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) error {
-	aa, _ := json.MarshalIndent(v, "", "  ")
-	logging.File.Println(string(aa))
-	if string(aa) == "null" {
-		panic("null")
-	}
 	sou := SettingsObjectUpdate{Value: v, SchemaVersion: me.schemaVersion}
 
 	if !noInsertAfter {
