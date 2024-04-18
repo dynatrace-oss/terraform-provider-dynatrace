@@ -1,0 +1,36 @@
+---
+layout: ""
+page_title: dynatrace_davis_anomaly_detectors Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
+description: |-
+  The resource `dynatrace_davis_anomaly_detectors` covers configuration for Davis anomaly detectors
+---
+
+# dynatrace_davis_anomaly_detectors (Resource)
+
+!> Please use the [export utility](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to create templates for this resource as the underlying schema is hidden and cannot be easily created from scratch.
+
+-> This resource requires the `Davis Anomaly Detection` app to be installed via the Dynatrace Hub.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+-> This resource requires an OAuth client that uses the standard client credentials flow to authenticate a service user with the API. Please set the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` with the client ID and secret. 
+
+## Dynatrace Documentation
+
+- Davis Anomaly Detection App - https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection/anomaly-detection-app
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:davis.anomaly-detectors`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_davis_anomaly_detectors` downloads all existing Davis anomaly detector configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/davis/anomalydetectors/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

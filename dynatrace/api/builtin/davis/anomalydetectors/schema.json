@@ -1,0 +1,382 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "anomaly-detector-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Anomaly detectors are used to automatically detect anomalies in timeseries by using thresholds or baselines.",
+	"displayName": "Anomaly detectors",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add anomaly detector"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"analyzer": {
+			"description": "",
+			"displayName": "Analyzer input",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/AnalyzerInput"
+			}
+		},
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 5000,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The description of the anomaly detector",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"lineCount": "4"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventTemplate": {
+			"description": "",
+			"displayName": "Event template",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/DavisEventTemplate"
+			}
+		},
+		"executionSettings": {
+			"description": "",
+			"displayName": "Execution settings",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ExecutionSettings"
+			}
+		},
+		"source": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "Rest API",
+			"description": "",
+			"displayName": "Source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"title": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 2,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The title of the anomaly detector",
+			"displayName": "Title",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Required"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:davis.anomaly-detectors",
+	"types": {
+		"AnalyzerInput": {
+			"constraints": [
+				{
+					"customValidatorId": "analyzer-input-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Analyzer input",
+			"documentation": "",
+			"properties": {
+				"input": {
+					"description": "Input fields for the specified analyzer",
+					"displayName": "Input fields",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/AnalyzerInputField"
+						}
+					},
+					"maxObjects": 30,
+					"metadata": {
+						"addItemButton": "Add analyzer input field",
+						"itemDisplayName": "New analyzer input field"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"pattern": "^[a-zA-Z_][a-zA-Z\\d_\\-\\.]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "Fully qualified name of the analyzer",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"AnalyzerInputField": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"pattern": "^[a-zA-Z_][a-zA-Z\\d_\\-\\.]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 10000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key}: {value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DavisEventTemplate": {
+			"constraints": [
+				{
+					"customValidatorId": "davis-event-template-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "Davis event template",
+			"documentation": "",
+			"properties": {
+				"properties": {
+					"description": "Set of additional key-value properties to be attached to the triggered event.",
+					"displayName": "Event properties",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/EventProperty"
+						}
+					},
+					"maxObjects": 50,
+					"metadata": {
+						"addItemButton": "Add Property",
+						"itemDisplayName": "New property"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "1",
+			"versionInfo": ""
+		},
+		"EventProperty": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key}: {value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ExecutionSettings": {
+			"description": "",
+			"displayName": "ExecutionSettings",
+			"documentation": "",
+			"properties": {
+				"queryOffset": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"description": "Minute offset of sliding evaluation window for metrics with latency",
+					"displayName": "Query offset",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.11"
+}
