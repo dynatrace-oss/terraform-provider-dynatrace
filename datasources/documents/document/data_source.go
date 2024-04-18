@@ -36,7 +36,7 @@ func DataSource() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `document` or `notebook`",
+				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard` or `notebook`",
 			},
 			"values": {
 				Type:     schema.TypeList,
