@@ -48,7 +48,7 @@ data "dynatrace_documents" "all-notebooks" {
 
 ### Optional
 
-- `type` (String) The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `document` or `notebook`
+- `type` (String) The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard` or `notebook`
 
 ### Read-Only
 
