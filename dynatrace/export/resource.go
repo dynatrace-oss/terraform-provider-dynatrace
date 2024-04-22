@@ -393,14 +393,23 @@ func (me *Resource) PostProcess() error {
 		}
 	}
 	me.Status = ResourceStati.PostProcessed
-	if me.IsReferencedAsDataSource() {
-		return nil
-	}
-	if !me.Module.Environment.Flags.FollowReferences {
-		return nil
-	}
+
 	descriptor := me.Module.Descriptor
-	if len(descriptor.Dependencies) == 0 {
+
+	dependecyList := descriptor.Dependencies
+
+	if me.IsReferencedAsDataSource() ||
+		!me.Module.Environment.Flags.FollowReferences {
+
+		dependecyList = []Dependency{}
+		for _, dependency := range descriptor.Dependencies {
+			if dependency.IsParent() {
+				dependecyList = append(dependecyList, dependency)
+			}
+		}
+	}
+
+	if len(dependecyList) == 0 {
 		return nil
 	}
 
@@ -417,7 +426,7 @@ func (me *Resource) PostProcess() error {
 
 	isModifiedFile := false
 
-	for _, dependency := range descriptor.Dependencies {
+	for _, dependency := range dependecyList {
 		resourceType := dependency.ResourceType()
 		if len(resourceType) > 0 {
 			module := me.Module.Environment.Module(resourceType)

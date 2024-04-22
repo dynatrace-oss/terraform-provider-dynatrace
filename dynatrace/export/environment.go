@@ -648,7 +648,9 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 			module.PurgeFolder()
 			delete(me.Modules, k)
 		} else if !module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil {
-			if me.Flags.FollowReferences {
+			_, parentFound := module.Environment.ChildParentGroups[module.Type]
+
+			if me.Flags.FollowReferences || parentFound {
 				module.PurgeFolder()
 			}
 		} else if len(module.GetPostProcessedResources()) == 0 {
