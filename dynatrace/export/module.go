@@ -884,8 +884,22 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 
 				err := processItem(resourceLoop)
 
+				if err != nil && strings.Contains(err.Error(), "Get function should not be called") {
+
+					if strings.Contains(err.Error(), "builtin:span-event-attribute") ||
+						strings.Contains(err.Error(), "builtin:span-attribute") {
+
+						wg.Done()
+						err = nil
+						return nil
+					}
+				}
+
 				if err != nil {
 					wg.Done()
+
+					logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
+					logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
 					return err
 				}
 			}

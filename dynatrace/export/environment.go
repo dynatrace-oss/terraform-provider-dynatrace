@@ -36,6 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
@@ -251,6 +252,9 @@ func (me *Environment) InitialDownload() error {
 
 					if err != nil {
 						wg.Done()
+
+						logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
+						logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
 						return err
 					}
 				}
@@ -333,6 +337,8 @@ func (me *Environment) PostProcess() error {
 
 							if err != nil {
 								wg.Done()
+								logging.Debug.Info.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
+								logging.Debug.Warn.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
 								return err
 							}
 						}

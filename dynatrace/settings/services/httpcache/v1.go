@@ -84,9 +84,25 @@ func (me *ListV1) Finish(v any) error {
 			stubList.Values = append(stubList.Values, stub)
 		}
 	}
+
 	data, err := json.Marshal(stubList)
+	err = me.convertToStub(data, err, v)
 	if err != nil {
-		return err
+		// aws_credentials does not expect {Values: } to precede apis.Stubs{}
+		// So we need to unMarshall only the apis.Stubs part
+		data, err = json.Marshal(stubList.Values)
+		err = me.convertToStub(data, err, v)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (*ListV1) convertToStub(data []byte, errIn error, v any) error {
+	if errIn != nil {
+		return errIn
 	}
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
