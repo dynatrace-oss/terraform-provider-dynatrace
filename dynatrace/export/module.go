@@ -220,14 +220,21 @@ func (me *Module) MkdirAll(flawed bool) error {
 	return os.MkdirAll(me.GetFolder(), os.ModePerm)
 }
 
+func (me *Module) FolderNameOverride() string {
+	if me.Descriptor == nil {
+		return ""
+	}
+	return me.Descriptor.FolderName
+}
+
 func (me *Module) GetFolder(relative ...bool) string {
 	if me.Environment.Flags.Flat {
 		return me.Environment.GetFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetFolder(), path.Join("modules", me.Type.Trim()))
+		return path.Join(me.Environment.GetFolder(), path.Join("modules", me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join("modules", me.Type.Trim())
+	return path.Join("modules", me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetAttentionFolder(relative ...bool) string {
@@ -235,9 +242,9 @@ func (me *Module) GetAttentionFolder(relative ...bool) string {
 		return me.Environment.GetAttentionFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetAttentionFolder(), path.Join(me.Type.Trim()))
+		return path.Join(me.Environment.GetAttentionFolder(), path.Join(me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join(me.Type.Trim())
+	return path.Join(me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetFlawedFolder(relative ...bool) string {
@@ -245,9 +252,9 @@ func (me *Module) GetFlawedFolder(relative ...bool) string {
 		return me.Environment.GetFlawedFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetFlawedFolder(), path.Join(me.Type.Trim()))
+		return path.Join(me.Environment.GetFlawedFolder(), path.Join(me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join(me.Type.Trim())
+	return path.Join(me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetFile(name string) string {
