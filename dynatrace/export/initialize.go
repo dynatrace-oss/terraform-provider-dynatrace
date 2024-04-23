@@ -76,7 +76,7 @@ func Initialize() (environment *Environment, err error) {
 		effectiveTailArgs := []string{}
 		for _, idx := range tailArgs {
 			effectiveTailArgs = append(effectiveTailArgs, idx)
-			key, id := ValidateParentResource(idx)
+			key, id := ValidateResource(idx)
 			if len(key) == 0 {
 				return nil, fmt.Errorf("unknown resource `%s`", idx)
 			}
@@ -200,15 +200,6 @@ func createFlags() (flags Flags, tailArgs []string) {
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
 	}, flag.Args()
-}
-
-func ValidateParentResource(keyVal string) (string, string) {
-	res1, res2 := ValidateResource(keyVal)
-	resourceType := ResourceType(res1)
-	if resourceType.IsChildResource() {
-		resourceType = resourceType.GetParent()
-	}
-	return string(resourceType), res2
 }
 
 func ValidateResource(keyVal string) (string, string) {
