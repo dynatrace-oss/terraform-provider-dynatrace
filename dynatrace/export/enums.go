@@ -682,6 +682,18 @@ func (me ResourceType) IsChildResource() bool {
 	return false
 }
 
+func (me ResourceType) GetParent() ResourceType {
+	if me.IsChildResource() {
+		return ""
+	}
+	for k, v := range AllResources {
+		if string(k) == string(me) {
+			return *v.Parent
+		}
+	}
+	return ""
+}
+
 type ResourceStatus string
 
 func (me ResourceStatus) IsOneOf(stati ...ResourceStatus) bool {
