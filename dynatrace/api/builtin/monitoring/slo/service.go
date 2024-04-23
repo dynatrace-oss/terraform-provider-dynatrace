@@ -96,6 +96,17 @@ func (me *service) Update(id string, v *slo.Settings) error {
 }
 
 func (me *service) Validate(v *slo.Settings) error {
+	soc := settings20.SettingsObjectCreate{
+		SchemaID:      SchemaID,
+		SchemaVersion: SchemaVersion,
+		Scope:         "environment",
+		Value:         v,
+	}
+
+	if err := me.client.Post("/api/v2/settings/objects?validateOnly=true", []settings20.SettingsObjectCreate{soc}).Expect(200).Finish(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

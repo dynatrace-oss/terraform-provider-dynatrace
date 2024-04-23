@@ -346,7 +346,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if me.Descriptor.Parent != nil {
+	if me.Descriptor != nil && me.Descriptor.Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -658,7 +658,7 @@ func (me *Module) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
-	if me.Type == resource.Type || (me.Descriptor.Parent != nil && *me.Descriptor.Parent == parentType) {
+	if me.Type == resource.Type || (me.Descriptor != nil && me.Descriptor.Parent != nil && *me.Descriptor.Parent == parentType) {
 		return false
 	}
 	for _, res := range me.Resources {

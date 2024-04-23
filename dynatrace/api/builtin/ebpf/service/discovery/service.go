@@ -15,6 +15,17 @@
 * limitations under the License.
  */
 
-package version
+package discovery
 
-const Current = "1.55.1"
+import (
+	discovery "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ebpf/service/discovery/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+)
+
+const SchemaVersion = "1.0.2"
+const SchemaID = "builtin:ebpf.service.discovery"
+
+func Service(credentials *settings.Credentials) settings.CRUDService[*discovery.Settings] {
+	return settings20.Service[*discovery.Settings](credentials, SchemaID, SchemaVersion)
+}

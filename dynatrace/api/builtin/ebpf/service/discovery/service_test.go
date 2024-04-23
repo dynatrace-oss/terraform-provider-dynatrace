@@ -15,6 +15,14 @@
 * limitations under the License.
  */
 
-package version
+package discovery_test
 
-const Current = "1.55.1"
+import (
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+)
+
+func TestAccEBPFServiceDiscovery(t *testing.T) {
+	api.TestAcc(t)
+}

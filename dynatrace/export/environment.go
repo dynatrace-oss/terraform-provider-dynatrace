@@ -479,6 +479,14 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		ModuleMutex:          new(sync.Mutex),
 		ChildModules:         map[ResourceType]*Module{},
 	}
+
+	if resType == ResourceTypes.JSONDashboardBase {
+		if module.Descriptor == nil {
+			descriptor := AllResources[resType]
+			module.Descriptor = &descriptor
+		}
+	}
+
 	me.Modules[resType] = module
 	return module
 }
@@ -752,8 +760,12 @@ func (me *Environment) WriteVariablesFiles() (err error) {
 	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
 	if parallel {
 		var wg sync.WaitGroup
-		wg.Add(len(me.Modules))
+
 		for _, module := range me.Modules {
+			if module.Descriptor == nil {
+				continue
+			}
+			wg.Add(1)
 			go func(module *Module) error {
 				defer wg.Done()
 				if shutdown.System.Stopped() {

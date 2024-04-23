@@ -94,7 +94,7 @@ func (me *Tile) Schema() map[string]*schema.Schema {
 			},
 		},
 		"assigned_entities": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Optional:    true,
 			MinItems:    1,
 			Description: "The list of Dynatrace entities, assigned to the tile",

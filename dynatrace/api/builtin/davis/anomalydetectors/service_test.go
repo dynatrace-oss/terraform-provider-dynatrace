@@ -15,6 +15,14 @@
 * limitations under the License.
  */
 
-package version
+package anomalydetectors_test
 
-const Current = "1.55.1"
+import (
+	"testing"
+)
+
+func TestAccDavisAnomalyDetectors(t *testing.T) {
+	// Temporarily disabled - schema does not exist in test environment
+	// api.TestAcc(t)
+	t.Skip()
+}
