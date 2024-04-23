@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
@@ -89,6 +90,17 @@ func deductPolicyID(policyID string, levelType string, levelID string, existing 
 	return fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
 }
 
+type BindingsResponse struct {
+	LevelType      string `json:"levelType"`
+	LevelID        string `json:"levelId"`
+	PolicyBindings []struct {
+		PolicyUUID string            `json:"policyUuid"`
+		GroupUUIDs []string          `json:"groups"`
+		Parameters map[string]string `json:"parameters"`
+		Metadata   map[string]string `json:"metadata"`
+	} `json:"policyBindings"`
+}
+
 func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v *bindings.PolicyBinding) error {
 	stateConfig := getStateConfig(ctx)
 	groupID, levelType, levelID, err := splitID(id)
@@ -115,50 +127,75 @@ func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v
 	}
 	v.GroupID = groupID
 	policies := []*bindings.Policy{}
+
+	var wg sync.WaitGroup
+	var policyErr error
+	var lock sync.Mutex
+
 	for _, policyID := range policyUUIDStruct.PolicyUuids {
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 200, false); err != nil {
-			return err
-		}
-		bindingsResponse := struct {
-			LevelType      string `json:"levelType"`
-			LevelID        string `json:"levelId"`
-			PolicyBindings []struct {
-				PolicyUUID string            `json:"policyUuid"`
-				GroupUUIDs []string          `json:"groups"`
-				Parameters map[string]string `json:"parameters"`
-				Metadata   map[string]string `json:"metadata"`
-			} `json:"policyBindings"`
-		}{}
-		if err = json.Unmarshal(responseBytes, &bindingsResponse); err != nil {
-			return err
-		}
-		if len(bindingsResponse.PolicyBindings) == 0 {
-			continue
-		}
-		for _, policyBinding := range bindingsResponse.PolicyBindings {
-			// policy := &bindings.Policy{ID: fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)}
-			existingPolicies := []*bindings.Policy{}
-			if stateConfig != nil {
-				existingPolicies = stateConfig.Policies
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			var bindingsResponse BindingsResponse
+			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
+				lock.Lock()
+				policyErr = err
+				lock.Unlock()
+				return
 			}
-			policy := &bindings.Policy{ID: deductPolicyID(policyID, levelType, levelID, existingPolicies)}
-			policies = append(policies, policy)
-			if len(policyBinding.Parameters) > 0 {
-				policy.Parameters = map[string]string{}
-				for key, value := range policyBinding.Parameters {
-					policy.Parameters[key] = value
-				}
+			if len(bindingsResponse.PolicyBindings) == 0 {
+				return
 			}
-			if len(policyBinding.Metadata) > 0 {
-				policy.Metadata = map[string]string{}
-				for key, value := range policyBinding.Metadata {
-					policy.Metadata[key] = value
-				}
+
+			policies, err := me.resolvePolicies(policyID, bindingsResponse, stateConfig)
+			if err != nil {
+				lock.Lock()
+				policyErr = err
+				lock.Unlock()
+				return
 			}
-		}
+			for _, policy := range policies {
+				lock.Lock()
+				policies = append(policies, policy)
+				lock.Unlock()
+			}
+		}()
+	}
+	wg.Wait()
+	if policyErr != nil {
+		return err
 	}
 	v.Policies = policies
 	return nil
+}
+
+func (me *BindingServiceClient) resolvePolicies(uuid string, bindingsResponse BindingsResponse, stateConfig *bindings.PolicyBinding) ([]*bindings.Policy, error) {
+	results := []*bindings.Policy{}
+	for _, policyBinding := range bindingsResponse.PolicyBindings {
+		existingPolicies := []*bindings.Policy{}
+		if stateConfig != nil {
+			existingPolicies = stateConfig.Policies
+		}
+		levelType, levelID, _, err := policies.ResolvePolicyLevel(me, uuid)
+		if err != nil {
+			return nil, err
+		}
+		policy := &bindings.Policy{ID: deductPolicyID(uuid, levelType, levelID, existingPolicies)}
+		if len(policyBinding.Parameters) > 0 {
+			policy.Parameters = map[string]string{}
+			for key, value := range policyBinding.Parameters {
+				policy.Parameters[key] = value
+			}
+		}
+		if len(policyBinding.Metadata) > 0 {
+			policy.Metadata = map[string]string{}
+			for key, value := range policyBinding.Metadata {
+				policy.Metadata[key] = value
+			}
+		}
+		results = append(results, policy)
+	}
+	return results, nil
 }
 
 func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) error {
@@ -170,17 +207,6 @@ func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) err
 	client := iam.NewIAMClient(me)
 
 	policiesList := []*bindings.Policy{}
-	for _, policy := range v.Policies {
-		policyID := policy.ID
-		policyUUID, policyLevelType, policyLevelID, err := policies.SplitID(policyID, levelType, levelID)
-		if err != nil {
-			return err
-		}
-		if policyLevelID != levelID || policyLevelType != levelType {
-			return fmt.Errorf("The policy %s is defined for %s = %s. It cannot be used within the scope %s = %s", policyUUID, policyLevelType, policyLevelID, levelType, levelID)
-		}
-		policiesList = append(policiesList, policy)
-	}
 
 	for _, policy := range policiesList {
 		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
@@ -221,60 +247,120 @@ type ListPolicyBindingsResponse struct {
 	PolicyBindings []PolicyBindingStub `json:"policyBindings"`
 }
 
-func (me *BindingServiceClient) List() (api.Stubs, error) {
-	var err error
-	var responseBytes []byte
-	client := iam.NewIAMClient(me)
+func (me *BindingServiceClient) FetchAccountBindings() chan *api.Stub {
+	results := make(chan *api.Stub)
+	go func() {
+		defer func() {
+			close(results)
+		}()
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
-		return nil, err
-	}
+		var err error
+		var responseBytes []byte
 
-	var envResponse ListEnvResponse
-	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
-		return nil, err
-	}
+		client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
-		return nil, err
-	}
-
-	var response ListPolicyBindingsResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
-		return nil, err
-	}
-
-	var stubs api.Stubs
-	groupIds := map[string]bool{}
-	for _, policy := range response.PolicyBindings {
-		for _, group := range policy.Groups {
-			if _, exists := groupIds[group]; !exists {
-				id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"))
-				stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id})
-				groupIds[group] = true
-			}
-		}
-	}
-
-	for _, environment := range envResponse.Data {
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environment.ID), 200, false); err != nil {
-			return nil, err
+		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+			return
 		}
 
 		var response ListPolicyBindingsResponse
 		if err = json.Unmarshal(responseBytes, &response); err != nil {
-			return nil, err
+			return
 		}
 
+		var stubs api.Stubs
 		groupIds := map[string]bool{}
 		for _, policy := range response.PolicyBindings {
 			for _, group := range policy.Groups {
 				if _, exists := groupIds[group]; !exists {
-					id := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environment.ID)
+					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"))
 					stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id})
 					groupIds[group] = true
 				}
 			}
+		}
+		for _, stub := range stubs {
+			results <- stub
+		}
+	}()
+	return results
+}
+
+func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
+	results := make(chan *api.Stub)
+	go func() {
+		defer func() {
+			close(results)
+		}()
+		var err error
+		var responseBytes []byte
+		client := iam.NewIAMClient(me)
+
+		var environmentIDs []string
+		if environmentIDs, err = policies.GetEnvironmentIDs(me); err != nil {
+			return
+		}
+
+		var stubs api.Stubs
+		for _, environmentID := range environmentIDs {
+			if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environmentID), 200, false); err != nil {
+				return
+			}
+
+			var response ListPolicyBindingsResponse
+			if err = json.Unmarshal(responseBytes, &response); err != nil {
+				return
+			}
+
+			groupIds := map[string]bool{}
+			for _, policy := range response.PolicyBindings {
+				for _, group := range policy.Groups {
+					if _, exists := groupIds[group]; !exists {
+						id := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environmentID)
+						stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id})
+						groupIds[group] = true
+					}
+				}
+			}
+		}
+		for _, stub := range stubs {
+			results <- stub
+		}
+	}()
+	return results
+}
+
+func (me *BindingServiceClient) List() (api.Stubs, error) {
+	var stubs api.Stubs
+	accountStubs := me.FetchAccountBindings()
+	environmentStubs := me.FetchEnvironmentBindings()
+
+	for {
+		if accountStubs == nil && environmentStubs == nil {
+			break
+		}
+		select {
+		case stub, more := <-accountStubs:
+			if more {
+				stubs = append(stubs, stub)
+			} else {
+				accountStubs = nil
+				if environmentStubs == nil {
+					break
+				}
+			}
+		case stub, more := <-environmentStubs:
+			if more {
+				stubs = append(stubs, stub)
+			} else {
+				environmentStubs = nil
+				if accountStubs == nil {
+					break
+				}
+			}
+		}
+		if accountStubs == nil && environmentStubs == nil {
+			break
 		}
 	}
 	return stubs, nil
@@ -297,7 +383,7 @@ func (me *BindingServiceClient) Delete(id string) error {
 		}
 		policyUUIDs[policyUUID] = policyUUID
 	}
-	for policyUUID, _ := range policyUUIDs {
+	for policyUUID := range policyUUIDs {
 		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), 204, false); err != nil {
 			return err
 		}

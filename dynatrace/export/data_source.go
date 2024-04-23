@@ -5,10 +5,19 @@ import (
 	"strings"
 )
 
+type DataSourceKind string
+
+const (
+	DataSourceTenant = DataSourceKind("tenant")
+	DataSourceEntity = DataSourceKind("entity")
+	DataSourcePolicy = DataSourceKind("policy")
+)
+
 type DataSource struct {
-	ID   string
-	Type string
-	Name string
+	ID         string
+	Type       string
+	Name       string
+	UniqueName string
 }
 
 func AsDataSource(resource *Resource) string {
@@ -91,6 +100,10 @@ func AsDataSource(resource *Resource) string {
 		}`, resource.UniqueName, esc(resource.Name))
 	case ResourceTypes.IAMGroup:
 		return fmt.Sprintf(`data "dynatrace_iam_group" "%s" {
+			name = "%s"
+		}`, resource.UniqueName, esc(resource.Name))
+	case ResourceTypes.IAMPolicy:
+		return fmt.Sprintf(`data "dynatrace_iam_policy" "%s" {
 			name = "%s"
 		}`, resource.UniqueName, esc(resource.Name))
 	case ResourceTypes.AppSecVulnerabilityAlerting:

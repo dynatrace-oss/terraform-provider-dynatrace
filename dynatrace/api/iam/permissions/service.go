@@ -123,11 +123,11 @@ func (me *PermissionServiceClient) Get(id string, v *permissions.Permission) err
 		}
 	}
 
-	return fmt.Errorf("There exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)
+	return fmt.Errorf("there exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)
 }
 
 func (me *PermissionServiceClient) Update(email string, permission *permissions.Permission) error {
-	return errors.New("Permissions are not expected to get updated - only destroy and create are possible")
+	return errors.New("permissions are not expected to get updated - only destroy and create are possible")
 }
 
 func (me *PermissionServiceClient) List() (api.Stubs, error) {
@@ -138,18 +138,18 @@ func (me *PermissionServiceClient) List() (api.Stubs, error) {
 	}
 
 	var stubs api.Stubs
-	var responseBytes []byte
 
 	client := iam.NewIAMClient(me)
 	for _, groupStub := range groupStubs {
 		groupID := groupStub.ID
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), 200, false); err != nil {
-			return nil, err
-		}
+
+		accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
+
 		var response GetGroupPermissionsResponse
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), 200, false, &response); err != nil {
 			return nil, err
 		}
+
 		if len(response.Permissions) > 0 {
 			for _, permission := range response.Permissions {
 				permissionID := strings.Join([]string{groupID, permission.Name, permission.Scope, permission.ScopeType}, "#-#")

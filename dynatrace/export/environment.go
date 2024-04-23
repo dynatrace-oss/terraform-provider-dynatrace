@@ -31,6 +31,8 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
+	policysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -82,19 +84,32 @@ func (me *Environment) TenantID() string {
 	return tenant
 }
 
-func (me *Environment) DataSource(id string) *DataSource {
+func (me *Environment) DataSource(id string, kind DataSourceKind) *DataSource {
 	for _, module := range me.Modules {
 		if dataSource, found := module.DataSources[id]; found {
 			return dataSource
 		}
 	}
-	if id == "tenant" {
-		return &DataSource{ID: id, Name: id, Type: "tenant"}
+	if kind == DataSourceTenant {
+		return &DataSource{ID: id, Name: id, Type: string(DataSourceTenant)}
 	}
-	service := cache.Read(entity.Service(me.Credentials))
-	var entity entitysettings.Entity
-	if err := service.Get(id, &entity); err == nil {
-		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type}
+	if kind == DataSourcePolicy {
+		service := cache.CRUD(policies.Service(me.Credentials))
+		var policy policysettings.Policy
+		if err := service.Get(id, &policy); err == nil {
+			terraformName := toTerraformName(policy.Name)
+			if policyMod := me.Module(ResourceTypes.IAMPolicy); policyMod != nil {
+				terraformName = me.Module(ResourceTypes.IAMPolicy).namer.Name(terraformName)
+			}
+			return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourcePolicy)}
+		}
+	}
+	if kind == DataSourceEntity {
+		service := cache.Read(entity.Service(me.Credentials))
+		var entity entitysettings.Entity
+		if err := service.Get(id, &entity); err == nil {
+			return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type}
+		}
 	}
 	return nil
 }
