@@ -673,6 +673,18 @@ func (me ResourceType) GetChildren() []ResourceType {
 	return res
 }
 
+func (me ResourceType) GetParent() ResourceType {
+	if !me.IsChildResource() {
+		return ""
+	}
+	for k, v := range AllResources {
+		if string(k) == string(me) {
+			return *v.Parent
+		}
+	}
+	return ""
+}
+
 func (me ResourceType) IsChildResource() bool {
 	for k, v := range AllResources {
 		if string(k) == string(me) {

@@ -75,6 +75,7 @@ func Initialize() (environment *Environment, err error) {
 	} else {
 		effectiveTailArgs := []string{}
 		for _, idx := range tailArgs {
+			idx = ToParent(idx)
 			effectiveTailArgs = append(effectiveTailArgs, idx)
 			key, id := ValidateResource(idx)
 			if len(key) == 0 {
@@ -200,6 +201,28 @@ func createFlags() (flags Flags, tailArgs []string) {
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
 	}, flag.Args()
+}
+
+func ToParent(keyVal string) string {
+	res1 := ""
+	res2 := ""
+	parts := strings.Split(keyVal, "=")
+	keyVal = parts[0]
+	for resName := range AllResources {
+		if keyVal == string(resName) {
+			for resName.IsChildResource() {
+				resName = resName.GetParent()
+			}
+			res1 = string(resName)
+			if len(parts) > 1 {
+				res2 = parts[1]
+			}
+		}
+	}
+	if len(res2) == 0 {
+		return res1
+	}
+	return fmt.Sprintf("%s=%s", res1, res2)
 }
 
 func ValidateResource(keyVal string) (string, string) {
