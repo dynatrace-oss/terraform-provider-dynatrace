@@ -42,6 +42,14 @@ var ValidateUUID = func(i any, p cty.Path) diag.Diagnostics {
 	return diags
 }
 
+var ValidateUUIDOrEmpty = func(i any, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	if len(i.(string)) == 0 {
+		return diags
+	}
+	return ValidateUUID(i, p)
+}
+
 var ValidateMaxLength = func(maxLength int) schema.SchemaValidateDiagFunc {
 	return func(i any, p cty.Path) diag.Diagnostics {
 		var diags diag.Diagnostics

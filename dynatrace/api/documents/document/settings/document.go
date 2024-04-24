@@ -55,14 +55,14 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Description:      "The user context the executions of the document will happen with",
 			Optional:         true,
 			Computed:         true,
-			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(36)),
+			ValidateDiagFunc: Validate(ValidateUUIDOrEmpty, ValidateMaxLength(36)),
 		},
 		"owner": {
 			Type:             schema.TypeString,
 			Description:      "The ID of the owner of this document",
 			Optional:         true,
 			Computed:         true,
-			ValidateDiagFunc: ValidateUUID,
+			ValidateDiagFunc: ValidateUUIDOrEmpty,
 		},
 		"content": {
 			Type:        schema.TypeString,
