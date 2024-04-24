@@ -54,6 +54,7 @@ type Module struct {
 	ChildModules           map[ResourceType]*Module
 	IdRegexType            string
 	LegacyIdMap            map[string]*Resource
+	DataSourceLock         *sync.Mutex
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -85,15 +86,39 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.AppSecAttackAlerting
 }
 
-func (me *Module) DataSource(id string) *DataSource {
+func (me *Module) DataSource(id string, kind DataSourceKind, excepts ...ResourceType) *DataSource {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
 	if dataSource, found := me.DataSources[id]; found {
 		return dataSource
 	}
-	dataSource := me.Environment.DataSource(id)
+	dataSource := me.Environment.DataSource(id, kind, append(excepts, me.Type)...)
 	if dataSource != nil {
 		me.DataSources[id] = dataSource
 	}
 	return dataSource
+}
+
+func (me *Module) GetDataSources(dataSources map[string]*DataSource) {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
+	for k, v := range me.DataSources {
+		dataSources[k] = v
+	}
+}
+
+func (me *Module) SortedDataSources() (result []*DataSource) {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
+	dataSourceIDs := []string{}
+	for dataSourceID := range me.DataSources {
+		dataSourceIDs = append(dataSourceIDs, dataSourceID)
+	}
+	sort.Strings(dataSourceIDs)
+	for _, dataSourceID := range dataSourceIDs {
+		result = append(result, me.DataSources[dataSourceID])
+	}
+	return result
 }
 
 func (me *Module) ContainsPostProcessedResources() bool {
@@ -465,14 +490,9 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	for ds := range dsm {
 		buf.Write([]byte("\n" + ds))
 	}
-	dataSourceIDs := []string{}
-	for dataSourceID := range me.DataSources {
-		dataSourceIDs = append(dataSourceIDs, dataSourceID)
-	}
-	sort.Strings(dataSourceIDs)
-	for _, dataSourceID := range dataSourceIDs {
-		dataSource := me.DataSources[dataSourceID]
+	for _, dataSource := range me.SortedDataSources() {
 		dataSourceName := dataSource.Name
+		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
 		if dataSourceID == "tenant" {
 			if _, err = buf.WriteString(`
@@ -523,14 +543,9 @@ func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
 			}
 		}
 	}
-	dataSourceIDs := []string{}
-	for dataSourceID := range me.DataSources {
-		dataSourceIDs = append(dataSourceIDs, dataSourceID)
-	}
-	sort.Strings(dataSourceIDs)
-	for _, dataSourceID := range dataSourceIDs {
-		dataSource := me.DataSources[dataSourceID]
+	for _, dataSource := range me.SortedDataSources() {
 		dataSourceName := dataSource.Name
+		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
 		dsm["dynatrace_entity."+dataSource.Type+"."+string(dd)] = fmt.Sprintf(`data "dynatrace_entity" "%s" {
 			type = "%s"

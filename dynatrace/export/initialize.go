@@ -49,6 +49,7 @@ func Initialize() (environment *Environment, err error) {
 		return nil, nil
 	}
 
+	settings.ExportRunning = true
 	os.Setenv("dynatrace.secrets", "true")
 	cache.Enable()
 	resArgs := map[string][]string{}

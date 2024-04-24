@@ -725,7 +725,7 @@ func (me *tenantds) Replace(environment *Environment, s string, replacingIn Reso
 	if !strings.Contains(s, tenantID) {
 		return s, []any{}
 	}
-	environment.Module(replacingIn).DataSource("tenant")
+	environment.Module(replacingIn).DataSource("tenant", DataSourceKindTenant)
 	s = strings.ReplaceAll(s, tenantID, "${data.dynatrace_tenant.tenant.id}")
 	return s, []any{true}
 }
@@ -760,7 +760,7 @@ func (me *entityds) Replace(environment *Environment, s string, replacingIn Reso
 	found := false
 	m1 := regexp.MustCompile(me.Pattern)
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {
-		dataSource := environment.Module(replacingIn).DataSource(id)
+		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceKindEntity)
 		if dataSource == nil {
 			return s
 		}

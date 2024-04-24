@@ -30,6 +30,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
+var ExportRunning = false
+
 func NewCRUDService[T Settings](credentials *Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
 	return &defaultService[T]{
 		schemaID: schemaID,
