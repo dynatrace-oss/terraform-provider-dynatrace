@@ -38,10 +38,12 @@
 				},
 				{
 					"customValidatorId": "attribute-key-pattern-with-case-sensitivity-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "attribute-key-allowed-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -60,15 +62,14 @@
 	},
 	"schemaConstraints": [
 		{
-			"customMessage": "Custom attribute with the specified key already exists.",
-			"type": "UNIQUE",
-			"uniqueProperties": [
-				"key"
-			]
-		},
-		{
 			"customMessage": "Exceeded limit of custom attributes.",
 			"customValidatorId": "attribute-slot-available-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "attribute-key-unique-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -78,5 +79,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-custom-attributes",
 	"types": {},
-	"version": "1.0.13"
+	"version": "1.0.14"
 }
