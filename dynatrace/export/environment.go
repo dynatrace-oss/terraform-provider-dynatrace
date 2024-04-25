@@ -84,16 +84,13 @@ func (me *Environment) TenantID() string {
 	return tenant
 }
 
-func (me *Environment) DataSource(id string, kind DataSourceKind) *DataSource {
-	for _, module := range me.Modules {
-		if dataSource, found := module.DataSources[id]; found {
-			return dataSource
-		}
-	}
-	if kind == DataSourceTenant {
-		return &DataSource{ID: id, Name: id, Type: string(DataSourceTenant)}
-	}
-	if kind == DataSourcePolicy {
+func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...ResourceType) *DataSource {
+	switch kind {
+	case DataSourceKindTenant:
+		return &DataSource{ID: id, Name: id, Type: "tenant", Kind: DataSourceKindTenant}
+	case DataSourceKindEntity:
+		return me.FetchEntity(id)
+	case DataSourceKindPolicy:
 		service := cache.CRUD(policies.Service(me.Credentials))
 		var policy policysettings.Policy
 		if err := service.Get(id, &policy); err == nil {
@@ -104,12 +101,28 @@ func (me *Environment) DataSource(id string, kind DataSourceKind) *DataSource {
 			return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourcePolicy)}
 		}
 	}
-	if kind == DataSourceEntity {
-		service := cache.Read(entity.Service(me.Credentials))
-		var entity entitysettings.Entity
-		if err := service.Get(id, &entity); err == nil {
-			return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type}
+	for _, module := range me.Modules {
+		skipModule := false
+		for _, except := range excepts {
+			if module.Type == except {
+				skipModule = true
+			}
 		}
+		if skipModule {
+			continue
+		}
+		if dataSource := module.DataSource(id, kind, excepts...); dataSource != nil {
+			return dataSource
+		}
+	}
+	return nil
+}
+
+func (me *Environment) FetchEntity(id string) *DataSource {
+	service := cache.Read(entity.DataSourceService(me.Credentials))
+	var entity entitysettings.Entity
+	if err := service.Get(id, &entity); err == nil {
+		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type, Kind: DataSourceKindEntity}
 	}
 	return nil
 }
@@ -477,14 +490,8 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		Environment:          me,
 		ChildParentIDNameMap: map[string]string{},
 		ModuleMutex:          new(sync.Mutex),
+		DataSourceLock:       new(sync.Mutex),
 		ChildModules:         map[ResourceType]*Module{},
-	}
-
-	if resType == ResourceTypes.JSONDashboardBase {
-		if module.Descriptor == nil {
-			descriptor := AllResources[resType]
-			module.Descriptor = &descriptor
-		}
 	}
 
 	me.Modules[resType] = module
@@ -534,7 +541,7 @@ func (me *Environment) GetChildResources() []*Resource {
 		return resources
 	}
 	for _, module := range me.Modules {
-		if module != nil && module.Descriptor != nil && module.Descriptor.Parent != nil {
+		if module != nil && module.GetDescriptor().Parent != nil {
 			resources = append(resources, module.GetChildResources()...)
 		}
 	}
@@ -547,9 +554,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 	if me.Flags.Flat {
 		dataSources := map[string]*DataSource{}
 		for _, module := range me.Modules {
-			for k, v := range module.DataSources {
-				dataSources[k] = v
-			}
+			module.GetDataSources(dataSources)
 		}
 		var datasourcesFile *os.File
 		if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
@@ -662,8 +667,10 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 		if module.IsReferencedAsDataSource() {
 			module.PurgeFolder()
 			delete(me.Modules, k)
-		} else if !module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil {
-			if me.Flags.FollowReferences {
+		} else if !module.Environment.ChildResourceOverride && module.GetDescriptor().Parent != nil {
+			_, parentFound := module.Environment.ChildParentGroups[module.Type]
+
+			if me.Flags.FollowReferences || parentFound {
 				module.PurgeFolder()
 			}
 		} else if len(module.GetPostProcessedResources()) == 0 {
@@ -762,9 +769,7 @@ func (me *Environment) WriteVariablesFiles() (err error) {
 		var wg sync.WaitGroup
 
 		for _, module := range me.Modules {
-			if module.Descriptor == nil {
-				continue
-			}
+
 			wg.Add(1)
 			go func(module *Module) error {
 				defer wg.Done()
@@ -833,7 +838,7 @@ func (me *Environment) WriteMainFile() error {
 		if me.Module(resourceType).IsReferencedAsDataSource() {
 			continue
 		}
-		if !me.ChildResourceOverride && me.Module(resourceType).Descriptor.Parent != nil {
+		if !me.ChildResourceOverride && me.Module(resourceType).GetDescriptor().Parent != nil {
 			continue
 		}
 		if len(me.Module(resourceType).GetPostProcessedResources()) == 0 {

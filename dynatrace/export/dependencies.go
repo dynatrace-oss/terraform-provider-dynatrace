@@ -296,7 +296,7 @@ func (me *dashdep) Replace(environment *Environment, s string, replacingIn Resou
 		}
 	}
 
-	childDescriptor := environment.Module(replacingIn).Descriptor
+	childDescriptor := environment.Module(replacingIn).GetDescriptor()
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	var replacePattern string
@@ -535,7 +535,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 }
 
 func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
-	childDescriptor := environment.Module(replacingIn).Descriptor
+	childDescriptor := environment.Module(replacingIn).GetDescriptor()
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	resources := []any{}
@@ -727,7 +727,7 @@ func (me *tenantds) Replace(environment *Environment, s string, replacingIn Reso
 	if !strings.Contains(s, tenantID) {
 		return s, []any{}
 	}
-	environment.Module(replacingIn).DataSource("tenant", DataSourceTenant)
+	environment.Module(replacingIn).DataSource("tenant", DataSourceKindTenant)
 	s = strings.ReplaceAll(s, tenantID, "${data.dynatrace_tenant.tenant.id}")
 	return s, []any{true}
 }
@@ -804,7 +804,7 @@ func (me *entityds) Replace(environment *Environment, s string, replacingIn Reso
 	found := false
 	m1 := regexp.MustCompile(me.Pattern)
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {
-		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceEntity)
+		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceKindEntity)
 		if dataSource == nil {
 			return s
 		}

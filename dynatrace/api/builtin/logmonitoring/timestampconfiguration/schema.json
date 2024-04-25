@@ -7,6 +7,7 @@
 	"constraints": [
 		{
 			"customValidatorId": "logMonitoringTimezoneValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -29,6 +30,11 @@
 					"displayName": "Log source",
 					"icon": "logfile",
 					"value": "log.source"
+				},
+				{
+					"displayName": "Host tag",
+					"icon": "filter",
+					"value": "host.tag"
 				},
 				{
 					"displayName": "K8s container name",
@@ -134,6 +140,7 @@
 				},
 				{
 					"customValidatorId": "logMonitoringDateTimePatternValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -224,6 +231,14 @@
 	"schemaId": "builtin:logmonitoring.timestamp-configuration",
 	"types": {
 		"Matcher": {
+			"constraints": [
+				{
+					"customMessage": "Invalid host tag format: correct format 'key=value'",
+					"customValidatorId": "logMonitoringHostTagValueValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
 			"description": "",
 			"displayName": "Matcher",
 			"documentation": "",
@@ -329,5 +344,5 @@
 			}
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

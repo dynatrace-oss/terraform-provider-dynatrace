@@ -116,6 +116,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "samplesFitInWindowValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -151,8 +152,8 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 30,
-					"description": "The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event",
+					"default": 24,
+					"description": "The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event",
 					"displayName": "Dealerting samples",
 					"documentation": "",
 					"maxObjects": 1,
@@ -259,7 +260,7 @@
 				},
 				"enabled": {
 					"default": true,
-					"description": "",
+					"description": "Detection of high CPU saturation is not available on AIX hosts",
 					"displayName": "Detect CPU saturation on host",
 					"documentation": "",
 					"maxObjects": 1,
@@ -904,7 +905,7 @@
 					],
 					"default": 5,
 					"description": "",
-					"displayName": "Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples",
+					"displayName": "Alert if the System Load divided by the number of logical CPU cores is higher than this threshold for the defined amount of samples.",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -1915,6 +1916,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "samplesFitInWindowValidatorStrict",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -1950,8 +1952,8 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 30,
-					"description": "The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event",
+					"default": 24,
+					"description": "The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event",
 					"displayName": "Dealerting samples",
 					"documentation": "",
 					"maxObjects": 1,
@@ -2009,5 +2011,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.8"
+	"version": "1.2.9"
 }

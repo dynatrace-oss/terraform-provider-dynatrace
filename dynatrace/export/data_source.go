@@ -7,17 +7,15 @@ import (
 
 type DataSourceKind string
 
-const (
-	DataSourceTenant = DataSourceKind("tenant")
-	DataSourceEntity = DataSourceKind("entity")
-	DataSourcePolicy = DataSourceKind("policy")
-)
+var DataSourceKindTenant = DataSourceKind("tenant")
+var DataSourceKindEntity = DataSourceKind("entity")
+var DataSourceKindPolicy = DataSourceKind("policy")
 
 type DataSource struct {
-	ID         string
-	Type       string
-	Name       string
-	UniqueName string
+	ID   string
+	Type string
+	Name string
+	Kind DataSourceKind
 }
 
 func AsDataSource(resource *Resource) string {
