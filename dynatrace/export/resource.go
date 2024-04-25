@@ -231,8 +231,8 @@ func (me *Resource) Download() error {
 		}
 	}
 
-	if me.Module.Descriptor.except != nil {
-		if me.Module.Descriptor.except(me.ID, me.Name) {
+	if except := me.Module.GetDescriptor().except; except != nil {
+		if except(me.ID, me.Name) {
 			me.Status = ResourceStati.Excluded
 			return nil
 		}
@@ -240,7 +240,7 @@ func (me *Resource) Download() error {
 
 	var service = me.Module.Service
 
-	settngs := me.Module.Descriptor.NewSettings()
+	settngs := me.Module.GetDescriptor().NewSettings()
 
 	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
 
@@ -394,7 +394,7 @@ func (me *Resource) PostProcess() error {
 	}
 	me.Status = ResourceStati.PostProcessed
 
-	descriptor := me.Module.Descriptor
+	descriptor := me.Module.GetDescriptor()
 
 	dependecyList := descriptor.Dependencies
 
