@@ -333,6 +333,17 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Cr
 	}
 }
 
+func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
+	return ResourceDescriptor{
+		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+		},
+		protoType:    newSettings(fn),
+		Dependencies: dependencies,
+		FolderName:   folderName,
+	}
+}
+
 func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
 		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
@@ -355,6 +366,7 @@ type ResourceDescriptor struct {
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
+	FolderName   string
 }
 
 func (me ResourceDescriptor) Specify(t notifications.Type) ResourceDescriptor {
@@ -488,8 +500,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
 	),
-	ResourceTypes.JSONDashboardBase: NewResourceDescriptor(
+	ResourceTypes.JSONDashboardBase: NewResourceDescriptorWithFolderOverride(
 		jsondashboardsbase.Service,
+		"json_dashboard",
 	),
 	ResourceTypes.Documents: NewResourceDescriptor(
 		documents.Service,

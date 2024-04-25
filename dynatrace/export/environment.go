@@ -482,13 +482,6 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		ChildModules:         map[ResourceType]*Module{},
 	}
 
-	if resType == ResourceTypes.JSONDashboardBase {
-		if module.Descriptor == nil {
-			descriptor := AllResources[resType]
-			module.Descriptor = &descriptor
-		}
-	}
-
 	me.Modules[resType] = module
 	return module
 }
@@ -536,7 +529,7 @@ func (me *Environment) GetChildResources() []*Resource {
 		return resources
 	}
 	for _, module := range me.Modules {
-		if module != nil && module.Descriptor != nil && module.Descriptor.Parent != nil {
+		if module != nil && module.GetDescriptor().Parent != nil {
 			resources = append(resources, module.GetChildResources()...)
 		}
 	}
@@ -662,8 +655,10 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 		if module.IsReferencedAsDataSource() {
 			module.PurgeFolder()
 			delete(me.Modules, k)
-		} else if !module.Environment.ChildResourceOverride && module.Descriptor.Parent != nil {
-			if me.Flags.FollowReferences {
+		} else if !module.Environment.ChildResourceOverride && module.GetDescriptor().Parent != nil {
+			_, parentFound := module.Environment.ChildParentGroups[module.Type]
+
+			if me.Flags.FollowReferences || parentFound {
 				module.PurgeFolder()
 			}
 		} else if len(module.GetPostProcessedResources()) == 0 {
@@ -762,9 +757,7 @@ func (me *Environment) WriteVariablesFiles() (err error) {
 		var wg sync.WaitGroup
 
 		for _, module := range me.Modules {
-			if module.Descriptor == nil {
-				continue
-			}
+
 			wg.Add(1)
 			go func(module *Module) error {
 				defer wg.Done()
@@ -833,7 +826,7 @@ func (me *Environment) WriteMainFile() error {
 		if me.Module(resourceType).IsReferencedAsDataSource() {
 			continue
 		}
-		if !me.ChildResourceOverride && me.Module(resourceType).Descriptor.Parent != nil {
+		if !me.ChildResourceOverride && me.Module(resourceType).GetDescriptor().Parent != nil {
 			continue
 		}
 		if len(me.Module(resourceType).GetPostProcessedResources()) == 0 {

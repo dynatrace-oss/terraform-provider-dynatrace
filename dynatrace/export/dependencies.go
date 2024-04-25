@@ -294,7 +294,7 @@ func (me *dashdep) Replace(environment *Environment, s string, replacingIn Resou
 		}
 	}
 
-	childDescriptor := environment.Module(replacingIn).Descriptor
+	childDescriptor := environment.Module(replacingIn).GetDescriptor()
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	var replacePattern string
@@ -533,7 +533,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 }
 
 func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
-	childDescriptor := environment.Module(replacingIn).Descriptor
+	childDescriptor := environment.Module(replacingIn).GetDescriptor()
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	resources := []any{}

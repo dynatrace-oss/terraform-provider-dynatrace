@@ -18,8 +18,6 @@
 package jsondashboardsbase
 
 import (
-	"strings"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -55,30 +53,19 @@ func (me *service) List() (api.Stubs, error) {
 }
 
 func (me *service) Get(id string, v *dashboardsbase.JSONDashboardBase) error {
-	if err := me.service.Get(id, v); err != nil {
-		return err
-	}
 	return nil
 }
 
 func (me *service) Validate(v *dashboardsbase.JSONDashboardBase) error {
-	if validator, ok := me.service.(settings.Validator[*dashboardsbase.JSONDashboardBase]); ok {
-		return validator.Validate(v)
-	}
 	return nil
 }
 
 func (me *service) Create(v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
-	return me.service.Create(v.EnrichRequireds())
+	return me.service.Create(v)
 }
 
 func (me *service) Update(id string, v *dashboardsbase.JSONDashboardBase) error {
-	jsonDashboard := v
-	oldContents := jsonDashboard.Contents
-	jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
-	err := me.service.Update(id, v.EnrichRequireds())
-	jsonDashboard.Contents = oldContents
-	return err
+	return nil
 }
 
 func (me *service) Delete(id string) error {

@@ -17,7 +17,10 @@
 
 package export
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type ResourceType string
 
@@ -663,6 +666,17 @@ var ResourceTypes = struct {
 	"dynatrace_davis_anomaly_detectors",
 }
 
+func (me ResourceType) GetFolderName(override string) string {
+	folderName := me.Trim()
+	if len(override) > 0 {
+		folderName = override
+	}
+	if !me.IsChildResource() {
+		return folderName
+	}
+	return fmt.Sprintf("%s_child_of_%s", folderName, me.GetParent().GetFolderName(""))
+}
+
 func (me ResourceType) GetChildren() []ResourceType {
 	res := []ResourceType{}
 	for k, v := range AllResources {
@@ -671,6 +685,18 @@ func (me ResourceType) GetChildren() []ResourceType {
 		}
 	}
 	return res
+}
+
+func (me ResourceType) GetParent() ResourceType {
+	if !me.IsChildResource() {
+		return ""
+	}
+	for k, v := range AllResources {
+		if string(k) == string(me) {
+			return *v.Parent
+		}
+	}
+	return ""
 }
 
 func (me ResourceType) IsChildResource() bool {
