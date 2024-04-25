@@ -947,7 +947,7 @@ Required:
 
 Optional:
 
-- `assigned_entities` (Set of String) The list of Dynatrace entities, assigned to the tile
+- `assigned_entities` (List of String) The list of Dynatrace entities, assigned to the tile
 - `auto_refresh_disabled` (Boolean) Auto Refresh is disabled (`true`)
 - `bounds` (Block List, Max: 1) the position and size of a tile (see [below for nested schema](#nestedblock--tile--bounds))
 - `chart_visible` (Boolean)

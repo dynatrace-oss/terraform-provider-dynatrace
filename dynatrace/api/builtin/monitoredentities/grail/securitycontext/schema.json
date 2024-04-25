@@ -2,8 +2,8 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure specific overrides of the security context here.",
-	"displayName": "Grail Security Context",
+	"description": "the dt.security_context field must be used to set up access permissions for monitored entities in Grail. On this screen you can configure how the dt.security_context field is defined for each entity type. Please check the [documentation](https://dt-url.net/vc034se) to learn more about entity permissions in Grail. \n\n**By default, Grail will use the actual value of dt.security_context. You can override it per entity type in the settings below.**",
+	"displayName": "Grail security context for monitored entities",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -86,5 +86,5 @@
 	],
 	"schemaId": "builtin:monitoredentities.grail.security.context",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

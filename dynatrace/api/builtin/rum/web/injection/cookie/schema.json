@@ -45,6 +45,7 @@
 				{
 					"customMessage": "Please enter a valid domain.",
 					"customValidatorId": "rumInjectionCookieDomainValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -84,5 +85,5 @@
 	],
 	"schemaId": "builtin:rum.web.injection.cookie",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

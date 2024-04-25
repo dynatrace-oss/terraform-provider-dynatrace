@@ -82,19 +82,35 @@ func (me *Environment) TenantID() string {
 	return tenant
 }
 
-func (me *Environment) DataSource(id string) *DataSource {
+func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...ResourceType) *DataSource {
+	switch kind {
+	case DataSourceKindTenant:
+		return &DataSource{ID: id, Name: id, Type: "tenant", Kind: DataSourceKindTenant}
+	case DataSourceKindEntity:
+		return me.FetchEntity(id)
+	}
 	for _, module := range me.Modules {
-		if dataSource, found := module.DataSources[id]; found {
+		skipModule := false
+		for _, except := range excepts {
+			if module.Type == except {
+				skipModule = true
+			}
+		}
+		if skipModule {
+			continue
+		}
+		if dataSource := module.DataSource(id, kind, excepts...); dataSource != nil {
 			return dataSource
 		}
 	}
-	if id == "tenant" {
-		return &DataSource{ID: id, Name: id, Type: "tenant"}
-	}
-	service := cache.Read(entity.Service(me.Credentials))
+	return nil
+}
+
+func (me *Environment) FetchEntity(id string) *DataSource {
+	service := cache.Read(entity.DataSourceService(me.Credentials))
 	var entity entitysettings.Entity
 	if err := service.Get(id, &entity); err == nil {
-		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type}
+		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type, Kind: DataSourceKindEntity}
 	}
 	return nil
 }
@@ -462,6 +478,7 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		Environment:          me,
 		ChildParentIDNameMap: map[string]string{},
 		ModuleMutex:          new(sync.Mutex),
+		DataSourceLock:       new(sync.Mutex),
 		ChildModules:         map[ResourceType]*Module{},
 	}
 
@@ -532,9 +549,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 	if me.Flags.Flat {
 		dataSources := map[string]*DataSource{}
 		for _, module := range me.Modules {
-			for k, v := range module.DataSources {
-				dataSources[k] = v
-			}
+			module.GetDataSources(dataSources)
 		}
 		var datasourcesFile *os.File
 		if datasourcesFile, err = me.CreateFile("___datasources___.tf"); err != nil {
