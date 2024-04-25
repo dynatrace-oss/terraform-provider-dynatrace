@@ -32,6 +32,7 @@ import (
 	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/deployment/lambdaagent"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
@@ -218,6 +219,7 @@ func Provider() *schema.Provider {
 			"dynatrace_remote_environments":          remoteenvironments.DataSource(),
 			"dynatrace_hub_items":                    items.DataSource(),
 			"dynatrace_documents":                    document.DataSource(),
+			"dynatrace_lambda_agent_version":         lambdaagent.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
