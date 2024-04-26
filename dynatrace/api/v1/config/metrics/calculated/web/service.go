@@ -97,7 +97,11 @@ func (me *service) Delete(id string) error {
 				return err
 			}
 		} else {
-			break
+			if err = me.Get(id, &mysettings.CalculatedWebMetric{}); err != nil {
+				if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
+					break
+				}
+			}
 		}
 		time.Sleep(2 * time.Second)
 	}
