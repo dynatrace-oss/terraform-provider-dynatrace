@@ -242,15 +242,41 @@ func (c client) Delete(ctx context.Context, id string) (Response, error) {
 
 func (c client) create(ctx context.Context, data []byte) (*http.Response, error) {
 	options := rest.RequestOptions{}
-	if !NO_REPAIR_INPUT {
-		options.QueryParams = url.Values{"repairInput": []string{"true"}}
-	}
+	c.setRepairInput(options)
+
 	r, err := c.client.POST(ctx, endpointPath, bytes.NewReader(data), options)
 
 	if err != nil {
 		return r, fmt.Errorf("failed to create object: %w", err)
 	}
 	return r, nil
+}
+
+func IsSkipRepairSchemaID(schemaID string) bool {
+	if schemaID == "builtin:alerting.profile" ||
+		schemaID == "builtin:appsec.notification-alerting-profile" ||
+		schemaID == "builtin:failure-detection.environment.rules" ||
+		schemaID == "builtin:service-detection.external-web-request" ||
+		schemaID == "builtin:service-detection.external-web-service" ||
+		schemaID == "builtin:service-detection.full-web-request" ||
+		schemaID == "builtin:service-detection.full-web-service" {
+
+		return true
+	}
+	return false
+}
+
+func (c client) setRepairInput(options rest.RequestOptions) {
+	if IsSkipRepairSchemaID(c.schemaID) {
+		return
+	}
+
+	if NO_REPAIR_INPUT {
+		return
+	}
+
+	options.QueryParams = url.Values{"repairInput": []string{"true"}}
+
 }
 
 func (c client) get(ctx context.Context, id string) (*http.Response, error) {
@@ -298,9 +324,8 @@ func (c client) update(ctx context.Context, id string, data []byte) (*http.Respo
 
 	// make PUT request
 	options := rest.RequestOptions{}
-	if !NO_REPAIR_INPUT {
-		options.QueryParams = url.Values{"repairInput": []string{"true"}}
-	}
+
+	c.setRepairInput(options)
 	return c.client.PUT(ctx, path, bytes.NewReader(data), options)
 }
 

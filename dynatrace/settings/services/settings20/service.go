@@ -303,6 +303,17 @@ type Matcher interface {
 	Match(o any) bool
 }
 
+func (me *service[T]) skipRepairInput() bool {
+	if IsSkipRepairSchemaID(me.schemaID) {
+		return true
+	}
+	if NO_REPAIR_INPUT {
+		return true
+	}
+
+	return false
+}
+
 func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
@@ -359,7 +370,7 @@ func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, er
 	}
 
 	var req rest.Request
-	if NO_REPAIR_INPUT {
+	if me.skipRepairInput() {
 		req = me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
 	} else {
 		req = me.client.Post("/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200)
@@ -441,7 +452,7 @@ func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) err
 		}
 	}
 	var req rest.Request
-	if NO_REPAIR_INPUT {
+	if me.skipRepairInput() {
 		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
 	} else {
 		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou, 200)
