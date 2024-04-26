@@ -98,7 +98,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 			if policyMod := me.Module(ResourceTypes.IAMPolicy); policyMod != nil {
 				terraformName = me.Module(ResourceTypes.IAMPolicy).namer.Name(terraformName)
 			}
-			return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourcePolicy)}
+			return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourceKindPolicy)}
 		}
 	}
 	for _, module := range me.Modules {

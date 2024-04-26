@@ -46,6 +46,12 @@ func (me *GroupServiceClient) Name() string {
 	return me.SchemaID()
 }
 
+// TODO ... keep group cache up to date
+// UUID                     string             `json:"uuid"`
+// Name                     string             `json:"name"`
+// Description              string             `json:"description"`
+// FederatedAttributeValues []string           `json:"federatedAttributeValues"`
+// Permissions              groups.Permissions `json:"permissions"`
 func (me *GroupServiceClient) Create(group *groups.Group) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte

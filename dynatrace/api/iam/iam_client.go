@@ -97,7 +97,7 @@ func (rl *RateLimiter) CanCall() bool {
 	rl.mutex.Lock()
 	defer rl.mutex.Unlock()
 	now := time.Now()
-	if now.Sub(rl.lastCall) >= 700*time.Millisecond {
+	if now.Sub(rl.lastCall) >= 1000*time.Millisecond {
 		rl.lastCall = now
 		return true
 	}

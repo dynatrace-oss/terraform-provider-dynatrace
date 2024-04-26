@@ -715,7 +715,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.IAMPermission),
-		// Dependencies.ID(ResourceTypes.IAMPolicyBindingsV2),
 		Dependencies.Tenant,
 	),
 	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),

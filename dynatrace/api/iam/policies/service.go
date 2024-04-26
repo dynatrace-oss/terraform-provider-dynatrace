@@ -71,6 +71,17 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
+	err := me.get(id, v)
+	if err != nil {
+		panic(err)
+	}
+	if len(v.Account) == 0 && len(v.Environment) == 0 && !strings.HasSuffix(id, "#-#global#-#global") {
+		panic(id)
+	}
+	return err
+}
+
+func (me *PolicyServiceClient) get(id string, v *policies.Policy) error {
 	var levelType string
 	var levelID string
 
@@ -96,8 +107,14 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	}
 	if levelType == "account" {
 		v.Account = levelID
+		if len(levelID) == 0 {
+			panic(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+		}
 	} else if levelType == "environment" {
 		v.Environment = levelID
+		if len(levelID) == 0 {
+			panic(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+		}
 	}
 	v.UUID = uuid
 	RegisterPolicyLevel(me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
@@ -105,11 +122,16 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 }
 
 func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
-	uuid, levelType, levelID, err := SplitIDNoDefaults(id)
+	var levelType string
+	var levelID string
+	uuid, _, _, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
-
+	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	if err != nil {
+		return err
+	}
 	client := iam.NewIAMClient(me)
 
 	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, 204, false); err != nil {
@@ -255,21 +277,34 @@ func list(auth iam.Authenticator) (results chan *api.Stub, err error) {
 
 func (me *PolicyServiceClient) List() (api.Stubs, error) {
 	stubs := api.Stubs{}
-	results, err := list(me)
+	policyLevels, err := FetchAllPolicyLevels(me)
 	if err != nil {
-		return nil, err
+		return stubs, err
 	}
-	for stub := range results {
-		stubs = append(stubs, stub)
+	for uuid, level := range policyLevels {
+		if level.LevelType == "global" && level.LevelID == "global" {
+			continue
+		}
+		stubs = append(stubs, &api.Stub{ID: Join(uuid, level.LevelType, level.LevelID), Name: level.Name})
 	}
 	return stubs, nil
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {
-	uuid, levelType, levelID, err := SplitIDNoDefaults(id)
+	var levelType string
+	var levelID string
+	var err error
+	var uuid string
+
+	uuid, _, _, err = SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
+	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	if err != nil {
+		return err
+	}
+
 	_, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 204, false)
 	return err
 }
@@ -292,6 +327,9 @@ func SplitID(id string, defLevelType string, defLevelID string) (uuid string, le
 }
 
 func SplitIDNoDefaults(id string) (uuid string, levelType string, levelID string, err error) {
+	if IsValidUUID(id) {
+		return id, "", "", nil
+	}
 	parts := strings.Split(id, "#-#")
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)

@@ -2,10 +2,8 @@ package v2bindings
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
@@ -107,17 +105,12 @@ func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v
 	if err != nil {
 		return err
 	}
-	var responseBytes []byte
-
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200, false); err != nil {
-		return err
-	}
 	policyUUIDStruct := struct {
 		PolicyUuids []string `json:"policyUuids"`
 	}{}
-	if err = json.Unmarshal(responseBytes, &policyUUIDStruct); err != nil {
+	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200, false, &policyUUIDStruct); err != nil {
 		return err
 	}
 	if levelType == "account" {
@@ -128,42 +121,20 @@ func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v
 	v.GroupID = groupID
 	policies := []*bindings.Policy{}
 
-	var wg sync.WaitGroup
-	var policyErr error
-	var lock sync.Mutex
-
 	for _, policyID := range policyUUIDStruct.PolicyUuids {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			var bindingsResponse BindingsResponse
-			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
-				lock.Lock()
-				policyErr = err
-				lock.Unlock()
-				return
-			}
-			if len(bindingsResponse.PolicyBindings) == 0 {
-				return
-			}
+		var bindingsResponse BindingsResponse
+		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
+			return err
+		}
+		if len(bindingsResponse.PolicyBindings) == 0 {
+			return nil
+		}
 
-			policies, err := me.resolvePolicies(policyID, bindingsResponse, stateConfig)
-			if err != nil {
-				lock.Lock()
-				policyErr = err
-				lock.Unlock()
-				return
-			}
-			for _, policy := range policies {
-				lock.Lock()
-				policies = append(policies, policy)
-				lock.Unlock()
-			}
-		}()
-	}
-	wg.Wait()
-	if policyErr != nil {
-		return err
+		resolvedPolicies, err := me.resolvePolicies(policyID, bindingsResponse, stateConfig)
+		if err != nil {
+			return err
+		}
+		policies = append(policies, resolvedPolicies...)
 	}
 	v.Policies = policies
 	return nil
@@ -255,16 +226,10 @@ func (me *BindingServiceClient) FetchAccountBindings() chan *api.Stub {
 		}()
 
 		var err error
-		var responseBytes []byte
-
+		var response ListPolicyBindingsResponse
 		client := iam.NewIAMClient(me)
 
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
-			return
-		}
-
-		var response ListPolicyBindingsResponse
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false, &response); err != nil {
 			return
 		}
 
@@ -293,7 +258,6 @@ func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
 			close(results)
 		}()
 		var err error
-		var responseBytes []byte
 		client := iam.NewIAMClient(me)
 
 		var environmentIDs []string
@@ -303,12 +267,8 @@ func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
 
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
-			if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environmentID), 200, false); err != nil {
-				return
-			}
-
 			var response ListPolicyBindingsResponse
-			if err = json.Unmarshal(responseBytes, &response); err != nil {
+			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environmentID), 200, false, &response); err != nil {
 				return
 			}
 

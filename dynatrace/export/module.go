@@ -516,13 +516,13 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 		dataSourceName := dataSource.Name
 		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
-		if dataSource.Type == string(DataSourceTenant) {
+		if dataSource.Type == string(DataSourceKindTenant) {
 			if _, err = buf.WriteString(`
 			data "dynatrace_tenant" "tenant" {
 			}`); err != nil {
 				return err
 			}
-		} else if dataSource.Type == string(DataSourcePolicy) {
+		} else if dataSource.Type == string(DataSourceKindPolicy) {
 			qualifier := ""
 			dsid := dataSource.ID
 			if strings.Contains(dsid, "#-#environment#-#") {

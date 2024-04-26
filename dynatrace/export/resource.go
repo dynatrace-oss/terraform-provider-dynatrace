@@ -249,7 +249,7 @@ func (me *Resource) Download() error {
 	settngs := me.Module.GetDescriptor().NewSettings()
 
 	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
-
+	fmt.Printf("[DOWNLOAD][%s][%s]\n", me.Type, me.ID)
 	if err = service.Get(getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
@@ -286,6 +286,10 @@ func (me *Resource) Download() error {
 				return nil
 			}
 		}
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		me.Status = ResourceStati.Erronous
+		me.Error = err
 		return err
 	}
 	name := settings.Name(settngs, me.ID)

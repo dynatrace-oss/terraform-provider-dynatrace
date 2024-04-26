@@ -760,7 +760,7 @@ func (me *policyds) Replace(environment *Environment, s string, replacingIn Reso
 	pattern := `[0-9a-zA-Z]{8}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{12}#\-\#global#\-\#global`
 	m1 := regexp.MustCompile(pattern)
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {
-		dataSource := environment.Module(replacingIn).DataSource(id, DataSourcePolicy)
+		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceKindPolicy)
 		if dataSource == nil {
 			return s
 		}
