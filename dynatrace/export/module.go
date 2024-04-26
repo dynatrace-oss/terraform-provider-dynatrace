@@ -71,6 +71,22 @@ func (me *Module) GetDescriptor() *ResourceDescriptor {
 	return me.PrivDescriptor
 }
 
+func (me *Module) GetReferringResources(resource *Resource) []*Resource {
+	var resources []*Resource
+	me.ModuleMutex.Lock()
+	for _, res := range me.Resources {
+		resources = append(resources, res)
+	}
+	me.ModuleMutex.Unlock()
+	var referringResources []*Resource
+	for _, res := range resources {
+		if res.RefersTo(resource) {
+			referringResources = append(referringResources, res)
+		}
+	}
+	return referringResources
+}
+
 func (me *Module) IsReferencedAsDataSource() bool {
 	if !me.Environment.Flags.DataSources {
 		return false
@@ -681,6 +697,21 @@ func (me *Module) RefersTo(resource *Resource, parentType ResourceType) bool {
 		return false
 	}
 	for _, res := range me.Resources {
+		if res.RefersTo(resource) {
+			return true
+		}
+	}
+	return false
+}
+
+func (me *Module) IsReferenced(resource *Resource) bool {
+	me.ModuleMutex.Lock()
+	var resources []*Resource
+	for _, res := range me.Resources {
+		resources = append(resources, res)
+	}
+	me.ModuleMutex.Unlock()
+	for _, res := range resources {
 		if res.RefersTo(resource) {
 			return true
 		}

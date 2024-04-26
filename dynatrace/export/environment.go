@@ -36,6 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
@@ -397,28 +398,94 @@ func (me *Environment) PostProcess() error {
 		}
 	}
 
+	resourcesToVoid := map[ResourceType]map[string]*Resource{}
+
 	fmt.Println("Post-Processing Resources - Group child configs with parent configs ...")
-	for _, resource := range me.GetChildResources() {
+	for _, resource := range me.GetChildResources(true) {
 		if resource.GetParent().Status == ResourceStati.Erronous {
 			continue
 		}
-		var parentBytes []byte
-		var childBytes []byte
-		var err error
-		if parentBytes, err = resource.GetParent().ReadFile(); err == nil {
-			if childBytes, err = resource.ReadFile(); err == nil {
-				resource.GetParent().Module.saveChildModule(resource.Module)
-				var parentFile *os.File
-				if parentFile, err = resource.GetParent().CreateFile(); err == nil {
-					defer parentFile.Close()
-					parentFile.Write(parentBytes)
-					parentFile.Write([]byte("\n\n"))
-					parentFile.Write(childBytes)
+		parent := resource.GetParent()
+		if parent.Type.CanGetVoidedIfNotReferenced() {
+			var mapOfCheckedResources map[string]*Resource
+			var found bool
+			if mapOfCheckedResources, found = resourcesToVoid[parent.Type]; !found {
+				mapOfCheckedResources = map[string]*Resource{}
+				resourcesToVoid[parent.Type] = mapOfCheckedResources
+			}
+			if _, found := mapOfCheckedResources[parent.ID]; !found {
+				// There's room for optization here. At the moment we're JUST hunting down `dynatrace_json_dashboard_base` that
+				// aren't getting referenced by `dynatrace_json_dashboard` blocks (besides the one with the same ID)
+				// We're nevertheless asking ALL modules. We could ask the `dynatrace_json_dashboard_base` module directly
+				// It's just not pretty to have within this for-loop an explicit reference to a specific resource type
+				resourcesReferringToParent := parent.GetReferringResources()
+				isReferredToAsPotentialCircularDependency := false
+				for _, resourceReferringToParent := range resourcesReferringToParent {
+					if resourceReferringToParent.Type.IsPotentialCircularDependencyTo(resourceReferringToParent.ID, parent.Type, parent.ID) {
+						isReferredToAsPotentialCircularDependency = true
+						break
+					}
 				}
+				if isReferredToAsPotentialCircularDependency {
+					mapOfCheckedResources[parent.ID] = parent
+				} else {
+					// noting down that we've already checked that resource
+					mapOfCheckedResources[parent.ID] = nil
+				}
+			}
+		}
+
+		if err := mergeParentWithChild(resource); err != nil {
+			logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to merge resource into parent .tf file: %s", resource.Type, resource.ID, err.Error())
+		}
+	}
+	for _, resourcesByIDToVoid := range resourcesToVoid {
+		for _, resourceToVoid := range resourcesByIDToVoid {
+			if err := voidResource(resourceToVoid); err != nil {
+				logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to remove resource: %s", resourceToVoid.Type, resourceToVoid.ID, err.Error())
 			}
 		}
 	}
 	return nil
+}
+
+func voidResource(resource *Resource) error {
+	if resource == nil {
+		return nil
+	}
+	var err error
+	var resourceBytes []byte
+	var changed bool
+	if resourceBytes, err = resource.ReadFile(); err != nil {
+		return err
+	}
+	if resourceBytes, changed = resource.Type.VoidResource(resource, resourceBytes); changed {
+		var resourceFile *os.File
+		if resourceFile, err = resource.CreateFile(); err == nil {
+			defer resourceFile.Close()
+			resourceFile.Write(resourceBytes)
+		}
+	}
+	return nil
+}
+
+func mergeParentWithChild(resource *Resource) error {
+	var parentBytes []byte
+	var childBytes []byte
+	var err error
+	if parentBytes, err = resource.GetParent().ReadFile(); err == nil {
+		if childBytes, err = resource.ReadFile(); err == nil {
+			resource.GetParent().Module.saveChildModule(resource.Module)
+			var parentFile *os.File
+			if parentFile, err = resource.GetParent().CreateFile(); err == nil {
+				defer parentFile.Close()
+				parentFile.Write(childBytes)
+				parentFile.Write([]byte("\n\n"))
+				parentFile.Write(parentBytes)
+			}
+		}
+	}
+	return err
 }
 
 func getResMap(resources []*Resource) map[ResourceType][]*Resource {
@@ -523,7 +590,11 @@ func (me *Environment) GetNonPostProcessedResources() []*Resource {
 	return resources
 }
 
-func (me *Environment) GetChildResources() []*Resource {
+func (me *Environment) GetChildResources(optSort ...bool) []*Resource {
+	needsToSort := false
+	if len(optSort) > 0 {
+		needsToSort = optSort[0]
+	}
 	resources := []*Resource{}
 	if me.ChildResourceOverride {
 		return resources
@@ -532,6 +603,19 @@ func (me *Environment) GetChildResources() []*Resource {
 		if module != nil && module.GetDescriptor().Parent != nil {
 			resources = append(resources, module.GetChildResources()...)
 		}
+	}
+	if needsToSort {
+		sort.SliceStable(resources, func(i, j int) bool {
+			a := resources[i]
+			b := resources[j]
+			if a == nil {
+				return b != nil
+			}
+			if b == nil {
+				return false
+			}
+			return a.Type.Less(b.Type)
+		})
 	}
 	return resources
 }
@@ -1194,4 +1278,31 @@ func appendModule(modules []TerraformInitModule, moduleNameTrimmed string) []Ter
 		Dir:    fmt.Sprintf("modules/%s", moduleNameTrimmed),
 	})
 	return modules
+}
+
+func (me *Environment) IsReferenced(resource *Resource) bool {
+	me.mu.Lock()
+	var modules []*Module
+	for _, module := range me.Modules {
+		modules = append(modules, module)
+	}
+	me.mu.Unlock()
+	for _, module := range modules {
+		return module.IsReferenced(resource)
+	}
+	return false
+}
+
+func (me *Environment) GetReferringResources(resource *Resource) []*Resource {
+	var referringResources []*Resource
+	me.mu.Lock()
+	var modules []*Module
+	for _, module := range me.Modules {
+		modules = append(modules, module)
+	}
+	me.mu.Unlock()
+	for _, module := range modules {
+		referringResources = append(referringResources, module.GetReferringResources(resource)...)
+	}
+	return referringResources
 }
