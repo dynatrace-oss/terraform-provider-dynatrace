@@ -99,6 +99,9 @@ func (me *service) client() *automation.Client {
 func (me *service) Get(id string, v *workflows.Workflow) (err error) {
 	var result *automation.Response
 	if result, err = me.client().GET(automation.Workflows, id); err != nil {
+		if responseErr, ok := err.(automation.ResponseErr); ok {
+			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+		}
 		return err
 	}
 	return json.Unmarshal(result.Data, &v)
@@ -135,6 +138,9 @@ func (me *service) Create(v *workflows.Workflow) (stub *api.Stub, err error) {
 		return nil, err
 	}
 	if id, err = me.client().INSERT(automation.Workflows, data); err != nil {
+		if responseErr, ok := err.(automation.ResponseErr); ok {
+			return nil, rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+		}
 		return nil, err
 	}
 	return &api.Stub{Name: v.Title, ID: id}, nil
@@ -145,11 +151,23 @@ func (me *service) Update(id string, v *workflows.Workflow) (err error) {
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	return me.client().UPDATE(automation.Workflows, id, data)
+	if err = me.client().UPDATE(automation.Workflows, id, data); err != nil {
+		if responseErr, ok := err.(automation.ResponseErr); ok {
+			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+		}
+	}
+	return err
 }
 
 func (me *service) Delete(id string) error {
-	return me.client().DELETE(automation.Workflows, id)
+	err := me.client().DELETE(automation.Workflows, id)
+	if responseErr, ok := err.(automation.ResponseErr); ok {
+		if responseErr.StatusCode == 404 {
+			return nil
+		}
+		return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+	}
+	return err
 }
 
 func (me *service) New() *workflows.Workflow {
