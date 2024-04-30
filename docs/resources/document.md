@@ -1,7 +1,7 @@
 ---
 layout: ""
 page_title:  Resource - terraform-provider-dynatrace"
-subcategory: "Document"
+subcategory: "Documents"
 description: |-
   The resource `dynatrace_document` covers configuration of Documents (dashboards and notebooks) in Dynatrace.
 ---
