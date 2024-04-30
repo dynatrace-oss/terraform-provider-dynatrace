@@ -132,7 +132,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 		if !found {
 			deleteRules = append(deleteRules, stateRule)
-			logging.File.Println("Delete rules: ", *stateRule.AttributeRule.Conditions[0].StringValue)
 		}
 	}
 	// Concat API and TF rules
@@ -149,7 +148,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 		if !found {
 			finalRules = append(finalRules, apiRule)
-			logging.File.Println("Final rules: ", *apiRule.AttributeRule.Conditions[0].StringValue)
 		}
 	}
 	apiConfig.Rules = finalRules
