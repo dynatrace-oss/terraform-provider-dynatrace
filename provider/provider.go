@@ -201,6 +201,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_attribute":            reqattrds.DataSource(),
 			"dynatrace_calculated_service_metric":    metricsds.DataSource(),
 			"dynatrace_iam_group":                    ds_iam_groups.DataSource(),
+			"dynatrace_iam_groups":                   ds_iam_groups.DataSourceMulti(),
 			"dynatrace_entity":                       entity.DataSource(),
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
