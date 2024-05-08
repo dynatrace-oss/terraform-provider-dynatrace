@@ -46,6 +46,7 @@ func DataSourceSingle() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The UUID of the policy",
 				Optional:    true,
+				Computed:    true,
 			},
 		},
 	}
@@ -74,8 +75,8 @@ func DataSourceSingleRead(d *schema.ResourceData, m any) error {
 		return err
 	}
 
-	service := policies.Service(creds)
-	stubs, err := service.List()
+	service := policies.ServiceWithGloabals(creds)
+	stubs, err := service.ListWithGlobals()
 	if err != nil {
 		return err
 	}
