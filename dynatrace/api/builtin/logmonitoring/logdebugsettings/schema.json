@@ -1,0 +1,31 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Debug settings allow you to add messages that provide detailed debugging information on a log record transformation. Learn more by visiting our [documentation](https://dt-url.net/f203vlb).",
+	"displayName": "Debug settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enable log ingest debug information",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring.analysis",
+		"group:log-monitoring"
+	],
+	"schemaId": "builtin:logmonitoring.log-debug-settings",
+	"types": {},
+	"version": "1"
+}

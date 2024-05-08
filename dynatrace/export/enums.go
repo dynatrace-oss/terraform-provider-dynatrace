@@ -444,6 +444,7 @@ var ResourceTypes = struct {
 	InfraOpsAppFeatureFlags             ResourceType
 	EBPFServiceDiscovery                ResourceType
 	DavisAnomalyDetectors               ResourceType
+	LogDebugSettings                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -735,6 +736,7 @@ var ResourceTypes = struct {
 	"dynatrace_infraops_app_feature_flags",
 	"dynatrace_ebpf_service_discovery",
 	"dynatrace_davis_anomaly_detectors",
+	"dynatrace_log_debug_settings",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
