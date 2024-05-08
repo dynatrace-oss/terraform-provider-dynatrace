@@ -5,6 +5,7 @@
 	"constraints": [
 		{
 			"customValidatorId": "attribute-block-list-add-enable-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -36,12 +37,13 @@
 					"type": "TRIMMED"
 				},
 				{
-					"maxLength": 100,
+					"maxLength": 200,
 					"minLength": 1,
 					"type": "LENGTH"
 				},
 				{
 					"customValidatorId": "prohibit-always-captured-attributes-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -70,5 +72,5 @@
 	],
 	"schemaId": "builtin:attribute-block-list",
 	"types": {},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }
