@@ -39,6 +39,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*policies.P
 	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
 }
 
+func ServiceWithGloabals(credentials *settings.Credentials) *PolicyServiceClient {
+	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+}
+
 func (me *PolicyServiceClient) SchemaID() string {
 	return "accounts:iam:policies"
 }
@@ -285,6 +289,18 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 		if level.LevelType == "global" && level.LevelID == "global" {
 			continue
 		}
+		stubs = append(stubs, &api.Stub{ID: Join(uuid, level.LevelType, level.LevelID), Name: level.Name})
+	}
+	return stubs, nil
+}
+
+func (me *PolicyServiceClient) ListWithGlobals() (api.Stubs, error) {
+	stubs := api.Stubs{}
+	policyLevels, err := FetchAllPolicyLevels(me)
+	if err != nil {
+		return stubs, err
+	}
+	for uuid, level := range policyLevels {
 		stubs = append(stubs, &api.Stub{ID: Join(uuid, level.LevelType, level.LevelID), Name: level.Name})
 	}
 	return stubs, nil

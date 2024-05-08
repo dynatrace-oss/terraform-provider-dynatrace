@@ -119,8 +119,8 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		return err
 	}
 
-	service := policies.Service(creds)
-	stubs, err := service.List()
+	service := policies.ServiceWithGloabals(creds)
+	stubs, err := service.ListWithGlobals()
 	if err != nil {
 		return err
 	}
