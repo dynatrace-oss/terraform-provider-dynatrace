@@ -19,10 +19,10 @@ package customlogsourcesettings_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccLogCustomSource(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - schema does not exist in test environment. Requires v292
+	// api.TestAcc(t)
+	t.Skip()
 }
