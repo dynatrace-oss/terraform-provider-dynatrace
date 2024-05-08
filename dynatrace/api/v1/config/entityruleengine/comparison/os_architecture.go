@@ -132,7 +132,7 @@ func (oac *OSArchitecture) MarshalJSON() ([]byte, error) {
 		m["negate"] = rawMessage
 	}
 	{
-		rawMessage, err := json.Marshal(ComparisonBasicTypes.PaasType)
+		rawMessage, err := json.Marshal(oac.GetType())
 		if err != nil {
 			return nil, err
 		}
