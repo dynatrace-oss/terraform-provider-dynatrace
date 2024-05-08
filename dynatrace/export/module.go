@@ -113,7 +113,8 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.AzureCredentials ||
 		me.Type == ResourceTypes.IAMGroup ||
 		me.Type == ResourceTypes.AppSecVulnerabilityAlerting ||
-		me.Type == ResourceTypes.AppSecAttackAlerting
+		me.Type == ResourceTypes.AppSecAttackAlerting ||
+		me.Type == ResourceTypes.IAMPolicy
 }
 
 func (me *Module) DataSource(id string, kind DataSourceKind, excepts ...ResourceType) *DataSource {
@@ -531,18 +532,34 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 		dataSourceName := dataSource.Name
 		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
-		if dataSourceID == "tenant" {
+		if dataSource.Type == string(DataSourceKindTenant) {
 			if _, err = buf.WriteString(`
 			data "dynatrace_tenant" "tenant" {
 			}`); err != nil {
 				return err
 			}
+		} else if dataSource.Type == string(DataSourceKindPolicy) {
+			qualifier := ""
+			dsid := dataSource.ID
+			if strings.Contains(dsid, "#-#environment#-#") {
+				qualifier = fmt.Sprintf("environment = \"%s\"", dsid[strings.LastIndex(dsid, "#-#")+3:])
+			} else if strings.Contains(dsid, "#-#account#-#") {
+				qualifier = fmt.Sprintf("account = \"%s\"", dsid[strings.LastIndex(dsid, "#-#")+3:])
+			}
+
+			if _, err = buf.WriteString(fmt.Sprintf(`			
+			data "dynatrace_iam_policy" "%s" {
+				%s
+				name = "%s"
+			}`, dataSource.UniqueName, qualifier, dataSource.Name)); err != nil {
+				return err
+			}
 		} else {
 			if _, err = buf.WriteString(fmt.Sprintf(`
-			data "dynatrace_entity" "%s" {
-				type = "%s"
-				name = %s
-			}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
+				data "dynatrace_entity" "%s" {
+					type = "%s"
+					name = %s
+				}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
 				return err
 			}
 		}
@@ -920,7 +937,6 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 	if maxThreads > itemCount {
 		maxThreads = itemCount
 	}
-	wg.Add(maxThreads)
 
 	processItem := func(resource *Resource) error {
 		if err := resource.Download(); err != nil {
@@ -938,28 +954,25 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 	}
 
 	for i := 0; i < maxThreads; i++ {
-
-		go func() error {
-
+		wg.Add(1)
+		go func(idx int) error {
+			defer wg.Done()
 			for {
 				resourceLoop, ok := <-channel
 				if !ok {
-					wg.Done()
 					return nil
 				}
 				if shutdown.System.Stopped() {
-					wg.Done()
 					return nil
 				}
 
 				err := processItem(resourceLoop)
 
 				if err != nil {
-					wg.Done()
 					return err
 				}
 			}
-		}()
+		}(i)
 
 	}
 

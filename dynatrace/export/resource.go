@@ -68,6 +68,12 @@ func (me *Resource) GetParent() *Resource {
 }
 
 func (me *Resource) IsReferencedAsDataSource() bool {
+	// Global Policies (managed by Dynatrace) should never get exported as resources
+	// So if another resource (iam_policy_bindings_v2) refers to such a global policy
+	// it needs to become a data source
+	if me.Type == ResourceTypes.IAMPolicy {
+		return strings.HasSuffix(me.ID, "#-#global#-#global")
+	}
 	return me.Module.IsReferencedAsDataSource()
 }
 
@@ -288,6 +294,10 @@ func (me *Resource) Download() error {
 				return nil
 			}
 		}
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		me.Status = ResourceStati.Erronous
+		me.Error = err
 		return err
 	}
 	name := settings.Name(settngs, me.ID)
@@ -333,6 +343,11 @@ func (me *Resource) Download() error {
 			}
 			finalComments = append(finalComments, "ATTENTION "+comment)
 		}
+	}
+
+	// global policies shouldn't make it onto disk as resources
+	if me.Type == ResourceTypes.IAMPolicy && strings.HasSuffix(me.ID, "#-#global#-#global") {
+		return nil
 	}
 
 	me.Module.MkdirAll(me.Flawed)

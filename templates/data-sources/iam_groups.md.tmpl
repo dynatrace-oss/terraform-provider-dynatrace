@@ -1,0 +1,36 @@
+---
+layout: ""
+page_title: "dynatrace_iam_groups Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The data source `dynatrace_iam_groups` covers queries for user groups
+---
+
+# dynatrace_iam_groups (Data Source)
+
+## Example Usage
+
+```terraform
+data "dynatrace_iam_groups" "all-groups" {
+}
+
+output "groups" {
+  value = data.dynatrace_iam_groups.all-groups
+}
+
+```
+
+### Example output
+```
+Changes to Outputs:
+  + groups = {
+      + groups = {
+          + "########-3036-3ac2-5fa4-############" = "Group A"
+          + "########-4049-4241-ac2b-############" = "Group B"
+          + "########-5365-4450-89ab-############" = "Group C"
+        }
+      + id     = "iam-groups"
+    }
+```
+
+{{ .SchemaMarkdown | trimspace }}

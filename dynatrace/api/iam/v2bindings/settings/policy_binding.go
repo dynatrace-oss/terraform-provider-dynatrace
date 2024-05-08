@@ -70,6 +70,21 @@ func (me *PolicyBinding) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("policy", &me.Policies); err != nil {
 		return err
 	}
+	// Terraform has a bug when it comes to TypeSet
+	// Sometimes empty entries are getting produced
+	if len(me.Policies) > 0 {
+		finalPolicies := []*Policy{}
+		for _, policy := range me.Policies {
+			if policy == nil {
+				continue
+			}
+			if len(policy.ID) == 0 {
+				continue
+			}
+			finalPolicies = append(finalPolicies, policy)
+		}
+		me.Policies = finalPolicies
+	}
 
 	return nil
 }

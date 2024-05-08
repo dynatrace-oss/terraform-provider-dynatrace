@@ -147,6 +147,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_vulnerability_alerting"
 	case ResourceTypes.AppSecAttackAlerting:
 		return "dynatrace_attack_alerting"
+	case ResourceTypes.IAMPolicy:
+		return "dynatrace_iam_policy"
 	}
 	return ""
 }

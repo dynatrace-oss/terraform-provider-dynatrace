@@ -71,6 +71,7 @@ var Dependencies = struct {
 	CloudApplicationNamespace Dependency
 	EnvironmentActiveGate     Dependency
 	Tenant                    Dependency
+	GlobalPolicy              Dependency
 }{
 	ManagementZone:       &mgmzdep{ResourceTypes.ManagementZoneV2},
 	DashboardLinkID:      func(parent bool) Dependency { return &dashlinkdep{ResourceTypes.JSONDashboardBase, parent} },
@@ -99,6 +100,7 @@ var Dependencies = struct {
 	CloudApplicationNamespace: &entityds{"CLOUD_APPLICATION_NAMESPACE", "CLOUD_APPLICATION_NAMESPACE-[A-Z0-9]{16}", false},
 	EnvironmentActiveGate:     &entityds{"ENVIRONMENT_ACTIVE_GATE", "ENVIRONMENT_ACTIVE_GATE-[A-Z0-9]{16}", false},
 	Tenant:                    &tenantds{},
+	GlobalPolicy:              &policyds{},
 }
 
 type mgmzdep struct {
@@ -728,6 +730,48 @@ func (me *tenantds) Replace(environment *Environment, s string, replacingIn Reso
 	environment.Module(replacingIn).DataSource("tenant", DataSourceKindTenant)
 	s = strings.ReplaceAll(s, tenantID, "${data.dynatrace_tenant.tenant.id}")
 	return s, []any{true}
+}
+
+type policyds struct {
+}
+
+func (me *policyds) IsParent() bool {
+	return false
+}
+
+func (me *policyds) ResourceType() ResourceType {
+	return ""
+}
+
+func (me *policyds) DataSourceType() DataSourceType {
+	return ""
+}
+
+func (me *policyds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+	// when running on HTTP Cache no data sources should get replaced
+	// The IDs of these entities are guaranteed to match existing ones
+	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+		return s, []any{}
+	}
+	if environment.Flags.FlagMigrationOutput {
+		return s, []any{}
+	}
+	found := false
+	pattern := `[0-9a-zA-Z]{8}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{12}#\-\#global#\-\#global`
+	m1 := regexp.MustCompile(pattern)
+	s = m1.ReplaceAllStringFunc(s, func(id string) string {
+		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceKindPolicy)
+		if dataSource == nil {
+			return s
+		}
+		found = true
+		return fmt.Sprintf("${data.dynatrace_iam_policy.%s.id}", dataSource.UniqueName)
+	})
+	if found {
+		return s, []any{found}
+	} else {
+		return s, []any{}
+	}
 }
 
 type entityds struct {

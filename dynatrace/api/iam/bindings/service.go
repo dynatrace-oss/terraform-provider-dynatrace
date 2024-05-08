@@ -96,7 +96,7 @@ func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBindi
 
 	policyIDs := []string{}
 	for _, policyID := range bindings.PolicyIDs {
-		uuid, policyLevelType, policyLevelID, err := policies.SplitID(policyID)
+		uuid, policyLevelType, policyLevelID, err := policies.SplitID(policyID, levelType, levelID)
 		if policyLevelID != levelID || policyLevelType != levelType {
 			return fmt.Errorf("The policy %s is defined for %s = %s. It cannot be used within the scope %s = %s", uuid, policyLevelType, policyLevelID, levelType, levelID)
 		}
