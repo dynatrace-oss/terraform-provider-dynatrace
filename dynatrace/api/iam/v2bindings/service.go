@@ -177,7 +177,7 @@ func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) err
 
 	client := iam.NewIAMClient(me)
 
-	policiesList := []*bindings.Policy{}
+	policiesList := append([]*bindings.Policy{}, v.Policies...)
 
 	for _, policy := range policiesList {
 		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
