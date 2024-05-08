@@ -388,7 +388,7 @@ func (me *JSONDashboard) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"link_id": {
 			Type:        schema.TypeString,
-			Description: "ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks.",
+			Description: "ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks. See the documentation for `dynatrace_json_dashboard_base` for a concrete example.",
 			Optional:    true,
 			Computed:    true,
 		},

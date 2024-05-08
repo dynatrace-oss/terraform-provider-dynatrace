@@ -24,6 +24,75 @@ import (
 
 type ResourceType string
 
+func (rt ResourceType) Less(other ResourceType) bool {
+	if rt == other {
+		return false
+	}
+	if rt == ResourceTypes.JSONDashboard {
+		return false
+	} else if other == ResourceTypes.JSONDashboard {
+		return true
+	}
+	if rt == ResourceTypes.DashboardSharing {
+		return false
+	} else if other == ResourceTypes.DashboardSharing {
+		return true
+	}
+	if rt == ResourceTypes.JSONDashboardBase {
+		return false
+	} else if other == ResourceTypes.JSONDashboardBase {
+		return true
+	}
+	return strings.Compare(string(rt), string(other)) == -1
+}
+
+func (rt ResourceType) IsPotentialCircularDependencyTo(referringResourceID string, referredToResourceType ResourceType, referredToResourceID string) bool {
+	// CURRENTLY circular dependencies are only possible when
+	// dynatrace_json_dashboard contains the ID of a dynatrace_json_dashboard_base
+	//
+	// If the dynatrace_json_dashboard JUST contains
+	//    link_id  = "${dynatrace_json_dashboard_base.<name>id}" that's not a cicular dependency.
+	// Both resources would have the same ID (but different resource type).
+	// A circular dependency is possible if a dynatrace_json_dashboard refers to a dynatrace_json_dashboard_base with a DIFFERENT ID.
+	return rt == ResourceTypes.JSONDashboard && referredToResourceType == ResourceTypes.JSONDashboardBase && referringResourceID != referredToResourceID
+}
+
+func (rt ResourceType) VoidResource(resource *Resource, contents []byte) ([]byte, bool) {
+	if !rt.CanGetVoidedIfNotReferenced() {
+		return contents, false
+	}
+	dashboardBaseReference := fmt.Sprintf(`${dynatrace_json_dashboard_base.%s.id}`, resource.UniqueName)
+	dashboardReference := fmt.Sprintf(`${dynatrace_json_dashboard.%s.id}`, resource.UniqueName)
+	var results string
+	lastLineWasSpace := false
+	for _, line := range strings.Split(string(contents), "\n") {
+		if strings.Contains(line, "link_id") && strings.Contains(line, dashboardBaseReference) {
+			continue
+		} else if strings.Contains(line, "dashboard_id") && strings.Contains(line, dashboardBaseReference) {
+			line = strings.Replace(line, dashboardBaseReference, dashboardReference, 1)
+		}
+		curLineIsSpace := len(strings.TrimSpace(line)) == 0
+		if curLineIsSpace {
+			if lastLineWasSpace {
+				continue
+			}
+		}
+		lastLineWasSpace = curLineIsSpace
+		results = results + "\n" + line
+	}
+	// Here we assume (see ResourceType.Less) that the resource block `dynatrace_json_dashboard_base`
+	// is located at the very end of the file. The resource block is expected to be empty.
+	// Therefore we can expect that the } before the last one signals the end of the
+	// resource blocks that are allowed to remain. Everything past that will get cut off
+	results = results[:strings.LastIndex(results, "}")]
+	results = results[:strings.LastIndex(results, "}")+1]
+	return []byte(results), true
+}
+
+func (rt ResourceType) CanGetVoidedIfNotReferenced() bool {
+	return rt == ResourceTypes.JSONDashboardBase
+}
+
 func (me ResourceType) Trim() string {
 	return strings.TrimPrefix(string(me), "dynatrace_")
 }

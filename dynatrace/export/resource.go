@@ -56,6 +56,10 @@ type Resource struct {
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
 }
 
+func (me *Resource) GetReferringResources() []*Resource {
+	return me.Module.Environment.GetReferringResources(me)
+}
+
 func (me *Resource) GetParent() *Resource {
 	if me.Module.Environment.ChildResourceOverride {
 		return nil
@@ -152,6 +156,10 @@ func (me *Resource) getResourceReferences(resources map[string]*Resource) map[st
 	}
 
 	return resources
+}
+
+func (me *Resource) IsReferenced() bool {
+	return me.Module.Environment.IsReferenced(me)
 }
 
 func (me *Resource) RefersTo(other *Resource) bool {

@@ -1,7 +1,7 @@
 ---
 layout: ""
 page_title:  Resource - terraform-provider-dynatrace"
-subcategory: "Document"
+subcategory: "Documents"
 description: |-
   The resource `dynatrace_direct_shares` covers configuration of direct shares for Documents (dashboards and notebooks) in Dynatrace.
 ---
