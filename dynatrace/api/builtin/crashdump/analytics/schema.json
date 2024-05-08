@@ -1,15 +1,9 @@
 {
 	"allowedScopes": [
-		"HOST"
+		"HOST",
+		"HOST_GROUP"
 	],
-	"constraints": [
-		{
-			"customMessage": "Crash Dump Analytics is only available for hosts with Windows or Linux operating system.",
-			"customValidatorId": "crash-dump-analytics-allowed-os-type-validator",
-			"type": "CUSTOM_VALIDATOR_REF"
-		}
-	],
-	"description": "Dynatrace automatically detects application crashes on Windows and Linux and analyzes the core dumps of these crashes, but you can disable this functionality",
+	"description": "Dynatrace automatically detects application crashes on Windows and Linux and analyzes the crashes' core dumps. Here you can manage crash dump analytics. For details on crash analysis, see the [documentation](https://docs.dynatrace.com/docs/shortlink/crash-analysis)",
 	"displayName": "Crash dump analytics",
 	"documentation": "",
 	"dynatrace": "1",
@@ -19,7 +13,7 @@
 	"properties": {
 		"enableCrashDumpAnalytics": {
 			"default": true,
-			"description": "Control the automatic crash dump analytics feature. It's strongly recommended to keep this option enabled. Disabling this feature will stop receiving information about potential problems",
+			"description": "Disable the feature to stop receiving information about crash details and potential problems. We recommend keeping the feature enabled.",
 			"displayName": "Crash dump analytics",
 			"documentation": "",
 			"maxObjects": 1,
@@ -30,5 +24,5 @@
 	},
 	"schemaId": "builtin:crashdump.analytics",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.1.1"
 }

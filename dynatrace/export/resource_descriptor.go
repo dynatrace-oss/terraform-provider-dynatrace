@@ -1218,6 +1218,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CrashdumpAnalytics: NewResourceDescriptor(
 		crashdumpanalytics.Service,
 		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
 	),
 	ResourceTypes.AppMonitoring:           NewResourceDescriptor(appmonitoring.Service),
 	ResourceTypes.GrailSecurityContext:    NewResourceDescriptor(securitycontext.Service),

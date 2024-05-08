@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	EnableCrashDumpAnalytics bool   `json:"enableCrashDumpAnalytics"` // Control the automatic crash dump analytics feature. It's strongly recommended to keep this option enabled. Disabling this feature will stop receiving information about potential problems
-	HostID                   string `json:"-" scope:"hostId"`         // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	EnableCrashDumpAnalytics bool   `json:"enableCrashDumpAnalytics"` // Disable the feature to stop receiving information about crash details and potential problems. We recommend keeping the feature enabled.
+	HostID                   string `json:"-" scope:"hostId"`         // The scope of this setting (HOST HOST_GROUP environment)
 }
 
 func (me *Settings) Name() string {
@@ -35,12 +35,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enable_crash_dump_analytics": {
 			Type:        schema.TypeBool,
-			Description: "Control the automatic crash dump analytics feature. It's strongly recommended to keep this option enabled. Disabling this feature will stop receiving information about potential problems",
+			Description: "Disable the feature to stop receiving information about crash details and potential problems. We recommend keeping the feature enabled.",
 			Required:    true,
 		},
 		"host_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			Description: "The scope of this setting (HOST HOST_GROUP environment)",
 			Required:    true,
 		},
 	}
