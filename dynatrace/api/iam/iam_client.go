@@ -192,7 +192,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 			var iamErr IAMError
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
 				if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
-					httplog("-------------------- TOKEN-SWITCH --------------------")
+					// httplog("-------------------- TOKEN-SWITCH --------------------")
 					return me.request(url, method, expectedResponseCodes, true, payload, headers)
 				}
 				return nil, iamErr
