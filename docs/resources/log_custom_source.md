@@ -30,9 +30,24 @@ resource "dynatrace_log_custom_source" "#name#" {
   enabled = false
   scope   = "HOST_GROUP-1234567890000000"
   custom_log_source {
-    accept_binary = true
-    type   = "LOG_PATH_PATTERN"
-    values = [ "/terraform" ]
+    type = "WINDOWS_EVENT_LOG"
+    values_and_enrichment {
+      custom_log_source_with_enrichment {
+        path = "/terraform"
+        enrichment {
+          enrichment {
+            type  = "attribute"
+            key   = "key1"
+            value = "value1"
+          }
+          enrichment {
+            type  = "attribute"
+            key   = "key2"
+            value = "value2"
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -61,11 +76,53 @@ resource "dynatrace_log_custom_source" "#name#" {
 Required:
 
 - `type` (String) Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`
-- `values` (Set of String) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
 
 Optional:
 
 - `accept_binary` (Boolean) Accept binary content
+- `values` (Set of String) (Required attribute for cluster v1.291 and under) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
+- `values_and_enrichment` (Block List, Max: 1) (Required attribute for cluster v1.292+) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name. (see [below for nested schema](#nestedblock--custom_log_source--values_and_enrichment))
+
+<a id="nestedblock--custom_log_source--values_and_enrichment"></a>
+### Nested Schema for `custom_log_source.values_and_enrichment`
+
+Required:
+
+- `custom_log_source_with_enrichment` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment))
+
+<a id="nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment"></a>
+### Nested Schema for `custom_log_source.values_and_enrichment.custom_log_source_with_enrichment`
+
+Required:
+
+- `path` (String) Values
+
+Optional:
+
+- `enrichment` (Block List, Max: 1) Optional field that allows to define attributes that will enrich logs. ${N} can be used in attribute value to expand the value matched by wildcards where N denotes the number of the wildcard the expand (see [below for nested schema](#nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment--enrichment))
+
+<a id="nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment--enrichment"></a>
+### Nested Schema for `custom_log_source.values_and_enrichment.custom_log_source_with_enrichment.enrichment`
+
+Required:
+
+- `enrichment` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment--enrichment--enrichment))
+
+<a id="nestedblock--custom_log_source--values_and_enrichment--custom_log_source_with_enrichment--enrichment--enrichment"></a>
+### Nested Schema for `custom_log_source.values_and_enrichment.custom_log_source_with_enrichment.enrichment.enrichment`
+
+Required:
+
+- `type` (String) Possible Values: `Attribute`
+
+Optional:
+
+- `key` (String) no documentation available
+- `value` (String) no documentation available
+
+
+
+
 
 
 <a id="nestedblock--context"></a>

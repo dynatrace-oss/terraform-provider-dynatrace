@@ -106,7 +106,7 @@ Required:
 
 Required:
 
-- `attribute` (String) Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_source`, `Process_technology`
+- `attribute` (String) Possible Values: `container.name`, `dt.entity.container_group`, `dt.entity.process_group`, `k8s.container.name`, `k8s.deployment.name`, `k8s.namespace.name`, `log.source`, `process.technology` and `host.tag`
 - `operator` (String) Possible Values: `MATCHES`
 - `values` (Set of String) no documentation available
  

@@ -567,7 +567,7 @@ resource "dynatrace_json_dashboard" "#name#" {
 
 ### Optional
 
-- `link_id` (String) ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks.
+- `link_id` (String) ID of the dashboard, used with the json_dashboard_base resource and variables to create circular dependencies between dashboards for hyperlinks. See the documentation for `dynatrace_json_dashboard_base` for a concrete example.
 
 ### Read-Only
 
