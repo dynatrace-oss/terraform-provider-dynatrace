@@ -93,9 +93,14 @@ func NewRateLimiter() *RateLimiter {
 	return &RateLimiter{}
 }
 
+var DISABLE_RATE_LIMITER = (os.Getenv("DYNATRACE_DISABLE_IAM_RATE_LIMITER") == "true")
+
 func (rl *RateLimiter) CanCall() bool {
 	rl.mutex.Lock()
 	defer rl.mutex.Unlock()
+	if DISABLE_RATE_LIMITER {
+		return true
+	}
 	now := time.Now()
 	if now.Sub(rl.lastCall) >= 1000*time.Millisecond {
 		rl.lastCall = now
