@@ -140,9 +140,9 @@ func (me *GroupServiceClient) list() ([]*ListGroup, error) {
 	groupStubMutex.Lock()
 	defer groupStubMutex.Unlock()
 
-	if cachedGroupStubs != nil {
-		return cachedGroupStubs, nil
-	}
+	// if cachedGroupStubs != nil {
+	// 	return cachedGroupStubs, nil
+	// }
 	groupStubs, err := me.listUnguarded()
 	if err != nil {
 		return nil, err
