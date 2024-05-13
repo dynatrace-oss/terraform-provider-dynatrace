@@ -100,7 +100,7 @@ func (me *service) Get(id string, v *workflows.Workflow) (err error) {
 	var result *automation.Response
 	if result, err = me.client().GET(automation.Workflows, id); err != nil {
 		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 		}
 		return err
 	}
@@ -139,7 +139,7 @@ func (me *service) Create(v *workflows.Workflow) (stub *api.Stub, err error) {
 	}
 	if id, err = me.client().INSERT(automation.Workflows, data); err != nil {
 		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return nil, rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+			return nil, rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 		}
 		return nil, err
 	}
@@ -153,7 +153,7 @@ func (me *service) Update(id string, v *workflows.Workflow) (err error) {
 	}
 	if err = me.client().UPDATE(automation.Workflows, id, data); err != nil {
 		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 		}
 	}
 	return err
@@ -165,7 +165,7 @@ func (me *service) Delete(id string) error {
 		if responseErr.StatusCode == 404 {
 			return nil
 		}
-		return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+		return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 	}
 	return err
 }

@@ -51,7 +51,7 @@ func (me *service) Get(id string, v *scheduling_rules.Settings) (err error) {
 	var result *automation.Response
 	if result, err = me.client().GET(automation.SchedulingRules, id); err != nil {
 		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 		}
 		return err
 	}
@@ -104,7 +104,7 @@ func (me *service) Update(id string, v *scheduling_rules.Settings) (err error) {
 	}
 	if err = me.client().UPDATE(automation.SchedulingRules, id, data); err != nil {
 		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 		}
 	}
 	return err
@@ -116,7 +116,7 @@ func (me *service) Delete(id string) error {
 		if responseErr.StatusCode == 404 {
 			return nil
 		}
-		return rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
+		return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
 	}
 	return err
 }
