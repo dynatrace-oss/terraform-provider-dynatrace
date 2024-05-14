@@ -18,8 +18,10 @@
 package jsondashboards
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -34,8 +36,106 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*dashboards
 	return &service{settings.NewCRUDService(
 		credentials,
 		SchemaID,
-		settings.DefaultServiceOptions[*dashboards.JSONDashboard]("/api/config/v1/dashboards").WithStubs(&dashboards.DashboardList{}),
+		settings.DefaultServiceOptions[*dashboards.JSONDashboard]("/api/config/v1/dashboards").WithStubs(&dashboards.DashboardList{}).WithAfterCreate(AfterCreate),
 	)}
+}
+
+type DashboardPreset struct {
+	DashboardPreset string `json:"DashboardPreset"`
+	UserGroup       string `json:"UserGroup"`
+}
+
+type DashboardPresetPayloadValue struct {
+	EnableDashboardPresets bool               `json:"enableDashboardPresets"`
+	DashboardPresetsList   []*DashboardPreset `json:"dashboardPresetsList"`
+}
+
+type DashboardPresetPayload struct {
+	SchemaID string                       `json:"schemaId"`
+	Scope    string                       `json:"scope"`
+	Value    *DashboardPresetPayloadValue `json:"value"`
+}
+
+const dummUserGroupID = "0d80b6f2-64c8-430e-8c10-83b8beda3fd3"
+const userGroupViolationMessagePrefix = "Given property 'UserGroup' with value: '0d80b6f2-64c8-430e-8c10-83b8beda3fd3' is not a valid value in datasource. Value must be one of ["
+
+func AfterCreate(client rest.Client, stub *api.Stub) (stubs *api.Stub, err error) {
+	// This function just ATTEMPTS to validate whether the Dashboard is ready for use via Dashboard Presets
+	// If an error happens (e.g. because of missing / wrong credentials) it doesn't error out
+	//
+	// What happens here:
+	// * The Settings 2.0 API receives payload for VALIDATION of Dashboard Presets
+	// * The first request is bound to fail because we don't have a User Group to specify available at this point
+	//   * We can extract a valid User Group ID from the first error message
+	// * After that sending the payload is required to succeed FIVE times
+	//   * At most 50 attempts (with 500 sec sleep time in between) are being made
+	//   * If less than 5 successes are counted the function doesn't error out
+	//   * But even then it may have stalled Terraform long enough, so that subsequent
+	//     dynatrace_dashboard_presets resources won't fail anymore
+	payload := DashboardPresetPayload{
+		SchemaID: "builtin:dashboards.presets",
+		Scope:    "environment",
+		Value: &DashboardPresetPayloadValue{
+			EnableDashboardPresets: true,
+			DashboardPresetsList: []*DashboardPreset{
+				{
+					DashboardPreset: stub.ID,
+					UserGroup:       dummUserGroupID, // first request sends dummy user groupID
+				},
+			},
+		},
+	}
+	numRetries := 50
+	numSuccesses := 0
+	for numRetries > 0 && numSuccesses < 5 {
+		numRetries--
+		validated, err := ValidatePreset(client, &payload)
+		if err != nil {
+			// some other error has happened - we will silently ignore that
+			// the dashboard HAS been created, the sanity check just couldn't be done
+			return stub, nil
+		}
+		if validated {
+			numSuccesses++
+		}
+		time.Sleep(500)
+	}
+	return stub, nil
+}
+
+func ValidatePreset(client rest.Client, payload *DashboardPresetPayload) (validated bool, err error) {
+	p := []*DashboardPresetPayload{payload}
+	err = client.Post("/api/v2/settings/objects?repairInput=true&validateOnly=true", &p, 200).Finish(nil)
+	if err != nil {
+		if restErr, ok := err.(rest.Error); ok {
+			for _, violation := range restErr.ConstraintViolations {
+				violationMessage := violation.Message
+				if strings.HasPrefix(violationMessage, userGroupViolationMessagePrefix) {
+					violationMessage = violationMessage[len(userGroupViolationMessagePrefix):]
+					idx := strings.Index(violationMessage, ",")
+					if idx < 0 {
+						return false, errors.New("no groupID found")
+					}
+					parts := strings.Split(violationMessage, ", ")
+					if len(parts) == 0 {
+						return false, errors.New("no groupID found")
+					}
+					payload.Value.DashboardPresetsList[0].UserGroup = parts[0]
+					return false, nil
+				}
+			}
+
+			for _, violation := range restErr.ConstraintViolations {
+				violationMessage := violation.Message
+				if strings.HasPrefix(violationMessage, fmt.Sprintf("Given property 'DashboardPreset' with value: '%s' is not a valid value in datasource.", payload.Value.DashboardPresetsList[0].DashboardPreset)) {
+					return false, nil
+				}
+			}
+		} else {
+			return false, err
+		}
+	}
+	return true, nil
 }
 
 type service struct {
