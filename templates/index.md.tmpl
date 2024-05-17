@@ -18,7 +18,7 @@ Use the links to the left to learn about the available resources, data sources, 
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.57.0"
+            version = "1.57.1"
             source = "dynatrace-oss/dynatrace"
         }
     }
