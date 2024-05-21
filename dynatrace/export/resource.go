@@ -518,6 +518,10 @@ func (me *Resource) GetExtractedIdsPerRegexType(idRegexType string, tfFileConten
 
 	optimizedIdDep := optimizers[idRegexType]
 
+	if optimizedIdDep.regex == nil {
+		return me.ExtractedIdsPerDependencyModule[idRegexType]
+	}
+
 	optimizedMatchList := optimizedIdDep.regex.FindAll([]byte(tfFileContent), -1)
 	for _, match := range optimizedMatchList {
 		me.ExtractedIdsPerDependencyModule[idRegexType][string(match)] = true
