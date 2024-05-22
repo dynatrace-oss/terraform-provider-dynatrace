@@ -19,6 +19,7 @@ package managementzones
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -72,10 +73,17 @@ func (me *service) Create(v *managementzones.Settings) (*api.Stub, error) {
 
 	validator := slo.Service(me.credentials).(settings.Validator[*slosettings.Settings])
 
-	retry := 10
+	retry := 50
+	success := 0
 	for i := 0; i < retry; i++ {
 		if err := validator.Validate(&sloValue); err == nil {
-			break
+			success++
+			if success >= 5 {
+				break
+			}
+		} else {
+			success = 0
+			time.Sleep(500)
 		}
 	}
 
