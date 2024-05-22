@@ -123,11 +123,18 @@ func (me *Environment) Export() (err error) {
 func (me *Environment) PreProcess() error {
 	me.ProcessChildParentGroups()
 	me.ProcessHasDependenciesTo()
+
 	err := me.LoadImportState()
 	if err != nil {
 		return err
 	}
+
 	err = me.ProcessPrevState()
+	if err != nil {
+		return err
+	}
+
+	err = LoadIgnoreResourcesMap()
 	if err != nil {
 		return err
 	}

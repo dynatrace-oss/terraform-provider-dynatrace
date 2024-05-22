@@ -1198,6 +1198,10 @@ func (me *Module) Discover() error {
 		if stub.Name == "" {
 			panic(me.Type)
 		}
+		if IsIgnoredResource(me.Type, stub.ID) {
+			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
+			continue
+		}
 		res := me.Resource(stub.ID).SetName(stub.Name)
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID

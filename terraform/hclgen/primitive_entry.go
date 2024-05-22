@@ -97,7 +97,7 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 			if strings.HasPrefix(strVal, "HCL-UNQUOTE-") {
 				rawVal = rawVal + sep + strings.TrimPrefix(strVal, "HCL-UNQUOTE-")
 			} else {
-				rawVal = rawVal + sep + "\"" + strings.ReplaceAll(strings.ReplaceAll(strVal, "\\", "\\\\"), "\"", "\\\"") + "\""
+				rawVal = rawVal + sep + "\"" + string(escapeQuotedStringLit(strVal)) + "\""
 			}
 			sep = ", "
 		}
