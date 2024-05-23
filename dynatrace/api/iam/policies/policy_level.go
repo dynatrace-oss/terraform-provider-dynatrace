@@ -183,7 +183,7 @@ func registerPolicyLevel(auth iam.Authenticator, level PolicyLevel) error {
 			return err
 		}
 	}
-	globalAllPolicyLevels[level.UUID] = PolicyLevel{UUID: level.UUID, LevelType: level.LevelID, LevelID: level.LevelID, Name: level.Name}
+	globalAllPolicyLevels[level.UUID] = PolicyLevel{UUID: level.UUID, LevelType: level.LevelType, LevelID: level.LevelID, Name: level.Name}
 	return nil
 }
 
