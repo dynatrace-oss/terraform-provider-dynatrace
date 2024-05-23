@@ -202,7 +202,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 				}
 				return nil, iamErr
 			} else {
-				return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)
+				return nil, rest.Error{Code: httpResponse.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)}
 			}
 		}
 

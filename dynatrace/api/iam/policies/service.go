@@ -2,6 +2,7 @@ package policies
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -77,10 +78,10 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	err := me.get(id, v)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if len(v.Account) == 0 && len(v.Environment) == 0 && !strings.HasSuffix(id, "#-#global#-#global") {
-		panic(id)
+		return nil // TODO: investigate whether this can ever happen
 	}
 	return err
 }
@@ -112,12 +113,12 @@ func (me *PolicyServiceClient) get(id string, v *policies.Policy) error {
 	if levelType == "account" {
 		v.Account = levelID
 		if len(levelID) == 0 {
-			panic(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
 		}
 	} else if levelType == "environment" {
 		v.Environment = levelID
 		if len(levelID) == 0 {
-			panic(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
 		}
 	}
 	v.UUID = uuid
