@@ -24,6 +24,7 @@ import (
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
+	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
@@ -1271,6 +1272,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.EBPFServiceDiscovery:      NewResourceDescriptor(ebpf.Service),
 	ResourceTypes.DavisAnomalyDetectors:     NewResourceDescriptor(anomalydetectors.Service),
 	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
+	ResourceTypes.InfraOpsAppSettings:       NewResourceDescriptor(infraopssettings.Service),
 }
 
 var excludeListedResources = []ResourceType{

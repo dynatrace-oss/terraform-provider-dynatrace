@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_infraops_app_settings Resource - terraform-provider-dynatrace"
+subcategory: "AppEngine"
+description: |-
+  The resource `dynatrace_infraops_app_settings` covers configuration for infrastructure and operations app settings
+---
+
+# dynatrace_infraops_app_settings (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Infrastructure & Operations - https://www.dynatrace.com/hub/detail/infrastructure-operations/
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.infraops:settings`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_infraops_app_settings` downloads existing infrastructure and operations app feature flag configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/infraops/settings/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
