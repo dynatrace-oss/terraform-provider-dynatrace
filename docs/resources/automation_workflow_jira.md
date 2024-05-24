@@ -45,6 +45,7 @@ resource "dynatrace_automation_workflow_jira" "#name#"{
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `password` (String, Sensitive) Password of the Jira user
 - `token` (String, Sensitive) Token for the selected authentication type
 - `user` (String) Username or E-Mail address

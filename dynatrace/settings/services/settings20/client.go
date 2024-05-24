@@ -369,8 +369,11 @@ func (c Client) List(ctx context.Context) (Response, error) {
 type SettingsObjectResponse struct {
 	Code  int `json:"code"`
 	Error struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
+		Code                 int    `json:"code"`
+		Message              string `json:"message"`
+		ConstraintViolations *[]struct {
+			Message *string `json:"message,omitempty"`
+		} `json:"constraintViolations,omitempty"`
 	} `json:"error"`
 }
 
@@ -380,6 +383,13 @@ func (sor SettingsObjectResponse) RequiresOAuth() bool {
 	}
 	if sor.Error.Code != http.StatusBadRequest {
 		return false
+	}
+	if sor.Error.ConstraintViolations != nil {
+		for _, violations := range *sor.Error.ConstraintViolations {
+			if violations.Message != nil && *violations.Message == "Could not do validation as request was not done using oAuth." {
+				return true
+			}
+		}
 	}
 	return sor.Error.Message == "No OAuth token provided"
 }

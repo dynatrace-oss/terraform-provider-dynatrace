@@ -142,7 +142,7 @@ resource "dynatrace_iam_policy_bindings" "bindings" {
 
 Required:
 
-- `id` (String) The id of the policy
+- `id` (String) Either the attribute `id` or the attribute `uuid` of a `dynatrace_iam_policy`. Initially just the `id` attribute was supported (which is a concatenation of several configuration settings) - and is still supported for backwards compatibility
 
 Optional:
 

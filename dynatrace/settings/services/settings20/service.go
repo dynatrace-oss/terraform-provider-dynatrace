@@ -463,13 +463,26 @@ func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) err
 			return me.update(id, v, retry, true)
 		}
 		if me.options != nil && me.options.UpdateRetry != nil && !retry {
-			if modifiedPayload := me.options.UpdateRetry(v, err); (any)(modifiedPayload) != (any)(nil) {
+			if modifiedPayload := me.options.UpdateRetry(v, err); !isNil(modifiedPayload) {
 				return me.update(id, modifiedPayload, true, noInsertAfter)
 			}
 		}
 		return err
 	}
 	return nil
+}
+
+func isNil[T any](t T) bool {
+	v := reflect.ValueOf(t)
+	kind := v.Kind()
+	// Must be one of these types to be nillable
+	return (kind == reflect.Ptr ||
+		kind == reflect.Interface ||
+		kind == reflect.Slice ||
+		kind == reflect.Map ||
+		kind == reflect.Chan ||
+		kind == reflect.Func) &&
+		v.IsNil()
 }
 
 func (me *service[T]) Delete(id string) error {

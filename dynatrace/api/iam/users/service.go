@@ -52,6 +52,12 @@ func (me *UserServiceClient) Create(user *users.User) (*api.Stub, error) {
 
 	client := iam.NewIAMClient(me)
 	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), user, 201, false); err != nil {
+		if err.Error() == "User already exists" {
+			if err = me.Update(user.Email, user); err != nil {
+				return nil, err
+			}
+			return &api.Stub{ID: user.Email, Name: user.Email}, nil
+		}
 		return nil, err
 	}
 
@@ -116,16 +122,11 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 func (me *UserServiceClient) Update(email string, user *users.User) error {
 	var err error
 
-	client := iam.NewIAMClient(me)
-
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), user.Groups, 200, false); err != nil {
-		return err
-	}
 	groups := []string{}
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), groups, 200, false); err != nil {
+	if _, err = iam.NewIAMClient(me).PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), user.Email), groups, 200, false); err != nil {
 		return err
 	}
 

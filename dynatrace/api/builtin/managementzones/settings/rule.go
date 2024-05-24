@@ -84,6 +84,15 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 			Description:      "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
 			Optional:         true, // precondition
 			DiffSuppressFunc: hcl.SuppressEOT,
+			StateFunc: func(i any) string {
+				if i == nil {
+					return ""
+				}
+				if s, ok := i.(string); ok {
+					return strings.TrimSpace(s)
+				}
+				return ""
+			},
 		},
 		"type": {
 			Type:        schema.TypeString,
@@ -94,6 +103,10 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 }
 
 func (me *Rule) MarshalHCL(properties hcl.Properties) error {
+	if me.EntitySelector != nil {
+		*me.EntitySelector = strings.TrimSuffix(*me.EntitySelector, "\r\n")
+		*me.EntitySelector = strings.TrimSuffix(*me.EntitySelector, "\n")
+	}
 	return properties.EncodeAll(map[string]any{
 		"attribute_rule":  me.AttributeRule,
 		"dimension_rule":  me.DimensionRule,
@@ -137,6 +150,7 @@ func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if me.EntitySelector != nil {
+		*me.EntitySelector = strings.TrimSuffix(*me.EntitySelector, "\r\n")
 		*me.EntitySelector = strings.TrimSuffix(*me.EntitySelector, "\n")
 	}
 	return nil

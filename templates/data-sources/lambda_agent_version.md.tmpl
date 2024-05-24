@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title: "dynatrace_lambda_agent_version Data Source - terraform-provider-dynatrace"
+subcategory: "Deployment"
+description: |-
+  The data source `dynatrace_lambda_agent_version` retrieves the latest version names of AWS Lambda OneAgent code modules
+---
+
+# dynatrace_lambda_agent_version (Data Source)
+
+The AWS Lambda agent version data source retrieves the latest version names of OneAgent code modules for the Java, Node.js, and Python runtimes, also including names for layers that are combined with the log collector, as well as for the standalone log collector layer.
+
+## Example Usage
+
+```terraform
+data "dynatrace_lambda_agent_version" "example" {
+}
+
+output "latest" {
+  value = data.dynatrace_lambda_agent_version.example
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}

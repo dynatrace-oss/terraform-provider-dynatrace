@@ -26,7 +26,7 @@ The full documentation of the export feature is available [here](https://registr
 
 ```terraform
 resource "dynatrace_custom_tags" "#name#" {
-    entity_selector = "entityId(\"HOST-XXXXXXXXXXXXXXXX\")"
+    entity_selector = "entityId(\"HOST-123456789000000\")"
     tags {
       filter {
         context = "CONTEXTLESS"

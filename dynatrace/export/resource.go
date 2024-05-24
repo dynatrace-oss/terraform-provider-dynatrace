@@ -23,6 +23,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
@@ -54,6 +55,11 @@ type Resource struct {
 	SplitId                         int
 	BundleFilePath                  string
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
+	ResourceMutex                   *sync.Mutex
+}
+
+func (me *Resource) GetReferringResources() []*Resource {
+	return me.Module.Environment.GetReferringResources(me)
 }
 
 func (me *Resource) GetParent() *Resource {
@@ -64,6 +70,12 @@ func (me *Resource) GetParent() *Resource {
 }
 
 func (me *Resource) IsReferencedAsDataSource() bool {
+	// Global Policies (managed by Dynatrace) should never get exported as resources
+	// So if another resource (iam_policy_bindings_v2) refers to such a global policy
+	// it needs to become a data source
+	if me.Type == ResourceTypes.IAMPolicy {
+		return strings.HasSuffix(me.ID, "#-#global#-#global")
+	}
 	return me.Module.IsReferencedAsDataSource()
 }
 
@@ -146,6 +158,10 @@ func (me *Resource) getResourceReferences(resources map[string]*Resource) map[st
 	}
 
 	return resources
+}
+
+func (me *Resource) IsReferenced() bool {
+	return me.Module.Environment.IsReferenced(me)
 }
 
 func (me *Resource) RefersTo(other *Resource) bool {
@@ -231,8 +247,8 @@ func (me *Resource) Download() error {
 		}
 	}
 
-	if me.Module.Descriptor.except != nil {
-		if me.Module.Descriptor.except(me.ID, me.Name) {
+	if except := me.Module.GetDescriptor().except; except != nil {
+		if except(me.ID, me.Name) {
 			me.Status = ResourceStati.Excluded
 			return nil
 		}
@@ -240,7 +256,7 @@ func (me *Resource) Download() error {
 
 	var service = me.Module.Service
 
-	settngs := me.Module.Descriptor.NewSettings()
+	settngs := me.Module.GetDescriptor().NewSettings()
 
 	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
 
@@ -280,6 +296,10 @@ func (me *Resource) Download() error {
 				return nil
 			}
 		}
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		me.Status = ResourceStati.Erronous
+		me.Error = err
 		return err
 	}
 	name := settings.Name(settngs, me.ID)
@@ -325,6 +345,11 @@ func (me *Resource) Download() error {
 			}
 			finalComments = append(finalComments, "ATTENTION "+comment)
 		}
+	}
+
+	// global policies shouldn't make it onto disk as resources
+	if me.Type == ResourceTypes.IAMPolicy && strings.HasSuffix(me.ID, "#-#global#-#global") {
+		return nil
 	}
 
 	me.Module.MkdirAll(me.Flawed)
@@ -393,14 +418,23 @@ func (me *Resource) PostProcess() error {
 		}
 	}
 	me.Status = ResourceStati.PostProcessed
-	if me.IsReferencedAsDataSource() {
-		return nil
+
+	descriptor := me.Module.GetDescriptor()
+
+	dependecyList := descriptor.Dependencies
+
+	if me.IsReferencedAsDataSource() ||
+		!me.Module.Environment.Flags.FollowReferences {
+
+		dependecyList = []Dependency{}
+		for _, dependency := range descriptor.Dependencies {
+			if dependency.IsParent() {
+				dependecyList = append(dependecyList, dependency)
+			}
+		}
 	}
-	if !me.Module.Environment.Flags.FollowReferences {
-		return nil
-	}
-	descriptor := me.Module.Descriptor
-	if len(descriptor.Dependencies) == 0 {
+
+	if len(dependecyList) == 0 {
 		return nil
 	}
 
@@ -417,7 +451,7 @@ func (me *Resource) PostProcess() error {
 
 	isModifiedFile := false
 
-	for _, dependency := range descriptor.Dependencies {
+	for _, dependency := range dependecyList {
 		resourceType := dependency.ResourceType()
 		if len(resourceType) > 0 {
 			module := me.Module.Environment.Module(resourceType)

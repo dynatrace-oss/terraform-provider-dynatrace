@@ -1,0 +1,35 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "This OneAgent module enables the discovery of active services on the network. It is a very low-overhead, safe way of identifying services that to be monitored.",
+	"displayName": "eBPF Service Discovery",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"minAgentVersion": "1.283"
+	},
+	"multiObject": false,
+	"properties": {
+		"ebpf": {
+			"default": true,
+			"description": "When disabled, Dynatrace can only detect services in Full stack mode.",
+			"displayName": "Enable service discovery",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:network-and-discovery"
+	],
+	"schemaId": "builtin:ebpf.service.discovery",
+	"types": {},
+	"version": "1.0.2"
+}

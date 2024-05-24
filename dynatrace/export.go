@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 )
@@ -41,6 +42,10 @@ func Export(args []string) bool {
 }
 
 func runExport() (err error) {
+	start := time.Now()
+	defer func() {
+		fmt.Printf("... finished after %v seconds\n", int64(time.Since(start).Seconds()))
+	}()
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
 	var environment *export.Environment

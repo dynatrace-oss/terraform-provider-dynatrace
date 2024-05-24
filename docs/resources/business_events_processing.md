@@ -71,6 +71,7 @@ resource "dynatrace_business_events_processing" "#name#" {
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `transformation_fields` (Block List, Max: 1) Transformation fields (see [below for nested schema](#nestedblock--transformation_fields))
 
 ### Read-Only

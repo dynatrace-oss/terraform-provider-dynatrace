@@ -98,6 +98,7 @@ import (
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/appmonitoring"
+	ebpf "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ebpf/service/discovery"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
@@ -120,6 +121,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
 	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdebugsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsecuritycontextrules"
@@ -245,6 +247,9 @@ import (
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
+
+	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
+	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -283,6 +288,7 @@ import (
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/davis/anomalydetectors"
 	envparameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters"
 	envrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
@@ -328,6 +334,17 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Cr
 	}
 }
 
+func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
+	return ResourceDescriptor{
+		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+		},
+		protoType:    newSettings(fn),
+		Dependencies: dependencies,
+		FolderName:   folderName,
+	}
+}
+
 func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
 		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
@@ -350,6 +367,7 @@ type ResourceDescriptor struct {
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
+	FolderName   string
 }
 
 func (me ResourceDescriptor) Specify(t notifications.Type) ResourceDescriptor {
@@ -483,8 +501,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
 	),
-	ResourceTypes.JSONDashboardBase: NewResourceDescriptor(
+	ResourceTypes.JSONDashboardBase: NewResourceDescriptorWithFolderOverride(
 		jsondashboardsbase.Service,
+		"json_dashboard",
+	),
+	ResourceTypes.Documents: NewResourceDescriptor(
+		documents.Service,
+	),
+	ResourceTypes.DirectShares: NewResourceDescriptor(
+		directshares.Service,
 	),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
@@ -693,11 +718,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.IAMPermission),
 		Dependencies.Tenant,
 	),
-	ResourceTypes.IAMPermission:       NewResourceDescriptor(permissions.Service),
-	ResourceTypes.IAMPolicy:           NewResourceDescriptor(policies.Service),
-	ResourceTypes.IAMPolicyBindings:   NewResourceDescriptor(bindings.Service),
-	ResourceTypes.IAMPolicyBindingsV2: NewResourceDescriptor(v2bindings.Service),
-	ResourceTypes.DDUPool:             NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMPermission:     NewResourceDescriptor(permissions.Service),
+	ResourceTypes.IAMPolicy:         NewResourceDescriptor(policies.Service),
+	ResourceTypes.IAMPolicyBindings: NewResourceDescriptor(bindings.Service),
+	ResourceTypes.IAMPolicyBindingsV2: NewResourceDescriptor(
+		v2bindings.Service,
+		Dependencies.ID(ResourceTypes.IAMGroup),
+		Dependencies.ID(ResourceTypes.IAMPolicy),
+		Dependencies.GlobalPolicy,
+	),
+	ResourceTypes.DDUPool: NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -1189,6 +1219,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CrashdumpAnalytics: NewResourceDescriptor(
 		crashdumpanalytics.Service,
 		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
 	),
 	ResourceTypes.AppMonitoring:           NewResourceDescriptor(appmonitoring.Service),
 	ResourceTypes.GrailSecurityContext:    NewResourceDescriptor(securitycontext.Service),
@@ -1237,6 +1268,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
 	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
 	ResourceTypes.InfraOpsAppFeatureFlags:   NewResourceDescriptor(infraopsfeatureflags.Service),
+	ResourceTypes.EBPFServiceDiscovery:      NewResourceDescriptor(ebpf.Service),
+	ResourceTypes.DavisAnomalyDetectors:     NewResourceDescriptor(anomalydetectors.Service),
+	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
 }
 
 var excludeListedResources = []ResourceType{

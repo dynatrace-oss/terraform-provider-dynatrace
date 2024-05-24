@@ -34,3 +34,11 @@ var LogSourceTypes = struct {
 	"LOG_PATH_PATTERN",
 	"WINDOWS_EVENT_LOG",
 }
+
+type WildcardExpansionType string
+
+var WildcardExpansionTypes = struct {
+	Attribute WildcardExpansionType
+}{
+	"attribute",
+}

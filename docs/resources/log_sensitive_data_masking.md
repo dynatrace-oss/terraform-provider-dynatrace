@@ -73,6 +73,7 @@ resource "dynatrace_log_sensitive_data_masking" "#name#" {
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `matchers` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--matchers))
 - `scope` (String) The scope of this setting (HOST-########, HOST_GROUP-########). Omit this property if you want to cover the whole environment.
 
@@ -105,7 +106,7 @@ Required:
 
 Required:
 
-- `attribute` (String) Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `Log_source`, `Process_technology`
+- `attribute` (String) Possible Values: `container.name`, `dt.entity.container_group`, `dt.entity.process_group`, `k8s.container.name`, `k8s.deployment.name`, `k8s.namespace.name`, `log.source`, `process.technology` and `host.tag`
 - `operator` (String) Possible Values: `MATCHES`
 - `values` (Set of String) no documentation available
  

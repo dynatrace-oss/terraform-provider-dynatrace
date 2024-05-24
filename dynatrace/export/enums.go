@@ -17,9 +17,81 @@
 
 package export
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type ResourceType string
+
+func (rt ResourceType) Less(other ResourceType) bool {
+	if rt == other {
+		return false
+	}
+	if rt == ResourceTypes.JSONDashboard {
+		return false
+	} else if other == ResourceTypes.JSONDashboard {
+		return true
+	}
+	if rt == ResourceTypes.DashboardSharing {
+		return false
+	} else if other == ResourceTypes.DashboardSharing {
+		return true
+	}
+	if rt == ResourceTypes.JSONDashboardBase {
+		return false
+	} else if other == ResourceTypes.JSONDashboardBase {
+		return true
+	}
+	return strings.Compare(string(rt), string(other)) == -1
+}
+
+func (rt ResourceType) IsPotentialCircularDependencyTo(referringResourceID string, referredToResourceType ResourceType, referredToResourceID string) bool {
+	// CURRENTLY circular dependencies are only possible when
+	// dynatrace_json_dashboard contains the ID of a dynatrace_json_dashboard_base
+	//
+	// If the dynatrace_json_dashboard JUST contains
+	//    link_id  = "${dynatrace_json_dashboard_base.<name>id}" that's not a cicular dependency.
+	// Both resources would have the same ID (but different resource type).
+	// A circular dependency is possible if a dynatrace_json_dashboard refers to a dynatrace_json_dashboard_base with a DIFFERENT ID.
+	return rt == ResourceTypes.JSONDashboard && referredToResourceType == ResourceTypes.JSONDashboardBase && referringResourceID != referredToResourceID
+}
+
+func (rt ResourceType) VoidResource(resource *Resource, contents []byte) ([]byte, bool) {
+	if !rt.CanGetVoidedIfNotReferenced() {
+		return contents, false
+	}
+	dashboardBaseReference := fmt.Sprintf(`${dynatrace_json_dashboard_base.%s.id}`, resource.UniqueName)
+	dashboardReference := fmt.Sprintf(`${dynatrace_json_dashboard.%s.id}`, resource.UniqueName)
+	var results string
+	lastLineWasSpace := false
+	for _, line := range strings.Split(string(contents), "\n") {
+		if strings.Contains(line, "link_id") && strings.Contains(line, dashboardBaseReference) {
+			continue
+		} else if strings.Contains(line, "dashboard_id") && strings.Contains(line, dashboardBaseReference) {
+			line = strings.Replace(line, dashboardBaseReference, dashboardReference, 1)
+		}
+		curLineIsSpace := len(strings.TrimSpace(line)) == 0
+		if curLineIsSpace {
+			if lastLineWasSpace {
+				continue
+			}
+		}
+		lastLineWasSpace = curLineIsSpace
+		results = results + "\n" + line
+	}
+	// Here we assume (see ResourceType.Less) that the resource block `dynatrace_json_dashboard_base`
+	// is located at the very end of the file. The resource block is expected to be empty.
+	// Therefore we can expect that the } before the last one signals the end of the
+	// resource blocks that are allowed to remain. Everything past that will get cut off
+	results = results[:strings.LastIndex(results, "}")]
+	results = results[:strings.LastIndex(results, "}")+1]
+	return []byte(results), true
+}
+
+func (rt ResourceType) CanGetVoidedIfNotReferenced() bool {
+	return rt == ResourceTypes.JSONDashboardBase
+}
 
 func (me ResourceType) Trim() string {
 	return strings.TrimPrefix(string(me), "dynatrace_")
@@ -47,6 +119,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_dashboard"
 	case ResourceTypes.JSONDashboard:
 		return "dynatrace_dashboard"
+	case ResourceTypes.Documents:
+		return "dynatrace_document"
 	case ResourceTypes.SLO:
 		return "dynatrace_slo"
 	case ResourceTypes.CalculatedServiceMetric:
@@ -73,6 +147,8 @@ func (me ResourceType) AsDataSource() string {
 		return "dynatrace_vulnerability_alerting"
 	case ResourceTypes.AppSecAttackAlerting:
 		return "dynatrace_attack_alerting"
+	case ResourceTypes.IAMPolicy:
+		return "dynatrace_iam_policy"
 	}
 	return ""
 }
@@ -129,6 +205,8 @@ var ResourceTypes = struct {
 	Credentials                         ResourceType
 	Dashboard                           ResourceType
 	JSONDashboard                       ResourceType
+	Documents                           ResourceType
+	DirectShares                        ResourceType
 	JSONDashboardBase                   ResourceType
 	CalculatedServiceMetric             ResourceType
 	CalculatedWebMetric                 ResourceType
@@ -364,6 +442,9 @@ var ResourceTypes = struct {
 	HubActiveExtensionVersion           ResourceType
 	DatabaseAppFeatureFlags             ResourceType
 	InfraOpsAppFeatureFlags             ResourceType
+	EBPFServiceDiscovery                ResourceType
+	DavisAnomalyDetectors               ResourceType
+	LogDebugSettings                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -416,6 +497,8 @@ var ResourceTypes = struct {
 	"dynatrace_credentials",
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
+	"dynatrace_document",
+	"dynatrace_direct_share",
 	"dynatrace_json_dashboard_base",
 	"dynatrace_calculated_service_metric",
 	"dynatrace_calculated_web_metric",
@@ -651,6 +734,20 @@ var ResourceTypes = struct {
 	"dynatrace_hub_extension_active_version",
 	"dynatrace_db_app_feature_flags",
 	"dynatrace_infraops_app_feature_flags",
+	"dynatrace_ebpf_service_discovery",
+	"dynatrace_davis_anomaly_detectors",
+	"dynatrace_log_debug_settings",
+}
+
+func (me ResourceType) GetFolderName(override string) string {
+	folderName := me.Trim()
+	if len(override) > 0 {
+		folderName = override
+	}
+	if !me.IsChildResource() {
+		return folderName
+	}
+	return fmt.Sprintf("%s_child_of_%s", folderName, me.GetParent().GetFolderName(""))
 }
 
 func (me ResourceType) GetChildren() []ResourceType {
@@ -661,6 +758,18 @@ func (me ResourceType) GetChildren() []ResourceType {
 		}
 	}
 	return res
+}
+
+func (me ResourceType) GetParent() ResourceType {
+	if !me.IsChildResource() {
+		return ""
+	}
+	for k, v := range AllResources {
+		if string(k) == string(me) {
+			return *v.Parent
+		}
+	}
+	return ""
 }
 
 func (me ResourceType) IsChildResource() bool {

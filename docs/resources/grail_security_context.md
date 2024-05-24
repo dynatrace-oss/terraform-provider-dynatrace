@@ -39,6 +39,10 @@ resource "dynatrace_grail_security_context" "#name#" {
 - `destination_property` (String) The case-sensitive name of a property of the destination type.
 - `entity_type` (String) Type of the entity whose security context to override.
 
+### Optional
+
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

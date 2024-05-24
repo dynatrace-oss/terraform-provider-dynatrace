@@ -104,6 +104,7 @@ resource "dynatrace_business_events_oneagent" "#name#" {
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only

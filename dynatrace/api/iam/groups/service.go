@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -46,6 +46,12 @@ func (me *GroupServiceClient) Name() string {
 	return me.SchemaID()
 }
 
+// TODO ... keep group cache up to date
+// UUID                     string             `json:"uuid"`
+// Name                     string             `json:"name"`
+// Description              string             `json:"description"`
+// FederatedAttributeValues []string           `json:"federatedAttributeValues"`
+// Permissions              groups.Permissions `json:"permissions"`
 func (me *GroupServiceClient) Create(group *groups.Group) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
@@ -104,52 +110,81 @@ type ListGroupsResponse struct {
 	Items []*ListGroup `json:"items"`
 }
 
-func (me *GroupServiceClient) List() (api.Stubs, error) {
-	var err error
-	var responseBytes []byte
+var cachedGroupStubs []*ListGroup
+var groupStubMutex sync.Mutex
 
-	if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
-		return nil, err
+func (me *GroupServiceClient) List() (api.Stubs, error) {
+	groupStubMutex.Lock()
+	defer groupStubMutex.Unlock()
+
+	if cachedGroupStubs != nil {
+		var stubs api.Stubs
+		for _, elem := range cachedGroupStubs {
+			stubs = append(stubs, &api.Stub{ID: elem.UUID, Name: elem.Name})
+		}
+		return stubs, nil
 	}
 
-	var response ListGroupsResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	groupStubs, err := me.listUnguarded()
+	if err != nil {
 		return nil, err
 	}
 	var stubs api.Stubs
-	for _, elem := range response.Items {
+	for _, elem := range groupStubs {
 		stubs = append(stubs, &api.Stub{ID: elem.UUID, Name: elem.Name})
 	}
 	return stubs, nil
 }
 
-func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
-	var stubs api.Stubs
+func (me *GroupServiceClient) list() ([]*ListGroup, error) {
+	groupStubMutex.Lock()
+	defer groupStubMutex.Unlock()
 
-	if stubs, err = me.List(); err != nil {
+	// if cachedGroupStubs != nil {
+	// 	return cachedGroupStubs, nil
+	// }
+	groupStubs, err := me.listUnguarded()
+	if err != nil {
+		return nil, err
+	}
+	cachedGroupStubs = groupStubs
+	return cachedGroupStubs, nil
+}
+
+func (me *GroupServiceClient) listUnguarded() ([]*ListGroup, error) {
+	var err error
+
+	client := iam.NewIAMClient(me)
+	var response ListGroupsResponse
+	accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
+	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", accountID), 200, false, &response); err != nil {
+		return nil, err
+	}
+	return response.Items, nil
+}
+
+func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
+	stubs, err := me.list()
+	if err != nil {
 		return err
 	}
-
-	for _, stub := range stubs {
-		if stub.ID == id {
-			var responseBytes []byte
-
-			if responseBytes, err = iam.NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false); err != nil {
-				return err
-			}
+	for _, listStub := range stubs {
+		if listStub.UUID == id {
+			accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
+			client := iam.NewIAMClient(me)
 			var groupStub ListGroup
-			if err = json.Unmarshal(responseBytes, &groupStub); err != nil {
+			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), 200, false, groupStub); err != nil {
 				return err
 			}
-			v.Name = groupStub.Name
-			v.Description = groupStub.Description
-			v.FederatedAttributeValues = groupStub.FederatedAttributeValues
+
+			v.Name = listStub.Name
+			v.Description = listStub.Description
+			v.FederatedAttributeValues = listStub.FederatedAttributeValues
 			v.Permissions = groupStub.Permissions
 			return nil
 		}
 	}
-
-	return rest.Error{Code: 404, Message: fmt.Sprintf("a group with id %s doesn't exist", id)}
+	return fmt.Errorf("no group with id `%s` found", id)
 }
 
 func (me *GroupServiceClient) Delete(id string) error {

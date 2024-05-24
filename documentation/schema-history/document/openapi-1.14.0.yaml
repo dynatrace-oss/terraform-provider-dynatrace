@@ -1,0 +1,2475 @@
+openapi: "3.0.3"
+info:
+  title: "Document"
+  description: "# Overview\n\nThis API allows you to create and manage documents,\
+    \ as well as manage access to your documents via shares.\n\nHave a look at the\
+    \ [service documentation](https://dt-url.net/platform-services-document-service)\
+    \ to familiarize yourself with its key concepts.\n\nNote, that the document's\
+    \ content is not inspected by the document-store, therefore it can be entirely\
+    \ schemaless. If your content adheres to a schema, it's your responsibility to\
+    \ enforce that.\n\nInformation about authorization can be found [here](https://dt-url.net/platform-services-authentication).\n\
+    \n\n# Access Management\n\nThere are 2 different permission mechanisms. Most operations\
+    \ involve both mechanisms.\n\n## Endpoint Permissions\nIAM permissions (e.g. `document:documents:read`)\
+    \ guard endpoints. If the user does not have the permission required by an endpoint,\
+    \ the request gets rejected.\n\nThese permissions can not be modified via the\
+    \ doc-store API.\n\n## Document Permissions\nThese permissions guard individual\
+    \ documents. They are modelled in the service itself, independent of IAM permissions.\n\
+    \nThey can be modified via the API, e.g. by using the sharing endpoints. \n\n\
+    Therefore, a user needs to have access both in the DT IAM layer (by having specific\
+    \ IAM permissions) as well as access to the specific documents (e.g. by being\
+    \ document owner).\n\n# Sharing\n\nBy default, documents are only accessible to\
+    \ their owner. To enable collaboration with other users, you can share the documents\
+    \ with other users.\n\nThere are 2 ways of sharing documents.\n\n*Environment-Shares*\
+    \ allow to share a document with potentially all users in the environment.\nThe\
+    \ owner effectively loses control over who exactly gains access, as any user can\
+    \ claim the share and therefore receive access.\n\n*Direct-Shares* allow to share\
+    \ a document with specific users and groups. The owner is in total control of\
+    \ who exactly receives access, and can also revoke access retrospectively.\n\n\
+    The sharing mechanisms are not mutually exclusive - a document can be shared via\
+    \ multiple sharing mechanisms at the same time. \n\n\n# Document Locking\n\n##\
+    \ Optimistic Locking\n\nOperations which modify a document generally use optimistic\
+    \ locking. \n\nWhen such operations are executed, the user must provide the version\
+    \ upon which they operate. \n\nIf the document version in the service does not\
+    \ match, because the document has been modified in the meantime, then the operation\
+    \ gets rejected.\n\n## Active Locking\n\nIn addition to the mandatory *Optimistic\
+    \ Locking*, there is optional *Active Locking*.\n\nActive locking can be optionally\
+    \ utilized to prevent conflicts caused by multiple users concurrently updating\
+    \ the same document.\n\nA user can lock a document to prevent other users from\
+    \ updating the document for some time.\n\nOnce the user is done updating the document,\
+    \ they can release the lock and therefore enable updates by other users.\n\n\n\
+    # Deletion and Restoration\n\nDeleted documents are moved to the trash and permanently\
+    \ deleted after 30 days.\n\nThe Trash API can be used to manage deleted documents.\
+    \ \n\nRestoring a deleted document makes the document accessible again for the\
+    \ owner as well as all users who had previously received access via shares.\n\n\
+    \n# Snapshots\n\nDocument snapshots allow to revert a document's content back\
+    \ to an earlier state of it.\n\nSnapshots must be explicitly created when updating\
+    \ the document. Multiple snapshots can be created per document.\n\nRestoring a\
+    \ snapshot means that the document's content gets changed to the state it had\
+    \ when the snapshot was originally created.\n\nSnapshot creation is rate-limited\
+    \ to 5 snapshots per 60 seconds per document.\n\nThe maximum amount of snapshots\
+    \ per document is 50. Additional snapshots result in the deletion of the oldest\
+    \ existing snapshot.\n\nAll snapshots get automatically deleted after 30 days.\n"
+  version: "1.14.0"
+tags:
+- name: "Documents"
+  description: "CRUD operations for documents and snapshots."
+- name: "Direct Shares"
+  description: "Share your documents directly with specific users and groups."
+- name: "Environment Shares"
+  description: "Share your documents with the whole environment, via links."
+- name: "Trash"
+  description: "Restore or irrevocably destroy your deleted documents."
+- name: "Document Locking"
+  description: "Endpoints for document locking."
+paths:
+  /documents:
+    post:
+      summary: "Create a new document."
+      description: "**Required scope:** document:documents:write<br/><br/>Create a\
+        \ new document which is then owned by you (the user specified by the provided\
+        \ Authorization header). The document is not accessible to other users.\n\n\
+        The document's `name` and `type` must be provided. These two properties can\
+        \ later be used for filtering purposes, when [listing accessible documents](#/Documents/listDocuments).\n\
+        \nBe aware, that the `type` is not the same as the Content-Type of the document,\
+        \ but instead adds user-defined semantics of which the document-store is entirely\
+        \ agnostic.\n\nThe content size must not exceed **50 MB**."
+      operationId: "createDocument"
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      tags:
+      - "Documents"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  description: "The name of this document. This name doesn't need\
+                    \ to be unique and is *not* used as identifier. Maximum length\
+                    \ is 128 characters."
+                  type: "string"
+                type:
+                  description: "The type of this document. This type is *not* the\
+                    \ Content-Type of the document, but instead adds a user-defined\
+                    \ semantic. Maximum length is 128 characters."
+                  type: "string"
+                content:
+                  description: "The binary content of this document. Its exact type\
+                    \ is taken from the `Content-Type` header, which is thus mandatory."
+                  type: "string"
+                  format: "binary"
+              required:
+              - "name"
+              - "type"
+              - "content"
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/DocumentCreated"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "413":
+          $ref: "#/components/responses/DocumentTooLarge"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        "507":
+          $ref: "#/components/responses/InsufficientStorage"
+    get:
+      parameters:
+      - $ref: "#/components/parameters/filter"
+      - $ref: "#/components/parameters/sort"
+      - $ref: "#/components/parameters/pageKey"
+      - $ref: "#/components/parameters/page"
+      - $ref: "#/components/parameters/pageSize"
+      summary: "List all documents accessible to you."
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>List the\
+        \ metadata of all documents accessible to you. \n\n\nThis includes your own\
+        \ documents, as well as other users' documents which have been shared with\
+        \ you.\n\n\n*Note, that at the moment we offer a naive pagination, and therefore\
+        \ interim document mutations and/or an \ninsufficient sort clause, if provided,\
+        \ can lead to result inconsistencies (such as duplicates, missing entries).*\n"
+      operationId: "listDocuments"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/DocumentMetadataList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/fileNameParam"
+      - $ref: "#/components/parameters/snapshotVersionQueryParam"
+      summary: "Retrieve metadata and content."
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>Return metadata\
+        \ and content in one multipart response.\n\nIf the `snapshot-version` param\
+        \ is provided, the metadata and content of the specified snapshot will be\
+        \ returned instead.\n\nThe document must be accessible to you - therefore,\
+        \ you must either own it or you have received access through sharing."
+      operationId: "getDocument"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/FullDocument"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentOrSnapshotNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    patch:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/optimisticLockingVersionParam"
+      - $ref: "#/components/parameters/createSnapshotQueryParam"
+      summary: "Update metadata and content. Optionally, create a snapshot."
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Update metadata\
+        \ and/or the content of the document.\n\nName, type and content must be non-empty,\
+        \ but are optional. At least one of them must be provided.\n\nThe document\
+        \ must be accessible to you - therefore, you must either own it or you have\
+        \ received access through sharing.\n\nAs part of this operation, you can optionally\
+        \ create a snapshot of the updated document.\nIn that case, if the document\
+        \ has more than 50 snapshots, its oldest snapshot gets automatically deleted.\n\
+        It's not possible to create more than 5 snapshots per 60 seconds, per document.\n"
+      operationId: "updateDocument"
+      tags:
+      - "Documents"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  description: "The name of this document. This name doesn't need\
+                    \ to be unique and is *not* used as identifier.\n\nMaximum length\
+                    \ is 128 characters.\n"
+                  type: "string"
+                type:
+                  description: "The type of this document. This type is *not* the\
+                    \ Content-Type of the document, but instead adds a user-defined\
+                    \ semantic.\n\nMaximum length is 128 characters.\n"
+                  type: "string"
+                content:
+                  description: "The binary content of this document. Its exact type\
+                    \ is taken from the `Content-Type` header, which is thus mandatory."
+                  type: "string"
+                  format: "binary"
+                snapshotDescription:
+                  description: "An optional user-provided description of the snapshot's\
+                    \ content or the changes it introduced.\n\nThis description gets\
+                    \ ignored if the query-param `create-snapshot` is not set to true.\n\
+                    \nMaximum length is 128 characters.\n"
+                  type: "string"
+        required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/UpdateDocumentResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/SnapshotCreationRateLimitExceeded"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/optimisticLockingVersionParam"
+      summary: "Delete the document"
+      security:
+      - ssoAuth:
+        - "document:documents:delete"
+      description: "**Required scope:** document:documents:delete<br/><br/>Move the\
+        \ document into the trash. It is no longer accessible until it's restored\
+        \ from the trash.\n\n[Optimistic locking](https://dt-url.net/platform-services-locking)\
+        \ is enforced via the `optimistic-locking-version` parameter.\n\nYou must\
+        \ own the document in order to delete it."
+      operationId: "deleteDocument"
+      tags:
+      - "Documents"
+      responses:
+        "204":
+          $ref: "#/components/responses/DocumentDeleted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}/metadata:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/snapshotVersionQueryParam"
+      summary: "Retrieve document metadata."
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>Retrieve\
+        \ a document's metadata.\n\nThe document must be accessible to you - therefore,\
+        \ you must either own it or you have received access through sharing.\n\n\
+        If the `snapshot-version` param is provided, the metadata of the specified\
+        \ snapshot will be returned instead."
+      operationId: "getDocumentMetadata"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/DocumentMetadata"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentOrSnapshotNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    patch:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/optimisticLockingVersionParam"
+      summary: "Update document metadata"
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Partially\
+        \ update a document's user-defined metadata. At least one property must be\
+        \ updated, otherwise the operation fails.\n\nThe document's content is not\
+        \ affected by this operation.\n\n[Optimistic locking](https://dt-url.net/platform-services-locking)\
+        \ is enforced via the `optimistic-locking-version` parameter.\n\nThe document\
+        \ must be accessible to you - therefore, you must either own it or you have\
+        \ received access through sharing."
+      operationId: "updateDocumentMetadata"
+      tags:
+      - "Documents"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  description: "Document name."
+                  type: "string"
+                type:
+                  description: "Document type."
+                  type: "string"
+      responses:
+        "200":
+          $ref: "#/components/responses/DocumentUpdated"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}/content:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/fileNameParam"
+      - $ref: "#/components/parameters/snapshotVersionQueryParam"
+      summary: "Download document content"
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>Download\
+        \ latest document content.\n\nIf the `snapshot-version` param is provided,\
+        \ the content of the specified snapshot will be returned instead.\n\nThe document\
+        \ must be accessible to you - therefore, you must either own it or you have\
+        \ received access through sharing.\n\nThe response's `Content-Type` header\
+        \ has the same value that has been used during the upload."
+      operationId: "downloadDocumentContent"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/DocumentContent"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentOrSnapshotNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    put:
+      summary: "Update document content"
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Update a\
+        \ document's content, by completely replacing it.\n\nThe document must be\
+        \ accessible to you - therefore, you must either own it or you have received\
+        \ access through sharing.\n\n[Optimistic locking](https://dt-url.net/platform-services-locking)\
+        \ is enforced via the `optimistic-locking-version` parameter.\n\nThe content\
+        \ size must be greater than 0 and must not exceed `50 MB`.\n\nThe `Content-Type`\
+        \ header must be set for the multipart part; it will be used as the (new)\
+        \ content type of the document. Illegal (non-mime-type) content types result\
+        \ in a `400 - Bad Request` error.\n\nThe `Content-Disposition` header must\
+        \ be set for the multipart part;"
+      operationId: "updateDocumentContent"
+      tags:
+      - "Documents"
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      - $ref: "#/components/parameters/optimisticLockingVersionParam"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                content:
+                  type: "string"
+                  format: "binary"
+              required:
+              - "content"
+      responses:
+        "200":
+          $ref: "#/components/responses/DocumentContentUpdated"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        "507":
+          $ref: "#/components/responses/InsufficientStorage"
+  /documents/{id}/snapshots:
+    parameters:
+    - $ref: "#/components/parameters/documentIdParam"
+    - $ref: "#/components/parameters/pageKey"
+    - $ref: "#/components/parameters/page"
+    - $ref: "#/components/parameters/pageSize"
+    get:
+      summary: "List all snapshots of the document"
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>Returns metadata\
+        \ of all snapshots of the document, in descending order of the snapshot's\
+        \ creation date.\n\nYou can apply pagination via the `pageKey` and `pageSize`\
+        \ parameters.\n\n*Note, that at the moment we offer a naive pagination, and\
+        \ therefore interim mutations can lead to result inconsistencies (such as\
+        \ duplicates, missing entries).*"
+      operationId: "listSnapshots"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/SnapshotListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}/snapshots/{snapshot-version}:
+    parameters:
+    - $ref: "#/components/parameters/documentIdParam"
+    - $ref: "#/components/parameters/snapshotVersionPathParam"
+    delete:
+      summary: "Delete the snapshot."
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Irrevocably\
+        \ delete the snapshot. Only the document owner may do this.\n\nThis operation\
+        \ does not affect the current state of the document. \n\nInstead, it prevents\
+        \ that the document may ever be restored to the state it had when the snapshot\
+        \ was created.\n"
+      operationId: "deleteSnapshot"
+      tags:
+      - "Documents"
+      responses:
+        "204":
+          description: "The snapshot has been deleted."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/SnapshotNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}/snapshots/{snapshot-version}:restore:
+    parameters:
+    - $ref: "#/components/parameters/documentIdParam"
+    - $ref: "#/components/parameters/snapshotVersionPathParam"
+    post:
+      summary: "Restore the snapshot."
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Reset the\
+        \ document to the state it had when the snapshot was created. Everyone with\
+        \ write access may do this.\n\nA new snapshot is created afterwards.\nIf the\
+        \ document has more than 50 snapshots, its oldest snapshot gets automatically\
+        \ deleted.\n\nThis operation only changes the document's content. It doesn't\
+        \ change ownership or access/sharing data.\n"
+      operationId: "restoreSnapshot"
+      tags:
+      - "Documents"
+      responses:
+        "200":
+          $ref: "#/components/responses/RestoreSnapshotResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentOrSnapshotNotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}:inspect-lock:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      summary: "Inspect whether the document is locked."
+      security:
+      - ssoAuth:
+        - "document:documents:read"
+      description: "**Required scope:** document:documents:read<br/><br/>Inspect whether\
+        \ the document is locked.\n\nThis provides the information about whether the\
+        \ document is locked and the user that currently owns the lock."
+      operationId: "inspectLock"
+      tags:
+      - "Document Locking"
+      responses:
+        "200":
+          $ref: "#/components/responses/InspectLockResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}:acquire-lock:
+    parameters:
+    - $ref: "#/components/parameters/documentIdParam"
+    post:
+      summary: "Acquire the lock on the document."
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Acquire\
+        \ the lock on the document. A user can lock a maximum of five documents at\
+        \ any given time. Once the lock is acquired by the user, other users cannot\
+        \ make any updates to the document.\n\nThe user acquiring the lock can optionally\
+        \ specify the duration for which the lock can be attained. However, the specified\
+        \ duration must not exceed the maximum allowed duration of 15 minutes. If\
+        \ not specified, the lock is acquired for 10 minutes.\n\nIf the user who has\
+        \ currently locked the document attempts to acquire the lock for the same\
+        \ document again, the duration of the lock gets extended by the specified\
+        \ duration or by a default duration of 10 minutes, if not specified.\n\nThe\
+        \ other users would not be allowed to acquire the lock on an already locked\
+        \ document."
+      operationId: "acquireLock"
+      tags:
+      - "Document Locking"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcquireLock"
+      responses:
+        "200":
+          description: "The lock has been acquired by the user."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcquireLockResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/DocumentAlreadyLocked"
+        "429":
+          $ref: "#/components/responses/LockedDocumentsLimitReached"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /documents/{id}:release-lock:
+    parameters:
+    - $ref: "#/components/parameters/documentIdParam"
+    post:
+      summary: "Release the lock on the document."
+      security:
+      - ssoAuth:
+        - "document:documents:write"
+      description: "**Required scope:** document:documents:write<br/><br/>Release\
+        \ the lock on the document.\nThe lock on the document can be released only\
+        \ by the user who owns it."
+      operationId: "releaseLock"
+      tags:
+      - "Document Locking"
+      responses:
+        "200":
+          description: "The lock on the document has been released."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /environment-shares:
+    post:
+      summary: "Create an environment-share for one of your own documents."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:write"
+      description: "**Required scope:** document:environment-shares:write<br/><br/>Create\
+        \ a document share, which can be used to give one or multiple other users\
+        \ access to this document.\n\nThis is only possible if you are the owner of\
+        \ the document.\n\nA share can be created with either `read` or `read-write`\
+        \ access.\n\nA document can have maximally one share per access type, therefore\
+        \ it's not possible to create multiple read-shares or multiple 'read-write'-shares\
+        \ for a single document.\n\nThis means, that you can create one read-share\
+        \ for a document, and this single read-share can be used to give read-access\
+        \ to an arbitrary number of users. The same applies to a 'read-write'-share.\n\
+        \nCreating a share does *not* automatically allow users to access the document\
+        \ - only those users who explicitly [claim the share](#/Environment%20Shares/claimEnvironmentShare)\
+        \ gain access to the document.\n\nRevoking access from users can be done by\
+        \ [deleting the share](#/Environment%20Shares/deleteEnvironmentShare)."
+      operationId: "createEnvironmentShare"
+      tags:
+      - "Environment Shares"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvShare"
+      responses:
+        "201":
+          description: "A new share for the specified document has been created."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentShare"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/ShareAlreadyExists"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    get:
+      summary: "List your environment-shares."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:read"
+      description: "**Required scope:** document:environment-shares:read<br/><br/>List\
+        \ all environment-shares of your own documents.\n\nIf you are only concerned\
+        \ with a specific document's environment-shares, or a specific share, you\
+        \ can use the `filter` parameter to narrow down the result set. Note, that\
+        \ this does *not* circumvent the restriction of being able to only get environment-shares\
+        \ of *your own* documents. If you attempt to retrieve environment-shares of\
+        \ another user's document, the result set will be empty.\n\nFurthermore, you\
+        \ can apply pagination via the `pageKey`, `page` and `pageSize` parameters.\n\
+        \n*Note, that at the moment we offer a naive pagination, and therefore interim\
+        \ mutations can lead to result inconsistencies (such as duplicates, missing\
+        \ entries).*"
+      operationId: "listEnvironmentShares"
+      tags:
+      - "Environment Shares"
+      parameters:
+      - in: "query"
+        name: "filter"
+        description: "The filter query, as explained [here](https://dt-url.net/platform-services-filtering).\
+          \ Filtering is only possible on the `documentId` property, and only via\
+          \ the equals operator. Via this you can effectively request all shares of\
+          \ a specific document owned by you. If this parameter is omitted, all environment-shares\
+          \ of this user will be returned."
+        required: false
+        schema:
+          type: "string"
+      - $ref: "#/components/parameters/pageKey"
+      - $ref: "#/components/parameters/page"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        "200":
+          description: "A list of your environment-shares.\nIf the list was paginated\
+            \ (see `pageKey`, `page` and `pageSize`), and there are more environment-shares\
+            \ available, you will find a non-empty `nextPageKey` which can be used\
+            \ for a follow-up query. The `totalCount` property will let you know the\
+            \ number of all matching environment-shares, as if no pagination would\
+            \ have been applied."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentShareList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /environment-shares/{id}:
+    get:
+      summary: "Retrieve one of your environment-shares."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:read"
+      description: "**Required scope:** document:environment-shares:read<br/><br/>Retrieve\
+        \ a share via its id.\n\nOnly the share's owner is permitted to do this."
+      operationId: "getEnvironmentShare"
+      tags:
+      - "Environment Shares"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Environment-share id."
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          $ref: "#/components/responses/EnvironmentShare"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      summary: "Delete one of your environment-shares."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:delete"
+      description: "**Required scope:** document:environment-shares:delete<br/><br/>Delete\
+        \ the share. This will *not* delete the share's document.\n\nOnly the share's\
+        \ owner is permitted to do this.\n\nThis operation effectively revokes the\
+        \ access which has been granted to *all users* which have claimed this share.\
+        \ This is the only way to revoke access to your document from other users.\
+        \ It's not possible to revoke access of individual users.\n\nBe aware that\
+        \ deleting a share does not necessarily prevent a user from accessing a document,\
+        \ as the user might still have access via another share (of the same document).\
+        \ E.g., if a user has read- and readwrite-access (via one read-share and another\
+        \ readwrite-share), and the read-share gets deleted, access is still granted\
+        \ to the user via the readwrite-share."
+      operationId: "deleteEnvironmentShare"
+      tags:
+      - "Environment Shares"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Environment-share id."
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: "The share has been deleted."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /environment-shares/{id}/claim:
+    put:
+      summary: "Claim another user's environment-share."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:claim"
+      description: "**Required scope:** document:environment-shares:claim<br/><br/>Claim\
+        \ this environment-share, therefore gaining access to the share's document.\
+        \ From thereafter, the document will be accessible to you with the specific\
+        \ permissions defined by the share. You can then access the document as usual,\
+        \ via the same endpoints which you would use to access your own documents.\n\
+        \nClaiming your own shares is not possible. You can only claim shares of documents\
+        \ belonging to other users *of the same environment*.\n\nOnce you have claimed\
+        \ access to a document, you can not revoke that access again.\n\nThe document's\
+        \ owner can revoke your access by deleting the share. This will effectively\
+        \ revoke the access you have been granted by claiming this share.\n\nYou can\
+        \ claim multiple shares of the same document, and each share will grant you\
+        \ different permissions.\n\nClaiming the same share multiple times does not\
+        \ have any effect."
+      operationId: "claimEnvironmentShare"
+      tags:
+      - "Environment Shares"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Share id."
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "You have successfully claimed this share and can now access\
+            \ the document with the granted permissions."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentShareClaimResult"
+        "400":
+          $ref: "#/components/responses/ClaimingOwnedShareNotAllowed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /environment-shares/{id}/claimers:
+    get:
+      summary: "List the claimers of one of your environment-shares."
+      security:
+      - ssoAuth:
+        - "document:environment-shares:read"
+      description: "**Required scope:** document:environment-shares:read<br/><br/>\n\
+        Retrieve a share's claimers.\n\nOnly the share's owner is permitted to do\
+        \ this.\n\nYou can control the result's pagination via the `pageKey`, `page`\
+        \ and `pageSize` parameters.\n\n*Note, that at the moment we offer a naive\
+        \ pagination, and therefore interim document mutations and/or an\ninsufficient\
+        \ sort clause, if provided, can lead to result inconsistencies (such as duplicates,\
+        \ missing entries).*\n"
+      operationId: "getEnvironmentShareClaimers"
+      tags:
+      - "Environment Shares"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Environment-share id."
+        required: true
+        schema:
+          type: "string"
+      - $ref: "#/components/parameters/pageKey"
+      - $ref: "#/components/parameters/page"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        "200":
+          $ref: "#/components/responses/EnvironmentShareClaimerList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /direct-shares:
+    post:
+      summary: "Create a direct-share for one of your own documents."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:write"
+      description: "**Required scope:** document:direct-shares:write<br/><br/>Create\
+        \ a direct-share for a document owned by you. The share can be used to grant\
+        \ access to a specific set of users and/or groups, via [addRecipients](#/Direct%20Shares/addUserShareRecipients)\n\
+        \nYou can optionally add users and/or groups which will directly be registered\
+        \ as recipients of the share. The users and groups are specified via their\
+        \ sso-ids. The maximum number of recipients is 1000.\n\nThe validity of the\
+        \ SSO-users and SSO-groups is not verified. It's technically possible, albeit\
+        \ pointless, to add non-existing users and groups.\n\nThe share can be created\
+        \ with either `read` or `read-write` access.\n\nA document can have maximally\
+        \ one direct-share per access type, therefore it's not possible to create\
+        \ multiple `read`-shares or multiple `read-write`-shares for a single document.\n\
+        \nThis means, that you can create one `read`-share for a document, and this\
+        \ single `read`-share can be used to give read-access to an arbitrary number\
+        \ of users (and/or groups). The same applies to a `read-write`-share."
+      operationId: "createDirectShare"
+      tags:
+      - "Direct Shares"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDirectShare"
+        required: true
+      responses:
+        "201":
+          description: "A new share for the specified document has been created."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DirectShare"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/DocumentNotFound"
+        "409":
+          $ref: "#/components/responses/ShareAlreadyExists"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    get:
+      summary: "List your direct-shares."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:read"
+      description: "**Required scope:** document:direct-shares:read<br/><br/>List\
+        \ all shares of your documents.\n\nIf you are only concerned with a specific\
+        \ document's shares, or a specific share, you can use the `filter` parameter\
+        \ to narrow down the result set. This does *not* circumvent the restriction\
+        \ of being able to only get shares of *your own* documents. If you attempt\
+        \ to retrieve shares of another user's document, the result set will be empty.\n\
+        \n*Note, that at the moment we offer a naive pagination, and therefore interim\
+        \ mutations can lead to result inconsistencies (such as duplicates, missing\
+        \ entries).*"
+      operationId: "listDirectShares"
+      tags:
+      - "Direct Shares"
+      parameters:
+      - in: "query"
+        name: "filter"
+        description: "The filter query, as explained [here](https://dt-url.net/platform-services-filtering).\
+          \ Filtering is only possible on the `documentId` property, and only with\
+          \ the equals operator. Via this you can effectively request all shares of\
+          \ a specific document owned by you. If this parameter is omitted, all direct-shares\
+          \ of this user will be returned."
+        required: false
+        schema:
+          type: "string"
+      - $ref: "#/components/parameters/pageKey"
+      - $ref: "#/components/parameters/page"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        "200":
+          description: "A list of your direct-shares."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DirectShareList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /direct-shares/{id}:
+    parameters:
+    - $ref: "#/components/parameters/shareIdParam"
+    get:
+      summary: "Retrieve one of your direct-shares."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:read"
+      description: "**Required scope:** document:direct-shares:read<br/><br/>Retrieve\
+        \ a direct-share via its id.\n\nOnly the share's owner is permitted to do\
+        \ this."
+      operationId: "getDirectShare"
+      tags:
+      - "Direct Shares"
+      responses:
+        "200":
+          $ref: "#/components/responses/DirectShare"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      summary: "Delete one of your direct-shares."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:delete"
+      description: "**Required scope:** document:direct-shares:delete<br/><br/>Delete\
+        \ the share. This will *not* delete the share's document.\n\nYou can only\
+        \ delete shares of your own documents.\n\nThis operation effectively revokes\
+        \ the access of all of the share's recipients.\n\nBe aware that deleting a\
+        \ share does not necessarily prevent a user from accessing a document, as\
+        \ the user might still have access via another share (of the same document).\
+        \ E.g., if a user has 'read' and 'read-write' access (via one 'read' and another\
+        \ 'read-write' share), and the 'read' share gets deleted, access is still\
+        \ granted to the user via the other 'read-write' share."
+      operationId: "deleteDirectShare"
+      tags:
+      - "Direct Shares"
+      responses:
+        "204":
+          description: "The share has been deleted."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /direct-shares/{id}/recipients:
+    parameters:
+    - $ref: "#/components/parameters/shareIdParam"
+    get:
+      summary: "List the recipients of one of your direct-shares."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:read"
+      description: "**Required scope:** document:direct-shares:read<br/><br/>Retrieve\
+        \ a share's recipients. If there are groups among the recipieints, the groups\
+        \ always appear before the users.\n\nOnly share's owner is permitted to do\
+        \ this."
+      operationId: "getDirectShareRecipients"
+      tags:
+      - "Direct Shares"
+      responses:
+        "200":
+          $ref: "#/components/responses/DirectShareRecipientList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /direct-shares/{id}/recipients/add:
+    parameters:
+    - $ref: "#/components/parameters/shareIdParam"
+    post:
+      summary: "Add recipients to the share."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:write"
+      description: "**Required scope:** document:direct-shares:write<br/><br/>Add\
+        \ one or multiple SSO-users and/or SSO-groups to this share. The affected\
+        \ users immediately gain access to the document.\n\nOnly share's owner is\
+        \ permitted to do this. The maximum number of recipients is 1000.\n\nThe validity\
+        \ of the SSO-users and SSO-groups is not verified. It's technically possible,\
+        \ albeit pointless, to add non-existing users and groups.\n\nAlready added\
+        \ users or groups are ignored."
+      operationId: "addDirectShareRecipients"
+      tags:
+      - "Direct Shares"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddDirectShareRecipients"
+        required: true
+      responses:
+        "204":
+          description: "The recipients have been added."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /direct-shares/{id}/recipients/remove:
+    parameters:
+    - $ref: "#/components/parameters/shareIdParam"
+    post:
+      summary: "Remove recipients from the share."
+      security:
+      - ssoAuth:
+        - "document:direct-shares:write"
+      description: "**Required scope:** document:direct-shares:write<br/><br/>Remove\
+        \ one or multiple recipients from the share. The affected users immediately\
+        \ lose access to the document.\n\nOnly share's owner is permitted to do this.\
+        \ The maximum number of recipients is 1000.\n\nNon-existing users or groups\
+        \ are ignored."
+      operationId: "removeDirectShareRecipients"
+      tags:
+      - "Direct Shares"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemoveDirectShareRecipients"
+        required: true
+      responses:
+        "204":
+          description: "The recipients have been removed."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/ShareNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /trash/documents:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/listTrashedDocumentsFilterParam"
+      - $ref: "#/components/parameters/pageKey"
+      - $ref: "#/components/parameters/page"
+      - $ref: "#/components/parameters/pageSize"
+      summary: "List your deleted documents."
+      security:
+      - ssoAuth:
+        - "document:trash.documents:read"
+      description: "**Required scope:** document:trash.documents:read<br/><br/>Lists\
+        \ all documents, owned by you, which currently reside in the trash.\n\nNote\
+        \ that documents in the trash are irreversibly deleted after 30 days.\n\n\
+        *Note that at the moment we offer a naive pagination, and therefore interim\
+        \ document mutations and/or an\n    insufficient sort clause, if provided,\
+        \ can lead to result inconsistencies (such as duplicates, missing entries).*\n"
+      operationId: "listTrashedDocuments"
+      tags:
+      - "Trash"
+      responses:
+        "200":
+          $ref: "#/components/responses/ListTrashDocumentsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /trash/documents/{id}:
+    get:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      summary: "Inspect the deleted document."
+      security:
+      - ssoAuth:
+        - "document:trash.documents:read"
+      description: "**Required scope:** document:trash.documents:read<br/><br/>Inspect\
+        \ the deleted document's metadata.\nOnly the document owner is permitted to\
+        \ do this."
+      operationId: "inspectTrashedDocument"
+      tags:
+      - "Trash"
+      responses:
+        "200":
+          $ref: "#/components/responses/InspectTrashDocumentResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/TrashedDocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      summary: "Irreversibly destroy the document."
+      security:
+      - ssoAuth:
+        - "document:trash.documents:delete"
+      description: "**Required scope:** document:trash.documents:delete<br/><br/>This\
+        \ operation irreversibly destroys the document.\nOnly the document owner is\
+        \ permitted to do this."
+      operationId: "deleteTrashedDocument"
+      tags:
+      - "Trash"
+      responses:
+        "204":
+          description: "The document has been permanently deleted."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/TrashedDocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /trash/documents/{id}/restore:
+    post:
+      parameters:
+      - $ref: "#/components/parameters/documentIdParam"
+      summary: "Restore the deleted document."
+      security:
+      - ssoAuth:
+        - "document:trash.documents:restore"
+      description: "**Required scope:** document:trash.documents:restore<br/><br/>This\
+        \ operation restores the document from the trash.\nAll users who had access\
+        \ before the deletion regain their access to the document.\nOnly the document\
+        \ owner is permitted to do this."
+      operationId: "restoreTrashedDocument"
+      tags:
+      - "Trash"
+      responses:
+        "204":
+          description: "The document has been restored."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/TrashedDocumentNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+components:
+  parameters:
+    documentTypeParam:
+      in: "query"
+      name: "type"
+      schema:
+        type: "string"
+      required: true
+    documentNameParam:
+      in: "query"
+      name: "name"
+      schema:
+        type: "string"
+      required: true
+    fileNameParam:
+      in: "query"
+      name: "filename"
+      description: "The optional `filename` query parameter can be passed to give\
+        \ the file that is being downloaded a user-provided name and file extension\
+        \ for downloading purposes. This name will be sent back to the client via\
+        \ the Content-Disposition HTTP header. The passed `filename` will be trimmed\
+        \ that it does not contain any space characters around the name. When the\
+        \ `filename` is not specified, then the name of the document is used as file\
+        \ name and no extension is added, since the service is not aware of file extensions."
+      schema:
+        type: "string"
+      required: false
+    optimisticLockingVersionParam:
+      in: "query"
+      name: "optimistic-locking-version"
+      description: "To protect users from accidental overrides, the current version\
+        \ of the document must match the optimistic locking version parameter - otherwise,\
+        \ this request will fail and the entity is left unchanged."
+      schema:
+        type: "string"
+      required: true
+    filter:
+      in: "query"
+      name: "filter"
+      description: "\nThe filter parameter, as explained [here](https://dt-url.net/platform-services-filtering).\n\
+        \nIf this parameter is omitted, no filtering is applied and all documents\
+        \ available to you will be returned.\n\nFiltering by string type parameters\
+        \ (`name`, `type`) when using one of the operators `contains`, `starts-with`\
+        \ and `ends-with` is **case insensitive**.\n\nWhen using the equals operator\
+        \ or the not-equals operator, filtering is **case sensitive**.\n\nThe following\
+        \ fields are legal filtering parameters - any other field names will result\
+        \ in a HTTP 400 response:\n\n`id`, `name`, `type`, `version`, `owner`, `modificationInfo.createdTime`,\
+        \ `modificationInfo.createdBy`, `modificationInfo.lastModifiedTime`, `modificationInfo.lastModifiedBy`\n\
+        \nThe following constraints apply:\n* The `exists` operator is **not supported**.\n\
+        \n* Parameter names are **case-sensitive**.\n\n* Maximum nesting depth (via\
+        \ brackets) is 3.\n\n* Maximum length is 256 characters.\n\nExamples:\n\n\
+        * `name = 'my-document-name'`\n\n* `name == 'my-document-name'`\n\n* `(name\
+        \ starts-with 'awesome' or type != 'dashboard') and version >= 5`\n\n* `modificationInfo.lastModifiedTime\
+        \ >= '2022-07-01T00:10:05.000Z' and not (name contains 'new')`\n"
+      required: false
+      schema:
+        type: "string"
+    sort:
+      in: "query"
+      name: "sort"
+      description: "The sort parameter, as explained [here](https://dt-url.net/platform-services-filtering)\n\
+        \nIf this parameter is omitted, the documents are sorted by their ids.\n\n\
+        Sorting by string types (`name`, `type`) is done in a case insensitive manner.\
+        \ \n\nThe following fields are legal sorting parameters - any other sorting\
+        \ parameters will result in a HTTP 400 response:\n* `name`,  `type`,  `version`,\
+        \ `owner`, `modificationInfo.createdTime`, `modificationInfo.createdBy`, `modificationInfo.lastModifiedTime`,`modificationInfo.lastModifiedBy`\n\
+        \nThe following constraints apply:\n\n* Maximum number of sorting parameters\
+        \ is 5. Exceeding this limit will result in a HTTP 400 response.\n\n* Note\
+        \ that blanks are *not* ignored and will result in a HTTP 400 response.\n\n\
+        Examples: \n\n* `name`\n\n* `name,-type,modificationInfo.lastModifiedTime`\n"
+      required: false
+      schema:
+        type: "string"
+    pageKey:
+      in: "query"
+      name: "page-key"
+      description: "The page key is used to query results from the next page.\nYou\
+        \ get a `nextPageKey` parameter in the return value of this method to use\
+        \ here.\nIf this parameter is omitted, the first page will be returned.\n"
+      required: false
+      schema:
+        type: "string"
+    page:
+      in: "query"
+      name: "page"
+      description: "The page parameter is used to directly access a specific page.\
+        \ \nThe value of the page parameter, if specified, has to be a value greater\
+        \ than zero.\nIf the value of the page parameter exceeds the highest available\
+        \ page on the backend, an empty page is returned.\n"
+      required: false
+      schema:
+        type: "integer"
+    pageSize:
+      in: "query"
+      name: "page-size"
+      description: "The page size which defines the requested number of result entries.\
+        \ You can request a maximum of 1000 result entries.\nIf this parameter is\
+        \ omitted, the default value of 20 will be used.\n"
+      required: false
+      schema:
+        type: "integer"
+    listTrashedDocumentsFilterParam:
+      in: "query"
+      name: "filter"
+      required: false
+      schema:
+        type: "string"
+      description: "The filter parameter, as explained [here](https://dt-url.net/platform-services-filtering).\n\
+        \nIf this parameter is omitted, no filtering is applied and all your deleted\
+        \ documents will be returned.\n\nFiltering by string type parameters when\
+        \ using one of the operators `contains`, `starts-with` and `ends-with` is\
+        \ **case insensitive**.\n\nWhen using the equals operator or the not-equals\
+        \ operator, filtering is **case sensitive**.\n\nThe following fields are legal\
+        \ filtering parameters - any other field names will result in a HTTP 400 response:\n\
+        \n`id`, `name`, `type`, `deletionInfo.deletedTime`, `deletionInfo.deletedBy`\n\
+        \nThe following constraints apply:\n* The `exists` operator is **not supported**.\n\
+        \n* Parameter names are **case-sensitive**.\n\n* Maximum nesting depth (via\
+        \ brackets) is 3.\n\n* Maximum length is 256 characters.\n"
+    snapshotVersionQueryParam:
+      in: "query"
+      name: "snapshot-version"
+      description: "Snapshot version, to be used if you want to access a snapshot\
+        \ of the document.\n"
+      required: false
+      schema:
+        type: "integer"
+    createSnapshotQueryParam:
+      in: "query"
+      name: "create-snapshot"
+      description: "Indicates whether a new snapshot shall be created after the update\
+        \ was executed.\n"
+      required: false
+      schema:
+        type: "boolean"
+        default: false
+    documentIdParam:
+      in: "path"
+      name: "id"
+      description: "System-generated unique id of a document."
+      required: true
+      schema:
+        type: "string"
+    shareIdParam:
+      in: "path"
+      name: "id"
+      description: "System-generated unique id of a share."
+      required: true
+      schema:
+        type: "string"
+    snapshotVersionPathParam:
+      in: "path"
+      name: "snapshot-version"
+      description: "System-generated snapshot version."
+      required: true
+      schema:
+        type: "integer"
+  headers:
+    documentVersionResponseHeader:
+      description: "Document version"
+      schema:
+        type: "integer"
+  schemas:
+    DocumentList:
+      type: "object"
+      description: "Envelope object for a list of metadata"
+      properties:
+        documents:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DocumentMetaData"
+        nextPageKey:
+          type: "string"
+          description: "Use this as `page-key` query param to get the next page. If\
+            \ the list was paginated, and there are more results available, this parameter\
+            \ will be returned."
+        totalCount:
+          type: "integer"
+          description: "The total amount of matching results for this query, as if\
+            \ no pagination would have been applied."
+      required:
+      - "documents"
+      - "totalCount"
+      example:
+        documents:
+        - id: "6239bf48-ce6d-4e06-8694-bd3c2b235d63"
+          name: "My Dashboard"
+          type: "MyType"
+          version: "1"
+          owner: "441664f0-23c9-40ef-b344-18c02c23d789"
+          modificationInfo:
+            createdBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+            createdTime: "2021-10-09T19:23:27Z"
+            lastModifiedBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+            lastModifiedTime: "2021-11-10T05:11:11Z"
+          access:
+          - "read"
+          - "write"
+          - "delete"
+        - id: "2e9565ea-73dd-42e1-89d1-58797ca5e89f"
+          name: "My Notebook"
+          type: "MyType2"
+          version: "3"
+          owner: "441664f0-23c9-40ef-b344-18c02c23d789"
+          modificationInfo:
+            createdBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+            createdTime: "2021-10-09T19:23:27Z"
+            lastModifiedBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+            lastModifiedTime: "2021-11-10T05:11:11Z"
+          access:
+          - "read"
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 42
+    DocumentUserProvidedValues:
+      type: "object"
+      description: "Name and type are provided by the user. The system is entirely\
+        \ agnostic of the actual values, apart from ensuring that they are present."
+      properties:
+        name:
+          type: "string"
+        type:
+          type: "string"
+      required:
+      - "name"
+      - "type"
+      example:
+        name: "My Dashboard"
+        type: "MyType"
+    UpdateDocumentMetadata:
+      type: "object"
+      properties:
+        documentMetadata:
+          $ref: "#/components/schemas/DocumentMetaData"
+        createdSnapshot:
+          $ref: "#/components/schemas/CreatedSnapshot"
+      required:
+      - "documentMetadata"
+    RestoreDocumentResult:
+      type: "object"
+      properties:
+        documentMetadata:
+          $ref: "#/components/schemas/DocumentMetaData"
+        createdSnapshot:
+          $ref: "#/components/schemas/CreatedSnapshot"
+      required:
+      - "documentMetadata"
+      - "createdSnapshot"
+    CreatedSnapshot:
+      type: "object"
+      properties:
+        snapshotVersion:
+          type: "integer"
+          description: "System-generated snapshot version."
+      example:
+        snapshotVersion: 5
+      required:
+      - "snapshotVersion"
+    DocumentMetaData:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "System-generated unique id."
+        name:
+          type: "string"
+          description: "Name, provided by the user. The system is entirely agnostic\
+            \ of this value and there are no semantics attached to it."
+        type:
+          type: "string"
+          description: "Type, provided by the user. The system is entirely agnostic\
+            \ of this value and there are no semantics attached to it."
+        version:
+          description: "Initial value is 1. Every manipulation (of metadata or content)\
+            \ leads to an increment. This value is used for optimistic locking during\
+            \ modification operations."
+          type: "string"
+        owner:
+          type: "string"
+          description: "Unique user id derived from Authorization header."
+        modificationInfo:
+          $ref: "#/components/schemas/ModificationInfo"
+        access:
+          type: "array"
+          items:
+            type: "string"
+          description: "Indicates which operations you may apply to this document.\
+            \ For example, if you own the document, this array contains the values\
+            \ ['read', 'write', 'delete'].\n- `read` - you may read, but not update\
+            \ or delete it.\n- `write` - you may update, but not read or delete it.\n\
+            - `delete` - you may delete, but not read or update it.\n"
+      required:
+      - "id"
+      - "name"
+      - "type"
+      - "version"
+      - "owner"
+      - "modificationInfo"
+      - "access"
+      example:
+        id: "6239bf48-ce6d-4e06-8694-bd3c2b235d63"
+        name: "My Dashboard"
+        type: "MyType"
+        version: "1"
+        owner: "441664f0-23c9-40ef-b344-18c02c23d789"
+        modificationInfo:
+          createdBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+          createdTime: "2021-10-09T19:23:27Z"
+          lastModifiedBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+          lastModifiedTime: "2021-11-10T05:11:11Z"
+        access:
+        - "read"
+        - "write"
+        - "delete"
+    ModificationInfo:
+      type: "object"
+      description: "Info related to creation and modification of the entity."
+      properties:
+        createdBy:
+          type: "string"
+          description: "User who created this entity."
+        createdTime:
+          type: "string"
+          format: "date-time"
+          description: "Creation time (in notation as defined by RFC 3339, section\
+            \ 5.6)."
+        lastModifiedBy:
+          type: "string"
+          description: "User who last modified this entity (metadata or content)."
+        lastModifiedTime:
+          type: "string"
+          format: "date-time"
+          description: "Time of last modification (in notation as defined by RFC 3339,\
+            \ section 5.6)."
+      required:
+      - "createdBy"
+      - "createdTime"
+      - "lastModifiedBy"
+      - "lastModifiedTime"
+    DeletionInfo:
+      type: "object"
+      description: "Info related to the deletion of the entity."
+      properties:
+        deletedBy:
+          type: "string"
+          description: "User who deleted this entity."
+        deletedTime:
+          type: "string"
+          format: "date-time"
+          description: "Time of deletion (in notation as defined by RFC 3339, section\
+            \ 5.6)."
+      required:
+      - "deletedBy"
+      - "deletedTime"
+    CreationInfo:
+      type: "object"
+      description: "Info related to creation of the entity."
+      properties:
+        createdBy:
+          type: "string"
+          description: "User who created this entity."
+        createdTime:
+          type: "string"
+          format: "date-time"
+          description: "Creation time (in notation as defined by RFC 3339, section\
+            \ 5.6)."
+      required:
+      - "createdBy"
+      - "createdTime"
+    SnapshotList:
+      type: "object"
+      description: "Envelope object for a list of snapshots of a document."
+      properties:
+        snapshots:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SnapshotMetadata"
+        nextPageKey:
+          type: "string"
+          description: "Use this as `page-key` query param to get the next page. If\
+            \ the list was paginated, and there are more results available, this parameter\
+            \ will be returned."
+        totalCount:
+          type: "integer"
+          description: "The total amount of matching results for this query, as if\
+            \ no pagination would have been applied."
+      required:
+      - "snapshots"
+      - "totalCount"
+      example:
+        snapshots:
+        - snapshotVersion: 2
+          documentVersion: 7
+          description: "Add another section to the document"
+          modificationInfo:
+            createdBy: "5555f0-23c9-40ef-b344-18c02c23d788"
+            createdTime: "2021-10-15T19:23:27Z"
+        - snapshotVersion: 1
+          documentVersion: 3
+          description: "Add a section to the document"
+          modificationInfo:
+            createdBy: "6666f0-23c9-40ef-b344-18c02c23d789"
+            createdTime: "2021-10-09T19:23:27Z"
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 2
+    SnapshotMetadata:
+      type: "object"
+      description: "Metadata of a snapshot of a document."
+      properties:
+        snapshotVersion:
+          type: "integer"
+          description: "System-maintained auto-incremented snapshot version, starting\
+            \ at 1.\n\nThis is not the document version.\n"
+        documentVersion:
+          type: "integer"
+          description: "The document version associated with this snapshot. The document\
+            \ had this version when the snapshot was created."
+        description:
+          type: "string"
+          description: "An optional description of the snapshot's content or the changes\
+            \ it introduces to the previous snapshot. Provided by the user or app."
+        modificationInfo:
+          $ref: "#/components/schemas/CreationInfo"
+      required:
+      - "snapshotVersion"
+      - "documentVersion"
+      - "modificationInfo"
+      example:
+        snapshotVersion: 2
+        documentVersion: 5
+        description: "Add a section to the document"
+        modificationInfo:
+          createdBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+          createdTime: "2021-10-09T19:23:27Z"
+    ErrorEnvelope:
+      type: "object"
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+      - "error"
+    Error:
+      type: "object"
+      description: "An error response as defined [here](https://dt-url.net/platform-services-error-handling)."
+      properties:
+        code:
+          type: "integer"
+        message:
+          type: "string"
+        details:
+          $ref: "#/components/schemas/ErrorDetails"
+      required:
+      - "code"
+      - "message"
+    ErrorDetails:
+      type: "object"
+      properties:
+        errorRef:
+          type: "string"
+    CreateEnvShare:
+      type: "object"
+      description: "Input required to create a environment-share."
+      properties:
+        documentId:
+          type: "string"
+          description: "Document id."
+        access:
+          description: " Specifies which permissions shall be granted via the share:\n\
+            - `read` - grants permission to read the document, but not to update or\
+            \ delete it. - read-write` - grants permission to read and update the\
+            \ document, but not to delete it. "
+          type: "string"
+      required:
+      - "documentId"
+      - "access"
+    AcquireLock:
+      type: "object"
+      description: "Input to acquire the lock."
+      properties:
+        documentVersion:
+          description: "The latest version of the document."
+          type: "integer"
+        lockDurationInSeconds:
+          type: "integer"
+          description: "Duration specified in seconds to acquire the lock on the document."
+      required:
+      - "documentVersion"
+      example:
+        documentVersion: 3
+        lockDurationInSeconds: 20
+    AcquireLockResult:
+      type: "object"
+      properties:
+        documentVersion:
+          description: "The latest version of the document."
+          type: "integer"
+        lockedUntil:
+          type: "string"
+          format: "date-time"
+          description: "Timestamp until the document remains locked."
+      required:
+      - "documentVersion"
+      - "lockedUntil"
+      example:
+        documentVersion: 3
+        lockedUntil: "2023-08-10T05:11:11Z"
+    EnvironmentShare:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "System-generated unique id of a share resource."
+        documentId:
+          type: "string"
+          description: "The shared document's id."
+        access:
+          type: "array"
+          items:
+            type: "string"
+          description: "Indicates which operations you may apply to this document.\
+            \ For example, if you own the document, this array contains the values\
+            \ ['read', 'write', 'delete'].\n- `read` - you may read, but not update\
+            \ or delete it.\n- `write` - you may update, but not read or delete it.\n\
+            - `delete` - you may delete, but not read or update it.\n"
+        claimCount:
+          description: "Number of users who have claimed this share and therefore\
+            \ can access the document and collaborate on it."
+          type: "integer"
+      required:
+      - "id"
+      - "documentId"
+      - "access"
+      - "claimCount"
+      example:
+        id: "af21cc73-bb1c-45f1-ad1b-12e8f91b9fbc"
+        documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+        access:
+        - "read"
+        - "write"
+        claimCount: 0
+    EnvironmentShareList:
+      type: "object"
+      description: "A list of environment-shares."
+      properties:
+        environment-shares:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/EnvironmentShare"
+        nextPageKey:
+          type: "string"
+          description: "Use this as `page-key` query param to get the next page. If\
+            \ the list was paginated, and there are more results available, this parameter\
+            \ will be returned."
+        totalCount:
+          type: "integer"
+          description: "The total amount of matching results for this query, as if\
+            \ no pagination would have been applied."
+      required:
+      - "environment-shares"
+      - "totalCount"
+      example:
+        environment-shares:
+        - id: "af21cc73-bb1c-45f1-ad1b-12e8f91b9fbc"
+          documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+          access:
+          - "read"
+          claimCount: 5
+        - id: "f0ed12ec-f232-45db-b667-26b2cf414787"
+          documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+          access:
+          - "read"
+          - "write"
+          claimCount: 0
+        - id: "9dc638d0-0cea-4c9c-ad9c-85ec02d967d6"
+          documentId: "4f135fa6-0c1b-456d-b962-20f14a2ac67e"
+          access:
+          - "read"
+          - "write"
+          claimCount: 42
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 42
+    EnvironmentShareClaimResult:
+      type: "object"
+      description: "Confirmation of claiming an environment-share."
+      properties:
+        documentId:
+          type: "string"
+          description: "The shared document's id."
+        documentType:
+          type: "string"
+          description: "The shared document's type."
+        access:
+          type: "array"
+          items:
+            type: "string"
+          description: "Indicates which operations you may apply to this document.\
+            \ For example, if you own the document, this array contains the values\
+            \ ['read', 'write', 'delete'].\n\n- `read` - you may read, but not update\
+            \ or delete it.\n- `write` - you may update, but not read or delete it.\n\
+            - `delete` - you may delete, but not read or update it.\n"
+      required:
+      - "documentId"
+      - "documentType"
+      - "access"
+      example:
+        documentId: "af21cc73-bb1c-45f1-ad1b-12e8f91b9fbc"
+        documentType: "dashboard"
+        access:
+        - "read"
+        - "write"
+    EnvironmentShareClaimerList:
+      type: "object"
+      description: "Envelope object for a list of claimers."
+      properties:
+        claimers:
+          type: "array"
+          items:
+            type: "string"
+        nextPageKey:
+          type: "string"
+          description: "Use this as page-key query param to get the next page"
+        totalCount:
+          type: "integer"
+          description: "The total amount of results for this query"
+      required:
+      - "claimers"
+      - "totalCount"
+      example:
+        claimers:
+        - "441664f0-23c9-40ef-b344-18c02c23d789"
+        - "4b41f970-099c-47c5-8818-3f6daac77a40"
+        - "063a45f0-877f-48ca-8646-5044de48d886"
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 3
+    DirectShare:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          description: "System-generated unique id."
+        documentId:
+          type: "string"
+          description: "The shared document's id."
+        access:
+          type: "array"
+          items:
+            type: "string"
+          description: "The access granted by this share."
+        userCount:
+          description: "Number of users who have been directly assigned to this share\
+            \ and therefore can access the document and collaborate on it. Not that\
+            \ potentially assigned groups and their users (see groupCount) are not\
+            \ reflected in this number."
+          type: "integer"
+        groupCount:
+          description: "Number of groups which have been assigned to this share."
+          type: "integer"
+      required:
+      - "id"
+      - "documentId"
+      - "access"
+      - "userCount"
+      - "groupCount"
+      example:
+        id: "af21cc73-bb1c-45f1-ad1b-12e8f91b9fbc"
+        documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+        access:
+        - "read"
+        - "write"
+        userCount: 2
+        groupCount: 1
+    DirectShareList:
+      type: "object"
+      description: "A list of direct-shares."
+      properties:
+        direct-shares:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DirectShare"
+        nextPageKey:
+          type: "string"
+        totalCount:
+          type: "integer"
+      required:
+      - "direct-shares"
+      - "totalCount"
+      example:
+        direct-shares:
+        - id: "af21cc73-bb1c-45f1-ad1b-12e8f91b9fbc"
+          documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+          access:
+          - "read"
+          userCount: 5
+          groupCount: 0
+        - id: "f0ed12ec-f232-45db-b667-26b2cf414787"
+          documentId: "1d1cf013-fd4c-463e-a8ad-912485daf711"
+          access:
+          - "read"
+          - "write"
+          userCount: 0
+          groupCount: 5
+        - id: "9dc638d0-0cea-4c9c-ad9c-85ec02d967d6"
+          documentId: "4f135fa6-0c1b-456d-b962-20f14a2ac67e"
+          access:
+          - "read"
+          - "write"
+          userCount: 167
+          groupCount: 2
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 3
+    CreateDirectShare:
+      type: "object"
+      description: "Input required to create a direct-share."
+      properties:
+        documentId:
+          type: "string"
+          description: "Document id."
+        access:
+          description: " Specifies which permissions shall be granted via the share:\
+            \ - `read` - grants permission to read the document, but not to update\
+            \ or delete it. - `read-write` - grants permission to read and update\
+            \ the document, but not to delete it. "
+          type: "string"
+        recipients:
+          description: "An array of sso-users (sso-ids). These users will immediately\
+            \ get access to the document. Can be empty."
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SsoEntity"
+      required:
+      - "documentId"
+      - "access"
+      - "recipients"
+    AddDirectShareRecipients:
+      type: "object"
+      description: "Input required to add recipients to a direct-share."
+      properties:
+        recipients:
+          description: "An array of SSO entities (users and/or groups) to add to this\
+            \ share. They immediately get access to the document.\n\nAlready added\
+            \ entities are ignored."
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SsoEntity"
+      required:
+      - "recipients"
+    RemoveDirectShareRecipients:
+      type: "object"
+      description: "Input required to remove recipients from a direct-share."
+      properties:
+        ids:
+          type: "array"
+          items:
+            type: "string"
+      required:
+      - "ids"
+    SsoEntity:
+      type: "object"
+      description: "A SSO user or SSO group."
+      properties:
+        id:
+          type: "string"
+          description: "SSO id of a user or group."
+        type:
+          type: "string"
+          description: "Type of the SSO entity - either `user` or `group`."
+      required:
+      - "id"
+      - "type"
+      example:
+        id: "441664f0-23c9-40ef-b344-18c02c23d789"
+        type: "group"
+    DirectShareRecipientList:
+      type: "object"
+      description: "Envelope object for a list of recipients."
+      properties:
+        recipients:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SsoEntity"
+        nextPageKey:
+          type: "string"
+          description: "Use this as page-key query param to get the next page"
+        totalCount:
+          type: "integer"
+          description: "Total number of recipients of the share."
+      required:
+      - "claimers"
+      - "totalCount"
+      example:
+        recipients:
+        - id: "441664f0-23c9-40ef-b344-18c02c23d789"
+          type: "user"
+        - id: "4b41f970-099c-47c5-8818-3f6daac77a40"
+          type: "group"
+        - id: "063a45f0-877f-48ca-8646-5044de48d886"
+          type: "user"
+        nextPageKey: "bmQgUXVhcms="
+        totalCount: 3
+    TrashDocumentList:
+      type: "object"
+      description: "Envelope object for a list of documents in trash."
+      properties:
+        documents:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TrashDocumentListEntry"
+        nextPageKey:
+          type: "string"
+          description: "Use this as `page-key` query param to get the next page. If\
+            \ the list was paginated, and there are more results available, this parameter\
+            \ will be returned."
+        totalCount:
+          type: "integer"
+          description: "The total amount of matching results for this query, as if\
+            \ no pagination would have been applied."
+      required:
+      - "documents"
+      - "totalCount"
+    TrashDocumentListEntry:
+      type: "object"
+      description: "A document which has been deleted and now lives in the trash."
+      properties:
+        id:
+          type: "string"
+          description: "Id of the deleted document."
+        name:
+          type: "string"
+          description: "Name of the deleted document."
+        type:
+          type: "string"
+          description: "Type of the deleted document."
+        deletionInfo:
+          $ref: "#/components/schemas/DeletionInfo"
+      required:
+      - "id"
+      - "name"
+      - "type"
+      - "deletionInfo"
+    TrashDocument:
+      type: "object"
+      description: "A document which has been moved to the trash."
+      properties:
+        id:
+          type: "string"
+          description: "Id of the deleted document."
+        name:
+          type: "string"
+          description: "Name of the deleted document."
+        type:
+          type: "string"
+          description: "Type of the deleted document."
+        version:
+          description: "Version of the deleted document."
+          type: "integer"
+        owner:
+          type: "string"
+          description: "Owner of the deleted document."
+        modificationInfo:
+          $ref: "#/components/schemas/ModificationInfo"
+        deletionInfo:
+          $ref: "#/components/schemas/DeletionInfo"
+      required:
+      - "id"
+      - "name"
+      - "type"
+      - "version"
+      - "owner"
+      - "deletionInfo"
+      - "modificationInfo"
+    DocumentLockDetails:
+      type: "object"
+      description: "The locking details of the document."
+      properties:
+        lockedBy:
+          type: "string"
+          description: "The user that currently owns the lock."
+        isLocked:
+          description: "Document is locked or not."
+          type: "boolean"
+        isLockedByAnotherUser:
+          description: "Document is locked by another user or not."
+          type: "boolean"
+        documentVersion:
+          description: "Latest version of the document."
+          type: "integer"
+      required:
+      - "isLockedByAnotherUser"
+      - "documentVersion"
+      example:
+        lockedBy: "431664f1-23c9-40ef-b344-18c02c23d789"
+        isLocked: true
+        isLockedByAnotherUser: true
+        documentVersion: 1
+  responses:
+    DocumentCreated:
+      description: "A new document has been created."
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentMetaData"
+    DocumentUpdated:
+      description: "The document has been updated. The updated metadata is returned."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentMetaData"
+          example:
+            id: "6239bf48-ce6d-4e06-8694-bd3c2b235d63"
+            name: "a new name"
+            type: "a new type"
+            version: "2"
+            owner: "441664f0-23c9-40ef-b344-18c02c23d789"
+            modificationInfo:
+              createdBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+              createdTime: "2021-10-09T19:23:27Z"
+              lastModifiedBy: "441664f0-23c9-40ef-b344-18c02c23d789"
+              lastModifiedTime: "2021-11-10T05:11:11Z"
+            access:
+            - "read"
+            - "read-write"
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+    DocumentContent:
+      description: "Content of the document"
+      content:
+        '*/*':
+          schema:
+            type: "string"
+            format: "binary"
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+    DocumentContentUpdated:
+      description: "Document content successfully updated"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentMetaData"
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+    DocumentDeleted:
+      description: "The document was deleted successfully."
+    FullDocument:
+      description: "Metadata and content in a multipart response."
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+      content:
+        multipart/form-data:
+          schema:
+            type: "object"
+            properties:
+              metadata:
+                $ref: "#/components/schemas/DocumentMetaData"
+              content:
+                description: "The binary content of this document."
+                type: "string"
+                format: "binary"
+          example: "POST / HTTP/1.1\n...\nContent-Type: multipart/form-data; boundary=---------------------------9051914041544843365972754266\n\
+            Content-Length: <nn>\n\n-----------------------------9051914041544843365972754266\n\
+            Content-Disposition: form-data; name=\"metadata\"; filename=\"1234-metadata.json\"\
+            \nContent-Type: application/json\n\n{\n  \"id\": \"6239bf48-ce6d-4e06-8694-bd3c2b235d63\"\
+            ,\n  \"name\": \"My Dashboard\",\n  \"type\": \"MyType\",\n  \"version\"\
+            : \"1\",\n  \"owner\": \"441664f0-23c9-40ef-b344-18c02c23d789\",\n  \"\
+            modificationInfo\": {\n    \"createdBy\": \"441664f0-23c9-40ef-b344-18c02c23d789\"\
+            ,\n    \"createdTime\": \"2021-10-09T19:23:27Z\",\n    \"lastModifiedBy\"\
+            : \"441664f0-23c9-40ef-b344-18c02c23d789\",\n    \"lastModifiedTime\"\
+            : \"2021-11-10T05:11:11Z\"\n  },\n  \"access\": [\"read\"]\n}\n\n-----------------------------9051914041544843365972754266\n\
+            Content-Disposition: form-data; filename=\"My Dashboard\"\nContent-Type:\
+            \ image/jpeg\n\n<some image binary data>\n-----------------------------9051914041544843365972754266"
+    UpdateDocumentResponse:
+      description: "Result of updating metadata & content. Contains document metadata\
+        \ and snapshot metadata."
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateDocumentMetadata"
+    DocumentMetadata:
+      description: "Metadata of document"
+      headers:
+        Document-Version:
+          $ref: "#/components/headers/documentVersionResponseHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentMetaData"
+    DocumentMetadataList:
+      description: "A list of metadata objects of documents which are accessible to\
+        \ you.\n\nNote, that this includes your own documents as well as other users'\
+        \ documents which are shared with you."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentList"
+    SnapshotListResponse:
+      description: "A list of snapshots of the document."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SnapshotList"
+    SnapshotCreationRateLimitExceeded:
+      description: "Too many snapshots have been created for this document in the\
+        \ recent time. Try again later."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    RestoreSnapshotResponse:
+      description: "Document has been restored. New snapshot has been created."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RestoreDocumentResult"
+    EnvironmentShare:
+      description: "An environment-share."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EnvironmentShare"
+    EnvironmentShareClaimerList:
+      description: "A list of users who have claimed the environment-share."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EnvironmentShareClaimerList"
+    DirectShare:
+      description: "A direct-share."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DirectShare"
+    DirectShareRecipientList:
+      description: "A list of recipients of the direct-share."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DirectShareRecipientList"
+    ListTrashDocumentsResponse:
+      description: "A list of documents in the trash."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TrashDocumentList"
+    InspectTrashDocumentResponse:
+      description: "Metadata of a deleted document."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TrashDocument"
+    InspectLockResponse:
+      description: "Lock details for a document."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentLockDetails"
+    BadRequest:
+      description: "Malformed request or invalid parameters."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Unauthorized:
+      description: "API token or tenant missing or corrupt."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Forbidden:
+      description: "Access forbidden. This usually happens because the user lacks\
+        \ the permission to access the specific endpoint, or because the target entity\
+        \ is not accessible to the user."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    DocumentNotFound:
+      description: "Document not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    DocumentOrSnapshotNotFound:
+      description: "Document or snapshot not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    SnapshotNotFound:
+      description: "Snapshot not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    TrashedDocumentNotFound:
+      description: "Trashed document not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    ShareNotFound:
+      description: "Share not found."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    ShareAlreadyExists:
+      description: "Share creation failed - a share with the specified permission\
+        \ already exists for the document."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    DocumentAlreadyLocked:
+      description: "Lock acquisition failed as the document is already locked."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    LockedDocumentsLimitReached:
+      description: "Lock acquisition failed as number of locked documents reached\
+        \ or exceeded the allowed limit."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    ClaimingOwnedShareNotAllowed:
+      description: "A user can't claim one of their own shares."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Conflict:
+      description: "Optimistic locking failed, or the document is actively locked\
+        \ by another user, or some other conflict."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    DocumentTooLarge:
+      description: "Maximum content size exceeded."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    InternalServerError:
+      description: "There is a problem in the backend."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    ServiceUnavailable:
+      description: "There is a temporary problem in the backend."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    InsufficientStorage:
+      description: "The storage quota has been exceeded."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+  securitySchemes:
+    ssoAuth:
+      type: "oauth2"
+      description: "This API uses oauth2 with the 'client credentials' flow"
+      flows:
+        clientCredentials:
+          tokenUrl: "https://sso.dynatrace.com/sso/oauth2/token"
+          scopes:
+            document:documents:read: "list and read documents"
+            document:documents:write: "create and edit documents"
+            document:documents:delete: "delete documents"
+            document:environment-shares:read: "list and read environment-shares"
+            document:environment-shares:write: "create environment-shares"
+            document:environment-shares:claim: "claim environment-shares"
+            document:environment-shares:delete: "delete environment-shares"
+            document:direct-shares:read: "list and read direct-shares"
+            document:direct-shares:write: "create direct-shares"
+            document:direct-shares:delete: "delete direct-shares"
+            document:trash.documents:read: "list and read documents in the trash"
+            document:trash.documents:restore: "restore documents from the trash"
+            document:trash.documents:delete: "delete documents from the trash"

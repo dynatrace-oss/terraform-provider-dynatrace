@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -83,7 +84,51 @@ func (me *iamClient) DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []i
 	return me.request(url, http.MethodDelete, expectedResponseCodes, forceNewBearer, nil, nil)
 }
 
+type RateLimiter struct {
+	lastCall time.Time
+	mutex    sync.Mutex
+}
+
+func NewRateLimiter() *RateLimiter {
+	return &RateLimiter{}
+}
+
+var DISABLE_RATE_LIMITER = (os.Getenv("DYNATRACE_DISABLE_IAM_RATE_LIMITER") == "true")
+
+func (rl *RateLimiter) CanCall() bool {
+	rl.mutex.Lock()
+	defer rl.mutex.Unlock()
+	if DISABLE_RATE_LIMITER {
+		return true
+	}
+	now := time.Now()
+	if now.Sub(rl.lastCall) >= 1000*time.Millisecond {
+		rl.lastCall = now
+		return true
+	}
+	return false
+}
+
+var limiter = NewRateLimiter()
+
+func httplog(v ...any) {
+	currentTime := time.Now()
+	formattedTime := currentTime.Format("2006-01-02 15:04:05")
+	tt := fmt.Sprintf("[HTTP] [%s]", formattedTime)
+	fmt.Println(append([]any{tt}, v...)...)
+}
+
 func (me *iamClient) request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
+	for {
+		if limiter.CanCall() {
+			return me._request(url, method, expectedResponseCodes, forceNewBearer, payload, headers)
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+func (me *iamClient) _request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
+	// httplog(fmt.Sprintf("[%s] %s", method, url))
 
 	num504Retries := 0
 
@@ -131,6 +176,7 @@ func (me *iamClient) request(url string, method string, expectedResponseCodes []
 		rest.Logger.Println("  ", httpResponse.StatusCode, string(responseBytes))
 
 		if httpResponse.StatusCode == 504 {
+			// httplog("-------------------- FIVE-O-FOUR --------------------")
 			num504Retries++
 			if num504Retries > 5 {
 				return nil, fmt.Errorf("response code %d (expected: %d)", 504, expectedResponseCodes)
@@ -151,11 +197,12 @@ func (me *iamClient) request(url string, method string, expectedResponseCodes []
 			var iamErr IAMError
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
 				if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
+					// httplog("-------------------- TOKEN-SWITCH --------------------")
 					return me.request(url, method, expectedResponseCodes, true, payload, headers)
 				}
 				return nil, iamErr
 			} else {
-				return nil, fmt.Errorf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)
+				return nil, rest.Error{Code: httpResponse.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)}
 			}
 		}
 

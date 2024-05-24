@@ -18,6 +18,8 @@
 package entity
 
 import (
+	"fmt"
+
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -98,7 +100,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 
 	var settings entities.Settings
 	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
-	service := srv.Service(entityType, entitySelector, from, to, creds)
+	service := srv.Service(entityType, name, entitySelector, from, to, creds)
 	if err := service.Get(service.SchemaID(), &settings); err != nil {
 		return err
 	}
@@ -109,9 +111,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 			for _, entity := range settings.Entities {
 				if name == *entity.DisplayName {
 					d.SetId(*entity.EntityId)
-					if len(entity.Properties) > 0 {
-						d.Set("properties", entity.Properties)
-					}
+					setProperties(entity.Properties, d)
 					return nil
 				}
 			}
@@ -122,12 +122,21 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		// When looking via entity_selector the first result
 		// will be returned
 		d.SetId(*settings.Entities[0].EntityId)
-		if len(settings.Entities[0].Properties) > 0 {
-			d.Set("properties", settings.Entities[0].Properties)
-		}
+		setProperties(settings.Entities[0].Properties, d)
 		return nil
 	}
 	// Without any matches we're setting the ID to an empty string
 	d.SetId("")
 	return nil
+}
+
+func setProperties(properties map[string]any, d *schema.ResourceData) {
+	if len(properties) == 0 {
+		return
+	}
+	props := map[string]any{}
+	for k, v := range properties {
+		props[k] = fmt.Sprintf("%v", v)
+	}
+	d.Set("properties", props)
 }

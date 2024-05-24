@@ -34,7 +34,7 @@ func unref(v reflect.Value) reflect.Value {
 	if v.Kind() == reflect.Interface {
 		return unref(v.Elem())
 	}
-	panic(v.Kind())
+	return reflect.Value{}
 }
 
 var stringType = reflect.ValueOf("").Type()

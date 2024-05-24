@@ -134,6 +134,9 @@ func (me *service) SchemaID() string {
 
 func (me *service) Create(v *aws.AWSCredentialsConfig) (*api.Stub, error) {
 	stub, err := me.service.Create(v)
+	if err != nil {
+		return nil, err
+	}
 	if v.RemoveDefaults {
 		err = me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}, 204).Finish()
 	}

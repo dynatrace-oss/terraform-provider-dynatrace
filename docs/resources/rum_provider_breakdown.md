@@ -50,6 +50,7 @@ resource "dynatrace_rum_provider_breakdown" "#name#" {
 ### Optional
 
 - `icon_url` (String) Specify an URL for the provider's brand icon
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 
 ### Read-Only
 
@@ -67,5 +68,5 @@ Required:
 
 Required:
 
-- `pattern` (String) Please type at least part of this content provider's URL. Asterisks (*) can be used as wildcard characters.
+- `pattern` (String) Use a ends-with pattern for this content provider's domain
  

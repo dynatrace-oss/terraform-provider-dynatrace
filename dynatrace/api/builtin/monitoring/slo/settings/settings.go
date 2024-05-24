@@ -31,7 +31,7 @@ type Settings struct {
 	EvaluationType      SloEvaluationType    `json:"evaluationType"`              // Possible Values: `AGGREGATE`
 	EvaluationWindow    string               `json:"evaluationWindow"`            // Define the timeframe during which the SLO is to be evaluated. For the timeframe you can enter expressions like -1h (last hour), -1w (last week) or complex expressions like -2d to now (last two days), -1d/d to now/d (beginning of yesterday to beginning of today).
 	Filter              string               `json:"filter"`                      // Set a filter parameter (entitySelector) on any GET call to evaluate this SLO against specific services only (for example, type(\"SERVICE\")).  For details, see the [Entity Selector documentation](https://dt-url.net/entityselector).
-	MetricExpression    string               `json:"metricExpression"`            // For details, see the [Metrics page](/ui/metrics \"Metrics page\").
+	MetricExpression    string               `json:"metricExpression"`            // The percentage-based metric expression for the calculation of the SLO. For details, see the [Metrics page](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/metric-v2/metric-expressions).
 	MetricName          string               `json:"metricName"`                  // Metric name
 	Name                string               `json:"name"`                        // SLO name
 	TargetSuccess       float64              `json:"targetSuccess"`               // Set the target value of the SLO. A percentage below this value indicates a failure.

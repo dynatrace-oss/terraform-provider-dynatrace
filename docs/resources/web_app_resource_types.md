@@ -41,6 +41,7 @@ resource "dynatrace_web_app_resource_types" "#name#" {
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `secondary_resource_type` (String) The secondary type of the resource.
 
 ### Read-Only

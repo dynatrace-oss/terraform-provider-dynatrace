@@ -32,7 +32,7 @@ type Settings struct {
 	Ignore             bool                 `json:"ignore"`                       // The matching URLs will always be ignored, also if Adaptive Traffic Management is not active.
 	Path               *string              `json:"path,omitempty"`               // Path of the URL.
 	PathComparisonType *PathComparisonType  `json:"pathComparisonType,omitempty"` // Path comparison condition. Possible values: `EQUALS`, `DOES_NOT_EQUAL`, `CONTAINS`, `DOES_NOT_CONTAIN`, `STARTS_WITH`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `DOES_NOT_END_WITH`
-	QueryParameters    QueryParameters      `json:"queryParameters"`              // Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.
+	QueryParameters    QueryParameters      `json:"queryParameters,omitempty"`    // Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.
 	Scope              *string              `json:"-" scope:"scope"`              // The scope of this setting (PROCESS_GROUP_INSTANCE, PROCESS_GROUP). Omit this property if you want to cover the whole environment.
 	InsertAfter        string               `json:"-"`
 }
@@ -78,7 +78,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"query_parameters": {
 			Type:        schema.TypeList,
 			Description: "Add URL parameters in any order. **All** specified parameters must be present in the query of an URL to get a match.",
-			Required:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(QueryParameters).Schema()},
 			MinItems:    1,
 			MaxItems:    1,

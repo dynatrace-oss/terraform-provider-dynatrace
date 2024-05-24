@@ -49,10 +49,11 @@ resource "dynatrace_process_availability" "#name#" {
 ### Required
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `name` (String) Monitored rule name
+- `name` (String) Monitoring rule name
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--metadata))
 - `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
 - `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied.

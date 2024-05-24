@@ -20,6 +20,7 @@ package entities
 import (
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -31,13 +32,14 @@ import (
 
 const SchemaID = "v2:environment:entities"
 
-func Service(entityType string, entitySelector string, from string, to string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
-	return &service{entityType: entityType, entitySelector: entitySelector, from: from, to: to, client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(entityType string, entityName string, entitySelector string, from string, to string, credentials *settings.Credentials) settings.RService[*entities.Settings] {
+	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.DefaultClient(credentials.URL, credentials.Token)}
 }
 
 type service struct {
 	client         rest.Client
 	entityType     string
+	entityName     string
 	entitySelector string
 	from           string
 	to             string
@@ -59,7 +61,16 @@ func (me *service) Get(id string, v *entities.Settings) (err error) {
 			return err
 		}
 	} else {
-		entitySelector := fmt.Sprintf("type(\"%s\")", me.entityType)
+		entitySelector := ""
+		if len(me.entityType) > 0 {
+			entitySelector = entitySelector + fmt.Sprintf("type(\"%s\")", me.entityType)
+		}
+		if len(me.entityName) > 0 {
+			entitySelector = entitySelector + fmt.Sprintf(",entityName.equals(\"%s\")", me.entityName)
+		}
+		// shouldn't happen - just sanity
+		// in case there was no type but a name
+		entitySelector = strings.TrimPrefix(entitySelector, ",")
 		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}

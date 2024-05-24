@@ -20,6 +20,7 @@ package mobile
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/collections"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -35,7 +36,7 @@ type Application struct {
 	IconType                         *IconType                      `json:"iconType,omitempty"`                         // Custom application icon. Mobile apps always use the mobile device icon, so this icon can only be set for custom apps.
 	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // (Field has overlap with `dynatrace_mobile_app_enablement` for mobile and `dynatrace_custom_app_enablement` for custom apps) The percentage of user sessions to be analyzed
 	ApdexSettings                    *MobileCustomApdex             `json:"apdexSettings,omitempty"`
-	OptInModeEnabled                 bool                           `json:"optInModeEnabled,omitempty"`     // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
+	OptInModeEnabled                 *bool                          `json:"optInModeEnabled,omitempty"`     // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
 	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled,omitempty"` // (Field has overlap with `dynatrace_mobile_app_enablement`) The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
 	SessionReplayOnCrashEnabled      bool                           `json:"sessionReplayOnCrashEnabled"`    // The session replay on crash is enabled (`true`) or disabled (`false`). \n\nEnabling requires both **sessionReplayEnabled** and **optInModeEnabled** values set to `true`.\nAlso, this value is only applicable to mobile and not to custom apps
 	BeaconEndpointType               BeaconEndpointType             `json:"beaconEndpointType"`             // The type of the beacon endpoint
@@ -84,6 +85,11 @@ func (me *Application) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("properties", &me.Properties); err != nil {
 		return err
 	}
+
+	if me.ApplicationType != nil && *me.ApplicationType == ApplicationTypes.MobileApplication && me.OptInModeEnabled == nil {
+		me.OptInModeEnabled = opt.NewBool(false)
+	}
+
 	return nil
 }
 

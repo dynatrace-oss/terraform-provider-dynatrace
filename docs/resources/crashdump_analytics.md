@@ -36,8 +36,8 @@ resource "dynatrace_crashdump_analytics" "#name#" {
 
 ### Required
 
-- `enable_crash_dump_analytics` (Boolean) Control the automatic crash dump analytics feature. It's strongly recommended to keep this option enabled. Disabling this feature will stop receiving information about potential problems
-- `host_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `enable_crash_dump_analytics` (Boolean) Disable the feature to stop receiving information about crash details and potential problems. We recommend keeping the feature enabled.
+- `host_id` (String) The scope of this setting (HOST HOST_GROUP environment)
 
 ### Read-Only
 

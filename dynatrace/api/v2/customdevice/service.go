@@ -18,6 +18,7 @@
 package customdevice
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"os"
@@ -48,6 +49,13 @@ const MinApplyTimeout = 100
 const MaxApplyTimeout = 500
 
 func (me *service) Get(id string, v *customdevice.CustomDevice) error {
+	return me.GetWithContext(context.Background(), id, v)
+}
+
+func (me *service) GetWithContext(ctx context.Context, id string, v *customdevice.CustomDevice) error {
+	cfg := ctx.Value(settings.ContextKeyStateConfig)
+	stateConfig, stateConfigFound := cfg.(*customdevice.CustomDevice)
+
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
@@ -122,6 +130,10 @@ func (me *service) Get(id string, v *customdevice.CustomDevice) error {
 	// v.ConfigUrl = CustomDeviceGetResponse.Entities[0].ConfigUrl
 	v.DNSNames = CustomDeviceGetResponse.Entities[0].Properties.DNSNames
 	v.CustomDeviceID = id
+
+	if stateConfigFound && stateConfig != nil {
+		v.UIBased = stateConfig.UIBased
+	}
 
 	return nil
 }
@@ -224,7 +236,11 @@ func (me *service) Create(v *customdevice.CustomDevice) (*api.Stub, error) {
 		v.CustomDeviceID = uuid.NewString()
 	}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post("/api/v2/entities/custom", v, 201, 204).Finish(); err != nil {
+	uiBasedQuery := ""
+	if v.UIBased != nil && *v.UIBased {
+		uiBasedQuery = "?uiBased=true"
+	}
+	if err = client.Post("/api/v2/entities/custom"+uiBasedQuery, v, 201, 204).Finish(); err != nil {
 		return nil, err
 	}
 

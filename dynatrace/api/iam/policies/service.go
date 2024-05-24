@@ -2,8 +2,11 @@ package policies
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
@@ -37,6 +40,10 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*policies.P
 	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
 }
 
+func ServiceWithGloabals(credentials *settings.Credentials) *PolicyServiceClient {
+	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+}
+
 func (me *PolicyServiceClient) SchemaID() string {
 	return "accounts:iam:policies"
 }
@@ -63,38 +70,73 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	if err = json.Unmarshal(responseBytes, &pcr); err != nil {
 		return nil, err
 	}
+	v.UUID = pcr.UUID
+	RegisterPolicyLevel(me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
 func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	err := me.get(id, v)
 	if err != nil {
 		return err
 	}
-	var responseBytes []byte
+	if len(v.Account) == 0 && len(v.Environment) == 0 && !strings.HasSuffix(id, "#-#global#-#global") {
+		return nil // TODO: investigate whether this can ever happen
+	}
+	return err
+}
 
-	client := iam.NewIAMClient(me)
+func (me *PolicyServiceClient) get(id string, v *policies.Policy) error {
+	var levelType string
+	var levelID string
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 200, false); err != nil {
+	uuid, _, _, err := SplitIDNoDefaults(id)
+	if err != nil {
 		return err
 	}
-	if err = json.Unmarshal(responseBytes, &v); err != nil {
+	client := iam.NewIAMClient(me)
+	var policyName string
+
+	levelType, levelID, policyName, err = ResolvePolicyLevel(me, uuid)
+	if err != nil {
+		return err
+	}
+	if levelType == "global" && levelID == "global" {
+		v.UUID = uuid
+		v.Name = policyName
+		return nil
+	}
+
+	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 200, false, &v); err != nil {
 		return err
 	}
 	if levelType == "account" {
 		v.Account = levelID
+		if len(levelID) == 0 {
+			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+		}
 	} else if levelType == "environment" {
 		v.Environment = levelID
+		if len(levelID) == 0 {
+			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+		}
 	}
+	v.UUID = uuid
+	RegisterPolicyLevel(me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return nil
 }
 
 func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	var levelType string
+	var levelID string
+	uuid, _, _, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
-
+	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	if err != nil {
+		return err
+	}
 	client := iam.NewIAMClient(me)
 
 	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, 204, false); err != nil {
@@ -121,61 +163,190 @@ type ListPoliciesResponse struct {
 	Policies []PolicyStub `json:"policies"`
 }
 
-func (me *PolicyServiceClient) List() (api.Stubs, error) {
-	var err error
-	var responseBytes []byte
-	client := iam.NewIAMClient(me)
-
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", me.AccountID()), 200, false); err != nil {
-		return nil, err
-	}
-
-	var envResponse ListEnvResponse
-	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
-		return nil, err
-	}
-
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", me.AccountID()), 200, false); err != nil {
-		return nil, err
-	}
-
-	var response ListPoliciesResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
-		return nil, err
-	}
-
-	var stubs api.Stubs
-	for _, policy := range response.Policies {
-		stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "account", me.AccountID()), Name: policy.Name})
-	}
-
-	for _, environment := range envResponse.Data {
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/policies", environment.ID), 200, false); err != nil {
-			return nil, err
-		}
+func listForEnvironment(auth iam.Authenticator, environmentID string) (results chan *api.Stub, err error) {
+	results = make(chan *api.Stub)
+	go func() {
+		defer close(results)
+		client := iam.NewIAMClient(auth)
 
 		var response ListPoliciesResponse
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
-			return nil, err
+		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/policies", environmentID), 200, false, &response); err != nil {
+			return
 		}
 
 		for _, policy := range response.Policies {
-			stubs = append(stubs, &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "environment", environment.ID), Name: policy.Name})
+			results <- &api.Stub{ID: Join(policy.UUID, "environment", environmentID), Name: policy.Name}
 		}
+	}()
+	return results, nil
+}
+
+func listForEnvironments(auth iam.Authenticator) (results chan *api.Stub, err error) {
+	results = make(chan *api.Stub)
+	var environmentIDs []string
+	if environmentIDs, err = GetEnvironmentIDs(auth); err != nil {
+		return nil, err
+	}
+	var wg sync.WaitGroup
+
+	for _, environmentID := range environmentIDs {
+		wg.Add(1)
+		var envIdxChan chan *api.Stub
+		if envIdxChan, err = listForEnvironment(auth, environmentID); err != nil {
+			wg.Done()
+			return nil, err
+		}
+		go func(source, target chan *api.Stub) {
+			defer wg.Done()
+			for elem := range source {
+				target <- elem
+			}
+		}(envIdxChan, results)
+	}
+	// once all goroutines are done close results channel
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	return results, nil
+}
+
+func listForAccount(auth iam.Authenticator) (results chan *api.Stub, err error) {
+	client := iam.NewIAMClient(auth)
+	accountID := strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")
+	results = make(chan *api.Stub)
+	go func() {
+		defer close(results)
+		var response ListPoliciesResponse
+		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", accountID), 200, false, &response); err != nil {
+			return
+		}
+
+		for _, policy := range response.Policies {
+			results <- &api.Stub{ID: Join(policy.UUID, "account", accountID), Name: policy.Name}
+		}
+	}()
+	return results, nil
+}
+
+func list(auth iam.Authenticator) (results chan *api.Stub, err error) {
+	results = make(chan *api.Stub)
+
+	var envChan chan *api.Stub
+	var accChan chan *api.Stub
+
+	if envChan, err = listForEnvironments(auth); err != nil {
+		return nil, err
+	}
+	if accChan, err = listForAccount(auth); err != nil {
+		return nil, err
+	}
+
+	go func() {
+		defer close(results)
+		for {
+			if envChan == nil && accChan == nil {
+				break
+			}
+			select {
+			case stub, more := <-envChan:
+				if stub != nil {
+					results <- stub
+				}
+				if !more {
+					envChan = nil
+					if accChan == nil {
+						break
+					}
+				}
+			case stub, more := <-accChan:
+				if stub != nil {
+					results <- stub
+				}
+				if !more {
+					accChan = nil
+					if envChan == nil {
+						break
+					}
+				}
+			}
+			if envChan == nil && accChan == nil {
+				break
+			}
+		}
+	}()
+
+	return results, nil
+}
+
+func (me *PolicyServiceClient) List() (api.Stubs, error) {
+	stubs := api.Stubs{}
+	policyLevels, err := FetchAllPolicyLevels(me)
+	if err != nil {
+		return stubs, err
+	}
+	for uuid, level := range policyLevels {
+		if level.LevelType == "global" && level.LevelID == "global" {
+			continue
+		}
+		stubs = append(stubs, &api.Stub{ID: Join(uuid, level.LevelType, level.LevelID), Name: level.Name})
+	}
+	return stubs, nil
+}
+
+func (me *PolicyServiceClient) ListWithGlobals() (api.Stubs, error) {
+	stubs := api.Stubs{}
+	policyLevels, err := FetchAllPolicyLevels(me)
+	if err != nil {
+		return stubs, err
+	}
+	for uuid, level := range policyLevels {
+		stubs = append(stubs, &api.Stub{ID: Join(uuid, level.LevelType, level.LevelID), Name: level.Name})
 	}
 	return stubs, nil
 }
 
 func (me *PolicyServiceClient) Delete(id string) error {
-	uuid, levelType, levelID, err := SplitID(id)
+	var levelType string
+	var levelID string
+	var err error
+	var uuid string
+
+	uuid, _, _, err = SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
+	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	if err != nil {
+		return err
+	}
+
 	_, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 204, false)
 	return err
 }
 
-func SplitID(id string) (uuid string, levelType string, levelID string, err error) {
+var uuidRegexp = regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$")
+
+func IsValidUUID(uuid string) bool {
+	return uuidRegexp.MatchString(uuid)
+}
+
+// defLevelType and devLevelID are getting used in case the passed policyID is just its UUID
+//
+// In such a case the caller needs to have access to other configuration with these two strings
+// e.g. the config object the policyIDs are embedded in
+func SplitID(id string, defLevelType string, defLevelID string) (uuid string, levelType string, levelID string, err error) {
+	if IsValidUUID(id) {
+		return id, defLevelType, defLevelID, nil
+	}
+	return SplitIDNoDefaults(id)
+}
+
+func SplitIDNoDefaults(id string) (uuid string, levelType string, levelID string, err error) {
+	if IsValidUUID(id) {
+		return id, "", "", nil
+	}
 	parts := strings.Split(id, "#-#")
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)
@@ -185,6 +356,10 @@ func SplitID(id string) (uuid string, levelType string, levelID string, err erro
 
 func joinID(uuid string, policy *policies.Policy) string {
 	levelType, levelID := getLevel(policy)
+	return fmt.Sprintf("%s#-#%s#-#%s", uuid, levelType, levelID)
+}
+
+func Join(uuid string, levelType string, levelID string) string {
 	return fmt.Sprintf("%s#-#%s#-#%s", uuid, levelType, levelID)
 }
 

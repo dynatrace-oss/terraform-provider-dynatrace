@@ -32,12 +32,15 @@ import (
 	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/deployment/lambdaagent"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
+	ds_iam_policies "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/policies"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
@@ -198,6 +201,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_attribute":            reqattrds.DataSource(),
 			"dynatrace_calculated_service_metric":    metricsds.DataSource(),
 			"dynatrace_iam_group":                    ds_iam_groups.DataSource(),
+			"dynatrace_iam_groups":                   ds_iam_groups.DataSourceMulti(),
 			"dynatrace_entity":                       entity.DataSource(),
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
@@ -216,6 +220,10 @@ func Provider() *schema.Provider {
 			"dynatrace_attack_alerting":              attackalerting.DataSource(),
 			"dynatrace_remote_environments":          remoteenvironments.DataSource(),
 			"dynatrace_hub_items":                    items.DataSource(),
+			"dynatrace_documents":                    document.DataSource(),
+			"dynatrace_iam_policies":                 ds_iam_policies.DataSource(),
+			"dynatrace_iam_policy":                   ds_iam_policies.DataSourceSingle(),
+			"dynatrace_lambda_agent_version":         lambdaagent.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -511,8 +519,13 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_network_zones":              networkzones.Resource(),
 			"dynatrace_hub_extension_config":               resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
 			"dynatrace_hub_extension_active_version":       resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
+			"dynatrace_document":                           resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
+			"dynatrace_direct_shares":                      resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
 			"dynatrace_db_app_feature_flags":               resources.NewGeneric(export.ResourceTypes.DatabaseAppFeatureFlags).Resource(),
 			"dynatrace_infraops_app_feature_flags":         resources.NewGeneric(export.ResourceTypes.InfraOpsAppFeatureFlags).Resource(),
+			"dynatrace_ebpf_service_discovery":             resources.NewGeneric(export.ResourceTypes.EBPFServiceDiscovery).Resource(),
+			"dynatrace_davis_anomaly_detectors":            resources.NewGeneric(export.ResourceTypes.DavisAnomalyDetectors).Resource(),
+			"dynatrace_log_debug_settings":                 resources.NewGeneric(export.ResourceTypes.LogDebugSettings).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

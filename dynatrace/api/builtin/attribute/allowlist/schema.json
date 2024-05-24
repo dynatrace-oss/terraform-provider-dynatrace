@@ -42,7 +42,7 @@
 					"type": "TRIMMED"
 				},
 				{
-					"maxLength": 100,
+					"maxLength": 200,
 					"minLength": 1,
 					"type": "LENGTH"
 				},
@@ -77,5 +77,5 @@
 	],
 	"schemaId": "builtin:attribute-allow-list",
 	"types": {},
-	"version": "0.0.10"
+	"version": "0.0.13"
 }

@@ -39,6 +39,18 @@
 				}
 			],
 			"type": "enum"
+		},
+		"WildcardExpansionType": {
+			"description": "",
+			"displayName": "Custom Log Source Wildcard Expansion type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Attribute",
+					"value": "attribute"
+				}
+			],
+			"type": "enum"
 		}
 	},
 	"maxObjects": 1000,
@@ -221,38 +233,146 @@
 						"$ref": "#/enums/LogSourceType"
 					}
 				},
-				"values": {
-					"description": "",
+				"values-and-enrichment": {
+					"description": "It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.",
 					"displayName": "Log source",
-					"documentation": "It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.",
+					"documentation": "",
 					"items": {
-						"constraints": [
-							{
-								"type": "NOT_EMPTY"
-							},
-							{
-								"maxLength": 4096,
-								"minLength": 1,
-								"type": "LENGTH"
-							}
-						],
 						"description": "",
-						"displayName": "Values",
+						"displayName": "",
 						"documentation": "",
-						"type": "text"
+						"type": {
+							"$ref": "#/types/CustomLogSourceWithEnrichment"
+						}
 					},
 					"maxObjects": 100,
-					"metadata": {
-						"placeholder": "Log source name",
-						"uiDefaultValue": ""
-					},
 					"minObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "set"
 				}
 			},
-			"summaryPattern": "{type} matches any of {values}",
+			"summaryPattern": "{type} matches any of {values-and-enrichment}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CustomLogSourceWithEnrichment": {
+			"description": "",
+			"displayName": "CustomLogSourceWithEnrichment",
+			"documentation": "",
+			"properties": {
+				"enrichment": {
+					"description": "Optional field that allows to define attributes that will enrich logs",
+					"displayName": "Enrichments",
+					"documentation": "${N} can be used in attribute value to expand the value matched by wildcards where N denotes the number of the wildcard the expand",
+					"items": {
+						"description": "",
+						"displayName": "Enrichment",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/Enrichment"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"path": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Values",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Logs from {path} will be enriched with attributes {enrichment}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Enrichment": {
+			"description": "",
+			"displayName": "Enrichment",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"customMessage": "Key must contain only Latin alphanumeric characters, dots '.', underscores '_', colons ':' and hyphens '-'.",
+							"pattern": "^[.A-Za-z0-9_\\-:]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customValidatorId": "EnrichmentAttributeValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"type": {
+					"default": "attribute",
+					"description": "",
+					"displayName": "type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/WildcardExpansionType"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key}:{value}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -271,5 +391,5 @@
 			}
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.1"
 }

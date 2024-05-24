@@ -42,6 +42,7 @@ resource "dynatrace_custom_device" "#name#" {
 - `properties` (Map of String, Deprecated) The list of key-value pair properties that will be shown beneath the infographics of your custom device.
 - `props` (String) The list of key-value pair properties that will be shown beneath the infographics of your custom device.
 - `type` (String) The technology type definition of the custom device.
+- `ui_based` (Boolean) If `true` the custom device will be handled as if it was created via UI. It will be refreshed automatically and won't age out. This attribute is taken into consideration when creating the custom device. Changing it afterwards won't have an effect.
 
 ### Read-Only
 

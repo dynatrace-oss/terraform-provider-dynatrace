@@ -45,7 +45,7 @@ type Module struct {
 	namer                  UniqueNamer
 	Status                 ModuleStatus
 	Error                  error
-	Descriptor             *ResourceDescriptor
+	PrivDescriptor         *ResourceDescriptor
 	Service                settings.CRUDService[settings.Settings]
 	ChildParentIDNameMap   map[string]string
 	ModuleMutex            *sync.Mutex
@@ -54,6 +54,37 @@ type Module struct {
 	ChildModules           map[ResourceType]*Module
 	IdRegexType            string
 	LegacyIdMap            map[string]*Resource
+	DataSourceLock         *sync.Mutex
+	DescriptorLock         sync.Mutex
+}
+
+func (me *Module) GetDescriptor() *ResourceDescriptor {
+	me.DescriptorLock.Lock()
+	defer me.DescriptorLock.Unlock()
+	if me.PrivDescriptor == nil {
+		if descriptor, found := AllResources[me.Type]; found {
+			me.PrivDescriptor = &descriptor
+		} else {
+			panic(fmt.Sprintf("Tried to resolve a Resource Descriptor for resource type `%s` - that key doesn't exist in AllResource. Please contact Dynatrace.", me.Type))
+		}
+	}
+	return me.PrivDescriptor
+}
+
+func (me *Module) GetReferringResources(resource *Resource) []*Resource {
+	var resources []*Resource
+	me.ModuleMutex.Lock()
+	for _, res := range me.Resources {
+		resources = append(resources, res)
+	}
+	me.ModuleMutex.Unlock()
+	var referringResources []*Resource
+	for _, res := range resources {
+		if res.RefersTo(resource) {
+			referringResources = append(referringResources, res)
+		}
+	}
+	return referringResources
 }
 
 func (me *Module) IsReferencedAsDataSource() bool {
@@ -82,18 +113,43 @@ func (me *Module) IsReferencedAsDataSource() bool {
 		me.Type == ResourceTypes.AzureCredentials ||
 		me.Type == ResourceTypes.IAMGroup ||
 		me.Type == ResourceTypes.AppSecVulnerabilityAlerting ||
-		me.Type == ResourceTypes.AppSecAttackAlerting
+		me.Type == ResourceTypes.AppSecAttackAlerting ||
+		me.Type == ResourceTypes.IAMPolicy
 }
 
-func (me *Module) DataSource(id string) *DataSource {
+func (me *Module) DataSource(id string, kind DataSourceKind, excepts ...ResourceType) *DataSource {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
 	if dataSource, found := me.DataSources[id]; found {
 		return dataSource
 	}
-	dataSource := me.Environment.DataSource(id)
+	dataSource := me.Environment.DataSource(id, kind, append(excepts, me.Type)...)
 	if dataSource != nil {
 		me.DataSources[id] = dataSource
 	}
 	return dataSource
+}
+
+func (me *Module) GetDataSources(dataSources map[string]*DataSource) {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
+	for k, v := range me.DataSources {
+		dataSources[k] = v
+	}
+}
+
+func (me *Module) SortedDataSources() (result []*DataSource) {
+	me.DataSourceLock.Lock()
+	defer me.DataSourceLock.Unlock()
+	dataSourceIDs := []string{}
+	for dataSourceID := range me.DataSources {
+		dataSourceIDs = append(dataSourceIDs, dataSourceID)
+	}
+	sort.Strings(dataSourceIDs)
+	for _, dataSourceID := range dataSourceIDs {
+		result = append(result, me.DataSources[dataSourceID])
+	}
+	return result
 }
 
 func (me *Module) ContainsPostProcessedResources() bool {
@@ -202,7 +258,14 @@ func (me *Module) Resource(id string) *Resource {
 	if stored, found := me.Resources[id]; found {
 		return stored
 	}
-	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered, ExtractedIdsPerDependencyModule: map[string]map[string]bool{}}
+	res := &Resource{
+		ID:                              id,
+		Type:                            me.Type,
+		Module:                          me,
+		Status:                          ResourceStati.Discovered,
+		ExtractedIdsPerDependencyModule: map[string]map[string]bool{},
+		ResourceMutex:                   new(sync.Mutex),
+	}
 	me.Resources[id] = res
 	return res
 }
@@ -220,14 +283,21 @@ func (me *Module) MkdirAll(flawed bool) error {
 	return os.MkdirAll(me.GetFolder(), os.ModePerm)
 }
 
+func (me *Module) FolderNameOverride() string {
+	if descriptor := me.GetDescriptor(); descriptor != nil {
+		return descriptor.FolderName
+	}
+	return ""
+}
+
 func (me *Module) GetFolder(relative ...bool) string {
 	if me.Environment.Flags.Flat {
 		return me.Environment.GetFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetFolder(), path.Join("modules", me.Type.Trim()))
+		return path.Join(me.Environment.GetFolder(), path.Join("modules", me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join("modules", me.Type.Trim())
+	return path.Join("modules", me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetAttentionFolder(relative ...bool) string {
@@ -235,9 +305,9 @@ func (me *Module) GetAttentionFolder(relative ...bool) string {
 		return me.Environment.GetAttentionFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetAttentionFolder(), path.Join(me.Type.Trim()))
+		return path.Join(me.Environment.GetAttentionFolder(), path.Join(me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join(me.Type.Trim())
+	return path.Join(me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetFlawedFolder(relative ...bool) string {
@@ -245,9 +315,9 @@ func (me *Module) GetFlawedFolder(relative ...bool) string {
 		return me.Environment.GetFlawedFolder()
 	}
 	if len(relative) == 0 || !relative[0] {
-		return path.Join(me.Environment.GetFlawedFolder(), path.Join(me.Type.Trim()))
+		return path.Join(me.Environment.GetFlawedFolder(), path.Join(me.Type.GetFolderName(me.FolderNameOverride())))
 	}
-	return path.Join(me.Type.Trim())
+	return path.Join(me.Type.GetFolderName(me.FolderNameOverride()))
 }
 
 func (me *Module) GetFile(name string) string {
@@ -345,7 +415,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if me.Descriptor.Parent != nil {
+	if me.GetDescriptor().Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -441,7 +511,7 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
+	if !me.Environment.ChildResourceOverride && me.GetDescriptor().Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -465,27 +535,38 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	for ds := range dsm {
 		buf.Write([]byte("\n" + ds))
 	}
-	dataSourceIDs := []string{}
-	for dataSourceID := range me.DataSources {
-		dataSourceIDs = append(dataSourceIDs, dataSourceID)
-	}
-	sort.Strings(dataSourceIDs)
-	for _, dataSourceID := range dataSourceIDs {
-		dataSource := me.DataSources[dataSourceID]
+	for _, dataSource := range me.SortedDataSources() {
 		dataSourceName := dataSource.Name
+		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
-		if dataSourceID == "tenant" {
+		if dataSource.Type == string(DataSourceKindTenant) {
 			if _, err = buf.WriteString(`
 			data "dynatrace_tenant" "tenant" {
 			}`); err != nil {
 				return err
 			}
+		} else if dataSource.Type == string(DataSourceKindPolicy) {
+			qualifier := ""
+			dsid := dataSource.ID
+			if strings.Contains(dsid, "#-#environment#-#") {
+				qualifier = fmt.Sprintf("environment = \"%s\"", dsid[strings.LastIndex(dsid, "#-#")+3:])
+			} else if strings.Contains(dsid, "#-#account#-#") {
+				qualifier = fmt.Sprintf("account = \"%s\"", dsid[strings.LastIndex(dsid, "#-#")+3:])
+			}
+
+			if _, err = buf.WriteString(fmt.Sprintf(`			
+			data "dynatrace_iam_policy" "%s" {
+				%s
+				name = "%s"
+			}`, dataSource.UniqueName, qualifier, dataSource.Name)); err != nil {
+				return err
+			}
 		} else {
 			if _, err = buf.WriteString(fmt.Sprintf(`
-			data "dynatrace_entity" "%s" {
-				type = "%s"
-				name = %s
-			}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
+				data "dynatrace_entity" "%s" {
+					type = "%s"
+					name = %s
+				}`, dataSourceID, dataSource.Type, string(dd))); err != nil {
 				return err
 			}
 		}
@@ -512,7 +593,7 @@ func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
 	if me.IsReferencedAsDataSource() {
 		return map[string]string{}, nil
 	}
-	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
+	if !me.Environment.ChildResourceOverride && me.GetDescriptor().Parent != nil {
 		return map[string]string{}, nil
 	}
 	dsm = map[string]string{}
@@ -523,14 +604,9 @@ func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
 			}
 		}
 	}
-	dataSourceIDs := []string{}
-	for dataSourceID := range me.DataSources {
-		dataSourceIDs = append(dataSourceIDs, dataSourceID)
-	}
-	sort.Strings(dataSourceIDs)
-	for _, dataSourceID := range dataSourceIDs {
-		dataSource := me.DataSources[dataSourceID]
+	for _, dataSource := range me.SortedDataSources() {
 		dataSourceName := dataSource.Name
+		dataSourceID := dataSource.ID
 		dd, _ := json.Marshal(dataSourceName)
 		dsm["dynatrace_entity."+dataSource.Type+"."+string(dd)] = fmt.Sprintf(`data "dynatrace_entity" "%s" {
 			type = "%s"
@@ -560,7 +636,10 @@ func (me *Module) WriteResourcesFile() (err error) {
 	if me.IsReferencedAsDataSource() {
 		return nil
 	}
-	if !me.Environment.ChildResourceOverride && me.Descriptor.Parent != nil {
+	if me.Environment == nil {
+		return nil
+	}
+	if !me.Environment.ChildResourceOverride && me.GetDescriptor().Parent != nil {
 		return nil
 	}
 	if me.Environment.Flags.Flat {
@@ -638,10 +717,25 @@ func (me *Module) RefersTo(resource *Resource, parentType ResourceType) bool {
 	if resource == nil {
 		return false
 	}
-	if me.Type == resource.Type || (me.Descriptor.Parent != nil && *me.Descriptor.Parent == parentType) {
+	if me.Type == resource.Type || (me.GetDescriptor().Parent != nil && *me.GetDescriptor().Parent == parentType) {
 		return false
 	}
 	for _, res := range me.Resources {
+		if res.RefersTo(resource) {
+			return true
+		}
+	}
+	return false
+}
+
+func (me *Module) IsReferenced(resource *Resource) bool {
+	me.ModuleMutex.Lock()
+	var resources []*Resource
+	for _, res := range me.Resources {
+		resources = append(resources, res)
+	}
+	me.ModuleMutex.Unlock()
+	for _, res := range resources {
 		if res.RefersTo(resource) {
 			return true
 		}
@@ -656,8 +750,8 @@ func (me *Module) GetChildOfResources() []*Resource {
 	}
 
 	for _, module := range me.Environment.Modules {
-		childDescriptor := module.Descriptor
-		isParent := !me.Environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
+		childDescriptor := module.GetDescriptor()
+		isParent := !me.Environment.ChildResourceOverride && childDescriptor != nil && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
 		if isParent {
 			for _, resource := range module.Resources {
 				if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
@@ -850,7 +944,6 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 	if maxThreads > itemCount {
 		maxThreads = itemCount
 	}
-	wg.Add(maxThreads)
 
 	processItem := func(resource *Resource) error {
 		if err := resource.Download(); err != nil {
@@ -868,42 +961,36 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 	}
 
 	for i := 0; i < maxThreads; i++ {
-
-		go func() error {
-
+		wg.Add(1)
+		go func(idx int) error {
+			defer wg.Done()
 			for {
 				resourceLoop, ok := <-channel
 				if !ok {
-					wg.Done()
 					return nil
 				}
 				if shutdown.System.Stopped() {
-					wg.Done()
 					return nil
 				}
 
 				err := processItem(resourceLoop)
 
 				if err != nil && strings.Contains(err.Error(), "Get function should not be called") {
-
 					if strings.Contains(err.Error(), "builtin:span-event-attribute") ||
 						strings.Contains(err.Error(), "builtin:span-attribute") {
 
-						wg.Done()
 						err = nil
 						return nil
 					}
 				}
 
 				if err != nil {
-					wg.Done()
-
 					logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
 					logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
 					return err
 				}
 			}
-		}()
+		}(i)
 
 	}
 
@@ -1166,13 +1253,10 @@ func (me *Module) Discover() error {
 		return nil
 	}
 
-	if me.Descriptor == nil {
-		descriptor := AllResources[me.Type]
-		me.Descriptor = &descriptor
-	}
+	descriptor := me.GetDescriptor()
 
 	if me.Service == nil {
-		me.Service = me.Descriptor.Service(me.Environment.Credentials)
+		me.Service = descriptor.Service(me.Environment.Credentials)
 	}
 
 	var err error
@@ -1339,8 +1423,8 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		}
 
 		moduleValue := fmt.Sprintf("module.%s", me.Type.Trim())
-		if me.Descriptor.Parent != nil {
-			moduleValue = fmt.Sprintf("module.%s", me.Descriptor.Parent.Trim())
+		if me.GetDescriptor().Parent != nil {
+			moduleValue = fmt.Sprintf("module.%s", me.GetDescriptor().Parent.Trim())
 		}
 		if res.SplitId > 0 {
 			moduleValue = fmt.Sprintf("%s_%d", moduleValue, res.SplitId)

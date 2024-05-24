@@ -60,6 +60,7 @@ resource "dynatrace_declarative_grouping" "#name#" {
 ### Optional
 
 - `detection` (Block List, Max: 1) Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group. (see [below for nested schema](#nestedblock--detection))
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only

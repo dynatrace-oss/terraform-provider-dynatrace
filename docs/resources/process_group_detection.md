@@ -59,6 +59,7 @@ resource "dynatrace_process_group_detection" "_47d495a8-5577-436d-a3b3-777924c2d
 
 ### Optional
 
+- `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `instance_extraction` (Block List, Max: 1) You can define the properties that should be used to identify your process instances. (see [below for nested schema](#nestedblock--instance_extraction))
 
 ### Read-Only

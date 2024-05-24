@@ -1,0 +1,35 @@
+---
+layout: ""
+page_title: "dynatrace_iam_policy Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The data source `dynatrace_iam_policy` covers queries for the UUID of an IAM policy
+---
+
+# dynatrace_iam_policy (Data Source)
+
+The IAM policy data source allows the policy UUID to be retrieved by its name and account/environment (exclude for global).
+
+## Example Usage
+```terraform
+data "dynatrace_iam_policy" "appengineadmin" {
+  name = "AppEngine - Admin"
+}
+
+output "policies" {
+  value = data.dynatrace_iam_policy.appengineadmin
+}
+```
+
+## Example Output
+```
+Changes to Outputs:
+  + policies = {
+      + account     = null
+      + environment = null
+      + id          = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX#-#global#-#global"
+      + name        = "AppEngine - Admin"
+      + uuid        = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+    }
+```
+{{ .SchemaMarkdown | trimspace }}

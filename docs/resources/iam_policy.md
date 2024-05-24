@@ -71,3 +71,4 @@ resource "dynatrace_iam_policy" "policy" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `uuid` (String) The ID of this resource is a concatenation of multiple pieces of information (policy UUID, accountID, environmentID, ...). There are use cases where you JUST need the UUID of the Policy, though

@@ -25,6 +25,12 @@ import (
 	"strings"
 )
 
+const (
+	ProdTokenURL   = "https://sso.dynatrace.com/sso/oauth2/token"
+	SprintTokenURL = "https://sso.dynatracelabs.com/sso/oauth2/token"
+	DevTokenURL    = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
+)
+
 func GetEnv(names ...string) string {
 	if len(names) == 0 {
 		return ""
@@ -105,6 +111,15 @@ func CreateExportCredentials() (*Credentials, error) {
 		if match := re.FindStringSubmatch(environmentURL); len(match) > 0 {
 			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
+		}
+	}
+	if len(automationTokenURL) == 0 {
+		if strings.Contains(automationEnvironmentURL, ".live.dynatrace.com") || strings.Contains(automationEnvironmentURL, ".apps.dynatrace.com") {
+			automationTokenURL = ProdTokenURL
+		} else if strings.Contains(automationEnvironmentURL, ".sprint.dynatracelabs.com") || strings.Contains(automationEnvironmentURL, ".sprint.apps.dynatracelabs.com") {
+			automationTokenURL = SprintTokenURL
+		} else if strings.Contains(automationEnvironmentURL, ".dev.dynatracelabs.com") || strings.Contains(automationEnvironmentURL, ".dev.apps.dynatracelabs.com") {
+			automationTokenURL = DevTokenURL
 		}
 	}
 
