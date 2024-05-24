@@ -140,7 +140,7 @@ jobs:
           IAM_CLIENT_ID: ${{ secrets.IAM_CLIENT_ID }}
           IAM_ACCOUNT_ID: ${{ secrets.IAM_ACCOUNT_ID }}
           IAM_CLIENT_SECRET: ${{ secrets.IAM_CLIENT_SECRET }}
-        run: go test -v ./dynatrace/api/app/dynatrace/infrastructure/diskedge/anomalydetectors
+        run: go test -v ./dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors
       - name: TestJiraForWorkflows
         if: success() || failure()
         env:
