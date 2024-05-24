@@ -527,6 +527,7 @@ func Provider() *schema.Provider {
 			"dynatrace_davis_anomaly_detectors":            resources.NewGeneric(export.ResourceTypes.DavisAnomalyDetectors).Resource(),
 			"dynatrace_log_debug_settings":                 resources.NewGeneric(export.ResourceTypes.LogDebugSettings).Resource(),
 			"dynatrace_infraops_app_settings":              resources.NewGeneric(export.ResourceTypes.InfraOpsAppSettings).Resource(),
+			"dynatrace_disk_edge_anomaly_detectors":        resources.NewGeneric(export.ResourceTypes.DiskEdgeAnomalyDetectors).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

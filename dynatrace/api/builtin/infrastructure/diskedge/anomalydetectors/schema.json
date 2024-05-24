@@ -1,0 +1,789 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "The *Disk Edge* feature within Dynatrace provides automatic detection of performance anomalies related to disk infrastructure.\nUse these settings to tailor detection sensitivity to a specific disk's name and/or custom metadata. Defining custom properties can help with post processing of the event. \n\n**Policy Hierarchy and Scope**\n\nThe order of policies establishes a hierarchical structure. Disk is assigned to a policy it matches to (based on disk name and/or metadata) according  to the policies hierarchy.\n\nPolicies  can be defined within Host, Host Group and Tenant scope. Lower scope has priority over the higher one.\n\nTo learn more about Disk Edge visit its [official documentation](https://dt-url.net/diskEdgeDoc).",
+	"displayName": "Anomaly detection for infrastructure: Disk Edge",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"EOperatingSystem": {
+			"description": "",
+			"displayName": "Operating System",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Windows",
+					"value": "WINDOWS"
+				},
+				{
+					"displayName": "Linux",
+					"value": "LINUX"
+				},
+				{
+					"displayName": "AIX",
+					"value": "AIX"
+				}
+			],
+			"type": "enum"
+		},
+		"Trigger": {
+			"description": "",
+			"displayName": "Trigger",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Available disk space (MiB) below",
+					"value": "AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW"
+				},
+				{
+					"displayName": "Available disk space (%) below",
+					"value": "AVAILABLE_DISK_SPACE_PERCENT_BELOW"
+				},
+				{
+					"displayName": "Available inodes (number) below",
+					"value": "AVAILABLE_INODES_NUMBER_BELOW"
+				},
+				{
+					"displayName": "Available inodes (%) below",
+					"value": "AVAILABLE_INODES_PERCENT_BELOW"
+				},
+				{
+					"displayName": "Read time (ms) exceeding",
+					"value": "READ_TIME_EXCEEDING"
+				},
+				{
+					"displayName": "Write time (ms) exceeding",
+					"value": "WRITE_TIME_EXCEEDING"
+				},
+				{
+					"displayName": "Is read only file system",
+					"value": "READ_ONLY_FILE_SYSTEM"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add policy",
+		"itemDisplayName": "Add policy",
+		"minAgentVersion": "1.293"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"alerts": {
+			"constraints": [
+				{
+					"customMessage": "Duplicate trigger.",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"trigger"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Alerts",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Alert"
+				}
+			},
+			"maxObjects": 7,
+			"metadata": {
+				"addItemButton": "Add alert",
+				"itemDisplayName": "New alert"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"diskNameFilters": {
+			"description": "Disk will be included in this policy if **any** of the filters match",
+			"displayName": "Disk name filters",
+			"documentation": "Disk name filter has to match a required format.\n\n- `$match(/zSecure/snapshot?/*)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n- `$contains(/log/)` – Matches if `/log/` appears anywhere in disk name.\n- `$eq(/)` – Matches if `/` matches the disk name exactly.\n- `$prefix(/srv/)` – Matches if `/srv/` matches the prefix of disk name.\n- `$suffix(/backup)` – Matches if `/backup` matches the suffix of disk name.\n\nAvailable logic operations:\n- `$not($eq(/usr))` – Matches if the disk name is different from `/usr`.\n- `$and($prefix(/var),$suffix(/backup))` – Matches if disk name starts with `/var` and ends with `/backup`.\n- `$or($prefix(/home/),$eq(/root))` – Matches if disk name starts with `/home` or equals `/root`.\n\nBrackets **(** and **)** that are part of the matched disk name **must be escaped with a tilde (~)**",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 1000,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customMessage": "This value does not match the required format.",
+						"customValidatorId": "ConditionGeneralRule",
+						"skipAsyncValidation": false,
+						"type": "CUSTOM_VALIDATOR_REF"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add filter",
+				"itemDisplayName": "New filter"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventProperties": {
+			"description": "Set of additional key-value properties to be attached to the triggered event.",
+			"displayName": "Properties",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/MetadataItem"
+				}
+			},
+			"maxObjects": 30,
+			"metadata": {
+				"addItemButton": "Add Property",
+				"itemDisplayName": "New property"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"hostMetadataConditions": {
+			"description": "The policy will be enabled if **all** conditions are met",
+			"displayName": "Host custom metadata conditions",
+			"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+			"items": {
+				"description": "",
+				"displayName": "Custom metadata",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/HostMetadataConditionType"
+				}
+			},
+			"maxObjects": 30,
+			"metadata": {
+				"addItemButton": "Add condition",
+				"itemDisplayName": "New condition"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"operatingSystem": {
+			"description": "Select the operating systems on which policy should be applied",
+			"displayName": "Operating system",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/enums/EOperatingSystem"
+				}
+			},
+			"maxObjects": 3,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"policyName": {
+			"constraints": [
+				{
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Policy name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Policy name already exists. Please provide a different one.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"policyName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:anomaly-detection.infrastructure",
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:infrastructure.disk.edge.anomaly-detectors",
+	"types": {
+		"Alert": {
+			"description": "",
+			"displayName": "Alert",
+			"documentation": "",
+			"properties": {
+				"sampleCountThresholds": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"AVAILABLE_INODES_NUMBER_BELOW",
+							"AVAILABLE_INODES_PERCENT_BELOW",
+							"AVAILABLE_DISK_SPACE_PERCENT_BELOW",
+							"AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW",
+							"READ_TIME_EXCEEDING",
+							"WRITE_TIME_EXCEEDING"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"type": {
+						"$ref": "#/types/SampleCountThresholds"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": false,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": false,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"sampleCountThresholdsImmediately": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"READ_ONLY_FILE_SYSTEM"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"type": {
+						"$ref": "#/types/SampleCountThresholdsImmediately"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"sections": [
+								{
+									"displayName": "Alerting event thresholds",
+									"expanded": false,
+									"properties": [
+										"violatingSamples",
+										"violatingEvaluationWindow"
+									]
+								},
+								{
+									"displayName": "Dealerting event thresholds",
+									"expanded": false,
+									"properties": [
+										"dealertingSamples",
+										"dealertingEvaluationWindow"
+									]
+								}
+							]
+						}
+					}
+				},
+				"thresholdMebibytes": {
+					"constraints": [
+						{
+							"maximum": 1000000000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "MiB"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"type": "float"
+				},
+				"thresholdMilliseconds": {
+					"constraints": [
+						{
+							"maximum": 1000000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "ms"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"READ_TIME_EXCEEDING",
+							"WRITE_TIME_EXCEEDING"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"type": "float"
+				},
+				"thresholdNumber": {
+					"constraints": [
+						{
+							"maximum": 1000000000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 100,
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"AVAILABLE_INODES_NUMBER_BELOW"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"type": "float"
+				},
+				"thresholdPercent": {
+					"constraints": [
+						{
+							"maximum": 100,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 10,
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"AVAILABLE_DISK_SPACE_PERCENT_BELOW",
+							"AVAILABLE_INODES_PERCENT_BELOW"
+						],
+						"property": "trigger",
+						"type": "IN"
+					},
+					"subType": "percentage",
+					"type": "float"
+				},
+				"trigger": {
+					"default": "AVAILABLE_DISK_SPACE_PERCENT_BELOW",
+					"description": "",
+					"displayName": "Trigger",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Trigger"
+					}
+				}
+			},
+			"summaryPattern": "{trigger} {thresholdPercent}{thresholdMilliseconds}{thresholdMebibytes}{thresholdNumber}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HostMetadataCondition": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataCondition": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Condition",
+					"documentation": "This string has to match a required format.\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				},
+				"metadataKey": {
+					"constraints": [
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Custom metadata ",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HostMetadataConditionType": {
+			"description": "",
+			"displayName": "HostMetadataConditionType",
+			"documentation": "",
+			"properties": {
+				"hostMetadataCondition": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/HostMetadataCondition"
+					}
+				}
+			},
+			"summaryPattern": "{hostMetadataCondition/metadataKey} matches {hostMetadataCondition/metadataCondition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetadataItem": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"metadataKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Unknown predefined property key.",
+							"customValidatorId": "event-property-key-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customMessage": "Key property must not contain '{' or '}'.",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type 'dt.' for key hints.",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_property_key",
+					"type": "text"
+				},
+				"metadataValue": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Type '{' for placeholder hints.",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Required"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "event_template_variable_placeholder",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{metadataKey}: {metadataValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SampleCountThresholds": {
+			"constraints": [
+				{
+					"customValidatorId": "samplesFitInWindowValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "SampleCountThresholds",
+			"documentation": "",
+			"properties": {
+				"dealertingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "",
+					"displayName": "Evaluation window size for dealerting samples",
+					"documentation": "The number of **10-second samples** that form the sliding evaluation window for dealerting.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 24,
+					"description": "",
+					"displayName": "Dealerting samples",
+					"documentation": "The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 30,
+					"description": "",
+					"displayName": "Evaluation window size for violating samples",
+					"documentation": "The number of **10-second samples** that form the sliding evaluation window to detect violating samples.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 18,
+					"description": "",
+					"displayName": "Violating samples",
+					"documentation": "The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SampleCountThresholdsImmediately": {
+			"constraints": [
+				{
+					"customValidatorId": "samplesFitInWindowValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "SampleCountThresholdsImmediately",
+			"documentation": "",
+			"properties": {
+				"dealertingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Evaluation window size for dealerting samples",
+					"documentation": "The number of **10-second samples** that form the sliding evaluation window for dealerting.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Dealerting samples",
+					"documentation": "The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingEvaluationWindow": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Evaluation window size for violating samples",
+					"documentation": "The number of **10-second samples** that form the sliding evaluation window to detect violating samples.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"maximum": 180,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "Violating samples",
+					"documentation": "The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.15"
+}

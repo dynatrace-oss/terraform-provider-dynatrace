@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_disk_edge_anomaly_detectors Resource - terraform-provider-dynatrace"
+subcategory: "Anomaly Detection"
+description: |-
+  The resource `dynatrace_disk_edge_anomaly_detectors` covers configuration for disk edge anomaly detection
+---
+
+# dynatrace_disk_edge_anomaly_detectors (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Adjust the sensitivity of anomaly detection for infrastructure - https://www.dynatrace.com/support/help/how-to-use-dynatrace/problem-detection-and-analysis/problem-detection/adjust-sensitivity-anomaly-detection/adjust-sensitivity-infastructure
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:infrastructure.disk.edge.anomaly-detectors`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_disk_edge_anomaly_detectors` downloads all existing disk edge anomaly detection configuration
+
+The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

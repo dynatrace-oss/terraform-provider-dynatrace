@@ -117,6 +117,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
+	diskedgeanomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors"
 	issuetracking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
@@ -1273,6 +1274,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DavisAnomalyDetectors:     NewResourceDescriptor(anomalydetectors.Service),
 	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
 	ResourceTypes.InfraOpsAppSettings:       NewResourceDescriptor(infraopssettings.Service),
+	ResourceTypes.DiskEdgeAnomalyDetectors:  NewResourceDescriptor(diskedgeanomalydetectors.Service),
 }
 
 var excludeListedResources = []ResourceType{
