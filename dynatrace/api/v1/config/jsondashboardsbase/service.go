@@ -18,11 +18,16 @@
 package jsondashboardsbase
 
 import (
+	"os"
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	dashboardsbase "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboardsbase/settings"
 )
+
+var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
 
 const SchemaID = "v1:config:json-dashboards-base"
 
@@ -53,18 +58,40 @@ func (me *service) List() (api.Stubs, error) {
 }
 
 func (me *service) Get(id string, v *dashboardsbase.JSONDashboardBase) error {
+	if JSON_DASHBOARD_BASE_PLUS {
+		if err := me.service.Get(id, v); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
 func (me *service) Validate(v *dashboardsbase.JSONDashboardBase) error {
+	if JSON_DASHBOARD_BASE_PLUS {
+		if validator, ok := me.service.(settings.Validator[*dashboardsbase.JSONDashboardBase]); ok {
+			return validator.Validate(v)
+		}
+	}
 	return nil
 }
 
 func (me *service) Create(v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
+	if JSON_DASHBOARD_BASE_PLUS {
+		return me.service.Create(v.EnrichRequireds())
+	}
 	return me.service.Create(v)
 }
 
 func (me *service) Update(id string, v *dashboardsbase.JSONDashboardBase) error {
+
+	if JSON_DASHBOARD_BASE_PLUS {
+		jsonDashboard := v
+		oldContents := jsonDashboard.Contents
+		jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
+		err := me.service.Update(id, v.EnrichRequireds())
+		jsonDashboard.Contents = oldContents
+		return err
+	}
 	return nil
 }
 
