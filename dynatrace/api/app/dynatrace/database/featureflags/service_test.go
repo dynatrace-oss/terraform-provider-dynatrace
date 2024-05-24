@@ -19,10 +19,10 @@ package database_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDatabaseAppFeatureFlags(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v288)
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }
