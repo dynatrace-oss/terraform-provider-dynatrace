@@ -144,6 +144,14 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "logmonitoring.date-time-pattern-settings.datasource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
 			"default": "",
 			"description": "",
 			"displayName": "Date-time pattern",
@@ -154,6 +162,7 @@
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"subType": "datasource",
 			"type": "text"
 		},
 		"enabled": {
@@ -344,5 +353,5 @@
 			}
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

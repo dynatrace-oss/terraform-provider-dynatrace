@@ -55,6 +55,7 @@
 		{
 			"customMessage": "Duplicate keys are not allowed in custom configuration properties.",
 			"customValidatorId": "rumCustomConfigurationPropertiesValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -65,5 +66,5 @@
 	],
 	"schemaId": "builtin:rum.web.custom-configuration-properties",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

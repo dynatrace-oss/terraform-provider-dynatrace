@@ -27,7 +27,7 @@ import (
 )
 
 const SchemaID = "builtin:alerting.maintenance-window"
-const SchemaVersion = "2.14.6"
+const SchemaVersion = "2.14.7"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*maintenancewindow.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenancewindow.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})

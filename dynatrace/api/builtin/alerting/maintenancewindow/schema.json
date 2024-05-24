@@ -6,10 +6,11 @@
 		{
 			"customMessage": "At least one added filter is needed and additionally every filter needs a management zone id filter value.",
 			"customValidatorId": "maintenance-window-permission-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Maintenance windows are typically planned, recurring periods of system downtime during which your DevOps team can perform preventative maintenance and system upgrades outside of peak traffic hours.",
+	"description": "Maintenance windows are typically planned, recurring periods of system downtime during which your DevOps team can perform preventative maintenance and system upgrades outside of peak traffic hours. [Documentation](https://dt-url.net/5902ho9 \"How to define a maintenance window\")\n\n",
 	"displayName": "Maintenance windows",
 	"documentation": "To avoid having Dynatrace report on any performance anomalies that may result from such events, set up maintenance windows below that correspond with your organization's maintenance window schedule.",
 	"dynatrace": "1",
@@ -220,23 +221,26 @@
 				{
 					"customMessage": "At least one filter value is necessary.",
 					"customValidatorId": "maintenance-window-filter-container-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customMessage": "At least one management zone filter value is necessary.",
 					"customValidatorId": "maintenance-window-permission-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"description": "Configured values of one filter are evaluated together (**AND**).",
 			"displayName": "Filter",
-			"documentation": "The maintenance window is applied onto an entity if it matches all of the values of at least one filter.",
+			"documentation": "The maintenance window is applied to an entity if it matches all of the values of at least one filter.",
 			"properties": {
 				"entityId": {
 					"constraints": [
 						{
 							"customMessage": "Invalid entity id.",
 							"customValidatorId": "maintenance-window-entity-id-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -267,6 +271,7 @@
 						"constraints": [
 							{
 								"customValidatorId": "universal-tag-validator",
+								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							},
 							{
@@ -800,5 +805,5 @@
 			]
 		}
 	},
-	"version": "2.14.6"
+	"version": "2.14.7"
 }
