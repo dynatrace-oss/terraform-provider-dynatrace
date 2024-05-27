@@ -522,12 +522,6 @@ func mergeParentWithChild(resource *Resource) error {
 				parentFile.Write(childBytes)
 				parentFile.Write([]byte("\n\n"))
 				parentFile.Write(parentBytes)
-				if resource.GetParent().ID == "bbbbbbbb-0001-0002-0000-000000000009" {
-					fmt.Println("AAA: ", string(parentBytes), "AAA:")
-				}
-				if resource.ID == "bbbbbbbb-0001-0002-0000-000000000009" {
-					fmt.Println("BBB: ", string(childBytes), "BBB:")
-				}
 			}
 		}
 	}
