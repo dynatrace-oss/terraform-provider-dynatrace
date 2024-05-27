@@ -258,7 +258,14 @@ func (me *Module) Resource(id string) *Resource {
 	if stored, found := me.Resources[id]; found {
 		return stored
 	}
-	res := &Resource{ID: id, Type: me.Type, Module: me, Status: ResourceStati.Discovered, ExtractedIdsPerDependencyModule: map[string]map[string]bool{}}
+	res := &Resource{
+		ID:                              id,
+		Type:                            me.Type,
+		Module:                          me,
+		Status:                          ResourceStati.Discovered,
+		ExtractedIdsPerDependencyModule: map[string]map[string]bool{},
+		ResourceMutex:                   new(sync.Mutex),
+	}
 	me.Resources[id] = res
 	return res
 }
@@ -968,7 +975,18 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 
 				err := processItem(resourceLoop)
 
+				if err != nil && strings.Contains(err.Error(), "Get function should not be called") {
+					if strings.Contains(err.Error(), "builtin:span-event-attribute") ||
+						strings.Contains(err.Error(), "builtin:span-attribute") {
+
+						err = nil
+						return nil
+					}
+				}
+
 				if err != nil {
+					logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
+					logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [%s] [FAILED] %+v", resourceLoop.Type, resourceLoop.ID, err)
 					return err
 				}
 			}
@@ -1263,6 +1281,10 @@ func (me *Module) Discover() error {
 	for _, stub := range stubs {
 		if stub.Name == "" {
 			panic(me.Type)
+		}
+		if IsIgnoredResource(me.Type, stub.ID) {
+			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
+			continue
 		}
 		res := me.Resource(stub.ID).SetName(stub.Name)
 		if stub.LegacyID != nil {

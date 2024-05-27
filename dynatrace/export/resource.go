@@ -23,6 +23,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
@@ -54,6 +55,7 @@ type Resource struct {
 	SplitId                         int
 	BundleFilePath                  string
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
+	ResourceMutex                   *sync.Mutex
 }
 
 func (me *Resource) GetReferringResources() []*Resource {

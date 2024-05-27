@@ -47,6 +47,7 @@ import (
 var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
+var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
 
 const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
@@ -151,11 +152,18 @@ func (me *Environment) Export() (err error) {
 func (me *Environment) PreProcess() error {
 	me.ProcessChildParentGroups()
 	me.ProcessHasDependenciesTo()
+
 	err := me.LoadImportState()
 	if err != nil {
 		return err
 	}
+
 	err = me.ProcessPrevState()
+	if err != nil {
+		return err
+	}
+
+	err = LoadIgnoreResourcesMap()
 	if err != nil {
 		return err
 	}
@@ -280,6 +288,9 @@ func (me *Environment) InitialDownload() error {
 
 					if err != nil {
 						wg.Done()
+
+						logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
+						logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
 						return err
 					}
 				}
@@ -362,6 +373,8 @@ func (me *Environment) PostProcess() error {
 
 							if err != nil {
 								wg.Done()
+								logging.Debug.Info.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
+								logging.Debug.Warn.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
 								return err
 							}
 						}
@@ -451,13 +464,19 @@ func (me *Environment) PostProcess() error {
 			logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to merge resource into parent .tf file: %s", resource.Type, resource.ID, err.Error())
 		}
 	}
-	for _, resourcesByIDToVoid := range resourcesToVoid {
-		for _, resourceToVoid := range resourcesByIDToVoid {
-			if err := voidResource(resourceToVoid); err != nil {
-				logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to remove resource: %s", resourceToVoid.Type, resourceToVoid.ID, err.Error())
+
+	if JSON_DASHBOARD_BASE_PLUS {
+		// pass
+	} else {
+		for _, resourcesByIDToVoid := range resourcesToVoid {
+			for _, resourceToVoid := range resourcesByIDToVoid {
+				if err := voidResource(resourceToVoid); err != nil {
+					logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to remove resource: %s", resourceToVoid.Type, resourceToVoid.ID, err.Error())
+				}
 			}
 		}
 	}
+
 	return nil
 }
 
@@ -485,6 +504,15 @@ func mergeParentWithChild(resource *Resource) error {
 	var parentBytes []byte
 	var childBytes []byte
 	var err error
+	parent := resource.GetParent()
+
+	if parent == nil {
+		return nil
+	}
+
+	parent.ResourceMutex.Lock()
+	defer parent.ResourceMutex.Unlock()
+
 	if parentBytes, err = resource.GetParent().ReadFile(); err == nil {
 		if childBytes, err = resource.ReadFile(); err == nil {
 			resource.GetParent().Module.saveChildModule(resource.Module)
@@ -1284,10 +1312,17 @@ func readStuff(scanner *bufio.Scanner) {
 }
 
 func appendModule(modules []TerraformInitModule, moduleNameTrimmed string) []TerraformInitModule {
+	directory := moduleNameTrimmed
+	if moduleNameTrimmed == "json_dashboard_base" {
+		directory = "json_dashboard"
+	} else if moduleNameTrimmed == "json_dashboard" {
+		return modules
+	}
+
 	modules = append(modules, TerraformInitModule{
 		Key:    moduleNameTrimmed,
-		Source: fmt.Sprintf("./modules/%s", moduleNameTrimmed),
-		Dir:    fmt.Sprintf("modules/%s", moduleNameTrimmed),
+		Source: fmt.Sprintf("./modules/%s", directory),
+		Dir:    fmt.Sprintf("modules/%s", directory),
 	})
 	return modules
 }
