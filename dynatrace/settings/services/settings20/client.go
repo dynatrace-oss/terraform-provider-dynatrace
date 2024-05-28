@@ -242,7 +242,7 @@ func (c client) Delete(ctx context.Context, id string) (Response, error) {
 
 func (c client) create(ctx context.Context, data []byte) (*http.Response, error) {
 	options := rest.RequestOptions{}
-	c.setRepairInput(options)
+	c.setRepairInput(&options)
 
 	r, err := c.client.POST(ctx, endpointPath, bytes.NewReader(data), options)
 
@@ -253,20 +253,10 @@ func (c client) create(ctx context.Context, data []byte) (*http.Response, error)
 }
 
 func IsSkipRepairSchemaID(schemaID string) bool {
-	if schemaID == "builtin:alerting.profile" ||
-		schemaID == "builtin:appsec.notification-alerting-profile" ||
-		schemaID == "builtin:failure-detection.environment.rules" ||
-		schemaID == "builtin:service-detection.external-web-request" ||
-		schemaID == "builtin:service-detection.external-web-service" ||
-		schemaID == "builtin:service-detection.full-web-request" ||
-		schemaID == "builtin:service-detection.full-web-service" {
-
-		return true
-	}
 	return false
 }
 
-func (c client) setRepairInput(options rest.RequestOptions) {
+func (c client) setRepairInput(options *rest.RequestOptions) {
 	if IsSkipRepairSchemaID(c.schemaID) {
 		return
 	}
@@ -325,7 +315,7 @@ func (c client) update(ctx context.Context, id string, data []byte) (*http.Respo
 	// make PUT request
 	options := rest.RequestOptions{}
 
-	c.setRepairInput(options)
+	c.setRepairInput(&options)
 	return c.client.PUT(ctx, path, bytes.NewReader(data), options)
 }
 
