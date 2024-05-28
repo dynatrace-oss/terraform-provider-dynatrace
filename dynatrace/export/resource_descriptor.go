@@ -249,6 +249,7 @@ import (
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/reports"
 
 	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
@@ -1275,6 +1276,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
 	ResourceTypes.InfraOpsAppSettings:       NewResourceDescriptor(infraopssettings.Service),
 	ResourceTypes.DiskEdgeAnomalyDetectors:  NewResourceDescriptor(diskedgeanomalydetectors.Service),
+	ResourceTypes.Reports: NewResourceDescriptor(
+		reports.Service,
+		Dependencies.ID(ResourceTypes.JSONDashboard),
+	),
 }
 
 var excludeListedResources = []ResourceType{
