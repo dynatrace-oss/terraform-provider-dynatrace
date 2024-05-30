@@ -97,6 +97,7 @@ Required:
 
 Optional:
 
+- `auto_adaptive_threshold_enabled` (Boolean) Enable auto adaptive threshold
 - `description` (String) no documentation available
 - `dql_query` (String) DQL query
 - `reference_slo` (String) Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
