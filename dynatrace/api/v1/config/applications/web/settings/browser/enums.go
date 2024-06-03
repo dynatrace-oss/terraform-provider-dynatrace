@@ -23,6 +23,7 @@ var Types = struct {
 	AndroidWebKit    Type
 	BotsSpiders      Type
 	Chrome           Type
+	ChromeHeadless   Type
 	Edge             Type
 	Firefox          Type
 	InternetExplorer Type
@@ -32,6 +33,7 @@ var Types = struct {
 	"ANDROID_WEBKIT",
 	"BOTS_SPIDERS",
 	"CHROME",
+	"CHROME_HEADLESS",
 	"EDGE",
 	"FIREFOX",
 	"INTERNET_EXPLORER",
