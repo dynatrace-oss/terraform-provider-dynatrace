@@ -1302,6 +1302,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.AlertingProfile, "Replaced by dynatrace_alerting"},
 			{ResourceTypes.CustomAnomalies, "Replaced by dynatrace_metric_events"},
+			{ResourceTypes.LogGrail, "Only meant to be used for the initial Logs powered by Grail activation"},
 			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance"},
 			{ResourceTypes.Notification, "Replaced by dynatrace_<type>_notification"},
 		},
@@ -1334,7 +1335,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		},
 	},
 	{
-		Reason: "Excluded since configuration is under account management",
+		Reason: "Account management requires OAuth2 client and is specific to SaaS",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.IAMUser, ""},
 			{ResourceTypes.IAMGroup, ""},
@@ -1345,19 +1346,19 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		},
 	},
 	{
-		Reason: "Cluster Resources",
+		Reason: "Cluster management is specific to Managed",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.Policy, ""},
 		},
 	},
 	{
-		Reason: "Excluded since it requires a personal token",
+		Reason: "Requires a personal token",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.UserSettings, ""},
 		},
 	},
 	{
-		Reason: "May cause issues for migration use cases",
+		Reason: "Potential issues for migration use cases",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.MetricMetadata, ""},
 			{ResourceTypes.MetricQuery, ""},
@@ -1368,29 +1369,29 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.AzureService, ""},
 			{ResourceTypes.AWSService, ""},
-			{ResourceTypes.AutomationWorkflow, ""},
-			{ResourceTypes.PlatformBucket, ""},
-			{ResourceTypes.AutomationBusinessCalendar, ""},
-			{ResourceTypes.AutomationSchedulingRule, ""},
 			{ResourceTypes.AGToken, ""},
 			{ResourceTypes.MobileAppKeyPerformance, ""},
 		},
 	},
 	{
-		Reason: "Excluded due to potential time consuming execution",
+		Reason: "Requires an OAuth2 client",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.AutomationBusinessCalendar, ""},
+			{ResourceTypes.AutomationSchedulingRule, ""},
+			{ResourceTypes.AutomationWorkflow, ""},
+			{ResourceTypes.Documents, ""},
+			{ResourceTypes.PlatformBucket, ""},
+		},
+	},
+	{
+		Reason: "Potential time consuming execution",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.CustomTags, ""},
 			{ResourceTypes.CustomDevice, ""},
 		},
 	},
 	{
-		Reason: "Deprecated since it is only meant to be used for the initial Logs powered by Grail activation",
-		Exclusions: []ResourceExclusion{
-			{ResourceTypes.LogGrail, ""},
-		},
-	},
-	{
-		Reason: "Excluding AppSec resources from default export since it requires the feature to be activated",
+		Reason: "Requires the feature to be activated",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.AppSecVulnerabilitySettings, ""},
 			{ResourceTypes.AppSecVulnerabilityThirdParty, ""},
@@ -1404,7 +1405,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		},
 	},
 	{
-		Reason: "Excluding resources that require apps from Dynatrace Hub",
+		Reason: "Requires the app from Dynatrace Hub",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.SiteReliabilityGuardian, ""},
 			{ResourceTypes.JiraForWorkflows, ""},
@@ -1412,7 +1413,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 		},
 	},
 	{
-		Reason: "Excluded because it can be used against any schema",
+		Reason: "Generic resource against any Setting 2.0 schema",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.GenericSetting, ""},
 		},
@@ -1439,7 +1440,7 @@ func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 	}
 
 	return append(excludeListedResourceGroups, ResourceExclusionGroup{
-		Reason: "Production Environments may contain 10k+ Dashboards",
+		Reason: "Production environments may contain 10k+ dashboards",
 		Exclusions: []ResourceExclusion{
 			{ResourceTypes.JSONDashboard, ""},
 			{ResourceTypes.DashboardSharing, ""},
