@@ -550,6 +550,7 @@ var ServiceTechnologys = struct {
 	Istio                                ServiceTechnology
 	Java                                 ServiceTechnology
 	JavaHTTPURLConnection                ServiceTechnology
+	JavaHTTPURLConnetion                 ServiceTechnology
 	JaxWs                                ServiceTechnology
 	JBoss                                ServiceTechnology
 	JBossEap                             ServiceTechnology
@@ -762,6 +763,7 @@ var ServiceTechnologys = struct {
 	"IIS_APP_POOL",
 	"ISTIO",
 	"JAVA",
+	"JAVA_HTTPURLCONNECTION",
 	"JAVA_HTTPURLCONNETION",
 	"JAX_WS",
 	"JBOSS",
