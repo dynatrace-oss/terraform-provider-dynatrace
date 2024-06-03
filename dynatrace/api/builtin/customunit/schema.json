@@ -32,6 +32,7 @@
 			"type": "enum"
 		}
 	},
+	"keyProperty": "newUnitName",
 	"maxObjects": 100,
 	"multiObject": true,
 	"ordered": false,
@@ -150,11 +151,13 @@
 		{
 			"customMessage": "Unit names have to be unique (case-insensitive) and must be different from unit symbols of predefined units.",
 			"customValidatorId": "unique-unit-name-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "Unit symbols have to be unique and must be different from unit symbols of predefined units.",
 			"customValidatorId": "unique-unit-symbol-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -163,5 +166,5 @@
 	],
 	"schemaId": "builtin:custom-unit",
 	"types": {},
-	"version": "0.6"
+	"version": "0.7"
 }

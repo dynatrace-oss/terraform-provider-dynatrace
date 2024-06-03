@@ -59,6 +59,9 @@
 			"displayName": "Disable NFS disk monitoring",
 			"documentation": "",
 			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.287"
+			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "boolean"
@@ -66,7 +69,7 @@
 		"exclusions": {
 			"description": "OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.",
 			"displayName": "Exclude disks",
-			"documentation": "Certain filesystems are always excluded as monitoring of them is not useful. For example, autofs, proc, cgroup, tmpfs.",
+			"documentation": "Certain filesystems are always excluded as monitoring of them is not useful. For example, autofs, proc, cgroup, tmpfs.\n\n ⚠️ Filtering is done before resolving symbolic links.",
 			"items": {
 				"description": "Create a rule that will be used to disable monitoring of matching disks. Please be aware that rule with default values will disable monitoring of all disks.",
 				"displayName": "Disk exclusion rule",
@@ -136,7 +139,7 @@
 					],
 					"description": "",
 					"displayName": "Disk or mount point path",
-					"documentation": " **Disk or mount point path field:** the path to where the disk to be excluded from monitoring is mounted. Examples:\n\n* /mnt/my_disk\n* /staff/emp1\n* C:\\\n* /staff/*\n* /disk*\n\n ⚠️ Mount point paths are case sensitive! \n\nThe wildcard in **/staff/*** means to exclude every child folder of /staff.\n\nThe wildcard in **/disk*** means to exclude every mount point starting with /disk, for example /disk1, /disk99,  /diskabc",
+					"documentation": " **Disk or mount point path field:** the path to where the disk to be excluded from monitoring is mounted. Examples:\n\n* /mnt/my_disk\n* /staff/emp1\n* C:\\\n* /staff/*\n* /disk*\n\n ⚠️ Mount point paths are case sensitive! \n\nThe wildcard in **/staff/*** means to exclude every child folder of /staff.\n\nThe wildcard in **/disk*** means to exclude every mount point starting with /disk, for example /disk1, /disk99,  /diskabc\n\n ⚠️ Filtering is done before resolving symbolic links.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -161,5 +164,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.9"
+	"version": "1.2.10"
 }

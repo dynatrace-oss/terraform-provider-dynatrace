@@ -104,7 +104,7 @@
 			"default": true,
 			"description": "",
 			"displayName": "Monitor workload and node resource metrics",
-			"documentation": "Workload and node resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.",
+			"documentation": "Workload and node resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate. Node resource metrics require ActiveGate 1.271+",
 			"maxObjects": 1,
 			"metadata": {
 				"minActiveGateVersion": "1.261"
@@ -128,7 +128,7 @@
 		},
 		"pvcMonitoringEnabled": {
 			"default": false,
-			"description": "To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.",
+			"description": "This toggle will be removed in a future version. The persistent volume claim monitoring is now builtin and independent of this toggle. See [this community guide](https://dt-url.net/v2200u4m) for details.",
 			"displayName": "Monitor persistent volume claims",
 			"documentation": "The persistent volume claims feature is based on custom metrics and is, therefore, subject to licensing.\n\nIf you have DPS licensing see [licensing documentation](https://dt-url.net/nd0348b) for details.\n\nIf you have non-DPS licensing see [DDUs for custom metrics](https://dt-url.net/k8smcc) for details.",
 			"maxObjects": 1,
@@ -221,5 +221,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }
