@@ -1282,92 +1282,171 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 }
 
-var excludeListedResources = []ResourceType{
-	// Officially deprecated resources (EOL)
-	ResourceTypes.AlertingProfile,   // Replaced by dynatrace_alerting
-	ResourceTypes.CustomAnomalies,   // Replaced by dynatrace_metric_events
-	ResourceTypes.MaintenanceWindow, // Replaced by dynatrace_maintenance
-	ResourceTypes.Notification,      // Replaced by dynatrace_<type>_notification
+type ResourceExclusion struct {
+	ResourceType ResourceType
+	Reason       string
+}
+
+type ResourceExclusionGroup struct {
+	Reason     string
+	Exclusions []ResourceExclusion
+}
+
+var excludeListedResourceGroups = []ResourceExclusionGroup{
 	// ResourceTypes.SpanAttribute, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
 	// ResourceTypes.SpanEvents, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
 	// ResourceAttributes, // Replaced by dynatrace_attribute_allow_list and dynatrace_attribute_masking. Commenting out of the excludeList temporarily..
 
-	// Deprecated resources due to better alternatives
-	ResourceTypes.ApplicationAnomalies,    // Replaced by dynatrace_web_app_anomalies
-	ResourceTypes.ApplicationDataPrivacy,  // Replaced by dynatrace_data_privacy and dynatrace_session_replay_web_privacy
-	ResourceTypes.AutoTag,                 // Replaced by dynatrace_autotag_v2
-	ResourceTypes.CloudFoundryCredentials, // Replaced by dynatrace_cloud_foundry
-	ResourceTypes.Dashboard,               // Replaced by dynatrace_json_dashboard
-	ResourceTypes.DatabaseAnomalies,       // Replaced by dynatrace_database_anomalies_v2
-	ResourceTypes.DiskEventAnomalies,      // Replaced by dynatrace_disk_anomaly_rules
-	ResourceTypes.HostAnomalies,           // Replaced by dynatrace_host_anomalies_v2
-	ResourceTypes.KubernetesCredentials,   // Replaced by dynatrace_kubernetes
-	ResourceTypes.ManagementZone,          // Replaced by dynatrace_management_zone_v2
-	ResourceTypes.ProcessGroupAnomalies,   // Replaced by dynatrace_pg_alerting
-	ResourceTypes.ServiceAnomalies,        // Replaced by dynatrace_service_anomalies_v2
-	ResourceTypes.SLO,                     // Replaced by dynatrace_slo_v2
+	{
+		Reason: "Officially deprecated resources (EOL)",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.AlertingProfile, "Replaced by dynatrace_alerting"},
+			{ResourceTypes.CustomAnomalies, "Replaced by dynatrace_metric_events"},
+			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance"},
+			{ResourceTypes.Notification, "Replaced by dynatrace_<type>_notification"},
+		},
+	},
+	{
+		Reason: "Deprecated resources due to better alternatives",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.ApplicationAnomalies, "Replaced by dynatrace_web_app_anomalies"},
+			{ResourceTypes.ApplicationDataPrivacy, "Replaced by dynatrace_data_privacy and dynatrace_session_replay_web_privacy"},
+			{ResourceTypes.AutoTag, "Replaced by dynatrace_autotag_v2"},
+			{ResourceTypes.CloudFoundryCredentials, "Replaced by dynatrace_cloud_foundry"},
+			{ResourceTypes.Dashboard, "Replaced by dynatrace_json_dashboard"},
+			{ResourceTypes.DatabaseAnomalies, "Replaced by dynatrace_database_anomalies_v2"},
+			{ResourceTypes.DiskEventAnomalies, "Replaced by dynatrace_disk_anomaly_rules"},
+			{ResourceTypes.HostAnomalies, "Replaced by dynatrace_host_anomalies_v2"},
+			{ResourceTypes.KubernetesCredentials, "Replaced by dynatrace_kubernetes"},
+			{ResourceTypes.ManagementZone, "Replaced by dynatrace_management_zone_v2"},
+			{ResourceTypes.ProcessGroupAnomalies, "Replaced by dynatrace_pg_alerting"},
+			{ResourceTypes.ServiceAnomalies, "Replaced by dynatrace_service_anomalies_v2"},
+			{ResourceTypes.SLO, "Replaced by dynatrace_slo_v2"},
+		},
+	},
+	{
+		Reason: "Resources waiting for full coverage to deprecate v1/v2 counterpart",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.ApplicationDetectionV2, "Ordering of Settings is not yet supported. Use `dynatrace_application_detection_rule` instead"},
+			{ResourceTypes.MobileAppRequestErrors, "JS errors missing, use dynatrace_application_error_rules"},
+			{ResourceTypes.WebAppCustomErrors, "JS errors missing, use dynatrace_application_error_rules"},
+			{ResourceTypes.WebAppRequestErrors, "JS errors missing, use dynatrace_application_error_rules"},
+		},
+	},
+	{
+		Reason: "Excluded since configuration is under account management",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.IAMUser, ""},
+			{ResourceTypes.IAMGroup, ""},
+			{ResourceTypes.IAMPermission, ""},
+			{ResourceTypes.IAMPolicy, ""},
+			{ResourceTypes.IAMPolicyBindings, ""},
+			{ResourceTypes.IAMPolicyBindingsV2, ""},
+		},
+	},
+	{
+		Reason: "Cluster Resources",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.Policy, ""},
+		},
+	},
+	{
+		Reason: "Excluded since it requires a personal token",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.UserSettings, ""},
+		},
+	},
+	{
+		Reason: "May cause issues for migration use cases",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.MetricMetadata, ""},
+			{ResourceTypes.MetricQuery, ""},
+		},
+	},
+	{
+		Reason: "Not included in export - to be discussed",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.AzureService, ""},
+			{ResourceTypes.AWSService, ""},
+			{ResourceTypes.AutomationWorkflow, ""},
+			{ResourceTypes.PlatformBucket, ""},
+			{ResourceTypes.AutomationBusinessCalendar, ""},
+			{ResourceTypes.AutomationSchedulingRule, ""},
+			{ResourceTypes.AGToken, ""},
+			{ResourceTypes.MobileAppKeyPerformance, ""},
+		},
+	},
+	{
+		Reason: "Excluded due to potential time consuming execution",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.CustomTags, ""},
+			{ResourceTypes.CustomDevice, ""},
+		},
+	},
+	{
+		Reason: "Deprecated since it is only meant to be used for the initial Logs powered by Grail activation",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.LogGrail, ""},
+		},
+	},
+	{
+		Reason: "Excluding AppSec resources from default export since it requires the feature to be activated",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.AppSecVulnerabilitySettings, ""},
+			{ResourceTypes.AppSecVulnerabilityThirdParty, ""},
+			{ResourceTypes.AppSecVulnerabilityCode, ""},
+			{ResourceTypes.AppSecNotification, ""},
+			{ResourceTypes.AppSecVulnerabilityAlerting, ""},
+			{ResourceTypes.AppSecAttackAlerting, ""},
+			{ResourceTypes.AppSecAttackSettings, ""},
+			{ResourceTypes.AppSecAttackRules, ""},
+			{ResourceTypes.AppSecAttackAllowlist, ""},
+		},
+	},
+	{
+		Reason: "Excluding resources that require apps from Dynatrace Hub",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.SiteReliabilityGuardian, ""},
+			{ResourceTypes.JiraForWorkflows, ""},
+			{ResourceTypes.SlackForWorkflows, ""},
+		},
+	},
+	{
+		Reason: "Excluded because it can be used against any schema",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.GenericSetting, ""},
+		},
+	},
+}
 
-	// Resources waiting for full coverage to deprecate v1/v2 counterpart
-	ResourceTypes.ApplicationDetectionV2, // Cannot handle ordering, use dynatrace_application_detection_rule
-	ResourceTypes.MobileAppRequestErrors, // JS errors missing, use dynatrace_application_error_rules
-	ResourceTypes.WebAppCustomErrors,     // JS errors missing, use dynatrace_application_error_rules
-	ResourceTypes.WebAppRequestErrors,    // JS errors missing, use dynatrace_application_error_rules
+var excludeListedResources = genExcludeListedResourceGroups()
 
-	// Excluded since configuration is under account management
-	ResourceTypes.IAMUser,
-	ResourceTypes.IAMGroup,
-	ResourceTypes.IAMPermission,
-	ResourceTypes.IAMPolicy,
-	ResourceTypes.IAMPolicyBindings,
-	ResourceTypes.IAMPolicyBindingsV2,
-
-	// Cluster Resources
-	ResourceTypes.Policy,
-
-	ResourceTypes.UserSettings, // Excluded since it requires a personal token
-
-	// Not included in export - to be discussed
-	ResourceTypes.AzureService,
-	ResourceTypes.AWSService,
-	ResourceTypes.AutomationWorkflow,
-	ResourceTypes.AutomationBusinessCalendar,
-	ResourceTypes.AutomationSchedulingRule,
-	ResourceTypes.AGToken,
-	ResourceTypes.MobileAppKeyPerformance,
-
-	// Not included in export - may cause issues for migration use cases
-	ResourceTypes.MetricMetadata,
-	ResourceTypes.MetricQuery,
-
-	// Not included in default export -  excluded due to potential time consuming execution
-	ResourceTypes.CustomTags,
-	ResourceTypes.CustomDevice,
-
-	// Deprecated since it is only meant to be used for the initial Logs powered by Grail activation
-	ResourceTypes.LogGrail,
-
-	// Excluding AppSec resources from default export since it requires the feature to be activated
-	ResourceTypes.AppSecVulnerabilitySettings,
-	ResourceTypes.AppSecVulnerabilityThirdParty,
-	ResourceTypes.AppSecVulnerabilityCode,
-	ResourceTypes.AppSecNotification,
-	ResourceTypes.AppSecVulnerabilityAlerting,
-	ResourceTypes.AppSecAttackAlerting,
-	ResourceTypes.AppSecAttackSettings,
-	ResourceTypes.AppSecAttackRules,
-	ResourceTypes.AppSecAttackAllowlist,
-
-	// Excluding resources that require apps from Dynatrace Hub
-	ResourceTypes.SiteReliabilityGuardian,
-	ResourceTypes.JiraForWorkflows,
-	ResourceTypes.SlackForWorkflows,
-
-	// Incubator
-	ResourceTypes.GenericSetting,
-	ResourceTypes.PlatformBucket,
+func genExcludeListedResourceGroups() []ResourceType {
+	result := []ResourceType{}
+	for _, eg := range GetExcludeListedResourceGroups() {
+		for _, ex := range eg.Exclusions {
+			result = append(result, ex.ResourceType)
+		}
+	}
+	return result
 }
 
 var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
+
+func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
+	if ENABLE_EXPORT_DASHBOARD {
+		return excludeListedResourceGroups
+	}
+
+	return append(excludeListedResourceGroups, ResourceExclusionGroup{
+		Reason: "Production Environments may contain 10k+ Dashboards",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.JSONDashboard, ""},
+			{ResourceTypes.DashboardSharing, ""},
+			{ResourceTypes.JSONDashboardBase, ""},
+		},
+	})
+}
 
 func GetExcludeListedResources() []ResourceType {
 

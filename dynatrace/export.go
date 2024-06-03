@@ -30,8 +30,34 @@ func Export(args []string) bool {
 	if len(args) == 1 {
 		return false
 	}
+
 	if strings.TrimSpace(args[1]) != "-export" {
 		return false
+	}
+
+	if len(args) > 1 {
+		if strings.TrimSpace(args[2]) == "-list-exclusions" {
+			for _, group := range export.GetExcludeListedResourceGroups() {
+				fmt.Println(group.Reason)
+				// Calculate the maximum length of the name field
+				maxNameLength := 0
+				for _, exclusion := range group.Exclusions {
+					if len(exclusion.ResourceType) > maxNameLength {
+						maxNameLength = len(exclusion.ResourceType)
+					}
+				}
+
+				for _, exclusion := range group.Exclusions {
+					if len(exclusion.Reason) == 0 {
+						fmt.Printf("  %s\n", exclusion.ResourceType)
+					} else {
+						fmt.Printf("  %-*s  ... %s\n", maxNameLength, exclusion.ResourceType, exclusion.Reason)
+					}
+				}
+				fmt.Println()
+			}
+			return true
+		}
 	}
 
 	// defer export.CleanUp.Finish()

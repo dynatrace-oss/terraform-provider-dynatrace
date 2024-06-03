@@ -30,6 +30,7 @@ Linux: `./terraform-provider-dynatrace -export [-ref] [-migrate] [-import-state]
 
 ### Usage Examples
 * `./terraform-provider-dynatrace -export` downloads all available configuration settings without data sources and dependency references (export similar to previous version)
+* `./terraform-provider-dynatrace -export -list-exclusions` prints out a list of resources that are not getting exported unless specified explicitly
 * `./terraform-provider-dynatrace -export -ref -id` downloads all available configuration settings with data sources / dependency references and adds commented ids in resource output
 * `./terraform-provider-dynatrace -export -ref dynatrace_dashboard dynatrace_web_application` downloads all available dashboards, web applications and resource dependencies with references
 * `./terraform-provider-dynatrace -export -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads the alerting profiles with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`, includes all resource dependencies with references
