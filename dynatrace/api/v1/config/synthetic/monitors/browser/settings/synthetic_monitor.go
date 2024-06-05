@@ -96,9 +96,9 @@ func (me *SyntheticMonitor) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			MinItems:    1,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-				return true
-			},
+			// DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+			// 	return true
+			// },
 		},
 		"tags": {
 			Type:        schema.TypeList,
