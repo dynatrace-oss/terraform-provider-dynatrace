@@ -76,42 +76,61 @@ func Initialize() (environment *Environment, err error) {
 	} else {
 		effectiveTailArgs := []string{}
 		for _, idx := range tailArgs {
-			idx = ToParent(idx)
-			effectiveTailArgs = append(effectiveTailArgs, idx)
-			key, id := ValidateResource(idx)
-			if len(key) == 0 {
-				return nil, fmt.Errorf("unknown resource `%s`", idx)
-			}
+			if idx == "*" {
+				effectiveTailArgs = append(effectiveTailArgs, "*")
+			} else {
+				idx = ToParent(idx)
+				effectiveTailArgs = append(effectiveTailArgs, idx)
+				key, id := ValidateResource(idx)
+				if len(key) == 0 {
+					return nil, fmt.Errorf("unknown resource `%s`", idx)
+				}
 
-			for _, child := range ResourceType(key).GetChildren() {
-				if len(id) == 0 {
-					effectiveTailArgs = append(effectiveTailArgs, string(child))
-				} else {
-					effectiveTailArgs = append(effectiveTailArgs, string(child)+"="+id)
+				for _, child := range ResourceType(key).GetChildren() {
+					if len(id) == 0 {
+						effectiveTailArgs = append(effectiveTailArgs, string(child))
+					} else {
+						effectiveTailArgs = append(effectiveTailArgs, string(child)+"="+id)
+					}
 				}
 			}
 		}
 		for _, idx := range effectiveTailArgs {
-			key, id := ValidateResource(idx)
-			if len(key) == 0 {
-				return nil, fmt.Errorf("unknown resource `%s`", idx)
-			}
-			stored, ok := resArgs[key]
-			if ok {
-				if stored != nil {
-					if id == "" {
-						resArgs[key] = nil
-					} else {
-						stored = append(stored, id)
-						resArgs[key] = stored
+			if idx == "*" {
+				for resourceType := range AllResources {
+					excludeListed := false
+					for _, excludeListedResourceType := range GetExcludeListedResources() {
+						if resourceType == excludeListedResourceType {
+							excludeListed = true
+							break
+						}
+					}
+					if !excludeListed {
+						resArgs[string(resourceType)] = nil
 					}
 				}
 			} else {
-				if id == "" {
-					resArgs[key] = nil
+				key, id := ValidateResource(idx)
+				if len(key) == 0 {
+					return nil, fmt.Errorf("unknown resource `%s`", idx)
+				}
+				stored, ok := resArgs[key]
+				if ok {
+					if stored != nil {
+						if id == "" {
+							resArgs[key] = nil
+						} else {
+							stored = append(stored, id)
+							resArgs[key] = stored
+						}
+					}
 				} else {
-					stored = []string{id}
-					resArgs[key] = stored
+					if id == "" {
+						resArgs[key] = nil
+					} else {
+						stored = []string{id}
+						resArgs[key] = stored
+					}
 				}
 			}
 		}
@@ -254,4 +273,5 @@ type Flags struct {
 	Exclude             bool
 	DataSources         bool
 	SkipTerraformInit   bool
+	Include             bool
 }
