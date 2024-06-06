@@ -27,7 +27,7 @@ The full documentation of the export feature is available [here](https://registr
 ```terraform
 resource "dynatrace_log_events" "#name#" {
   enabled = false
-  query   = "content=\"terraform\""
+  query   = "matchesPhrase(content, \"terratest\")"
   summary = "Created by Terraform"
   event_template {
     description = "Created by Terraform"

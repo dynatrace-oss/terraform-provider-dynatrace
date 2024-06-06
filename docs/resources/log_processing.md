@@ -27,10 +27,10 @@ The full documentation of the export feature is available [here](https://registr
 ```terraform
 resource "dynatrace_log_processing" "#name#" {
   enabled   = false
-  query     = "content=\"terraform\""
+  query     = "matchesPhrase(content, \"terratest\")"
   rule_name = "#name#"
   processor_definition {
-    rule =<<-EOT
+    rule = <<-EOT
       PARSE(content,"LD 'total: ' INT:total '; failed: ' INT:failed")
       | FIELDS_ADD(failed.percentage: 100.0 * failed / total + '%')
       | FIELDS_REMOVE(total, failed)
@@ -38,8 +38,8 @@ resource "dynatrace_log_processing" "#name#" {
   }
   rule_testing {
     sample_log = jsonencode({
-          "content": ""
-      })
+      "content" : ""
+    })
   }
 }
 ```
