@@ -1,6 +1,6 @@
 resource "dynatrace_log_processing" "first-instance" {
   enabled   = false
-  query     = "content=\"terraform\""
+  query     = "matchesPhrase(content, \"terratest\")"
   rule_name = "#name#"
   processor_definition {
     rule = <<-EOT
@@ -18,7 +18,7 @@ resource "dynatrace_log_processing" "first-instance" {
 
 resource "dynatrace_log_processing" "second-instance" {
   enabled   = false
-  query     = "content=\"terraform\""
+  query     = "matchesPhrase(content, \"terratest\")"
   rule_name = "#name#-second"
   processor_definition {
     rule = <<-EOT
