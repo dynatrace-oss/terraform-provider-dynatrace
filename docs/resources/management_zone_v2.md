@@ -388,11 +388,11 @@ Optional:
 - `azure_to_pgpropagation` (Boolean) Apply to process groups connected to matching Azure entities
 - `azure_to_service_propagation` (Boolean) Apply to services provided by matching Azure entities
 - `custom_device_group_to_custom_device_propagation` (Boolean) Apply to custom devices in a custom device group
-- `host_to_pgpropagation` (Boolean) Apply to processes running on matching hosts
-- `pg_to_host_propagation` (Boolean) Apply to underlying hosts of matching process groups
-- `pg_to_service_propagation` (Boolean) Apply to all services provided by the process groups
-- `service_to_host_propagation` (Boolean) Apply to underlying hosts of matching services
-- `service_to_pgpropagation` (Boolean) Apply to underlying process groups of matching services
+- `host_to_pgpropagation` (Boolean) Apply to processes running on matching hosts. `entity_type` must be set to `HOST`
+- `pg_to_host_propagation` (Boolean) Apply to underlying hosts of matching process groups. `entity_type` must be set to `PROCESS_GROUP`
+- `pg_to_service_propagation` (Boolean) Apply to all services provided by the process groups. `entity_type` must be set to `PROCESS_GROUP`
+- `service_to_host_propagation` (Boolean) Apply to underlying hosts of matching services. `entity_type` must be set to `SERVICE`
+- `service_to_pgpropagation` (Boolean) Apply to underlying process groups of matching services. `entity_type` must be set to `SERVICE`
 
 <a id="nestedblock--rules--rule--attribute_rule--attribute_conditions"></a>
 ### Nested Schema for `rules.rule.attribute_rule.attribute_conditions`
