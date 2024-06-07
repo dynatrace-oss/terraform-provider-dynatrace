@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"reflect"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging"
 	auto_tag_rule_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging/rules/settings"
@@ -47,6 +48,29 @@ func Resource() *schema.Resource {
 	}
 }
 
+// Fix for #476
+// Multiple instances of `dynatrace_autotag_rules` must not get applied in parallel
+// ... unless they are addressing a different auto tag
+// (i.e. refer to a different `dynatrace_autotag.<resourcename>.id`)
+type multiMutex struct {
+	lock    *sync.Mutex
+	mutexes map[string]*sync.Mutex
+}
+
+func (m *multiMutex) Get(id string) *sync.Mutex {
+	m.lock.Lock()
+	var res *sync.Mutex
+	var found bool
+	defer m.lock.Unlock()
+	if res, found = m.mutexes[id]; !found {
+		res = new(sync.Mutex)
+		m.mutexes[id] = res
+	}
+	return res
+}
+
+var mmu = &multiMutex{lock: new(sync.Mutex), mutexes: make(map[string]*sync.Mutex)}
+
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
@@ -59,6 +83,12 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
+
+	// Fix for #476 - see documentation for `multiMutex`
+	mu := mmu.Get(tfConfig.AutoTagId)
+	mu.Lock()
+	defer mu.Unlock()
+
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
 	if err := autotagging.Service(creds).Get(tfConfig.AutoTagId, apiConfig); err != nil {
@@ -114,6 +144,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
+
+	// Fix for #476 - see documentation for `multiMutex`
+	mu := mmu.Get(tfConfig.AutoTagId)
+	mu.Lock()
+	defer mu.Unlock()
+
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
 	if err := autotagging.Service(creds).Get(tfConfig.AutoTagId, apiConfig); err != nil {
@@ -186,6 +222,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 			}
 		}
 	}
+
+	// Fix for #476 - see documentation for `multiMutex`
+	mu := mmu.Get(stateConfig.AutoTagId)
+	mu.Lock()
+	defer mu.Unlock()
+
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
 	if err := autotagging.Service(creds).Get(stateConfig.AutoTagId, apiConfig); err != nil {
@@ -235,6 +277,12 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 			}
 		}
 	}
+
+	// Fix for #476 - see documentation for `multiMutex`
+	mu := mmu.Get(stateConfig.AutoTagId)
+	mu.Lock()
+	defer mu.Unlock()
+
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
 	if err := autotagging.Service(creds).Get(stateConfig.AutoTagId, apiConfig); err != nil {
