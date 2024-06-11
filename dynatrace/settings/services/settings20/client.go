@@ -25,8 +25,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
+	"golang.org/x/oauth2"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/go-logr/logr"
@@ -165,6 +165,19 @@ func (c client) Create(ctx context.Context, scope string, data []byte) (Response
 	}
 	resp, err := c.create(ctx, dsoc)
 	if err != nil {
+		if unwrappedErr := errors.Unwrap(err); unwrappedErr != nil {
+			if ue, ok := unwrappedErr.(*url.Error); ok {
+				if uwue := errors.Unwrap(ue); uwue != nil {
+					if retrieveErr, ok := uwue.(*oauth2.RetrieveError); ok {
+						data := "oauth token error"
+						if (retrieveErr.Body != nil) && len(retrieveErr.Body) > 0 {
+							data = data + ": " + string(retrieveErr.Body)
+						}
+						return Response{Response: api.Response{StatusCode: retrieveErr.Response.StatusCode, Data: []byte(data), Request: RequestInfo(nil)}, ID: ""}, err
+					}
+				}
+			}
+		}
 		return Response{}, err
 	}
 	tmp := []struct {
@@ -415,7 +428,6 @@ func UpdateRequiresOAuth(response Response) bool {
 	}
 	sor := SettingsObjectResponse{}
 	if err := json.Unmarshal(response.Data, &sor); err != nil {
-		logging.File.Println(err)
 		return false
 	}
 	return sor.RequiresOAuth()
