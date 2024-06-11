@@ -33,7 +33,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"golang.org/x/oauth2"
@@ -147,7 +146,6 @@ func (me *service) Client(schemaIDs string) *settings20.Client {
 				AuthStyle:    oauth2.AuthStyleInParams}),
 		crest.WithHTTPListener(httpListener),
 	)
-	logging.File.Println(me.credentials.Automation.TokenURL)
 
 	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
 	oauthClient.SetHeader("Authorization", "Api-Token "+me.credentials.Token)
