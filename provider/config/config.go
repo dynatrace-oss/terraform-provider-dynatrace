@@ -170,11 +170,11 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
 		}
 		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automationEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatrace.com", match[1])
+			automationEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
 			automationTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
 		}
 		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automationEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatrace.com", match[1])
+			automationEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
 			automationTokenURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
 		}
 	}
