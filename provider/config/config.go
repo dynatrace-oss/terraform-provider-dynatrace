@@ -133,6 +133,10 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 	return ProviderConfigureGeneric(ctx, d)
 }
 
+var regexpSaasTenant = regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
+var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dynatracelabs.com`)
+var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
+
 func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnostics) {
 	dtEnvURL := d.Get("dt_env_url").(string)
 	apiToken := d.Get("dt_api_token").(string)
@@ -141,9 +145,14 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 
 	dtEnvURL = strings.TrimSuffix(strings.TrimSuffix(dtEnvURL, " "), "/")
 	if len(dtEnvURL) != 0 {
-		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-		if match := re.FindStringSubmatch(dtEnvURL); match != nil && len(match) > 0 {
+		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
 			dtEnvURL = fmt.Sprintf("https://%s.live.dynatrace.com", match[1])
+		}
+		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
+			dtEnvURL = fmt.Sprintf("https://%s.sprint.dynatracelabs.com", match[1])
+		}
+		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
+			dtEnvURL = fmt.Sprintf("https://%s.dev.dynatracelabs.com", match[1])
 		}
 	}
 
@@ -156,10 +165,17 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	automationEnvironmentURL := getString(d, "automation_env_url")
 	automationTokenURL := getString(d, "automation_token_url")
 	if len(automationEnvironmentURL) == 0 {
-		re := regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-		if match := re.FindStringSubmatch(dtEnvURL); match != nil && len(match) > 0 {
+		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
 			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
 			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
+		}
+		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
+			automationEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatrace.com", match[1])
+			automationTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
+		}
+		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
+			automationEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatrace.com", match[1])
+			automationTokenURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
 		}
 	}
 
