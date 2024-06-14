@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/dlclark/regexp2 v1.11.0
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.5.0
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.5.1
 	github.com/go-logr/logr v1.4.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
@@ -16,7 +16,7 @@ require (
 	github.com/spf13/afero v1.11.0
 	github.com/zclconf/go-cty v1.14.2
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
-	golang.org/x/oauth2 v0.17.0
+	golang.org/x/oauth2 v0.18.0
 	golang.org/x/sync v0.6.0
 )
 
