@@ -23,16 +23,20 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
+	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/automation"
+	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*workflows.Workflow] {
@@ -51,18 +55,18 @@ var lock sync.Mutex
 
 func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	lock.Lock()
-	rest.Logger.Println(req.Method, req.URL)
+	tfrest.Logger.Println(req.Method, req.URL)
 	if req.Body != nil {
 		buf := new(bytes.Buffer)
 		io.Copy(buf, req.Body)
 		data := buf.Bytes()
-		rest.Logger.Println("  ", string(data))
+		tfrest.Logger.Println("  ", string(data))
 		req.Body = io.NopCloser(bytes.NewBuffer(data))
 	}
 	lock.Unlock()
 	resp, err := rt.RoundTripper.RoundTrip(req)
 	if err != nil {
-		rest.Logger.Println(err.Error())
+		tfrest.Logger.Println(err.Error())
 	}
 	if resp != nil {
 		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
@@ -71,14 +75,16 @@ func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 				io.Copy(buf, resp.Body)
 				data := buf.Bytes()
 				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				rest.Logger.Println(resp.Status, string(data))
+				tfrest.Logger.Println(resp.Status, string(data))
 			} else {
-				rest.Logger.Println(resp.Status)
+				tfrest.Logger.Println(resp.Status)
 			}
 		}
 	}
 	return resp, err
 }
+
+var R automation.Response
 
 func (me *service) client() *automation.Client {
 	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
@@ -93,36 +99,51 @@ func (me *service) client() *automation.Client {
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
 	})
-	return automation.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
+	u, _ := url.Parse(me.credentials.Automation.EnvironmentURL)
+	return automation.NewClient(rest.NewClient(u, httpClient))
 }
 
-func (me *service) Get(id string, v *workflows.Workflow) (err error) {
-	var result *automation.Response
-	if result, err = me.client().GET(automation.Workflows, id); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
-		}
+func (me *service) Get(id string, v *workflows.Workflow) error {
+	var err error
+	var response automation.Response
+	if response, err = me.client().Get(context.TODO(), apiClient.Workflows, id); err != nil {
 		return err
 	}
-	return json.Unmarshal(result.Data, &v)
+	if response.StatusCode != 200 {
+		var e automationerr.ErrorEnvelope
+		if e.Unmarshal(response.Data) {
+			return e.Err.ToRESTError()
+		}
+		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	}
+
+	return json.Unmarshal(response.Data, &v)
 }
 
 func (me *service) SchemaID() string {
 	return "automation:workflows"
 }
 
+type WorkflowStub struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+}
+
 func (me *service) List() (api.Stubs, error) {
-	result, err := me.client().LIST(automation.Workflows)
+	listResponse, err := me.client().List(context.TODO(), apiClient.Workflows)
 	if err != nil {
 		return nil, err
 	}
+	if apiErr, ok := listResponse.AsAPIError(); ok {
+		return nil, tfrest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
+	}
 	var stubs api.Stubs
-	for _, r := range result {
-		var workflow workflows.Workflow
-		if err := json.Unmarshal(r.Data, &workflow); err != nil {
+	for _, r := range listResponse.All() {
+		var workflowStub WorkflowStub
+		if err := json.Unmarshal(r, &workflowStub); err != nil {
 			return nil, err
 		}
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: workflow.Title})
+		stubs = append(stubs, &api.Stub{ID: workflowStub.ID, Name: workflowStub.Title})
 	}
 	return stubs, nil
 }
@@ -133,17 +154,25 @@ func (me *service) Validate(v *workflows.Workflow) error {
 
 func (me *service) Create(v *workflows.Workflow) (stub *api.Stub, err error) {
 	var data []byte
-	var id string
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	if id, err = me.client().INSERT(automation.Workflows, data); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return nil, rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
-		}
+	var response automation.Response
+	if response, err = me.client().Create(context.TODO(), apiClient.Workflows, data); err != nil {
 		return nil, err
 	}
-	return &api.Stub{Name: v.Title, ID: id}, nil
+	if response.StatusCode == 201 {
+		var workflowStub WorkflowStub
+		if err := json.Unmarshal(response.Data, &workflowStub); err != nil {
+			return nil, err
+		}
+		return &api.Stub{Name: v.Title, ID: workflowStub.ID}, nil
+	}
+	var e automationerr.ErrorEnvelope
+	if e.Unmarshal(response.Data) {
+		return nil, e.Err.ToRESTError()
+	}
+	return nil, tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) Update(id string, v *workflows.Workflow) (err error) {
@@ -151,21 +180,27 @@ func (me *service) Update(id string, v *workflows.Workflow) (err error) {
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	if err = me.client().UPDATE(automation.Workflows, id, data); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
-		}
+	var response automation.Response
+	if response, err = me.client().Update(context.TODO(), apiClient.Workflows, id, data); err != nil {
+		return err
 	}
-	return err
+	if response.StatusCode == 200 {
+		return nil
+	}
+	var e automationerr.ErrorEnvelope
+	if e.Unmarshal(response.Data) {
+		return e.Err.ToRESTError()
+	}
+	return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) Delete(id string) error {
-	err := me.client().DELETE(automation.Workflows, id)
-	if responseErr, ok := err.(automation.ResponseErr); ok {
-		if responseErr.StatusCode == 404 {
-			return nil
-		}
-		return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
+	response, err := me.client().Delete(context.TODO(), apiClient.Workflows, id)
+	if response.StatusCode == 204 || response.StatusCode == 404 {
+		return nil
+	}
+	if response.StatusCode != 0 {
+		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 	}
 	return err
 }
