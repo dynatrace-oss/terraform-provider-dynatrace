@@ -20,14 +20,20 @@ package business_calendars
 import (
 	"context"
 	"encoding/json"
+	"net/http"
+	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
+	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/automation"
+	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*business_calendars.Settings] {
@@ -39,41 +45,61 @@ type service struct {
 }
 
 func (me *service) client() *automation.Client {
+	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
+		if http.DefaultClient.Transport == nil {
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
+		} else {
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
+		}
+	}
 	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
 		ClientID:     me.credentials.Automation.ClientID,
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
 	})
-	return automation.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
+	u, _ := url.Parse(me.credentials.Automation.EnvironmentURL)
+	return automation.NewClient(rest.NewClient(u, httpClient))
 }
 
 func (me *service) Get(id string, v *business_calendars.Settings) (err error) {
-	var result *automation.Response
-	if result, err = me.client().GET(automation.BusinessCalendars, id); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
-		}
+	var response automation.Response
+	if response, err = me.client().Get(context.TODO(), apiClient.BusinessCalendars, id); err != nil {
 		return err
 	}
-	return json.Unmarshal(result.Data, &v)
+	if response.StatusCode != 200 {
+		var e automationerr.ErrorEnvelope
+		if e.Unmarshal(response.Data) {
+			return e.Err.ToRESTError()
+		}
+		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	}
+	return json.Unmarshal(response.Data, &v)
 }
 
 func (me *service) SchemaID() string {
 	return "automation:business.calendars"
 }
 
+type BusinessCalendarStub struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+}
+
 func (me *service) List() (api.Stubs, error) {
-	result, err := me.client().LIST(automation.BusinessCalendars)
+	listResponse, err := me.client().List(context.TODO(), apiClient.BusinessCalendars)
 	if err != nil {
 		return nil, err
 	}
+	if apiErr, ok := listResponse.AsAPIError(); ok {
+		return nil, tfrest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
+	}
 	var stubs api.Stubs
-	for _, r := range result {
-		var setting business_calendars.Settings
-		if err := json.Unmarshal(r.Data, &setting); err != nil {
+	for _, r := range listResponse.All() {
+		var stub BusinessCalendarStub
+		if err := json.Unmarshal(r, &stub); err != nil {
 			return nil, err
 		}
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: setting.Title})
+		stubs = append(stubs, &api.Stub{ID: stub.ID, Name: stub.Title})
 	}
 	return stubs, nil
 }
@@ -84,17 +110,25 @@ func (me *service) Validate(v *business_calendars.Settings) error {
 
 func (me *service) Create(v *business_calendars.Settings) (stub *api.Stub, err error) {
 	var data []byte
-	var id string
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	if id, err = me.client().INSERT(automation.BusinessCalendars, data); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return nil, rest.Error{Code: responseErr.StatusCode, Message: responseErr.Message}
-		}
+	var response automation.Response
+	if response, err = me.client().Create(context.TODO(), apiClient.BusinessCalendars, data); err != nil {
 		return nil, err
 	}
-	return &api.Stub{Name: v.Title, ID: id}, nil
+	if response.StatusCode == 201 {
+		var stub BusinessCalendarStub
+		if err := json.Unmarshal(response.Data, &stub); err != nil {
+			return nil, err
+		}
+		return &api.Stub{Name: v.Title, ID: stub.ID}, nil
+	}
+	var e automationerr.ErrorEnvelope
+	if e.Unmarshal(response.Data) {
+		return nil, e.Err.ToRESTError()
+	}
+	return nil, tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) Update(id string, v *business_calendars.Settings) (err error) {
@@ -102,21 +136,27 @@ func (me *service) Update(id string, v *business_calendars.Settings) (err error)
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	if err = me.client().UPDATE(automation.BusinessCalendars, id, data); err != nil {
-		if responseErr, ok := err.(automation.ResponseErr); ok {
-			return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
-		}
+	var response automation.Response
+	if response, err = me.client().Update(context.TODO(), apiClient.BusinessCalendars, id, data); err != nil {
+		return err
 	}
-	return err
+	if response.StatusCode == 200 {
+		return nil
+	}
+	var e automationerr.ErrorEnvelope
+	if e.Unmarshal(response.Data) {
+		return e.Err.ToRESTError()
+	}
+	return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) Delete(id string) error {
-	err := me.client().DELETE(automation.BusinessCalendars, id)
-	if responseErr, ok := err.(automation.ResponseErr); ok {
-		if responseErr.StatusCode == 404 {
-			return nil
-		}
-		return rest.Error{Code: responseErr.StatusCode, Message: string(responseErr.Data)}
+	response, err := me.client().Delete(context.TODO(), apiClient.BusinessCalendars, id)
+	if response.StatusCode == 204 || response.StatusCode == 404 {
+		return nil
+	}
+	if response.StatusCode != 0 {
+		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 	}
 	return err
 }
