@@ -23,9 +23,10 @@ import (
 )
 
 type Settings struct {
-	Description *string `json:"description,omitempty"` // Description
-	Name        string  `json:"name"`                  // Tag name
-	Rules       Rules   `json:"rules,omitempty"`       // Rules
+	Description               *string `json:"description,omitempty"` // Description
+	Name                      string  `json:"name"`                  // Tag name
+	Rules                     Rules   `json:"rules,omitempty"`       // Rules
+	RulesMaintainedExternally bool    `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -40,6 +41,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Tag name",
 			Required:    true,
 		},
+		"rules_maintained_externally": {
+			Type:        schema.TypeBool,
+			Description: "If `true` this resource will not ",
+			Optional:    true,
+			Default:     false,
+		},
 		"rules": {
 			Type:        schema.TypeList,
 			Description: "Rules",
@@ -53,17 +60,19 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"description": me.Description,
-		"name":        me.Name,
-		"rules":       me.Rules,
+		"description":                 me.Description,
+		"name":                        me.Name,
+		"rules":                       me.Rules,
+		"rules_maintained_externally": me.RulesMaintainedExternally,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeAll(map[string]any{
-		"description": &me.Description,
-		"name":        &me.Name,
-		"rules":       &me.Rules,
+		"description":                 &me.Description,
+		"name":                        &me.Name,
+		"rules":                       &me.Rules,
+		"rules_maintained_externally": &me.RulesMaintainedExternally,
 	}); err != nil {
 		return err
 	}
