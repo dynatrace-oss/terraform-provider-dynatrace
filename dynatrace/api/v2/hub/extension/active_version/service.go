@@ -128,10 +128,6 @@ func (me *service) New() *active_version.Settings {
 	return new(active_version.Settings)
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 type GetActiveEnvironmentConfigurationResponse struct {
 	Version string `json:"version"`
 }

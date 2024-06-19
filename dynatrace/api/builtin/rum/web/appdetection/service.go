@@ -98,10 +98,6 @@ func (me *service) Delete(id string) error {
 	return me.service.Delete(id)
 }
 
-func (me *service) Name() string {
-	return me.service.Name()
-}
-
 func Duplicates(service settings.RService[*appdetection.Settings], v *appdetection.Settings) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_application_detection_rule_v2") {
 		var err error

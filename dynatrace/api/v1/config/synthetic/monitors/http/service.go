@@ -89,10 +89,6 @@ func (me *service) List() (api.Stubs, error) {
 	return me.service.List()
 }
 
-func (me *service) Name() string {
-	return me.service.Name()
-}
-
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }

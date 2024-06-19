@@ -156,7 +156,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *directshares.DirectShare {
 	return new(directshares.DirectShare)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

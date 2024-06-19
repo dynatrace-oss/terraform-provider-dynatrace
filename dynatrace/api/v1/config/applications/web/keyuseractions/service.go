@@ -236,7 +236,3 @@ func (me *service) List() (api.Stubs, error) {
 func (me *service) SchemaID() string {
 	return SchemaID
 }
-
-func (me *service) Name() string {
-	return SchemaID
-}

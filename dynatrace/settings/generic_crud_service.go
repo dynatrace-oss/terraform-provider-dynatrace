@@ -92,7 +92,3 @@ func (me *GenericCRUDService[T]) DeleteWithContext(ctx context.Context, id strin
 func (me *GenericCRUDService[T]) SchemaID() string {
 	return me.Service.SchemaID()
 }
-
-func (me *GenericCRUDService[T]) Name() string {
-	return me.Service.Name()
-}

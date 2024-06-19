@@ -76,7 +76,3 @@ func (s *service) Update(id string, v *detection.Rule) error {
 func (s *service) Delete(id string) error {
 	return s.service.Delete(id)
 }
-
-func (s *service) Name() string {
-	return s.service.Name()
-}

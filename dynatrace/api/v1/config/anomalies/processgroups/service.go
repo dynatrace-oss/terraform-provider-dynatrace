@@ -119,7 +119,3 @@ func (me *service) List() (api.Stubs, error) {
 func (me *service) New() *processgroups.AnomalyDetection {
 	return new(processgroups.AnomalyDetection)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

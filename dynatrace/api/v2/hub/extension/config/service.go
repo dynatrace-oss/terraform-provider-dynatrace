@@ -178,10 +178,6 @@ func (me *service) New() *extension_config.Settings {
 	return new(extension_config.Settings)
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 func injectScope(scope string, v *extension_config.Settings) {
 	v.ActiveGateGroup = ""
 	v.ManagementZone = ""

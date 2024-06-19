@@ -166,7 +166,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *scheduling_rules.Settings {
 	return new(scheduling_rules.Settings)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

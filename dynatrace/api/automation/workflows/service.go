@@ -170,7 +170,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *workflows.Workflow {
 	return new(workflows.Workflow)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

@@ -287,7 +287,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *customdevice.CustomDevice {
 	return new(customdevice.CustomDevice)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

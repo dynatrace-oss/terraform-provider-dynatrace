@@ -272,7 +272,3 @@ func (me *service) Delete(id string) error {
 	}
 	return me.client.Put(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID), reducedServices).Expect(204).Finish()
 }
-
-func (me *service) Name() string {
-	return SchemaID
-}

@@ -52,10 +52,6 @@ func (me *service) Delete(id string) error {
 	return me.serviceClient.Delete(id)
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 func (me *PolicyServiceClient) SchemaID() string {
 	return "accounts:policies"
 }

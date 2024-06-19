@@ -188,7 +188,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *documents.Document {
 	return new(documents.Document)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

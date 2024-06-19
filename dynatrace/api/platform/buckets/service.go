@@ -258,7 +258,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *buckets.Bucket {
 	return new(buckets.Bucket)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

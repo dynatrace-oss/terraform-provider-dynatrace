@@ -118,7 +118,3 @@ func (me *service) DeleteValue(v *customtags.Settings) error {
 func (me *service) New() *customtags.Settings {
 	return new(customtags.Settings)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

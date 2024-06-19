@@ -154,7 +154,3 @@ func (me *service) DeleteWithTechnology(id string, technology string) error {
 func (me *service) SchemaID() string {
 	return SchemaID
 }
-
-func (me *service) Name() string {
-	return SchemaID
-}

@@ -70,7 +70,6 @@ type CRUDService[T Settings] interface {
 	Create(v T) (*api.Stub, error)
 	Update(id string, v T) error
 	Delete(id string) error
-	Name() string
 }
 
 type Validator[T Settings] interface {

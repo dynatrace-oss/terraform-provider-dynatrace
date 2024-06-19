@@ -303,10 +303,6 @@ func (me *service) delete(id string, numRetries int) error {
 
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 func (me *service) SchemaID() string {
 	return "generic"
 }

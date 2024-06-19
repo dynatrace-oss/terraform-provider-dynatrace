@@ -48,10 +48,6 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Name() string {
-	return SchemaID
-}
-
 func (me *service) Create(v *order.Order) (*api.Stub, error) {
 	if err := me.client.Put("/api/config/v1/service/requestNaming/order", v, 204).Finish(); err != nil {
 		return nil, err

@@ -89,10 +89,6 @@ func (me *service) List() (api.Stubs, error) {
 	return me.httpService.List()
 }
 
-func (me *service) Name() string {
-	return me.scriptService.Name()
-}
-
 func (me *service) SchemaID() string {
 	return me.scriptService.SchemaID()
 }

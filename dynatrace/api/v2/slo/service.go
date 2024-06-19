@@ -203,7 +203,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *slo.SLO {
 	return new(slo.SLO)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

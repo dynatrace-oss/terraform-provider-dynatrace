@@ -79,7 +79,3 @@ func (me *service) Delete(id string) error {
 
 	return nil
 }
-
-func (me *service) Name() string {
-	return me.service.Name()
-}

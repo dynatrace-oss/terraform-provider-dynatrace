@@ -107,7 +107,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *apitokens.APIToken {
 	return new(apitokens.APIToken)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

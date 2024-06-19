@@ -93,7 +93,3 @@ func (me *service) Update(id string, v *autotagging.Settings) error {
 func (me *service) Delete(id string) error {
 	return me.service.Delete(id)
 }
-
-func (me *service) Name() string {
-	return me.service.Name()
-}

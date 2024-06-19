@@ -106,7 +106,3 @@ func (me *service) Delete(id string) error {
 func (me *service) New() *activegatetokens.Settings {
 	return new(activegatetokens.Settings)
 }
-
-func (me *service) Name() string {
-	return me.SchemaID()
-}

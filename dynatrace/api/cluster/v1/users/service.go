@@ -44,10 +44,6 @@ func (me *service) Get(id string, v *users.UserConfig) error {
 	return me.serviceClient.Get(id, v)
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 func (me *service) SchemaID() string {
 	return SchemaID
 }

@@ -221,10 +221,6 @@ func (me *service) DeleteWithContext(ctx context.Context, id string) error {
 	return me.service.Delete(id)
 }
 
-func (me *service) Name() string {
-	return me.SchemaID()
-}
-
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }

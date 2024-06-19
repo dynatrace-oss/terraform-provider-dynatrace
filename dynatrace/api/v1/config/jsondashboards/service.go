@@ -218,7 +218,3 @@ func (me *service) Delete(id string) error {
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
-
-func (me *service) Name() string {
-	return me.service.Name()
-}
