@@ -18,20 +18,17 @@
 package workflows
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"io"
 	"net/http"
 	"net/url"
-	"os"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
 	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
@@ -47,51 +44,14 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-type MyRoundTripper struct {
-	RoundTripper http.RoundTripper
-}
-
-var lock sync.Mutex
-
-func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	lock.Lock()
-	tfrest.Logger.Println(req.Method, req.URL)
-	if req.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, req.Body)
-		data := buf.Bytes()
-		tfrest.Logger.Println("  ", string(data))
-		req.Body = io.NopCloser(bytes.NewBuffer(data))
-	}
-	lock.Unlock()
-	resp, err := rt.RoundTripper.RoundTrip(req)
-	if err != nil {
-		tfrest.Logger.Println(err.Error())
-	}
-	if resp != nil {
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-			if resp.Body != nil {
-				buf := new(bytes.Buffer)
-				io.Copy(buf, resp.Body)
-				data := buf.Bytes()
-				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				tfrest.Logger.Println(resp.Status, string(data))
-			} else {
-				tfrest.Logger.Println(resp.Status)
-			}
-		}
-	}
-	return resp, err
-}
-
 var R automation.Response
 
 func (me *service) client() *automation.Client {
-	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
+	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
 		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultTransport}
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
 		} else {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultClient.Transport}
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
 		}
 	}
 	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
