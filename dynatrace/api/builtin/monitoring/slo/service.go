@@ -34,6 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/google/uuid"
 )
 
 const SchemaVersion = "6.0.14"
@@ -139,7 +140,16 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *slo.Setting
 }
 
 func (me *service) Get(id string, v *slo.Settings) error {
-	legacyId := settings.LegacyID(id)
+	var legacyId string
+	if _, err := uuid.Parse(id); err == nil {
+		legacyId = id
+	} else {
+		legacyId = settings.LegacyID(id)
+	}
+	if len(legacyId) == 0 {
+		legacyId = id
+	}
+
 	slo := new(sloGet)
 
 	service := slo_env2_service.Service(me.credentials)
