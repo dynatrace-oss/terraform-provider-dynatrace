@@ -231,14 +231,16 @@ func (me *service) Validate(v *generic.Settings) error {
 }
 
 func (me *service) Create(v *generic.Settings) (*api.Stub, error) {
-	return me.create(v, false)
+	return me.create(v)
 }
 
 type Matcher interface {
 	Match(o any) bool
 }
 
-func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
+const errMsgOAuthRequired = "an OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting"
+
+func (me *service) create(v *generic.Settings) (*api.Stub, error) {
 	scope := "environment"
 	if len(v.Scope) > 0 {
 		scope = v.Scope
@@ -249,7 +251,7 @@ func (me *service) create(v *generic.Settings, retry bool) (*api.Stub, error) {
 			return nil, err
 		}
 		if response.StatusCode == 0 {
-			return nil, errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
+			return nil, errors.New(errMsgOAuthRequired)
 		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
@@ -268,7 +270,7 @@ func (me *service) Update(id string, v *generic.Settings) error {
 			return err
 		}
 		if response.StatusCode == 0 {
-			return errors.New("An OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting")
+			return errors.New(errMsgOAuthRequired)
 		}
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}

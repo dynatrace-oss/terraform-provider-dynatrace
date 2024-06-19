@@ -24,7 +24,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -34,8 +33,6 @@ import (
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 )
-
-var mu sync.Mutex
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*slo.SLO] {
 	return &service{credentials: credentials}
