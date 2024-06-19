@@ -60,7 +60,9 @@ func (me *service) client() *automation.Client {
 		TokenURL:     me.credentials.Automation.TokenURL,
 	})
 	u, _ := url.Parse(me.credentials.Automation.EnvironmentURL)
-	return automation.NewClient(rest.NewClient(u, httpClient))
+	restClient := rest.NewClient(u, httpClient)
+	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	return automation.NewClient(restClient)
 }
 
 func (me *service) Get(id string, v *workflows.Workflow) error {
