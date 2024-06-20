@@ -1,0 +1,67 @@
+---
+layout: ""
+page_title: "dynatrace_autotag Data Source - terraform-provider-dynatrace"
+subcategory: "Tags"
+description: |-
+  The data source `dynatrace_autotag` covers queries for the ID of an automatically applied tag based on name. 
+---
+
+# dynatrace_autotag (Data Source)
+
+The automatically applied tag data source allows the tag ID to be retrieved by its name.
+
+-> This data source requires the API token scopes **Read settings** (`settings.read`)
+
+- `name` queries the automatically applied tag with the specified name
+
+## Example Usage
+
+```terraform
+data "dynatrace_autotag" "Example" {
+  name = "Terraform Example"
+}
+
+resource "dynatrace_autotag_rules" "Example" {
+  auto_tag_id = data.dynatrace_autotag.Example.id
+  rules {
+    rule {
+      type                = "ME"
+      enabled             = true
+      value_format        = "Java"
+      value_normalization = "Leave text as-is"
+      attribute_rule {
+        entity_type               = "PROCESS_GROUP"
+        pg_to_host_propagation    = true
+        pg_to_service_propagation = false
+        conditions {
+          condition {
+            enum_value = "JAVA"
+            key        = "PROCESS_GROUP_TECHNOLOGY"
+            operator   = "EQUALS"
+          }
+        }
+      }
+    }
+    rule {
+      type                = "ME"
+      enabled             = true
+      value_format        = ".NET"
+      value_normalization = "Leave text as-is"
+      attribute_rule {
+        entity_type               = "PROCESS_GROUP"
+        pg_to_host_propagation    = true
+        pg_to_service_propagation = false
+        conditions {
+          condition {
+            enum_value = "DOTNET"
+            key        = "PROCESS_GROUP_TECHNOLOGY"
+            operator   = "EQUALS"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
