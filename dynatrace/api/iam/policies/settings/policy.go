@@ -55,6 +55,7 @@ func (me *Policy) Schema() map[string]*schema.Schema {
 			Optional:      true,
 			ConflictsWith: []string{"account"},
 			AtLeastOneOf:  []string{"environment", "account"},
+			Deprecated:    "Configuring policies on environment level has been deprecated by Dynatrace. Please consider creating an account wide policy instead",
 			ForceNew:      true,
 			Description:   "The ID of the environment (https://<environmentid>.live.dynatrace.com) if the policy should be applied to a specific environment",
 		},
