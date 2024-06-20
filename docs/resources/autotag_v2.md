@@ -94,6 +94,7 @@ resource "dynatrace_autotag_v2" "#name#" {
 
 - `description` (String) Description
 - `rules` (Block List, Max: 1) Rules (see [below for nested schema](#nestedblock--rules))
+- `rules_maintained_externally` (Boolean) If `true` this resource will not
 
 ### Read-Only
 

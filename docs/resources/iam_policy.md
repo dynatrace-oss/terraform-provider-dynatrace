@@ -65,7 +65,7 @@ resource "dynatrace_iam_policy" "policy" {
 
 - `account` (String) The UUID of the account (`urn:dtaccount:<account-uuid>`) in case the policy should be applied to all environments of this account. The prefix `urn:dtaccount:` MUST be omitted here.
 - `description` (String) An optional description text for the policy
-- `environment` (String) The ID of the environment (https://<environmentid>.live.dynatrace.com) if the policy should be applied to a specific environment
+- `environment` (String, Deprecated) The ID of the environment (https://<environmentid>.live.dynatrace.com) if the policy should be applied to a specific environment
 - `tags` (Set of String) Tags for this policy
 
 ### Read-Only
