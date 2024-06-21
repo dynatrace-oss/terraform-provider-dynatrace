@@ -46,12 +46,8 @@ type defaultService[T Settings] struct {
 	options  *ServiceOptions[T]
 }
 
-func (me *defaultService[T]) GetWithContext(ctx context.Context, id string, v T) error {
-	return me.Get(id, v)
-}
-
-func (me *defaultService[T]) Get(id string, v T) error {
-	if err := me.get(id, v); err != nil {
+func (me *defaultService[T]) Get(ctx context.Context, id string, v T) error {
+	if err := me.client.Get(me.getURL(id), 200).Finish(v); err != nil {
 		return err
 	}
 	if me.options.CompleteGet != nil {
@@ -128,11 +124,7 @@ func (me *defaultService[T]) stubs() api.RecordStubs {
 	return &api.StubList{}
 }
 
-func (me *defaultService[T]) get(id string, v any) error {
-	return me.client.Get(me.getURL(id), 200).Finish(v)
-}
-
-func (me *defaultService[T]) List() (api.Stubs, error) {
+func (me *defaultService[T]) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	req := me.client.Get(me.listURL(), 200)
@@ -168,16 +160,12 @@ func (me *defaultService[T]) Validate(v T) error {
 	return nil
 }
 
-func (me *defaultService[T]) CreateWithContext(ctx context.Context, v T) (*api.Stub, error) {
-	return me.Create(v)
-}
-
-func (me *defaultService[T]) Create(v T) (*api.Stub, error) {
+func (me *defaultService[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
 	if me.options != nil && me.options.Lock != nil && me.options.Unlock != nil {
 		me.options.Lock()
 		defer me.options.Unlock()
 	}
-	stub, err := me.create(v)
+	stub, err := me.create(ctx, v)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +176,7 @@ func (me *defaultService[T]) Create(v T) (*api.Stub, error) {
 			stubName := struct {
 				Name string `json:"name"`
 			}{}
-			if err = me.get(stub.ID, &stubName); err == nil {
+			if err = me.client.Get(me.getURL(stub.ID), 200).Finish(&stubName); err == nil {
 				// For some settings the original response doesn't deliver a name
 				// In here (when confirming that the whole cluster knows the new settings) we
 				// receive the whole configuration anyways.
@@ -216,11 +204,11 @@ func (me *defaultService[T]) Create(v T) (*api.Stub, error) {
 	return stub, err
 }
 
-func (me *defaultService[T]) create(v T) (*api.Stub, error) {
+func (me *defaultService[T]) create(ctx context.Context, v T) (*api.Stub, error) {
 	var err error
 
 	if me.options != nil && me.options.Duplicates != nil {
-		dupStub, dupErr := me.options.Duplicates(me, v)
+		dupStub, dupErr := me.options.Duplicates(ctx, me, v)
 		if dupErr != nil {
 			return nil, dupErr
 		}
@@ -240,7 +228,7 @@ func (me *defaultService[T]) create(v T) (*api.Stub, error) {
 				return nil, err
 			}
 			if hijackedStub != nil {
-				return hijackedStub, me.Update(hijackedStub.ID, v)
+				return hijackedStub, me.Update(ctx, hijackedStub.ID, v)
 			} else {
 				return nil, err
 			}
@@ -276,12 +264,12 @@ func (me *defaultService[T]) onBeforeUpdate(id string, v T) (T, error) {
 	return v, nil
 }
 
-func (me *defaultService[T]) Update(id string, v T) error {
+func (me *defaultService[T]) Update(ctx context.Context, id string, v T) error {
 	var err error
 	if v, err = me.onBeforeUpdate(id, v); err != nil {
 		return err
 	}
-	if err = me.update(id, v); err != nil {
+	if err = me.update(ctx, id, v); err != nil {
 		return err
 	}
 	if me.options.OnChanged != nil {
@@ -290,11 +278,7 @@ func (me *defaultService[T]) Update(id string, v T) error {
 	return nil
 }
 
-func (me *defaultService[T]) UpdateWithContext(ctx context.Context, id string, v T) error {
-	return me.Update(id, v)
-}
-
-func (me *defaultService[T]) update(id string, v T) error {
+func (me *defaultService[T]) update(ctx context.Context, id string, v T) error {
 	var err error
 	// some endpoints respond back initially with an internal server error
 	// We're re-trying at least two more times before the update fails for good
@@ -314,7 +298,7 @@ func (me *defaultService[T]) update(id string, v T) error {
 	return err
 }
 
-func (me *defaultService[T]) Delete(id string) error {
+func (me *defaultService[T]) Delete(ctx context.Context, id string) error {
 	var err error
 	numRetries := 0
 	for {
@@ -325,7 +309,7 @@ func (me *defaultService[T]) Delete(id string) error {
 					return e2
 				}
 				if retry {
-					return me.Delete(id)
+					return me.Delete(ctx, id)
 				}
 			}
 			if !strings.Contains(err.Error(), "Could not delete configuration") {
@@ -347,9 +331,5 @@ func (me *defaultService[T]) Delete(id string) error {
 }
 
 func (me *defaultService[T]) SchemaID() string {
-	return me.schemaID
-}
-
-func (me *defaultService[T]) Name() string {
 	return me.schemaID
 }

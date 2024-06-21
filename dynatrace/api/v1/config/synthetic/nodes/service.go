@@ -18,6 +18,7 @@
 package nodes
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -41,7 +42,7 @@ type nodeList struct {
 	Nodes []nodes.Settings `json:"nodes"`
 }
 
-func (me *service) List() (stubs api.Stubs, err error) {
+func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	var stubList nodeList
 	if err = me.client.Get("/api/v1/synthetic/nodes", 200).Finish(&stubList); err != nil {
 		return nil, err
@@ -53,7 +54,7 @@ func (me *service) List() (stubs api.Stubs, err error) {
 	return stubs, nil
 }
 
-func (me *service) Get(id string, v *nodes.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *nodes.Settings) (err error) {
 	return me.client.Get(fmt.Sprintf("/api/v1/synthetic/nodes/%v", id), 200).Finish(&v)
 }
 

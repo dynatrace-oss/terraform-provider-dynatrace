@@ -1,6 +1,7 @@
 package groups
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -33,24 +34,24 @@ type service struct {
 	serviceClient *ServiceClient
 }
 
-func (me *service) Create(v *groups.GroupConfig) (*api.Stub, error) {
-	return me.serviceClient.Create(v)
+func (me *service) Create(ctx context.Context, v *groups.GroupConfig) (*api.Stub, error) {
+	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *groups.GroupConfig) error {
-	return me.serviceClient.Update(v)
+func (me *service) Update(ctx context.Context, id string, v *groups.GroupConfig) error {
+	return me.serviceClient.Update(ctx, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.serviceClient.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.serviceClient.Delete(ctx, id)
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.serviceClient.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(id string, v *groups.GroupConfig) error {
-	return me.serviceClient.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *groups.GroupConfig) error {
+	return me.serviceClient.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
@@ -62,7 +63,7 @@ func (cs *ServiceClient) SchemaID() string {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(groupConfig *groups.GroupConfig) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, groupConfig *groups.GroupConfig) (*api.Stub, error) {
 	var err error
 
 	var createdGroupConfig groups.GroupConfig
@@ -73,17 +74,17 @@ func (cs *ServiceClient) Create(groupConfig *groups.GroupConfig) (*api.Stub, err
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(groupConfig *groups.GroupConfig) error {
+func (cs *ServiceClient) Update(ctx context.Context, groupConfig *groups.GroupConfig) error {
 	return cs.client.Put("/groups", groupConfig, 200).Finish()
 }
 
 // Delete TODO: documentation
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	return cs.client.Delete(fmt.Sprintf("/groups/%s", id), 200).Finish()
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get(id string, v *groups.GroupConfig) error {
+func (cs *ServiceClient) Get(ctx context.Context, id string, v *groups.GroupConfig) error {
 	var err error
 
 	if err = cs.client.Get(fmt.Sprintf("/groups/%s", id), 200).Finish(&v); err != nil {
@@ -93,7 +94,7 @@ func (cs *ServiceClient) Get(id string, v *groups.GroupConfig) error {
 }
 
 // ListAll TODO: documentation
-func (cs *ServiceClient) List() (api.Stubs, error) {
+func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var groups []*groups.GroupConfig

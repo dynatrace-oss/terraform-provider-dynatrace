@@ -18,6 +18,7 @@
 package apitokens
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -37,7 +38,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) Get(id string, v *apitokens.APIToken) error {
+func (me *service) Get(ctx context.Context, id string, v *apitokens.APIToken) error {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -53,7 +54,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:api-tokens"
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -74,7 +75,7 @@ func (me *service) Validate(v *apitokens.APIToken) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *apitokens.APIToken) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub, error) {
 	var err error
 
 	resultToken := apitokens.APIToken{}
@@ -96,11 +97,11 @@ func (me *service) Create(v *apitokens.APIToken) (*api.Stub, error) {
 	return &api.Stub{ID: *resultToken.ID, Name: resultToken.Name, Value: resultToken}, nil
 }
 
-func (me *service) Update(id string, v *apitokens.APIToken) error {
+func (me *service) Update(ctx context.Context, id string, v *apitokens.APIToken) error {
 	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Put(fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Delete(fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
 }
 

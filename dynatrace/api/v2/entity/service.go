@@ -18,6 +18,7 @@
 package entity
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/url"
@@ -42,7 +43,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(id string, v *entity.Entity) error {
+func (me *service) Get(ctx context.Context, id string, v *entity.Entity) error {
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
 		return errors.New("entity calls disabled when using Migration Cache")
 	}
@@ -53,7 +54,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 
@@ -65,7 +66,7 @@ type dataSourceService struct {
 	client rest.Client
 }
 
-func (me *dataSourceService) Get(id string, v *entity.Entity) error {
+func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entity) error {
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
 		return errors.New("entity calls disabled when using Migration Cache")
 	}
@@ -90,7 +91,7 @@ func (me *dataSourceService) SchemaID() string {
 	return SchemaID
 }
 
-func (me *dataSourceService) List() (api.Stubs, error) {
+func (me *dataSourceService) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 

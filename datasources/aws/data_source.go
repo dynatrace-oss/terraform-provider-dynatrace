@@ -18,32 +18,35 @@
 package aws
 
 import (
+	"context"
+
 	svc "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/iam"
 	iam "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/iam/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read:   logging.EnableDS(DataSourceRead),
-		Schema: map[string]*schema.Schema{},
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
+		Schema:      map[string]*schema.Schema{},
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := svc.Service(creds)
 
 	var settings iam.Settings
-	if err = service.Get("", &settings); err != nil {
-		return err
+	if err = service.Get(ctx, "", &settings); err != nil {
+		return diag.FromErr(err)
 	}
 	d.SetId(settings.Token)
-	return nil
+	return diag.Diagnostics{}
 }

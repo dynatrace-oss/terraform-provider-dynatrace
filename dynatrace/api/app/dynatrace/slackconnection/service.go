@@ -145,7 +145,7 @@ func (me *service) Client(schemaIDs string) *settings20.Client {
 	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
 }
 
-func (me *service) Create(v *slackconnection.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *slackconnection.Settings) (*api.Stub, error) {
 	scope := "environment"
 	data, err := json.Marshal(v)
 	if err != nil {
@@ -167,7 +167,7 @@ func (me *service) Create(v *slackconnection.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) Update(id string, v *slackconnection.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *slackconnection.Settings) error {
 	data, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -187,7 +187,7 @@ func (me *service) Validate(v *slackconnection.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	response, err := me.Client("").Delete(context.TODO(), id)
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
@@ -210,7 +210,7 @@ type SettingsObject struct {
 	Value         json.RawMessage `json:"value"`
 }
 
-func (me *service) Get(id string, v *slackconnection.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *slackconnection.Settings) error {
 	var err error
 	var response settings20.Response
 	var settingsObject SettingsObject
@@ -235,7 +235,7 @@ func (me *service) Get(id string, v *slackconnection.Settings) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	response, err := me.Client(SchemaID).List(context.TODO())
 	if response.StatusCode != 200 {

@@ -1,6 +1,7 @@
 package permissions
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -48,7 +49,7 @@ func (me *PermissionServiceClient) Name() string {
 	return me.SchemaID()
 }
 
-func (me *PermissionServiceClient) Create(permission *permissions.Permission) (*api.Stub, error) {
+func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(me)
@@ -81,7 +82,7 @@ type GetGroupPermissionsResponse struct {
 	Permissions []*permissions.PermissionDTO
 }
 
-func (me *PermissionServiceClient) Get(id string, v *permissions.Permission) error {
+func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission) error {
 	var err error
 	var responseBytes []byte
 
@@ -126,13 +127,13 @@ func (me *PermissionServiceClient) Get(id string, v *permissions.Permission) err
 	return fmt.Errorf("there exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)
 }
 
-func (me *PermissionServiceClient) Update(email string, permission *permissions.Permission) error {
+func (me *PermissionServiceClient) Update(ctx context.Context, email string, permission *permissions.Permission) error {
 	return errors.New("permissions are not expected to get updated - only destroy and create are possible")
 }
 
-func (me *PermissionServiceClient) List() (api.Stubs, error) {
+func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	groupsService := groups.NewGroupService(me.clientID, me.accountID, me.clientSecret)
-	groupStubs, err := groupsService.List()
+	groupStubs, err := groupsService.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +162,7 @@ func (me *PermissionServiceClient) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *PermissionServiceClient) Delete(id string) error {
+func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error {
 	parts := strings.Split(id, "#-#")
 	if len(parts) < 4 {
 		return fmt.Errorf("'%s' is not a valid permission ID", id)

@@ -18,18 +18,20 @@
 package supported_services
 
 import (
+	"context"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"except": {
 				Type:        schema.TypeSet,
@@ -47,7 +49,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	theID := "b06436b3-f9e1-46c4-b0eb-ed6c9438673c"
 	except := map[string]string{}
 	if iExcept, ok := d.GetOk("except"); ok && iExcept != nil {
@@ -59,12 +61,12 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	srvc := services.NewSupportedServicesService(creds)
 	all, err := srvc.List()
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	srvmap := map[string]bool{}
 	for k, v := range all {
@@ -75,5 +77,5 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	d.Set("services", srvmap)
 	d.SetId(theID)
-	return nil
+	return diag.Diagnostics{}
 }

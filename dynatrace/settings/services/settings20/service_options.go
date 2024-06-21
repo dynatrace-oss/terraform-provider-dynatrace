@@ -18,6 +18,8 @@
 package settings20
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -28,5 +30,5 @@ type ServiceOptions[T settings.Settings] struct {
 	HijackOnCreate func(err error, service settings.RService[T], v T) (*api.Stub, error)
 	CreateRetry    func(v T, err error) T
 	UpdateRetry    func(v T, err error) T
-	Duplicates     func(service settings.RService[T], v T) (*api.Stub, error)
+	Duplicates     func(ctx context.Context, service settings.RService[T], v T) (*api.Stub, error)
 }

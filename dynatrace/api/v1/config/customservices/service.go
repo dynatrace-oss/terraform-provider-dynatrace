@@ -18,6 +18,7 @@
 package customservices
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/url"
@@ -40,12 +41,12 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*customserv
 	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
 }
 
-func (me *service) Get(id string, v *customservices.CustomService) error {
+func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService) error {
 	if id, technology, ok := settings.SplitID(id); ok {
-		return me.GetWithTechnology(id, technology, v)
+		return me.GetWithTechnology(ctx, id, technology, v)
 	}
 	for _, technology := range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Go, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP} {
-		if err := me.GetWithTechnology(id, string(technology), v); err != nil {
+		if err := me.GetWithTechnology(ctx, id, string(technology), v); err != nil {
 			if restError, ok := err.(rest.Error); ok {
 				if restError.Code != 404 {
 					return err
@@ -58,7 +59,7 @@ func (me *service) Get(id string, v *customservices.CustomService) error {
 	return errors.New("unable to determine technology")
 }
 
-func (me *service) GetWithTechnology(id string, technology string, v *customservices.CustomService) error {
+func (me *service) GetWithTechnology(ctx context.Context, id string, technology string, v *customservices.CustomService) error {
 	req := me.client.Get(fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id))).Expect(200)
 	if err := req.Finish(v); err != nil {
 		return err
@@ -67,7 +68,7 @@ func (me *service) GetWithTechnology(id string, technology string, v *customserv
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	client := me.client
@@ -94,11 +95,11 @@ func (me *service) ValidateWithTechnology(technology string, v any) error {
 	return me.client.Post(fmt.Sprintf("/api/config/v1/service/customServices/%s/validator", url.PathEscape(technology)), v, 204).Finish()
 }
 
-func (me *service) Create(v *customservices.CustomService) (*api.Stub, error) {
-	return me.CreateWithTechnology(string(v.Technology), v)
+func (me *service) Create(ctx context.Context, v *customservices.CustomService) (*api.Stub, error) {
+	return me.CreateWithTechnology(ctx, string(v.Technology), v)
 }
 
-func (me *service) CreateWithTechnology(technology string, v any) (*api.Stub, error) {
+func (me *service) CreateWithTechnology(ctx context.Context, technology string, v any) (*api.Stub, error) {
 	var err error
 
 	req := me.client.Post(fmt.Sprintf("/api/config/v1/service/customServices/%s", url.PathEscape(technology)), v, 201)
@@ -111,14 +112,14 @@ func (me *service) CreateWithTechnology(technology string, v any) (*api.Stub, er
 	return &stub, nil
 }
 
-func (me *service) Update(id string, v *customservices.CustomService) error {
+func (me *service) Update(ctx context.Context, id string, v *customservices.CustomService) error {
 	if id, technology, ok := settings.SplitID(id); ok {
-		return me.UpdateWithTechnology(id, technology, v)
+		return me.UpdateWithTechnology(ctx, id, technology, v)
 	}
-	return me.UpdateWithTechnology(id, string(v.Technology), v)
+	return me.UpdateWithTechnology(ctx, id, string(v.Technology), v)
 }
 
-func (me *service) UpdateWithTechnology(id string, technology string, v any) error {
+func (me *service) UpdateWithTechnology(ctx context.Context, id string, technology string, v any) error {
 	var err error
 
 	req := me.client.Put(fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id)), v, 204)
@@ -129,12 +130,12 @@ func (me *service) UpdateWithTechnology(id string, technology string, v any) err
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	if id, technology, ok := settings.SplitID(id); ok {
-		return me.DeleteWithTechnology(id, technology)
+		return me.DeleteWithTechnology(ctx, id, technology)
 	}
 	for _, technology := range []customservices.Technology{customservices.Technologies.DotNet, customservices.Technologies.Go, customservices.Technologies.Java, customservices.Technologies.NodeJS, customservices.Technologies.PHP} {
-		if err := me.DeleteWithTechnology(id, string(technology)); err != nil {
+		if err := me.DeleteWithTechnology(ctx, id, string(technology)); err != nil {
 			if restError, ok := err.(rest.Error); ok {
 				if restError.Code != 404 {
 					return err
@@ -147,7 +148,7 @@ func (me *service) Delete(id string) error {
 	return errors.New("unable to determine technology")
 }
 
-func (me *service) DeleteWithTechnology(id string, technology string) error {
+func (me *service) DeleteWithTechnology(ctx context.Context, id string, technology string) error {
 	return me.client.Delete(fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id))).Expect(204).Finish()
 }
 

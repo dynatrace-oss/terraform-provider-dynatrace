@@ -18,6 +18,7 @@
 package mobile
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strings"
@@ -52,11 +53,11 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*mobile.App
 	)
 }
 
-func Duplicates(service settings.RService[*mobile.Application], v *mobile.Application) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*mobile.Application], v *mobile.Application) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_mobile_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -67,7 +68,7 @@ func Duplicates(service settings.RService[*mobile.Application], v *mobile.Applic
 	} else if settings.HijackDuplicate("dynatrace_mobile_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

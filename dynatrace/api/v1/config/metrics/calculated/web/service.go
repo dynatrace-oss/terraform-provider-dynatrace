@@ -18,6 +18,7 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strings"
@@ -40,11 +41,11 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(id string, v *mysettings.CalculatedWebMetric) error {
+func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
 	return me.client.Get(fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	req := me.client.Get("/api/config/v1/calculatedMetrics/rum", 200)
@@ -67,7 +68,7 @@ func (me *service) Validate(v *mysettings.CalculatedWebMetric) error {
 	return nil
 }
 
-func (me *service) Create(v *mysettings.CalculatedWebMetric) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *mysettings.CalculatedWebMetric) (*api.Stub, error) {
 	var err error
 	client := me.client
 	var stub api.Stub
@@ -80,14 +81,14 @@ func (me *service) Create(v *mysettings.CalculatedWebMetric) (*api.Stub, error) 
 	return &stub, nil
 }
 
-func (me *service) Update(id string, v *mysettings.CalculatedWebMetric) error {
+func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
 	if err := me.client.Put(fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
 	attempts := 30
 
@@ -97,7 +98,7 @@ func (me *service) Delete(id string) error {
 				return err
 			}
 		} else {
-			if err = me.Get(id, &mysettings.CalculatedWebMetric{}); err != nil {
+			if err = me.Get(ctx, id, &mysettings.CalculatedWebMetric{}); err != nil {
 				if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
 					break
 				}

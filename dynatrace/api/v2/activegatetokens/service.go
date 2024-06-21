@@ -18,6 +18,7 @@
 package activegatetokens
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -46,7 +47,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) Get(id string, v *activegatetokens.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -67,7 +68,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:activegate-tokens"
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{}, nil
 }
 
@@ -75,7 +76,7 @@ func (me *service) Validate(v *activegatetokens.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *activegatetokens.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *activegatetokens.Settings) (*api.Stub, error) {
 	var err error
 
 	response := TokenCreateResponse{}
@@ -95,11 +96,11 @@ func (me *service) Create(v *activegatetokens.Settings) (*api.Stub, error) {
 	return &api.Stub{ID: response.ID, Name: v.Name, Value: v}, nil
 }
 
-func (me *service) Update(id string, v *activegatetokens.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Delete(fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
 }
 

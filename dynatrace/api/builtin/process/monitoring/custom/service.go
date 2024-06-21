@@ -18,6 +18,7 @@
 package customprocessmonitoring
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -33,11 +34,11 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*customproc
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
 }
 
-func Duplicates(service settings.RService[*customprocessmonitoring.Settings], v *customprocessmonitoring.Settings) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*customprocessmonitoring.Settings], v *customprocessmonitoring.Settings) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_process_monitoring_rule") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -51,7 +52,7 @@ func Duplicates(service settings.RService[*customprocessmonitoring.Settings], v 
 	} else if settings.HijackDuplicate("dynatrace_process_monitoring_rule") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

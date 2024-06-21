@@ -20,7 +20,6 @@ package opentelemetrymetrics
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/url"
 	"reflect"
@@ -52,11 +51,11 @@ type service struct {
 
 var mu sync.Mutex
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) GetWithContext(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -117,7 +116,7 @@ func toJSON(v any) string {
 	return string(data)
 }
 
-func (me *service) Create(v *opentelemetrymetrics.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	v.Mode = resolveMode(v, nil)
@@ -138,7 +137,7 @@ func (me *service) Create(v *opentelemetrymetrics.Settings) (*api.Stub, error) {
 		}
 	}
 
-	stub, err := me.service.Create(&effectiveValue)
+	stub, err := me.service.Create(ctx, &effectiveValue)
 	if err != nil {
 		return stub, err
 	}
@@ -148,7 +147,7 @@ func (me *service) Create(v *opentelemetrymetrics.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) UpdateWithContext(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -182,7 +181,7 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *opentele
 		}
 
 	}
-	if err := me.service.Update(id, &effectiveValue); err != nil {
+	if err := me.service.Update(ctx, id, &effectiveValue); err != nil {
 		return err
 	}
 	v.AdditionalAttributesToDimensionEnabled = effectiveValue.AdditionalAttributesToDimensionEnabled
@@ -191,7 +190,7 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *opentele
 	return nil
 }
 
-func (me *service) DeleteWithContext(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -213,12 +212,12 @@ func (me *service) DeleteWithContext(ctx context.Context, id string) error {
 		}
 		// if there are no attributes left, we opt for deleting the whole setting
 		if len(effectiveValue.AdditionalAttributes) != 0 || len(effectiveValue.ToDropAttributes) != 0 {
-			return me.service.Update(id, &effectiveValue)
+			return me.service.Update(ctx, id, &effectiveValue)
 		}
 	}
 
 	// if mode is "Explicit" or if there are still attributes remaining
-	return me.service.Delete(id)
+	return me.service.Delete(ctx, id)
 }
 
 func (me *service) SchemaID() string {
@@ -328,16 +327,4 @@ func (me *service) fetchExistingRecord() (*opentelemetrymetrics.Settings, error)
 		}
 	}
 	return existingValue, err
-}
-
-func (me *service) Update(id string, v *opentelemetrymetrics.Settings) error {
-	return errors.New("`builtin:opentelemetry-metrics` Update function should not be called, please create a GitHub Issue")
-}
-
-func (me *service) Delete(id string) error {
-	return errors.New("`builtin:opentelemetry-metrics` Delete function should not be called, please create a GitHub Issue")
-}
-
-func (me *service) Get(id string, v *opentelemetrymetrics.Settings) error {
-	return me.GetWithContext(context.Background(), id, v)
 }

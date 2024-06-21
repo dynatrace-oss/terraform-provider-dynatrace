@@ -97,7 +97,7 @@ func (me *service) client() *document.Client {
 	return document.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
 }
 
-func (me *service) Get(id string, v *documents.Document) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
 	var result *document.Response
 	if result, err = me.client().GET(document.Documents, id); err != nil {
 		return err
@@ -117,7 +117,7 @@ func (me *service) SchemaID() string {
 	return "document:documents"
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	result, err := me.client().LIST(document.Documents)
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (me *service) Validate(v *documents.Document) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *documents.Document) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
 	var id string
 
 	body := &bytes.Buffer{}
@@ -160,7 +160,7 @@ func (me *service) Create(v *documents.Document) (stub *api.Stub, err error) {
 	return &api.Stub{ID: id, Name: v.Name}, nil
 }
 
-func (me *service) Update(id string, v *documents.Document) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -181,7 +181,7 @@ func (me *service) Update(id string, v *documents.Document) (err error) {
 	return me.client().UPDATE(document.Documents, id, body, writer.FormDataContentType())
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return me.client().DELETE(document.Documents, id)
 }
 

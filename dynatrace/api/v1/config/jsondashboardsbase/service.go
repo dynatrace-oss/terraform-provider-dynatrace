@@ -18,6 +18,7 @@
 package jsondashboardsbase
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -43,8 +44,8 @@ type service struct {
 	service settings.CRUDService[*dashboardsbase.JSONDashboardBase]
 }
 
-func (me *service) List() (api.Stubs, error) {
-	stubs, err := me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	stubs, err := me.service.List(ctx)
 	if err != nil {
 		return stubs, err
 	}
@@ -57,9 +58,9 @@ func (me *service) List() (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *service) Get(id string, v *dashboardsbase.JSONDashboardBase) error {
+func (me *service) Get(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
 	if JSON_DASHBOARD_BASE_PLUS {
-		if err := me.service.Get(id, v); err != nil {
+		if err := me.service.Get(ctx, id, v); err != nil {
 			return err
 		}
 	}
@@ -75,28 +76,28 @@ func (me *service) Validate(v *dashboardsbase.JSONDashboardBase) error {
 	return nil
 }
 
-func (me *service) Create(v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
 	if JSON_DASHBOARD_BASE_PLUS {
-		return me.service.Create(v.EnrichRequireds())
+		return me.service.Create(ctx, v.EnrichRequireds())
 	}
-	return me.service.Create(v)
+	return me.service.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *dashboardsbase.JSONDashboardBase) error {
+func (me *service) Update(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
 
 	if JSON_DASHBOARD_BASE_PLUS {
 		jsonDashboard := v
 		oldContents := jsonDashboard.Contents
 		jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
-		err := me.service.Update(id, v.EnrichRequireds())
+		err := me.service.Update(ctx, id, v.EnrichRequireds())
 		jsonDashboard.Contents = oldContents
 		return err
 	}
 	return nil
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
 func (me *service) SchemaID() string {

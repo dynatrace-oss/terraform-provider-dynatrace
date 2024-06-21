@@ -18,6 +18,7 @@
 package managementzones
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -48,8 +49,8 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) Create(v *managementzones.Settings) (*api.Stub, error) {
-	stub, err := me.service.Create(v)
+func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v)
 	if err != nil {
 		return nil, err
 	}
@@ -90,20 +91,20 @@ func (me *service) Create(v *managementzones.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) Update(id string, v *managementzones.Settings) error {
-	return me.service.Update(id, v)
+func (me *service) Update(ctx context.Context, id string, v *managementzones.Settings) error {
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
-func (me *service) Get(id string, v *managementzones.Settings) error {
-	return me.service.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *managementzones.Settings) error {
+	return me.service.Get(ctx, id, v)
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
 func (me *service) SchemaID() string {

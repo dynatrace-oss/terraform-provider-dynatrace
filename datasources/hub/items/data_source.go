@@ -18,6 +18,7 @@
 package items
 
 import (
+	"context"
 	"strings"
 
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items"
@@ -26,13 +27,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"items": {
 				Type:        schema.TypeList,
@@ -56,10 +58,10 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	var settings items.HubItemList
 	var opts srv.Options
@@ -68,8 +70,8 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 
 	service := srv.Service(creds, opts)
-	if err := service.Get(service.SchemaID(), &settings); err != nil {
-		return err
+	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+		return diag.FromErr(err)
 	}
 	d.SetId(service.SchemaID())
 	var finalSettings items.HubItemList
@@ -84,7 +86,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if len(finalSettings.Items) != 0 {
 		marshalled := hcl.Properties{}
 		if err := finalSettings.MarshalHCL(marshalled); err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 		artifactIds := map[string]string{}
 		for _, item := range finalSettings.Items {
@@ -96,5 +98,5 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if len(opts.Type) > 0 {
 		d.Set("type", opts.Type)
 	}
-	return nil
+	return diag.Diagnostics{}
 }

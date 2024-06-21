@@ -18,17 +18,20 @@
 package users
 
 import (
+	"context"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	usr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read:        DataSourceRead,
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Description: "Fetches the groups the user identified with the given email is assigned to",
 		Schema: map[string]*schema.Schema{
 			"email": {
@@ -48,26 +51,26 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var email string
 	if v, ok := d.GetOk("email"); ok {
 		email = v.(string)
 	}
 	if len(email) == 0 {
 		d.SetId("")
-		return nil
+		return diag.Diagnostics{}
 	}
 	d.SetId(email)
 
 	creds, err := config.Credentials(m, config.CredValIAM)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	var user usr.User
 	service := users.Service(creds)
-	if err := service.Get(email, &user); err != nil {
-		return err
+	if err := service.Get(ctx, email, &user); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(user.UID) > 0 {
 		d.Set("uid", user.UID)
@@ -78,5 +81,5 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	} else {
 		d.Set("groups", []string{})
 	}
-	return nil
+	return diag.Diagnostics{}
 }

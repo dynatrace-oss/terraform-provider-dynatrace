@@ -18,6 +18,7 @@
 package cache
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -63,21 +64,21 @@ func (me *readService[T]) init() error {
 	return nil
 }
 
-func (me *readService[T]) List() (api.Stubs, error) {
+func (me *readService[T]) List(ctx context.Context) (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
-	return me.list(true)
+	return me.list(ctx, true)
 }
 
-func (me *readService[T]) ListNoValues() (api.Stubs, error) {
+func (me *readService[T]) ListNoValues(ctx context.Context) (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
-	return me.list(false)
+	return me.list(ctx, false)
 }
 
-func (me *readService[T]) list(withValues bool) (api.Stubs, error) {
+func (me *readService[T]) list(ctx context.Context, withValues bool) (api.Stubs, error) {
 	if err := me.init(); err != nil {
 		return nil, err
 	}
@@ -101,7 +102,7 @@ func (me *readService[T]) list(withValues bool) (api.Stubs, error) {
 
 	var err error
 	var stubs api.Stubs
-	if stubs, err = me.service.List(); err != nil {
+	if stubs, err = me.service.List(ctx); err != nil {
 		return nil, err
 	}
 	me.index.Complete = true
@@ -117,7 +118,7 @@ func (me *readService[T]) list(withValues bool) (api.Stubs, error) {
 	return stubs.ToStubs(), nil
 }
 
-func (me *readService[T]) Get(id string, v T) error {
+func (me *readService[T]) Get(ctx context.Context, id string, v T) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -142,7 +143,7 @@ func (me *readService[T]) Get(id string, v T) error {
 			Message: fmt.Sprintf("Setting with id '%s' not found (offline mode)", id),
 		}
 	} else {
-		if err = me.service.Get(id, v); err != nil {
+		if err = me.service.Get(ctx, id, v); err != nil {
 			return err
 		}
 		return me.notifyGet(id, v)

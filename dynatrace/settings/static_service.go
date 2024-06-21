@@ -18,6 +18,8 @@
 package settings
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
@@ -39,27 +41,27 @@ func StaticService[T Settings](credentials *Credentials, schemaID string, url st
 	}
 }
 
-func (me *staticService[T]) Get(id string, v T) error {
+func (me *staticService[T]) Get(ctx context.Context, id string, v T) error {
 	return me.client.Get(me.url, 200).Finish(v)
 }
 
-func (me *staticService[T]) List() (api.Stubs, error) {
+func (me *staticService[T]) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&me.stub}, nil
 }
 
-func (me *staticService[T]) Create(v T) (*api.Stub, error) {
-	return &me.stub, me.Update(me.stub.ID, v)
+func (me *staticService[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
+	return &me.stub, me.Update(ctx, me.stub.ID, v)
 }
 
 func (me *staticService[T]) Validate(v T) error {
 	return me.client.Post(me.url+"/validator", v, 204).Finish()
 }
 
-func (me *staticService[T]) Delete(id string) error {
+func (me *staticService[T]) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (me *staticService[T]) Update(id string, v T) error {
+func (me *staticService[T]) Update(ctx context.Context, id string, v T) error {
 	return me.client.Put(me.url, v, 204).Finish()
 }
 

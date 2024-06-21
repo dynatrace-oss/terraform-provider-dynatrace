@@ -18,6 +18,8 @@
 package locations
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
@@ -26,12 +28,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeString,
@@ -52,7 +55,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var id *string
 	var name *string
 
@@ -69,11 +72,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(creds).List(); err != nil {
-		return err
+	if stubs, err = locations.Service(creds).List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	locs := locsettings.SyntheticLocations{}
 	for _, stub := range stubs {
@@ -92,9 +95,9 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	marshalled := hcl.Properties{}
 	if err = locs.MarshalHCL(marshalled); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	d.Set("locations", marshalled["location"])
 
-	return nil
+	return diag.Diagnostics{}
 }

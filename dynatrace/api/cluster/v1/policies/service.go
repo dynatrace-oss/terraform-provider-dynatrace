@@ -1,6 +1,7 @@
 package policies
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -28,28 +29,28 @@ type service struct {
 	serviceClient *PolicyServiceClient
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.serviceClient.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(id string, v *policies.Policy) error {
-	return me.serviceClient.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *policies.Policy) error {
+	return me.serviceClient.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return "accounts:policies"
 }
 
-func (me *service) Create(v *policies.Policy) (*api.Stub, error) {
-	return me.serviceClient.Create(v)
+func (me *service) Create(ctx context.Context, v *policies.Policy) (*api.Stub, error) {
+	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *policies.Policy) error {
-	return me.serviceClient.Update(id, v)
+func (me *service) Update(ctx context.Context, id string, v *policies.Policy) error {
+	return me.serviceClient.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.serviceClient.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.serviceClient.Delete(ctx, id)
 }
 
 func (me *PolicyServiceClient) SchemaID() string {
@@ -60,7 +61,7 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
+func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (*api.Stub, error) {
 	var err error
 	levelType, levelID := getLevel(v)
 
@@ -71,7 +72,7 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
-func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
+func (me *PolicyServiceClient) Get(ctx context.Context, id string, v *policies.Policy) error {
 	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err
@@ -88,7 +89,7 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	return nil
 }
 
-func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
+func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *policies.Policy) error {
 	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err
@@ -100,7 +101,7 @@ func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
 	return nil
 }
 
-func (me *PolicyServiceClient) List() (api.Stubs, error) {
+func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 
@@ -150,7 +151,7 @@ func (me *PolicyServiceClient) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *PolicyServiceClient) Delete(id string) error {
+func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 	uuid, levelType, levelID, err := SplitID(id)
 	if err != nil {
 		return err

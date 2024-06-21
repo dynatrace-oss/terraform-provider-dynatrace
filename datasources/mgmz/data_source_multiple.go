@@ -1,6 +1,7 @@
 package mgmz
 
 import (
+	"context"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -9,6 +10,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -16,7 +18,7 @@ const staticID = "46465fe6-70cb-4564-864f-c3344caae5c0"
 
 func DataSourceMultiple() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceReadMultiple),
+		ReadContext: logging.EnableDSCtx(DataSourceReadMultiple),
 		Schema: map[string]*schema.Schema{
 			"values": {
 				Type:     schema.TypeList,
@@ -50,16 +52,16 @@ func DataSourceMultiple() *schema.Resource {
 	}
 }
 
-func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
+func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	d.SetId(staticID)
 	values := []map[string]any{}
@@ -80,5 +82,5 @@ func DataSourceReadMultiple(d *schema.ResourceData, m any) error {
 		})
 	}
 	d.Set("values", values)
-	return nil
+	return diag.Diagnostics{}
 }

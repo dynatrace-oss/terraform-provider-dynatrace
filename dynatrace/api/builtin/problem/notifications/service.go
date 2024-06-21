@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -63,11 +64,11 @@ func UseOAuth2Fix(v *Notification, err error) *Notification {
 	return nil
 }
 
-func Duplicates(service settings.RService[*Notification], v *Notification) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*Notification], v *Notification) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_notification") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -78,7 +79,7 @@ func Duplicates(service settings.RService[*Notification], v *Notification) (*api
 	} else if settings.HijackDuplicate("dynatrace_notification") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

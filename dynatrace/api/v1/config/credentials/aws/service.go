@@ -18,6 +18,7 @@
 package aws
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -88,11 +89,11 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 	}
 }
 
-func Duplicates(service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWSCredentialsConfig) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWSCredentialsConfig) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_aws_credentials") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -103,7 +104,7 @@ func Duplicates(service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWS
 	} else if settings.HijackDuplicate("dynatrace_aws_credentials") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -120,20 +121,20 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *aws.AWSCredentialsConfig) error {
-	return me.service.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *aws.AWSCredentialsConfig) error {
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *aws.AWSCredentialsConfig) (*api.Stub, error) {
-	stub, err := me.service.Create(v)
+func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +144,7 @@ func (me *service) Create(v *aws.AWSCredentialsConfig) (*api.Stub, error) {
 	return stub, err
 }
 
-func (me *service) Update(id string, v *aws.AWSCredentialsConfig) error {
+func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsConfig) error {
 	var updv aws.AWSCredentialsConfigUpdate
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id)).Finish(&updv); err != nil {
 		return err
@@ -156,6 +157,6 @@ func (me *service) Update(id string, v *aws.AWSCredentialsConfig) error {
 	return me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }

@@ -65,7 +65,7 @@ func (me *service) client() *automation.Client {
 	return automation.NewClient(restClient)
 }
 
-func (me *service) Get(id string, v *workflows.Workflow) error {
+func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
 	var err error
 	var response automation.Response
 	if response, err = me.client().Get(context.TODO(), apiClient.Workflows, id); err != nil {
@@ -91,7 +91,7 @@ type WorkflowStub struct {
 	Title string `json:"title"`
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	listResponse, err := me.client().List(context.TODO(), apiClient.Workflows)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (me *service) Validate(v *workflows.Workflow) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *workflows.Workflow) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api.Stub, err error) {
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
@@ -137,7 +137,7 @@ func (me *service) Create(v *workflows.Workflow) (stub *api.Stub, err error) {
 	return nil, tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
-func (me *service) Update(id string, v *workflows.Workflow) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
@@ -156,7 +156,7 @@ func (me *service) Update(id string, v *workflows.Workflow) (err error) {
 	return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	response, err := me.client().Delete(context.TODO(), apiClient.Workflows, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil

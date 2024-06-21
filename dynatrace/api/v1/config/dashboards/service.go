@@ -18,6 +18,8 @@
 package dashboards
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -40,15 +42,15 @@ func (me *service) NoCache() bool {
 	return true
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *dashboards.Dashboard) error {
+func (me *service) Get(ctx context.Context, id string, v *dashboards.Dashboard) error {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
-	if err = me.service.Get(id, jsondb); err != nil {
+	if err = me.service.Get(ctx, id, jsondb); err != nil {
 		return err
 	}
 	if data, err = settings.ToJSON(jsondb); err != nil {
@@ -73,7 +75,7 @@ func (me *service) Validate(v *dashboards.Dashboard) error {
 	return nil
 }
 
-func (me *service) Create(v *dashboards.Dashboard) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *dashboards.Dashboard) (*api.Stub, error) {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -83,10 +85,10 @@ func (me *service) Create(v *dashboards.Dashboard) (*api.Stub, error) {
 	if err = settings.FromJSON(data, jsondb); err != nil {
 		return nil, err
 	}
-	return me.service.Create(jsondb)
+	return me.service.Create(ctx, jsondb)
 }
 
-func (me *service) Update(id string, v *dashboards.Dashboard) error {
+func (me *service) Update(ctx context.Context, id string, v *dashboards.Dashboard) error {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -96,11 +98,11 @@ func (me *service) Update(id string, v *dashboards.Dashboard) error {
 	if err = settings.FromJSON(data, jsondb); err != nil {
 		return err
 	}
-	return me.service.Update(id, jsondb)
+	return me.service.Update(ctx, id, jsondb)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
 func (me *service) SchemaID() string {

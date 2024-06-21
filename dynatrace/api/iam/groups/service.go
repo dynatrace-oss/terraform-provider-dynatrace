@@ -1,6 +1,7 @@
 package groups
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -52,7 +53,7 @@ func (me *GroupServiceClient) Name() string {
 // Description              string             `json:"description"`
 // FederatedAttributeValues []string           `json:"federatedAttributeValues"`
 // Permissions              groups.Permissions `json:"permissions"`
-func (me *GroupServiceClient) Create(group *groups.Group) (*api.Stub, error) {
+func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -77,7 +78,7 @@ func (me *GroupServiceClient) Create(group *groups.Group) (*api.Stub, error) {
 	return &api.Stub{ID: groupID, Name: groupName}, nil
 }
 
-func (me *GroupServiceClient) Update(uuid string, group *groups.Group) error {
+func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
 	var err error
 
 	client := iam.NewIAMClient(me)
@@ -113,7 +114,7 @@ type ListGroupsResponse struct {
 var cachedGroupStubs []*ListGroup
 var groupStubMutex sync.Mutex
 
-func (me *GroupServiceClient) List() (api.Stubs, error) {
+func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	groupStubMutex.Lock()
 	defer groupStubMutex.Unlock()
 
@@ -163,7 +164,7 @@ func (me *GroupServiceClient) listUnguarded() ([]*ListGroup, error) {
 	return response.Items, nil
 }
 
-func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
+func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
 	stubs, err := me.list()
 	if err != nil {
 		return err
@@ -187,7 +188,7 @@ func (me *GroupServiceClient) Get(id string, v *groups.Group) (err error) {
 	return fmt.Errorf("no group with id `%s` found", id)
 }
 
-func (me *GroupServiceClient) Delete(id string) error {
+func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
 	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
 	return err
 }

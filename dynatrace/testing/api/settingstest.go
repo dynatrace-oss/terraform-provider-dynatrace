@@ -18,6 +18,7 @@
 package api
 
 import (
+	"context"
 	"io/fs"
 	"os"
 	"path"
@@ -124,7 +125,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 						return
 					}
 
-					if stub, err = service.Create(createSettings); err != nil {
+					if stub, err = service.Create(context.Background(), createSettings); err != nil {
 						assert.Error(err)
 						return
 					}
@@ -132,7 +133,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 					if !t.Failed() {
 						t.Cleanup(func() {
 							if service != nil && stub != nil {
-								if err = service.Delete(stub.ID); err != nil {
+								if err = service.Delete(context.Background(), stub.ID); err != nil {
 									assert.Error(err)
 								}
 							}
@@ -140,7 +141,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 					}
 
 					remoteSettings := settings.NewSettings(service.(settings.RService[V]))
-					if err = service.Get(stub.ID, remoteSettings); err != nil {
+					if err = service.Get(context.Background(), stub.ID, remoteSettings); err != nil {
 						assert.Error(err)
 						return
 					}
@@ -158,13 +159,13 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 							return
 						}
 						updateSettings := allSettings[idx]
-						if err = service.Update(stub.ID, updateSettings); err != nil {
+						if err = service.Update(context.Background(), stub.ID, updateSettings); err != nil {
 							assert.Error(err)
 							return
 						}
 
 						remoteSettings := settings.NewSettings(service.(settings.RService[V]))
-						if err = service.Get(stub.ID, remoteSettings); err != nil {
+						if err = service.Get(context.Background(), stub.ID, remoteSettings); err != nil {
 							assert.Error(err)
 							return
 						}

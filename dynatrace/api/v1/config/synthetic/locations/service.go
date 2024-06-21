@@ -18,6 +18,8 @@
 package locations
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -35,7 +37,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) List() (stubs api.Stubs, err error) {
+func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	var stubList locations.SyntheticLocations
 	if err = me.client.Get("/api/v1/synthetic/locations", 200).Finish(&stubList); err != nil {
 		return nil, err
@@ -47,9 +49,9 @@ func (me *service) List() (stubs api.Stubs, err error) {
 	return stubs, nil
 }
 
-func (me *service) Get(id string, v *locations.SyntheticLocation) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *locations.SyntheticLocation) (err error) {
 	var stubs api.Stubs
-	if stubs, err = me.List(); err != nil {
+	if stubs, err = me.List(ctx); err != nil {
 		return err
 	}
 	for _, stub := range stubs {

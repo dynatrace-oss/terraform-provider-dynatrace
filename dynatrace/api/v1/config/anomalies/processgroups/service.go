@@ -18,6 +18,7 @@
 package processgroups
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -47,8 +48,8 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(config *processgroups.AnomalyDetection) (*api.Stub, error) {
-	if err := me.Update(config.ProcessGroupId, config); err != nil {
+func (me *service) Create(ctx context.Context, config *processgroups.AnomalyDetection) (*api.Stub, error) {
+	if err := me.Update(ctx, config.ProcessGroupId, config); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: config.ProcessGroupId + "-anomalydetection", Name: config.ProcessGroupId + "-anomalydetection"}, nil
@@ -56,7 +57,7 @@ func (me *service) Create(config *processgroups.AnomalyDetection) (*api.Stub, er
 
 // Update TODO: documentation
 
-func (me *service) Update(id string, config *processgroups.AnomalyDetection) error {
+func (me *service) Update(ctx context.Context, id string, config *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
 	if err := me.client.Put(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), config, 204).Finish(); err != nil {
@@ -78,7 +79,7 @@ func (me *service) Validate(config *processgroups.AnomalyDetection) error {
 }
 
 // Delete TODO: documentation
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
 	if err := me.client.Delete(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 204).Finish(); err != nil {
@@ -89,7 +90,7 @@ func (me *service) Delete(id string) error {
 }
 
 // Get TODO: documentation
-func (me *service) Get(id string, v *processgroups.AnomalyDetection) error {
+func (me *service) Get(ctx context.Context, id string, v *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
 	if err := me.client.Get(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 200).Finish(v); err != nil {
@@ -100,10 +101,10 @@ func (me *service) Get(id string, v *processgroups.AnomalyDetection) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	srv := cache.Read(entities.Service("PROCESS_GROUP", "", "", "", "", me.credentials), true)
 	v := new(entitiesSettings.Settings)
-	if err := srv.Get("", v); err != nil {
+	if err := srv.Get(ctx, "", v); err != nil {
 		return nil, err
 	}
 

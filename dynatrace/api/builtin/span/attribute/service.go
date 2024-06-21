@@ -59,7 +59,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(v *attribute.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *attribute.Settings) (*api.Stub, error) {
 	soc := settings20.SettingsObjectCreate{
 		SchemaID:      SchemaID,
 		SchemaVersion: SchemaVersion,
@@ -77,7 +77,7 @@ func (me *service) Create(v *attribute.Settings) (*api.Stub, error) {
 				Enabled: true,
 				Key:     v.Key,
 			}
-			stub, err = allowlist.Service(me.credentials).Create(&allowlistSettings)
+			stub, err = allowlist.Service(me.credentials).Create(ctx, &allowlistSettings)
 			if err != nil {
 				return nil, err
 			}
@@ -88,7 +88,7 @@ func (me *service) Create(v *attribute.Settings) (*api.Stub, error) {
 					Key:     v.Key,
 					Masking: maskingsettings.MaskingType(v.Masking),
 				}
-				if _, err = masking.Service(me.credentials).Create(&maskingSettings); err != nil {
+				if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
 					return nil, err
 				}
 			}
@@ -101,7 +101,7 @@ func (me *service) Create(v *attribute.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribute.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *attribute.Settings) error {
 	if err := me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
 		sou := settings20.SettingsObjectUpdate{Value: v, SchemaVersion: SchemaVersion}
 		if err := me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
@@ -115,7 +115,7 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribut
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List()
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -133,12 +133,12 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribut
 					Enabled: true,
 					Key:     v.Key,
 				}
-				if err = allowlist.Service(me.credentials).Update(*allowlistId, &allowlistSettings); err != nil {
+				if err = allowlist.Service(me.credentials).Update(ctx, *allowlistId, &allowlistSettings); err != nil {
 					return err
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List()
+			maskingStubs, err := masking.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -158,11 +158,11 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribut
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if err = masking.Service(me.credentials).Update(*maskingId, &maskingSettings); err != nil {
+					if err = masking.Service(me.credentials).Update(ctx, *maskingId, &maskingSettings); err != nil {
 						return err
 					}
 				} else {
-					if err = masking.Service(me.credentials).Delete(*maskingId); err != nil {
+					if err = masking.Service(me.credentials).Delete(ctx, *maskingId); err != nil {
 						return err
 					}
 				}
@@ -173,7 +173,7 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribut
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if _, err = masking.Service(me.credentials).Create(&maskingSettings); err != nil {
+					if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
 						return err
 					}
 				}
@@ -185,15 +185,11 @@ func (me *service) UpdateWithContext(ctx context.Context, id string, v *attribut
 	return nil
 }
 
-func (me *service) Update(id string, v *attribute.Settings) error {
-	return errors.New("`builtin:span-attribute` Update function should not be called, please create a GitHub Issue")
-}
-
 func (me *service) Validate(v *attribute.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) DeleteWithContext(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
 	if err = me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
 		if err = me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish(); err != nil {
@@ -207,7 +203,7 @@ func (me *service) DeleteWithContext(ctx context.Context, id string) error {
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List()
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -225,7 +221,7 @@ func (me *service) DeleteWithContext(ctx context.Context, id string) error {
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List()
+			maskingStubs, err := masking.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -250,11 +246,7 @@ func (me *service) DeleteWithContext(ctx context.Context, id string) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
-	return errors.New("`builtin:span-attribute` Delete function should not be called, please create a GitHub Issue")
-}
-
-func (me *service) GetWithContext(ctx context.Context, id string, v *attribute.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *attribute.Settings) error {
 	var err error
 	var settingsObject settings20.SettingsObject
 	if err = me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
@@ -273,7 +265,7 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *attribute.S
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List()
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -289,7 +281,7 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *attribute.S
 			}
 
 			v.Masking = attribute.MaskingTypes.NotMasked
-			maskingStubs, err := masking.Service(me.credentials).List()
+			maskingStubs, err := masking.Service(me.credentials).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -310,11 +302,7 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *attribute.S
 	return nil
 }
 
-func (me *service) Get(id string, v *attribute.Settings) error {
-	return errors.New("`builtin:span-attribute` Get function should not be called, please create a GitHub Issue")
-}
-
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	stubs := api.Stubs{}

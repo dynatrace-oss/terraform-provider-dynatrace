@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -43,17 +44,13 @@ func (me *UserServiceClient) SchemaID() string {
 	return "accounts:iam:users"
 }
 
-func (me *UserServiceClient) Name() string {
-	return me.SchemaID()
-}
-
-func (me *UserServiceClient) Create(user *users.User) (*api.Stub, error) {
+func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(me)
 	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), user, 201, false); err != nil {
 		if err.Error() == "User already exists" {
-			if err = me.Update(user.Email, user); err != nil {
+			if err = me.Update(ctx, user.Email, user); err != nil {
 				return nil, err
 			}
 			return &api.Stub{ID: user.Email, Name: user.Email}, nil
@@ -82,7 +79,7 @@ type GetUserGroupsResponse struct {
 	UID    string `json:"uid"`
 }
 
-func (me *UserServiceClient) Get(email string, v *users.User) error {
+func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User) error {
 	var err error
 	var responseBytes []byte
 
@@ -104,7 +101,7 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 	v.UID = response.UID
 	groupService := groups.NewGroupService(me.clientID, me.accountID, me.clientID)
 	var visibleGroupIDs api.Stubs
-	if visibleGroupIDs, err = groupService.List(); err != nil {
+	if visibleGroupIDs, err = groupService.List(ctx); err != nil {
 		return err
 	}
 	for _, group := range response.Groups {
@@ -119,7 +116,7 @@ func (me *UserServiceClient) Get(email string, v *users.User) error {
 	return nil
 }
 
-func (me *UserServiceClient) Update(email string, user *users.User) error {
+func (me *UserServiceClient) Update(ctx context.Context, email string, user *users.User) error {
 	var err error
 
 	groups := []string{}
@@ -143,7 +140,7 @@ type ListUsersResponse struct {
 	Items []UserStub `json:"items"`
 }
 
-func (me *UserServiceClient) List() (api.Stubs, error) {
+func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
@@ -162,7 +159,7 @@ func (me *UserServiceClient) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *UserServiceClient) Delete(email string) error {
+func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
 	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/users/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), email), 200, false)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil

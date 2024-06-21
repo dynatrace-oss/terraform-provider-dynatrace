@@ -18,6 +18,7 @@
 package vault
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 
@@ -27,12 +28,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:        schema.TypeString,
@@ -55,7 +57,7 @@ func DataSource() *schema.Resource {
 
 var notFoundRegexp = regexp.MustCompile(`Setting with id '.*' not found \(offline mode\)`)
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	name := ""
 	typ := ""
 	scope := ""
@@ -69,17 +71,17 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		scope = value.(string)
 	}
 	if name == "" && typ == "" && scope == "" {
-		return fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string")
+		return diag.FromErr(fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string"))
 	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := export.Service(creds, export.ResourceTypes.Credentials)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(stubs) == 0 {
 		d.SetId("")
@@ -89,7 +91,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			continue
 		}
 		var credentials vault.Credentials
-		if err = service.Get(stub.ID, &credentials); err != nil {
+		if err = service.Get(ctx, stub.ID, &credentials); err != nil {
 			/*
 				Identically configured credentials are allowed to be configured via REST and WebUI.
 				Therefore the block
@@ -108,7 +110,7 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 			if notFoundRegexp.MatchString(err.Error()) {
 				continue
 			}
-			return err
+			return diag.FromErr(err)
 		}
 		if scope != "" && string(credentials.Scope) != scope {
 			continue
@@ -120,9 +122,9 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 		d.Set("type", string(credentials.Type))
 		d.Set("name", stub.Name)
 		d.SetId(stub.ID)
-		return nil
+		return diag.Diagnostics{}
 	}
 
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }

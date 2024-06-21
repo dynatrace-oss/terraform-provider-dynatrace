@@ -18,6 +18,7 @@
 package extension_config
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -38,7 +39,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) Get(id string, v *extension_config.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings) error {
 	name, configurationID := splitID(id)
 	var response GetMonitoringConfigurationResponse
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -51,7 +52,7 @@ func (me *service) Get(id string, v *extension_config.Settings) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 
 	var extensionsList ExtensionsList
@@ -82,7 +83,7 @@ func (me *service) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Create(v *extension_config.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*api.Stub, error) {
 	version, err := extractVersion(v)
 	if err != nil {
 		return nil, err
@@ -131,7 +132,7 @@ func (me *service) ensureInstalled(name string, version string) error {
 	return nil
 }
 
-func (me *service) Update(id string, v *extension_config.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *extension_config.Settings) error {
 	_, configID := splitID(id)
 	version, err := extractVersion(v)
 	if err != nil {
@@ -153,7 +154,7 @@ func (me *service) Update(id string, v *extension_config.Settings) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	name, configID := splitID(id)
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	if err := client.Delete(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {

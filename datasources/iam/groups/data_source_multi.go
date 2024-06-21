@@ -18,14 +18,18 @@
 package groups
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceMulti() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceMultiRead,
+		ReadContext: logging.EnableDSCtx(DataSourceMultiRead),
 		Schema: map[string]*schema.Schema{
 			"groups": {
 				Type:     schema.TypeMap,
@@ -36,16 +40,16 @@ func DataSourceMulti() *schema.Resource {
 	}
 }
 
-func DataSourceMultiRead(d *schema.ResourceData, m any) error {
+func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValIAM)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := groups.Service(creds)
-	stubs, err := service.List()
+	stubs, err := service.List(ctx)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	d.SetId("iam-groups")
 	groups := map[string]string{}
@@ -55,5 +59,5 @@ func DataSourceMultiRead(d *schema.ResourceData, m any) error {
 		}
 	}
 	d.Set("groups", groups)
-	return nil
+	return diag.Diagnostics{}
 }

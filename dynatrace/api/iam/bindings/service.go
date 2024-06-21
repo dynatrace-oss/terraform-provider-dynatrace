@@ -1,6 +1,7 @@
 package bindings
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -50,16 +51,16 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*api.Stub, error) {
+func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding) (*api.Stub, error) {
 	id := joinID(v)
 	var err error
-	if err = me.Update(id, v); err != nil {
+	if err = me.Update(ctx, id, v); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id, Name: "PolicyBindings-" + id}, nil
 }
 
-func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -86,7 +87,7 @@ func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error 
 	return nil
 }
 
-func (me *BindingServiceClient) Update(id string, bindings *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings *bindings.PolicyBinding) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -130,7 +131,7 @@ type ListPolicyBindingsResponse struct {
 	PolicyBindings []PolicyBindingStub `json:"policyBindings"`
 }
 
-func (me *BindingServiceClient) List() (api.Stubs, error) {
+func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 	client := iam.NewIAMClient(me)
@@ -189,13 +190,13 @@ func (me *BindingServiceClient) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *BindingServiceClient) Delete(id string) error {
+func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
 	}
 	var binding bindings.PolicyBinding
-	if err = me.Get(id, &binding); err != nil {
+	if err = me.Get(ctx, id, &binding); err != nil {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {

@@ -18,6 +18,7 @@
 package synthetic
 
 import (
+	"context"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -43,35 +44,35 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *mysettings.CalculatedSyntheticMetric) error {
-	return me.service.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric) error {
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *mysettings.CalculatedSyntheticMetric) (*api.Stub, error) {
-	return me.service.Create(v)
+func (me *service) Create(ctx context.Context, v *mysettings.CalculatedSyntheticMetric) (*api.Stub, error) {
+	return me.service.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *mysettings.CalculatedSyntheticMetric) error {
-	return me.service.Update(id, v)
+func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric) error {
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
 	var retry = 10
 
 	for i := 0; i < retry; i++ {
-		if err = me.service.Delete(id); err != nil {
+		if err = me.service.Delete(ctx, id); err != nil {
 			return err
 		}
-		if err = me.service.Get(id, new(mysettings.CalculatedSyntheticMetric)); err != nil {
+		if err = me.service.Get(ctx, id, new(mysettings.CalculatedSyntheticMetric)); err != nil {
 			break
 		}
 		time.Sleep(time.Second * 2)

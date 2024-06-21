@@ -18,6 +18,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -94,7 +95,7 @@ func (me servicesResponse) clone() servicesResponse {
 	return cl
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	var credentialStubs api.Stubs
 	var err error
@@ -113,7 +114,7 @@ func (me *service) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Get(id string, v *services.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *services.Settings) error {
 	smu.Lock()
 	defer smu.Unlock()
 	parts := strings.Split(id, "#")
@@ -140,7 +141,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(v *services.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub, error) {
 	smu.Lock()
 	defer smu.Unlock()
 	credentialsID := v.CredentialsID
@@ -239,12 +240,12 @@ func (me *service) Create(v *services.Settings) (*api.Stub, error) {
 	return &api.Stub{ID: credentialsID + "#" + v.Name, Name: credentialsID + "_" + v.Name}, nil
 }
 
-func (me *service) Update(id string, v *services.Settings) error {
-	_, err := me.Create(v)
+func (me *service) Update(ctx context.Context, id string, v *services.Settings) error {
+	_, err := me.Create(ctx, v)
 	return err
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	smu.Lock()
 	defer smu.Unlock()
 	parts := strings.Split(id, "#")

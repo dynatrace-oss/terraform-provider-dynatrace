@@ -25,14 +25,14 @@ import (
 )
 
 type RService[T Settings] interface {
-	List() (api.Stubs, error)
-	Get(id string, v T) error
+	List(ctx context.Context) (api.Stubs, error)
+	Get(ctx context.Context, id string, v T) error
 	SchemaID() string
 }
 
-func FindByName[T Settings](service RService[T], name string) (stub *api.Stub, err error) {
+func FindByName[T Settings](ctx context.Context, service RService[T], name string) (stub *api.Stub, err error) {
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
+	if stubs, err = service.List(ctx); err != nil {
 		return nil, err
 	}
 	for _, stub := range stubs.ToStubs() {
@@ -47,29 +47,13 @@ type ContextKey string
 
 const ContextKeyStateConfig = ContextKey("state-config")
 
-type ContextGetter[T Settings] interface {
-	GetWithContext(ctx context.Context, id string, v T) error
-}
-
-type ContextUpdater[T Settings] interface {
-	UpdateWithContext(ctx context.Context, id string, v T) error
-}
-
-type ContextCreator[T Settings] interface {
-	CreateWithContext(ctx context.Context, v T) (*api.Stub, error)
-}
-
-type ContextDeleter[T Settings] interface {
-	DeleteWithContext(ctx context.Context, id string) error
-}
-
 type CRUDService[T Settings] interface {
-	List() (api.Stubs, error)
-	Get(id string, v T) error
+	List(ctx context.Context) (api.Stubs, error)
+	Get(ctx context.Context, id string, v T) error
 	SchemaID() string
-	Create(v T) (*api.Stub, error)
-	Update(id string, v T) error
-	Delete(id string) error
+	Create(ctx context.Context, v T) (*api.Stub, error)
+	Update(ctx context.Context, id string, v T) error
+	Delete(ctx context.Context, id string) error
 }
 
 type Validator[T Settings] interface {
