@@ -1,6 +1,7 @@
 package mgmz
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -23,24 +24,24 @@ type ServiceClient struct {
 	client rest.Client
 }
 
-func (me *service) Create(v *mgmz.Permission) (*api.Stub, error) {
-	return me.serviceClient.Create(v)
+func (me *service) Create(ctx context.Context, v *mgmz.Permission) (*api.Stub, error) {
+	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *mgmz.Permission) error {
-	return me.serviceClient.Update(v)
+func (me *service) Update(ctx context.Context, id string, v *mgmz.Permission) error {
+	return me.serviceClient.Update(ctx, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.serviceClient.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.serviceClient.Delete(ctx, id)
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.serviceClient.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(id string, v *mgmz.Permission) error {
-	return me.serviceClient.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *mgmz.Permission) error {
+	return me.serviceClient.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
@@ -62,7 +63,7 @@ type service struct {
 	serviceClient *ServiceClient
 }
 
-func (cs *ServiceClient) Create(permission *mgmz.Permission) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, permission *mgmz.Permission) (*api.Stub, error) {
 	var err error
 	permissionDTO := &mgmz.PermissionDTO{
 		GroupID: permission.GroupID,
@@ -84,7 +85,7 @@ func (cs *ServiceClient) Create(permission *mgmz.Permission) (*api.Stub, error) 
 	return &api.Stub{ID: toID(permission), Name: toID(permission)}, nil
 }
 
-func (cs *ServiceClient) Update(permission *mgmz.Permission) error {
+func (cs *ServiceClient) Update(ctx context.Context, permission *mgmz.Permission) error {
 	var err error
 	permissionDTO := &mgmz.PermissionDTO{
 		GroupID: permission.GroupID,
@@ -106,7 +107,7 @@ func (cs *ServiceClient) Update(permission *mgmz.Permission) error {
 	return nil
 }
 
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	var permission mgmz.Permission
 	if err := readID(id, &permission); err != nil {
 		return err
@@ -139,7 +140,7 @@ func (cs *ServiceClient) Delete(id string) error {
 	return nil
 }
 
-func (cs *ServiceClient) Get(id string, permission *mgmz.Permission) error {
+func (cs *ServiceClient) Get(ctx context.Context, id string, permission *mgmz.Permission) error {
 	var err error
 
 	if err := readID(id, permission); err != nil {
@@ -172,7 +173,7 @@ type ListResponse []struct {
 	} `json:"mzPermissionsPerEnvironment"`
 }
 
-func (cs *ServiceClient) List() (api.Stubs, error) {
+func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 

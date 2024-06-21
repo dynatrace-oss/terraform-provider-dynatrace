@@ -18,17 +18,20 @@
 package lambdaagent
 
 import (
+	"context"
+
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/deployment/lambdaagent"
 	latest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/deployment/lambdaagent/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"java": {
 				Type:        schema.TypeString,
@@ -76,16 +79,16 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	var latest latest.Latest
 	service := srv.Service(creds)
-	if err := service.Get("", &latest); err != nil {
-		return err
+	if err := service.Get(ctx, "", &latest); err != nil {
+		return diag.FromErr(err)
 	}
 
 	d.SetId(service.SchemaID())
@@ -97,5 +100,5 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	d.Set("nodejs_with_collector", latest.NodeJSWithCollector)
 	d.Set("collector", latest.Collector)
 
-	return nil
+	return diag.Diagnostics{}
 }

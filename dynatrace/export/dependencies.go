@@ -393,7 +393,7 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 
 	legacyIdMap := environment.Module(me.resourceType).GetLegacyIdMap()
 
-	for extractedId, _ := range extractedIds {
+	for extractedId := range extractedIds {
 		resource, exists := legacyIdMap[extractedId]
 
 		if exists {

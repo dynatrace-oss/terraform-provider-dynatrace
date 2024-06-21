@@ -18,6 +18,7 @@
 package detection
 
 import (
+	"context"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -40,20 +41,20 @@ type service struct {
 	service settings.CRUDService[*detection.Rule]
 }
 
-func (s *service) List() (api.Stubs, error) {
-	return s.service.List()
+func (s *service) List(ctx context.Context) (api.Stubs, error) {
+	return s.service.List(ctx)
 }
 
-func (s *service) Get(id string, v *detection.Rule) error {
-	return s.service.Get(id, v)
+func (s *service) Get(ctx context.Context, id string, v *detection.Rule) error {
+	return s.service.Get(ctx, id, v)
 }
 
 func (s *service) SchemaID() string {
 	return s.service.SchemaID()
 }
 
-func (s *service) Create(v *detection.Rule) (*api.Stub, error) {
-	stub, err := s.service.Create(v)
+func (s *service) Create(ctx context.Context, v *detection.Rule) (*api.Stub, error) {
+	stub, err := s.service.Create(ctx, v)
 	if err == nil {
 		return stub, err
 	}
@@ -64,15 +65,15 @@ func (s *service) Create(v *detection.Rule) (*api.Stub, error) {
 			break
 		}
 		time.Sleep(10 * time.Second)
-		stub, err = s.service.Create(v)
+		stub, err = s.service.Create(ctx, v)
 	}
 	return stub, err
 }
 
-func (s *service) Update(id string, v *detection.Rule) error {
-	return s.service.Update(id, v)
+func (s *service) Update(ctx context.Context, id string, v *detection.Rule) error {
+	return s.service.Update(ctx, id, v)
 }
 
-func (s *service) Delete(id string) error {
-	return s.service.Delete(id)
+func (s *service) Delete(ctx context.Context, id string) error {
+	return s.service.Delete(ctx, id)
 }

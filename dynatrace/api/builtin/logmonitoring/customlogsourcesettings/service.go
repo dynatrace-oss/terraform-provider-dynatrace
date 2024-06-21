@@ -46,14 +46,14 @@ type service struct {
 
 var errorMessage = "Given property 'values-and-enrichment' with value: '0' violates the following constraint: fell below the collection's lower size limit which was set to 1."
 
-func (me *service) Create(v *customlogsourcesettings.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *customlogsourcesettings.Settings) (*api.Stub, error) {
 	var stub *api.Stub
 	var err error
 
-	if stub, err = me.service.Create(v); err != nil {
+	if stub, err = me.service.Create(ctx, v); err != nil {
 		if strings.Contains(err.Error(), errorMessage) && v.Custom_log_source != nil && len(v.Custom_log_source.Values) > 0 {
 			valuesToValuesAndEnrichment(v)
-			if stub, err = me.service.Create(v); err != nil {
+			if stub, err = me.service.Create(ctx, v); err != nil {
 				return nil, err
 			}
 		} else {
@@ -64,11 +64,11 @@ func (me *service) Create(v *customlogsourcesettings.Settings) (*api.Stub, error
 	return stub, nil
 }
 
-func (me *service) Update(id string, v *customlogsourcesettings.Settings) error {
-	if err := me.service.Update(id, v); err != nil {
+func (me *service) Update(ctx context.Context, id string, v *customlogsourcesettings.Settings) error {
+	if err := me.service.Update(ctx, id, v); err != nil {
 		if strings.Contains(err.Error(), errorMessage) && v.Custom_log_source != nil && len(v.Custom_log_source.Values) > 0 {
 			valuesToValuesAndEnrichment(v)
-			if err = me.service.Update(id, v); err != nil {
+			if err = me.service.Update(ctx, id, v); err != nil {
 				return err
 			}
 		} else {
@@ -79,9 +79,9 @@ func (me *service) Update(id string, v *customlogsourcesettings.Settings) error 
 	return nil
 }
 
-func (me *service) GetWithContext(ctx context.Context, id string, v *customlogsourcesettings.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *customlogsourcesettings.Settings) error {
 	var err error
-	if err = me.Get(id, v); err != nil {
+	if err = me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
 
@@ -116,16 +116,12 @@ func valuesAndEnrichmentToValues(v *customlogsourcesettings.Settings) {
 	v.Custom_log_source.Values_and_enrichment = customlogsourcesettings.CustomLogSourceWithEnrichments{}
 }
 
-func (me *service) Get(id string, v *customlogsourcesettings.Settings) error {
-	return me.service.Get(id, v)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
-}
-
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
 func (me *service) SchemaID() string {

@@ -18,6 +18,7 @@
 package customtags
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/url"
@@ -41,7 +42,7 @@ type service struct {
 
 var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
 
-func (me *service) Get(selector string, v *customtags.Settings) (err error) {
+func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings) (err error) {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	if err = client.Get(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
@@ -67,7 +68,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:customtags"
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return list.List(rest.DefaultClient(me.credentials.URL, me.credentials.Token))
 }
 
@@ -75,14 +76,14 @@ func (me *service) Validate(v *customtags.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *customtags.Settings) (*api.Stub, error) {
-	if err := me.Update(v.EntitySelector, v); err != nil {
+func (me *service) Create(ctx context.Context, v *customtags.Settings) (*api.Stub, error) {
+	if err := me.Update(ctx, v.EntitySelector, v); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: v.EntitySelector, Name: v.EntitySelector}, nil
 }
 
-func (me *service) Update(id string, v *customtags.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *customtags.Settings) error {
 	var err error
 
 	var settingsObj customtags.Settings
@@ -95,11 +96,11 @@ func (me *service) Update(id string, v *customtags.Settings) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return errors.New("not implemented")
 }
 
-func (me *service) DeleteValue(v *customtags.Settings) error {
+func (me *service) DeleteValue(ctx context.Context, v *customtags.Settings) error {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	for _, tag := range v.Tags {
 		if tag.Value == nil || len(*tag.Value) == 0 {

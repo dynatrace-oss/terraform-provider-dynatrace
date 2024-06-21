@@ -48,11 +48,7 @@ const DefaultApplyTimeout = 100
 const MinApplyTimeout = 100
 const MaxApplyTimeout = 500
 
-func (me *service) Get(id string, v *customdevice.CustomDevice) error {
-	return me.GetWithContext(context.Background(), id, v)
-}
-
-func (me *service) GetWithContext(ctx context.Context, id string, v *customdevice.CustomDevice) error {
+func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDevice) error {
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	stateConfig, stateConfigFound := cfg.(*customdevice.CustomDevice)
 
@@ -185,7 +181,7 @@ type lresponse struct {
 	} `json:"entities"`
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `type("CUSTOM_DEVICE")`
@@ -228,7 +224,7 @@ func (me *service) Validate(v *customdevice.CustomDevice) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *customdevice.CustomDevice) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *customdevice.CustomDevice) (*api.Stub, error) {
 	mutex.Lock()
 	defer mutex.Unlock()
 	var err error
@@ -269,7 +265,7 @@ func (me *service) Create(v *customdevice.CustomDevice) (*api.Stub, error) {
 	return &api.Stub{ID: v.CustomDeviceID, Name: *v.DisplayName}, nil
 }
 
-func (me *service) Update(id string, v *customdevice.CustomDevice) error {
+func (me *service) Update(ctx context.Context, id string, v *customdevice.CustomDevice) error {
 	var err error
 	v.CustomDeviceID = id
 	v.EntityId = ""
@@ -280,7 +276,7 @@ func (me *service) Update(id string, v *customdevice.CustomDevice) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return nil // no endpoint for that
 }
 

@@ -18,6 +18,8 @@
 package entities
 
 import (
+	"context"
+
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
@@ -25,12 +27,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:          schema.TypeString,
@@ -65,7 +68,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var entityType string
 	if v, ok := d.GetOk("type"); ok {
 		entityType = v.(string)
@@ -89,22 +92,22 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	var settings entities.Settings
 	service := srv.Service(entityType, "", entitySelector, from, to, creds)
-	if err := service.Get(service.SchemaID(), &settings); err != nil {
-		return err
+	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+		return diag.FromErr(err)
 	}
 	d.SetId(service.SchemaID())
 	if len(settings.Entities) != 0 {
 		marshalled := hcl.Properties{}
 		err := marshalled.Encode("settings", &settings)
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 		d.Set("entities", marshalled["settings"].([]any)[0].(hcl.Properties)["entities"])
 	}
-	return nil
+	return diag.Diagnostics{}
 }

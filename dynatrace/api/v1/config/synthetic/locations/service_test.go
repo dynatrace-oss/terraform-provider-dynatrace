@@ -18,6 +18,7 @@
 package locations_test
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"os"
@@ -41,7 +42,7 @@ func TestSyntheticLocations(t *testing.T) {
 	service := locations.Service(credentials)
 	var stubs api.Stubs
 	var err error
-	if stubs, err = service.List(); err != nil {
+	if stubs, err = service.List(context.Background()); err != nil {
 		t.Error(err)
 		return
 	}

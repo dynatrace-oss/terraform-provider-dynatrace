@@ -18,6 +18,7 @@
 package cache
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -63,7 +64,7 @@ func (me *crudService[T]) init() error {
 	return nil
 }
 
-func (me *crudService[T]) Create(v T) (*api.Stub, error) {
+func (me *crudService[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -76,7 +77,7 @@ func (me *crudService[T]) Create(v T) (*api.Stub, error) {
 	}
 	var err error
 	var stub *api.Stub
-	if stub, err = me.service.Create(v); err != nil {
+	if stub, err = me.service.Create(ctx, v); err != nil {
 		return nil, err
 	}
 	me.index.Add(stub.ID, stub.Name)
@@ -86,7 +87,7 @@ func (me *crudService[T]) Create(v T) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *crudService[T]) Delete(id string) error {
+func (me *crudService[T]) Delete(ctx context.Context, id string) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -97,7 +98,7 @@ func (me *crudService[T]) Delete(id string) error {
 	if mode == ModeOffline {
 		return errors.New("modifications not allowed in offline mode")
 	}
-	if err := me.service.Delete(id); err != nil {
+	if err := me.service.Delete(ctx, id); err != nil {
 		return err
 	}
 
@@ -105,21 +106,21 @@ func (me *crudService[T]) Delete(id string) error {
 	return me.tarFolder.Delete(id)
 }
 
-func (me *crudService[T]) List() (api.Stubs, error) {
+func (me *crudService[T]) List(ctx context.Context) (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
-	return me.list(true)
+	return me.list(ctx, true)
 }
 
-func (me *crudService[T]) ListNoValues() (api.Stubs, error) {
+func (me *crudService[T]) ListNoValues(ctx context.Context) (api.Stubs, error) {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
-	return me.list(false)
+	return me.list(ctx, false)
 }
 
-func (me *crudService[T]) list(withValues bool) (api.Stubs, error) {
+func (me *crudService[T]) list(ctx context.Context, withValues bool) (api.Stubs, error) {
 	if err := me.init(); err != nil {
 		return nil, err
 	}
@@ -147,7 +148,7 @@ func (me *crudService[T]) list(withValues bool) (api.Stubs, error) {
 
 	var err error
 	var stubs api.Stubs
-	if stubs, err = me.service.List(); err != nil {
+	if stubs, err = me.service.List(ctx); err != nil {
 		return nil, err
 	}
 	for _, stub := range stubs {
@@ -168,7 +169,7 @@ func (me *crudService[T]) list(withValues bool) (api.Stubs, error) {
 	return stubs.ToStubs(), nil
 }
 
-func (me *crudService[T]) Get(id string, v T) error {
+func (me *crudService[T]) Get(ctx context.Context, id string, v T) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -194,13 +195,13 @@ func (me *crudService[T]) Get(id string, v T) error {
 			Message: fmt.Sprintf("Setting with id '%s' not found (offline mode)", id),
 		}
 	}
-	if err = me.service.Get(id, v); err != nil {
+	if err = me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
 	return me.notifyGet(id, "", v)
 }
 
-func (me *crudService[T]) Update(id string, v T) error {
+func (me *crudService[T]) Update(ctx context.Context, id string, v T) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -211,7 +212,7 @@ func (me *crudService[T]) Update(id string, v T) error {
 	if mode == ModeOffline {
 		return errors.New("modifications not allowed in offline mode")
 	}
-	if err := me.service.Update(id, v); err != nil {
+	if err := me.service.Update(ctx, id, v); err != nil {
 		return err
 	}
 	return me.tarFolder.Delete(id)

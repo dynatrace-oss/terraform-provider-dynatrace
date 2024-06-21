@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -24,24 +25,24 @@ type ServiceClient struct {
 	client rest.Client
 }
 
-func (me *service) Create(v *users.UserConfig) (*api.Stub, error) {
-	return me.serviceClient.Create(v)
+func (me *service) Create(ctx context.Context, v *users.UserConfig) (*api.Stub, error) {
+	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *users.UserConfig) error {
-	return me.serviceClient.Update(v)
+func (me *service) Update(ctx context.Context, id string, v *users.UserConfig) error {
+	return me.serviceClient.Update(ctx, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.serviceClient.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.serviceClient.Delete(ctx, id)
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.serviceClient.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(id string, v *users.UserConfig) error {
-	return me.serviceClient.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *users.UserConfig) error {
+	return me.serviceClient.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
@@ -64,7 +65,7 @@ type service struct {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(userConfig *users.UserConfig) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, userConfig *users.UserConfig) (*api.Stub, error) {
 	var err error
 
 	var createdUserConfig users.UserConfig
@@ -75,12 +76,12 @@ func (cs *ServiceClient) Create(userConfig *users.UserConfig) (*api.Stub, error)
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(userConfig *users.UserConfig) error {
+func (cs *ServiceClient) Update(ctx context.Context, userConfig *users.UserConfig) error {
 	return cs.client.Put("/users", userConfig, 200).Finish()
 }
 
 // Delete TODO: documentation
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the Dashboard to delete")
 	}
@@ -88,7 +89,7 @@ func (cs *ServiceClient) Delete(id string) error {
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get(id string, v *users.UserConfig) error {
+func (cs *ServiceClient) Get(ctx context.Context, id string, v *users.UserConfig) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the Dashboard to fetch")
 	}
@@ -104,7 +105,7 @@ func (cs *ServiceClient) Get(id string, v *users.UserConfig) error {
 }
 
 // ListAll TODO: documentation
-func (cs *ServiceClient) List() (api.Stubs, error) {
+func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var users []*users.UserConfig

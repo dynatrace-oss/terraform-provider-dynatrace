@@ -18,6 +18,8 @@
 package iam
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	iam "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/iam/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -32,11 +34,11 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(id string, v *iam.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *iam.Settings) error {
 	return me.client.Get("/api/config/v1/aws/iamExternalId", 200).Finish(v)
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: StaticID, Name: StaticName}}, nil
 }
 

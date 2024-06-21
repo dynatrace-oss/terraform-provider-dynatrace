@@ -18,6 +18,7 @@
 package presets
 
 import (
+	"context"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -39,55 +40,55 @@ type service struct {
 	service settings.CRUDService[*presets.Settings]
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	mu.Lock()
 	defer mu.Unlock()
-	return me.service.List()
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *presets.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *presets.Settings) error {
 	mu.Lock()
 	defer mu.Unlock()
-	if stubs, _ := me.service.List(); len(stubs) > 0 {
-		return me.service.Get(stubs[0].ID, v)
+	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
+		return me.service.Get(ctx, stubs[0].ID, v)
 	}
-	return me.service.Get(id, v)
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *presets.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *presets.Settings) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	// This schema is flagged with `multiobject=false` - in other words only one
 	// object can exist per environment
 	// Instead of trying to CREATE the settings we simply update the existing one
-	if stubs, _ := me.service.List(); len(stubs) > 0 {
-		return stubs[0], me.update(stubs[0].ID, v)
+	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
+		return stubs[0], me.update(ctx, stubs[0].ID, v)
 	}
-	return me.service.Create(v)
+	return me.service.Create(ctx, v)
 }
 
-func (me *service) update(id string, v *presets.Settings) error {
-	return me.service.Update(id, v)
+func (me *service) update(ctx context.Context, id string, v *presets.Settings) error {
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Update(id string, v *presets.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *presets.Settings) error {
 	mu.Lock()
 	defer mu.Unlock()
 	// Just in case we LOCALLY are having a different ID than the ID the
 	// environment insists on having we're checking first, whether an object
 	// already exists. If so, we're updating using THAT ID.
-	if stubs, _ := me.service.List(); len(stubs) > 0 {
-		return me.update(stubs[0].ID, v)
+	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
+		return me.update(ctx, stubs[0].ID, v)
 	}
-	return me.service.Update(id, v)
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	mu.Lock()
 	defer mu.Unlock()
-	return me.service.Delete(id)
+	return me.service.Delete(ctx, id)
 }

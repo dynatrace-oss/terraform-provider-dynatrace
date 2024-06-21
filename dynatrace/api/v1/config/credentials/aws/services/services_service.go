@@ -18,6 +18,7 @@
 package services
 
 import (
+	"context"
 	"strings"
 	"sync"
 
@@ -57,15 +58,15 @@ type supportedServicesResponse struct {
 }
 
 func (me *SupportedServicesService) IsBuiltIn(name string) (bool, error) {
-	s, e := me.Get(name)
+	s, e := me.Get(context.Background(), name)
 	if e != nil {
 		return false, e
 	}
 	return s != nil && s.BuiltIn, nil
 }
 
-func (me *SupportedServicesService) Get(name string) (*SupportedService, error) {
-	services, err := me.List()
+func (me *SupportedServicesService) Get(ctx context.Context, name string) (*SupportedService, error) {
+	services, err := me.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +77,7 @@ func (me *SupportedServicesService) Get(name string) (*SupportedService, error) 
 	return result, nil
 }
 
-func (me *SupportedServicesService) List() (map[string]*SupportedService, error) {
+func (me *SupportedServicesService) List(ctx context.Context) (map[string]*SupportedService, error) {
 	mu.Lock()
 	defer mu.Unlock()
 

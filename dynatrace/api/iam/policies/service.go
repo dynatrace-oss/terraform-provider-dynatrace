@@ -1,6 +1,7 @@
 package policies
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -56,7 +57,7 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
+func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -75,8 +76,8 @@ func (me *PolicyServiceClient) Create(v *policies.Policy) (*api.Stub, error) {
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
-func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
-	err := me.get(id, v)
+func (me *PolicyServiceClient) Get(ctx context.Context, id string, v *policies.Policy) error {
+	err := me.get(ctx, id, v)
 	if err != nil {
 		return err
 	}
@@ -86,7 +87,10 @@ func (me *PolicyServiceClient) Get(id string, v *policies.Policy) error {
 	return err
 }
 
-func (me *PolicyServiceClient) get(id string, v *policies.Policy) error {
+func UNUSED_PARAMETER(v any) {}
+
+func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.Policy) error {
+	UNUSED_PARAMETER(ctx)
 	var levelType string
 	var levelID string
 
@@ -126,7 +130,7 @@ func (me *PolicyServiceClient) get(id string, v *policies.Policy) error {
 	return nil
 }
 
-func (me *PolicyServiceClient) Update(id string, user *policies.Policy) error {
+func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *policies.Policy) error {
 	var levelType string
 	var levelID string
 	uuid, _, _, err := SplitIDNoDefaults(id)
@@ -280,7 +284,7 @@ func list(auth iam.Authenticator) (results chan *api.Stub, err error) {
 	return results, nil
 }
 
-func (me *PolicyServiceClient) List() (api.Stubs, error) {
+func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	stubs := api.Stubs{}
 	policyLevels, err := FetchAllPolicyLevels(me)
 	if err != nil {
@@ -307,7 +311,7 @@ func (me *PolicyServiceClient) ListWithGlobals() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *PolicyServiceClient) Delete(id string) error {
+func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 	var levelType string
 	var levelID string
 	var err error

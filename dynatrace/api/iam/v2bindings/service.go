@@ -42,18 +42,14 @@ func (me *BindingServiceClient) SchemaID() string {
 	return "accounts:iam:bindings"
 }
 
-func (me *BindingServiceClient) Name() string {
-	return me.SchemaID()
-}
-
 type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *BindingServiceClient) Create(v *bindings.PolicyBinding) (*api.Stub, error) {
+func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding) (*api.Stub, error) {
 	id := joinID(v)
 	var err error
-	if err = me.Update(id, v); err != nil {
+	if err = me.Update(ctx, id, v); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id}, nil
@@ -66,10 +62,6 @@ func getStateConfig(ctx context.Context) *bindings.PolicyBinding {
 		stateConfig = typedConfig
 	}
 	return stateConfig
-}
-
-func (me *BindingServiceClient) Get(id string, v *bindings.PolicyBinding) error {
-	return me.GetWithContext(context.Background(), id, v)
 }
 
 func deductPolicyID(policyID string, levelType string, levelID string, existing []*bindings.Policy) string {
@@ -99,7 +91,7 @@ type BindingsResponse struct {
 	} `json:"policyBindings"`
 }
 
-func (me *BindingServiceClient) GetWithContext(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding) error {
 	stateConfig := getStateConfig(ctx)
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
@@ -169,7 +161,7 @@ func (me *BindingServiceClient) resolvePolicies(uuid string, bindingsResponse Bi
 	return results, nil
 }
 
-func (me *BindingServiceClient) Update(id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindings.PolicyBinding) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -290,7 +282,7 @@ func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
 	return results
 }
 
-func (me *BindingServiceClient) List() (api.Stubs, error) {
+func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	accountStubs := me.FetchAccountBindings()
 	environmentStubs := me.FetchEnvironmentBindings()
@@ -326,13 +318,13 @@ func (me *BindingServiceClient) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *BindingServiceClient) Delete(id string) error {
+func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
 	}
 	var binding bindings.PolicyBinding
-	if err = me.Get(id, &binding); err != nil {
+	if err = me.Get(ctx, id, &binding); err != nil {
 		return err
 	}
 	policyUUIDs := map[string]string{}

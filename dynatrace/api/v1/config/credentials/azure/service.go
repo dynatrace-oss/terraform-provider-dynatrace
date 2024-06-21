@@ -18,6 +18,7 @@
 package azure
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
@@ -48,20 +49,20 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *azure.AzureCredentials) error {
-	return me.service.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *azure.AzureCredentials) error {
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *azure.AzureCredentials) (*api.Stub, error) {
-	stub, err := me.service.Create(v)
+func (me *service) Create(ctx context.Context, v *azure.AzureCredentials) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v)
 	if err != nil {
 		return nil, err
 	}
@@ -70,19 +71,19 @@ func (me *service) Create(v *azure.AzureCredentials) (*api.Stub, error) {
 		if err := me.client.Put(fmt.Sprintf("%s/%s/services", BasePath, stub.ID), struct {
 			Services []string `json:"services"`
 		}{Services: []string{}}, 204).Finish(); err != nil {
-			me.Delete(stub.ID)
+			me.Delete(ctx, stub.ID)
 			return nil, err
 		}
 	}
 	return stub, err
 }
 
-func (me *service) Update(id string, v *azure.AzureCredentials) error {
+func (me *service) Update(ctx context.Context, id string, v *azure.AzureCredentials) error {
 	// by not sending supported services they won't get changed
 	v.SupportingServices = nil
-	return me.service.Update(id, v)
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }

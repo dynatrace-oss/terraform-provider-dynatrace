@@ -18,6 +18,7 @@
 package entity
 
 import (
+	"context"
 	"fmt"
 
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
@@ -25,12 +26,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:         schema.TypeString,
@@ -69,7 +71,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
@@ -95,14 +97,14 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	var settings entities.Settings
 	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
 	service := srv.Service(entityType, name, entitySelector, from, to, creds)
-	if err := service.Get(service.SchemaID(), &settings); err != nil {
-		return err
+	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(settings.Entities) != 0 {
 		if len(name) > 0 {
@@ -117,17 +119,17 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 			}
 			// No entity with that name -> ID empty string signals not found
 			d.SetId("")
-			return nil
+			return diag.Diagnostics{}
 		}
 		// When looking via entity_selector the first result
 		// will be returned
 		d.SetId(*settings.Entities[0].EntityId)
 		setProperties(settings.Entities[0].Properties, d)
-		return nil
+		return diag.Diagnostics{}
 	}
 	// Without any matches we're setting the ID to an empty string
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }
 
 func setProperties(properties map[string]any, d *schema.ResourceData) {

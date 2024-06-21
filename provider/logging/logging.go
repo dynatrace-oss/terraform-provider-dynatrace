@@ -125,6 +125,16 @@ func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.Resourc
 	}
 }
 
+func EnableDSCtx(fn func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics) func(context.Context, *schema.ResourceData, any) diag.Diagnostics {
+	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+		return fn
+	}
+	return func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+		log.SetOutput(odl)
+		return fn(ctx, d, m)
+	}
+}
+
 func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
 	if os.Getenv("DYNATRACE_DEBUG") != "true" {
 		return fn

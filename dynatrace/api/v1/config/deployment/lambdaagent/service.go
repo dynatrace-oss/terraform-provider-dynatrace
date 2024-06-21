@@ -18,6 +18,8 @@
 package lambdaagent
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	lambdaagent "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/deployment/lambdaagent/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -35,7 +37,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(id string, v *lambdaagent.Latest) error {
+func (me *service) Get(ctx context.Context, id string, v *lambdaagent.Latest) error {
 	if err := me.client.Get(BasePath, 200).Finish(&v); err != nil {
 		return err
 	}
@@ -46,6 +48,6 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }

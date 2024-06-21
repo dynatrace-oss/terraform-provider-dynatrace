@@ -17,7 +17,11 @@
 
 package settings
 
-import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+import (
+	"context"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+)
 
 type GenericRService[T Settings] struct {
 	Service RService[T]
@@ -30,12 +34,12 @@ func (me *GenericRService[T]) NoCache() bool {
 	return false
 }
 
-func (me *GenericRService[T]) List() (api.Stubs, error) {
-	return me.Service.List()
+func (me *GenericRService[T]) List(ctx context.Context) (api.Stubs, error) {
+	return me.Service.List(ctx)
 }
 
-func (me *GenericRService[T]) Get(id string, v Settings) error {
-	return me.Service.Get(id, v.(T))
+func (me *GenericRService[T]) Get(ctx context.Context, id string, v Settings) error {
+	return me.Service.Get(ctx, id, v.(T))
 }
 
 func (me *GenericRService[T]) SchemaID() string {

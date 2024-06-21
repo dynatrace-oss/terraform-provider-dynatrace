@@ -18,6 +18,7 @@
 package profile
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -33,11 +34,11 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*profile.Pr
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
-func Duplicates(service settings.RService[*profile.Profile], v *profile.Profile) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*profile.Profile], v *profile.Profile) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -48,7 +49,7 @@ func Duplicates(service settings.RService[*profile.Profile], v *profile.Profile)
 	} else if settings.HijackDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

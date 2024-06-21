@@ -18,6 +18,8 @@
 package locations
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
@@ -26,17 +28,18 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func UniqueDataSource() *schema.Resource {
 	return &schema.Resource{
-		Read:   logging.EnableDS(UniqueDataSourceRead),
-		Schema: new(locsettings.SyntheticLocation).Schema(),
+		ReadContext: logging.EnableDSCtx(UniqueDataSourceRead),
+		Schema:      new(locsettings.SyntheticLocation).Schema(),
 	}
 }
 
-func UniqueDataSourceRead(d *schema.ResourceData, m any) (err error) {
+func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var id *string
 	var name *string
 	var typeLoc *string
@@ -71,11 +74,11 @@ func UniqueDataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(creds).List(); err != nil {
-		return err
+	if stubs, err = locations.Service(creds).List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 
 	for _, stub := range stubs {
@@ -118,7 +121,7 @@ func UniqueDataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 		marshalled := hcl.Properties{}
 		if err := value.MarshalHCL(marshalled); err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 		for k, v := range marshalled {
 			if k == "entity_id" {
@@ -126,11 +129,11 @@ func UniqueDataSourceRead(d *schema.ResourceData, m any) (err error) {
 			}
 			d.Set(k, v)
 		}
-		return nil
+		return diag.Diagnostics{}
 	}
 
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }
 
 // subsetCheck verifies that the input strings are a subset of source strings

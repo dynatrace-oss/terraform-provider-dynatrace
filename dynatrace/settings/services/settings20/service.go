@@ -18,6 +18,7 @@
 package settings20
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -83,7 +84,7 @@ func (me *service[T]) LegacyID() func(id string) string {
 	return nil
 }
 
-func (me *service[T]) Get(id string, v T) error {
+func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 	var err error
 	var settingsObject SettingsObject
 
@@ -222,7 +223,7 @@ func (me *service[T]) listIDs() ([]string, error) {
 	return ids, nil
 }
 
-func (me *service[T]) List() (api.Stubs, error) {
+func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	ids, err := me.listIDs()
@@ -295,8 +296,8 @@ func (me *service[T]) Validate(v T) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service[T]) Create(v T) (*api.Stub, error) {
-	return me.create(v, false, false)
+func (me *service[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
+	return me.create(ctx, v, false, false)
 }
 
 type Matcher interface {
@@ -314,10 +315,10 @@ func (me *service[T]) skipRepairInput() bool {
 	return false
 }
 
-func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
+func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
-		dupStub, dupErr := me.options.Duplicates(me, v)
+		dupStub, dupErr := me.options.Duplicates(ctx, me, v)
 		if dupErr != nil {
 			return nil, dupErr
 		}
@@ -334,7 +335,7 @@ func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, er
 	if matcher, ok := any(v).(Matcher); ok {
 		var stubs api.Stubs
 		var err error
-		if stubs, err = me.List(); err != nil {
+		if stubs, err = me.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -352,7 +353,7 @@ func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, er
 				asjson := string(data)
 				settings.SetRestoreOnDelete(asjson, v)
 				stub.Value = v
-				return stub, me.Update(stub.ID, v)
+				return stub, me.Update(ctx, stub.ID, v)
 			}
 		}
 	}
@@ -380,12 +381,12 @@ func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, er
 
 	if oerr := req.Finish(&objectID); oerr != nil {
 		if isInvalidInsertAfter(oerr) {
-			return me.create(v, retry, true)
+			return me.create(ctx, v, retry, true)
 		}
 
 		if me.options != nil && me.options.CreateRetry != nil && !retry {
 			if modifiedPayload := me.options.CreateRetry(v, oerr); !reflect.ValueOf(modifiedPayload).IsNil() {
-				return me.create(modifiedPayload, true, noInsertAfter)
+				return me.create(ctx, modifiedPayload, true, noInsertAfter)
 			}
 		}
 		if me.options != nil && me.options.HijackOnCreate != nil {
@@ -395,7 +396,7 @@ func (me *service[T]) create(v T, retry bool, noInsertAfter bool) (*api.Stub, er
 				return nil, hierr
 			}
 			if hijackedStub != nil {
-				return hijackedStub, me.Update(hijackedStub.ID, v)
+				return hijackedStub, me.Update(ctx, hijackedStub.ID, v)
 			} else {
 				return nil, oerr
 			}
@@ -439,11 +440,11 @@ func isInvalidInsertAfterRestErr(resterr *rest.Error) bool {
 	return false
 }
 
-func (me *service[T]) Update(id string, v T) error {
-	return me.update(id, v, false, false)
+func (me *service[T]) Update(ctx context.Context, id string, v T) error {
+	return me.update(ctx, id, v, false, false)
 }
 
-func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) error {
+func (me *service[T]) update(ctx context.Context, id string, v T, retry bool, noInsertAfter bool) error {
 	sou := SettingsObjectUpdate{Value: v, SchemaVersion: me.schemaVersion}
 
 	if !noInsertAfter {
@@ -460,11 +461,11 @@ func (me *service[T]) update(id string, v T, retry bool, noInsertAfter bool) err
 
 	if err := req.Finish(); err != nil {
 		if isInvalidInsertAfter(err) {
-			return me.update(id, v, retry, true)
+			return me.update(ctx, id, v, retry, true)
 		}
 		if me.options != nil && me.options.UpdateRetry != nil && !retry {
 			if modifiedPayload := me.options.UpdateRetry(v, err); !isNil(modifiedPayload) {
-				return me.update(id, modifiedPayload, true, noInsertAfter)
+				return me.update(ctx, id, modifiedPayload, true, noInsertAfter)
 			}
 		}
 		return err
@@ -485,11 +486,11 @@ func isNil[T any](t T) bool {
 		v.IsNil()
 }
 
-func (me *service[T]) Delete(id string) error {
-	return me.delete(id, 0)
+func (me *service[T]) Delete(ctx context.Context, id string) error {
+	return me.delete(ctx, id, 0)
 }
 
-func (me *service[T]) delete(id string, numRetries int) error {
+func (me *service[T]) delete(ctx context.Context, id string, numRetries int) error {
 	err := me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
 	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
 		return nil
@@ -499,14 +500,10 @@ func (me *service[T]) delete(id string, numRetries int) error {
 			return err
 		}
 		time.Sleep(6 * time.Second)
-		return me.delete(id, numRetries+1)
+		return me.delete(ctx, id, numRetries+1)
 	}
 	return err
 
-}
-
-func (me *service[T]) Name() string {
-	return me.SchemaID()
 }
 
 func (me *service[T]) SchemaID() string {

@@ -18,18 +18,21 @@
 package remoteenvironments
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/remote/environment/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"remote_environments": {
 				Type:     schema.TypeList,
@@ -40,16 +43,16 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := export.Service(creds, export.ResourceTypes.RemoteEnvironments)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 
 	remoteEnvironments := []*settings.Settings{}
@@ -59,11 +62,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 	}
 	marshalled := hcl.Properties{}
 	if marshalled.EncodeSlice("remote_environments", remoteEnvironments); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(service.SchemaID())
 	d.Set("remote_environments", marshalled["remote_environments"])
 
-	return nil
+	return diag.Diagnostics{}
 }

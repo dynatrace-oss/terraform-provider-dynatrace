@@ -57,17 +57,17 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) GetWithContext(ctx context.Context, id string, v *web.Application) error {
+func (me *service) Get(ctx context.Context, id string, v *web.Application) error {
 	var stateKeyUserActions web.KeyUserActions
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if appConfig, ok := cfg.(*web.Application); ok {
 		stateKeyUserActions = appConfig.KeyUserActions
 	}
-	if err := me.service.Get(id, v); err != nil {
+	if err := me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
 	var err error
@@ -93,16 +93,16 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *web.Applica
 	return nil
 }
 
-func (me *service) Get(id string, v *web.Application) error {
-	return me.service.Get(id, v)
-}
-
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) CreateWithContext(ctx context.Context, v *web.Application) (*api.Stub, error) {
-	stub, err := me.service.Create(v)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
+}
+
+func (me *service) Create(ctx context.Context, v *web.Application) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v)
 	if err != nil {
 		return stub, err
 	}
@@ -117,17 +117,13 @@ func (me *service) CreateWithContext(ctx context.Context, v *web.Application) (*
 	return stub, me.pollUntilKeyUserActionsCreated(stub.ID, v.KeyUserActions)
 }
 
-func (me *service) Create(v *web.Application) (*api.Stub, error) {
-	return me.service.Create(v)
-}
-
-func (me *service) UpdateWithContext(ctx context.Context, id string, v *web.Application) error {
+func (me *service) Update(ctx context.Context, id string, v *web.Application) error {
 	var stateKeyUserActions web.KeyUserActions
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if appConfig, ok := cfg.(*web.Application); ok {
 		stateKeyUserActions = appConfig.KeyUserActions
 	}
-	if err := me.service.Update(id, v); err != nil {
+	if err := me.service.Update(ctx, id, v); err != nil {
 		return err
 	}
 	var err error
@@ -277,19 +273,11 @@ func (me *service) fetchKeyUserActions(id string) (map[string]*web.KeyUserAction
 	return actions, nil
 }
 
-func (me *service) Update(id string, v *web.Application) error {
-	return me.service.Update(id, v)
-}
-
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
-}
-
-func Duplicates(service settings.RService[*web.Application], v *web.Application) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*web.Application], v *web.Application) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_web_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -300,7 +288,7 @@ func Duplicates(service settings.RService[*web.Application], v *web.Application)
 	} else if settings.HijackDuplicate("dynatrace_web_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

@@ -18,6 +18,8 @@
 package script
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -38,44 +40,44 @@ type service struct {
 	httpService   settings.CRUDService[*httpsettings.SyntheticMonitor]
 }
 
-func (me *service) Create(v *script.Settings) (*api.Stub, error) {
-	return &api.Stub{ID: v.HttpId, Name: v.HttpId}, me.Update(v.HttpId, v)
+func (me *service) Create(ctx context.Context, v *script.Settings) (*api.Stub, error) {
+	return &api.Stub{ID: v.HttpId, Name: v.HttpId}, me.Update(ctx, v.HttpId, v)
 }
 
-func (me *service) Update(id string, v *script.Settings) error {
-	monitorSettings, err := me.getHttp(id)
+func (me *service) Update(ctx context.Context, id string, v *script.Settings) error {
+	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
 	}
 	monitorSettings.Script = v.Script
 
-	return me.update(id, monitorSettings)
+	return me.update(ctx, id, monitorSettings)
 }
 
-func (me *service) getHttp(id string) (*httpsettings.SyntheticMonitor, error) {
+func (me *service) getHttp(ctx context.Context, id string) (*httpsettings.SyntheticMonitor, error) {
 	monitorSettings := new(httpsettings.SyntheticMonitor)
-	if err := me.httpService.Get(id, monitorSettings); err != nil {
+	if err := me.httpService.Get(ctx, id, monitorSettings); err != nil {
 		return nil, err
 	}
 	return monitorSettings, nil
 }
 
-func (me *service) update(id string, v *httpsettings.SyntheticMonitor) error {
-	return me.httpService.Update(id, v)
+func (me *service) update(ctx context.Context, id string, v *httpsettings.SyntheticMonitor) error {
+	return me.httpService.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	monitorSettings, err := me.getHttp(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
 	}
 	monitorSettings.Script = http.GetTempScript()
 
-	return me.update(id, monitorSettings)
+	return me.update(ctx, id, monitorSettings)
 }
 
-func (me *service) Get(id string, v *script.Settings) error {
-	monitorSettings, err := me.getHttp(id)
+func (me *service) Get(ctx context.Context, id string, v *script.Settings) error {
+	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -85,8 +87,8 @@ func (me *service) Get(id string, v *script.Settings) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.httpService.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.httpService.List(ctx)
 }
 
 func (me *service) SchemaID() string {

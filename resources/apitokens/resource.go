@@ -54,7 +54,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	objStub, err := apitokens.Service(creds).Create(config)
+	objStub, err := apitokens.Service(creds).Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -85,7 +85,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	if err := apitokens.Service(creds).Update(d.Id(), config); err != nil {
+	if err := apitokens.Service(creds).Update(ctx, d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -99,7 +99,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 		return diag.FromErr(err)
 	}
 	config := new(settings.APIToken)
-	err = apitokens.Service(creds).Get(d.Id(), config)
+	err = apitokens.Service(creds).Get(ctx, d.Id(), config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -124,7 +124,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	if err := apitokens.Service(creds).Delete(d.Id()); err != nil {
+	if err := apitokens.Service(creds).Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 

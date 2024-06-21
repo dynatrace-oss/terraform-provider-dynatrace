@@ -18,6 +18,8 @@
 package http
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -52,30 +54,30 @@ func GetTempScript() *http.Script {
 	}}}
 }
 
-func (me *service) Create(v *http.SyntheticMonitor) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *http.SyntheticMonitor) (*api.Stub, error) {
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		v.Script = GetTempScript()
 	}
-	return me.service.Create(v)
+	return me.service.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *http.SyntheticMonitor) error {
+func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonitor) error {
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		monitorSettings := new(http.SyntheticMonitor)
-		if err := me.service.Get(id, monitorSettings); err != nil {
+		if err := me.service.Get(ctx, id, monitorSettings); err != nil {
 			return err
 		}
 		v.Script = monitorSettings.Script
 	}
-	return me.service.Update(id, v)
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
-func (me *service) Get(id string, v *http.SyntheticMonitor) error {
-	if err := me.service.Get(id, v); err != nil {
+func (me *service) Get(ctx context.Context, id string, v *http.SyntheticMonitor) error {
+	if err := me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
 	if v.Script != nil && len(v.Script.Requests) == 1 && *v.Script.Requests[0].Description == *GetTempScript().Requests[0].Description {
@@ -85,8 +87,8 @@ func (me *service) Get(id string, v *http.SyntheticMonitor) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
 func (me *service) SchemaID() string {

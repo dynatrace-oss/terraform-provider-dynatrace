@@ -56,17 +56,17 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(v *slo.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, error) {
 	slo := me.convertToEnvV2(v)
 
 	service := slo_env2_service.Service(me.credentials)
-	stub, err := service.Create(&slo)
+	stub, err := service.Create(ctx, &slo)
 	if err != nil {
 		return nil, err
 	}
 	stub.LegacyID = &stub.ID
 
-	if stubs, err := me.List(); err == nil {
+	if stubs, err := me.List(ctx); err == nil {
 		for _, listStub := range stubs {
 			if listStub.Name == stub.Name {
 				stub.ID = listStub.ID
@@ -79,12 +79,12 @@ func (me *service) Create(v *slo.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) Update(id string, v *slo.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error {
 	legacyId := settings.LegacyID(id)
 	slo := me.convertToEnvV2(v)
 
 	service := slo_env2_service.Service(me.credentials)
-	err := service.Update(legacyId, &slo)
+	err := service.Update(ctx, legacyId, &slo)
 	if err != nil {
 		return err
 	}
@@ -107,11 +107,11 @@ func (me *service) Validate(v *slo.Settings) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	legacyId := settings.LegacyID(id)
 
 	service := slo_env2_service.Service(me.credentials)
-	err := service.Delete(legacyId)
+	err := service.Delete(ctx, legacyId)
 	if err != nil {
 		return err
 	}
@@ -124,8 +124,8 @@ type sloGet struct {
 	MetricKey string `json:"metricKey"`
 }
 
-func (me *service) GetWithContext(ctx context.Context, id string, v *slo.Settings) error {
-	err := me.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *slo.Settings) error {
+	err := me.get(ctx, id, v)
 	if err != nil {
 		if err.Error() == "Cannot access a disabled SLO." {
 			return errors.New("inaccessible")
@@ -135,7 +135,7 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *slo.Setting
 	return nil
 }
 
-func (me *service) Get(id string, v *slo.Settings) error {
+func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 	var legacyId string
 	if _, err := uuid.Parse(id); err == nil {
 		legacyId = id
@@ -161,7 +161,7 @@ func (me *service) Get(id string, v *slo.Settings) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return me.listSettings20()
 }
 

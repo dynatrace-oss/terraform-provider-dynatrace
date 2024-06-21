@@ -18,6 +18,7 @@
 package slo
 
 import (
+	"context"
 	"strings"
 
 	common "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
@@ -26,12 +27,13 @@ import (
 	slosetting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -101,7 +103,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
@@ -109,19 +111,19 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	service := slo.Service(creds)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
 			if name == stub.Name {
 				var v slosetting.Settings
-				if err := service.Get(stub.ID, &v); err != nil {
-					return err
+				if err := service.Get(ctx, stub.ID, &v); err != nil {
+					return diag.FromErr(err)
 				}
 				if v.CustomDescription != nil {
 					d.Set("description", *v.CustomDescription)
@@ -144,11 +146,11 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 					}
 				}
 				d.SetId(stub.ID)
-				return nil
+				return diag.Diagnostics{}
 			}
 		}
 	}
 
 	d.SetId(common.NotFoundID(strings.ToLower(strings.ReplaceAll(name, " ", ""))))
-	return nil
+	return diag.Diagnostics{}
 }

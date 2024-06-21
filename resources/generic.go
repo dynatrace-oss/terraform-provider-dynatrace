@@ -200,11 +200,7 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	service := me.Service(m)
 	var stub *api.Stub
 	var err error
-	if contextCreator, ok := service.(settings.ContextCreator[settings.Settings]); ok {
-		stub, err = contextCreator.CreateWithContext(ctx, sttngs)
-	} else {
-		stub, err = service.Create(sttngs)
-	}
+	stub, err = service.Create(ctx, sttngs)
 	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
@@ -251,17 +247,13 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	service := me.Service(m)
 	var err error
-	if contextUpdater, ok := service.(settings.ContextUpdater[settings.Settings]); ok {
-		if ctx.Value(settings.ContextKeyStateConfig) == nil {
-			stateConfig := me.Settings()
-			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
-				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
-			}
+	if ctx.Value(settings.ContextKeyStateConfig) == nil {
+		stateConfig := me.Settings()
+		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
-		err = contextUpdater.UpdateWithContext(ctx, d.Id(), sttngs)
-	} else {
-		err = service.Update(d.Id(), sttngs)
 	}
+	err = service.Update(ctx, d.Id(), sttngs)
 	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
@@ -344,35 +336,31 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 	service := me.Service(m)
 
 	var err error
-	if contextGetter, ok := service.(settings.ContextGetter[settings.Settings]); ok {
-		if ctx.Value(settings.ContextKeyStateConfig) == nil {
-			stateConfig := me.Settings()
-			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
-				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
-			}
+	if ctx.Value(settings.ContextKeyStateConfig) == nil {
+		stateConfig := me.Settings()
+		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
-		if err = contextGetter.GetWithContext(ctx, d.Id(), sttngs); err != nil {
-			if err.Error() == "inaccessible" {
-				return diag.Diagnostics{}
-			}
-			if strings.Contains(err.Error(), "re-run with confighcl") {
-				tfConfig := me.Settings()
-				if err = tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, me.Resource())); err == nil {
-					ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, tfConfig)
-				}
-				err = contextGetter.GetWithContext(ctx, d.Id(), sttngs)
-			} else {
-				if restError, ok := err.(rest.Error); ok {
-					if restError.Code == 404 {
-						d.SetId("")
-						return diag.Diagnostics{}
-					}
-				}
-				return diag.FromErr(err)
-			}
+	}
+	if err = service.Get(ctx, d.Id(), sttngs); err != nil {
+		if err.Error() == "inaccessible" {
+			return diag.Diagnostics{}
 		}
-	} else {
-		err = service.Get(d.Id(), sttngs)
+		if strings.Contains(err.Error(), "re-run with confighcl") {
+			tfConfig := me.Settings()
+			if err = tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, me.Resource())); err == nil {
+				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, tfConfig)
+			}
+			err = service.Get(ctx, d.Id(), sttngs)
+		} else {
+			if restError, ok := err.(rest.Error); ok {
+				if restError.Code == 404 {
+					d.SetId("")
+					return diag.Diagnostics{}
+				}
+			}
+			return diag.FromErr(err)
+		}
 	}
 	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
@@ -405,7 +393,7 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(restore), sttngs); err != nil {
 				return diag.FromErr(err)
 			}
-			if err := me.Service(m).Update(d.Id(), sttngs); err != nil {
+			if err := me.Service(m).Update(ctx, d.Id(), sttngs); err != nil {
 				return diag.FromErr(err)
 			}
 			d.SetId("")
@@ -414,17 +402,14 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	service := me.Service(m)
 	var err error
-	if contextDeleter, ok := service.(settings.ContextDeleter[settings.Settings]); ok {
-		if ctx.Value(settings.ContextKeyStateConfig) == nil {
-			stateConfig := me.Settings()
-			if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
-				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
-			}
+	if ctx.Value(settings.ContextKeyStateConfig) == nil {
+		stateConfig := me.Settings()
+		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
+			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
-		err = contextDeleter.DeleteWithContext(ctx, d.Id())
-	} else {
-		err = service.Delete(d.Id())
 	}
+	err = service.Delete(ctx, d.Id())
+
 	if err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if restError.Code == 404 {

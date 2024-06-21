@@ -18,16 +18,19 @@
 package mgmz
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceV2() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceReadV2),
+		ReadContext: logging.EnableDSCtx(DataSourceReadV2),
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -45,20 +48,20 @@ func DataSourceV2() *schema.Resource {
 	}
 }
 
-func DataSourceReadV2(d *schema.ResourceData, m any) (err error) {
+func DataSourceReadV2(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := export.Service(creds, export.ResourceTypes.ManagementZoneV2)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
@@ -66,10 +69,10 @@ func DataSourceReadV2(d *schema.ResourceData, m any) (err error) {
 				d.SetId(stub.ID)
 				d.Set("legacy_id", stub.LegacyID)
 				d.Set("settings_20_id", stub.ID)
-				return nil
+				return diag.Diagnostics{}
 			}
 		}
 	}
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }

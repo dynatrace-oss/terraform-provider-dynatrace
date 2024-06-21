@@ -18,6 +18,7 @@
 package sharing
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strings"
@@ -58,7 +59,7 @@ type DashbordMeta struct {
 	} `json:"dashboardMetadata"`
 }
 
-func (me *service) Get(id string, v *sharing.DashboardSharing) error {
+func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardSharing) error {
 	id = strings.TrimSuffix(id, "-sharing")
 
 	var dbm DashbordMeta
@@ -81,7 +82,7 @@ func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 			return err
 		}
 	} else {
-		if stubs, err = me.dashboardService.List(); err != nil {
+		if stubs, err = me.dashboardService.List(ctx); err != nil {
 			return err
 		}
 	}
@@ -94,7 +95,7 @@ func (me *service) Get(id string, v *sharing.DashboardSharing) error {
 	}
 	if len(dashboardName) == 0 || dashboardName == id {
 		dashboard := dashboards.JSONDashboard{}
-		if err := me.dashboardService.Get(id, &dashboard); err != nil {
+		if err := me.dashboardService.Get(ctx, id, &dashboard); err != nil {
 			return err
 		}
 		dashboardName = dashboard.Name()
@@ -113,13 +114,13 @@ func (me *service) Validate(v *sharing.DashboardSharing) error {
 	return nil
 }
 
-func (me *service) Update(id string, v *sharing.DashboardSharing) error {
-	return me.update(id, v, 0)
+func (me *service) Update(ctx context.Context, id string, v *sharing.DashboardSharing) error {
+	return me.update(ctx, id, v, 0)
 }
 
 const max_retries = 10
 
-func (me *service) update(id string, v *sharing.DashboardSharing, retry int) error {
+func (me *service) update(ctx context.Context, id string, v *sharing.DashboardSharing, retry int) error {
 	id = strings.TrimSuffix(id, "-sharing")
 
 	var dbm DashbordMeta
@@ -135,7 +136,7 @@ func (me *service) update(id string, v *sharing.DashboardSharing, retry int) err
 				return err
 			}
 			time.Sleep(10 * time.Second)
-			return me.update(id, v, retry+1)
+			return me.update(ctx, id, v, retry+1)
 		}
 		if strings.Contains(err.Error(), "Sharing settings of a preset can't be updated. It's shared by default") {
 			return nil
@@ -145,7 +146,7 @@ func (me *service) update(id string, v *sharing.DashboardSharing, retry int) err
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	id = strings.TrimSuffix(id, "-sharing")
 	settings := sharing.DashboardSharing{
 		DashboardID: id,
@@ -162,21 +163,21 @@ func (me *service) Delete(id string) error {
 			URLs:              map[string]string{},
 		},
 	}
-	return me.Update(id, &settings)
+	return me.Update(ctx, id, &settings)
 }
 
-func (me *service) Create(v *sharing.DashboardSharing) (*api.Stub, error) {
-	if err := me.Update(v.DashboardID, v); err != nil {
+func (me *service) Create(ctx context.Context, v *sharing.DashboardSharing) (*api.Stub, error) {
+	if err := me.Update(ctx, v.DashboardID, v); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: v.DashboardID + "-sharing"}, nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	var stubs api.Stubs
-	if stubs, err = me.dashboardService.List(); err != nil {
+	if stubs, err = me.dashboardService.List(ctx); err != nil {
 		return nil, err
 	}
 	return stubs.ToStubs(), nil

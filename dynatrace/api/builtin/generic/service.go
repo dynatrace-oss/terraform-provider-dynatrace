@@ -145,7 +145,7 @@ func (me *service) Client(schemaIDs string) *settings20.Client {
 	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
 }
 
-func (me *service) Get(id string, v *generic.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {
 	var err error
 	var response settings20.Response
 	var settingsObject SettingsObject
@@ -179,7 +179,7 @@ type schemataResponse struct {
 	Items []schemaStub `json:"items"`
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	tokenClient := me.TokenClient()
 	response, err := tokenClient.GET(context.TODO(), "api/v2/settings/schemas", crest.RequestOptions{})
 	if err != nil {
@@ -230,8 +230,8 @@ func (me *service) Validate(v *generic.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) Create(v *generic.Settings) (*api.Stub, error) {
-	return me.create(v)
+func (me *service) Create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
+	return me.create(ctx, v)
 }
 
 type Matcher interface {
@@ -240,12 +240,12 @@ type Matcher interface {
 
 const errMsgOAuthRequired = "an OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting"
 
-func (me *service) create(v *generic.Settings) (*api.Stub, error) {
+func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
 	scope := "environment"
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
-	response, err := me.Client(v.SchemaID).Create(context.TODO(), scope, []byte(v.Value))
+	response, err := me.Client(v.SchemaID).Create(ctx, scope, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
@@ -263,8 +263,8 @@ func (me *service) create(v *generic.Settings) (*api.Stub, error) {
 	return stub, nil
 }
 
-func (me *service) Update(id string, v *generic.Settings) error {
-	response, err := me.Client("").Update(context.TODO(), id, []byte(v.Value))
+func (me *service) Update(ctx context.Context, id string, v *generic.Settings) error {
+	response, err := me.Client("").Update(ctx, id, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -278,12 +278,12 @@ func (me *service) Update(id string, v *generic.Settings) error {
 	return err
 }
 
-func (me *service) Delete(id string) error {
-	return me.delete(id, 0)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.delete(ctx, id, 0)
 }
 
-func (me *service) delete(id string, numRetries int) error {
-	response, err := me.Client("").Delete(context.TODO(), id)
+func (me *service) delete(ctx context.Context, id string, numRetries int) error {
+	response, err := me.Client("").Delete(ctx, id)
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -299,7 +299,7 @@ func (me *service) delete(id string, numRetries int) error {
 			return err
 		}
 		time.Sleep(6 * time.Second)
-		return me.delete(id, numRetries+1)
+		return me.delete(ctx, id, numRetries+1)
 	}
 	return err
 

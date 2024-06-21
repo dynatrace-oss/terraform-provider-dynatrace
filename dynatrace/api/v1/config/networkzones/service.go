@@ -18,6 +18,7 @@
 package networkzones
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strings"
@@ -44,11 +45,11 @@ type service struct {
 	client      rest.Client
 }
 
-func (me *service) Get(id string, v *networkzones.NetworkZone) error {
+func (me *service) Get(ctx context.Context, id string, v *networkzones.NetworkZone) error {
 	return me.client.Get(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubList networkzones.NetworkZones
 
@@ -66,7 +67,7 @@ func (me *service) Validate(v *networkzones.NetworkZone) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *networkzones.NetworkZone) (*api.Stub, error) {
 	var err error
 
 	// id := *v.ID
@@ -79,10 +80,10 @@ func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
 
 	if err = req.Finish(); err != nil {
 		if strings.Contains(err.Error(), "Not allowed because network zones are disabled") {
-			if _, err := enable.Service(me.credentials).Create(&enablesettings.NetworkZones{Enabled: true}); err != nil {
+			if _, err := enable.Service(me.credentials).Create(ctx, &enablesettings.NetworkZones{Enabled: true}); err != nil {
 				return nil, err
 			}
-			return me.Create(v)
+			return me.Create(ctx, v)
 		}
 		if strings.Contains(err.Error(), "Creation and modification of network zone is only possible via cluster API.") {
 			return &api.Stub{ID: id + "---flawed----", Name: id}, nil
@@ -93,7 +94,7 @@ func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
 	return &api.Stub{ID: id, Name: id}, nil
 }
 
-func (me *service) Update(id string, v *networkzones.NetworkZone) error {
+func (me *service) Update(ctx context.Context, id string, v *networkzones.NetworkZone) error {
 	if v.NetworkZoneName != nil && id != strings.ToLower(*v.NetworkZoneName) {
 		return fmt.Errorf("Network zone name cannot be modified, please destroy and create with the new name")
 	}
@@ -103,7 +104,7 @@ func (me *service) Update(id string, v *networkzones.NetworkZone) error {
 	return nil
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return me.client.Delete(fmt.Sprintf("/api/v2/networkZones/%s", url.PathEscape(id))).Expect(204).Finish()
 }
 

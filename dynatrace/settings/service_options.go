@@ -18,6 +18,8 @@
 package settings
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -42,7 +44,7 @@ type ServiceOptions[T Settings] struct {
 	HijackOnCreate func(err error, service RService[T], v T) (*api.Stub, error)
 	Lock           func()
 	Unlock         func()
-	Duplicates     func(service RService[T], v T) (*api.Stub, error)
+	Duplicates     func(ctx context.Context, service RService[T], v T) (*api.Stub, error)
 }
 
 func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T) (*api.Stub, error)) *ServiceOptions[T] {
@@ -100,7 +102,7 @@ func (me *ServiceOptions[T]) WithDeleteRetry(deleteRetry func(id string, err err
 	return me
 }
 
-func (me *ServiceOptions[T]) WithDuplicates(fnDuplicates func(service RService[T], v T) (*api.Stub, error)) *ServiceOptions[T] {
+func (me *ServiceOptions[T]) WithDuplicates(fnDuplicates func(ctx context.Context, service RService[T], v T) (*api.Stub, error)) *ServiceOptions[T] {
 	me.Duplicates = fnDuplicates
 	return me
 }

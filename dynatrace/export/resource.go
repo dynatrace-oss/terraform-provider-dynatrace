@@ -260,7 +260,7 @@ func (me *Resource) Download() error {
 
 	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
 
-	if err = service.Get(getID, settngs); err != nil {
+	if err = service.Get(Context, getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
 				me.Status = ResourceStati.Erronous

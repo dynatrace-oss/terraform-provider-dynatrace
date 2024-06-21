@@ -18,6 +18,7 @@
 package appdetection
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -48,25 +49,25 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) Get(id string, v *appdetection.Settings) error {
-	return me.service.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *appdetection.Settings) error {
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *appdetection.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *appdetection.Settings) (*api.Stub, error) {
 	var stub *api.Stub
 	var err error
 	checkedAppExists := false
 	maxIterations := 50
 	for iteration := 0; iteration < maxIterations; iteration++ {
-		stub, err = me.service.Create(v)
+		stub, err = me.service.Create(ctx, v)
 		if err == nil {
 			break
 		}
@@ -90,19 +91,19 @@ func (me *service) Create(v *appdetection.Settings) (*api.Stub, error) {
 	return stub, err
 }
 
-func (me *service) Update(id string, v *appdetection.Settings) error {
-	return me.service.Update(id, v)
+func (me *service) Update(ctx context.Context, id string, v *appdetection.Settings) error {
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
 
-func Duplicates(service settings.RService[*appdetection.Settings], v *appdetection.Settings) (*api.Stub, error) {
+func Duplicates(ctx context.Context, service settings.RService[*appdetection.Settings], v *appdetection.Settings) (*api.Stub, error) {
 	if settings.RejectDuplicate("dynatrace_application_detection_rule_v2") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -114,7 +115,7 @@ func Duplicates(service settings.RService[*appdetection.Settings], v *appdetecti
 	} else if settings.HijackDuplicate("dynatrace_application_detection_rule_v2") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(); err != nil {
+		if stubs, err = service.List(ctx); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

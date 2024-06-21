@@ -45,14 +45,14 @@ type service struct {
 	service settings.CRUDService[*autotagging.Settings]
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.service.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
 }
 
-func (me *service) GetWithContext(ctx context.Context, id string, v *autotagging.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *autotagging.Settings) error {
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 
-	err := me.service.Get(id, v)
+	err := me.service.Get(ctx, id, v)
 
 	if stateConfig, stateConfigFound := cfg.(*autotagging.Settings); stateConfig != nil && stateConfigFound {
 		if stateConfig.RulesMaintainedExternally {
@@ -64,32 +64,28 @@ func (me *service) GetWithContext(ctx context.Context, id string, v *autotagging
 	return err
 }
 
-func (me *service) Get(id string, v *autotagging.Settings) error {
-	return me.service.Get(id, v)
-}
-
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(v *autotagging.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *autotagging.Settings) (*api.Stub, error) {
 	if v.RulesMaintainedExternally {
 		v.Rules = nil
 	}
-	return me.service.Create(v)
+	return me.service.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *autotagging.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *autotagging.Settings) error {
 	if v.RulesMaintainedExternally {
 		var remoteSettings autotagging.Settings
-		if err := me.service.Get(id, &remoteSettings); err != nil {
+		if err := me.service.Get(ctx, id, &remoteSettings); err != nil {
 			return err
 		}
 		v.Rules = remoteSettings.Rules
 	}
-	return me.service.Update(id, v)
+	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.service.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }

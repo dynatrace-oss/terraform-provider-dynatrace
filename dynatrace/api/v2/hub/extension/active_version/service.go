@@ -18,6 +18,7 @@
 package active_environment_config
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -38,7 +39,7 @@ type service struct {
 	itemsService settings.RService[*items_settings.HubItemList]
 }
 
-func (me *service) Get(id string, v *active_version.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *active_version.Settings) error {
 	var response GetActiveEnvironmentConfigurationResponse
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	if err := client.Get(fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(id)), 200).Finish(&response); err != nil {
@@ -49,10 +50,10 @@ func (me *service) Get(id string, v *active_version.Settings) error {
 	return nil
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	var hubItemList items_settings.HubItemList
-	if err := me.itemsService.Get("", &hubItemList); err != nil {
+	if err := me.itemsService.Get(ctx, "", &hubItemList); err != nil {
 		return nil, err
 	}
 	for _, item := range hubItemList.Items {
@@ -61,7 +62,7 @@ func (me *service) List() (api.Stubs, error) {
 			continue
 		}
 		sttngs := active_version.Settings{}
-		if err := me.Get(name, &sttngs); err == nil {
+		if err := me.Get(ctx, name, &sttngs); err == nil {
 			if len(sttngs.Version) > 0 {
 				stubs = append(stubs, &api.Stub{ID: name, Name: name})
 			}
@@ -70,7 +71,7 @@ func (me *service) List() (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Create(v *active_version.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api.Stub, error) {
 	version := v.Version
 	name := v.Name
 	if err := me.ensureInstalled(name, version); err != nil {
@@ -106,12 +107,12 @@ func (me *service) ensureInstalled(name string, version string) error {
 	return nil
 }
 
-func (me *service) Update(id string, v *active_version.Settings) error {
-	_, err := me.Create(v)
+func (me *service) Update(ctx context.Context, id string, v *active_version.Settings) error {
+	_, err := me.Create(ctx, v)
 	return err
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	// we cannot really delete this
 	return nil
 }

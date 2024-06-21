@@ -18,6 +18,7 @@
 package service
 
 import (
+	"context"
 	"strings"
 
 	dscommon "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources"
@@ -27,12 +28,13 @@ import (
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: logging.EnableDS(DataSourceRead),
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -54,7 +56,7 @@ func DataSource() *schema.Resource {
 	}
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) (err error) {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
@@ -75,30 +77,30 @@ func DataSourceRead(d *schema.ResourceData, m any) (err error) {
 
 	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	service := services.Service(creds)
 	var stubs api.Stubs
-	if stubs, err = service.List(); err != nil {
-		return err
+	if stubs, err = service.List(ctx); err != nil {
+		return diag.FromErr(err)
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
 			if name == stub.Name || (operator == string(Operators.Contains) && strings.Contains(stub.Name, name)) {
 				var record servsettings.Settings
-				if err = service.Get(stub.ID, &record); err != nil {
-					return err
+				if err = service.Get(ctx, stub.ID, &record); err != nil {
+					return diag.FromErr(err)
 				}
 				if dscommon.TagSubsetCheck(record.Tags, tags) {
 					d.SetId(record.EntityId)
-					return nil
+					return diag.Diagnostics{}
 				}
 			}
 		}
 	}
 
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }
 
 type Operator string

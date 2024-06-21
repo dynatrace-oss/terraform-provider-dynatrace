@@ -18,6 +18,7 @@
 package networkzones
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -40,24 +41,24 @@ type ServiceClient struct {
 	client rest.Client
 }
 
-func (me *service) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
-	return me.serviceClient.Create(v)
+func (me *service) Create(ctx context.Context, v *networkzones.NetworkZone) (*api.Stub, error) {
+	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(id string, v *networkzones.NetworkZone) error {
-	return me.serviceClient.Update(id, v)
+func (me *service) Update(ctx context.Context, id string, v *networkzones.NetworkZone) error {
+	return me.serviceClient.Update(ctx, id, v)
 }
 
-func (me *service) Delete(id string) error {
-	return me.serviceClient.Delete(id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.serviceClient.Delete(ctx, id)
 }
 
-func (me *service) List() (api.Stubs, error) {
-	return me.serviceClient.List()
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(id string, v *networkzones.NetworkZone) error {
-	return me.serviceClient.Get(id, v)
+func (me *service) Get(ctx context.Context, id string, v *networkzones.NetworkZone) error {
+	return me.serviceClient.Get(ctx, id, v)
 }
 
 func (me *service) SchemaID() string {
@@ -76,7 +77,7 @@ type service struct {
 	serviceClient *ServiceClient
 }
 
-func (cs *ServiceClient) Create(v *networkzones.NetworkZone) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, v *networkzones.NetworkZone) (*api.Stub, error) {
 	var id string
 	if v.NetworkZoneName != nil {
 		id = *v.NetworkZoneName
@@ -92,19 +93,19 @@ func (cs *ServiceClient) Create(v *networkzones.NetworkZone) (*api.Stub, error) 
 	return &api.Stub{ID: id, Name: id}, nil
 }
 
-func (cs *ServiceClient) Update(id string, v *networkzones.NetworkZone) error {
+func (cs *ServiceClient) Update(ctx context.Context, id string, v *networkzones.NetworkZone) error {
 	return cs.client.Put(fmt.Sprintf("/networkZones/%s", id), v, 204).Finish()
 }
 
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	return cs.client.Delete(fmt.Sprintf("/networkZones/%s", url.PathEscape(id))).Expect(204).Finish()
 }
 
-func (cs *ServiceClient) Get(id string, v *networkzones.NetworkZone) error {
+func (cs *ServiceClient) Get(ctx context.Context, id string, v *networkzones.NetworkZone) error {
 	return cs.client.Get(fmt.Sprintf("/networkZones/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (cs *ServiceClient) List() (api.Stubs, error) {
+func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubList networkzones.NetworkZones
 

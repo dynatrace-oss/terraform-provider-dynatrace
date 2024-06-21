@@ -97,7 +97,7 @@ func (me *service) client() *directshare.Client {
 	return directshare.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
 }
 
-func (me *service) Get(id string, v *directshares.DirectShare) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *directshares.DirectShare) (err error) {
 	var result *directshare.Response
 	if result, err = me.client().GET(directshare.DirectShares, id); err != nil {
 		return err
@@ -115,7 +115,7 @@ func (me *service) SchemaID() string {
 	return "document:direct-shares"
 }
 
-func (me *service) List() (api.Stubs, error) {
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	return stubs, nil // not implemented
 
@@ -125,7 +125,7 @@ func (me *service) Validate(v *directshares.DirectShare) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(v *directshares.DirectShare) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *directshares.DirectShare) (stub *api.Stub, err error) {
 	var id string
 
 	data, err := json.Marshal(v)
@@ -139,7 +139,7 @@ func (me *service) Create(v *directshares.DirectShare) (stub *api.Stub, err erro
 	return &api.Stub{ID: id}, nil
 }
 
-func (me *service) Update(id string, v *directshares.DirectShare) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *directshares.DirectShare) (err error) {
 
 	data, err := json.Marshal(v)
 	if err != nil {
@@ -149,7 +149,7 @@ func (me *service) Update(id string, v *directshares.DirectShare) (err error) {
 	return me.client().UPDATE(directshare.DirectShares, id, data)
 }
 
-func (me *service) Delete(id string) error {
+func (me *service) Delete(ctx context.Context, id string) error {
 	return me.client().DELETE(directshare.DirectShares, id)
 }
 
