@@ -29,13 +29,14 @@ import (
 )
 
 type Response struct {
-	ID      string `json:"id"`
-	Actor   string `json:"actor"`
-	Owner   string `json:"owner"`
-	Name    string `json:"name"`
-	Type    string `json:"type"`
-	Content string `json:"content"`
-	Version int    `json:"version"`
+	ID        string `json:"id"`
+	Actor     string `json:"actor"`
+	Owner     string `json:"owner"`
+	Name      string `json:"name"`
+	Type      string `json:"type"`
+	IsPrivate bool   `json:"isPrivate"`
+	Content   string `json:"content"`
+	Version   int    `json:"version"`
 }
 
 type listResponse struct {

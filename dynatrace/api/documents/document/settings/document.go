@@ -29,6 +29,7 @@ const SchemaVersion = 3
 type Document struct {
 	Name          string `json:"name" maxlength:"200"`
 	Content       string `json:"content,omitempty"`
+	IsPrivate     bool   `json:"isPrivate,omitempty"`
 	Type          string `json:"type"`
 	Actor         string `json:"actor,omitempty" maxlength:"36" format:"uuid"`
 	Owner         string `json:"owner,omitempty" format:"uuid"`
@@ -43,6 +44,12 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Description:      "The name/name of the document",
 			Required:         true,
 			ValidateDiagFunc: ValidateMaxLength(200),
+		},
+		"private": {
+			Type:        schema.TypeBool,
+			Description: "Specifies whether the document is private or readable by everybody",
+			Optional:    true,
+			Default:     false,
 		},
 		"type": {
 			Type:             schema.TypeString,
@@ -81,6 +88,7 @@ func (me *Document) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":    me.Name,
 		"content": me.Content,
+		"private": me.IsPrivate,
 		"type":    me.Type,
 		"actor":   me.Actor,
 		"owner":   me.Owner,
@@ -92,6 +100,7 @@ func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"name":    &me.Name,
 		"content": &me.Content,
+		"private": &me.IsPrivate,
 		"type":    &me.Type,
 		"actor":   &me.Actor,
 		"owner":   &me.Owner,
@@ -103,6 +112,7 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 	d := struct {
 		Name          string `json:"name"`
 		Content       string `json:"content,omitempty"`
+		Private       bool   `json:"isPrivate,omitempty"`
 		Type          string `json:"type"`
 		Actor         string `json:"actor,omitempty"`
 		Owner         string `json:"owner,omitempty"`
@@ -111,6 +121,7 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 	}{
 		SchemaVersion: SchemaVersion,
 		Name:          me.Name,
+		Private:       me.IsPrivate,
 		Content:       me.Content,
 		Type:          me.Type,
 		Actor:         me.Actor,
