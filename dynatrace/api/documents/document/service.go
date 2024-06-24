@@ -25,6 +25,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -97,7 +98,7 @@ func (me *service) client() *document.Client {
 	return document.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
+func (me *service) Get(_ context.Context, id string, v *documents.Document) (err error) {
 	var result *document.Response
 	if result, err = me.client().GET(document.Documents, id); err != nil {
 		return err
@@ -105,6 +106,7 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 
 	v.Actor = result.Actor
 	v.Content = result.Content
+	v.IsPrivate = result.IsPrivate
 	v.Name = result.Name
 	v.Owner = result.Owner
 	v.Type = result.Type
@@ -117,7 +119,7 @@ func (me *service) SchemaID() string {
 	return "document:documents"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(_ context.Context) (api.Stubs, error) {
 	result, err := me.client().LIST(document.Documents)
 	if err != nil {
 		return nil, err
@@ -130,11 +132,25 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Validate(v *documents.Document) error {
+func (me *service) Validate(_ *documents.Document) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub, error) {
+	stub, err := me.createPrivate(ctx, v)
+	if err != nil {
+		return nil, err
+	}
+
+	if !v.IsPrivate {
+		if err = me.update(ctx, stub.ID, v); err != nil {
+			return nil, err
+		}
+	}
+	return stub, nil
+}
+
+func (me *service) createPrivate(_ context.Context, v *documents.Document) (stub *api.Stub, err error) {
 	var id string
 
 	body := &bytes.Buffer{}
@@ -157,15 +173,21 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (stub *api
 	if id, err = me.client().INSERT(document.Documents, body, writer.FormDataContentType()); err != nil {
 		return nil, err
 	}
+
 	return &api.Stub{ID: id, Name: v.Name}, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
+	return me.update(ctx, id, v)
+}
+
+func (me *service) update(_ context.Context, id string, v *documents.Document) (err error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
 	writer.WriteField("type", v.Type)
 	writer.WriteField("name", v.Name)
+	writer.WriteField("isPrivate", strconv.FormatBool(v.IsPrivate))
 
 	part, err := writer.CreatePart(map[string][]string{
 		"Content-Type":        {"application/json"},
@@ -181,7 +203,7 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 	return me.client().UPDATE(document.Documents, id, body, writer.FormDataContentType())
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(_ context.Context, id string) error {
 	return me.client().DELETE(document.Documents, id)
 }
 
