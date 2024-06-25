@@ -101,7 +101,7 @@ The following examples demonstrate various ways to use the export utility.
   ```
 * Export specific configuration
   ```bash
-  ./terraform-provider-dynatrace -export -ref dynatrace_json_dashboard dynatrace_document
+  ./terraform-provider-dynatrace -export dynatrace_json_dashboard dynatrace_document
   ```
 * Export specific configurations and their dependencies:
   ```bash
