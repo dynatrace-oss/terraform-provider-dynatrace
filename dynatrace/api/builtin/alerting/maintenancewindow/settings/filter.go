@@ -41,7 +41,20 @@ func (me Filters) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Filters) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("filter", me)
+	if err := decoder.DecodeSlice("filter", me); err != nil {
+		return err
+	}
+	// slice may contain empty values because of SDK bug
+	filters := Filters{}
+	for _, filter := range *me {
+		// empty value
+		if filter.EntityID == nil && len(filter.EntityTags) == 0 && filter.EntityType == nil && len(filter.ManagementZones) == 0 {
+			continue
+		}
+		filters = append(filters, filter)
+	}
+	*me = filters
+	return nil
 }
 
 // Filter. Configured values of one filter are evaluated together (**AND**).. The maintenance window is applied onto an entity if it matches all of the values of at least one filter.
