@@ -64,6 +64,7 @@ func (me *Application) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The type of the web application. Possible values are `AUTO_INJECTED`, `BROWSER_EXTENSION_INJECTED` and `MANUALLY_INJECTED`",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"real_user_monitoring_enabled": {
 			Type:        schema.TypeBool,
