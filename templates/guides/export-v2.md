@@ -25,7 +25,7 @@ In addition to the out-of-the-box functionality of Terraform, the provider has t
   * **Read network zones** (`networkZones.read`)
   * **Write network zones** (`networkZones.write`)
 
--> Certain resources require an OAuth client for authentication (eg. automation, document, cluster, account management APIs), please refer to the resource specific pages for additional information.
+-> Certain resources require an OAuth client for authentication (eg. automation, document, account management APIs), please refer to the resource specific pages for additional information.
 
 ## Export guide
 

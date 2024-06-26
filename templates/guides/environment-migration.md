@@ -28,7 +28,7 @@ This guide covers both bulk and iterative methods of migrating configurations be
   * **Read network zones** (`networkZones.read`)
   * **Write network zones** (`networkZones.write`)
 
--> Certain resources require an OAuth client for authentication (eg. automation, document, cluster, account management APIs), please refer to the resource specific pages for additional information.
+-> Certain resources require an OAuth client for authentication (eg. automation, document, account management APIs), please refer to the resource specific pages for additional information.
 
 ## Set environment variables
 

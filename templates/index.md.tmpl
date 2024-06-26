@@ -33,48 +33,42 @@ Define `DYNATRACE_ENV_URL` for the Dynatrace environment URL.
 
 Define `DYNATRACE_API_TOKEN` as an access token with the following permissions.
  * **Read configuration** (`ReadConfig`)
-     * Required for reading API v1 configuration.
  * **Write configuration** (`WriteConfig`)
-     * Required for creating API v1 configuration.
  * **Read settings** (`settings.read`)
-     * Required for reading Settings 2.0 configuration.
- * **Write settings** (`settings.write`) (API v2)
-     * Required for modifying Settings 2.0 configuration.
+ * **Write settings** (`settings.write`)
  * **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
-     * Required for reading and creating synthetic configuration.
  * **Capture request data** (`CaptureRequestData`)
-     * Required for configuring request attributes.
  * **Read credential vault entries** (`credentialVault.read`)
-     * Required for reading credentials.
  * **Write credential vault entries** (`credentialVault.write`)
-     * Required for writing credentials.
  * **Read network zones** (`networkZones.read`)
-     * Required for reading network zones.
  * **Write network zones** (`networkZones.write`)
-     * Required for writing network zones.
  * **Read security problems** (`securityProblems.read`)
-     * Required for reading security configuration.
  * **Write security problems** (`securityProblems.write`)
-     * Required for writing security configuration.
  * **Read attacks** (`attacks.read`)
-     * Required for reading attack security configuration.
  * **Write attacks** (`attacks.write`)
-     * Required for writing attack security configuration.
 
-Alternatively, you can also add configuration options within your Terraform module.
+Configure an OAuth client with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
 
-!> Configuring credentials within the provider block is not recommended due to security. The method of setting `DYNATRACE_ENV_URL` and `DYNATRACE_API_TOKEN` as environment variables is the recommended approach especially for production environments.
-
-```
-provider "dynatrace" {
-    dt_env_url    = "https://########.live.dynatrace.com"
-    dt_api_token  = "################"
-}
-```
-
--> Certain resources require an OAuth client for authentication (eg. automation, document, cluster, account management APIs), please refer to the resource specific pages for additional information.
+Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the created OAuth client.
+ * **View workflows** (`automation:workflows:read`)
+ * **Create and edit workflows** (`automation:workflows:write`)
+ * **View calendars** (`automation:calendars:read`)
+ * **Create and edit calendars** (`automation:calendars:write`)
+ * **View rules** (`automation:rules:read`)
+ * **Create and edit rules** (`automation:rules:write`)
+ * **Admin permission to manage all workflows and executions** (`automation:workflows:admin`)
+ * **View documents** (`document:documents:read`)
+ * **Create and edit documents** (`document:documents:write`)
+ * **Delete documents** (`document:documents:delete`)
+ * **Read direct-shares** (`document:direct-shares:read`)
+ * **Write direct-shares** (`document:direct-shares:write`)
+ * **Delete direct-shares** (`document:direct-shares:delete`)
+ * **View bucket metadata** (`storage:bucket-definitions:read`)
+ * **Write buckets** (`storage:bucket-definitions:write`)
+ * **View users and groups** (`account-idm-read`)
+ * **Manage users and groups** (`account-idm-write`)
+ * **View and manage policies** (`iam-policies-management`)
+ * **View environments** (`account-env-read`)
 
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/export-utility) page for more information.
-
-{{ .SchemaMarkdown | trimspace }}
