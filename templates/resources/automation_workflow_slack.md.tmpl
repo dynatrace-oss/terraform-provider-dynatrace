@@ -12,8 +12,6 @@ description: |-
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
--> This resource requires an OAuth client that uses the standard client credentials flow to authenticate a service user with the API. Please set the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` with the client ID and secret. 
-
 ## Dynatrace Documentation
 
 - Slack for Workflows - https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/slack
