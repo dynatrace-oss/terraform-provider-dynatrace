@@ -9,7 +9,7 @@ description: |-
 
 The Dynatrace Terraform Provider is used to interact with the resources supported by the Dynatrace REST API. The provider needs to be configured with the proper credentials before it can be used.
 
-Use the links to the left to learn about the available resources, data sources, and guides.
+Use the navigation to the left to learn about the available resources and data sources. For additional information, refer to the official Dynatrace documentation on Terraform available [here](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform).
 
 ## Example
 
@@ -18,93 +18,57 @@ Use the links to the left to learn about the available resources, data sources, 
 terraform {
     required_providers {
         dynatrace = {
-            version = "1.58.6"
+            version = "~> 1.0"
             source = "dynatrace-oss/dynatrace"
         }
     }
 } 
 ```
 ## Configure the Dynatrace provider
-The recommended way to configure the provider is via environment variables.
-The value of `DYNATRACE_ENV_URL` needs to refer to the URL your Dynatrace Environment is reachable with.
-* Saas Environments: `https://########.live.dynatrace.com`
+The recommended approach is to configure the provider via environment variables.
+
+Define `DYNATRACE_ENV_URL` for the Dynatrace environment URL.
+* SaaS Environments: `https://########.live.dynatrace.com`
 * Managed Enviroments: `https://<dynatrace-host>/e/#####################`
 
-The value of `DYNATRACE_API_TOKEN` needs to be an API Token with the following permissions:
+Define `DYNATRACE_API_TOKEN` as an access token with the following permissions.
  * **Read configuration** (`ReadConfig`)
-     * Required for reading API v1 configuration.
  * **Write configuration** (`WriteConfig`)
-     * Required for creating API v1 configuration.
  * **Read settings** (`settings.read`)
-     * Required for reading Settings 2.0 configuration.
- * **Write settings** (`settings.write`) (API v2)
-     * Required for modifying Settings 2.0 configuration.
+ * **Write settings** (`settings.write`)
  * **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
-     * Required for reading and creating synthetic configuration.
  * **Capture request data** (`CaptureRequestData`)
-     * Required for configuring request attributes.
  * **Read credential vault entries** (`credentialVault.read`)
-     * Required for reading credentials.
  * **Write credential vault entries** (`credentialVault.write`)
-     * Required for writing credentials.
  * **Read network zones** (`networkZones.read`)
-     * Required for reading network zones.
  * **Write network zones** (`networkZones.write`)
-     * Required for writing network zones.
  * **Read security problems** (`securityProblems.read`)
-     * Required for reading security configuration.
  * **Write security problems** (`securityProblems.write`)
-     * Required for writing security configuration.
  * **Read attacks** (`attacks.read`)
-     * Required for reading attack security configuration.
  * **Write attacks** (`attacks.write`)
-     * Required for writing attack security configuration.
 
-Alternatively - but not recommended for security reasons you can also add configuration options within your Terraform Module.
+Configure an OAuth client with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
 
-!> Specifying credentials for Dynatrace environments is considered highly problematic from a security standpoint. Especially in production environments the environment variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN are the recommended way to go when it comes to configuring the Dynatrace Terraform Provider. There exists usually never a good reason to specify credentials inline.
+Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the created OAuth client.
+ * **View workflows** (`automation:workflows:read`)
+ * **Create and edit workflows** (`automation:workflows:write`)
+ * **View calendars** (`automation:calendars:read`)
+ * **Create and edit calendars** (`automation:calendars:write`)
+ * **View rules** (`automation:rules:read`)
+ * **Create and edit rules** (`automation:rules:write`)
+ * **Admin permission to manage all workflows and executions** (`automation:workflows:admin`)
+ * **View documents** (`document:documents:read`)
+ * **Create and edit documents** (`document:documents:write`)
+ * **Delete documents** (`document:documents:delete`)
+ * **Read direct-shares** (`document:direct-shares:read`)
+ * **Write direct-shares** (`document:direct-shares:write`)
+ * **Delete direct-shares** (`document:direct-shares:delete`)
+ * **View bucket metadata** (`storage:bucket-definitions:read`)
+ * **Write buckets** (`storage:bucket-definitions:write`)
+ * **View users and groups** (`account-idm-read`)
+ * **Manage users and groups** (`account-idm-write`)
+ * **View and manage policies** (`iam-policies-management`)
+ * **View environments** (`account-env-read`)
 
-```
-provider "dynatrace" {
-    dt_env_url    = "https://########.live.dynatrace.com"
-    dt_api_token  = "################"
-}
-```
-
-## Exporting existing configuration from a Dynatrace Environment
-In addition to acting as a Terraform Provider Plugin, the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can be directly invoked.
-The utility reaches out to the Dynatrace Environment specified by the command line arguments and fetches all currently supported configuration items. These results will then automatically get transformed into HCL (the configuration language to be used for `.tf` files) and places each configuration item into its own `.tf` file.
-
-With release 1.15.0, a new and improved version of the export utility is now available with various improvements (outlined below).
-* Data source references automatically generated in resources
-* Data source blocks created for dependencies in data_source.tf file(s)
-* Creation of all resources required based off of dependencies
-* Resources organized in modules with preconfigured main.tf based on output
-* Pre-populated providers.tf file in the parent folder and all modules
-* Option to include ID as a commented line in generated resources
-* Option to include/exclude specific resource IDs from export
-* Ability to convert from HCL to JSON formatted files
- 
-Please provide any feedback of the export utility via [GitHub Issues](https://github.com/dynatrace-oss/terraform-provider-dynatrace/issues). 
-
-**Export Utility documentation has been moved under Guides [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).**
-
-<!-- schema generated by tfplugindocs -->
-## Schema
-
-### Optional
-
-- `account_id` (String, Sensitive)
-- `automation_client_id` (String, Sensitive)
-- `automation_client_secret` (String, Sensitive)
-- `automation_env_url` (String) The URL of the Dynatrace Environment with Platform capabilities turned on (`https://#####.apps.dynatrace.com)`. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`
-- `automation_token_url` (String) The URL that provides the Bearer tokens when accessing the Automation REST API. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`
-- `client_id` (String, Sensitive)
-- `client_secret` (String, Sensitive)
-- `dt_api_token` (String, Sensitive)
-- `dt_cluster_api_token` (String, Sensitive)
-- `dt_cluster_url` (String, Sensitive)
-- `dt_env_url` (String)
-- `iam_account_id` (String, Sensitive)
-- `iam_client_id` (String, Sensitive)
-- `iam_client_secret` (String, Sensitive)
+## Exporting existing configuration from a Dynatrace environment
+In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/export-utility) page for more information.

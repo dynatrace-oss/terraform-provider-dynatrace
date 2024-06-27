@@ -2,48 +2,134 @@
 layout: ""
 page_title: "Export Utility"
 description: |-
-  The export utility queries the Dynatrace Environment specified and fetches all currently supported configuration
+  Export existing Dynatrace configurations using Dynatrace Configuration as Code via Terraform.
 ---
 
-## Export Utility
+# Export Utility
 
-### Command Line Syntax
-Invoking the export functionality requires
-* The environment variable `DYNATRACE_ENV_URL` as the URL of your Dynatrace environment
-* The environment variable `DYNATRACE_API_TOKEN` as the API Token of your Dynatrace environment
-* Optionally the environment variable `DYNATRACE_TARGET_FOLDER`. If it's not set, the output folder `./configuration` is assumed
+In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. This functionality provides an alternative to manually creating a Terraform configuration and provides an easy way to create templates based on an existing configuration.
 
-### Execution
-Windows: `terraform-provider-dynatrace.exe -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]*`
+## Prerequisites
 
-Linux: `./terraform-provider-dynatrace -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]*`
+* [Terraform CLI with the Dynatrace provider installed](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/terraform-cli) and available under `PATH`.
+* [Access token](https://docs.dynatrace.com/docs/manage/access-control/access-tokens) with at least the following permissions:
+
+  * **Read settings** (`settings.read`)
+  * **Write settings** (`settings.write`)
+  * **Read configuration** (`ReadConfig`)
+  * **Write configuration** (`WriteConfig`)
+  * **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
+  * **Capture request data** (`CaptureRequestData`)
+  * **Read credential vault entries** (`credentialVault.read`)
+  * **Write credential vault entries** (`credentialVault.write`)
+  * **Read network zones** (`networkZones.read`)
+  * **Write network zones** (`networkZones.write`)
+
+-> Certain resources require an OAuth client for authentication (eg. automation, document, account management APIs), please refer to the resource specific pages for additional information.
+
+## Export guide
+
+1. Define the environment URL and API token in a terminal window. This identifies the Dynatrace tenant for configuration retrieval.
+
+Windows - SaaS
+   ```bash
+   set DYNATRACE_ENV_URL=https://########.live.dynatrace.com
+   set DYNATRACE_API_TOKEN=dt0c01.########.########
+   ```
+
+Windows - Managed
+   ```bash
+   set DYNATRACE_ENV_URL=https://<dynatrace-host>/e/########
+   set DYNATRACE_API_TOKEN=dt0c01.########.########
+   ```
+
+Linux - SaaS
+   ```bash
+   export DYNATRACE_ENV_URL=https://########.live.dynatrace.com
+   export DYNATRACE_API_TOKEN=dt0c01.########.########
+   ```
+   
+Linux - Managed
+   ```bash
+   export DYNATRACE_ENV_URL=https://<dynatrace-host>/e/########
+   export DYNATRACE_API_TOKEN=dt0c01.########.########
+   ```
+
+   Optionally, set `DYNATRACE_TARGET_FOLDER` to designate an output directory. If not set, the default `./configuration` is used.
+
+2. Go to the Terraform Dynatrace Provider executable in the terminal. This isn't the generic executable, such as `terraform.exe` or `./terraform`. Typically, it's found in `.terraform/providers/registry.terraform.io/dynatrace-oss/dynatrace/{provider_version}/{os_version}/terraform-provider-dynatrace_x.y.z`.
+
+3. Directly invoke the executable with any needed options. Because export is additional functionality, it's OK to invoke the plugin directly, and the warning can be safely ignored. For examples, see the [Usage examples](#usage-examples) section below.
+
+   **Windows**: `terraform-provider-dynatrace.exe -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
+
+   **Linux**: `./terraform-provider-dynatrace -export [-ref] [-migrate] [-import-state] [-id] [-flat] [-exclude] [<resourcename>[=<id>]]`
 
 ### Options
-* `-ref` Enable resources with data sources and dependencies
-* `-migrate` Enable resources with dependencies, no data sources. More information available in the [Environment Migration](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/environment-migration) guide.
-* `-import-state` Automatically initializes the terraform modules and imports downloaded resources into the state
-* `-id` Enable commented id output in resource files
-* `-flat` All downloaded resources end up directly within the target folder - no module structure will be created
-* `-exclude` Exclude specified resource(s) from export
-* `-list-exclusions` Prints an overview of resources that will not get exported unless explicitly specified
 
-**NOTE:** Dashboards (because there could be thousands of them) and various other resources are currently excluded from the export unless the resource is directly specified in the command line arguments. Use the option `-list-exclusions` for a full list of these resource.
+* `-ref`: Enable resources with data sources and dependencies.
 
-### Usage Examples
-* `./terraform-provider-dynatrace -export` downloads all available configuration settings without data sources and dependency references
-* `./terraform-provider-dynatrace -export *` is equivalent to `./terraform-provider-dynatrace -export`
-* `./terraform-provider-dynatrace -export -ref -id` downloads all available configuration settings with data sources / dependency references and adds commented ids in resource output
-* `./terraform-provider-dynatrace -export -ref * dynatrace_json_dashboard dynatrace_document` downloads all available configuration settings that are covered by default, and also dashboards and documents (which aren't covered unless explicitly specified)
-* `./terraform-provider-dynatrace -export dynatrace_json_dashboard dynatrace_document` downloads dashboards and documents ONLY
-* `./terraform-provider-dynatrace -export -ref dynatrace_json_dashboard dynatrace_web_application` downloads all available dashboards, web applications and resource dependencies with references
-* `./terraform-provider-dynatrace -export -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325` downloads the alerting profiles with the ids `4f5942d4-3450-40a8-818f-c5faeb3563d0` and `9c4b75f1-9a64-4b44-a8e4-149154fd5325`, includes all resource dependencies with references
-* `./terraform-provider-dynatrace -export -ref dynatrace_calculated_service_metric dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0` downloads all available calculated service metrics and also the alerting profile with the id `4f5942d4-3450-40a8-818f-c5faeb3563d0`, includes all resource dependencies with references
-* `./terraform-provider-dynatrace -export -import-state` downloads all available configuration settings and imports resources into the state
-* `./terraform-provider-dynatrace -export -import-state dynatrace_web_application` downloads all web applications and imports resources into the state
-* `./terraform-provider-dynatrace -export -ref -exclude dynatrace_calculated_service_metric dynatrace_alerting` download all available configuration settings except `dynatrace_calculated_service_metric` and `dynatrace_alerting`, includes all resource dependencies with references
+* `-migrate`: Enable resources with dependencies, excluding data sources. See more in the [Migration guide](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/migration).
+
+* `-import-state`: Initialize terraform modules and import resources into the state.
+
+* `-id`: Display commented id output in resource files.
+
+* `-flat`: Store all resources directly within the target folder without a module structure.
+
+* `-exclude`: Exclude specified resources from export.
+
+* `-list-exclusions`: Prints an overview of resources that will not get exported unless explicitly specified.
+
+-> By default, dashboards (`dynatrace_json_dashboard`) and various other resources are excluded from the export unless the resource is directly specified. Use the option `-list-exclusions` for a full list of the excluded resources.
+
+### Usage examples
+
+The following examples demonstrate various ways to use the export utility.
+
+* Export all configurations without data sources/dependencies:
+  ```bash
+  ./terraform-provider-dynatrace -export
+  ```
+* Export all configurations with data sources/dependencies and include commented IDs:
+  ```bash
+  ./terraform-provider-dynatrace -export -ref -id
+  ```
+* Export all configurations with data sources/dependencies including specified resources in the exclusion list
+  ```bash
+  ./terraform-provider-dynatrace -export -ref * dynatrace_json_dashboard dynatrace_document
+  ```
+* Export specific configuration
+  ```bash
+  ./terraform-provider-dynatrace -export dynatrace_json_dashboard dynatrace_document
+  ```
+* Export specific configurations and their dependencies:
+  ```bash
+  ./terraform-provider-dynatrace -export -ref dynatrace_json_dashboard dynatrace_web_application
+  ```
+* Export specific alerting profiles by their IDs:
+  ```bash
+  ./terraform-provider-dynatrace -export -ref dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0 dynatrace_alerting=9c4b75f1-9a64-4b44-a8e4-149154fd5325
+  ```
+* Export multiple resources including dependencies:
+  ```bash
+  ./terraform-provider-dynatrace -export -ref dynatrace_calculated_service_metric dynatrace_alerting=4f5942d4-3450-40a8-818f-c5faeb3563d0
+  ```
+* Export all configurations and import them into the state:
+  ```bash
+  ./terraform-provider-dynatrace -export -import-state
+  ```
+* Export specific web applications and import them into the state:
+  ```bash
+  ./terraform-provider-dynatrace -export -import-state dynatrace_web_application
+  ```
+* Export all configurations except specified resources:
+  ```bash
+  ./terraform-provider-dynatrace -export -ref -exclude dynatrace_calculated_service_metric dynatrace_alerting
+  ```
 
 ### Additional Information
-* There may be instances where the exported configuration is deprecated and/or is unable to be used for a create/update. In these instances, the files will be moved into `.flawed` of the output folder and the explanation will be available as a commented output in the resource file. 
-    -  E.g. A dashboard with no tiles can be created and can be retrieved via the export, but the subsequent `terraform apply` would fail without any tiles. 
-* There are instances where the returned configuration does not contain all of the required information to run an `terraform apply` due to sensitive data or  instances where the files require additional attention. The files that apply to this scenario will be automatically moved to `.requires_attention`, the explanation will be available as a commented output in the resource file.
-    -  E.g. `dynatrace_credentials` confidential strings are not available via the API.
+* Some exported configurations might be deprecated or require modifications. Such files are moved to the `.flawed` directory in the output folder, with reasons provided as comments at the beginning of the file.
+* Some configurations might lack essential information for a `terraform apply` due to sensitive data or instances where the files require additional attention. These files are moved to `.requires_attention`, with explanations provided as comments at the beginning of the file.
+   
+  For example, `dynatrace_credentials` confidential strings are not available via the API.
