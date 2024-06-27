@@ -46,10 +46,11 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			ValidateDiagFunc: ValidateMaxLength(200),
 		},
 		"private": {
-			Type:        schema.TypeBool,
-			Description: "Specifies whether the document is private or readable by everybody",
-			Optional:    true,
-			Default:     false,
+			Type:             schema.TypeBool,
+			Description:      "Specifies whether the document is private or readable by everybody. This attribute is currently getting ignored until all Dynatrace Environments are guaranteed to support for it",
+			Optional:         true,
+			Default:          false,
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"type": {
 			Type:             schema.TypeString,
