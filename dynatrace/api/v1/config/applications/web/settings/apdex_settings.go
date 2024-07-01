@@ -42,26 +42,27 @@ func (me *ApdexSettings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Description: "no documentation available",
 			Optional:    true,
+			Deprecated:  "The attribute `threshold` no longer exists in the API schema, please use `tolerated_threshold`, `frustrating_threshold`, `tolerated_fallback_threshold`, and `frustrating_fallback_threshold` instead",
 		},
 		"tolerated_threshold": {
 			Type:        schema.TypeInt,
 			Description: "Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.",
-			Optional:    true,
+			Required:    true,
 		},
 		"frustrating_threshold": {
 			Type:        schema.TypeInt,
 			Description: "Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.",
-			Optional:    true,
+			Required:    true,
 		},
 		"tolerated_fallback_threshold": {
 			Type:        schema.TypeInt,
 			Description: "Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.",
-			Optional:    true,
+			Required:    true,
 		},
 		"frustrating_fallback_threshold": {
 			Type:        schema.TypeInt,
 			Description: "Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.",
-			Optional:    true,
+			Required:    true,
 		},
 	}
 }

@@ -71,7 +71,7 @@ func (me *AdvancedJavaScriptTagSettings) Schema() map[string]*schema.Schema {
 		"additional_event_handlers": {
 			Type:        schema.TypeList,
 			Description: "Additional event handlers and wrappers",
-			Optional:    true,
+			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(AdditionalEventHandlers).Schema()},
 		},
@@ -83,11 +83,12 @@ func (me *AdvancedJavaScriptTagSettings) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(EventWrapperSettings).Schema()},
 		},
 		"global_event_capture_settings": {
-			Type:        schema.TypeList,
-			Description: "Global event capture settings",
-			Optional:    true,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(GlobalEventCaptureSettings).Schema()},
+			Type:             schema.TypeList,
+			Description:      "Global event capture settings",
+			Optional:         true,
+			MaxItems:         1,
+			Elem:             &schema.Resource{Schema: new(GlobalEventCaptureSettings).Schema()},
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return newValue == "0" },
 		},
 	}
 }
@@ -113,7 +114,7 @@ func (me *AdvancedJavaScriptTagSettings) MarshalHCL(properties hcl.Properties) e
 }
 
 func (me *AdvancedJavaScriptTagSettings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"sync_beacon_firefox":                    &me.SyncBeaconFirefox,
 		"sync_beacon_internet_explorer":          &me.SyncBeaconInternetExplorer,
 		"instrument_unsupported_ajax_frameworks": &me.InstrumentUnsupportedAjaxFrameworks,
@@ -124,4 +125,10 @@ func (me *AdvancedJavaScriptTagSettings) UnmarshalHCL(decoder hcl.Decoder) error
 		"event_wrapper_settings":                 &me.EventWrapperSettings,
 		"global_event_capture_settings":          &me.GlobalEventCaptureSettings,
 	})
+
+	if me.GlobalEventCaptureSettings == nil {
+		me.GlobalEventCaptureSettings = new(GlobalEventCaptureSettings)
+	}
+
+	return err
 }

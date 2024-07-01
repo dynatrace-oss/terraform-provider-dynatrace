@@ -67,11 +67,12 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"javascript_framework_support": {
-			Type:        schema.TypeList,
-			Description: "Support of various JavaScript frameworks",
-			Optional:    true,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(JavaScriptFrameworkSupport).Schema()},
+			Type:             schema.TypeList,
+			Description:      "Support of various JavaScript frameworks",
+			Optional:         true,
+			MaxItems:         1,
+			Elem:             &schema.Resource{Schema: new(JavaScriptFrameworkSupport).Schema()},
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return newValue == "0" },
 		},
 		"content_capture": {
 			Type:        schema.TypeList,
@@ -151,7 +152,7 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 		"advanced_javascript_tag_settings": {
 			Type:        schema.TypeList,
 			Description: "Advanced JavaScript tag settings",
-			Optional:    true,
+			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(AdvancedJavaScriptTagSettings).Schema()},
 		},
@@ -242,7 +243,7 @@ func (me *MonitoringSettings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	err := decoder.DecodeAll(map[string]any{
 		"fetch_requests":                       &me.FetchRequests,
 		"xml_http_request":                     &me.XmlHttpRequest,
 		"javascript_framework_support":         &me.JavaScriptFrameworkSupport,
@@ -268,4 +269,10 @@ func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"same_site_cookie_attribute":           &me.SameSiteCookieAttribute,
 		"use_cors":                             &me.UseCors,
 	})
+
+	if me.JavaScriptFrameworkSupport == nil {
+		me.JavaScriptFrameworkSupport = new(JavaScriptFrameworkSupport)
+	}
+
+	return err
 }

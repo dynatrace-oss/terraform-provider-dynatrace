@@ -37,7 +37,7 @@ func (me *ContentCapture) Schema() map[string]*schema.Schema {
 		"resource_timing_settings": {
 			Type:        schema.TypeList,
 			Description: "Settings for resource timings capture",
-			Optional:    true,
+			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(ResourceTimingSettings).Schema()},
 		},
@@ -49,7 +49,7 @@ func (me *ContentCapture) Schema() map[string]*schema.Schema {
 		"timeout_settings": {
 			Type:        schema.TypeList,
 			Description: "Settings for timed action capture",
-			Optional:    true,
+			Required:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(TimeoutSettings).Schema()},
 		},
