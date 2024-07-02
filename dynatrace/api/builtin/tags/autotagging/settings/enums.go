@@ -160,6 +160,8 @@ var Attributes = struct {
 	MobileApplicationPlatform                 Attribute
 	MobileApplicationTags                     Attribute
 	NameOfComputeNode                         Attribute
+	NetworkAvailabilityMonitorName            Attribute
+	NetworkAvailabilityMonitorTags            Attribute
 	OpenstackAccountName                      Attribute
 	OpenstackAccountProjectName               Attribute
 	OpenstackAvailabilityZoneName             Attribute
@@ -357,6 +359,8 @@ var Attributes = struct {
 	"MOBILE_APPLICATION_PLATFORM",
 	"MOBILE_APPLICATION_TAGS",
 	"NAME_OF_COMPUTE_NODE",
+	"NETWORK_AVAILABILITY_MONITOR_NAME",
+	"NETWORK_AVAILABILITY_MONITOR_TAGS",
 	"OPENSTACK_ACCOUNT_NAME",
 	"OPENSTACK_ACCOUNT_PROJECT_NAME",
 	"OPENSTACK_AVAILABILITY_ZONE_NAME",
@@ -432,6 +436,7 @@ var AutoTagMeTypes = struct {
 	Host                         AutoTagMeType
 	HttpCheck                    AutoTagMeType
 	MobileApplication            AutoTagMeType
+	MultiprotocolMonitor         AutoTagMeType
 	ProcessGroup                 AutoTagMeType
 	Service                      AutoTagMeType
 	SyntheticTest                AutoTagMeType
@@ -450,6 +455,7 @@ var AutoTagMeTypes = struct {
 	"HOST",
 	"HTTP_CHECK",
 	"MOBILE_APPLICATION",
+	"MULTIPROTOCOL_MONITOR",
 	"PROCESS_GROUP",
 	"SERVICE",
 	"SYNTHETIC_TEST",
