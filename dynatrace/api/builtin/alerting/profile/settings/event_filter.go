@@ -46,9 +46,9 @@ func (me *EventFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type EventFilter struct {
-	Type       EventFilterType        `json:"type"`             // The type of event to filter by
-	Predefined *PredefinedEventFilter `json:"predefinedFilter"` // The predefined filter. Only valid if `type` is `PREDEFINED`
-	Custom     *CustomEventFilter     `json:"customFilter"`     // The custom filter. Only valid if `type` is `CUSTOM`
+	Type       AlertingProfileEventFilterType `json:"type"`             // The type of event to filter by
+	Predefined *PredefinedEventFilter         `json:"predefinedFilter"` // The predefined filter. Only valid if `type` is `PREDEFINED`
+	Custom     *CustomEventFilter             `json:"customFilter"`     // The custom filter. Only valid if `type` is `CUSTOM`
 }
 
 func (me *EventFilter) Schema() map[string]*schema.Schema {
@@ -88,14 +88,14 @@ func (me *EventFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 		if err := me.Custom.UnmarshalHCL(hcl.NewDecoder(decoder, "custom", 0)); err != nil {
 			return err
 		}
-		me.Type = EventFilterTypes.Custom
+		me.Type = AlertingProfileEventFilterTypes.Custom
 	}
 	if _, ok := decoder.GetOk("predefined.#"); ok {
 		me.Predefined = new(PredefinedEventFilter)
 		if err := me.Predefined.UnmarshalHCL(hcl.NewDecoder(decoder, "predefined", 0)); err != nil {
 			return err
 		}
-		me.Type = EventFilterTypes.Predefined
+		me.Type = AlertingProfileEventFilterTypes.Predefined
 	}
 	return nil
 }

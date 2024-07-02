@@ -24,11 +24,11 @@ import (
 )
 
 type TextFilter struct {
-	Operator      Operator `json:"operator"`      // Operator of the comparison
-	Value         string   `json:"value"`         // The value to compare with
-	Negate        bool     `json:"negate"`        // Negate the operator
-	Enabled       bool     `json:"enabled"`       // Enable this filter
-	CaseSensitive bool     `json:"caseSensitive"` // Case Sensitive comparison of text
+	Operator      ComparisonOperator `json:"operator"`      // Operator of the comparison
+	Value         string             `json:"value"`         // The value to compare with
+	Negate        bool               `json:"negate"`        // Negate the operator
+	Enabled       bool               `json:"enabled"`       // Enable this filter
+	CaseSensitive bool               `json:"caseSensitive"` // Case Sensitive comparison of text
 }
 
 func (me *TextFilter) Schema() map[string]*schema.Schema {
@@ -82,7 +82,7 @@ func (me *TextFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.CaseSensitive = (value.(bool))
 	}
 	if value, ok := decoder.GetOk("operator"); ok {
-		me.Operator = Operator(value.(string))
+		me.Operator = ComparisonOperator(value.(string))
 	}
 	if value, ok := decoder.GetOk("value"); ok {
 		me.Value = value.(string)

@@ -6,11 +6,13 @@
 		{
 			"customMessage": "Management zone should be selected",
 			"customValidatorId": "alerting-profile-mz-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "This is the default alerting profile, which is also used for mobile notifications. To avoid losing track of the profile's identity, the name 'Default' is protected from changes.",
 			"customValidatorId": "alerting-profile-default-name-unchanged-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -345,6 +347,18 @@
 					"value": "HTTP_CHECK_TEST_LOCATION_SLOWDOWN"
 				},
 				{
+					"displayName": "Network availability monitor global outage",
+					"value": "MULTI_PROTOCOL_GLOBAL_OUTAGE"
+				},
+				{
+					"displayName": "Network availability monitor local outage",
+					"value": "MULTI_PROTOCOL_LOCAL_OUTAGE"
+				},
+				{
+					"displayName": "Network availability monitor performance threshold violation",
+					"value": "MULTI_PROTOCOL_LOCATION_SLOWDOWN"
+				},
+				{
 					"displayName": "Third party monitor outage",
 					"value": "EXTERNAL_SYNTHETIC_TEST_OUTAGE"
 				},
@@ -622,6 +636,7 @@
 						"constraints": [
 							{
 								"customValidatorId": "universal-tag-validator",
+								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							},
 							{
@@ -741,6 +756,7 @@
 						{
 							"customMessage": "Property keys must be distinct.",
 							"customValidatorId": "alerting-profile-distinct-metadata-filters-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -784,6 +800,7 @@
 						{
 							"customMessage": "Unknown predefined property key.",
 							"customValidatorId": "event-property-key-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -890,10 +907,12 @@
 				{
 					"customMessage": "Value must be a valid regular expression",
 					"customValidatorId": "alerting-profile-text-filter-regex-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "alerting-profile-text-filter-dangerous-regex-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -967,5 +986,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.4.4"
+	"version": "8.4.5"
 }
