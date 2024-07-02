@@ -29,6 +29,7 @@ var MatcherTypes = struct {
 	K8SNamespaceName       MatcherType
 	LogContent             MatcherType
 	LogSource              MatcherType
+	LogSourceOrigin        MatcherType
 	Loglevel               MatcherType
 	ProcessTechnology      MatcherType
 	WinlogEventid          MatcherType
@@ -45,6 +46,7 @@ var MatcherTypes = struct {
 	"k8s.namespace.name",
 	"log.content",
 	"log.source",
+	"log.source.origin",
 	"loglevel",
 	"process.technology",
 	"winlog.eventid",

@@ -25,6 +25,11 @@
 					"value": "log.source"
 				},
 				{
+					"displayName": "Log source origin",
+					"icon": "agent",
+					"value": "log.source.origin"
+				},
+				{
 					"displayName": "Log content",
 					"icon": "filter",
 					"value": "log.content"
@@ -307,5 +312,5 @@
 			}
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }
