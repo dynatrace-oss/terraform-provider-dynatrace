@@ -68,17 +68,17 @@
 			"documentation": "",
 			"properties": {
 				"blockingStrategyDotNet": {
+					"default": "OFF",
 					"description": "",
 					"displayName": "Attack control .NET",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"featureFlag": "com.compuware.apm.webuiff.enable-attack-and-code-level-vulnerability-settings-dotnet.secEnableAttackAndCodeLevelVulnerabilitySettingsDotnet.feature",
 						"maturity": "EARLY_ADOPTER",
 						"sortItems": "disabled"
 					},
 					"modificationPolicy": "DEFAULT",
-					"nullable": true,
+					"nullable": false,
 					"type": {
 						"$ref": "#/enums/BlockingStrategy"
 					}
@@ -105,5 +105,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.2"
+	"version": "2.3.1"
 }

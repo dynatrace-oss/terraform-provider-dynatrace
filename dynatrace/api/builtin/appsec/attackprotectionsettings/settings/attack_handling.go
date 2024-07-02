@@ -24,8 +24,8 @@ import (
 
 // Default attack handling. Default settings for handling attacks.
 type AttackHandling struct {
-	BlockingStrategyDotNet *BlockingStrategy `json:"blockingStrategyDotNet,omitempty"` // (v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`
-	BlockingStrategyJava   BlockingStrategy  `json:"blockingStrategyJava"`             // Possible Values: `BLOCK`, `MONITOR`, `OFF`
+	BlockingStrategyDotNet BlockingStrategy `json:"blockingStrategyDotNet"` // (v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`
+	BlockingStrategyJava   BlockingStrategy `json:"blockingStrategyJava"`   // Possible Values: `BLOCK`, `MONITOR`, `OFF`
 }
 
 func (me *AttackHandling) Schema() map[string]*schema.Schema {
@@ -34,6 +34,7 @@ func (me *AttackHandling) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "(v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`",
 			Optional:    true, // nullable
+			Default:     "OFF",
 		},
 		"blocking_strategy_java": {
 			Type:        schema.TypeString,
