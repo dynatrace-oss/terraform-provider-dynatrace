@@ -32,6 +32,11 @@
 					"value": "log.source"
 				},
 				{
+					"displayName": "Log source origin",
+					"icon": "agent",
+					"value": "log.source.origin"
+				},
+				{
 					"displayName": "Host tag",
 					"icon": "filter",
 					"value": "host.tag"
@@ -353,5 +358,5 @@
 			}
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }
