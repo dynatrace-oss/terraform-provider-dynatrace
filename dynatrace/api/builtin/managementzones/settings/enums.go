@@ -160,6 +160,8 @@ var Attributes = struct {
 	MobileApplicationPlatform                 Attribute
 	MobileApplicationTags                     Attribute
 	NameOfComputeNode                         Attribute
+	NetworkAvailabilityMonitorName            Attribute
+	NetworkAvailabilityMonitorTags            Attribute
 	OpenstackAccountName                      Attribute
 	OpenstackAccountProjectName               Attribute
 	OpenstackAvailabilityZoneName             Attribute
@@ -357,6 +359,8 @@ var Attributes = struct {
 	"MOBILE_APPLICATION_PLATFORM",
 	"MOBILE_APPLICATION_TAGS",
 	"NAME_OF_COMPUTE_NODE",
+	"NETWORK_AVAILABILITY_MONITOR_NAME",
+	"NETWORK_AVAILABILITY_MONITOR_TAGS",
 	"OPENSTACK_ACCOUNT_NAME",
 	"OPENSTACK_ACCOUNT_PROJECT_NAME",
 	"OPENSTACK_AVAILABILITY_ZONE_NAME",
@@ -478,6 +482,7 @@ var ManagementZoneMeTypes = struct {
 	KubernetesCluster            ManagementZoneMeType
 	KubernetesService            ManagementZoneMeType
 	MobileApplication            ManagementZoneMeType
+	NetworkAvailabilityMonitor   ManagementZoneMeType
 	OpenstackAccount             ManagementZoneMeType
 	ProcessGroup                 ManagementZoneMeType
 	Queue                        ManagementZoneMeType
@@ -510,6 +515,7 @@ var ManagementZoneMeTypes = struct {
 	"KUBERNETES_CLUSTER",
 	"KUBERNETES_SERVICE",
 	"MOBILE_APPLICATION",
+	"NETWORK_AVAILABILITY_MONITOR",
 	"OPENSTACK_ACCOUNT",
 	"PROCESS_GROUP",
 	"QUEUE",

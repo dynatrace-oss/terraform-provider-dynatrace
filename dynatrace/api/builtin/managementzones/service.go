@@ -33,7 +33,7 @@ import (
 )
 
 const SchemaID = "builtin:management-zones"
-const SchemaVersion = "1.0.10"
+const SchemaVersion = "1.0.11"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*managementzones.Settings] {
 	return &service{

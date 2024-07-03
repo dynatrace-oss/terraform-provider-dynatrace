@@ -741,6 +741,16 @@
 					"value": "HTTP_MONITOR_TAGS"
 				},
 				{
+					"description": "Network availability monitors",
+					"displayName": "Network availability monitor name",
+					"value": "NETWORK_AVAILABILITY_MONITOR_NAME"
+				},
+				{
+					"description": "Network availability monitors",
+					"displayName": "Network availability monitor tags",
+					"value": "NETWORK_AVAILABILITY_MONITOR_TAGS"
+				},
+				{
 					"description": "Custom applications",
 					"displayName": "Custom application name",
 					"value": "CUSTOM_APPLICATION_NAME"
@@ -1127,6 +1137,10 @@
 				{
 					"displayName": "HTTP monitors (Synthetic monitor)",
 					"value": "HTTP_MONITOR"
+				},
+				{
+					"displayName": "Network availability monitors (Synthetic monitor)",
+					"value": "NETWORK_AVAILABILITY_MONITOR"
 				},
 				{
 					"displayName": "AppMon server",
@@ -1519,6 +1533,7 @@
 									"EXTERNAL_MONITOR_ENGINE_NAME",
 									"EXTERNAL_MONITOR_ENGINE_DESCRIPTION",
 									"HTTP_MONITOR_NAME",
+									"NETWORK_AVAILABILITY_MONITOR_NAME",
 									"DOCKER_CONTAINER_NAME",
 									"DOCKER_FULL_IMAGE_NAME",
 									"DOCKER_IMAGE_VERSION",
@@ -1988,6 +2003,7 @@
 											"EXTERNAL_MONITOR_ENGINE_NAME",
 											"EXTERNAL_MONITOR_ENGINE_DESCRIPTION",
 											"HTTP_MONITOR_NAME",
+											"NETWORK_AVAILABILITY_MONITOR_NAME",
 											"DOCKER_CONTAINER_NAME",
 											"DOCKER_FULL_IMAGE_NAME",
 											"DOCKER_IMAGE_VERSION",
@@ -2155,6 +2171,7 @@
 									"BROWSER_MONITOR_TAGS",
 									"EXTERNAL_MONITOR_TAGS",
 									"HTTP_MONITOR_TAGS",
+									"NETWORK_AVAILABILITY_MONITOR_TAGS",
 									"ESXI_HOST_TAGS",
 									"EC2_INSTANCE_TAGS",
 									"AWS_AUTO_SCALING_GROUP_TAGS",
@@ -2610,5 +2627,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.10"
+	"version": "1.0.11"
 }
