@@ -62,7 +62,7 @@ data "dynatrace_documents" "all-dashboard-and-notebooks" {}
 
 - `actor` (String) The user context the executions of the document will happen with
 - `owner` (String) The ID of the owner of this document
-- `private` (Boolean) Specifies whether the document is private or readable by everybody
+- `private` (Boolean) Specifies whether the document is private or readable by everybody. This attribute is currently getting ignored until all Dynatrace Environments are guaranteed to support for it
 
 ### Read-Only
 

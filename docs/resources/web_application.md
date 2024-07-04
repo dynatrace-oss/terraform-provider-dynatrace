@@ -306,25 +306,31 @@ resource "dynatrace_web_application" "#name#" {
 <a id="nestedblock--custom_action_apdex_settings"></a>
 ### Nested Schema for `custom_action_apdex_settings`
 
-Optional:
+Required:
 
 - `frustrating_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.
 - `frustrating_threshold` (Number) Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.
-- `threshold` (Number) no documentation available
 - `tolerated_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.
 - `tolerated_threshold` (Number) Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.
+
+Optional:
+
+- `threshold` (Number, Deprecated) no documentation available
 
 
 <a id="nestedblock--load_action_apdex_settings"></a>
 ### Nested Schema for `load_action_apdex_settings`
 
-Optional:
+Required:
 
 - `frustrating_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.
 - `frustrating_threshold` (Number) Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.
-- `threshold` (Number) no documentation available
 - `tolerated_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.
 - `tolerated_threshold` (Number) Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.
+
+Optional:
+
+- `threshold` (Number, Deprecated) no documentation available
 
 
 <a id="nestedblock--monitoring_settings"></a>
@@ -332,13 +338,13 @@ Optional:
 
 Required:
 
+- `advanced_javascript_tag_settings` (Block List, Min: 1, Max: 1) Advanced JavaScript tag settings (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings))
 - `content_capture` (Block List, Min: 1, Max: 1) Settings for content capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture))
 - `injection_mode` (String) Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE` and `JAVASCRIPT_TAG`.
 
 Optional:
 
 - `add_cross_origin_anonymous_attribute` (Boolean) Add the cross origin = anonymous attribute to capture JavaScript error messages and W3C resource timings
-- `advanced_javascript_tag_settings` (Block List, Max: 1) Advanced JavaScript tag settings (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings))
 - `angular_package_name` (String) The name of the angular package
 - `browser_restriction_settings` (Block List, Max: 1) Settings for restricting certain browser type, version, platform and, comparator. It also restricts the mode (see [below for nested schema](#nestedblock--monitoring_settings--browser_restriction_settings))
 - `cache_control_header_optimizations` (Boolean) Optimize the value of cache control headers for use with Dynatrace real user monitoring enabled/disabled
@@ -378,79 +384,17 @@ If noting specified the feature is disabled
 - `use_cors` (Boolean) Send beacon data via CORS.
 - `xml_http_request` (Boolean) `XmlHttpRequest` support enabled/disabled
 
-<a id="nestedblock--monitoring_settings--content_capture"></a>
-### Nested Schema for `monitoring_settings.content_capture`
-
-Optional:
-
-- `javascript_errors` (Boolean) JavaScript errors monitoring enabled/disabled
-- `resource_timing_settings` (Block List, Max: 1) Settings for resource timings capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--resource_timing_settings))
-- `timeout_settings` (Block List, Max: 1) Settings for timed action capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--timeout_settings))
-- `visually_complete_and_speed_index` (Boolean) Visually complete and Speed index support enabled/disabled
-- `visually_complete_settings` (Block List, Max: 1) Settings for VisuallyComplete (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--visually_complete_settings))
-
-<a id="nestedblock--monitoring_settings--content_capture--resource_timing_settings"></a>
-### Nested Schema for `monitoring_settings.content_capture.resource_timing_settings`
-
-Required:
-
-- `instrumentation_delay` (Number) Instrumentation delay for monitoring resource and image resource impact in browsers that don't offer W3C resource timings. 
-
-Valid values range from 0 to 9999.
-
-Only effective if `nonW3cResourceTimings` is enabled
-
-Optional:
-
-- `non_w3c_resource_timings` (Boolean) Timing for JavaScript files and images on non-W3C supported browsers enabled/disabled
-- `resource_timing_capture_type` (String) Defines how detailed resource timings are captured.
-
-Only effective if **w3cResourceTimings** or **nonW3cResourceTimings** is enabled. Possible values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS` and `CAPTURE_LIMITED_SUMMARIES`
-- `resource_timings_domain_limit` (Number) Limits the number of domains for which W3C resource timings are captured.
-
-Only effective if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`. Valid values range from 0 to 50.
-- `w3c_resource_timings` (Boolean) W3C resource timings for third party/CDN enabled/disabled
-
-
-<a id="nestedblock--monitoring_settings--content_capture--timeout_settings"></a>
-### Nested Schema for `monitoring_settings.content_capture.timeout_settings`
-
-Required:
-
-- `temporary_action_limit` (Number) Defines how deep temporary actions may cascade. 0 disables temporary actions completely. Recommended value if enabled is 3
-- `temporary_action_total_timeout` (Number) The total timeout of all cascaded timeouts that should still be able to create a temporary action
-
-Optional:
-
-- `timed_action_support` (Boolean) Timed action support enabled/disabled. 
-
-Enable to detect actions that trigger sending of XHRs via `setTimout` methods
-
-
-<a id="nestedblock--monitoring_settings--content_capture--visually_complete_settings"></a>
-### Nested Schema for `monitoring_settings.content_capture.visually_complete_settings`
-
-Optional:
-
-- `exclude_url_regex` (String) A RegularExpression used to exclude images and iframes from being detected by the VC module
-- `ignored_mutations_list` (String) Query selector for mutation nodes to ignore in VC and SI calculation
-- `inactivity_timeout` (Number) The time in ms the VC module waits for no mutations happening on the page after the load action. Defaults to 1000. Valid values range from 0 to 30000.
-- `mutation_timeout` (Number) Determines the time in ms VC waits after an action closes to start calculation. Defaults to 50. Valid values range from 0 to 5000.
-- `threshold` (Number) Minimum visible area in pixels of elements to be counted towards VC and SI. Defaults to 50. Valid values range from 0 to 10000.
-
-
-
 <a id="nestedblock--monitoring_settings--advanced_javascript_tag_settings"></a>
 ### Nested Schema for `monitoring_settings.advanced_javascript_tag_settings`
 
 Required:
 
+- `additional_event_handlers` (Block List, Min: 1, Max: 1) Additional event handlers and wrappers (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--additional_event_handlers))
 - `max_action_name_length` (Number) Maximum character length for action names. Valid values range from 5 to 10000.
 - `max_errors_to_capture` (Number) Maximum number of errors to be captured per page. Valid values range from 0 to 50.
 
 Optional:
 
-- `additional_event_handlers` (Block List, Max: 1) Additional event handlers and wrappers (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--additional_event_handlers))
 - `event_wrapper_settings` (Block List, Max: 1) In addition to the event handlers, events called using `addEventListener` or `attachEvent` can be captured. Be careful with this option! Event wrappers can conflict with the JavaScript code on a web page (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--event_wrapper_settings))
 - `global_event_capture_settings` (Block List, Max: 1) Global event capture settings (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--global_event_capture_settings))
 - `instrument_unsupported_ajax_frameworks` (Boolean) Instrumentation of unsupported Ajax frameworks enabled/disabled
@@ -506,6 +450,71 @@ For example `DragStart` or `DragEnd`. Maximum 100 characters.
 - `scroll` (Boolean) Scroll enabled/disabled
 - `touch_end` (Boolean) TouchEnd enabled/disabled
 - `touch_start` (Boolean) TouchStart enabled/disabled
+
+
+
+<a id="nestedblock--monitoring_settings--content_capture"></a>
+### Nested Schema for `monitoring_settings.content_capture`
+
+Required:
+
+- `resource_timing_settings` (Block List, Min: 1, Max: 1) Settings for resource timings capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--resource_timing_settings))
+- `timeout_settings` (Block List, Min: 1, Max: 1) Settings for timed action capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--timeout_settings))
+
+Optional:
+
+- `javascript_errors` (Boolean) JavaScript errors monitoring enabled/disabled
+- `visually_complete_and_speed_index` (Boolean) Visually complete and Speed index support enabled/disabled
+- `visually_complete_settings` (Block List, Max: 1) Settings for VisuallyComplete (see [below for nested schema](#nestedblock--monitoring_settings--content_capture--visually_complete_settings))
+
+<a id="nestedblock--monitoring_settings--content_capture--resource_timing_settings"></a>
+### Nested Schema for `monitoring_settings.content_capture.resource_timing_settings`
+
+Required:
+
+- `instrumentation_delay` (Number) Instrumentation delay for monitoring resource and image resource impact in browsers that don't offer W3C resource timings. 
+
+Valid values range from 0 to 9999.
+
+Only effective if `nonW3cResourceTimings` is enabled
+
+Optional:
+
+- `non_w3c_resource_timings` (Boolean) Timing for JavaScript files and images on non-W3C supported browsers enabled/disabled
+- `resource_timing_capture_type` (String) Defines how detailed resource timings are captured.
+
+Only effective if **w3cResourceTimings** or **nonW3cResourceTimings** is enabled. Possible values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS` and `CAPTURE_LIMITED_SUMMARIES`
+- `resource_timings_domain_limit` (Number) Limits the number of domains for which W3C resource timings are captured.
+
+Only effective if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`. Valid values range from 0 to 50.
+- `w3c_resource_timings` (Boolean) W3C resource timings for third party/CDN enabled/disabled
+
+
+<a id="nestedblock--monitoring_settings--content_capture--timeout_settings"></a>
+### Nested Schema for `monitoring_settings.content_capture.timeout_settings`
+
+Required:
+
+- `temporary_action_limit` (Number) Defines how deep temporary actions may cascade. 0 disables temporary actions completely. Recommended value if enabled is 3
+- `temporary_action_total_timeout` (Number) The total timeout of all cascaded timeouts that should still be able to create a temporary action
+
+Optional:
+
+- `timed_action_support` (Boolean) Timed action support enabled/disabled. 
+
+Enable to detect actions that trigger sending of XHRs via `setTimout` methods
+
+
+<a id="nestedblock--monitoring_settings--content_capture--visually_complete_settings"></a>
+### Nested Schema for `monitoring_settings.content_capture.visually_complete_settings`
+
+Optional:
+
+- `exclude_url_regex` (String) A RegularExpression used to exclude images and iframes from being detected by the VC module
+- `ignored_mutations_list` (String) Query selector for mutation nodes to ignore in VC and SI calculation
+- `inactivity_timeout` (Number) The time in ms the VC module waits for no mutations happening on the page after the load action. Defaults to 1000. Valid values range from 0 to 30000.
+- `mutation_timeout` (Number) Determines the time in ms VC waits after an action closes to start calculation. Defaults to 50. Valid values range from 0 to 5000.
+- `threshold` (Number) Minimum visible area in pixels of elements to be counted towards VC and SI. Defaults to 50. Valid values range from 0 to 10000.
 
 
 
@@ -635,13 +644,16 @@ Required:
 <a id="nestedblock--xhr_action_apdex_settings"></a>
 ### Nested Schema for `xhr_action_apdex_settings`
 
-Optional:
+Required:
 
 - `frustrating_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a tolerable user experience, when the configured KPM is not available. Values between 0 and 240000 are allowed.
 - `frustrating_threshold` (Number) Maximal value of apdex, which is considered as tolerable user experience. Values between 0 and 240000 are allowed.
-- `threshold` (Number) no documentation available
 - `tolerated_fallback_threshold` (Number) Fallback threshold of an XHR action, defining a satisfied user experience, when the configured KPM is not available. Values between 0 and 60000 are allowed.
 - `tolerated_threshold` (Number) Maximal value of apdex, which is considered as satisfied user experience. Values between 0 and 60000 are allowed.
+
+Optional:
+
+- `threshold` (Number, Deprecated) no documentation available
 
 
 <a id="nestedblock--conversion_goals"></a>
