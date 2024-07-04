@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -315,6 +316,8 @@ func (me *service[T]) skipRepairInput() bool {
 	return false
 }
 
+var regexpNeighborWithKey = regexp.MustCompile(`Neighbor\swith\skey\s'[^']*'\snot\sfound\sfor\s'[^']*'`)
+
 func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
@@ -427,6 +430,9 @@ func isInvalidInsertAfterRestErr(resterr *rest.Error) bool {
 		return false
 	}
 	if resterr.Code == 404 && resterr.Message == "Settings not found" {
+		return true
+	}
+	if regexpNeighborWithKey.MatchString(resterr.Message) {
 		return true
 	}
 	if len(resterr.ConstraintViolations) == 0 {
