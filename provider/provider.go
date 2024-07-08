@@ -19,6 +19,7 @@ package provider
 
 import (
 	"context"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/openpipeline"
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
@@ -226,6 +227,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_policy":                   ds_iam_policies.DataSourceSingle(),
 			"dynatrace_lambda_agent_version":         lambdaagent.DataSource(),
 			"dynatrace_autotag":                      autotag.DataSource(),
+			"dynatrace_openpipeline":                 openpipeline.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                     resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -531,6 +533,7 @@ func Provider() *schema.Provider {
 			"dynatrace_infraops_app_settings":              resources.NewGeneric(export.ResourceTypes.InfraOpsAppSettings).Resource(),
 			"dynatrace_disk_edge_anomaly_detectors":        resources.NewGeneric(export.ResourceTypes.DiskEdgeAnomalyDetectors).Resource(),
 			"dynatrace_report":                             resources.NewGeneric(export.ResourceTypes.Reports).Resource(),
+			"dynatrace_openpipeline":                       resources.NewGeneric(export.ResourceTypes.OpenPipeline).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

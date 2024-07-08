@@ -448,6 +448,7 @@ var ResourceTypes = struct {
 	InfraOpsAppSettings                 ResourceType
 	DiskEdgeAnomalyDetectors            ResourceType
 	Reports                             ResourceType
+	OpenPipeline                        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -743,6 +744,7 @@ var ResourceTypes = struct {
 	"dynatrace_infraops_app_settings",
 	"dynatrace_disk_edge_anomaly_detectors",
 	"dynatrace_report",
+	"dynatrace_openpipeline",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

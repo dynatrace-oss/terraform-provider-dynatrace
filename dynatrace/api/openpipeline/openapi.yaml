@@ -1,0 +1,1150 @@
+openapi: 3.0.3
+info:
+  title: OpenPipeline V1
+  description: |-
+  version: 1.1.0
+servers:
+  - url: https://demo.dev.dynatracelabs.com/platform
+tags:
+  - name: Configure
+    description: Configure your pipeline(s)
+  - name: Preview
+    description: Allows you to preview impact of configuration changes
+  - name: Matcher
+    description: Allows you to verify and retrieve suggestions for matchers
+  - name: "DQL Processor"
+    description: Allows you to verify and retrieve suggestions for DQL processor scripts
+paths:
+  /openpipeline/v1/matcher/verify:
+    post:
+      tags:
+        - Matcher
+      summary: Verifies if the given matcher is valid
+      operationId: matcherVerify
+      responses:
+        '200':
+          $ref: "#/components/responses/MatcherVerifyResponse"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        description: Single matcher to verify
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatcherRequest"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/matcher/autocomplete:
+    post:
+      tags:
+        - Matcher
+      summary: Returns autocompletion suggestions for the given matcher
+      operationId: matcherAutocomplete
+      responses:
+        '200':
+          $ref: "#/components/responses/MatcherAutocompleteResponse"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        description: Matcher and position to create suggestions for
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatcherAutocompleteRequest"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/matcher/lqlToDql:
+    post:
+      tags:
+        - Matcher
+      summary: Translates the given LQL matcher into a DQL matcher
+      operationId: matcherLqlToDql
+      responses:
+        '200':
+          $ref: "#/components/responses/MatcherLqlToDqlResponse"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        description: Matcher to convert from LQL to DQL
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatcherRequest"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/dqlProcessor/verify:
+    post:
+      tags:
+        - "DQL Processor"
+      summary: Verifies if the given DQL processor script is valid
+      operationId: dqpProcessorVerify
+      responses:
+        '200':
+          $ref: "#/components/responses/DQLProcessorVerifyResponse"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        description: Single DQL processor script to verify
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DQLProcessorVerifyRequest"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/dqlProcessor/autocomplete:
+    post:
+      tags:
+        - "DQL Processor"
+      summary: Returns autocompletion suggestions for the given DQL processor script
+      operationId: dqpProcessorAutocomplete
+      responses:
+        '200':
+          $ref: "#/components/responses/DQLProcessorAutocompleteResponse"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        description: DQL processor script and position to create suggestions for
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DQLProcessorAutocompleteRequest"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/preview/processor:
+    post:
+      tags:
+        - Preview
+      summary: Returns the preview result for a given processor and sample data
+      operationId: previewSingle
+      responses:
+        '200':
+          $ref: "#/components/responses/PreviewProcessorResult"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/NotAuthorized"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '413':
+          $ref: "#/components/responses/PayloadTooLarge"
+      requestBody:
+        description: Single processor preview request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreviewProcessor"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:write
+  /openpipeline/v1/configurations:
+    get:
+      tags:
+        - Configure
+      summary: Returns the list of available configuration ids
+      operationId: configurations
+      responses:
+        '200':
+          $ref: "#/components/responses/ConfigurationList"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/NotAuthorized"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '404':
+          $ref: "#/components/responses/NotFound"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+  /openpipeline/v1/configurations/{id}:
+    get:
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Configure
+      summary: Returns the configuration for a given id
+      operationId: configurationById
+      responses:
+        '200':
+          $ref: "#/components/responses/Configuration"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/NotAuthorized"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '404':
+          $ref: "#/components/responses/NotFound"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+    put:
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Configure
+      summary: Updates a configuration
+      operationId: updateConfigurationById
+      requestBody:
+        description: Configuration
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration"
+      responses:
+        '202':
+          $ref: "#/components/responses/Accepted"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/NotAuthorized"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '413':
+          $ref: "#/components/responses/PayloadTooLarge"
+      security:
+        - openpipeline_auth:
+            - openpipeline:configurations:read
+components:
+  schemas:
+    # the sampleData field of the processor itself is used as the data-input for previewing
+    PreviewProcessor:
+      type: object
+      properties:
+        processor:
+          oneOf:
+            - $ref: "#/components/schemas/DqlProcessor"
+            - $ref: "#/components/schemas/FieldsAddProcessor"
+            - $ref: "#/components/schemas/FieldsRemoveProcessor"
+            - $ref: "#/components/schemas/FieldsRenameProcessor"
+      required:
+        - processor
+
+    PreviewProcessorResult:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/PreviewProcessorResultEntry'
+      required:
+        - results
+
+    PreviewProcessorResultEntry:
+      type: object
+      properties:
+        matched:
+          type: boolean
+        record:
+          type: object
+      required:
+        - matched
+        - record
+
+    MatcherRequest:
+      type: object
+      properties:
+        query:
+          type: string
+
+    MatcherAutocompleteRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        cursorPosition:
+          type: integer
+          format: int32
+
+    MatcherLqlToDqlResponse:
+      type: string
+
+    DQLProcessorVerifyRequest:
+      type: object
+      properties:
+        script:
+          type: string
+
+    DQLProcessorAutocompleteRequest:
+      type: object
+      properties:
+        script:
+          type: string
+        cursorPosition:
+          type: integer
+          format: int32
+
+    AutocompleteResponse:
+      required:
+        - optional
+        - suggestions
+      type: object
+      properties:
+        optional:
+          type: boolean
+        suggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/AutocompleteSuggestion"
+        suggestedTtlSeconds:
+          type: integer
+
+    AutocompleteSuggestion:
+      required:
+        - alreadyTypedCharacters
+        - parts
+        - suggestion
+      type: object
+      properties:
+        parts:
+          type: array
+          items:
+            $ref: "#/components/schemas/AutocompleteSuggestionPart"
+        alreadyTypedCharacters:
+          type: integer
+          format: int32
+        suggestion:
+          type: string
+
+    AutocompleteSuggestionPart:
+      required:
+        - suggestion
+        - type
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/TokenType"
+        info:
+          type: string
+        synopsis:
+          type: string
+        suggestion:
+          type: string
+
+    TokenType:
+      type: string
+      enum:
+        - "SPACE"
+        - "LINEBREAK"
+        - "INDENT"
+        - "PIPE"
+        - "DOT"
+        - "COLON"
+        - "COMMA"
+        - "ASSIGNMENT"
+        - "BRACE_OPEN"
+        - "BRACE_CLOSE"
+        - "BRACKET_OPEN"
+        - "BRACKET_CLOSE"
+        - "PARENTHESIS_OPEN"
+        - "PARENTHESIS_CLOSE"
+        - "QUOTE"
+        - "SINGLE_QUOTE"
+        - "SLASH"
+        - "BOOLEAN_TRUE"
+        - "BOOLEAN_FALSE"
+        - "NULL"
+        - "COMMAND_NAME"
+        - "PARAMETER_KEY"
+        - "PARAMETER_VALUE_SCOPE"
+        - "FUNCTION_NAME"
+        - "TIMESERIES_AGGREGATION"
+        - "TIMESERIES_AGGREGATION_EXPRESSION"
+        - "OPERATOR"
+        - "TRAVERSAL_OPERATOR"
+        - "TRAVERSAL_RELATION_NAME"
+        - "TRAVERSAL_HOP_COUNT"
+        - "SIMPLE_IDENTIFIER"
+        - "DATA_OBJECT"
+        - "NUMBER"
+        - "STRING"
+        - "TIME_UNIT"
+        - "TIMESTAMP_VALUE"
+        - "METRIC_KEY"
+        - "VARIABLE"
+        - "END_COMMENT"
+        - "UID_VALUE"
+        - "PARSE_PATTERN"
+        - "FIELD_PATTERN"
+        - "ENTITY_SELECTOR_PART"
+        - "FIELD_MODIFIER"
+        - "ENTITY_TYPE"
+        - "ENTITY_ATTRIBUTE"
+
+    VerifyResponse:
+      required:
+        - valid
+      type: object
+      properties:
+        valid:
+          type: boolean
+        canonicalQuery:
+          type: string
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/MetadataNotification"
+
+    MetadataNotification:
+      type: object
+      properties:
+        severity:
+          type: string
+        messageFormat:
+          type: string
+        syntaxPosition:
+          $ref: "#/components/schemas/TokenPosition"
+        messageFormatSpecifierTypes:
+          type: array
+          items:
+            type: string
+        arguments:
+          type: array
+          items:
+            type: string
+        notificationType:
+          type: string
+        message:
+          type: string
+
+    TokenPosition:
+      required:
+        - end
+        - start
+      type: object
+      properties:
+        start:
+          $ref: "#/components/schemas/PositionInfo"
+        end:
+          $ref: "#/components/schemas/PositionInfo"
+
+    PositionInfo:
+      required:
+        - column
+        - index
+        - line
+      type: object
+      properties:
+        column:
+          type: integer
+          format: int32
+        index:
+          type: integer
+          format: int32
+        line:
+          type: integer
+          format: int32
+
+    ConfigurationListItem:
+      type: object
+      properties:
+        id:
+          type: string
+        editable:
+          type: boolean
+          readOnly: true
+      required:
+        - id
+
+    Configuration:
+      allOf:
+        - $ref: '#/components/schemas/ConfigurationListItem'
+        - type: object
+          properties:
+            version:
+              type: string # base64 encoded list of optimistic locking ids per schema result
+            # catchAllBucketName: this will be hardcoded in the app for each
+            customBasePath:
+              type: string # the base path used for custom endpoints of the specific scope
+            endpoints:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/EndpointDefinition'
+            pipelines:
+              type: array
+              items:
+                oneOf:
+                  - $ref: "#/components/schemas/ClassicPipelineDefinition"
+                  - $ref: "#/components/schemas/DefaultPipelineDefinition"
+            routing:
+              $ref: '#/components/schemas/RoutingTable'
+          required:
+            - version
+            - customBasePath
+            - endpoints
+            - routing
+            - pipelines
+
+    EndpointDefinition:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        builtin:
+          type: boolean
+        editable:
+          type: boolean
+          readOnly: true
+        basePath:
+          type: string # base path of the endpoint
+        segment:
+          type: string # last segment of the endpoint path
+        displayName:
+          type: string
+        defaultBucket:
+          type: string
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/DqlProcessor"
+              - $ref: "#/components/schemas/FieldsAddProcessor"
+              - $ref: "#/components/schemas/FieldsRemoveProcessor"
+              - $ref: "#/components/schemas/FieldsRenameProcessor"
+        routing:
+          oneOf:
+            - $ref: "#/components/schemas/StaticRouting"
+            - $ref: "#/components/schemas/DynamicRouting"
+      required:
+        - enabled
+        - basePath
+        - segment
+        - routing
+
+    Routing:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          static: "#/components/schemas/StaticRouting"
+          dynamic: "#/components/schemas/DynamicRouting"
+      properties:
+        type:
+          type: string
+      required:
+        - type
+
+    StaticRouting:
+      allOf:
+        - $ref: '#/components/schemas/Routing'
+        - type: object
+          properties:
+            pipelineId:
+              type: string
+          required:
+            - pipelineId
+
+    DynamicRouting:
+      allOf:
+        - $ref: '#/components/schemas/Routing'
+
+    Processor:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          sxql: "#/components/schemas/SxqlProcessor"
+          dql: "#/components/schemas/DqlProcessor"
+          fieldsAdd: "#/components/schemas/FieldsAddProcessor"
+          fieldsRemove: "#/components/schemas/FieldsRemoveProcessor"
+          fieldsRename: "#/components/schemas/FieldsRenameProcessor"
+          bucketAssignment: "#/components/schemas/BucketAssignmentProcessor"
+          noStorage: "#/components/schemas/NoStorageProcessor"
+          securityContext: "#/components/schemas/SecurityContextProcessor"
+          bizevent: "#/components/schemas/BizeventExtractionProcessor"
+          counterMetric: "#/components/schemas/CounterMetricExtractionProcessor"
+          valueMetric: "#/components/schemas/ValueMetricExtractionProcessor"
+          davis: "#/components/schemas/DavisEventExtractionProcessor"
+      properties:
+        id:
+          type: string
+        enabled:
+          type: boolean
+        editable:
+          type: boolean
+          readOnly: true
+        description:
+          type: string
+        matcher:
+          $ref: "#/components/schemas/Matcher"
+        type:
+          type: string
+        sampleData:
+          type: string
+      required:
+        - type
+        - id
+        - enabled
+        - description
+        - matcher
+
+    Matcher:
+      type: string
+
+    FieldsAddProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            fields: # unique name
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/FieldsAddItem'
+          required:
+            - fields
+
+    FieldsAddItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      required:
+        - name
+        - value
+
+    FieldsRemoveProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            fields:
+              type: array
+              items:
+                type: string # charset -> what about [] / backticks, etc
+              uniqueItems: true
+          required:
+            - fields
+
+    FieldsRenameProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            fields: # unique from/to name
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/FieldsRenameItem'
+          required:
+            - fields
+
+    FieldsRenameItem:
+      type: object
+      properties:
+        fromName:
+          type: string
+        toName:
+          type: string
+      required:
+        - fromName
+        - toName
+
+    PipelineDefinition:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          classic: "#/components/schemas/ClassicPipelineDefinition"
+          default: "#/components/schemas/DefaultPipelineDefinition"
+      properties:
+        type:
+          type: string
+        enabled:
+          type: boolean
+        editable:
+          type: boolean
+          readOnly: true
+        id:
+          type: string # equal to the key of the map where this definition is added to
+        builtin:
+          type: boolean
+          readOnly: true
+        displayName:
+          type: string
+        storage:
+          $ref: '#/components/schemas/StorageStage'
+        securityContext:
+          $ref: '#/components/schemas/SecurityContextStage'
+        metricExtraction:
+          $ref: '#/components/schemas/MetricExtractionStage'
+        dataExtraction:
+          $ref: '#/components/schemas/DataExtractionStage'
+      required:
+        - type
+        - enabled
+        - id
+
+    ClassicPipelineDefinition:
+      allOf:
+        - $ref: '#/components/schemas/PipelineDefinition'
+        - type: object
+          properties:
+            settingsSchema:
+              type: string
+              readOnly: true
+            processing:
+              $ref: '#/components/schemas/ClassicProcessingStage'
+          required:
+            - settingsSchema
+
+    DefaultPipelineDefinition:
+      allOf:
+        - $ref: '#/components/schemas/PipelineDefinition'
+        - type: object
+          properties:
+            processing:
+              $ref: '#/components/schemas/ProcessingStage'
+
+    StorageStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        catchAllBucketName:
+          type: string # bucket that is used if no other bucket assignment rule matched
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/BucketAssignmentProcessor'
+              - $ref: '#/components/schemas/NoStorageProcessor'
+      required:
+        - catchAllBucketName
+        - processors
+
+    MetricExtractionStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/CounterMetricExtractionProcessor'
+              - $ref: '#/components/schemas/ValueMetricExtractionProcessor'
+      required:
+        - processors
+
+    DataExtractionStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/DavisEventExtractionProcessor'
+              - $ref: '#/components/schemas/BizeventExtractionProcessor'
+      required:
+        - processors
+
+    DavisEventExtractionProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            properties:
+              $ref: '#/components/schemas/DavisEventProperty'
+          required:
+            - properties
+
+    DavisEventProperty:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      required:
+        - key
+        - value
+
+    MetricExtractionProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          discriminator:
+            propertyName: type
+            mapping:
+              counterMetric: "#/components/schemas/CounterMetricExtractionProcessor"
+              valueMetric: "#/components/schemas/ValueMetricExtractionProcessor"
+          properties:
+            type:
+              type: string
+            metricKey:
+              type: string
+            dimensions:
+              type: array
+              items:
+                type: string
+              uniqueItems: true
+          required:
+            - type
+            - metricKey
+
+    CounterMetricExtractionProcessor:
+      allOf:
+        - $ref: '#/components/schemas/MetricExtractionProcessor'
+
+    ValueMetricExtractionProcessor:
+      allOf:
+        - $ref: '#/components/schemas/MetricExtractionProcessor'
+        - type: object
+          properties:
+            field:
+              type: string
+          required:
+            - field
+
+    BizeventExtractionProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            eventType:
+              oneOf:
+                - $ref: "#/components/schemas/ConstantValueAssignment"
+                - $ref: "#/components/schemas/FieldValueAssignment"
+            eventProvider:
+              oneOf:
+                - $ref: "#/components/schemas/ConstantValueAssignment"
+                - $ref: "#/components/schemas/FieldValueAssignment"
+            fieldExtraction:
+              $ref: "#/components/schemas/BizeventFieldExtraction"
+          required:
+            - eventType
+            - eventProvider
+            - fieldExtraction
+
+    BizeventFieldExtraction:
+      type: object
+      properties:
+        semantic:
+          type: string
+          enum:
+            - INCLUDE
+            - INCLUDE_ALL
+            - EXCLUDE
+        fields:
+          type: array
+          items:
+            type: string
+          uniqueItems: true
+      required:
+        - semantic
+        - fields
+
+    ClassicProcessingStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/SxqlProcessor"
+      required:
+        - processors
+
+    ProcessingStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/DqlProcessor"
+              - $ref: "#/components/schemas/FieldsAddProcessor"
+              - $ref: "#/components/schemas/FieldsRemoveProcessor"
+              - $ref: "#/components/schemas/FieldsRenameProcessor"
+      required:
+        - processors
+
+    SxqlProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            sxqlScript:
+              type: string
+          required:
+            - sxqlScript
+
+    DqlProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            dqlScript:
+              type: string
+          required:
+            - dqlScript
+
+    SecurityContextStage:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        processors:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/SecurityContextProcessor'
+      required:
+        - processors
+
+    SecurityContextProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            value:
+              oneOf:
+                - $ref: '#/components/schemas/ConstantValueAssignment'
+                - $ref: '#/components/schemas/FieldValueAssignment'
+          required:
+            - value
+
+    ValueAssignment:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          constant: "#/components/schemas/ConstantValueAssignment"
+          field: "#/components/schemas/FieldValueAssignment"
+      properties:
+        type:
+          type: string
+      required:
+        - type
+
+    ConstantValueAssignment:
+      allOf:
+        - $ref: '#/components/schemas/ValueAssignment'
+        - type: object
+          properties:
+            constant:
+              type: string
+          required:
+            - constant
+
+    FieldValueAssignment:
+      allOf:
+        - $ref: '#/components/schemas/ValueAssignment'
+        - type: object
+          properties:
+            field:
+              type: string
+          required:
+            - field
+
+    BucketAssignmentProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+        - type: object
+          properties:
+            bucketName:
+              type: string # suggestions need to be queried via bucket-management-api
+          required:
+            - bucketName
+
+    NoStorageProcessor:
+      allOf:
+        - $ref: '#/components/schemas/Processor'
+
+    RoutingTableEntryTarget:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        pipelineId:
+          type: string
+      required:
+        - pipelineId
+
+    RoutingTableEntry:
+      allOf:
+        - $ref: "#/components/schemas/RoutingTableEntryTarget"
+        - type: object
+          properties:
+            enabled:
+              type: boolean
+            builtin:
+              type: boolean
+            matcher:
+              $ref: "#/components/schemas/Matcher"
+            note:
+              type: string
+          required:
+            - enabled
+            - matcher
+            - note
+
+    RoutingTable:
+      type: object
+      properties:
+        editable:
+          type: boolean
+          readOnly: true
+        catchAllPipeline:
+          $ref: "#/components/schemas/RoutingTableEntryTarget"
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutingTableEntry'
+      required:
+        - catchAllPipeline
+        - entries
+
+    ErrorResponseEnvelope:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/ErrorResponse"
+      required:
+        - error
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: object
+      required:
+        - code
+        - message
+
+  responses:
+    Accepted:
+      description: Payload accepted
+    MatcherVerifyResponse:
+      description: Returns the verification result of the matcher
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/VerifyResponse"
+    MatcherAutocompleteResponse:
+      description: Returns the autocomplete suggestions for the matcher
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AutocompleteResponse"
+    MatcherLqlToDqlResponse:
+      description: Returns the converted LQL matcher in DQL format
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MatcherLqlToDqlResponse"
+    DQLProcessorVerifyResponse:
+      description: Returns the verification result of the DQL processor script
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/VerifyResponse"
+    DQLProcessorAutocompleteResponse:
+      description: Returns the autocomplete suggestions for the DQL processor script
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AutocompleteResponse"
+    PreviewProcessorResult:
+      description: Returns the result for processor preview request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PreviewProcessorResult"
+    ConfigurationList:
+      description: List of Configurations
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ConfigurationListItem"
+    Configuration:
+      description: Configuration
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Configuration"
+    NotAuthorized:
+      description: Not authorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseEnvelope"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseEnvelope"
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseEnvelope"
+    PayloadTooLarge:
+      description: Max Payload size of 10485760 bytes exceeded
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseEnvelope"
+    BadRequest:
+      description: The request was not accepted (OpenPipeline not enabled, validation, etc)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseEnvelope"
+  securitySchemes:
+    openpipeline_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://sso.dev.dynatracelabs.com/oauth/authorize
+          scopes:
+            openpipeline:configurations:write: Modify OpenPipeline configuration
+            openpipeline:configurations:read: Read OpenPipeline configuration
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

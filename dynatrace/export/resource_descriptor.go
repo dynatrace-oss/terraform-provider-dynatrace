@@ -18,6 +18,7 @@
 package export
 
 import (
+	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	"os"
 	"reflect"
 	"strings"
@@ -514,6 +515,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DirectShares: NewResourceDescriptor(
 		directshares.Service,
 	),
+	ResourceTypes.OpenPipeline: NewResourceDescriptor(
+		openpipeline.Service),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
 		ResourceTypes.JSONDashboardBase,
