@@ -31,7 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/google/uuid"
 
-	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/networkzones/settings"
+	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
 )
 
 const SchemaID = "v2:environment:network-zones"
