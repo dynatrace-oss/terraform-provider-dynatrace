@@ -65,23 +65,23 @@ func (me *iamClient) authenticate(httpRequest *http.Request, forceNew bool) erro
 }
 
 func (me *iamClient) POST(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
+	return me.request(url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
 }
 
 func (me *iamClient) PUT(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, payload, map[string]string{"Content-Type": "application/json"})
+	return me.request(url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
 }
 
 func (me *iamClient) GET(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, nil, nil)
+	return me.request(url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
 }
 
 func (me *iamClient) DELETE(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, nil, nil)
+	return me.request(url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
 }
 
 func (me *iamClient) DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodDelete, expectedResponseCodes, forceNewBearer, nil, nil)
+	return me.request(url, http.MethodDelete, expectedResponseCodes, forceNewBearer, 0, nil, nil)
 }
 
 type RateLimiter struct {
@@ -115,19 +115,19 @@ func httplog(v ...any) {
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("2006-01-02 15:04:05")
 	tt := fmt.Sprintf("[HTTP] [%s]", formattedTime)
-	fmt.Println(append([]any{tt}, v...)...)
+	rest.Logger.Println(append([]any{tt}, v...)...)
 }
 
-func (me *iamClient) request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
 	for {
 		if limiter.CanCall() {
-			return me._request(url, method, expectedResponseCodes, forceNewBearer, payload, headers)
+			return me._request(url, method, expectedResponseCodes, forceNewBearer, forceNewBearerRetryCount, payload, headers)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
-func (me *iamClient) _request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) _request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
 	// httplog(fmt.Sprintf("[%s] %s", method, url))
 
 	num504Retries := 0
@@ -196,9 +196,9 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 		if isNotExpectedResponseCode {
 			var iamErr IAMError
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
-				if !forceNewBearer && iamErr.Error() == "Failed to validate access token." {
+				if (forceNewBearerRetryCount < 20) && iamErr.Error() == "Failed to validate access token." {
 					// httplog("-------------------- TOKEN-SWITCH --------------------")
-					return me.request(url, method, expectedResponseCodes, true, payload, headers)
+					return me.request(url, method, expectedResponseCodes, true, forceNewBearerRetryCount+1, payload, headers)
 				}
 				return nil, iamErr
 			} else {
