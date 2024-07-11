@@ -31,7 +31,7 @@ Define `DYNATRACE_ENV_URL` for the Dynatrace environment URL.
 * SaaS Environments: `https://########.live.dynatrace.com`
 * Managed Enviroments: `https://<dynatrace-host>/e/#####################`
 
-Define `DYNATRACE_API_TOKEN` as an access token with the following permissions.
+Define `DYNATRACE_API_TOKEN` as an [access token](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens) with the following permissions. 
  * **Read configuration** (`ReadConfig`)
  * **Write configuration** (`WriteConfig`)
  * **Read settings** (`settings.read`)
@@ -47,7 +47,7 @@ Define `DYNATRACE_API_TOKEN` as an access token with the following permissions.
  * **Read attacks** (`attacks.read`)
  * **Write attacks** (`attacks.write`)
 
-Configure an OAuth client with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
+Configure an [OAuth client](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/create-oauth-client) with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
 
 Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the created OAuth client.
  * **View settings objects for schema** (`settings:objects:read`)
