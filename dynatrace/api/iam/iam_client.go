@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -95,14 +96,36 @@ func NewRateLimiter() *RateLimiter {
 
 var DISABLE_RATE_LIMITER = (os.Getenv("DYNATRACE_DISABLE_IAM_RATE_LIMITER") == "true")
 
+const MAX_RATE_LIMITER_RATE = int64(5000)
+const DEFAULT_RATE_LIMITER_RATE = int64(1000)
+
+var rateLimiterRate = evalRateLimiterRate()
+
+func evalRateLimiterRate() int64 {
+	sRateLimiterRate := strings.TrimSpace(os.Getenv("DYNATRACE_IAM_RATE_LIMITER_RATE"))
+	if len(sRateLimiterRate) == 0 {
+		return DEFAULT_RATE_LIMITER_RATE
+	}
+	var err error
+	iRateLimiterRate := DEFAULT_RATE_LIMITER_RATE
+
+	if iRateLimiterRate, err = strconv.ParseInt(sRateLimiterRate, 10, 0); err != nil {
+		return DEFAULT_RATE_LIMITER_RATE
+	}
+	if iRateLimiterRate > MAX_RATE_LIMITER_RATE {
+		return MAX_RATE_LIMITER_RATE
+	}
+	return iRateLimiterRate
+}
+
 func (rl *RateLimiter) CanCall() bool {
 	rl.mutex.Lock()
 	defer rl.mutex.Unlock()
-	if DISABLE_RATE_LIMITER {
+	if rateLimiterRate <= 0 || DISABLE_RATE_LIMITER {
 		return true
 	}
 	now := time.Now()
-	if now.Sub(rl.lastCall) >= 1000*time.Millisecond {
+	if now.Sub(rl.lastCall) >= time.Duration(rateLimiterRate)*time.Millisecond {
 		rl.lastCall = now
 		return true
 	}
