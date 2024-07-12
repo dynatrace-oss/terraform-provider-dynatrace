@@ -174,13 +174,15 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 			accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
 			client := iam.NewIAMClient(me)
 			var groupStub ListGroup
-			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), 200, false, groupStub); err != nil {
+			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), 200, false, &groupStub); err != nil {
 				return err
 			}
 
 			v.Name = listStub.Name
 			v.Description = listStub.Description
 			v.FederatedAttributeValues = listStub.FederatedAttributeValues
+			// ddd, _ := json.MarshalIndent(groupStub.Permissions, "", "  ")
+			// logging.File.Println(string(ddd))
 			v.Permissions = groupStub.Permissions
 			return nil
 		}
