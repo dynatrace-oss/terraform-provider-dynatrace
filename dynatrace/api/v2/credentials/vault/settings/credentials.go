@@ -74,13 +74,13 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`",
+			Description: "The scope of the credentials set. Possible values are `ALL`, `APP_ENGINE`, `EXTENSION` and `SYNTHETIC`",
 			Optional:    true,
 			Deprecated:  "Deprecated(v279), please use `scopes` instead.",
 		},
 		"scopes": {
 			Type:        schema.TypeSet,
-			Description: "The set of scopes of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`",
+			Description: "The set of scopes of the credentials set. Possible values are `APP_ENGINE` and `SYNTHETIC`",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
