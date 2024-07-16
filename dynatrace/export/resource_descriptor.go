@@ -273,6 +273,7 @@ import (
 	active_version "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/active_version"
 	extension_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
+	v2monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
@@ -1279,6 +1280,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Reports: NewResourceDescriptor(
 		reports.Service,
 		Dependencies.ID(ResourceTypes.JSONDashboard),
+	),
+	ResourceTypes.NetworkMonitor: NewResourceDescriptor(
+		v2monitors.Service,
+		Dependencies.ID(ResourceTypes.SyntheticLocation),
 	),
 }
 
