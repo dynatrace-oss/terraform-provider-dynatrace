@@ -234,6 +234,7 @@ import (
 	httpcookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies"
 	httpoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/outagehandling"
 	httpperformancethresholds "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/performancethresholds"
+	networkoutagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/multiprotocol/outagehandling"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings"
 	unifiedservicesopentel "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/unifiedservices/enablement"
@@ -1284,6 +1285,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.NetworkMonitor: NewResourceDescriptor(
 		v2monitors.Service,
 		Dependencies.ID(ResourceTypes.SyntheticLocation),
+	),
+	ResourceTypes.NetworkMonitorOutageHandling: NewResourceDescriptor(
+		networkoutagehandling.Service,
+		Dependencies.ID(ResourceTypes.NetworkMonitor),
 	),
 }
 
