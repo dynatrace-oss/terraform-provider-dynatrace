@@ -22,7 +22,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_browser_monitor_outage` downloads all existing browser monitor outage handling configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

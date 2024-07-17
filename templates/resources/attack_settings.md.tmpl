@@ -22,7 +22,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_attack_settings` downloads existing application protection: general settings 
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

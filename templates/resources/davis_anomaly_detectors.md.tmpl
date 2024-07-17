@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_davis_anomaly_detectors (Resource)
 
-!> Please use the [export utility](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2) to create templates for this resource as the underlying schema is hidden and cannot be easily created from scratch.
+!> Please use the [export utility](https://dt-url.net/h203qmc) to create templates for this resource as the underlying schema is hidden and cannot be easily created from scratch.
 
 -> This resource requires the `Davis Anomaly Detection` app to be installed via the Dynatrace Hub.
 
@@ -26,7 +26,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_davis_anomaly_detectors` downloads all existing Davis anomaly detector configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

@@ -32,7 +32,7 @@ For installing Monitoring Configurations for a specific Extension you can use th
 
 - `terraform-provider-dynatrace -export dynatrace_hub_extension_active_version` downloads a resource for the currently active version of every installed extension.
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
