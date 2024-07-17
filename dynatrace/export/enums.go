@@ -450,6 +450,7 @@ var ResourceTypes = struct {
 	Reports                             ResourceType
 	NetworkMonitor                      ResourceType
 	NetworkMonitorOutageHandling        ResourceType
+	HubPermissions                      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -747,6 +748,7 @@ var ResourceTypes = struct {
 	"dynatrace_report",
 	"dynatrace_network_monitor",
 	"dynatrace_network_monitor_outage",
+	"dynatrace_hub_permissions",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
+	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
@@ -1290,6 +1291,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		networkoutagehandling.Service,
 		Dependencies.ID(ResourceTypes.NetworkMonitor),
 	),
+	ResourceTypes.HubPermissions: NewResourceDescriptor(hubpermissions.Service),
 }
 
 type ResourceExclusion struct {

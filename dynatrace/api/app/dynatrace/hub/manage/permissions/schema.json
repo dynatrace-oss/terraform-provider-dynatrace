@@ -1,0 +1,75 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Privileged user can manage permissions in the Hub App",
+	"displayName": "Manage Permissions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Hub"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 1000,
+					"minLength": 2,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"email": {
+			"constraints": [
+				{
+					"maxLength": 320,
+					"minLength": 5,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Please ensure your email address includes an '@' symbol, followed by a domain name, and ends with the top-level domain \".com\".",
+					"pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Email address is not valid",
+					"pattern": "^[\\.a-zA-Z0-9!#$%\u0026'*+/=?^_`{|}~-]+?@[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*?[a-zA-Z0-9])?)*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Email",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "email",
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "This email address has already been added. Please choose a different one.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"email"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.hub:manage.permissions",
+	"types": {},
+	"version": "0.0.3"
+}

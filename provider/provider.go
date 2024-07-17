@@ -533,6 +533,7 @@ func Provider() *schema.Provider {
 			"dynatrace_report":                             resources.NewGeneric(export.ResourceTypes.Reports).Resource(),
 			"dynatrace_network_monitor":                    resources.NewGeneric(export.ResourceTypes.NetworkMonitor).Resource(),
 			"dynatrace_network_monitor_outage":             resources.NewGeneric(export.ResourceTypes.NetworkMonitorOutageHandling).Resource(),
+			"dynatrace_hub_permissions":                    resources.NewGeneric(export.ResourceTypes.HubPermissions).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
