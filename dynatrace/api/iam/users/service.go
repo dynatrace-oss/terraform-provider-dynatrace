@@ -8,7 +8,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -37,6 +36,7 @@ func NewUserService(clientID string, accountID string, clientSecret string) *Use
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*users.User] {
+
 	return &UserServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
 }
 
@@ -99,18 +99,8 @@ func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.Use
 	v.Email = email
 	v.Groups = []string{}
 	v.UID = response.UID
-	groupService := groups.NewGroupService(me.clientID, me.accountID, me.clientID)
-	var visibleGroupIDs api.Stubs
-	if visibleGroupIDs, err = groupService.List(ctx); err != nil {
-		return err
-	}
 	for _, group := range response.Groups {
-		for _, stub := range visibleGroupIDs {
-			if stub.ID == group.UUID {
-				v.Groups = append(v.Groups, group.UUID)
-				break
-			}
-		}
+		v.Groups = append(v.Groups, group.UUID)
 	}
 
 	return nil
