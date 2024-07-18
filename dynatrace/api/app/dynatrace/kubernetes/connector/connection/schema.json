@@ -1,0 +1,139 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Connection details for the Kubernetes Automation for Workflows App. Connections are automatically managed by the dynatrace-operator if an EdgeConnect resource was deployed with it to a Kubernetes cluster.",
+	"displayName": "Kubernetes Automation Connections",
+	"documentation": "PREVIEW",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Kubernetes Automation for Workflows"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "The provided EdgeConnect Name is invalid",
+					"pattern": "^[0-9a-z-]{1,63}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of the EdgeConnect deployment",
+			"displayName": "EdgeConnect Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"namespace": {
+			"constraints": [
+				{
+					"customMessage": "The provided Namespace is invalid",
+					"pattern": "^[0-9a-z-]{1,63}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The namespace where EdgeConnect is deployed",
+			"displayName": "Namespace",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "The provided token is invalid",
+					"pattern": "^dt0e01\\.[A-Z0-9]{24}\\.[A-Z0-9]{64}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"uid": {
+			"constraints": [
+				{
+					"customMessage": "The provided Cluster UID is invalid",
+					"pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A pseudo-ID for the cluster, set to the UID of the kube-system namespace",
+			"displayName": "K8s Cluster UID",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.kubernetes.connector:connection",
+	"types": {},
+	"uiCustomization": {
+		"callback": {
+			"buttons": [
+				{
+					"description": "The Button can be used to test the connection",
+					"displayName": "Validate Connection",
+					"identifier": "validate-connection-schema",
+					"insert": "last"
+				}
+			]
+		}
+	},
+	"version": "0.1.5"
+}

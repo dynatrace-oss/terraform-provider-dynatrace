@@ -27,6 +27,7 @@ import (
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
+	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
@@ -1291,7 +1292,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		networkoutagehandling.Service,
 		Dependencies.ID(ResourceTypes.NetworkMonitor),
 	),
-	ResourceTypes.HubPermissions: NewResourceDescriptor(hubpermissions.Service),
+	ResourceTypes.HubPermissions:           NewResourceDescriptor(hubpermissions.Service),
+	ResourceTypes.K8sAutomationConnections: NewResourceDescriptor(k8sautomationconnections.Service),
 }
 
 type ResourceExclusion struct {
