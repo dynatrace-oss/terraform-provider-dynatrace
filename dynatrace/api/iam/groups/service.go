@@ -11,7 +11,19 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/google/uuid"
 )
+
+// data sources MAY have cached a list of group IDs
+// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since
+var revision = uuid.NewString()
+var revisionLock = sync.Mutex{}
+
+func GetRevision() string {
+	revisionLock.Lock()
+	defer revisionLock.Unlock()
+	return revision
+}
 
 type GroupServiceClient struct {
 	clientID     string
@@ -74,6 +86,12 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 			return nil, err
 		}
 	}
+
+	// data sources MAY have cached a list of group IDs
+	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since
+	revisionLock.Lock()
+	defer revisionLock.Unlock()
+	revision = uuid.NewString()
 
 	return &api.Stub{ID: groupID, Name: groupName}, nil
 }
@@ -192,5 +210,12 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
 	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
+
+	// data sources MAY have cached a list of group IDs
+	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since
+	revisionLock.Lock()
+	defer revisionLock.Unlock()
+	revision = uuid.NewString()
+
 	return err
 }
