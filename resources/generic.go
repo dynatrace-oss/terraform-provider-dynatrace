@@ -231,6 +231,12 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	if _, ok := sttngs.(Computer); ok {
 		return me.ReadForSettings(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m, sttngs)
 	}
+	// because of the current rate limitations of api.dynatrace.com we simply trust
+	// that the results on the remote side are correct
+	// and therefore avoid unnecessary GET calls
+	if me.Type == export.ResourceTypes.IAMGroup || me.Type == export.ResourceTypes.IAMPermission || me.Type == export.ResourceTypes.IAMPolicy || me.Type == export.ResourceTypes.IAMPolicyBindings || me.Type == export.ResourceTypes.IAMPolicyBindingsV2 || me.Type == export.ResourceTypes.IAMUser {
+		return diag.Diagnostics{}
+	}
 	return me.Read(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m)
 }
 
@@ -270,6 +276,12 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	if _, ok := sttngs.(Computer); ok {
 		return me.ReadForSettings(ctx, d, m, sttngs)
+	}
+	// because of the current rate limitations of api.dynatrace.com we simply trust
+	// that the results on the remote side are correct
+	// and therefore avoid unnecessary GET calls
+	if me.Type == export.ResourceTypes.IAMGroup || me.Type == export.ResourceTypes.IAMPermission || me.Type == export.ResourceTypes.IAMPolicy || me.Type == export.ResourceTypes.IAMPolicyBindings || me.Type == export.ResourceTypes.IAMPolicyBindingsV2 || me.Type == export.ResourceTypes.IAMUser {
+		return diag.Diagnostics{}
 	}
 	return me.Read(ctx, d, m)
 }
