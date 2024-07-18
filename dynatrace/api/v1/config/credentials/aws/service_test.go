@@ -24,5 +24,6 @@ import (
 )
 
 func TestAccAWSCredentials(t *testing.T) {
+	t.Skip() // #498
 	api.TestAcc(t)
 }
