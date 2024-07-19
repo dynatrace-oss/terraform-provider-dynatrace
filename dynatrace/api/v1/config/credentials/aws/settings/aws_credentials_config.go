@@ -30,14 +30,16 @@ import (
 
 // AWSCredentialsConfig Configuration of an AWS credentials.
 type AWSCredentialsConfig struct {
-	Label              string                     `json:"label"`                      // The name of the credentials.
-	TaggedOnly         *bool                      `json:"taggedOnly"`                 // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
-	AuthenticationData *AWSAuthenticationData     `json:"authenticationData"`         // A credentials for the AWS authentication.
-	PartitionType      PartitionType              `json:"partitionType"`              // The type of the AWS partition.
-	TagsToMonitor      []*AWSConfigTag            `json:"tagsToMonitor"`              // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
-	ConnectionStatus   *ConnectionStatus          `json:"connectionStatus,omitempty"` // The status of the connection to the AWS environment.   * `CONNECTED`: There was a connection within last 10 minutes.  * `DISCONNECTED`: A problem occurred with establishing connection using these credentials. Check whether the data is correct.  * `UNINITIALIZED`: The successful connection has never been established for these credentials.
-	RemoveDefaults     bool                       `json:"-"`
-	Unknowns           map[string]json.RawMessage `json:"-"`
+	Label                            string                     `json:"label"`                            // The name of the credentials.
+	TaggedOnly                       *bool                      `json:"taggedOnly"`                       // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
+	AuthenticationData               *AWSAuthenticationData     `json:"authenticationData"`               // A credentials for the AWS authentication.
+	PartitionType                    PartitionType              `json:"partitionType"`                    // The type of the AWS partition.
+	TagsToMonitor                    []*AWSConfigTag            `json:"tagsToMonitor"`                    // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
+	ConnectionStatus                 *ConnectionStatus          `json:"connectionStatus,omitempty"`       // The status of the connection to the AWS environment.   * `CONNECTED`: There was a connection within last 10 minutes.  * `DISCONNECTED`: A problem occurred with establishing connection using these credentials. Check whether the data is correct.  * `UNINITIALIZED`: The successful connection has never been established for these credentials.
+	CredentialsEnabled               bool                       `json:"credentialsEnabled"`               // Enable monitoring of specified AWS credentials
+	RunningOnDynatraceInfrastructure bool                       `json:"runningOnDynatraceInfrastructure"` // Run credentials on Dynatrace infrastructure
+	RemoveDefaults                   bool                       `json:"-"`
+	Unknowns                         map[string]json.RawMessage `json:"-"`
 }
 
 func (awscc *AWSCredentialsConfig) Name() string {
@@ -99,6 +101,18 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     false,
 		},
+		"credentials_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Enable monitoring of specified AWS credentials",
+			Optional:    true,
+			Default:     true,
+		},
+		"running_on_dynatrace_infrastructure": {
+			Type:        schema.TypeBool,
+			Description: "Run credentials on Dynatrace infrastructure",
+			Optional:    true,
+			Default:     false,
+		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "Any attributes that aren't yet supported by this provider",
@@ -155,6 +169,20 @@ func (awscc *AWSCredentialsConfig) MarshalJSON() ([]byte, error) {
 		}
 		m["tagsToMonitor"] = rawMessage
 	}
+	{
+		rawMessage, err := json.Marshal(awscc.CredentialsEnabled)
+		if err != nil {
+			return nil, err
+		}
+		m["credentialsEnabled"] = rawMessage
+	}
+	{
+		rawMessage, err := json.Marshal(awscc.RunningOnDynatraceInfrastructure)
+		if err != nil {
+			return nil, err
+		}
+		m["runningOnDynatraceInfrastructure"] = rawMessage
+	}
 	return json.Marshal(m)
 }
 
@@ -191,6 +219,21 @@ func (awscc *AWSCredentialsConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
+	if v, found := m["credentialsEnabled"]; found {
+		if err := json.Unmarshal(v, &awscc.CredentialsEnabled); err != nil {
+			return err
+		}
+	} else {
+		awscc.CredentialsEnabled = true
+	}
+	if v, found := m["runningOnDynatraceInfrastructure"]; found {
+		if err := json.Unmarshal(v, &awscc.RunningOnDynatraceInfrastructure); err != nil {
+			return err
+		}
+	} else {
+		awscc.RunningOnDynatraceInfrastructure = false
+	}
+
 	delete(m, "id")
 	delete(m, "label")
 	delete(m, "metadata")
@@ -201,6 +244,8 @@ func (awscc *AWSCredentialsConfig) UnmarshalJSON(data []byte) error {
 	delete(m, "partitionType")
 	delete(m, "tagsToMonitor")
 	delete(m, "connectionStatus")
+	delete(m, "credentialsEnabled")
+	delete(m, "runningOnDynatraceInfrastructure")
 	if len(m) > 0 {
 		awscc.Unknowns = m
 	}
@@ -253,6 +298,13 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("tags_to_monitor", awscc.TagsToMonitor); err != nil {
 		return err
 	}
+	if err := properties.Encode("credentials_enabled", awscc.CredentialsEnabled); err != nil {
+		return err
+	}
+	if err := properties.Encode("running_on_dynatrace_infrastructure", awscc.RunningOnDynatraceInfrastructure); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -280,6 +332,12 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("tagged_only"); ok {
 		awscc.TaggedOnly = opt.NewBool(value.(bool))
 	}
+	if value, ok := decoder.GetOk("credentials_enabled"); ok {
+		awscc.CredentialsEnabled = value.(bool)
+	}
+	if value, ok := decoder.GetOk("running_on_dynatrace_infrastructure"); ok {
+		awscc.RunningOnDynatraceInfrastructure = value.(bool)
+	}
 	if _, ok := decoder.GetOk("authentication_data.#"); ok {
 		awscc.AuthenticationData = new(AWSAuthenticationData)
 		if err := awscc.AuthenticationData.UnmarshalHCL(hcl.NewDecoder(decoder, "authentication_data", 0)); err != nil {
@@ -292,18 +350,14 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("tags_to_monitor", &awscc.TagsToMonitor); err != nil {
 		return err
 	}
-	// if result, ok := decoder.GetOk("tags_to_monitor.#"); ok {
-	// 	awscc.TagsToMonitor = []*AWSConfigTag{}
-	// 	for idx := 0; idx < result.(int); idx++ {
-	// 		entry := new(AWSConfigTag)
-	// 		if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "tags_to_monitor", idx)); err != nil {
-	// 			return err
-	// 		}
-	// 		awscc.TagsToMonitor = append(awscc.TagsToMonitor, entry)
-	// 	}
-	// }
 	if value, ok := decoder.GetOk("remove_defaults"); ok {
 		awscc.RemoveDefaults = value.(bool)
+	}
+	if awscc.TaggedOnly != nil && *awscc.TaggedOnly && awscc.TagsToMonitor == nil {
+		awscc.TagsToMonitor = []*AWSConfigTag{}
+	}
+	if awscc.TaggedOnly == nil || !(*awscc.TaggedOnly) {
+		awscc.TagsToMonitor = nil
 	}
 	return nil
 }
