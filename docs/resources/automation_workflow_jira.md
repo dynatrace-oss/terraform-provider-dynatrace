@@ -3,7 +3,7 @@ layout: ""
 page_title: dynatrace_automation_workflow_jira Resource - terraform-provider-dynatrace"
 subcategory: "Automation"
 description: |-
-  The resource `dynatrace_automation_workflow_jira` covers configuration for Jira for Workflows
+  The resource `dynatrace_automation_workflow_jira` covers configuration for Jira for Workflows app
 ---
 
 # dynatrace_automation_workflow_jira (Resource)
@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_automation_workflow_jira` downloads existing Jira for Workflows configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

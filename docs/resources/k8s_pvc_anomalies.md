@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_k8s_pvc_anomalies` downloads all existing Kubernetes persistent volume claim anomaly configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

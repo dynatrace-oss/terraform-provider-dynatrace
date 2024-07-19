@@ -3,7 +3,7 @@ layout: ""
 page_title: dynatrace_automation_workflow_slack Resource - terraform-provider-dynatrace"
 subcategory: "Automation"
 description: |-
-  The resource `dynatrace_automation_workflow_slack` covers configuration for Slack for Workflows
+  The resource `dynatrace_automation_workflow_slack` covers configuration for Slack for Workflows app
 ---
 
 # dynatrace_automation_workflow_slack (Resource)
@@ -22,7 +22,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_automation_workflow_slack` downloads existing Slack for Workflows configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

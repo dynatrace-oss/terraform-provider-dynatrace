@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_business_events_processing` downloads all existing business event processing configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

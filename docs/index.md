@@ -9,7 +9,7 @@ description: |-
 
 The Dynatrace Terraform Provider is used to interact with the resources supported by the Dynatrace REST API. The provider needs to be configured with the proper credentials before it can be used.
 
-Use the navigation to the left to learn about the available resources and data sources. For additional information, refer to the official Dynatrace documentation on Terraform available [here](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform).
+Use the navigation to the left to learn about the available resources and data sources. For additional information, refer to the official Dynatrace documentation on Terraform available [here](https://dt-url.net/3s63qyj).
 
 ## Example
 
@@ -47,7 +47,7 @@ Define `DYNATRACE_API_TOKEN` as an [access token](https://docs.dynatrace.com/doc
  * **Read attacks** (`attacks.read`)
  * **Write attacks** (`attacks.write`)
 
-Configure an [OAuth client](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/create-oauth-client) with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
+Configure an [OAuth client](https://dt-url.net/fj43qif) with all of the permissions below to be compatible with all OAuth based Terraform resources, or provide a subset of permissions based off of required use cases - refer to the resource specific pages for additional information. 
 
 Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the created OAuth client.
  * **View settings objects for schema** (`settings:objects:read`)
@@ -74,4 +74,4 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
  * **View environments** (`account-env-read`)
 
 ## Exporting existing configuration from a Dynatrace environment
-In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/export-utility) page for more information.
+In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.

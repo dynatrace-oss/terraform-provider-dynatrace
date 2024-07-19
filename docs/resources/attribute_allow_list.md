@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_attribute_allow_list` downloads all existing attribute allow-list configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

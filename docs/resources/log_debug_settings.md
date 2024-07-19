@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_log_debug_settings` downloads existing log debug settings
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

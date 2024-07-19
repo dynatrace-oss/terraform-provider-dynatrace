@@ -7,4 +7,4 @@ description: |-
 
 # Export Utility
 
-**This page has moved to the official Dynatrace documentation - [Export utility](https://docs.dynatrace.com/docs/manage/configuration-as-code/terraform/guides/export-utility).**
+**This page has moved to the official Dynatrace documentation - [Export utility](https://dt-url.net/h203qmc).**

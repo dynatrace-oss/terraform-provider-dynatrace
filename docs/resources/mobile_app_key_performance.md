@@ -22,7 +22,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_mobile_app_key_performance` downloads all existing apdex threshold configuration for mobile/custom applications
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

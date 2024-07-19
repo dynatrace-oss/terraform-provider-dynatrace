@@ -20,7 +20,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_credentials` downloads all existing credentials
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
@@ -51,8 +51,8 @@ resource "dynatrace_credentials" "name" {
 - `owner_access_only` (Boolean) The credentials set is available to every user (`false`) or to owner only (`true`)
 - `password` (String, Sensitive) The password of the credential. Note: Terraform treats an empty string for a value as if the attribute was absent. If you want to set an empty password, use the value `--empty--`.
 - `public` (Boolean) For certificate authentication specifies whether it's public certificate auth (`true`) or not (`false`).
-- `scope` (String, Deprecated) The scope of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`
-- `scopes` (Set of String) The set of scopes of the credentials set. Possible values are `ALL`, `EXTENSION` and `SYNTHETIC`
+- `scope` (String, Deprecated) The scope of the credentials set. Possible values are `ALL`, `APP_ENGINE`, `EXTENSION` and `SYNTHETIC`
+- `scopes` (Set of String) The set of scopes of the credentials set. Possible values are `APP_ENGINE` and `SYNTHETIC`
 - `token` (String, Sensitive) Token in the string format. Specifying a token implies `Token Authentication`.
 - `username` (String, Sensitive) The username of the credentials set.
 

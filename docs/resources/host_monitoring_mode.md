@@ -20,13 +20,13 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_host_monitoring_mode` downloads all existing host monitoring mode configuration
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
 ```terraform
 resource "dynatrace_host_monitoring_mode" "#name#" {
-  host_id        = "HOST-8DA9F5591F57733D"
+  host_id        = "HOST-C061B59E578EE850"
   monitoring_mode     = "FULL_STACK"
 }
 ```

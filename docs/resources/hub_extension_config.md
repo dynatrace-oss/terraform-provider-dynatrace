@@ -47,7 +47,7 @@ For defining which version of a specific Extension should currently be active yo
 
 - `terraform-provider-dynatrace -export dynatrace_hub_extension_config` downloads the settings for all configured Extensions 2.0
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 

@@ -18,7 +18,7 @@ description: |-
 
 - `terraform-provider-dynatrace -export dynatrace_synthetic_availability` downloads the existing settings for Usability Analytics
 
-The full documentation of the export feature is available [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/guides/export-v2).
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
