@@ -47,6 +47,7 @@ type Credentials struct {
 	ExternalVault            *externalvault.Config `json:"externalVault,omitempty"`            // Configuration for external vault synchronization
 	CredentialUsageSummary   UsageSummary          `json:"credentialUsageSummary,omitempty"`   // The list contains summary data related to the use of credentials
 	AllowContextlessRequests *bool                 `json:"allowContextlessRequests,omitempty"` // Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).
+	AllowedEntities          AllowedEntities       `json:"allowedEntities,omitempty"`          // The set of entities allowed to use the credential.
 }
 
 func (me *Credentials) Schema() map[string]*schema.Schema {
@@ -140,23 +141,31 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 			Description: "Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).",
 			Optional:    true,
 		},
+		"allowed_entities": {
+			Type:        schema.TypeList,
+			Description: "The set of entities allowed to use the credential.",
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(AllowedEntities).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 	}
 }
 
 func (me *Credentials) EnsurePredictableOrder() {
-	conds := UsageSummary{}
+	conds := AllowedEntities{}
 	condStrings := sort.StringSlice{}
-	for _, entry := range me.CredentialUsageSummary {
+	for _, entry := range me.AllowedEntities {
 		condBytes, _ := json.Marshal(entry)
 		condStrings = append(condStrings, string(condBytes))
 	}
 	condStrings.Sort()
 	for _, condString := range condStrings {
-		cond := CredentialUsageObj{}
+		cond := CredentialAccessData{}
 		json.Unmarshal([]byte(condString), &cond)
 		conds = append(conds, &cond)
 	}
-	me.CredentialUsageSummary = conds
+	me.AllowedEntities = conds
 }
 
 func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
@@ -238,6 +247,15 @@ func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("allow_contextless_requests", me.AllowContextlessRequests); err != nil {
 		return err
 	}
+	if len(me.AllowedEntities) > 0 {
+		me.EnsurePredictableOrder()
+		marshalled := hcl.Properties{}
+		err := me.AllowedEntities.MarshalHCL(marshalled)
+		if err != nil {
+			return err
+		}
+		properties["allowed_entities"] = []any{marshalled}
+	}
 
 	return nil
 }
@@ -299,6 +317,12 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("allow_contextless_requests"); ok {
 		me.AllowContextlessRequests = opt.NewBool(value.(bool))
+	}
+	me.AllowedEntities = AllowedEntities{}
+	if _, ok := decoder.GetOk("allowed_entities.#"); ok {
+		if err := me.AllowedEntities.UnmarshalHCL(hcl.NewDecoder(decoder, "allowed_entities", 0)); err != nil {
+			return err
+		}
 	}
 	// if result, ok := decoder.GetOk("credential_usage_summary.#"); ok {
 	// 	me.CredentialUsageSummary = []*CredentialUsageObj{}

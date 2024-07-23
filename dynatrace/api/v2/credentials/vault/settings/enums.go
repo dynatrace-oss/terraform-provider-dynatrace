@@ -108,3 +108,15 @@ var Scopes = struct {
 	Scope("APP_ENGINE"),
 	Scope("UNKNOWN"),
 }
+
+type EntityType string
+
+var EntityTypes = struct {
+	User        EntityType
+	Application EntityType
+	Unknown     EntityType
+}{
+	"USER",
+	"APPLICATION",
+	"UNKNOWN",
+}
