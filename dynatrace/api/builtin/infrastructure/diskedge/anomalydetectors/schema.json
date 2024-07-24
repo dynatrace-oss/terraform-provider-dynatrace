@@ -462,6 +462,19 @@
 			"displayName": "",
 			"documentation": "",
 			"properties": {
+				"keyMustExist": {
+					"default": true,
+					"description": "",
+					"displayName": "Key must exist",
+					"documentation": "When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.297"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
 				"metadataCondition": {
 					"constraints": [
 						{
@@ -517,8 +530,8 @@
 			},
 			"summaryPattern": "Custom metadata ",
 			"type": "object",
-			"version": "0",
-			"versionInfo": ""
+			"version": "1",
+			"versionInfo": "Added Key must exist boolean value."
 		},
 		"HostMetadataConditionType": {
 			"description": "",
@@ -539,7 +552,7 @@
 			},
 			"summaryPattern": "{hostMetadataCondition/metadataKey} matches {hostMetadataCondition/metadataCondition}",
 			"type": "object",
-			"version": "0",
+			"version": "1",
 			"versionInfo": ""
 		},
 		"MetadataItem": {
@@ -785,5 +798,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.15"
+	"version": "0.0.16"
 }
