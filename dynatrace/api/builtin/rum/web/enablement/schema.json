@@ -7,6 +7,7 @@
 		{
 			"customMessage": "Real User Monitoring is required to enable Session Replay.",
 			"customValidatorId": "sessionReplayRumEnabledValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -117,20 +118,24 @@
 						{
 							"customMessage": "Session Replay can't be activated currently, either due to the status of your licensing agreement or because you've exhausted your quota of DEM units. Please contact Dynatrace Sales to update your license.",
 							"customValidatorId": "sessionReplayLicenseValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
 							"customMessage": "For emergency reasons session replay has been disabled on this application and cannot be re-enabled. Please contact your Dynatrace support.",
 							"customValidatorId": "sessionReplayDisabledByEmergencyValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
 							"customMessage": "Session Replay can't be enabled for your application because the secondary storage for Session Replay data hasn't been configured correctly. Please contact support or your Dynatrace administrator",
 							"customValidatorId": "replayStorageReadinessValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
 							"customValidatorId": "sessionReplayMinJsAgentValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -150,5 +155,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.1"
 }
