@@ -35,7 +35,7 @@ func Export(args []string) bool {
 		return false
 	}
 
-	if len(args) > 1 {
+	if len(args) > 2 {
 		if strings.TrimSpace(args[2]) == "-list-exclusions" {
 			for _, group := range export.GetExcludeListedResourceGroups() {
 				fmt.Println(group.Reason)
