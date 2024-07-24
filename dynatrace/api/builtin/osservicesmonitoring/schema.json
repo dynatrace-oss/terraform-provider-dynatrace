@@ -290,6 +290,7 @@
 				{
 					"customMessage": "This value does not match the required format.",
 					"customValidatorId": "OSServicesLinuxStatusRule",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -331,6 +332,7 @@
 				{
 					"customMessage": "This value does not match the required format.",
 					"customValidatorId": "OSServicesWinStatusRule",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -390,6 +392,19 @@
 			"displayName": "",
 			"documentation": "",
 			"properties": {
+				"keyMustExist": {
+					"default": true,
+					"description": "",
+					"displayName": "Key must exist",
+					"documentation": "When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.297"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
 				"metadataCondition": {
 					"constraints": [
 						{
@@ -400,6 +415,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -444,8 +460,8 @@
 			},
 			"summaryPattern": "Custom metadata ",
 			"type": "object",
-			"version": "0",
-			"versionInfo": ""
+			"version": "1",
+			"versionInfo": "Added Key must exist boolean value."
 		},
 		"MetadataItem": {
 			"description": "",
@@ -460,6 +476,7 @@
 						{
 							"customMessage": "Unknown predefined property key.",
 							"customValidatorId": "event-property-key-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -531,6 +548,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -620,6 +638,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "OSServicesLinuxStartupRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -660,6 +679,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -749,6 +769,7 @@
 						{
 							"customMessage": "This value does not match the required format.",
 							"customValidatorId": "OSServicesWinStartupRule",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -796,5 +817,5 @@
 			]
 		}
 	},
-	"version": "1.3.4"
+	"version": "1.3.5"
 }
