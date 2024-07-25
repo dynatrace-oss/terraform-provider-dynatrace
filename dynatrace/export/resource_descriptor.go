@@ -96,6 +96,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	activegateupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/activegate/updates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultmode"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
 	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
@@ -1055,6 +1056,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		activegateupdates.Service,
 		Coalesce(Dependencies.EnvironmentActiveGate),
 	),
+	ResourceTypes.OneAgentDefaultMode:    NewResourceDescriptor(defaultmode.Service),
 	ResourceTypes.OneAgentDefaultVersion: NewResourceDescriptor(defaultversion.Service),
 	ResourceTypes.OneAgentUpdates: NewResourceDescriptor(
 		oneagentupdates.Service,

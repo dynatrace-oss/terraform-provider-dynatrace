@@ -536,6 +536,7 @@ func Provider() *schema.Provider {
 			"dynatrace_hub_permissions":                     resources.NewGeneric(export.ResourceTypes.HubPermissions).Resource(),
 			"dynatrace_automation_workflow_k8s_connections": resources.NewGeneric(export.ResourceTypes.K8sAutomationConnections).Resource(),
 			"dynatrace_business_events_oneagent_outgoing":   resources.NewGeneric(export.ResourceTypes.BusinessEventsOneAgentOutgoing).Resource(),
+			"dynatrace_oneagent_default_mode":               resources.NewGeneric(export.ResourceTypes.OneAgentDefaultMode).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

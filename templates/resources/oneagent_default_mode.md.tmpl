@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_oneagent_default_mode Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
+description: |-
+  The resource `dynatrace_oneagent_default_mode` covers configuration for OneAgent default mode
+---
+
+# dynatrace_oneagent_default_mode (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Application Security and monitoring modes - https://docs.dynatrace.com/docs/platform-modules/application-security/getting-started/monitoring-modes
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:deployment.oneagent.default-mode`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_oneagent_default_mode` downloads existing OneAgent default mode configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/deployment/oneagent/defaultmode/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

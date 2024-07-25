@@ -365,6 +365,7 @@ var ResourceTypes = struct {
 	WebAppJavascriptUpdates             ResourceType
 	OpenTelemetryMetrics                ResourceType
 	ActiveGateUpdates                   ResourceType
+	OneAgentDefaultMode                 ResourceType
 	OneAgentDefaultVersion              ResourceType
 	OneAgentUpdates                     ResourceType
 	OwnershipTeams                      ResourceType
@@ -665,6 +666,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_javascript_updates",
 	"dynatrace_opentelemetry_metrics",
 	"dynatrace_activegate_updates",
+	"dynatrace_oneagent_default_mode",
 	"dynatrace_oneagent_default_version",
 	"dynatrace_oneagent_updates",
 	"dynatrace_ownership_teams",
