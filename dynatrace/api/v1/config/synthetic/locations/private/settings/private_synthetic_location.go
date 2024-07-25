@@ -41,7 +41,7 @@ type PrivateSyntheticLocation struct {
 	LocationNodeOutageDelayInMinutes *int            `json:"locationNodeOutageDelayInMinutes,omitempty"` // Alert if the location or node outage lasts longer than *X* minutes. \n\n Only applicable when **availabilityLocationOutage** or **availabilityNodeOutage** is set to `true`
 	AvailabilityNotificationsEnabled bool            `json:"availabilityNotificationsEnabled,omitempty"` // The notifications of location and node outage is enabled (`true`) or disabled (`false`)
 	DeploymentType                   *DeploymentType `json:"deploymentType,omitempty"`                   // The deployment type of the location: \n\n* `STANDARD`: The location is deployed on Windows or Linux.\n* `KUBERNETES`: The location is deployed on Kubernetes
-	AutoUpdateChromium               bool            `json:"autoUpdateChromium,omitempty"`               // Auto upgrade of Chromium is enabled (`true`) or disabled (`false`)
+	AutoUpdateChromium               bool            `json:"autoUpdateChromium"`                         // Auto upgrade of Chromium is enabled (`true`) or disabled (`false`)
 	MinActiveGateCount               *int            `json:"minActiveGateCount"`
 	MaxActiveGateCount               *int            `json:"maxActiveGateCount"`
 	NodeSize                         *string         `json:"nodeSize"`
@@ -114,6 +114,7 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "Auto upgrade of Chromium is enabled (`true`) or disabled (`false`)",
 			Optional:    true,
+			Default:     true,
 		},
 		"min_active_gate_count": {
 			Type:        schema.TypeInt,

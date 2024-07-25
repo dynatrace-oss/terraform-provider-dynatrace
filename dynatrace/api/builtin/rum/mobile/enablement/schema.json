@@ -7,11 +7,13 @@
 		{
 			"customMessage": "This scope does not identify a valid application.",
 			"customValidatorId": "valid-application-scope",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "Real User Monitoring is required to enable Session Replay.",
 			"customValidatorId": "mobile-session-replay-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -114,5 +116,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.0.1"
+	"version": "2.1"
 }

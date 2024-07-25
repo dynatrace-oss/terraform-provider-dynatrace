@@ -40,7 +40,7 @@
 		"appName": "Jira for Workflows"
 	},
 	"multiObject": true,
-	"ordered": true,
+	"ordered": false,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -196,5 +196,5 @@
 	],
 	"schemaId": "app:dynatrace.jira:connection",
 	"types": {},
-	"version": "0.0.10"
+	"version": "0.0.11"
 }

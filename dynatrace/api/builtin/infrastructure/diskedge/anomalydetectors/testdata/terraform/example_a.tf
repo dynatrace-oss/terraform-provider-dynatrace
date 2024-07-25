@@ -22,12 +22,12 @@ resource "dynatrace_disk_edge_anomaly_detectors" "#name#" {
       metadata_value = "ExampleValue"
     }
   }
-  host_metadata_conditions {
-    host_metadata_condition {
-      host_metadata_condition {
-        metadata_condition = "$contains(terraform)"
-        metadata_key       = "ExampleKey"
-      }
-    }
-  }
+  # host_metadata_conditions { # Disabling until v297
+  #   host_metadata_condition {
+  #     host_metadata_condition {
+  #       metadata_condition = "$contains(terraform)"
+  #       metadata_key       = "ExampleKey"
+  #     }
+  #   }
+  # }
 }
