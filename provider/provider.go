@@ -70,6 +70,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/goldenstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/internetproxy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
@@ -535,6 +536,7 @@ func Provider() *schema.Provider {
 			"dynatrace_network_monitor_outage":              resources.NewGeneric(export.ResourceTypes.NetworkMonitorOutageHandling).Resource(),
 			"dynatrace_hub_permissions":                     resources.NewGeneric(export.ResourceTypes.HubPermissions).Resource(),
 			"dynatrace_automation_workflow_k8s_connections": resources.NewGeneric(export.ResourceTypes.K8sAutomationConnections).Resource(),
+			"dynatrace_golden_state":                        goldenstate.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
