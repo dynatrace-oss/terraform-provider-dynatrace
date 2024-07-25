@@ -1,0 +1,731 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "OneAgent can capture business events from outgoing HTTP requests. To activate this feature, add capture rules below.",
+	"displayName": "Capture business events with OneAgent",
+	"documentation": "\n\nCapture rules tell OneAgent to capture business events when specific webservices or endpoints are called. A capture rule consists of trigger rules, mandatory business event information (e.g. type and provider) and optional event data fields. A trigger defines the criteria that, when met, cause a business event to be captured (e.g. endpoint “/api/buy” is called). By adding event data fields to your business event, you can extract data directly from the incoming request payload. To limit the scope of a capture rule to a certain Host-Group or Host, create the rule directly in the Host-Group or Host setting screen.\n\nLearn more by visiting [our documentation](https://dt-url.net/gg230ij).",
+	"dynatrace": "1",
+	"enums": {
+		"ComparisonEnum": {
+			"description": "",
+			"displayName": "Comparison",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "not equals",
+					"value": "N_EQUALS"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "does not start with",
+					"value": "N_STARTS_WITH"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "does not end with",
+					"value": "N_ENDS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "does not contain",
+					"value": "N_CONTAINS"
+				},
+				{
+					"displayName": "exists",
+					"value": "EXISTS"
+				},
+				{
+					"displayName": "does not exist",
+					"value": "N_EXISTS"
+				}
+			],
+			"type": "enum"
+		},
+		"DataSourceEnum": {
+			"description": "",
+			"displayName": "Datasource",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Request - Path",
+					"value": "request.path"
+				},
+				{
+					"displayName": "Request - URL",
+					"value": "request.url"
+				},
+				{
+					"displayName": "Request - HTTP Method",
+					"value": "request.method"
+				},
+				{
+					"displayName": "Request - HTTP Header",
+					"value": "request.headers"
+				},
+				{
+					"displayName": "Request - Query String parameters",
+					"value": "request.parameters"
+				},
+				{
+					"displayName": "Request - Body",
+					"value": "request.body"
+				},
+				{
+					"displayName": "Response - Body",
+					"value": "response.body"
+				},
+				{
+					"displayName": "Response - HTTP Header",
+					"value": "response.headers"
+				},
+				{
+					"displayName": "Response - HTTP Status Code",
+					"value": "response.statusCode"
+				}
+			],
+			"type": "enum"
+		},
+		"DataSourceWithStaticStringEnum": {
+			"description": "",
+			"displayName": "Datasource",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Request - Path",
+					"value": "request.path"
+				},
+				{
+					"displayName": "Request - URL",
+					"value": "request.url"
+				},
+				{
+					"displayName": "Request - HTTP Method",
+					"value": "request.method"
+				},
+				{
+					"displayName": "Request - HTTP Header",
+					"value": "request.headers"
+				},
+				{
+					"displayName": "Request - Query String parameters",
+					"value": "request.parameters"
+				},
+				{
+					"displayName": "Request - Body",
+					"value": "request.body"
+				},
+				{
+					"displayName": "Response - Body",
+					"value": "response.body"
+				},
+				{
+					"displayName": "Response - HTTP Header",
+					"value": "response.headers"
+				},
+				{
+					"displayName": "Response - HTTP Status Code",
+					"value": "response.statusCode"
+				},
+				{
+					"displayName": "Fixed value",
+					"value": "constant.string"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add new capture rule",
+		"itemDisplayName": "Business event rule",
+		"minAgentVersion": "1.297"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"event": {
+			"description": "",
+			"displayName": "Event meta data",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/EventComplex"
+			}
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"triggers": {
+			"description": "Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
+			"displayName": "Triggers",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/MatcherComplex"
+				}
+			},
+			"maxObjects": 50,
+			"metadata": {
+				"addItemButton": "Add trigger"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:business-analytics.business-events-sources",
+		"group:business-analytics"
+	],
+	"schemaId": "builtin:bizevents.http.outgoing",
+	"types": {
+		"DataSourceComplex": {
+			"description": "",
+			"displayName": "Data source",
+			"documentation": "",
+			"properties": {
+				"dataSource": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "request.path",
+					"description": "",
+					"displayName": "Data source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DataSourceEnum"
+					}
+				},
+				"path": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "[See our documentation](https://dt-url.net/ei034bx)",
+					"displayName": "Path",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"request.body",
+							"request.headers",
+							"request.parameters",
+							"response.body",
+							"response.headers"
+						],
+						"property": "dataSource",
+						"type": "IN"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{dataSource} {path}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventAttributeComplex": {
+			"description": "",
+			"displayName": "Event content",
+			"documentation": "",
+			"properties": {
+				"path": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "[See our documentation](https://dt-url.net/ei034bx)",
+					"displayName": "Path",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"request.body",
+							"request.headers",
+							"request.parameters",
+							"response.body",
+							"response.headers"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"source": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Fixed value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"constant.string"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "constant.string",
+					"description": "",
+					"displayName": "Data source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DataSourceWithStaticStringEnum"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventCategoryAttributeComplex": {
+			"description": "",
+			"displayName": "Event content",
+			"documentation": "",
+			"properties": {
+				"path": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "[See our documentation](https://dt-url.net/ei034bx)",
+					"displayName": "Path",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"request.body",
+							"request.headers",
+							"request.parameters",
+							"response.body",
+							"response.headers"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"source": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Fixed value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"constant.string"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "constant.string",
+					"description": "",
+					"displayName": "Data source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DataSourceWithStaticStringEnum"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventComplex": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"category": {
+					"description": "Event category",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/EventCategoryAttributeComplex"
+					}
+				},
+				"data": {
+					"description": "Additional attributes for the business event.",
+					"displayName": "Event data",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/EventDataFieldComplex"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add data field"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"provider": {
+					"description": "Event provider",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/EventAttributeComplex"
+					}
+				},
+				"type": {
+					"description": "Event type",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/EventAttributeComplex"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventDataAttributeComplex": {
+			"description": "",
+			"displayName": "Event content",
+			"documentation": "",
+			"properties": {
+				"path": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "[See our documentation](https://dt-url.net/ei034bx)",
+					"displayName": "Path",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"request.body",
+							"request.headers",
+							"request.parameters",
+							"response.body",
+							"response.headers"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"source": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Fixed value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"constant.string"
+						],
+						"property": "sourceType",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"sourceType": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "bizevents-request-static-datasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "request.body",
+					"description": "",
+					"displayName": "Data source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/DataSourceWithStaticStringEnum"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"EventDataFieldComplex": {
+			"description": "",
+			"displayName": "Limits",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Field name to be added to data.",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"source": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/EventDataAttributeComplex"
+					}
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MatcherComplex": {
+			"description": "Rule must match",
+			"displayName": "Matcher",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": false,
+					"description": "",
+					"displayName": "Case sensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"EXISTS",
+								"N_EXISTS"
+							],
+							"property": "type",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"type": "boolean"
+				},
+				"source": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/DataSourceComplex"
+					}
+				},
+				"type": {
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Operator",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ComparisonEnum"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"EXISTS",
+								"N_EXISTS"
+							],
+							"property": "type",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{source.dataSource} {source.path} {type} ''{value}''",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.2"
+}

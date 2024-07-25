@@ -377,6 +377,7 @@ var ResourceTypes = struct {
 	AWSAnomalies                        ResourceType
 	VMwareAnomalies                     ResourceType
 	BusinessEventsOneAgent              ResourceType
+	BusinessEventsOneAgentOutgoing      ResourceType
 	BusinessEventsBuckets               ResourceType
 	BusinessEventsMetrics               ResourceType
 	BusinessEventsProcessing            ResourceType
@@ -676,6 +677,7 @@ var ResourceTypes = struct {
 	"dynatrace_aws_anomalies",
 	"dynatrace_vmware_anomalies",
 	"dynatrace_business_events_oneagent",
+	"dynatrace_business_events_oneagent_outgoing",
 	"dynatrace_business_events_buckets",
 	"dynatrace_business_events_metrics",
 	"dynatrace_business_events_processing",

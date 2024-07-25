@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_business_events_oneagent_outgoing Resource - terraform-provider-dynatrace"
+subcategory: "Business Events"
+description: |-
+  The resource `dynatrace_business_events_oneagent_outgoing` covers configuration for OneAgent business events based on outgoing HTTP requests
+---
+
+# dynatrace_business_events_oneagent_outgoing (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Business event capture - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-events-capturing#report-business-event-oneagent
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.outgoingg`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_business_events_oneagent_outgoing` downloads all existing OneAgent business events based on outgoing HTTP requests
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/bizevents/http/outgoing/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
