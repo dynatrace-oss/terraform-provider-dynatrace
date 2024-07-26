@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccNetworkAvailabilityMonitors(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v296)
+	// Temporarily disabled - valid synthetic location not available on test tenant
 	// api.TestAcc(t)
 	t.Skip()
 }

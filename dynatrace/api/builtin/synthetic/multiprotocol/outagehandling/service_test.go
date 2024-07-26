@@ -19,10 +19,10 @@ package outagehandling_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccNetworkMonitorOutageHandling(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v296)
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

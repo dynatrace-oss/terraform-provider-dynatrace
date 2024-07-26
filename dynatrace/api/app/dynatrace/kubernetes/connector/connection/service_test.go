@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccK8sAutomationConnections(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v296)
+	// Temporarily disabled - not available on test tenant (enable with v297)
 	// api.TestAcc(t)
 	t.Skip()
 }
