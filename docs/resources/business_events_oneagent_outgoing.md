@@ -1,12 +1,12 @@
 ---
 layout: ""
-page_title: dynatrace_business_events_oneagent Resource - terraform-provider-dynatrace"
+page_title: dynatrace_business_events_oneagent_outgoing Resource - terraform-provider-dynatrace"
 subcategory: "Business Events"
 description: |-
-  The resource `dynatrace_business_events_oneagent` covers configuration for OneAgent business events based on incoming HTTP requests
+  The resource `dynatrace_business_events_oneagent_outgoing` covers configuration for OneAgent business events based on outgoing HTTP requests
 ---
 
-# dynatrace_business_events_oneagent (Resource)
+# dynatrace_business_events_oneagent_outgoing (Resource)
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -14,76 +14,49 @@ description: |-
 
 - Business event capture - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-events-capturing#report-business-event-oneagent
 
-- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.incoming`)
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.outgoingg`)
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_business_events_oneagent` downloads all existing OneAgent business events based on incoming HTTP requests
+- `terraform-provider-dynatrace -export dynatrace_business_events_oneagent_outgoing` downloads all existing OneAgent business events based on outgoing HTTP requests
 
 The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_business_events_oneagent" "#name#" {
-  enabled   = true
-  rule_name = "#name#"
-  scope     = "environment"
+resource "dynatrace_business_events_oneagent_outgoing" "#name#" {
+  enabled      = true
+  rule_name    = "#name#"
+  scope        = "environment"
   event {
     category {
-      source_type = "request.path"
+      source      = "Category 1"
+      source_type = "constant.string"
     }
     data {
       event_data_field_complex {
-        name = "rsbody"
+        name = "Field 1"
         source {
-          path        = "*"
-          source_type = "response.body"
-        }
-      }
-      event_data_field_complex {
-        name = "req content-type"
-        source {
-          path        = "content-type"
-          source_type = "request.headers"
-        }
-      }
-      event_data_field_complex {
-        name = "technology"
-        source {
-          source      = "java"
-          source_type = "constant.string"
-        }
-      }
-      event_data_field_complex {
-        name = "rqbody"
-        source {
-          path        = "*"
+          path        = "Path 1"
           source_type = "request.body"
-        }
-      }
-      event_data_field_complex {
-        name = "res content-type"
-        source {
-          path        = "content-type"
-          source_type = "response.headers"
         }
       }
     }
     provider {
-      source      = "www.easytravel.com"
+      source      = "Provider 1"
       source_type = "constant.string"
     }
     type {
-      source      = "com.easytravel.search-journey"
+      source      = "Type 1"
       source_type = "constant.string"
     }
   }
   triggers {
     trigger {
-      type           = "STARTS_WITH"
+      type           = "EQUALS"
       case_sensitive = false
-      value          = "/easytravel/rest/journeys"
+      value          = "Terraform"
       source {
         data_source = "request.path"
       }

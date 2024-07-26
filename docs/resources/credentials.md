@@ -43,6 +43,7 @@ resource "dynatrace_credentials" "name" {
 ### Optional
 
 - `allow_contextless_requests` (Boolean) Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).
+- `allowed_entities` (Block List, Max: 1) The set of entities allowed to use the credential. (see [below for nested schema](#nestedblock--allowed_entities))
 - `certificate` (String) The certificate in the string format.
 - `credential_usage_summary` (Block List, Max: 2, Deprecated) The list contains summary data related to the use of credentials (see [below for nested schema](#nestedblock--credential_usage_summary))
 - `description` (String) A short description of the credentials set
@@ -59,6 +60,23 @@ resource "dynatrace_credentials" "name" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--allowed_entities"></a>
+### Nested Schema for `allowed_entities`
+
+Required:
+
+- `entity` (Block Set, Min: 1) The set of entities allowed to use the credential. (see [below for nested schema](#nestedblock--allowed_entities--entity))
+
+<a id="nestedblock--allowed_entities--entity"></a>
+### Nested Schema for `allowed_entities.entity`
+
+Optional:
+
+- `id` (String) ID of the entity
+- `type` (String) Type of entity. Possible values: `USER`, `APPLICATION`, `UNKNOWN`
+
+
 
 <a id="nestedblock--credential_usage_summary"></a>
 ### Nested Schema for `credential_usage_summary`
