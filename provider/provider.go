@@ -19,7 +19,6 @@ package provider
 
 import (
 	"context"
-	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
@@ -540,7 +539,6 @@ func Provider() *schema.Provider {
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
-	if os.Getenv("DYNATRACE_INCLUDE_INCUBATOR_RESOURCES") == "true" {
-	}
+	incubator(prv)
 	return prv
 }
