@@ -75,6 +75,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/outgoing"
 	bizevents_buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/buckets"
 	bizevents_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/metrics"
 	bizevents_processing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/pipelines"
@@ -95,6 +96,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping"
 	activegateupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/activegate/updates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/management/updatewindows"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultmode"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
 	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
@@ -1054,6 +1056,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		activegateupdates.Service,
 		Coalesce(Dependencies.EnvironmentActiveGate),
 	),
+	ResourceTypes.OneAgentDefaultMode:    NewResourceDescriptor(defaultmode.Service),
 	ResourceTypes.OneAgentDefaultVersion: NewResourceDescriptor(defaultversion.Service),
 	ResourceTypes.OneAgentUpdates: NewResourceDescriptor(
 		oneagentupdates.Service,
@@ -1103,6 +1106,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.BusinessEventsOneAgent: NewResourceDescriptor(
 		incoming.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.BusinessEventsOneAgentOutgoing: NewResourceDescriptor(
+		outgoing.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 	),

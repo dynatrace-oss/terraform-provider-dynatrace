@@ -1,0 +1,53 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "You can configure which OneAgent [monitoring mode|https://docs.dynatrace.com/docs/shortlink/appsec-monitoring-modes] will be by default used for OneAgent installation commands provided in Dynatrace WebUi. It does not affect OneAgent installer behavior. OneAgent installed without monitoring mode parameter will run in Full-Stack mode.",
+	"displayName": "OneAgent default mode",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"DefaultMode": {
+			"description": "",
+			"displayName": "DefaultMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "FullStack",
+					"value": "FULL_STACK"
+				},
+				{
+					"displayName": "Infrastructure",
+					"value": "INFRASTRUCTURE"
+				},
+				{
+					"displayName": "Discovery",
+					"value": "DISCOVERY"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"defaultMode": {
+			"default": "FULL_STACK",
+			"description": "",
+			"displayName": "OneAgent default monitoring mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/DefaultMode"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:deployment.oneagent.default-mode",
+	"types": {},
+	"version": "1"
+}
