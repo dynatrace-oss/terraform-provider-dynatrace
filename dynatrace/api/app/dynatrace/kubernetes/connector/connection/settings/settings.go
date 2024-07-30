@@ -58,6 +58,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
 			Optional:    true,
 			Computed:    true,
+			Deprecated:  "This resource is no longer ordered, please remove this attribute from the configuration",
 		},
 	}
 }
