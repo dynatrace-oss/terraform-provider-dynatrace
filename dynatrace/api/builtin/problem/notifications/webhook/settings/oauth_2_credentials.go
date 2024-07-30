@@ -23,10 +23,11 @@ import (
 )
 
 type OAuth2Credentials struct {
-	AccessTokenUrl string  `json:"accessTokenUrl"`  // Access token URL
-	ClientID       string  `json:"clientId"`        // Client ID
-	ClientSecret   string  `json:"clientSecret"`    // Client secret
-	Scope          *string `json:"scope,omitempty"` // The scope of access you are requesting
+	AccessTokenUrl               string  `json:"accessTokenUrl"`                         // Access token URL
+	AuthenticateViaRequestHeader *bool   `json:"authenticateViaRequestHeader,omitempty"` // If false, the client credentials are included in the HTTP request body.
+	ClientID                     string  `json:"clientId"`                               // Client ID
+	ClientSecret                 string  `json:"clientSecret"`                           // Client secret
+	Scope                        *string `json:"scope,omitempty"`                        // The scope of access you are requesting
 }
 
 func (me *OAuth2Credentials) Schema() map[string]*schema.Schema {
@@ -35,6 +36,11 @@ func (me *OAuth2Credentials) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Access token URL",
 			Required:    true,
+		},
+		"authenticate_via_request_header": {
+			Type:        schema.TypeBool,
+			Description: "If false, the client credentials are included in the HTTP request body.",
+			Optional:    true, // nullable
 		},
 		"client_id": {
 			Type:        schema.TypeString,
@@ -58,19 +64,21 @@ func (me *OAuth2Credentials) Schema() map[string]*schema.Schema {
 func (me *OAuth2Credentials) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(
 		map[string]any{
-			"access_token_url": me.AccessTokenUrl,
-			"client_id":        me.ClientID,
-			"client_secret":    "${state.secret_value}",
-			"scope":            me.Scope,
+			"access_token_url":                me.AccessTokenUrl,
+			"authenticate_via_request_header": me.AuthenticateViaRequestHeader,
+			"client_id":                       me.ClientID,
+			"client_secret":                   "${state.secret_value}",
+			"scope":                           me.Scope,
 		})
 }
 
 func (me *OAuth2Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"access_token_url": &me.AccessTokenUrl,
-		"client_id":        &me.ClientID,
-		"client_secret":    &me.ClientSecret,
-		"scope":            &me.Scope,
+		"access_token_url":                &me.AccessTokenUrl,
+		"authenticate_via_request_header": &me.AuthenticateViaRequestHeader,
+		"client_id":                       &me.ClientID,
+		"client_secret":                   &me.ClientSecret,
+		"scope":                           &me.Scope,
 	})
 }
 
