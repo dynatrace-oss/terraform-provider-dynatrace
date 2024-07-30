@@ -454,6 +454,7 @@ var ResourceTypes = struct {
 	NetworkMonitorOutageHandling        ResourceType
 	HubPermissions                      ResourceType
 	K8sAutomationConnections            ResourceType
+	WebAppCustomInjectionRules          ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -755,6 +756,7 @@ var ResourceTypes = struct {
 	"dynatrace_network_monitor_outage",
 	"dynatrace_hub_permissions",
 	"dynatrace_automation_workflow_k8s_connections",
+	"dynatrace_web_app_custom_injection",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

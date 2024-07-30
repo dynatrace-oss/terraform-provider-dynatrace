@@ -209,6 +209,7 @@ import (
 	webappbeaconendpoint "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beaconendpoint"
 	webappcustomconfigproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties"
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/custominjectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customrumjavascriptversion"
 	rumwebenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement"
 	webappinjectioncookie "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/injection/cookie"
@@ -1300,8 +1301,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		networkoutagehandling.Service,
 		Dependencies.ID(ResourceTypes.NetworkMonitor),
 	),
-	ResourceTypes.HubPermissions:           NewResourceDescriptor(hubpermissions.Service),
-	ResourceTypes.K8sAutomationConnections: NewResourceDescriptor(k8sautomationconnections.Service),
+	ResourceTypes.HubPermissions:             NewResourceDescriptor(hubpermissions.Service),
+	ResourceTypes.K8sAutomationConnections:   NewResourceDescriptor(k8sautomationconnections.Service),
+	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
 }
 
 type ResourceExclusion struct {
