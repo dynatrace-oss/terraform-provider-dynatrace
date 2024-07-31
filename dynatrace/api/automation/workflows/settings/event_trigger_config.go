@@ -132,8 +132,8 @@ func (me *EventTriggerConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	case EventTriggerTypes.DavisProblem:
-		me.EventQuery = new(EventQuery)
-		if err := json.Unmarshal(m.Config, &me.EventQuery); err != nil {
+		me.DavisProblemConfig = new(DavisProblemConfig)
+		if err := json.Unmarshal(m.Config, &me.DavisProblemConfig); err != nil {
 			return err
 		}
 	case EventTriggerTypes.DavisEvent:

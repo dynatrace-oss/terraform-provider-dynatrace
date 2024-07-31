@@ -24,7 +24,7 @@ import (
 )
 
 type DavisProblemConfig struct {
-	EntityTagsMatch EntityTagsMatch         `json:"entityTagsMatch"`                // Possible values: `all` and `any`
+	EntityTagsMatch *EntityTagsMatch        `json:"entityTagsMatch"`                // Possible values: `all` and `any`
 	EntityTags      map[string]string       `json:"entityTags"`                     //
 	OnProblemClose  bool                    `json:"onProblemClose" default:"false"` //
 	Categories      *DavisProblemCategories `json:"categories"`                     //
