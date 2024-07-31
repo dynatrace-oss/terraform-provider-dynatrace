@@ -5,13 +5,13 @@
 	"constraints": [
 		{
 			"checkAllProperties": false,
-			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"customMessage": "For security reasons please re-enter the token before saving the configuration.",
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Connection details for the Kubernetes Automation for Workflows App. Connections are automatically managed by the dynatrace-operator if an EdgeConnect resource was deployed with it to a Kubernetes cluster.",
-	"displayName": "Kubernetes Automation Connections",
-	"documentation": "PREVIEW",
+	"description": "Available connections for [Kubernetes Automation with Workflows](https://dt-url.net/qx03q4d). A connection is bound to a Kubernetes cluster where the workflow actions operate. We recommend following the steps described [here](https://dt-url.net/mf03qvf) using the Dynatrace Operator, which automatically creates the connection.",
+	"displayName": "Kubernetes Automation Connections (Preview)",
+	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
 	"maxObjects": 100,
@@ -19,7 +19,7 @@
 		"appName": "Kubernetes Automation for Workflows"
 	},
 	"multiObject": true,
-	"ordered": true,
+	"ordered": false,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -80,7 +80,7 @@
 				}
 			],
 			"default": "",
-			"description": "",
+			"description": "The token required by EdgeConnect to access the ServiceAccount token.",
 			"displayName": "Token",
 			"documentation": "",
 			"maxObjects": 1,
@@ -135,5 +135,5 @@
 			]
 		}
 	},
-	"version": "0.1.5"
+	"version": "0.1.8"
 }

@@ -10,18 +10,22 @@
 		},
 		{
 			"customValidatorId": "problem-notification-oauth-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customValidatorId": "problem-notification-webhook-url-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customValidatorId": "problem-notification-header-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customValidatorId": "problem-notification-secret-header-and-url-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -462,6 +466,7 @@
 				{
 					"customMessage": "Number of total recipients exceeded",
 					"customValidatorId": "problem-notification-email-total-recipients-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -510,6 +515,7 @@
 						},
 						{
 							"customValidatorId": "problem-notification-email-body-trial-account-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -877,6 +883,15 @@
 					"subType": "url",
 					"type": "text"
 				},
+				"authenticateViaRequestHeader": {
+					"description": "If false, the client credentials are included in the HTTP request body.",
+					"displayName": "Include the client credentials in the HTTP \"Authorization\" request header field with the HTTP \"Basic\" authentication scheme.",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"clientId": {
 					"constraints": [
 						{
@@ -936,8 +951,8 @@
 			},
 			"summaryPattern": "",
 			"type": "object",
-			"version": "0",
-			"versionInfo": ""
+			"version": "1",
+			"versionInfo": "Add OAuth2 support including the client credentials in the HTTP \"Authorization\" request header field with the HTTP \"Basic\" authentication scheme."
 		},
 		"OpsGenieNotification": {
 			"description": "",
@@ -1948,5 +1963,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.5"
+	"version": "1.6"
 }

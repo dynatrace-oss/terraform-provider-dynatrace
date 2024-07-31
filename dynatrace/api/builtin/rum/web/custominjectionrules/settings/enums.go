@@ -15,14 +15,34 @@
 * limitations under the License.
  */
 
-package outagehandling_test
+package custominjectionrules
 
-import (
-	"testing"
+type Operator string
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-)
+var Operators = struct {
+	Allpages Operator
+	Contains Operator
+	Ends     Operator
+	Equals   Operator
+	Starts   Operator
+}{
+	"AllPages",
+	"Contains",
+	"Ends",
+	"Equals",
+	"Starts",
+}
 
-func TestAccNetworkMonitorOutageHandling(t *testing.T) {
-	api.TestAcc(t)
+type Rule string
+
+var Rules = struct {
+	Afterspecifichtml  Rule
+	Automatic          Rule
+	Beforespecifichtml Rule
+	Donotinject        Rule
+}{
+	"AfterSpecificHtml",
+	"Automatic",
+	"BeforeSpecificHtml",
+	"DoNotInject",
 }

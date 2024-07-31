@@ -1,0 +1,173 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"description": "Define custom injection rules to control when and where RUM is automatically injected into your application's pages.",
+	"displayName": "Define custom injection rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Operator": {
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "All pages",
+					"value": "AllPages"
+				},
+				{
+					"displayName": "URL equals",
+					"value": "Equals"
+				},
+				{
+					"displayName": "URL starts with",
+					"value": "Starts"
+				},
+				{
+					"displayName": "URL ends with",
+					"value": "Ends"
+				},
+				{
+					"displayName": "URL contains",
+					"value": "Contains"
+				}
+			],
+			"type": "enum"
+		},
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic injection",
+					"value": "Automatic"
+				},
+				{
+					"displayName": "Before specific HTML",
+					"value": "BeforeSpecificHtml"
+				},
+				{
+					"displayName": "After specific HTML",
+					"value": "AfterSpecificHtml"
+				},
+				{
+					"displayName": "Do not inject",
+					"value": "DoNotInject"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add custom rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enable rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"htmlPattern": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 200,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "HTML pattern"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"BeforeSpecificHtml",
+					"AfterSpecificHtml"
+				],
+				"property": "rule",
+				"type": "IN"
+			},
+			"type": "text"
+		},
+		"operator": {
+			"default": "Equals",
+			"description": "",
+			"displayName": "Operator",
+			"documentation": "**Example**: \n\n **For the URL:**  \n `http://www.example.com:8080/lorem/ipsum.jsp?mode=desktop` \n\n A rule can be specified on the URL pattern:  \n `/lorem/ipsum.jsp` \n\n Using the operator:  \n `URL ends with` \n\n **Result:**  \n If URL ends with .jsp do not inject the JavaScript library",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Operator"
+			}
+		},
+		"rule": {
+			"default": "DoNotInject",
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Rule"
+			}
+		},
+		"urlPattern": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 200,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "URL pattern",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "For example, /lorem/ipsum.jsp"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"Equals",
+					"Starts",
+					"Ends",
+					"Contains"
+				],
+				"property": "operator",
+				"type": "IN"
+			},
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:rum-injection"
+	],
+	"schemaId": "builtin:rum.web.custom-injection-rules",
+	"types": {},
+	"version": "1"
+}

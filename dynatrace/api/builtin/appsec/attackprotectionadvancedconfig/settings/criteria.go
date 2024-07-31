@@ -38,6 +38,7 @@ func (me *Criteria) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Process group",
 			Optional:    true, // nullable
+			Deprecated:  "This field has been deprecated",
 		},
 	}
 }

@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package codelevelvulnerability
+package custominjectionrules
 
 import (
-	codelevelvulnerability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability/settings"
+	custominjectionrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/custominjectionrules/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "3.0.1"
-const SchemaID = "builtin:appsec.code-level-vulnerability-rule-settings"
+const SchemaVersion = "1"
+const SchemaID = "builtin:rum.web.custom-injection-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*codelevelvulnerability.Settings] {
-	return settings20.Service[*codelevelvulnerability.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*custominjectionrules.Settings] {
+	return settings20.Service[*custominjectionrules.Settings](credentials, SchemaID, SchemaVersion)
 }

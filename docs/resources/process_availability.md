@@ -128,4 +128,8 @@ Available logic operations:
 
 Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
+
+Optional:
+
+- `key_must_exist` (Boolean) When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
  

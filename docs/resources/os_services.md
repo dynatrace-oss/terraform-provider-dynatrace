@@ -156,7 +156,7 @@ Use one of the following values as a parameter for this condition:
 
 Required:
 
-- `metadata_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
+- `metadata_condition` (String) This string has to match a required format.
 
 - `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
 - `$eq(production)` – Matches if `production` matches the host metadata value exactly.
@@ -170,6 +170,10 @@ Available logic operations:
 
 Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
+
+Optional:
+
+- `key_must_exist` (Boolean) When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 
 
 
@@ -225,7 +229,7 @@ Use one of the following values as a parameter for this condition:
 
 Required:
 
-- `metadata_condition` (String) This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).
+- `metadata_condition` (String) This string has to match a required format.
 
 - `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
 - `$eq(production)` – Matches if `production` matches the host metadata value exactly.
@@ -239,6 +243,10 @@ Available logic operations:
 
 Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
+
+Optional:
+
+- `key_must_exist` (Boolean) When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 
 
 
