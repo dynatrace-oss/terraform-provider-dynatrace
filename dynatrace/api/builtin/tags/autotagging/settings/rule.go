@@ -87,7 +87,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"value_normalization": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`",
+			Description: "Possible Values: `Leave text as-is`, `To lower case`, `To upper case`",
 			Required:    true,
 		},
 	}
