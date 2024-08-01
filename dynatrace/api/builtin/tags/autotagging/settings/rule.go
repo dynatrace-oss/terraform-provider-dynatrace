@@ -82,7 +82,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"value_format": {
 			Type:        schema.TypeString,
-			Description: "Type '{' for placeholder suggestions",
+			Description: "Optional tag value",
 			Optional:    true, // nullable
 		},
 		"value_normalization": {
