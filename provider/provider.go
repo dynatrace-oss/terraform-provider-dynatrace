@@ -538,6 +538,7 @@ func Provider() *schema.Provider {
 			"dynatrace_oneagent_default_mode":               resources.NewGeneric(export.ResourceTypes.OneAgentDefaultMode).Resource(),
 			"dynatrace_web_app_custom_injection":            resources.NewGeneric(export.ResourceTypes.WebAppCustomInjectionRules).Resource(),
 			"dynatrace_discovery_default_rules":             resources.NewGeneric(export.ResourceTypes.DiscoveryDefaultRules).Resource(),
+			"dynatrace_discovery_feature_flags":             resources.NewGeneric(export.ResourceTypes.DiscoveryFeatureFlags).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

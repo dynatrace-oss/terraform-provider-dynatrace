@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_discovery_feature_flags Resource - terraform-provider-dynatrace"
+subcategory: "AppEngine"
+description: |-
+  The resource `dynatrace_discovery_feature_flags` covers configuration for Discovery and Coverage app feature flags
+---
+
+# dynatrace_discovery_feature_flags (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Discovery & Coverage - https://www.dynatrace.com/hub/detail/discovery-coverage/
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.discovery.coverage:feature-flags`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_discovery_feature_flags` downloads existing Discovery and Coverage app feature flags
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/discovery/coverage/featureflags/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

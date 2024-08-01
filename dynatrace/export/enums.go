@@ -456,6 +456,7 @@ var ResourceTypes = struct {
 	K8sAutomationConnections            ResourceType
 	WebAppCustomInjectionRules          ResourceType
 	DiscoveryDefaultRules               ResourceType
+	DiscoveryFeatureFlags               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -759,6 +760,7 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_k8s_connections",
 	"dynatrace_web_app_custom_injection",
 	"dynatrace_discovery_default_rules",
+	"dynatrace_discovery_feature_flags",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
