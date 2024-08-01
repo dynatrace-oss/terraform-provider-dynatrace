@@ -45,7 +45,21 @@ func (me MatcherComplexes) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MatcherComplexes) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("trigger", me)
+	if err := decoder.DecodeSlice("trigger", me); err != nil {
+		return err
+	}
+	if me == nil || len(*me) == 0 {
+		return nil
+	}
+	var triggers MatcherComplexes
+	for _, trigger := range *me {
+		if len(trigger.Type) == 0 {
+			continue
+		}
+		triggers = append(triggers, trigger)
+	}
+	*me = triggers
+	return nil
 }
 
 // Matcher. Rule must match
@@ -97,7 +111,7 @@ func (me *MatcherComplex) HandlePreconditions() error {
 	if me.CaseSensitive == nil && !slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
 		me.CaseSensitive = opt.NewBool(false)
 	}
-	if me.Value == nil && !slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
+	if len(me.Type) > 0 && me.Value == nil && !slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type)) {
 		return fmt.Errorf("'value' must be specified if 'type' is set to '%v'", me.Type)
 	}
 	return nil

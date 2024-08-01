@@ -82,12 +82,12 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"value_format": {
 			Type:        schema.TypeString,
-			Description: "Type '{' for placeholder suggestions",
+			Description: "Optional tag value",
 			Optional:    true, // nullable
 		},
 		"value_normalization": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`",
+			Description: "Possible Values: `Leave text as-is`, `To lower case`, `To upper case`",
 			Required:    true,
 		},
 	}
