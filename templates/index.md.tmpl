@@ -42,6 +42,7 @@ Define `DYNATRACE_API_TOKEN` as an [access token](https://docs.dynatrace.com/doc
  * **Write credential vault entries** (`credentialVault.write`)
  * **Read network zones** (`networkZones.read`)
  * **Write network zones** (`networkZones.write`)
+ * **Read Entities** (`entities.read`)
  * **Read security problems** (`securityProblems.read`)
  * **Write security problems** (`securityProblems.write`)
  * **Read attacks** (`attacks.read`)
