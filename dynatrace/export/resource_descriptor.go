@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
@@ -1304,6 +1305,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubPermissions:             NewResourceDescriptor(hubpermissions.Service),
 	ResourceTypes.K8sAutomationConnections:   NewResourceDescriptor(k8sautomationconnections.Service),
 	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
+	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
 }
 
 type ResourceExclusion struct {

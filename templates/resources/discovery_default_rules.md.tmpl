@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_discovery_default_rules Resource - terraform-provider-dynatrace"
+subcategory: "AppEngine"
+description: |-
+  The resource `dynatrace_discovery_default_rules` covers configuration for discovery findings default rules 
+---
+
+# dynatrace_discovery_default_rules (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Discovery & Coverage - https://www.dynatrace.com/hub/detail/discovery-coverage/
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.discovery.coverage:discovery.findings.default.rules.schema`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_discovery_default_rules` downloads existing discovery findings default rules
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/discovery/coverage/defaultrules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

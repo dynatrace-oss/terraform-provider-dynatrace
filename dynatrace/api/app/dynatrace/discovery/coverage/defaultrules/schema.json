@@ -1,0 +1,303 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Discovery findings default rules. This schema is not subject to manual changes, except for Muted setting. Any changes (except muting the rule) will be overwritten by the Discovery \u0026 Coverage application defaults.",
+	"displayName": "Discovery findings default rules schema",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Discovery \u0026 Coverage"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"rule": {
+			"description": "",
+			"displayName": "Rule: ",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Rule"
+			}
+		},
+		"settings": {
+			"description": "",
+			"displayName": "Settings:",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/RuleSettings"
+			}
+		}
+	},
+	"schemaId": "app:dynatrace.discovery.coverage:discovery.findings.default.rules.schema",
+	"types": {
+		"Action": {
+			"description": "",
+			"displayName": "Action",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"parameters": {
+					"description": "",
+					"displayName": "Parameters",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/ActionParameter"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add parameter"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ActionParameter": {
+			"description": "",
+			"displayName": "Parameter",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}:{value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"actions": {
+					"description": "",
+					"displayName": "Actions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/Action"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add action"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"category": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Category",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"environmentScope": {
+					"default": false,
+					"description": "",
+					"displayName": "Environment scope",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"id": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "NEVER",
+					"nullable": false,
+					"type": "text"
+				},
+				"priority": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Priority",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"query": {
+					"constraints": [
+						{
+							"maxLength": 2000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule query",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"title": {
+					"constraints": [
+						{
+							"maxLength": 250,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Title",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{title}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"RuleSettings": {
+			"description": "",
+			"displayName": "RuleSettings",
+			"documentation": "",
+			"properties": {
+				"muted": {
+					"default": false,
+					"description": "",
+					"displayName": "Muted",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.6"
+}
