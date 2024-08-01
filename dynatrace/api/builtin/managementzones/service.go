@@ -44,7 +44,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*management
 }
 
 type service struct {
-	service     settings.CRUDService[*managementzones.Settings]
+	service     settings.ListIDCRUDService[*managementzones.Settings]
 	client      rest.Client
 	credentials *settings.Credentials
 }
@@ -105,6 +105,10 @@ func (me *service) Get(ctx context.Context, id string, v *managementzones.Settin
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return me.service.List(ctx)
+}
+
+func (me *service) ListIDs(ctx context.Context) (api.Stubs, error) {
+	return me.service.ListIDs(ctx)
 }
 
 func (me *service) SchemaID() string {

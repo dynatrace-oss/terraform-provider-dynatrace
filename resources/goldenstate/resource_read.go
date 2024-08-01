@@ -69,19 +69,33 @@ func trimName(name string) string {
 	return name
 }
 
-func CommonRead(ctx context.Context, d *schema.ResourceData, creds *settings.Credentials, key export.ResourceType, indent string) error {
-	// logging.File.Println(indent, "CommonRead", key)
+var getOkMu sync.Mutex
 
+func GetOk(d *schema.ResourceData, key string) (any, bool) {
+	getOkMu.Lock()
+	defer getOkMu.Unlock()
+	return d.GetOk(key)
+}
+
+func Set(d *schema.ResourceData, key string, ids []string) {
+	getOkMu.Lock()
+	defer getOkMu.Unlock()
+	d.Set(key, ids)
+}
+
+func CommonRead(ctx context.Context, d *schema.ResourceData, creds *settings.Credentials, key export.ResourceType, indent string) error {
 	idMap := map[string]string{}
 
 	service := serviceMap[key](creds)
-	if stubs, err := service.List(ctx); err == nil {
+
+	stubs, err := service.List(ctx)
+
+	if err == nil {
 		for _, stub := range stubs {
 			idMap[stub.ID] = stub.Name
 		}
 	}
-	// decoder := confighcl.StateDecoderFrom(d, Resource())
-	if untypedIDs, ok := d.GetOk(string(key)); ok {
+	if untypedIDs, ok := GetOk(d, string(key)); ok {
 		if idSet, ok := untypedIDs.(*schema.Set); ok {
 			for _, untypedID := range idSet.List() {
 				if id, ok := untypedID.(string); ok {
@@ -102,6 +116,6 @@ func CommonRead(ctx context.Context, d *schema.ResourceData, creds *settings.Cre
 			ids = append(ids, id)
 		}
 	}
-	d.Set(string(key), ids)
+	Set(d, string(key), ids)
 	return nil
 }

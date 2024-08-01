@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
 type ServiceFunc func(*settings.Credentials) BasicService
@@ -29,6 +30,10 @@ type ServiceFunc func(*settings.Credentials) BasicService
 type BasicService interface {
 	List(ctx context.Context) (api.Stubs, error)
 	Delete(ctx context.Context, id string) error
+}
+
+type ListIDsService interface {
+	ListIDs(ctx context.Context) (api.Stubs, error)
 }
 
 func Wrap[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T]) func(credentials *settings.Credentials) BasicService {
@@ -42,6 +47,9 @@ type GenericService[T settings.Settings] struct {
 }
 
 func (me *GenericService[T]) List(ctx context.Context) (api.Stubs, error) {
+	if lister, ok := me.Service.(ListIDsService); ok {
+		return lister.ListIDs(context.WithValue(ctx, settings20.ContextKeyDeleteableOnly, true))
+	}
 	return me.Service.List(ctx)
 }
 

@@ -81,7 +81,9 @@ func CommonUpdate(ctx context.Context, d *schema.ResourceData, key export.Resour
 		return diag.Diagnostics{}, nil
 	}
 	service := serviceMap[key](creds)
+
 	stubs, err := service.List(ctx)
+
 	if err != nil {
 		return diag.Diagnostics{}, err
 	}

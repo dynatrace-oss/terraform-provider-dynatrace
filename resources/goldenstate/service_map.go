@@ -252,17 +252,20 @@ import (
 )
 
 var serviceMap = map[export.ResourceType]ServiceFunc{
+	export.ResourceTypes.Alerting:                 Wrap(alerting.Service),
+	export.ResourceTypes.ManagementZoneV2:         Wrap(v2managementzones.Service),
 	export.ResourceTypes.AutoTagV2:                Wrap(autotagging.Service),
-	export.ResourceTypes.CustomService:            Wrap(customservices.Service),
 	export.ResourceTypes.RequestAttribute:         Wrap(requestattributes.Service),
-	export.ResourceTypes.WebApplication:           Wrap(web.Service),
-	export.ResourceTypes.MobileApplication:        Wrap(mobile.Service),
-	export.ResourceTypes.SLOV2:                    Wrap(slov2.Service),
-	export.ResourceTypes.SpanAttribute:            Wrap(attribute.Service),
+	export.ResourceTypes.QueueManager:             Wrap(queuemanagers.Service),
+	export.ResourceTypes.IMSBridge:                Wrap(imsbridges.Service),
+	export.ResourceTypes.CustomService:            Wrap(customservices.Service),
+	export.ResourceTypes.AWSCredentials:           Wrap(aws.Service),
+	export.ResourceTypes.AzureCredentials:         Wrap(azure.Service),
 	export.ResourceTypes.SpanCaptureRule:          Wrap(capturing.Service),
 	export.ResourceTypes.SpanContextPropagation:   Wrap(contextpropagation.Service),
-	export.ResourceTypes.SpanEntryPoint:           Wrap(entrypoints.Service),
-	export.ResourceTypes.ResourceAttributes:       Wrap(resourceattribute.Service),
+	export.ResourceTypes.SLOV2:                    Wrap(slov2.Service),
+	export.ResourceTypes.WebApplication:           Wrap(web.Service),
+	export.ResourceTypes.MobileApplication:        Wrap(mobile.Service),
 	export.ResourceTypes.JiraNotification:         Wrap(jira.Service),
 	export.ResourceTypes.WebHookNotification:      Wrap(webhook.Service),
 	export.ResourceTypes.AnsibleTowerNotification: Wrap(ansible.Service),
@@ -274,24 +277,18 @@ var serviceMap = map[export.ResourceType]ServiceFunc{
 	export.ResourceTypes.TrelloNotification:       Wrap(trello.Service),
 	export.ResourceTypes.VictorOpsNotification:    Wrap(victorops.Service),
 	export.ResourceTypes.XMattersNotification:     Wrap(xmatters.Service),
-	export.ResourceTypes.Alerting:                 Wrap(alerting.Service),
-	export.ResourceTypes.FrequentIssues:           Wrap(frequentissues.Service),
-	export.ResourceTypes.MetricEvents:             Wrap(metricevents.Service),
-	export.ResourceTypes.IBMMQFilters:             Wrap(mqfilters.Service),
-	export.ResourceTypes.IMSBridge:                Wrap(imsbridges.Service),
-	export.ResourceTypes.QueueManager:             Wrap(queuemanagers.Service),
-	export.ResourceTypes.KeyRequests:              Wrap(keyrequests.Service),
 	export.ResourceTypes.Maintenance:              Wrap(v2maintenance.Service),
-	export.ResourceTypes.ManagementZoneV2:         Wrap(v2managementzones.Service),
-	export.ResourceTypes.NetworkZones:             Wrap(networkzones.Service),
-	export.ResourceTypes.AWSCredentials:           Wrap(aws.Service),
-	export.ResourceTypes.AzureCredentials:         Wrap(azure.Service),
+	export.ResourceTypes.MetricEvents:             Wrap(metricevents.Service),
+	export.ResourceTypes.KeyRequests:              Wrap(keyrequests.Service),
 	export.ResourceTypes.Credentials:              Wrap(vault.Service),
-	export.ResourceTypes.Dashboard:                Wrap(dashboards.Service),
+	export.ResourceTypes.CalculatedServiceMetric:  Wrap(calculated_service_metrics.Service),
+	export.ResourceTypes.CalculatedWebMetric:      Wrap(calculated_web_metrics.Service),
+}
+
+var TodoServiceMap = map[export.ResourceType]ServiceFunc{
+	export.ResourceTypes.Dashboard: Wrap(dashboards.Service),
 	// export.ResourceTypes.Documents:                           Wrap(documents.Service),
 	// export.ResourceTypes.DirectShares:                        Wrap(directshares.Service),
-	export.ResourceTypes.CalculatedServiceMetric:             Wrap(calculated_service_metrics.Service),
-	export.ResourceTypes.CalculatedWebMetric:                 Wrap(calculated_web_metrics.Service),
 	export.ResourceTypes.CalculatedMobileMetric:              Wrap(calculated_mobile_metrics.Service),
 	export.ResourceTypes.CalculatedSyntheticMetric:           Wrap(calculated_synthetic_metrics.Service),
 	export.ResourceTypes.HostNaming:                          Wrap(host_naming.Service),
@@ -483,4 +480,22 @@ var serviceMap = map[export.ResourceType]ServiceFunc{
 	export.ResourceTypes.Reports:                      Wrap(reports.Service),
 	export.ResourceTypes.NetworkMonitor:               Wrap(v2monitors.Service),
 	export.ResourceTypes.NetworkMonitorOutageHandling: Wrap(networkoutagehandling.Service),
+}
+
+// Settings where only a single instance exists
+var SingleConfigServiceMap = map[export.ResourceType]ServiceFunc{
+	export.ResourceTypes.IBMMQFilters:   Wrap(mqfilters.Service),
+	export.ResourceTypes.FrequentIssues: Wrap(frequentissues.Service),
+	export.ResourceTypes.NetworkZones:   Wrap(networkzones.Service),
+}
+
+// Freshly provisioned environments are pre-populated with settings that CAN get deleted
+var PrePopulatedConfigServiceMap = map[export.ResourceType]ServiceFunc{
+	export.ResourceTypes.SpanEntryPoint: Wrap(entrypoints.Service),
+}
+
+// Resources that are deprecated
+var DeprecatedConfigServiceMap = map[export.ResourceType]ServiceFunc{
+	export.ResourceTypes.SpanAttribute:      Wrap(attribute.Service),
+	export.ResourceTypes.ResourceAttributes: Wrap(resourceattribute.Service),
 }

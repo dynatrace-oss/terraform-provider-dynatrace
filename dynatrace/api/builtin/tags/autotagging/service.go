@@ -42,7 +42,11 @@ Reason for that wrapper:
 */
 
 type service struct {
-	service settings.CRUDService[*autotagging.Settings]
+	service settings.ListIDCRUDService[*autotagging.Settings]
+}
+
+func (me *service) ListIDs(ctx context.Context) (api.Stubs, error) {
+	return me.service.ListIDs(ctx)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

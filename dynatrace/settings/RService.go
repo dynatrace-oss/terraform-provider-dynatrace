@@ -56,6 +56,11 @@ type CRUDService[T Settings] interface {
 	Delete(ctx context.Context, id string) error
 }
 
+type ListIDCRUDService[T Settings] interface {
+	CRUDService[T]
+	ListIDs(ctx context.Context) (api.Stubs, error)
+}
+
 type Validator[T Settings] interface {
 	Validate(v T) error
 }

@@ -40,7 +40,7 @@ var DISABLE_ORDERING_SUPPORT = os.Getenv("DYNATRACE_DISABLE_ORDERING_SUPPORT") =
 
 var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
 
-func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.CRUDService[T] {
+func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
 	var opts *ServiceOptions[T]
 	if len(options) > 0 {
 		opts = options[0]
@@ -187,6 +187,60 @@ func (me *service[T]) getInsertAfter(ids []string, id string) (*string, error) {
 		prevID = curID
 	}
 	return nil, nil
+}
+
+type ContextKey string
+
+const ContextKeyDeleteableOnly = ContextKey("ContextKeyDeleteableOnly")
+
+// ListIDs differs from List in that the caller explicitly doesn't require any values
+// to get fetched (which List does by default).
+// If the given context.Context contains the value `true` for the key `ContextKeyDeleteableOnly`
+// then any settings that are according to the Settings 2.0 API non-deletable won't be part
+// of the resulting set of stubs
+func (me *service[T]) ListIDs(ctx context.Context) (api.Stubs, error) {
+	bDeletableOnly := false
+	if vDeletableOnly := ctx.Value(ContextKeyDeleteableOnly); vDeletableOnly != nil {
+		if tDeletableOnly, ok := vDeletableOnly.(bool); ok {
+			bDeletableOnly = tDeletableOnly
+		}
+	}
+
+	var err error
+
+	stubs := api.Stubs{}
+	nextPage := true
+
+	var nextPageKey *string
+	for nextPage {
+		var sol SettingsObjectList
+		var urlStr string
+		if nextPageKey != nil {
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?nextPageKey=%s", url.QueryEscape(*nextPageKey))
+		} else {
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,summary,modificationInfo,scope,schemaVersion"))
+		}
+		req := me.client.Get(urlStr, 200)
+		if err = req.Finish(&sol); err != nil {
+			return nil, err
+		}
+		if shutdown.System.Stopped() {
+			return stubs, nil
+		}
+
+		if len(sol.Items) > 0 {
+			for _, item := range sol.Items {
+				if !item.ModificationInfo.Deleteable && bDeletableOnly {
+					continue
+				}
+				stubs = append(stubs, &api.Stub{ID: item.ObjectID, Name: item.Summary, Value: nil, LegacyID: nil})
+			}
+		}
+		nextPageKey = sol.NextPageKey
+		nextPage = (nextPageKey != nil)
+	}
+
+	return stubs, nil
 }
 
 func (me *service[T]) listIDs() ([]string, error) {
