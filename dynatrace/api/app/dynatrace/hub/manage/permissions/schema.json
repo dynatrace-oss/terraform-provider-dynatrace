@@ -39,8 +39,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "Please ensure your email address includes an '@' symbol, followed by a domain name, and ends with the top-level domain \".com\".",
-					"pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$",
+					"customMessage": "Please ensure your email address includes an '@' symbol, followed by a domain name, and ends with a valid top-level domain (such as .com).",
+					"pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
 					"type": "PATTERN"
 				},
 				{
@@ -71,5 +71,5 @@
 	],
 	"schemaId": "app:dynatrace.hub:manage.permissions",
 	"types": {},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }
