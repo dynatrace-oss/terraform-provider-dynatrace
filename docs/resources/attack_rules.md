@@ -46,14 +46,18 @@ resource "dynatrace_attack_rules" "#name#" {
 
 ### Required
 
-- `attack_handling` (Block List, Min: 1, Max: 1) Step 2: Define attack control for chosen criteria (see [below for nested schema](#nestedblock--attack_handling))
-- `criteria` (Block List, Min: 1, Max: 1) Step 1: Define criteria (see [below for nested schema](#nestedblock--criteria))
+- `attack_handling` (Block List, Min: 1, Max: 1) Step 1: Select attack protection behavior (see [below for nested schema](#nestedblock--attack_handling))
+- `criteria` (Block List, Min: 1, Max: 1) Step 2: Select attack type (see [below for nested schema](#nestedblock--criteria))
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `metadata` (Block List, Min: 1, Max: 1) Step 3: Leave comment (see [below for nested schema](#nestedblock--metadata))
+- `metadata` (Block List, Min: 1, Max: 1) Step 4: Leave comment (optional) (see [below for nested schema](#nestedblock--metadata))
 
 ### Optional
 
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+- `resource_attribute_conditions` (Block List, Max: 1) If you add more than one condition, note that all conditions must be true simultaneously for the rule to apply.
+
+We provide suggestions for resource attribute keys and values based on what we currently see in your environment. You can also enter any value not currently seen in the list. Resource attributes come out of the box from the OneAgent, and you can set them up from [data enrichment](https://docs.dynatrace.com/docs/extend-dynatrace/extend-data). (see [below for nested schema](#nestedblock--resource_attribute_conditions))
+- `rule_name` (String) Rule name
 
 ### Read-Only
 
@@ -76,7 +80,7 @@ Required:
 
 Optional:
 
-- `process_group` (String) Process group
+- `process_group` (String, Deprecated) Process group
 
 
 <a id="nestedblock--metadata"></a>
@@ -85,4 +89,24 @@ Optional:
 Required:
 
 - `comment` (String) no documentation available
+
+
+<a id="nestedblock--resource_attribute_conditions"></a>
+### Nested Schema for `resource_attribute_conditions`
+
+Required:
+
+- `resource_attribute_condition` (Block List, Min: 1) (see [below for nested schema](#nestedblock--resource_attribute_conditions--resource_attribute_condition))
+
+<a id="nestedblock--resource_attribute_conditions--resource_attribute_condition"></a>
+### Nested Schema for `resource_attribute_conditions.resource_attribute_condition`
+
+Required:
+
+- `matcher` (String) Possible Values: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_END_WITH`, `DOES_NOT_EXIST`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `NOT_EQUALS`, `STARTS_WITH`
+- `resource_attribute_key` (String) Resource attribute key
+
+Optional:
+
+- `resource_attribute_value` (String) Resource attribute value
  

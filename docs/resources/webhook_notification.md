@@ -134,5 +134,6 @@ Required:
 
 Optional:
 
+- `authenticate_via_request_header` (Boolean) If false, the client credentials are included in the HTTP request body.
 - `scope` (String) The scope of access you are requesting
  

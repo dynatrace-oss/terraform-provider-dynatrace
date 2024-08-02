@@ -77,7 +77,7 @@ Optional:
 * btrfs
 * ext*
 
-⚠️ File system types are case sensitive! 
+⚠️ Starting from **OneAgent 1.299+** file system types are not case sensitive! 
 
 The wildcard in the last example means to exclude matching file systems such as types ext4 and ext3
 - `mountpoint` (String) **Disk or mount point path field:** the path to where the disk to be excluded from monitoring is mounted. Examples:
