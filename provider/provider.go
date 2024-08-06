@@ -37,6 +37,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entities"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
+	genericsettingsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/generic/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
@@ -225,6 +226,8 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_policy":                   ds_iam_policies.DataSourceSingle(),
 			"dynatrace_lambda_agent_version":         lambdaagent.DataSource(),
 			"dynatrace_autotag":                      autotag.DataSource(),
+			"dynatrace_generic_settings":             genericsettingsds.DataSourceMultiple(),
+			"dynatrace_generic_setting":              genericsettingsds.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

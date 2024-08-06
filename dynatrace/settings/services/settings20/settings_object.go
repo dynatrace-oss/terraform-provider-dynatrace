@@ -37,5 +37,6 @@ type SettingsObjectListItem struct {
 	ObjectID      string          `json:"objectId"`
 	Scope         string          `json:"scope"`
 	SchemaVersion string          `json:"schemaVersion"`
+	SchemaID      string          `json:"schemaId"`
 	Value         json.RawMessage `json:"value"`
 }
