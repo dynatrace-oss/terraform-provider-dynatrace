@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title: "dynatrace_generic_settings Data Source - terraform-provider-dynatrace"
+subcategory: "Platform"
+description: |-
+  The data source `dynatrace_generic_settings` covers queries for a list of Settings 2.0 objects
+---
+
+# dynatrace_generic_settings (Data Source)
+
+The generic settings data source allows Settings 2.0 objects to be retrieved by its schema ID, scope, and/or filter.
+
+## Example Usage
+
+```terraform
+data "dynatrace_generic_settings" "example" {
+  schema = "builtin:alerting.maintenance-window"
+}
+
+output "generic_settings" {
+  value = data.dynatrace_generic_settings.example
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

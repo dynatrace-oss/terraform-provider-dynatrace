@@ -1521,6 +1521,7 @@
 					"constraints": [
 						{
 							"maxLength": 500,
+							"minLength": 1,
 							"type": "LENGTH"
 						}
 					],
@@ -2403,5 +2404,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.16"
+	"version": "1.0.17"
 }

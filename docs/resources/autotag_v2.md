@@ -114,13 +114,13 @@ Required:
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `type` (String) Possible Values: `ME`, `SELECTOR`
-- `value_normalization` (String) Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`
+- `value_normalization` (String) Possible Values: `Leave text as-is`, `To lower case`, `To upper case`
 
 Optional:
 
 - `attribute_rule` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rules--rule--attribute_rule))
 - `entity_selector` (String) The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
-- `value_format` (String) Type '{' for placeholder suggestions
+- `value_format` (String) Optional tag value
 
 <a id="nestedblock--rules--rule--attribute_rule"></a>
 ### Nested Schema for `rules.rule.attribute_rule`

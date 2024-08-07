@@ -33,6 +33,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"golang.org/x/oauth2"
@@ -307,4 +308,64 @@ func (me *service) delete(ctx context.Context, id string, numRetries int) error 
 
 func (me *service) SchemaID() string {
 	return "generic"
+}
+
+type QueryParams struct {
+	Schema string
+	Scope  string
+	Filter string
+}
+
+func (me *service) ListSpecific(query QueryParams) (api.Stubs, error) {
+	client := me.TokenClient()
+
+	stubs := api.Stubs{}
+	nextPage := true
+	var nextPageKey *string
+	for nextPage {
+		var sol settings20.SettingsObjectList
+		var options crest.RequestOptions
+		if nextPageKey == nil {
+			options.QueryParams = url.Values{
+				"fields":    []string{"objectId,scope,value,schemaId"},
+				"pageSize":  []string{"100"},
+				"schemaIds": []string{query.Schema},
+				"scopes":    []string{query.Scope},
+				"filter":    []string{query.Filter},
+			}
+		} else {
+			options.QueryParams = url.Values{
+				"nextPageKey": []string{*nextPageKey},
+			}
+		}
+
+		response, err := client.GET(context.TODO(), "api/v2/settings/objects", options)
+		if err != nil {
+			return nil, err
+		}
+
+		if response.Body != nil {
+			json.NewDecoder(response.Body).Decode(&sol)
+		}
+		if len(sol.Items) == 0 {
+			return api.Stubs{}, nil
+		}
+		if shutdown.System.Stopped() {
+			return stubs, nil
+		}
+
+		if len(sol.Items) > 0 {
+			for _, item := range sol.Items {
+				newItem := new(generic.Settings)
+				newItem.Value = string(item.Value)
+				newItem.Scope = item.Scope
+				newItem.SchemaID = item.SchemaID
+				stubs = append(stubs, &api.Stub{ID: item.ObjectID, Name: item.ObjectID, Value: newItem})
+			}
+		}
+		nextPageKey = sol.NextPageKey
+		nextPage = (nextPageKey != nil)
+	}
+
+	return stubs, nil
 }

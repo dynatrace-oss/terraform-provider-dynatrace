@@ -55,6 +55,7 @@
 				},
 				{
 					"customValidatorId": "log-matcher-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -80,6 +81,7 @@
 				},
 				{
 					"customValidatorId": "log-dpp-name-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -125,6 +127,7 @@
 						},
 						{
 							"customValidatorId": "log-dpp-spectx-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -160,6 +163,7 @@
 						},
 						{
 							"customValidatorId": "json-syntax-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -183,5 +187,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.19"
+	"version": "1.0.20"
 }

@@ -123,7 +123,7 @@
 					],
 					"description": "",
 					"displayName": "File system type",
-					"documentation": " **File system type field:** the type of the file system to be excluded from monitoring. Examples:\n\n* ext4\n* ext3\n* btrfs\n* ext*\n\n⚠️ File system types are case sensitive! \n\nThe wildcard in the last example means to exclude matching file systems such as types ext4 and ext3",
+					"documentation": " **File system type field:** the type of the file system to be excluded from monitoring. Examples:\n\n* ext4\n* ext3\n* btrfs\n* ext*\n\n⚠️ Starting from **OneAgent 1.299+** file system types are not case sensitive! \n\nThe wildcard in the last example means to exclude matching file systems such as types ext4 and ext3",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -164,5 +164,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.10"
+	"version": "1.2.11"
 }
