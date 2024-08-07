@@ -58,14 +58,14 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	req := client.Get("/api/v2/apiTokens?pageSize=10000&sort=-creationDate").Expect(200)
+	req := client.Get("/api/v2/apiTokens?pageSize=10000&fields=%2Bscopes%2C%2BexpirationDate%2C%2BpersonalAccessToken&sort=-creationDate").Expect(200)
 	var tokenlist apitokens.TokenList
 	if err = req.Finish(&tokenlist); err != nil {
 		return nil, err
 	}
 	stubs := api.Stubs{}
 	for _, token := range tokenlist.APITokens {
-		stubs = append(stubs, &api.Stub{ID: *token.ID, Name: token.Name})
+		stubs = append(stubs, &api.Stub{ID: *token.ID, Name: token.Name, Value: &token.APIToken})
 	}
 
 	return stubs, nil

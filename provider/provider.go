@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/apitoken"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/attackalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/vulnerabilityalerting"
@@ -228,6 +229,8 @@ func Provider() *schema.Provider {
 			"dynatrace_autotag":                      autotag.DataSource(),
 			"dynatrace_generic_settings":             genericsettingsds.DataSourceMultiple(),
 			"dynatrace_generic_setting":              genericsettingsds.DataSource(),
+			"dynatrace_api_tokens":                   apitoken.DataSourceMultiple(),
+			"dynatrace_api_token":                    apitoken.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
