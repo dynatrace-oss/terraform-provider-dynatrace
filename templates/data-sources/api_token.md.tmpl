@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "dynatrace_api_token Data Source - terraform-provider-dynatrace"
+subcategory: "Access Tokens"
+description: |-
+  The data source `dynatrace_api_token` covers queries for an access token
+---
+
+# dynatrace_api_token (Data Source)
+
+The API token data source allows a single access token to be retrieved by its name, note the token value is not included in the response.
+
+If multiple tokens match the given name, the first result will be retrieved. To retrieve multiple tokens of the same name, please utilize the `dynatrace_api_tokens` data source.
+
+## Example Usage
+
+```terraform
+data "dynatrace_api_token" "example" {
+  name = "Terraform"
+}
+
+output "example" {
+  value = data.dynatrace_api_token.example
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

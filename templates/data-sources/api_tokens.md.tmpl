@@ -1,0 +1,24 @@
+---
+layout: ""
+page_title: "dynatrace_api_tokens Data Source - terraform-provider-dynatrace"
+subcategory: "Access Tokens"
+description: |-
+  The data source `dynatrace_api_tokens` covers queries for a list of access tokens
+---
+
+# dynatrace_api_tokens (Data Source)
+
+The API tokens data source allows all access tokens to be retrieved, note the token value is not included in the response.
+
+## Example Usage
+
+```terraform
+data "dynatrace_api_tokens" "example" {
+}
+
+output "example" {
+  value = data.dynatrace_api_tokens.example
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
