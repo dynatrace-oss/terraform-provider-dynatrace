@@ -305,6 +305,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Description: "Processor to apply a DQL script",
 			MinItems:    1,
 			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(DqlProcessor).Schema()},
 			Optional:    true,
 		},
 		"fields_add_processor": {
@@ -312,6 +313,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Description: "",
 			MinItems:    1,
 			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(FieldsAddProcessor).Schema()},
 			Optional:    true,
 		},
 		"fields_remove_processor": {
@@ -319,6 +321,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Description: "",
 			MinItems:    1,
 			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(FieldsRemoveProcessor).Schema()},
 			Optional:    true,
 		},
 		"fields_rename_processor": {
@@ -326,6 +329,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Description: "",
 			MinItems:    1,
 			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},
 			Optional:    true,
 		},
 	}

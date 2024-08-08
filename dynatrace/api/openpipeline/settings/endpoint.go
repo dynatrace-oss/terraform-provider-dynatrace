@@ -5,6 +5,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+type Endpoints struct {
+	Endpoints []EndpointDefinition `json:"endpoints"`
+}
+
+func (ep *Endpoints) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"endpoint": {
+			Type:        schema.TypeSet,
+			Description: "todo",
+			Elem:        &schema.Resource{Schema: new(EndpointDefinition).Schema()},
+			Optional:    true,
+		},
+	}
+}
+
+func (ep *Endpoints) MarshalHCL(properties hcl.Properties) error {
+	return properties.Encode("endpoints", ep.Endpoints)
+}
+
+func (ep *Endpoints) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.Decode("endpoints", &ep.Endpoints)
+}
+
 type EndpointDefinition struct {
 	BasePath string `json:"basePath"`
 	//Builtin       *bool   `json:"builtin,omitempty"`
@@ -70,5 +93,5 @@ func (ep *EndpointProcessors) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (ep *EndpointProcessors) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.Decode("processor", &ep.Processors)
+	return decoder.Decode("processors", &ep.Processors)
 }

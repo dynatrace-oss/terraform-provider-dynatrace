@@ -8,7 +8,7 @@ import (
 type Configuration struct {
 	CustomBasePath string `json:"customBasePath"`
 	//Editable       *bool                `json:"editable,omitempty"`
-	Endpoints []EndpointDefinition `json:"endpoints"`
+	Endpoints Endpoints `json:"endpoints"`
 	//Id             string               `json:"id"`
 	//Pipelines      []Pipeline           `json:"pipelines"`
 	//Routing        RoutingTable         `json:"routing"`
@@ -23,10 +23,12 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 
-		"endpoint": {
+		"endpoints": {
 			Type:        schema.TypeList,
 			Description: "The endpoints of the openpipeline configuration",
-			Elem:        &schema.Resource{Schema: new(EndpointDefinition).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(Endpoints).Schema()},
 			Required:    true,
 		},
 	}
@@ -36,7 +38,7 @@ func (d *Configuration) MarshalHCL(properties hcl.Properties) error {
 
 	if err := properties.EncodeAll(map[string]any{
 		"custom_base_path": d.CustomBasePath,
-		"endpoint":         d.Endpoints,
+		"endpoints":        d.Endpoints,
 	}); err != nil {
 		return err
 	}
@@ -46,7 +48,7 @@ func (d *Configuration) MarshalHCL(properties hcl.Properties) error {
 func (d *Configuration) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"custom_base_path": &d.CustomBasePath,
-		"endpoint":         &d.Endpoints,
+		"endpoints":        &d.Endpoints,
 	})
 
 }
