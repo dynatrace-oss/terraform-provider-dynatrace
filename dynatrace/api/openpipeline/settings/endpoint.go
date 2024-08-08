@@ -12,7 +12,7 @@ type EndpointDefinition struct {
 	//DisplayName   *string `json:"displayName,omitempty"`
 	//Editable      *bool   `json:"editable,omitempty"`
 	//Enabled       bool    `json:"enabled"`
-	Processors []EndpointProcessor `json:"processors,omitempty"`
+	Processors EndpointProcessors `json:"processors,omitempty"`
 	// Routing Routing `json:"routing"`
 	//Segment string  `json:"segment"`
 }
@@ -24,23 +24,22 @@ func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 			Description: "todo",
 			Required:    true,
 		},
-		"endpoint_processor": {
+		"processors": {
 			Type:        schema.TypeList,
 			Description: "todo",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(EndpointProcessors).Schema()},
 			Optional:    true,
 		},
 	}
 }
 
 func (d *EndpointDefinition) MarshalHCL(properties hcl.Properties) error {
-
-	if err := properties.EncodeAll(map[string]any{
-		"base_path":          d.BasePath,
-		"endpoint_processor": d.Processors,
-	}); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"base_path":  d.BasePath,
+		"processors": d.Processors,
+	})
 }
 
 func (d *EndpointDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -51,100 +50,25 @@ func (d *EndpointDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
-type EndpointProcessor struct {
-	Type string `json:"type"`
-	//Description string  `json:"description"`
-	//DqlScript   *string `json:"dqlScript"`
-	//Editable    *bool   `json:"editable,omitempty"`
-	//Enabled     bool    `json:"enabled"`
-	//Id          string  `json:"id"`
-	//Matcher     Matcher `json:"matcher"`
-	//SampleData  *string `json:"sampleData,omitempty"`
-	Fields *[]any `json:"fields"`
+type EndpointProcessors struct {
+	Processors []EndpointProcessor
 }
 
-func (e *EndpointProcessor) Schema() map[string]*schema.Schema {
-
-	var fieldsSchema *schema.Schema
-
-	switch e.Type {
-	case "fieldsRename":
-		fieldsSchema = &schema.Schema{
-			Type:        schema.TypeList,
-			Description: "TODO",
-			Elem:        &schema.Resource{Schema: new(FieldsRenameItem).Schema()},
-			Required:    true,
-		}
-		//TODO: add other cases
-	}
-
+func (ep *EndpointProcessors) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"type": {
-			Type:        schema.TypeString,
-			Description: "The custom base path of an openpipeline configuration",
-			Required:    true,
-		},
-		"fields": fieldsSchema,
-	}
-}
-
-func (e *EndpointProcessor) MarshalHCL(properties hcl.Properties) error {
-	if err := properties.EncodeAll(map[string]any{
-		"type":  e.Type,
-		"field": e.Fields,
-	}); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (e *EndpointProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"type":  &e.Type,
-		"field": &e.Fields,
-	})
-
-}
-
-type FieldsRenameItem struct {
-	FromName *string `json:"fromName"`
-	ToName   *string `json:"toName"`
-}
-
-func (f *FieldsRenameItem) MarshalHCL(properties hcl.Properties) error {
-	if err := properties.EncodeAll(map[string]any{
-		"from_name": f.FromName,
-		"to_name":   f.ToName,
-	}); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (f *FieldsRenameItem) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"from_name": &f.FromName,
-		"to_name":   &f.ToName,
-	})
-
-}
-
-func (f *FieldsRenameItem) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"from_name": {
-			Type:        schema.TypeString,
-			Description: "TODO",
-			Required:    true,
-		},
-		"to_name": {
-			Type:        schema.TypeString,
-			Description: "TODO",
-			Required:    true,
+		"processor": {
+			Type:        schema.TypeSet,
+			Description: "todo",
+			Elem:        &schema.Resource{Schema: new(EndpointProcessor).Schema()},
+			Optional:    true,
 		},
 	}
 }
 
-type Routing struct {
-	PipelineId *string `json:"pipelineId"`
-	Type       string  `json:"type"`
+func (ep *EndpointProcessors) MarshalHCL(properties hcl.Properties) error {
+	return properties.Encode("processors", ep.Processors)
+}
+
+func (ep *EndpointProcessors) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.Decode("processor", &ep.Processors)
 }
