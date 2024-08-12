@@ -11,7 +11,7 @@ type Configuration struct {
 	Endpoints Endpoints `json:"endpoints"`
 	//Id             string               `json:"id"`
 	//Pipelines      []Pipeline           `json:"pipelines"`
-	//Routing        RoutingTable         `json:"routing"`
+	Routing RoutingTable `json:"routing"`
 	//Version        string               `json:"version"`
 }
 
@@ -29,6 +29,14 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Endpoints).Schema()},
+			Required:    true,
+		},
+		"routing": {
+			Type:        schema.TypeList,
+			Description: "todo",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(RoutingTable).Schema()},
 			Required:    true,
 		},
 	}
