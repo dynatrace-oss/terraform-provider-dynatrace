@@ -6,23 +6,12 @@ import (
 )
 
 type Processor struct {
-	// Description Name or description of the processor.
-	Description string `json:"description"`
-
-	// Editable Indicates if the user is allowed to edit this object based on permissions and builtin property.
-	Editable *bool `json:"editable,omitempty"`
-
-	// Enabled Indicates if the object is active.
-	Enabled bool `json:"enabled"`
-
-	// Id Identifier of the processor. Must be unique within a stage.
-	Id string `json:"id"`
-
-	// Matcher Matching condition to apply on incoming records.
-	Matcher string `json:"matcher"`
-
-	// SampleData Sample data related to the processor for documentation or testing.
-	SampleData *string `json:"sampleData,omitempty"`
+	Description string  `json:"description"`
+	Editable    *bool   `json:"editable,omitempty"`
+	Enabled     bool    `json:"enabled"`
+	Id          string  `json:"id"`
+	Matcher     string  `json:"matcher"`
+	SampleData  *string `json:"sampleData,omitempty"`
 }
 
 func (p *Processor) Schema() map[string]*schema.Schema {
@@ -34,27 +23,27 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 		},
 		"editable": {
 			Type:        schema.TypeBool,
-			Description: "",
+			Description: "Indicates if the user is allowed to edit this object based on permissions and builtin property.",
 			Optional:    true,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "",
+			Description: "Indicates if the object is active.",
 			Required:    true,
 		},
 		"id": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Identifier of the processor. Must be unique within a stage.",
 			Required:    true,
 		},
 		"matcher": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Matching condition to apply on incoming records.",
 			Required:    true,
 		},
 		"sample_data": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Sample data related to the processor for documentation or testing.",
 			Optional:    true,
 		},
 	}
@@ -82,11 +71,8 @@ func (p *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
-// DqlProcessor Processor to apply a DQL script.
 type DqlProcessor struct {
 	Processor
-
-	// DqlScript The DQL script to apply on the record.
 	DqlScript string `json:"dqlScript"`
 }
 
@@ -117,8 +103,6 @@ func (p *DqlProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type FieldsAddProcessor struct {
 	Processor
-
-	// Fields List of fields to add to the record.
 	Fields []FieldsAddItem `json:"fields"`
 }
 
@@ -148,12 +132,8 @@ func (p *FieldsAddProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.Decode("field", &p.Fields)
 }
 
-// FieldsAddItem List of fields to add to the record.
 type FieldsAddItem struct {
-	// Name Name of the field.
-	Name string `json:"name"`
-
-	// Value Value to assign to the field.
+	Name  string `json:"name"`
 	Value string `json:"value"`
 }
 
@@ -188,8 +168,6 @@ func (f *FieldsAddItem) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type FieldsRemoveProcessor struct {
 	Processor
-
-	// Fields List of fields to remove from the record.
 	Fields []string `json:"fields"`
 }
 
@@ -219,11 +197,8 @@ func (p *FieldsRemoveProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.Decode("field", &p.Fields)
 }
 
-// FieldsRenameProcessor Processor to rename fields.
 type FieldsRenameProcessor struct {
 	Processor
-
-	// Fields List of fields to rename on the record.
 	Fields []FieldsRenameItem `json:"fields"`
 }
 
@@ -253,13 +228,9 @@ func (p *FieldsRenameProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.Decode("field", &p.Fields)
 }
 
-// FieldsRenameItem List of fields to rename on the record.
 type FieldsRenameItem struct {
-	// FromName The field to rename.
 	FromName string `json:"fromName"`
-
-	// ToName The new field name.
-	ToName string `json:"toName"`
+	ToName   string `json:"toName"`
 }
 
 func (f *FieldsRenameItem) Schema() map[string]*schema.Schema {
@@ -291,64 +262,390 @@ func (f *FieldsRenameItem) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
-type EndpointProcessor struct {
-	dqlProcessor          *DqlProcessor
-	fieldsAddProcessor    *FieldsAddProcessor
-	fieldsRemoveProcessor *FieldsRemoveProcessor
-	fieldsRenameProcessor *FieldsRenameProcessor
+type BizEventExtractionProcessor struct {
+	Processor
+	EventProvider ValueAssignment `json:"eventProvider,omitempty"`
+	EventType     ValueAssignment `json:"eventType,omitempty"`
 }
 
-func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
+func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
+	s := ep.Processor.Schema()
+	s["event_provider"] = &schema.Schema{
+		Type:        schema.TypeList,
+		MinItems:    1,
+		MaxItems:    1,
+		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
+		Description: "Strategy to assign a value.",
+		Required:    true,
+	}
+
+	s["event_type"] = &schema.Schema{
+		Type:        schema.TypeList,
+		MinItems:    1,
+		MaxItems:    1,
+		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
+		Description: "Strategy to assign a value.",
+		Required:    true,
+	}
+	return s
+}
+
+func (ep *BizEventExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := ep.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+
+	return properties.EncodeAll(map[string]any{
+		"event_provider": ep.EventProvider,
+		"event_type":     ep.EventType,
+	})
+}
+
+func (ep *BizEventExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+
+	if err := ep.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+
+	return decoder.DecodeAll(map[string]any{
+		"event_provider": ep.EventProvider,
+		"event_type":     ep.EventType,
+	})
+}
+
+type DavisEventExtractionProcessor struct {
+	Processor
+	Properties []DavisEventProperty `json:"properties,omitempty"`
+}
+
+func (ep *DavisEventExtractionProcessor) Schema() map[string]*schema.Schema {
+
+	s := ep.Processor.Schema()
+	s["properties"] = &schema.Schema{
+		Type:        schema.TypeList,
+		Elem:        &schema.Resource{Schema: new(DavisEventProperty).Schema()},
+		Description: "List of properties for the extracted davis event.",
+		Required:    true,
+	}
+	return s
+}
+
+func (ep *DavisEventExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := ep.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.Encode("properties", ep.Properties)
+}
+
+func (ep *DavisEventExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+
+	if err := ep.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.Decode("field", &ep.Properties)
+}
+
+type DavisEventProperty struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+func (ep *DavisEventProperty) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"dql_processor": {
-			Type:        schema.TypeList,
-			Description: "Processor to apply a DQL script",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(DqlProcessor).Schema()},
-			Optional:    true,
+		"key": {
+			Type:        schema.TypeString,
+			Description: "The key to set on the davis event.",
+			Required:    true,
 		},
-		"fields_add_processor": {
-			Type:        schema.TypeList,
-			Description: "",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(FieldsAddProcessor).Schema()},
-			Optional:    true,
-		},
-		"fields_remove_processor": {
-			Type:        schema.TypeList,
-			Description: "",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(FieldsRemoveProcessor).Schema()},
-			Optional:    true,
-		},
-		"fields_rename_processor": {
-			Type:        schema.TypeList,
-			Description: "",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},
-			Optional:    true,
+		"value": {
+			Type:        schema.TypeString,
+			Description: "The value assigned to the key.",
+			Required:    true,
 		},
 	}
 }
 
-func (ep *EndpointProcessor) MarshalHCL(properties hcl.Properties) error {
+func (ep *DavisEventProperty) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"dql_processor":           ep.dqlProcessor,
-		"fields_add_processor":    ep.fieldsAddProcessor,
-		"fields_remove_processor": ep.fieldsRemoveProcessor,
-		"fields_rename_processor": ep.fieldsRenameProcessor,
+		"key":   ep.Key,
+		"value": ep.Value,
 	})
 }
 
-func (ep *EndpointProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+func (ep *DavisEventProperty) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"dql_processor":           &ep.dqlProcessor,
-		"fields_add_processor":    &ep.fieldsAddProcessor,
-		"fields_remove_processor": &ep.fieldsRemoveProcessor,
-		"fields_rename_processor": &ep.fieldsRenameProcessor,
+		"key":   &ep.Key,
+		"value": &ep.Value,
+	})
+}
+
+type ValueAssignment struct {
+	// Type Defines the actual set of fields depending on the value. See one of the following objects:
+	Type string `json:"type"`
+}
+
+func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"type": {
+			Type:        schema.TypeString,
+			Description: "Strategy to assign a value.",
+			Required:    true,
+		},
+	}
+
+}
+
+func (ep *ValueAssignment) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeAll(map[string]any{
+		"type": ep.Type,
+	})
+}
+
+func (ep *ValueAssignment) UnmarshalHCL(decoder hcl.Decoder) error {
+
+	return decoder.DecodeAll(map[string]any{
+		"type": ep.Type,
+	})
+}
+
+type TechnologyProcessor struct {
+	Processor
+	TechnologyId string `json:"technologyId"`
+}
+
+func (p *TechnologyProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["technology_id"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Identifier of the processor. Must be unique within a stage.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *TechnologyProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.Encode("technology_id", p.TechnologyId)
+}
+
+func (p *TechnologyProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.Decode("technology_id", &p.TechnologyId)
+}
+
+type SqlxProcessor struct {
+	Processor
+	SqlxScript string `json:"sqlxScript"`
+}
+
+func (p *SqlxProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["sqlx_script"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "The SQLX script to apply on the record.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *SqlxProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.Encode("sqlx_script", p.SqlxScript)
+}
+
+func (p *SqlxProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.Decode("sqlx_script", &p.SqlxScript)
+}
+
+type CounterMetricExtractionProcessor struct {
+	Processor
+	Dimensions *[]string `json:"dimensions,omitempty"`
+	MetricKey  string    `json:"metricKey"`
+}
+
+func (p *CounterMetricExtractionProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["dimensions"] = &schema.Schema{
+		Type:        schema.TypeList,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+		Description: "List of dimensions to add to the metric.",
+		Optional:    true,
+	}
+	s["metric_key"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "The key of the metric to write.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *CounterMetricExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.EncodeAll(map[string]any{
+		"dimensions": p.Dimensions,
+		"metric_key": p.MetricKey,
+	})
+}
+
+func (p *CounterMetricExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.DecodeAll(map[string]any{
+		"dimensions": p.Dimensions,
+		"metric_key": p.MetricKey,
+	})
+}
+
+type ValueMetricExtractionProcessor struct {
+	Processor
+	Dimensions *[]string `json:"dimensions,omitempty"`
+	Field      string    `json:"field"`
+	MetricKey  string    `json:"metricKey"`
+}
+
+func (p *ValueMetricExtractionProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["dimensions"] = &schema.Schema{
+		Type:        schema.TypeList,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+		Description: "List of dimensions to add to the metric.",
+		Optional:    true,
+	}
+	s["field"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "The field to extract the value for the metric.",
+		Required:    true,
+	}
+	s["metric_key"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "The key of the metric to write.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *ValueMetricExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.EncodeAll(map[string]any{
+		"dimensions": p.Dimensions,
+		"field":      p.Field,
+		"metric_key": p.MetricKey,
+	})
+}
+
+func (p *ValueMetricExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.DecodeAll(map[string]any{
+		"dimensions": p.Dimensions,
+		"field":      p.Field,
+		"metric_key": p.MetricKey,
+	})
+}
+
+type BucketAssignmentProcessor struct {
+	Processor
+	BucketName string `json:"bucketName"`
+}
+
+func (p *BucketAssignmentProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["bucket_name"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Bucket that is assigned when the record is matched.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *BucketAssignmentProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.EncodeAll(map[string]any{
+		"bucket_name": p.BucketName,
+	})
+}
+
+func (p *BucketAssignmentProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.DecodeAll(map[string]any{
+		"bucket_name": p.BucketName,
+	})
+}
+
+type NoStorageProcessor struct {
+	Processor
+}
+
+func (p *NoStorageProcessor) Schema() map[string]*schema.Schema {
+	return p.Processor.Schema()
+}
+
+func (p *NoStorageProcessor) MarshalHCL(properties hcl.Properties) error {
+	return p.Processor.MarshalHCL(properties)
+
+}
+
+func (p *NoStorageProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	return p.Processor.UnmarshalHCL(decoder)
+}
+
+type SecurityContextProcessor struct {
+	Processor
+	Value ValueAssignment `json:"value"`
+}
+
+func (p *SecurityContextProcessor) Schema() map[string]*schema.Schema {
+	s := p.Processor.Schema()
+	s["value"] = &schema.Schema{
+		Type:        schema.TypeList,
+		MinItems:    1,
+		MaxItems:    1,
+		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
+		Description: "Strategy to assign a value.",
+		Required:    true,
+	}
+
+	return s
+}
+
+func (p *SecurityContextProcessor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.Processor.MarshalHCL(properties); err != nil {
+		return err
+	}
+	return properties.EncodeAll(map[string]any{
+		"value": p.Value,
+	})
+}
+
+func (p *SecurityContextProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+	return decoder.DecodeAll(map[string]any{
+		"value": p.Value,
 	})
 }

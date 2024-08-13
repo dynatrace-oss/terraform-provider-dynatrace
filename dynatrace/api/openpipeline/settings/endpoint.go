@@ -29,27 +29,65 @@ func (ep *Endpoints) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type EndpointDefinition struct {
-	BasePath string `json:"basePath"`
-	//Builtin       *bool   `json:"builtin,omitempty"`
-	//DefaultBucket *string `json:"defaultBucket,omitempty"`
-	//DisplayName   *string `json:"displayName,omitempty"`
-	//Editable      *bool   `json:"editable,omitempty"`
-	//Enabled       bool    `json:"enabled"`
-	Processors EndpointProcessors `json:"processors,omitempty"`
-	// Routing Routing `json:"routing"`
-	//Segment string  `json:"segment"`
+	BasePath      string             `json:"basePath"`
+	Builtin       *bool              `json:"builtin,omitempty"`
+	DefaultBucket *string            `json:"defaultBucket,omitempty"`
+	DisplayName   *string            `json:"displayName,omitempty"`
+	Editable      *bool              `json:"editable,omitempty"`
+	Enabled       bool               `json:"enabled"`
+	Segment       string             `json:"segment"`
+	Routing       Routing            `json:"routing"`
+	Processors    EndpointProcessors `json:"processors"`
 }
 
 func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"base_path": {
 			Type:        schema.TypeString,
-			Description: "todo",
+			Description: "The base path of the ingest source.",
 			Required:    true,
+		},
+		"builtin": {
+			Type:        schema.TypeString,
+			Description: "Indicates if the object is provided by Dynatrace or customer defined.",
+			Optional:    true,
+		},
+		"default_bucket": {
+			Type:        schema.TypeString,
+			Description: "The default bucket assigned to records for the ingest source.",
+			Optional:    true,
+		},
+		"display_name": {
+			Type:        schema.TypeString,
+			Description: "Display name of the ingest source.",
+			Optional:    true,
+		},
+		"editable": {
+			Type:        schema.TypeBool,
+			Description: "Indicates if the user is allowed to edit this object based on permissions and builtin property.",
+			Optional:    true,
+		},
+		"enabled": {
+			Type:        schema.TypeBool,
+			Description: "Indicates if the object is active.",
+			Required:    true,
+		},
+		"segment": {
+			Type:        schema.TypeString,
+			Description: "The segment of the ingest source, which is applied to the base path. Must be unique within a configuration.\"",
+			Required:    true,
+		},
+		"routing": {
+			Type:        schema.TypeList,
+			Description: "Routing strategy, either dynamic or static.",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(Routing).Schema()},
+			Optional:    true,
 		},
 		"processors": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "The pre-processing done in the ingest source.",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(EndpointProcessors).Schema()},
@@ -60,8 +98,15 @@ func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 
 func (d *EndpointDefinition) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"base_path":  d.BasePath,
-		"processors": d.Processors,
+		"base_path":      d.BasePath,
+		"builtin":        d.Builtin,
+		"default_bucket": d.DefaultBucket,
+		"display_name":   d.DisplayName,
+		"editable":       d.Editable,
+		"enabled":        d.Enabled,
+		"segment":        d.Segment,
+		"routing":        d.Routing,
+		"processors":     d.Processors,
 	})
 }
 
@@ -69,29 +114,13 @@ func (d *EndpointDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	return decoder.DecodeAll(map[string]any{
 		"base_path":          &d.BasePath,
+		"builtin":            &d.Builtin,
+		"default_bucket":     &d.DefaultBucket,
+		"display_name":       &d.DisplayName,
+		"editable":           &d.Editable,
+		"enabled":            d.Enabled,
+		"segment":            d.Segment,
+		"routing":            d.Routing,
 		"endpoint_processor": &d.Processors,
 	})
-}
-
-type EndpointProcessors struct {
-	Processors []EndpointProcessor
-}
-
-func (ep *EndpointProcessors) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"processor": {
-			Type:        schema.TypeSet,
-			Description: "todo",
-			Elem:        &schema.Resource{Schema: new(EndpointProcessor).Schema()},
-			Optional:    true,
-		},
-	}
-}
-
-func (ep *EndpointProcessors) MarshalHCL(properties hcl.Properties) error {
-	return properties.Encode("processors", ep.Processors)
-}
-
-func (ep *EndpointProcessors) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.Decode("processors", &ep.Processors)
 }
