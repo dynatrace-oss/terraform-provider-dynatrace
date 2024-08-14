@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.4"
+const SchemaVersion = "0.0.6"
 const SchemaID = "app:dynatrace.hub:manage.permissions"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*permissions.Settings] {

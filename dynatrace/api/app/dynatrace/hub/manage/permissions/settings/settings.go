@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	Description string `json:"description"` // Description
-	Email       string `json:"email"`       // Email
+	Description string `json:"description"` // Name
+	Email       string `json:"email"`       // Contact Email
 }
 
 func (me *Settings) Name() string {
@@ -35,12 +35,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"description": {
 			Type:        schema.TypeString,
-			Description: "Description",
+			Description: "Name",
 			Required:    true,
 		},
 		"email": {
 			Type:        schema.TypeString,
-			Description: "Email",
+			Description: "Contact Email",
 			Required:    true,
 		},
 	}
