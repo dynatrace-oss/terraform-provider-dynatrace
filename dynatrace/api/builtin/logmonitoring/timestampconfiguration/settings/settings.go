@@ -23,14 +23,15 @@ import (
 )
 
 type Settings struct {
-	Config_item_title string   `json:"config-item-title"`           // Name
-	Date_search_limit *int     `json:"date-search-limit,omitempty"` // (v1.275) Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
-	Date_time_pattern string   `json:"date-time-pattern"`           // Date-time pattern
-	Enabled           bool     `json:"enabled"`                     // This setting is enabled (`true`) or disabled (`false`)
-	Matchers          Matchers `json:"matchers,omitempty"`
-	Scope             *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	Timezone          string   `json:"timezone"`        // Timezone
-	InsertAfter       string   `json:"-"`
+	Config_item_title string         `json:"config-item-title"`           // Name
+	Date_search_limit *int           `json:"date-search-limit,omitempty"` // Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
+	Date_time_pattern string         `json:"date-time-pattern"`           // Date-time pattern
+	Enabled           bool           `json:"enabled"`                     // This setting is enabled (`true`) or disabled (`false`)
+	Entry_boundary    *EntryBoundary `json:"entry-boundary,omitempty"`    // Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.
+	Matchers          Matchers       `json:"matchers,omitempty"`
+	Scope             *string        `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Timezone          string         `json:"timezone"`        // Timezone
+	InsertAfter       string         `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -46,7 +47,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"date_search_limit": {
 			Type:        schema.TypeInt,
-			Description: "(v1.275) Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
+			Description: "Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.",
 			Optional:    true, // nullable
 		},
 		"date_time_pattern": {
@@ -59,10 +60,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
+		"entry_boundary": {
+			Type:        schema.TypeList,
+			Description: "Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(EntryBoundary).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"matchers": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Optional:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Matchers).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -72,7 +81,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"timezone": {
 			Type:        schema.TypeString,
@@ -94,6 +102,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"date_search_limit": me.Date_search_limit,
 		"date_time_pattern": me.Date_time_pattern,
 		"enabled":           me.Enabled,
+		"entry_boundary":    me.Entry_boundary,
 		"matchers":          me.Matchers,
 		"scope":             me.Scope,
 		"timezone":          me.Timezone,
@@ -107,6 +116,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"date_search_limit": &me.Date_search_limit,
 		"date_time_pattern": &me.Date_time_pattern,
 		"enabled":           &me.Enabled,
+		"entry_boundary":    &me.Entry_boundary,
 		"matchers":          &me.Matchers,
 		"scope":             &me.Scope,
 		"timezone":          &me.Timezone,
