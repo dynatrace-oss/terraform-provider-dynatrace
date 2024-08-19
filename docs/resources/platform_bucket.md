@@ -39,6 +39,15 @@ provider "dynatrace" {
 ```
 -> In order to handle credentials in a secure manner we recommend to use the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` as an alternative.
 
+## Environment Variables (Optional)
+
+There may be a delay for this resource to be fully available as a dependency for a subsequent resource. E.g. Utilizing this resource and `dynatrace_log_buckets` together.
+ 
+A default polling mechanism exists to validate the creation but may require tweaking due to load. The following environment variables can be used to fine tune these settings.
+
+- `DT_BUCKETS_RETRIES` (Default: 180, Max: 360) configures the maximum attempts to confirm that the operation (create, update or delete) has succeeded and was completed on the server side. There is a two second delay between consecutive attempts, therefore the check completes with at most 720 seconds with the maximum setting.
+- `DT_BUCKETS_NUM_SUCCESSES` (Default: 10, Max: 50) configures the number of successful consecutive retries expected, this applies to creating the resource only.
+
 ## Resource Example Usage
 
 ```terraform

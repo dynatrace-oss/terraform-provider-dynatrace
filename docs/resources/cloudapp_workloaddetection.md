@@ -62,13 +62,21 @@ resource "dynatrace_cloudapp_workloaddetection" "cloud_app_workload_detection" {
 - `cloud_foundry` (Block List, Min: 1, Max: 1) Enable this setting to get 
  * Processes of Cloud Foundry application instances merged into process groups by Cloud Foundry application. 
  *  Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). (see [below for nested schema](#nestedblock--cloud_foundry))
-- `docker` (Block List, Min: 1, Max: 1) Enable this setting for plain Docker environments to get 
- * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). (see [below for nested schema](#nestedblock--docker))
+- `docker` (Block List, Min: 1, Max: 1) Enable this setting for plain Docker and Podman environments to get 
+ * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). 
+ * Docker support requires OneAgent 1.257+. 
+ * Podman support requires OneAgent 1.267+. (see [below for nested schema](#nestedblock--docker))
 - `kubernetes` (Block List, Min: 1, Max: 1) Enable this setting to get 
  * Insights into your Kubernetes namespaces, workloads and pods (cloud application namespace, cloud application and cloud application instance and entities). 
  * Container resource metrics (container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). 
  * Similar workloads merged into process groups based on defined rules (see below). 
  * Version detection for services that run in Kubernetes workloads. (see [below for nested schema](#nestedblock--kubernetes))
+
+### Optional
+
+- `serverless` (Block List, Max: 1) Enable this setting to 
+ * Detect containers based on captured cloud-vendor metadata such as e.g. AWS ECS / Fargate, Azure Container Apps, [and many more](https://dt-url.net/2m02q7b).
+ * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). (see [below for nested schema](#nestedblock--serverless))
 
 ### Read-Only
 
@@ -141,4 +149,15 @@ Required:
 Optional:
 
 - `namespace` (String) Namespace name
+
+
+
+
+
+<a id="nestedblock--serverless"></a>
+### Nested Schema for `serverless`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
  

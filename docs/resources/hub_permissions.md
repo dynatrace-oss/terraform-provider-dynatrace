@@ -38,8 +38,8 @@ resource "dynatrace_hub_permissions" "#name#" {
 
 ### Required
 
-- `description` (String) Description
-- `email` (String) Email
+- `description` (String) Name
+- `email` (String) Contact Email
 
 ### Read-Only
 
