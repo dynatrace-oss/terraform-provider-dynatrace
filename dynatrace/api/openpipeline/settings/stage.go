@@ -49,6 +49,11 @@ type DataExtractionStage struct {
 
 func (f *DataExtractionStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"editable": {
+			Type:        schema.TypeBool,
+			Description: "todo",
+			Optional:    true,
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "todo",
@@ -125,7 +130,7 @@ type StorageStage struct {
 func (f *StorageStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"editable": {
-			Type:        schema.TypeString,
+			Type:        schema.TypeBool,
 			Description: "todo",
 			Optional:    true,
 		},
@@ -139,7 +144,7 @@ func (f *StorageStage) Schema() map[string]*schema.Schema {
 			Description: "todo",
 			MinItems:    1,
 			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(MetricExtractionProcessors).Schema()},
+			Elem:        &schema.Resource{Schema: new(StorageStageProcessors).Schema()},
 			Optional:    true,
 		},
 	}

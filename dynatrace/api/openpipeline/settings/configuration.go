@@ -8,10 +8,10 @@ import (
 type Configuration struct {
 	CustomBasePath string       `json:"customBasePath"`
 	Editable       *bool        `json:"editable,omitempty"`
-	Endpoints      Endpoints    `json:"endpoints"`
+	Endpoints      *Endpoints   `json:"endpoints"`
 	Kind           string       `json:"id"`
-	Pipelines      Pipelines    `json:"pipelines"`
-	Routing        RoutingTable `json:"routing"`
+	Pipelines      Pipelines    `json:"-"` //pipelines
+	Routing        RoutingTable `json:"-"` //routing
 	Version        string       `json:"version"`
 }
 
@@ -27,7 +27,6 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 			Description: "Indicates if the user is allowed to edit this object based on permissions and builtin property.",
 			Optional:    true,
 		},
-
 		"endpoints": {
 			Type:        schema.TypeList,
 			Description: "List of all ingest sources of the configuration.",

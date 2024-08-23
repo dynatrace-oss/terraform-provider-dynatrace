@@ -262,10 +262,48 @@ func (f *FieldsRenameItem) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
+type FieldExtraction struct {
+	Fields   []string `json:"fields"`
+	Semantic string   `json:"semantic"`
+}
+
+func (ep *FieldExtraction) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"fields": {
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "",
+			Required:    true,
+		},
+		"semantic": {
+			Type:        schema.TypeString,
+			Description: "",
+			Required:    true,
+		},
+	}
+
+}
+
+func (ep *FieldExtraction) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeAll(map[string]any{
+		"fields":   ep.Fields,
+		"semantic": ep.Semantic,
+	})
+}
+
+func (ep *FieldExtraction) UnmarshalHCL(decoder hcl.Decoder) error {
+
+	return decoder.DecodeAll(map[string]any{
+		"fields":   ep.Fields,
+		"semantic": ep.Semantic,
+	})
+}
+
 type BizEventExtractionProcessor struct {
 	Processor
-	EventProvider ValueAssignment `json:"eventProvider,omitempty"`
-	EventType     ValueAssignment `json:"eventType,omitempty"`
+	EventProvider   ValueAssignment  `json:"eventProvider,omitempty"`
+	EventType       ValueAssignment  `json:"eventType,omitempty"`
+	FieldExtraction *FieldExtraction `json:"fieldExtraction,omitempty"`
 }
 
 func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
@@ -287,6 +325,16 @@ func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
 		Description: "Strategy to assign a value.",
 		Required:    true,
 	}
+
+	s["field_extraction"] = &schema.Schema{
+		Type:        schema.TypeList,
+		MinItems:    1,
+		MaxItems:    1,
+		Elem:        &schema.Resource{Schema: new(FieldExtraction).Schema()},
+		Description: "",
+		Optional:    true,
+	}
+
 	return s
 }
 
@@ -381,7 +429,9 @@ func (ep *DavisEventProperty) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type ValueAssignment struct {
 	// Type Defines the actual set of fields depending on the value. See one of the following objects:
-	Type string `json:"type"`
+	Type     string  `json:"type"`
+	Field    *string `json:"field"`
+	Constant *string `json:"constant"`
 }
 
 func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
@@ -391,20 +441,34 @@ func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
 			Description: "Strategy to assign a value.",
 			Required:    true,
 		},
+		"field": {
+			Type:        schema.TypeString,
+			Description: "Strategy to assign a value.",
+			Optional:    true,
+		},
+		"constant": {
+			Type:        schema.TypeString,
+			Description: "Strategy to assign a value.",
+			Optional:    true,
+		},
 	}
 
 }
 
 func (ep *ValueAssignment) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"type": ep.Type,
+		"type":     ep.Type,
+		"field":    ep.Field,
+		"constant": ep.Constant,
 	})
 }
 
 func (ep *ValueAssignment) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	return decoder.DecodeAll(map[string]any{
-		"type": ep.Type,
+		"type":     ep.Type,
+		"field":    ep.Field,
+		"constant": ep.Constant,
 	})
 }
 

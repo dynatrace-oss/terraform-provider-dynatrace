@@ -1,12 +1,13 @@
 package openpipeline
 
 import (
+	"encoding/json"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Endpoints struct {
-	Endpoints []EndpointDefinition `json:"endpoints"`
+	Endpoints []*EndpointDefinition `json:"endpoints"`
 }
 
 func (ep *Endpoints) Schema() map[string]*schema.Schema {
@@ -28,16 +29,28 @@ func (ep *Endpoints) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.Decode("endpoints", &ep.Endpoints)
 }
 
+func (d *Endpoints) MarshalJSON() ([]byte, error) {
+	m := map[string]json.RawMessage{}
+	return json.Marshal(m)
+}
+
+func (d *Endpoints) UnmarshalJSON(data []byte) error {
+	if err := json.Unmarshal(data, &d.Endpoints); err != nil {
+		return err
+	}
+	return nil
+}
+
 type EndpointDefinition struct {
-	BasePath      string             `json:"basePath"`
-	Builtin       *bool              `json:"builtin,omitempty"`
-	DefaultBucket *string            `json:"defaultBucket,omitempty"`
-	DisplayName   *string            `json:"displayName,omitempty"`
-	Editable      *bool              `json:"editable,omitempty"`
-	Enabled       bool               `json:"enabled"`
-	Segment       string             `json:"segment"`
-	Routing       Routing            `json:"routing"`
-	Processors    EndpointProcessors `json:"processors"`
+	BasePath      string              `json:"basePath"`
+	Builtin       *bool               `json:"builtin,omitempty"`
+	DefaultBucket *string             `json:"defaultBucket,omitempty"`
+	DisplayName   *string             `json:"displayName,omitempty"`
+	Editable      *bool               `json:"editable,omitempty"`
+	Enabled       bool                `json:"enabled"`
+	Segment       string              `json:"segment"`
+	Routing       *Routing            `json:"routing"`
+	Processors    *EndpointProcessors `json:"-"`
 }
 
 func (d *EndpointDefinition) Schema() map[string]*schema.Schema {

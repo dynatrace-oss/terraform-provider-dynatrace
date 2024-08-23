@@ -14,7 +14,7 @@ func (ep *MetricExtractionProcessors) Schema() map[string]*schema.Schema {
 		"processor": {
 			Type:        schema.TypeSet,
 			Description: "Data extraction processor to use.",
-			Elem:        &schema.Resource{Schema: new(DataExtractionProcessor).Schema()},
+			Elem:        &schema.Resource{Schema: new(MetricExtractionProcessor).Schema()},
 			Optional:    true,
 		},
 	}
@@ -35,7 +35,7 @@ type MetricExtractionProcessor struct {
 
 func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"counter_metric_exctration_processor": {
+		"counter_metric_extraction_processor": {
 			Type:        schema.TypeList,
 			Description: "Processor to write the occurrences as a metric.",
 			MinItems:    1,
@@ -56,14 +56,14 @@ func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
 
 func (ep *MetricExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"counter_metric_exctration_processor": ep.counterMetricExtractionProcessor,
+		"counter_metric_extraction_processor": ep.counterMetricExtractionProcessor,
 		"value_metric_extraction_processor":   ep.valueMetricExtractionProcessor,
 	})
 }
 
 func (ep *MetricExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"counter_metric_exctration_processor": ep.counterMetricExtractionProcessor,
+		"counter_metric_extraction_processor": ep.counterMetricExtractionProcessor,
 		"value_metric_extraction_processor":   ep.valueMetricExtractionProcessor,
 	})
 }

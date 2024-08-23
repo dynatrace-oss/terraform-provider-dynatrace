@@ -196,26 +196,20 @@ func (t *RoutingTableEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Routing struct {
-	dynamicRouting *DynamicRouting
-	staticRouting  *StaticRouting
+	Type       string  `json:"type"`
+	PipelineId *string `json:"pipelineId,omitempty"`
 }
 
 func (ep *Routing) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"dynamic_routing": {
-			Type:        schema.TypeList,
-			Description: "Processor to apply a DQL script",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(DynamicRouting).Schema()},
-			Optional:    true,
+		"type": {
+			Type:        schema.TypeString,
+			Description: "Type of the Routing",
+			Required:    true,
 		},
-		"static_routing": {
-			Type:        schema.TypeList,
-			Description: "",
-			MinItems:    1,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(StaticRouting).Schema()},
+		"pipeline_id": {
+			Type:        schema.TypeString,
+			Description: "Pipeline ID of the static routing",
 			Optional:    true,
 		},
 	}
@@ -223,54 +217,14 @@ func (ep *Routing) Schema() map[string]*schema.Schema {
 
 func (ep *Routing) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"dynamic_routing": ep.dynamicRouting,
-		"static_routing":  ep.staticRouting,
+		"type":        ep.Type,
+		"pipeline_id": ep.PipelineId,
 	})
 }
 
 func (ep *Routing) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"dynamic_routing": ep.dynamicRouting,
-		"static_routing":  ep.staticRouting,
-	})
-}
-
-type DynamicRouting struct{}
-
-func (e *DynamicRouting) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{}
-}
-
-func (t *DynamicRouting) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{})
-}
-
-func (t *DynamicRouting) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{})
-}
-
-type StaticRouting struct {
-	PipelineId string `json:"pipelineId"`
-}
-
-func (e *StaticRouting) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"pipeline_id": {
-			Type:        schema.TypeString,
-			Description: "Identifier of the pipeline.",
-			Required:    true,
-		},
-	}
-}
-
-func (t *StaticRouting) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"pipeline_id": t.PipelineId,
-	})
-}
-
-func (t *StaticRouting) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"pipeline_id": t.PipelineId,
+		"type":        ep.Type,
+		"pipeline_id": ep.PipelineId,
 	})
 }

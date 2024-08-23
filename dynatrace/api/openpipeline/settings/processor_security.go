@@ -14,7 +14,7 @@ func (ep *SecurityContextProcessors) Schema() map[string]*schema.Schema {
 		"processor": {
 			Type:        schema.TypeSet,
 			Description: "todo",
-			Elem:        &schema.Resource{Schema: new(StorageStageProcessor).Schema()},
+			Elem:        &schema.Resource{Schema: new(SecContextProcessor).Schema()},
 			Optional:    true,
 		},
 	}
@@ -29,8 +29,7 @@ func (ep *SecurityContextProcessors) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type SecContextProcessor struct {
-	securityContextProcessor *SecurityContextProcessors
-	noStorageProcessor       *NoStorageProcessor
+	securityContextProcessor *SecurityContextProcessor
 }
 
 func (ep *SecContextProcessor) Schema() map[string]*schema.Schema {
