@@ -76,7 +76,7 @@ var httpListener = &crest.HTTPListener{
 func (me *service) client() *bucket.Client {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
-		WithEnvironmentURL(me.credentials.Automation.EnvironmentURL).
+		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
 		WithOAuthCredentials(clientcredentials.Config{
 			ClientID:     me.credentials.Automation.ClientID,
 			ClientSecret: me.credentials.Automation.ClientSecret,
