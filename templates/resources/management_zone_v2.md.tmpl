@@ -16,6 +16,15 @@ description: |-
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:management-zones`)
 
+## Environment Variables (Optional)
+
+There may be a delay for this resource to be fully available as a dependency for a subsequent resource. E.g. Utilizing this resource and `dynatrace_slo` together.
+ 
+A default polling mechanism exists to validate the creation but may require tweaking due to load. The following environment variables can be used to fine tune these settings.
+
+- `DT_MGMZ_RETRIES` (Default: 50, Max: 150) configures the maximum attempts to confirm that the create operation has succeeded.
+- `DT_MGMZ_SUCCESSES` (Default: 5, Max: 25) configures the number of successful consecutive retries expected.
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_management_zone_v2` downloads all existing management zone configuration
