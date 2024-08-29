@@ -546,6 +546,7 @@ func Provider() *schema.Provider {
 			"dynatrace_discovery_default_rules":             resources.NewGeneric(export.ResourceTypes.DiscoveryDefaultRules).Resource(),
 			"dynatrace_discovery_feature_flags":             resources.NewGeneric(export.ResourceTypes.DiscoveryFeatureFlags).Resource(),
 			"dynatrace_histogram_metrics":                   resources.NewGeneric(export.ResourceTypes.HistogramMetrics).Resource(),
+			"dynatrace_kubernetes_enrichment":               resources.NewGeneric(export.ResourceTypes.KubernetesEnrichment).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

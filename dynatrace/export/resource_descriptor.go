@@ -126,6 +126,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
 	diskedgeanomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors"
 	issuetracking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/enrichment"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
@@ -1310,6 +1311,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
 	ResourceTypes.DiscoveryFeatureFlags:      NewResourceDescriptor(featureflags.Service),
 	ResourceTypes.HistogramMetrics:           NewResourceDescriptor(histogrammetrics.Service),
+	ResourceTypes.KubernetesEnrichment: NewResourceDescriptor(
+		enrichment.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 type ResourceExclusion struct {
