@@ -1,6 +1,7 @@
 package openpipeline
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/jsonmodel"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -26,6 +27,45 @@ func (ep *EndpointProcessors) MarshalHCL(properties hcl.Properties) error {
 
 func (ep *EndpointProcessors) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.Decode("processors", &ep.Processors)
+}
+
+func (ep *EndpointProcessors) FromJSON(endpointProcessors *[]jsonmodel.EndpointProcessor) error {
+	ep.Processors = nil
+	for _, ee := range *endpointProcessors {
+
+		t, err := jsonmodel.ExtractEndpointProcessorType(ee)
+		if err != nil {
+			return err
+		}
+		switch t {
+		case "DQLProcessor":
+			dp, err := ee.AsDqlProcessor()
+			if err != nil {
+				return err
+			}
+
+			dqlProcessor := DqlProcessor{}
+			if err := dqlProcessor.FromJSON(dp); err != nil {
+				return err
+			}
+			ep.Processors = append(ep.Processors, EndpointProcessor{dqlProcessor: &dqlProcessor})
+
+		case "FieldsAddProcessor":
+			fap, err := ee.AsFieldsAddProcessor()
+			if err != nil {
+				return err
+			}
+
+			fieldsAddProcessor := FieldsAddProcessor{}
+			if err := fieldsAddProcessor.FromJSON(fap); err != nil {
+				return err
+			}
+			ep.Processors = append(ep.Processors, EndpointProcessor{fieldsAddProcessor: &fieldsAddProcessor})
+		}
+
+	}
+
+	return nil
 }
 
 type EndpointProcessor struct {

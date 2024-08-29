@@ -2,6 +2,7 @@ package openpipeline
 
 import (
 	"encoding/json"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/jsonmodel"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -109,6 +110,17 @@ func (c *Configuration) FromJSON(configuration jsonmodel.Configuration) error {
 
 	//...
 	// TODO: translate to hcl Configuration
+
+	endpoints := Endpoints{}
+	if err := endpoints.FromJSON(configuration.Endpoints); err != nil {
+		return err
+	}
+
+	if len(endpoints.Endpoints) > 0 {
+		c.Endpoints = &endpoints
+	} else {
+		c.Endpoints = nil
+	}
 
 	return nil
 }

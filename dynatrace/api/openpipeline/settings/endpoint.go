@@ -2,12 +2,14 @@ package openpipeline
 
 import (
 	"encoding/json"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/jsonmodel"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Endpoints struct {
-	Endpoints []*EndpointDefinition `json:"endpoints"`
+	Endpoints []*EndpointDefinition
 }
 
 func (ep *Endpoints) Schema() map[string]*schema.Schema {
@@ -41,16 +43,27 @@ func (d *Endpoints) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (d *Endpoints) FromJSON(endpointDefinitions []jsonmodel.EndpointDefinition) error {
+	d.Endpoints = nil
+	for _, ed := range endpointDefinitions {
+		endpointDefinition := EndpointDefinition{}
+		endpointDefinition.FromJSON(ed)
+		d.Endpoints = append(d.Endpoints, &endpointDefinition)
+	}
+
+	return nil
+}
+
 type EndpointDefinition struct {
-	BasePath      string              `json:"basePath"`
-	Builtin       *bool               `json:"builtin,omitempty"`
-	DefaultBucket *string             `json:"defaultBucket,omitempty"`
-	DisplayName   *string             `json:"displayName,omitempty"`
-	Editable      *bool               `json:"editable,omitempty"`
-	Enabled       bool                `json:"enabled"`
-	Segment       string              `json:"segment"`
-	Routing       *Routing            `json:"routing"`
-	Processors    *EndpointProcessors `json:"-"`
+	BasePath      string
+	Builtin       *bool
+	DefaultBucket *string
+	DisplayName   *string
+	Editable      *bool
+	Enabled       bool
+	Segment       string
+	Routing       *Routing
+	Processors    *EndpointProcessors
 }
 
 func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
@@ -136,4 +149,26 @@ func (d *EndpointDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
 		"routing":            d.Routing,
 		"endpoint_processor": &d.Processors,
 	})
+}
+
+func (d *EndpointDefinition) FromJSON(endpointDefinition jsonmodel.EndpointDefinition) error {
+	d.BasePath = endpointDefinition.BasePath
+	d.Builtin = endpointDefinition.Builtin
+	d.DefaultBucket = endpointDefinition.DefaultBucket
+	d.DisplayName = endpointDefinition.DisplayName
+	d.Editable = endpointDefinition.Editable
+	d.Enabled = endpointDefinition.Enabled
+	d.Segment = endpointDefinition.Segment
+
+	processors := EndpointProcessors{}
+	if err := processors.FromJSON(endpointDefinition.Processors); err != nil {
+		return err
+	}
+
+	if len(processors.Processors) > 0 {
+		d.Processors = &processors
+	} else {
+		d.Processors = nil
+	}
+	return nil
 }

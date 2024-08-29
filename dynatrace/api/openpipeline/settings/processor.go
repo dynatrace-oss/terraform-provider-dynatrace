@@ -1,6 +1,7 @@
 package openpipeline
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/jsonmodel"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -73,7 +74,7 @@ func (p *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type DqlProcessor struct {
 	Processor
-	DqlScript string `json:"dqlScript"`
+	DqlScript string
 }
 
 func (p *DqlProcessor) Schema() map[string]*schema.Schema {
@@ -99,6 +100,18 @@ func (p *DqlProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	return decoder.Decode("dql_script", &p.DqlScript)
+}
+
+func (p *DqlProcessor) FromJSON(dp jsonmodel.DqlProcessor) error {
+	p.DqlScript = dp.DqlScript
+	p.Description = dp.Description
+	p.Editable = jsonmodel.ClonePtr(dp.Editable)
+	p.Enabled = dp.Enabled
+	p.Id = dp.Id
+	p.Matcher = dp.Matcher
+	p.SampleData = jsonmodel.ClonePtr(dp.SampleData)
+
+	return nil
 }
 
 type FieldsAddProcessor struct {
@@ -130,6 +143,26 @@ func (p *FieldsAddProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	return decoder.Decode("field", &p.Fields)
+}
+
+func (p *FieldsAddProcessor) FromJSON(fap jsonmodel.FieldsAddProcessor) error {
+	p.Description = fap.Description
+	p.Editable = jsonmodel.ClonePtr(fap.Editable)
+	p.Enabled = fap.Enabled
+	p.Id = fap.Id
+	p.Matcher = fap.Matcher
+	p.SampleData = jsonmodel.ClonePtr(fap.SampleData)
+
+	p.Fields = nil
+	for _, fai := range fap.Fields {
+		fieldsAddItem := FieldsAddItem{}
+		if err := fieldsAddItem.FromJSON(fai); err != nil {
+			return err
+		}
+
+		p.Fields = append(p.Fields, fieldsAddItem)
+	}
+	return nil
 }
 
 type FieldsAddItem struct {
@@ -164,6 +197,12 @@ func (f *FieldsAddItem) UnmarshalHCL(decoder hcl.Decoder) error {
 		"name":  &f.Name,
 		"value": &f.Value,
 	})
+}
+
+func (p *FieldsAddItem) FromJSON(fai jsonmodel.FieldsAddItem) error {
+	p.Name = fai.Name
+	p.Value = fai.Value
+	return nil
 }
 
 type FieldsRemoveProcessor struct {
