@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Configure how histogram data is ingested.",
+	"displayName": "Histogram metrics",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enableHistogramBucketIngest": {
+			"default": false,
+			"description": "When enabled, you can ingest the `le` dimension, representing explicit histogram buckets.\\\n Enable this if you are using OpenTelemetry histograms or Prometheus histogram metrics.\\\nWhen disabled, only your histograms' sum and count metrics will be ingested.",
+			"displayName": "Ingest complete explicit bucket histograms.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:metrics"
+	],
+	"schemaId": "builtin:histogram-metrics",
+	"types": {},
+	"version": "1"
+}

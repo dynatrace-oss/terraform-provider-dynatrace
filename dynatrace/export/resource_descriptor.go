@@ -114,6 +114,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
 	grailmetricsallowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall"
 	grailmetricsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowlist"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/histogrammetrics"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostmonitoringadvanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/aixkernelextension"
@@ -1308,6 +1309,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
 	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
 	ResourceTypes.DiscoveryFeatureFlags:      NewResourceDescriptor(featureflags.Service),
+	ResourceTypes.HistogramMetrics:           NewResourceDescriptor(histogrammetrics.Service),
 }
 
 type ResourceExclusion struct {
