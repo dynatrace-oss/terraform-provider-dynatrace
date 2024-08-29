@@ -19,10 +19,10 @@ package logdebugsettings_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccLogDebugSettings(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - schema removed from test environment
+	// api.TestAcc(t)
+	t.Skip()
 }
