@@ -1,18 +1,29 @@
 package openpipeline
 
 import (
+	"encoding/json"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/jsonmodel"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Configuration struct {
-	CustomBasePath string       `json:"customBasePath"`
-	Editable       *bool        `json:"editable,omitempty"`
-	Endpoints      *Endpoints   `json:"endpoints"`
-	Kind           string       `json:"id"`
-	Pipelines      Pipelines    `json:"-"` //pipelines
-	Routing        RoutingTable `json:"-"` //routing
-	Version        string       `json:"version"`
+	CustomBasePath string
+	Editable       *bool
+	Endpoints      *Endpoints
+	Kind           string
+	Pipelines      Pipelines
+	Routing        RoutingTable
+	Version        string
+}
+
+func (d *Configuration) UnmarshalJSON(bytes []byte) error {
+
+	configuration := jsonmodel.Configuration{}
+	if err := json.Unmarshal(bytes, &configuration); err != nil {
+		return err
+	}
+	return d.FromJSON(configuration)
 }
 
 func (d *Configuration) Schema() map[string]*schema.Schema {
@@ -87,4 +98,17 @@ func (d *Configuration) UnmarshalHCL(decoder hcl.Decoder) error {
 		"version":          &d.Version,
 	})
 
+}
+
+func (c *Configuration) FromJSON(configuration jsonmodel.Configuration) error {
+
+	c.CustomBasePath = configuration.CustomBasePath
+	c.Editable = configuration.Editable
+	c.Kind = configuration.Id
+	c.Version = configuration.Version
+
+	//...
+	// TODO: translate to hcl Configuration
+
+	return nil
 }
