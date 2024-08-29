@@ -7,19 +7,19 @@ info:
     \ we try to avoid this.\n* We may add new enum constants without incrementing\
     \ the API version; thus, clients need to handle unknown enum constants gracefully."
   title: "OpenPipeline v1"
-  version: "1.0.0"
+  version: "1.0.1"
 servers:
-- url: "https://ntd44713.apps.dynatrace.com/platform/openpipeline/v1"
-  x-api-gateway-url: "/platform/openpipeline/v1"
+  - url: "https://vsy13800.dev.apps.dynatracelabs.com/platform/openpipeline/v1"
+    x-api-gateway-url: "/platform/openpipeline/v1"
 tags:
-- description: "Allows you to view and update your configurations."
-  name: "Configurations"
-- description: "Allows you to preview the impact of configuration changes."
-  name: "Preview"
-- description: "Allows you to verify and retrieve suggestions for matchers."
-  name: "Matcher"
-- description: "Allows you to verify and retrieve suggestions for DQL processor scripts."
-  name: "DQL Processor"
+  - description: "Allows you to view and update your configurations."
+    name: "Configurations"
+  - description: "Allows you to preview the impact of configuration changes."
+    name: "Preview"
+  - description: "Allows you to verify and retrieve suggestions for matchers."
+    name: "Matcher"
+  - description: "Allows you to verify and retrieve suggestions for DQL processor scripts."
+    name: "DQL Processor"
 paths:
   /configurations:
     get:
@@ -29,12 +29,12 @@ paths:
           content:
             application/json; charset=utf-8:
               example:
-              - id: "logs"
-                editable: false
-              - id: "events"
-                editable: false
-              - id: "bizevents"
-                editable: false
+                - id: "logs"
+                  editable: false
+                - id: "events"
+                  editable: false
+                - id: "bizevents"
+                  editable: false
               schema:
                 type: "array"
                 items:
@@ -61,27 +61,27 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Returns the list of available configuration identifiers."
       tags:
-      - "Configurations"
+        - "Configurations"
       x-only-visible-in-saas: true
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /configurations/{id}:
     get:
       operationId: "configurationById"
       parameters:
-      - description: "Identifier of the configuration."
-        in: "path"
-        name: "id"
-        required: true
-        schema:
-          type: "string"
+        - description: "Identifier of the configuration."
+          in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           content:
@@ -92,6 +92,212 @@ paths:
                 version: "1719220519649-ff2897a62cf849b0baa95e71fa4d5f1f"
                 customBasePath: "/platform/ingest/custom/events"
                 endpoints:
+                  - enabled: true
+                    builtin: false
+                    editable: false
+                    basePath: "/platform/ingest/custom/events"
+                    segment: "home"
+                    displayName: "Endpoint for home automation"
+                    defaultBucket: "home_automation_events"
+                    processors:
+                      - type: "fieldsRename"
+                        enabled: false
+                        editable: true
+                        id: "hostname-field-normalizer"
+                        description: "hostname field normalizer"
+                        matcher: "isNotNull(\"hostname\")"
+                        sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
+                      }"
+                        fields:
+                          - fromName: "hostname"
+                            toName: "host.name"
+                          - fromName: "ip"
+                            toName: "ip.address"
+                      - type: "fieldsAdd"
+                        enabled: false
+                        editable: true
+                        id: "add-source-field"
+                        description: "Add source field"
+                        matcher: "true"
+                        sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
+                      }"
+                        fields:
+                          - name: "source"
+                            value: "home-automation"
+                    routing:
+                      type: "dynamic"
+                  - enabled: true
+                    builtin: true
+                    editable: false
+                    basePath: "/platform/ingest/v1/events"
+                    segment: ""
+                    displayName: "Default API"
+                    defaultBucket: null
+                    processors: []
+                    routing:
+                      type: "dynamic"
+                pipelines:
+                  - type: "default"
+                    enabled: true
+                    editable: false
+                    id: "home-automation"
+                    builtin: false
+                    displayName: "Home automation pipeline"
+                    storage:
+                      editable: false
+                      catchAllBucketName: "home_automation_events"
+                      processors:
+                        - type: "noStorage"
+                          id: "don-not-store-debug-events"
+                          description: "Do not store debugging events"
+                          enabled: true
+                          editable: false
+                          matcher: "severity==\"debug\""
+                          sampleData: "{}"
+                        - type: "bucketAssignment"
+                          enabled: true
+                          editable: false
+                          id: "bucket-assignment-security-relevent-events"
+                          description: "Store security relevant events in dedicated bucket"
+                          matcher: "type==\"security\""
+                          sampleData: "{}"
+                          bucketName: "home_automation_security_events"
+                    securityContext:
+                      editable: false
+                      processors:
+                        - type: "securityContext"
+                          id: "security-context"
+                          description: "Mark security context for supervisors"
+                          enabled: true
+                          editable: false
+                          matcher: "type==\"security\""
+                          sampleData: "{}"
+                          value:
+                            type: "constant"
+                            constant: "supervisors"
+                    metricExtraction:
+                      editable: false
+                      processors:
+                        - type: "counterMetric"
+                          id: "click-counter-metric"
+                          description: "Counts the clicks on a button"
+                          enabled: true
+                          editable: true
+                          matcher: "device.type==\"button\""
+                          sampleData: "{}"
+                          metricKey: "events.home.button.click"
+                          dimensions:
+                            - "device.name"
+                            - "device.location"
+                        - type: "valueMetric"
+                          id: "temperature-value-metric"
+                          description: "description"
+                          enabled: true
+                          editable: true
+                          matcher: "device.type==\"temperature-sensor\""
+                          sampleData: "{}"
+                          metricKey: "events.home.temperature"
+                          dimensions:
+                            - "device.name"
+                            - "device.location"
+                          field: "temperature"
+                    dataExtraction:
+                      editable: false
+                      processors: []
+                    processing:
+                      editable: false
+                      processors: []
+                  - type: "default"
+                    enabled: true
+                    editable: false
+                    id: "default"
+                    builtin: true
+                    displayName: "events"
+                    storage:
+                      editable: false
+                      catchAllBucketName: "default_events"
+                      processors: []
+                    securityContext:
+                      editable: false
+                      processors: []
+                    metricExtraction:
+                      editable: false
+                      processors: []
+                    dataExtraction:
+                      editable: false
+                      processors: []
+                    processing:
+                      editable: false
+                      processors: []
+                routing:
+                  editable: false
+                  catchAllPipeline:
+                    editable: false
+                    pipelineId: "default"
+                  entries:
+                    - enabled: true
+                      editable: false
+                      builtin: false
+                      pipelineId: "home-automation"
+                      matcher: "source==\"home-automation\""
+                      note: "Route all home automation events into dedicated pipeline"
+              schema:
+                $ref: "#/components/schemas/Configuration"
+          description: "Full configuration of the requested identifier."
+        "4XX":
+          content:
+            application/json; charset=utf-8:
+              example:
+                error:
+                  code: 400
+                  message: "Bad request."
+              schema:
+                $ref: "#/components/schemas/ErrorResponseEnvelope"
+          description: "Client-side error."
+        "5XX":
+          content:
+            application/json; charset=utf-8:
+              example:
+                error:
+                  code: 500
+                  message: "Internal server error."
+              schema:
+                $ref: "#/components/schemas/ErrorResponseEnvelope"
+          description: "Server-side error."
+      security:
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
+      summary: "Returns the configuration for a given identifier."
+      tags:
+        - "Configurations"
+      x-only-visible-in-saas: true
+      x-permissions:
+        - "openpipeline:configurations:read"
+      description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
+        \ permission:** openpipeline:configurations:read"
+    put:
+      description: "**Required scope:** openpipeline:configurations:write<br/>**Required\
+        \ permission:** openpipeline:configurations:write<br/><br/>NOTE: Objects with\
+        \ builtin set to 'true' and pipeline definitions of type 'classic' will be\
+        \ accepted but are not saved."
+      operationId: "updateConfigurationById"
+      parameters:
+        - description: "Identifier of the configuration."
+          in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json; charset=utf-8:
+            example:
+              id: "events"
+              editable: false
+              version: "1719220519649-ff2897a62cf849b0baa95e71fa4d5f1f"
+              customBasePath: "/platform/ingest/custom/events"
+              endpoints:
                 - enabled: true
                   builtin: false
                   editable: false
@@ -100,30 +306,30 @@ paths:
                   displayName: "Endpoint for home automation"
                   defaultBucket: "home_automation_events"
                   processors:
-                  - type: "fieldsRename"
-                    enabled: false
-                    editable: true
-                    id: "hostname-field-normalizer"
-                    description: "hostname field normalizer"
-                    matcher: "isNotNull(\"hostname\")"
-                    sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
-                      }"
-                    fields:
-                    - fromName: "hostname"
-                      toName: "host.name"
-                    - fromName: "ip"
-                      toName: "ip.address"
-                  - type: "fieldsAdd"
-                    enabled: false
-                    editable: true
-                    id: "add-source-field"
-                    description: "Add source field"
-                    matcher: "true"
-                    sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
-                      }"
-                    fields:
-                    - name: "source"
-                      value: "home-automation"
+                    - type: "fieldsRename"
+                      enabled: false
+                      editable: true
+                      id: "hostname-field-normalizer"
+                      description: "hostname field normalizer"
+                      matcher: "isNotNull(\"hostname\")"
+                      sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
+                    }"
+                      fields:
+                        - fromName: "hostname"
+                          toName: "host.name"
+                        - fromName: "ip"
+                          toName: "ip.address"
+                    - type: "fieldsAdd"
+                      enabled: false
+                      editable: true
+                      id: "add-source-field"
+                      description: "Add source field"
+                      matcher: "true"
+                      sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
+                    }"
+                      fields:
+                        - name: "source"
+                          value: "home-automation"
                   routing:
                     type: "dynamic"
                 - enabled: true
@@ -136,7 +342,7 @@ paths:
                   processors: []
                   routing:
                     type: "dynamic"
-                pipelines:
+              pipelines:
                 - type: "default"
                   enabled: true
                   editable: false
@@ -147,60 +353,60 @@ paths:
                     editable: false
                     catchAllBucketName: "home_automation_events"
                     processors:
-                    - type: "noStorage"
-                      id: "don-not-store-debug-events"
-                      description: "Do not store debugging events"
-                      enabled: true
-                      editable: false
-                      matcher: "severity==\"debug\""
-                      sampleData: "{}"
-                    - type: "bucketAssignment"
-                      enabled: true
-                      editable: false
-                      id: "bucket-assignment-security-relevent-events"
-                      description: "Store security relevant events in dedicated bucket"
-                      matcher: "type==\"security\""
-                      sampleData: "{}"
-                      bucketName: "home_automation_security_events"
+                      - type: "noStorage"
+                        id: "don-not-store-debug-events"
+                        description: "Do not store debugging events"
+                        enabled: true
+                        editable: false
+                        matcher: "severity==\"debug\""
+                        sampleData: "{}"
+                      - type: "bucketAssignment"
+                        enabled: true
+                        editable: false
+                        id: "bucket-assignment-security-relevent-events"
+                        description: "Store security relevant events in dedicated bucket"
+                        matcher: "type==\"security\""
+                        sampleData: "{}"
+                        bucketName: "home_automation_security_events"
                   securityContext:
                     editable: false
                     processors:
-                    - type: "securityContext"
-                      id: "security-context"
-                      description: "Mark security context for supervisors"
-                      enabled: true
-                      editable: false
-                      matcher: "type==\"security\""
-                      sampleData: "{}"
-                      value:
-                        type: "constant"
-                        constant: "supervisors"
+                      - type: "securityContext"
+                        id: "security-context"
+                        description: "Mark security context for supervisors"
+                        enabled: true
+                        editable: false
+                        matcher: "type==\"security\""
+                        sampleData: "{}"
+                        value:
+                          type: "constant"
+                          constant: "supervisors"
                   metricExtraction:
                     editable: false
                     processors:
-                    - type: "counterMetric"
-                      id: "click-counter-metric"
-                      description: "Counts the clicks on a button"
-                      enabled: true
-                      editable: true
-                      matcher: "device.type==\"button\""
-                      sampleData: "{}"
-                      metricKey: "events.home.button.click"
-                      dimensions:
-                      - "device.name"
-                      - "device.location"
-                    - type: "valueMetric"
-                      id: "temperature-value-metric"
-                      description: "description"
-                      enabled: true
-                      editable: true
-                      matcher: "device.type==\"temperature-sensor\""
-                      sampleData: "{}"
-                      metricKey: "events.home.temperature"
-                      dimensions:
-                      - "device.name"
-                      - "device.location"
-                      field: "temperature"
+                      - type: "counterMetric"
+                        id: "click-counter-metric"
+                        description: "Counts the clicks on a button"
+                        enabled: true
+                        editable: true
+                        matcher: "device.type==\"button\""
+                        sampleData: "{}"
+                        metricKey: "events.home.button.click"
+                        dimensions:
+                          - "device.name"
+                          - "device.location"
+                      - type: "valueMetric"
+                        id: "temperature-value-metric"
+                        description: "description"
+                        enabled: true
+                        editable: true
+                        matcher: "device.type==\"temperature-sensor\""
+                        sampleData: "{}"
+                        metricKey: "events.home.temperature"
+                        dimensions:
+                          - "device.name"
+                          - "device.location"
+                        field: "temperature"
                   dataExtraction:
                     editable: false
                     processors: []
@@ -229,224 +435,18 @@ paths:
                   processing:
                     editable: false
                     processors: []
-                routing:
-                  editable: false
-                  catchAllPipeline:
-                    editable: false
-                    pipelineId: "default"
-                  entries:
-                  - enabled: true
-                    editable: false
-                    builtin: false
-                    pipelineId: "home-automation"
-                    matcher: "source==\"home-automation\""
-                    note: "Route all home automation events into dedicated pipeline"
-              schema:
-                $ref: "#/components/schemas/Configuration"
-          description: "Full configuration of the requested identifier."
-        "4XX":
-          content:
-            application/json; charset=utf-8:
-              example:
-                error:
-                  code: 400
-                  message: "Bad request."
-              schema:
-                $ref: "#/components/schemas/ErrorResponseEnvelope"
-          description: "Client-side error."
-        "5XX":
-          content:
-            application/json; charset=utf-8:
-              example:
-                error:
-                  code: 500
-                  message: "Internal server error."
-              schema:
-                $ref: "#/components/schemas/ErrorResponseEnvelope"
-          description: "Server-side error."
-      security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
-      summary: "Returns the configuration for a given identifier."
-      tags:
-      - "Configurations"
-      x-only-visible-in-saas: true
-      x-permissions:
-      - "openpipeline:configurations:read"
-      description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
-        \ permission:** openpipeline:configurations:read"
-    put:
-      description: "**Required scope:** openpipeline:configurations:write<br/>**Required\
-        \ permission:** openpipeline:configurations:write<br/><br/>NOTE: Objects with\
-        \ builtin set to 'true' and pipeline definitions of type 'classic' will be\
-        \ accepted but are not saved."
-      operationId: "updateConfigurationById"
-      parameters:
-      - description: "Identifier of the configuration."
-        in: "path"
-        name: "id"
-        required: true
-        schema:
-          type: "string"
-      requestBody:
-        content:
-          application/json; charset=utf-8:
-            example:
-              id: "events"
-              editable: false
-              version: "1719220519649-ff2897a62cf849b0baa95e71fa4d5f1f"
-              customBasePath: "/platform/ingest/custom/events"
-              endpoints:
-              - enabled: true
-                builtin: false
-                editable: false
-                basePath: "/platform/ingest/custom/events"
-                segment: "home"
-                displayName: "Endpoint for home automation"
-                defaultBucket: "home_automation_events"
-                processors:
-                - type: "fieldsRename"
-                  enabled: false
-                  editable: true
-                  id: "hostname-field-normalizer"
-                  description: "hostname field normalizer"
-                  matcher: "isNotNull(\"hostname\")"
-                  sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
-                    }"
-                  fields:
-                  - fromName: "hostname"
-                    toName: "host.name"
-                  - fromName: "ip"
-                    toName: "ip.address"
-                - type: "fieldsAdd"
-                  enabled: false
-                  editable: true
-                  id: "add-source-field"
-                  description: "Add source field"
-                  matcher: "true"
-                  sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
-                    }"
-                  fields:
-                  - name: "source"
-                    value: "home-automation"
-                routing:
-                  type: "dynamic"
-              - enabled: true
-                builtin: true
-                editable: false
-                basePath: "/platform/ingest/v1/events"
-                segment: ""
-                displayName: "Default API"
-                defaultBucket: null
-                processors: []
-                routing:
-                  type: "dynamic"
-              pipelines:
-              - type: "default"
-                enabled: true
-                editable: false
-                id: "home-automation"
-                builtin: false
-                displayName: "Home automation pipeline"
-                storage:
-                  editable: false
-                  catchAllBucketName: "home_automation_events"
-                  processors:
-                  - type: "noStorage"
-                    id: "don-not-store-debug-events"
-                    description: "Do not store debugging events"
-                    enabled: true
-                    editable: false
-                    matcher: "severity==\"debug\""
-                    sampleData: "{}"
-                  - type: "bucketAssignment"
-                    enabled: true
-                    editable: false
-                    id: "bucket-assignment-security-relevent-events"
-                    description: "Store security relevant events in dedicated bucket"
-                    matcher: "type==\"security\""
-                    sampleData: "{}"
-                    bucketName: "home_automation_security_events"
-                securityContext:
-                  editable: false
-                  processors:
-                  - type: "securityContext"
-                    id: "security-context"
-                    description: "Mark security context for supervisors"
-                    enabled: true
-                    editable: false
-                    matcher: "type==\"security\""
-                    sampleData: "{}"
-                    value:
-                      type: "constant"
-                      constant: "supervisors"
-                metricExtraction:
-                  editable: false
-                  processors:
-                  - type: "counterMetric"
-                    id: "click-counter-metric"
-                    description: "Counts the clicks on a button"
-                    enabled: true
-                    editable: true
-                    matcher: "device.type==\"button\""
-                    sampleData: "{}"
-                    metricKey: "events.home.button.click"
-                    dimensions:
-                    - "device.name"
-                    - "device.location"
-                  - type: "valueMetric"
-                    id: "temperature-value-metric"
-                    description: "description"
-                    enabled: true
-                    editable: true
-                    matcher: "device.type==\"temperature-sensor\""
-                    sampleData: "{}"
-                    metricKey: "events.home.temperature"
-                    dimensions:
-                    - "device.name"
-                    - "device.location"
-                    field: "temperature"
-                dataExtraction:
-                  editable: false
-                  processors: []
-                processing:
-                  editable: false
-                  processors: []
-              - type: "default"
-                enabled: true
-                editable: false
-                id: "default"
-                builtin: true
-                displayName: "events"
-                storage:
-                  editable: false
-                  catchAllBucketName: "default_events"
-                  processors: []
-                securityContext:
-                  editable: false
-                  processors: []
-                metricExtraction:
-                  editable: false
-                  processors: []
-                dataExtraction:
-                  editable: false
-                  processors: []
-                processing:
-                  editable: false
-                  processors: []
               routing:
                 editable: false
                 catchAllPipeline:
                   editable: false
                   pipelineId: "default"
                 entries:
-                - enabled: true
-                  editable: false
-                  builtin: false
-                  pipelineId: "home-automation"
-                  matcher: "source==\"home-automation\""
-                  note: "Route all home automation events into dedicated pipeline"
+                  - enabled: true
+                    editable: false
+                    builtin: false
+                    pipelineId: "home-automation"
+                    matcher: "source==\"home-automation\""
+                    note: "Route all home automation events into dedicated pipeline"
             schema:
               $ref: "#/components/schemas/Configuration"
         description: "The updated configuration to apply."
@@ -495,15 +495,15 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:write"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:write"
+        - ssoBearerAuth: []
       summary: "Updates a configuration."
       tags:
-      - "Configurations"
+        - "Configurations"
       x-only-visible-in-saas: true
       x-permissions:
-      - "openpipeline:configurations:write"
+        - "openpipeline:configurations:write"
   /dqlProcessor/autocomplete:
     post:
       operationId: "dqlProcessorAutocomplete"
@@ -523,22 +523,22 @@ paths:
             application/json; charset=utf-8:
               example:
                 suggestions:
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " "
-                - parts:
-                  - suggestion: "parse"
-                    type: "COMMAND_NAME"
-                    info: "Parses a record field and puts the result(s) into one or\
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " "
+                  - parts:
+                      - suggestion: "parse"
+                        type: "COMMAND_NAME"
+                        info: "Parses a record field and puts the result(s) into one or\
                       \ more fields as specified in the pattern."
-                    synopsis: "parse expression, pattern [, preserveFieldsOnFailure]\
+                        synopsis: "parse expression, pattern [, preserveFieldsOnFailure]\
                       \ [, parsingPrerequisite]"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 5
-                  suggestion: "parse "
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 5
+                    suggestion: "parse "
                 optional: false
               schema:
                 $ref: "#/components/schemas/AutocompleteResponse"
@@ -565,14 +565,14 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Returns autocompletion suggestions for the given DQL processor script."
       tags:
-      - "DQL Processor"
+        - "DQL Processor"
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /dqlProcessor/verify:
@@ -597,17 +597,17 @@ paths:
                   value:
                     valid: false
                     notifications:
-                    - severity: "ERROR"
-                      syntaxPosition:
-                        start:
-                          column: 1
-                          index: 0
-                          line: 1
-                        end:
-                          column: 6
-                          index: 5
-                          line: 1
-                      message: "There's been an error during parsing: There's no command\
+                      - severity: "ERROR"
+                        syntaxPosition:
+                          start:
+                            column: 1
+                            index: 0
+                            line: 1
+                          end:
+                            column: 6
+                            index: 5
+                            line: 1
+                        message: "There's been an error during parsing: There's no command\
                         \ `parsee`."
                 Valid DQL script:
                   description: "Valid DQL script"
@@ -638,14 +638,14 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Verifies if the given DQL processor script is valid."
       tags:
-      - "DQL Processor"
+        - "DQL Processor"
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /matcher/autocomplete:
@@ -667,163 +667,163 @@ paths:
             application/json; charset=utf-8:
               example:
                 suggestions:
-                - parts:
-                  - suggestion: ""
-                    type: "SIMPLE_IDENTIFIER"
-                    info: "some custom field"
-                  alreadyTypedCharacters: 0
-                  suggestion: ""
-                - parts:
-                  - suggestion: "matchesPhrase"
-                    type: "FUNCTION_NAME"
-                    info: "Matches a phrase against the input string expression using\
+                  - parts:
+                      - suggestion: ""
+                        type: "SIMPLE_IDENTIFIER"
+                        info: "some custom field"
+                    alreadyTypedCharacters: 0
+                    suggestion: ""
+                  - parts:
+                      - suggestion: "matchesPhrase"
+                        type: "FUNCTION_NAME"
+                        info: "Matches a phrase against the input string expression using\
                       \ token matchers."
-                    synopsis: "matchesPhrase(expression, phrase [, caseSensitive])"
-                  - suggestion: "("
-                    type: "PARENTHESIS_OPEN"
-                  alreadyTypedCharacters: 5
-                  suggestion: "matchesPhrase("
-                - parts:
-                  - suggestion: "matchesValue"
-                    type: "FUNCTION_NAME"
-                    info: "Matches a value against the input expression using token\
+                        synopsis: "matchesPhrase(expression, phrase [, caseSensitive])"
+                      - suggestion: "("
+                        type: "PARENTHESIS_OPEN"
+                    alreadyTypedCharacters: 5
+                    suggestion: "matchesPhrase("
+                  - parts:
+                      - suggestion: "matchesValue"
+                        type: "FUNCTION_NAME"
+                        info: "Matches a value against the input expression using token\
                       \ matchers."
-                    synopsis: "matchesValue(expression, value [, caseSensitive])"
-                  - suggestion: "("
-                    type: "PARENTHESIS_OPEN"
-                  alreadyTypedCharacters: 5
-                  suggestion: "matchesValue("
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "*"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " * "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "/"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " / "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "%"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " % "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "+"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " + "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "-"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " - "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "=="
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " == "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "!="
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " != "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "<"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " < "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: ">"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " > "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "<="
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " <= "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: ">="
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " >= "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "and"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " and "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "xor"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " xor "
-                - parts:
-                  - suggestion: " "
-                    type: "SPACE"
-                  - suggestion: "or"
-                    type: "OPERATOR"
-                  - suggestion: " "
-                    type: "SPACE"
-                  alreadyTypedCharacters: 0
-                  suggestion: " or "
-                - parts:
-                  - suggestion: "|"
-                    type: "PIPE"
-                  alreadyTypedCharacters: 0
-                  suggestion: "|"
+                        synopsis: "matchesValue(expression, value [, caseSensitive])"
+                      - suggestion: "("
+                        type: "PARENTHESIS_OPEN"
+                    alreadyTypedCharacters: 5
+                    suggestion: "matchesValue("
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "*"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " * "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "/"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " / "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "%"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " % "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "+"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " + "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "-"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " - "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "=="
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " == "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "!="
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " != "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "<"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " < "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: ">"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " > "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "<="
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " <= "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: ">="
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " >= "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "and"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " and "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "xor"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " xor "
+                  - parts:
+                      - suggestion: " "
+                        type: "SPACE"
+                      - suggestion: "or"
+                        type: "OPERATOR"
+                      - suggestion: " "
+                        type: "SPACE"
+                    alreadyTypedCharacters: 0
+                    suggestion: " or "
+                  - parts:
+                      - suggestion: "|"
+                        type: "PIPE"
+                    alreadyTypedCharacters: 0
+                    suggestion: "|"
                 optional: true
               schema:
                 $ref: "#/components/schemas/AutocompleteResponse"
@@ -849,14 +849,14 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Returns autocompletion suggestions for the given matcher."
       tags:
-      - "Matcher"
+        - "Matcher"
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /matcher/lqlToDql:
@@ -901,14 +901,14 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Translates the given LQL matcher into a DQL matcher."
       tags:
-      - "Matcher"
+        - "Matcher"
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /matcher/verify:
@@ -933,17 +933,17 @@ paths:
                   value:
                     valid: false
                     notifications:
-                    - severity: "ERROR"
-                      syntaxPosition:
-                        start:
-                          column: 1
-                          index: 0
-                          line: 1
-                        end:
-                          column: 6
-                          index: 5
-                          line: 1
-                      message: "There's been an error during parsing: There's no command\
+                      - severity: "ERROR"
+                        syntaxPosition:
+                          start:
+                            column: 1
+                            index: 0
+                            line: 1
+                          end:
+                            column: 6
+                            index: 5
+                            line: 1
+                        message: "There's been an error during parsing: There's no command\
                         \ `parsee`."
                 Valid matcher:
                   description: "Valid matcher"
@@ -974,14 +974,14 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:read"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:read"
+        - ssoBearerAuth: []
       summary: "Verifies if the given matcher is valid."
       tags:
-      - "Matcher"
+        - "Matcher"
       x-permissions:
-      - "openpipeline:configurations:read"
+        - "openpipeline:configurations:read"
       description: "**Required scope:** openpipeline:configurations:read<br/>**Required\
         \ permission:** openpipeline:configurations:read"
   /preview/processor:
@@ -1001,10 +1001,10 @@ paths:
                 sampleData: "{\"hostname\": \"raspberry-pi 4\",\"ip\":\"10.0.0.123\"\
                   }"
                 fields:
-                - fromName: "hostname"
-                  toName: "host.name"
-                - fromName: "ip"
-                  toName: "ip.address"
+                  - fromName: "hostname"
+                    toName: "host.name"
+                  - fromName: "ip"
+                    toName: "ip.address"
             schema:
               $ref: "#/components/schemas/PreviewProcessorEnvelope"
         description: "The processor with sample-data to preview."
@@ -1015,11 +1015,11 @@ paths:
             application/json; charset=utf-8:
               example:
                 results:
-                - matched: true
-                  record:
-                    ip.address: "10.0.0.123"
-                    host.name: "raspberry-pi 4"
-                    timestamp: "2024-06-24T07:21:52.200000000Z"
+                  - matched: true
+                    record:
+                      ip.address: "10.0.0.123"
+                      host.name: "raspberry-pi 4"
+                      timestamp: "2024-06-24T07:21:52.200000000Z"
               schema:
                 $ref: "#/components/schemas/PreviewProcessorResult"
           description: "Preview result containing the processed sample data record."
@@ -1044,15 +1044,15 @@ paths:
                 $ref: "#/components/schemas/ErrorResponseEnvelope"
           description: "Server-side error."
       security:
-      - ssoAuth:
-        - "openpipeline:configurations:write"
-      - ssoBearerAuth: []
+        - ssoAuth:
+            - "openpipeline:configurations:write"
+        - ssoBearerAuth: []
       summary: "Returns the preview result for a given processor and sample data."
       tags:
-      - "Preview"
+        - "Preview"
       x-only-visible-in-saas: true
       x-permissions:
-      - "openpipeline:configurations:write"
+        - "openpipeline:configurations:write"
       description: "**Required scope:** openpipeline:configurations:write<br/>**Required\
         \ permission:** openpipeline:configurations:write"
 components:
@@ -1079,8 +1079,8 @@ components:
           items:
             $ref: "#/components/schemas/AutocompleteSuggestion"
       required:
-      - "optional"
-      - "suggestions"
+        - "optional"
+        - "suggestions"
     AutocompleteSuggestion:
       type: "object"
       description: "Single suggestion for completion of the query."
@@ -1099,9 +1099,9 @@ components:
           type: "string"
           description: "The suggested continuation of the input."
       required:
-      - "alreadyTypedCharacters"
-      - "parts"
-      - "suggestion"
+        - "alreadyTypedCharacters"
+        - "parts"
+        - "suggestion"
     AutocompleteSuggestionPart:
       type: "object"
       description: "Part of the suggestion."
@@ -1119,55 +1119,91 @@ components:
           type: "string"
           description: "The type of the autocomplete token."
           enum:
-          - "ASSIGNMENT"
-          - "BOOLEAN_FALSE"
-          - "BOOLEAN_TRUE"
-          - "BRACE_CLOSE"
-          - "BRACE_OPEN"
-          - "BRACKET_CLOSE"
-          - "BRACKET_OPEN"
-          - "COLON"
-          - "COMMA"
-          - "COMMAND_NAME"
-          - "DATA_OBJECT"
-          - "DOT"
-          - "END_COMMENT"
-          - "ENTITY_ATTRIBUTE"
-          - "ENTITY_SELECTOR_PART"
-          - "ENTITY_TYPE"
-          - "FIELD_MODIFIER"
-          - "FIELD_PATTERN"
-          - "FUNCTION_NAME"
-          - "INDENT"
-          - "LINEBREAK"
-          - "METRIC_KEY"
-          - "NULL"
-          - "NUMBER"
-          - "OPERATOR"
-          - "PARAMETER_KEY"
-          - "PARAMETER_VALUE_SCOPE"
-          - "PARENTHESIS_CLOSE"
-          - "PARENTHESIS_OPEN"
-          - "PARSE_PATTERN"
-          - "PIPE"
-          - "QUOTE"
-          - "SIMPLE_IDENTIFIER"
-          - "SINGLE_QUOTE"
-          - "SLASH"
-          - "SPACE"
-          - "STRING"
-          - "TIMESERIES_AGGREGATION"
-          - "TIMESERIES_AGGREGATION_EXPRESSION"
-          - "TIMESTAMP_VALUE"
-          - "TIME_UNIT"
-          - "TRAVERSAL_HOP_COUNT"
-          - "TRAVERSAL_OPERATOR"
-          - "TRAVERSAL_RELATION_NAME"
-          - "UID_VALUE"
-          - "VARIABLE"
+            - "ASSIGNMENT"
+            - "BOOLEAN_FALSE"
+            - "BOOLEAN_TRUE"
+            - "BRACE_CLOSE"
+            - "BRACE_OPEN"
+            - "BRACKET_CLOSE"
+            - "BRACKET_OPEN"
+            - "COLON"
+            - "COMMA"
+            - "COMMAND_NAME"
+            - "DATA_OBJECT"
+            - "DOT"
+            - "END_COMMENT"
+            - "ENTITY_ATTRIBUTE"
+            - "ENTITY_SELECTOR_PART"
+            - "ENTITY_TYPE"
+            - "FIELD_MODIFIER"
+            - "FIELD_PATTERN"
+            - "FUNCTION_NAME"
+            - "INDENT"
+            - "LINEBREAK"
+            - "METRIC_KEY"
+            - "NULL"
+            - "NUMBER"
+            - "OPERATOR"
+            - "PARAMETER_KEY"
+            - "PARAMETER_VALUE_SCOPE"
+            - "PARENTHESIS_CLOSE"
+            - "PARENTHESIS_OPEN"
+            - "PARSE_PATTERN"
+            - "PIPE"
+            - "QUOTE"
+            - "SIMPLE_IDENTIFIER"
+            - "SINGLE_QUOTE"
+            - "SLASH"
+            - "SPACE"
+            - "STRING"
+            - "TIMESERIES_AGGREGATION"
+            - "TIMESERIES_AGGREGATION_EXPRESSION"
+            - "TIMESTAMP_VALUE"
+            - "TIME_UNIT"
+            - "TRAVERSAL_HOP_COUNT"
+            - "TRAVERSAL_OPERATOR"
+            - "TRAVERSAL_RELATION_NAME"
+            - "UID_VALUE"
+            - "VARIABLE"
       required:
-      - "suggestion"
-      - "type"
+        - "suggestion"
+        - "type"
+    AzureLogForwardingProcessor:
+      type: "object"
+      description: "Processor to extract a Azure log."
+      properties:
+        description:
+          type: "string"
+          description: "Name or description of the processor."
+        editable:
+          type: "boolean"
+          description: "Indicates if the user is allowed to edit this object based\
+            \ on permissions and builtin property."
+          readOnly: true
+        enabled:
+          type: "boolean"
+          description: "Indicates if the object is active."
+        fieldExtraction:
+          $ref: "#/components/schemas/FieldsExtraction"
+        forwarderConfigId:
+          type: "string"
+        id:
+          type: "string"
+          description: "Identifier of the processor. Must be unique within a stage."
+        matcher:
+          type: "string"
+          description: "Matching condition to apply on incoming records."
+        sampleData:
+          type: "string"
+          description: "Sample data related to the processor for documentation or\
+            \ testing."
+      required:
+        - "description"
+        - "enabled"
+        - "fieldExtraction"
+        - "forwarderConfigId"
+        - "id"
+        - "matcher"
     BizeventExtractionProcessor:
       type: "object"
       description: "Processor to extract a bizevent.\nThis processor can only be applied\
@@ -1189,7 +1225,7 @@ components:
         eventType:
           $ref: "#/components/schemas/ValueAssignment"
         fieldExtraction:
-          $ref: "#/components/schemas/BizeventFieldExtraction"
+          $ref: "#/components/schemas/FieldsExtraction"
         id:
           type: "string"
           description: "Identifier of the processor. Must be unique within a stage."
@@ -1201,36 +1237,12 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "eventProvider"
-      - "fieldExtraction"
-      - "id"
-      - "matcher"
-    BizeventFieldExtraction:
-      type: "object"
-      description: "Definition of the field extraction."
-      properties:
-        fields:
-          type: "array"
-          description: "Fields to include/exclude in the extracted bizevent."
-          items:
-            type: "string"
-            description: "Fields to include/exclude in the extracted bizevent."
-          uniqueItems: true
-        semantic:
-          type: "string"
-          description: "Defines how the fields of the source record should be extracted\
-            \ into the bizevent.\nINCLUDE: Only the specified fields are extracted.\n\
-            INCLUDE_ALL: All fields are extracted.\nEXCLUDE: All fields except the\
-            \ specified fields are extracted."
-          enum:
-          - "EXCLUDE"
-          - "INCLUDE"
-          - "INCLUDE_ALL"
-      required:
-      - "fields"
-      - "semantic"
+        - "description"
+        - "enabled"
+        - "eventProvider"
+        - "fieldExtraction"
+        - "id"
+        - "matcher"
     BucketAssignmentProcessor:
       type: "object"
       description: "Processor to assign a bucket."
@@ -1260,29 +1272,29 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "bucketName"
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "bucketName"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     ClassicPipelineDefinition:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/PipelineDefinition"
-      - type: "object"
-        properties:
-          processing:
-            $ref: "#/components/schemas/ClassicProcessingStage"
-          settingsSchema:
-            type: "string"
-            description: "The settings-schema identifier related to the processing\
+        - $ref: "#/components/schemas/PipelineDefinition"
+        - type: "object"
+          properties:
+            processing:
+              $ref: "#/components/schemas/ClassicProcessingStage"
+            settingsSchema:
+              type: "string"
+              description: "The settings-schema identifier related to the processing\
               \ of the classic pipeline."
       description: "Definition of a classic pipeline which are configured via settings\
         \ 2.0.\nThis only applies to the logs and bizevents configuration."
       required:
-      - "enabled"
-      - "id"
-      - "settingsSchema"
+        - "enabled"
+        - "id"
+        - "settingsSchema"
     ClassicProcessingStage:
       type: "object"
       description: "Processing stage configuration of the pipeline."
@@ -1298,18 +1310,18 @@ components:
           items:
             $ref: "#/components/schemas/ClassicProcessingStageProcessor"
       required:
-      - "processors"
+        - "processors"
     ClassicProcessingStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the ClassicProcessingStage.\n\
         Applicable processor is SxqlProcessor."
       oneOf:
-      - $ref: "#/components/schemas/SxqlProcessor"
+        - $ref: "#/components/schemas/SxqlProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     Configuration:
       type: "object"
       description: "Full configuration containing ingest sources, pipelines and dynamic\
@@ -1342,12 +1354,12 @@ components:
           type: "string"
           description: "The current version of the configuration."
       required:
-      - "customBasePath"
-      - "endpoints"
-      - "id"
-      - "pipelines"
-      - "routing"
-      - "version"
+        - "customBasePath"
+        - "endpoints"
+        - "id"
+        - "pipelines"
+        - "routing"
+        - "version"
     ConfigurationListItem:
       type: "object"
       description: "Basic information about a configuration."
@@ -1361,19 +1373,19 @@ components:
           type: "string"
           description: "Identifier of the configuration."
       required:
-      - "id"
+        - "id"
     ConstantValueAssignment:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/ValueAssignment"
-      - type: "object"
-        properties:
-          constant:
-            type: "string"
-            description: "The constant value to assign."
+        - $ref: "#/components/schemas/ValueAssignment"
+        - type: "object"
+          properties:
+            constant:
+              type: "string"
+              description: "The constant value to assign."
       description: "Assign a constant value."
       required:
-      - "constant"
+        - "constant"
     ConstraintViolation:
       type: "object"
       description: "Information about a single constraint violation."
@@ -1382,21 +1394,21 @@ components:
           type: "string"
           description: "Description of the constraint violation."
       required:
-      - "message"
+        - "message"
     ConstraintViolationDetails:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/ErrorResponseDetails"
-      - type: "object"
-        properties:
-          constraintViolations:
-            type: "array"
-            description: "List of encountered constraint violations."
-            items:
-              $ref: "#/components/schemas/ConstraintViolation"
+        - $ref: "#/components/schemas/ErrorResponseDetails"
+        - type: "object"
+          properties:
+            constraintViolations:
+              type: "array"
+              description: "List of encountered constraint violations."
+              items:
+                $ref: "#/components/schemas/ConstraintViolation"
       description: "List of encountered constraint violations."
       required:
-      - "constraintViolations"
+        - "constraintViolations"
     CounterMetricExtractionProcessor:
       type: "object"
       description: "Processor to write the occurrences as a metric."
@@ -1406,11 +1418,10 @@ components:
           description: "Name or description of the processor."
         dimensions:
           type: "array"
-          description: "List of dimensions to add to the metric."
+          description: "List of unique dimensions to add to the metric."
           items:
             type: "string"
-            description: "List of dimensions to add to the metric."
-          uniqueItems: true
+            description: "List of unique dimensions to add to the metric."
         editable:
           type: "boolean"
           description: "Indicates if the user is allowed to edit this object based\
@@ -1433,11 +1444,11 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
-      - "metricKey"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
+        - "metricKey"
     DQLProcessorAutocompleteRequest:
       type: "object"
       properties:
@@ -1469,19 +1480,20 @@ components:
           items:
             $ref: "#/components/schemas/DataExtractionStageProcessor"
       required:
-      - "processors"
+        - "processors"
     DataExtractionStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the DataExtractionStage.\n\
         Applicable processors are DavisEventExtractionProcessor and BizeventExtractionProcessor."
       oneOf:
-      - $ref: "#/components/schemas/DavisEventExtractionProcessor"
-      - $ref: "#/components/schemas/BizeventExtractionProcessor"
+        - $ref: "#/components/schemas/DavisEventExtractionProcessor"
+        - $ref: "#/components/schemas/BizeventExtractionProcessor"
+        - $ref: "#/components/schemas/AzureLogForwardingProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     DavisEventExtractionProcessor:
       type: "object"
       description: "Processor to extract a davis event."
@@ -1513,11 +1525,11 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
-      - "properties"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
+        - "properties"
     DavisEventProperty:
       type: "object"
       description: "List of properties for the extracted davis event."
@@ -1529,20 +1541,20 @@ components:
           type: "string"
           description: "The value assigned to the key."
       required:
-      - "key"
-      - "value"
+        - "key"
+        - "value"
     DefaultPipelineDefinition:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/PipelineDefinition"
-      - type: "object"
-        properties:
-          processing:
-            $ref: "#/components/schemas/ProcessingStage"
+        - $ref: "#/components/schemas/PipelineDefinition"
+        - type: "object"
+          properties:
+            processing:
+              $ref: "#/components/schemas/ProcessingStage"
       description: "Definition of a single default pipeline."
       required:
-      - "enabled"
-      - "id"
+        - "enabled"
+        - "id"
     DqlProcessor:
       type: "object"
       description: "Processor to apply a DQL script."
@@ -1572,15 +1584,15 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "dqlScript"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "dqlScript"
+        - "enabled"
+        - "id"
+        - "matcher"
     DynamicRouting:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/Routing"
+        - $ref: "#/components/schemas/Routing"
       description: "Records are routed via the dynamic routes."
     EndpointDefinition:
       type: "object"
@@ -1619,25 +1631,25 @@ components:
           description: "The segment of the ingest source, which is applied to the\
             \ base path.\nMust be unique within a configuration."
       required:
-      - "basePath"
-      - "enabled"
-      - "routing"
-      - "segment"
+        - "basePath"
+        - "enabled"
+        - "routing"
+        - "segment"
     EndpointProcessor:
       type: "object"
       description: "Groups all processors applicable for processing in the EndpointDefinition.\n\
         Applicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor\
         \ and FieldsRenameProcessor."
       oneOf:
-      - $ref: "#/components/schemas/DqlProcessor"
-      - $ref: "#/components/schemas/FieldsAddProcessor"
-      - $ref: "#/components/schemas/FieldsRemoveProcessor"
-      - $ref: "#/components/schemas/FieldsRenameProcessor"
+        - $ref: "#/components/schemas/DqlProcessor"
+        - $ref: "#/components/schemas/FieldsAddProcessor"
+        - $ref: "#/components/schemas/FieldsRemoveProcessor"
+        - $ref: "#/components/schemas/FieldsRenameProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     ErrorResponse:
       type: "object"
       description: "Basic information of the encountered error."
@@ -1652,8 +1664,8 @@ components:
           type: "string"
           description: "Description of the encountered error."
       required:
-      - "code"
-      - "message"
+        - "code"
+        - "message"
     ErrorResponseDetails:
       type: "object"
       description: "Detailed information of the error."
@@ -1668,9 +1680,9 @@ components:
             \ one of the following objects: \n\n* `constraintViolation` -> ConstraintViolationDetails\
             \ \n"
           enum:
-          - "constraintViolation"
+            - "constraintViolation"
       required:
-      - "type"
+        - "type"
     ErrorResponseEnvelope:
       type: "object"
       description: "Encloses the encountered error."
@@ -1678,19 +1690,19 @@ components:
         error:
           $ref: "#/components/schemas/ErrorResponse"
       required:
-      - "error"
+        - "error"
     FieldValueAssignment:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/ValueAssignment"
-      - type: "object"
-        properties:
-          field:
-            type: "string"
-            description: "The field on the record to extract the value for assignment."
+        - $ref: "#/components/schemas/ValueAssignment"
+        - type: "object"
+          properties:
+            field:
+              type: "string"
+              description: "The field on the record to extract the value for assignment."
       description: "Assign a value extracted from a field."
       required:
-      - "field"
+        - "field"
     FieldsAddItem:
       type: "object"
       description: "List of fields to add to the record."
@@ -1702,8 +1714,8 @@ components:
           type: "string"
           description: "Value to assign to the field."
       required:
-      - "name"
-      - "value"
+        - "name"
+        - "value"
     FieldsAddProcessor:
       type: "object"
       description: "Processor to add fields."
@@ -1735,11 +1747,34 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "fields"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "fields"
+        - "id"
+        - "matcher"
+    FieldsExtraction:
+      type: "object"
+      description: "Definition of the field extraction."
+      properties:
+        fields:
+          type: "array"
+          description: "Unique fields to include/exclude in the extracted record."
+          items:
+            type: "string"
+            description: "Unique fields to include/exclude in the extracted record."
+        semantic:
+          type: "string"
+          description: "Defines how the fields of the source record should be extracted.\n\
+            INCLUDE: Only the specified fields are extracted.\nINCLUDE_ALL: All fields\
+            \ are extracted.\nEXCLUDE: All fields except the specified fields are\
+            \ extracted."
+          enum:
+            - "EXCLUDE"
+            - "INCLUDE"
+            - "INCLUDE_ALL"
+      required:
+        - "fields"
+        - "semantic"
     FieldsRemoveProcessor:
       type: "object"
       description: "Processor to remove fields."
@@ -1757,11 +1792,10 @@ components:
           description: "Indicates if the object is active."
         fields:
           type: "array"
-          description: "List of fields to remove from the record."
+          description: "List of unique fields to remove from the record."
           items:
             type: "string"
-            description: "List of fields to remove from the record."
-          uniqueItems: true
+            description: "List of unique fields to remove from the record."
         id:
           type: "string"
           description: "Identifier of the processor. Must be unique within a stage."
@@ -1773,11 +1807,11 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "fields"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "fields"
+        - "id"
+        - "matcher"
     FieldsRenameItem:
       type: "object"
       description: "List of fields to rename on the record."
@@ -1789,8 +1823,8 @@ components:
           type: "string"
           description: "The new field name."
       required:
-      - "fromName"
-      - "toName"
+        - "fromName"
+        - "toName"
     FieldsRenameProcessor:
       type: "object"
       description: "Processor to rename fields."
@@ -1822,11 +1856,11 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "fields"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "fields"
+        - "id"
+        - "matcher"
     MatcherAutocompleteRequest:
       type: "object"
       properties:
@@ -1891,19 +1925,19 @@ components:
           items:
             $ref: "#/components/schemas/MetricExtractionStageProcessor"
       required:
-      - "processors"
+        - "processors"
     MetricExtractionStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the MetricExtractionStage.\n\
         Applicable processors are CounterMetricExtractionProcessor and ValueMetricExtractionProcessor."
       oneOf:
-      - $ref: "#/components/schemas/CounterMetricExtractionProcessor"
-      - $ref: "#/components/schemas/ValueMetricExtractionProcessor"
+        - $ref: "#/components/schemas/CounterMetricExtractionProcessor"
+        - $ref: "#/components/schemas/ValueMetricExtractionProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     NoStorageProcessor:
       type: "object"
       description: "Processor to skip storage assignment."
@@ -1930,10 +1964,10 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     PipelineDefinition:
       type: "object"
       description: "Definition of a single pipeline, either 'default' or 'classic'."
@@ -1975,12 +2009,12 @@ components:
             \ one of the following objects: \n\n* `default` -> DefaultPipelineDefinition\
             \ \n* `classic` -> ClassicPipelineDefinition \n"
           enum:
-          - "classic"
-          - "default"
+            - "classic"
+            - "default"
       required:
-      - "enabled"
-      - "id"
-      - "type"
+        - "enabled"
+        - "id"
+        - "type"
     PositionInfo:
       type: "object"
       description: "The exact position in the query string."
@@ -1998,25 +2032,29 @@ components:
           format: "int32"
           description: "Input string position line zero based index."
       required:
-      - "column"
-      - "index"
-      - "line"
+        - "column"
+        - "index"
+        - "line"
     PreviewProcessor:
       type: "object"
       description: "The processor to execute for the preview. Applicable processors\
-        \ are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor and FieldsRenameProcessor."
+        \ are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor, FieldsRenameProcessor\
+        \ and TechnologyProcessor."
       oneOf:
-      - $ref: "#/components/schemas/DqlProcessor"
-      - $ref: "#/components/schemas/FieldsAddProcessor"
-      - $ref: "#/components/schemas/FieldsRemoveProcessor"
-      - $ref: "#/components/schemas/FieldsRenameProcessor"
+        - $ref: "#/components/schemas/DqlProcessor"
+        - $ref: "#/components/schemas/FieldsAddProcessor"
+        - $ref: "#/components/schemas/FieldsRemoveProcessor"
+        - $ref: "#/components/schemas/FieldsRenameProcessor"
+        - $ref: "#/components/schemas/TechnologyProcessor"
     PreviewProcessorEnvelope:
       type: "object"
       properties:
+        configId:
+          type: "string"
         processor:
           $ref: "#/components/schemas/PreviewProcessor"
       required:
-      - "processor"
+        - "processor"
     PreviewProcessorResult:
       type: "object"
       properties:
@@ -2026,7 +2064,7 @@ components:
           items:
             $ref: "#/components/schemas/PreviewProcessorResultEntry"
       required:
-      - "results"
+        - "results"
     PreviewProcessorResultEntry:
       type: "object"
       description: "Preview result for a single sample data record."
@@ -2034,13 +2072,22 @@ components:
         matched:
           type: "boolean"
           description: "Indicates if the record matched the processors matching condition."
+        matchedProcessors:
+          type: "array"
+          description: "Contains matched processors ids, useful in case of multi-processors\
+            \ preview like in case of Technology."
+          items:
+            type: "string"
+            description: "Contains matched processors ids, useful in case of multi-processors\
+              \ preview like in case of Technology."
         record:
           type: "object"
           additionalProperties: true
           description: "The altered record after the processor was applied."
       required:
-      - "matched"
-      - "record"
+        - "matched"
+        - "matchedProcessors"
+        - "record"
     ProcessingStage:
       type: "object"
       description: "Processing stage configuration of the pipeline."
@@ -2056,22 +2103,21 @@ components:
           items:
             $ref: "#/components/schemas/ProcessingStageProcessor"
       required:
-      - "processors"
+        - "processors"
     ProcessingStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the ProcessingStage.\nApplicable\
-        \ processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor and\
-        \ FieldsRenameProcessor."
+        \ processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor,\
+        \ FieldsRenameProcessor and TechnologyProcessor."
       oneOf:
-      - $ref: "#/components/schemas/DqlProcessor"
-      - $ref: "#/components/schemas/FieldsAddProcessor"
-      - $ref: "#/components/schemas/FieldsRemoveProcessor"
-      - $ref: "#/components/schemas/FieldsRenameProcessor"
+        - $ref: "#/components/schemas/DqlProcessor"
+        - $ref: "#/components/schemas/FieldsAddProcessor"
+        - $ref: "#/components/schemas/FieldsRemoveProcessor"
+        - $ref: "#/components/schemas/FieldsRenameProcessor"
+        - $ref: "#/components/schemas/TechnologyProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "enabled"
+        - "id"
     Routing:
       type: "object"
       description: "Routing strategy, either dynamic or static."
@@ -2087,10 +2133,10 @@ components:
             \ one of the following objects: \n\n* `static` -> StaticRouting \n* `dynamic`\
             \ -> DynamicRouting \n"
           enum:
-          - "dynamic"
-          - "static"
+            - "dynamic"
+            - "static"
       required:
-      - "type"
+        - "type"
     RoutingTable:
       type: "object"
       description: "Dynamic routing definition."
@@ -2108,8 +2154,8 @@ components:
           items:
             $ref: "#/components/schemas/RoutingTableEntry"
       required:
-      - "catchAllPipeline"
-      - "entries"
+        - "catchAllPipeline"
+        - "entries"
     RoutingTableEntry:
       type: "object"
       description: "Dynamic routing entry."
@@ -2136,10 +2182,10 @@ components:
           type: "string"
           description: "Identifier of the pipeline the record is routed into."
       required:
-      - "enabled"
-      - "matcher"
-      - "note"
-      - "pipelineId"
+        - "enabled"
+        - "matcher"
+        - "note"
+        - "pipelineId"
     RoutingTableEntryTarget:
       type: "object"
       description: "The default pipeline records are routed into if no dynamic routing\
@@ -2154,7 +2200,7 @@ components:
           type: "string"
           description: "Identifier of the pipeline."
       required:
-      - "pipelineId"
+        - "pipelineId"
     SecurityContextProcessor:
       type: "object"
       description: "Processor to set the security context field."
@@ -2183,11 +2229,11 @@ components:
         value:
           $ref: "#/components/schemas/ValueAssignment"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
-      - "value"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
+        - "value"
     SecurityContextStage:
       type: "object"
       description: "Security context stage configuration of the pipeline."
@@ -2203,30 +2249,30 @@ components:
           items:
             $ref: "#/components/schemas/SecurityContextStageProcessor"
       required:
-      - "processors"
+        - "processors"
     SecurityContextStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the SecurityContextStage.\n\
         Applicable processor is SecurityContextProcessor."
       oneOf:
-      - $ref: "#/components/schemas/SecurityContextProcessor"
+        - $ref: "#/components/schemas/SecurityContextProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     StaticRouting:
       type: "object"
       allOf:
-      - $ref: "#/components/schemas/Routing"
-      - type: "object"
-        properties:
-          pipelineId:
-            type: "string"
-            description: "Identifier of the pipeline."
+        - $ref: "#/components/schemas/Routing"
+        - type: "object"
+          properties:
+            pipelineId:
+              type: "string"
+              description: "Identifier of the pipeline."
       description: "Records are statically routed to the defined pipeline."
       required:
-      - "pipelineId"
+        - "pipelineId"
     StorageStage:
       type: "object"
       description: "Storage stage configuration of the pipeline."
@@ -2246,20 +2292,20 @@ components:
           items:
             $ref: "#/components/schemas/StorageStageProcessor"
       required:
-      - "catchAllBucketName"
-      - "processors"
+        - "catchAllBucketName"
+        - "processors"
     StorageStageProcessor:
       type: "object"
       description: "Groups all processors applicable for the StorageStage.\nApplicable\
         \ processors are BucketAssignmentProcessor and NoStorageProcessor."
       oneOf:
-      - $ref: "#/components/schemas/BucketAssignmentProcessor"
-      - $ref: "#/components/schemas/NoStorageProcessor"
+        - $ref: "#/components/schemas/BucketAssignmentProcessor"
+        - $ref: "#/components/schemas/NoStorageProcessor"
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
     SxqlProcessor:
       type: "object"
       description: "Processor to apply a SXQL script."
@@ -2289,11 +2335,38 @@ components:
           type: "string"
           description: "The SXQL script to apply on the record."
       required:
-      - "description"
-      - "enabled"
-      - "id"
-      - "matcher"
-      - "sxqlScript"
+        - "description"
+        - "enabled"
+        - "id"
+        - "matcher"
+        - "sxqlScript"
+    TechnologyProcessor:
+      type: "object"
+      description: "Processor to apply a technology processors."
+      properties:
+        editable:
+          type: "boolean"
+          description: "Indicates if the user is allowed to edit this object based\
+            \ on permissions and builtin property."
+          readOnly: true
+        enabled:
+          type: "boolean"
+          description: "Indicates if the object is active."
+        id:
+          type: "string"
+          description: "Identifier of the processor. Must be unique within a stage."
+        sampleData:
+          type: "string"
+          description: "Sample data related to the processor for documentation or\
+            \ testing."
+        technologyId:
+          type: "string"
+          description: "The reference identifier to a specific technology. This technology\
+            \ is applied on the record."
+      required:
+        - "enabled"
+        - "id"
+        - "technologyId"
     TokenPosition:
       type: "object"
       description: "The position of a token in the input string used for errors and\
@@ -2304,8 +2377,8 @@ components:
         start:
           $ref: "#/components/schemas/PositionInfo"
       required:
-      - "end"
-      - "start"
+        - "end"
+        - "start"
     ValueAssignment:
       type: "object"
       description: "Strategy to assign a value."
@@ -2321,10 +2394,10 @@ components:
             \ one of the following objects: \n\n* `constant` -> ConstantValueAssignment\
             \ \n* `field` -> FieldValueAssignment \n"
           enum:
-          - "constant"
-          - "field"
+            - "constant"
+            - "field"
       required:
-      - "type"
+        - "type"
     ValueMetricExtractionProcessor:
       type: "object"
       description: "Processor to extract a value from a field as a metric."
@@ -2334,11 +2407,10 @@ components:
           description: "Name or description of the processor."
         dimensions:
           type: "array"
-          description: "List of dimensions to add to the metric."
+          description: "List of unique dimensions to add to the metric."
           items:
             type: "string"
-            description: "List of dimensions to add to the metric."
-          uniqueItems: true
+            description: "List of unique dimensions to add to the metric."
         editable:
           type: "boolean"
           description: "Indicates if the user is allowed to edit this object based\
@@ -2364,12 +2436,12 @@ components:
           description: "Sample data related to the processor for documentation or\
             \ testing."
       required:
-      - "description"
-      - "enabled"
-      - "field"
-      - "id"
-      - "matcher"
-      - "metricKey"
+        - "description"
+        - "enabled"
+        - "field"
+        - "id"
+        - "matcher"
+        - "metricKey"
     VerifyResponse:
       type: "object"
       description: "Verify response."
@@ -2383,7 +2455,7 @@ components:
           type: "boolean"
           description: "True if the supplied input string is valid."
       required:
-      - "valid"
+        - "valid"
   securitySchemes:
     ssoAuth:
       description: "Dynatrace OAuth\n\n A Bearer token is passed in the **Authorization**\
@@ -2393,7 +2465,7 @@ components:
           scopes:
             openpipeline:configurations:read: "Read the OpenPipeline configuration"
             openpipeline:configurations:write: "Write the OpenPipeline configuration"
-          tokenUrl: "https://sso.dynatrace.com/sso/oauth2/token"
+          tokenUrl: "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
       type: "oauth2"
     ssoBearerAuth:
       type: "http"
