@@ -19,10 +19,10 @@ package custominjectionrules_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccWebAppCustomInjectionRules(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v298)
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

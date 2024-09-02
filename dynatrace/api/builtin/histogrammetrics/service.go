@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package logstoragesettings
+package histogrammetrics
 
 import (
-	logstoragesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings/settings"
+	histogrammetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/histogrammetrics/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.11"
-const SchemaID = "builtin:logmonitoring.log-storage-settings"
+const SchemaVersion = "1"
+const SchemaID = "builtin:histogram-metrics"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logstoragesettings.Settings] {
-	return settings20.Service[*logstoragesettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*histogrammetrics.Settings] {
+	return settings20.Service[*histogrammetrics.Settings](credentials, SchemaID, SchemaVersion)
 }

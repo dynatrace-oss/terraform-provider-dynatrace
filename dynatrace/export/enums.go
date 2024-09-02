@@ -457,6 +457,8 @@ var ResourceTypes = struct {
 	WebAppCustomInjectionRules          ResourceType
 	DiscoveryDefaultRules               ResourceType
 	DiscoveryFeatureFlags               ResourceType
+	HistogramMetrics                    ResourceType
+	KubernetesEnrichment                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -761,6 +763,8 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_custom_injection",
 	"dynatrace_discovery_default_rules",
 	"dynatrace_discovery_feature_flags",
+	"dynatrace_histogram_metrics",
+	"dynatrace_kubernetes_enrichment",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

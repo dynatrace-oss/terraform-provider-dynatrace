@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package permissions
+package histogrammetrics
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -23,24 +23,18 @@ import (
 )
 
 type Settings struct {
-	Description string `json:"description"` // Name
-	Email       string `json:"email"`       // Contact Email
+	EnableHistogramBucketIngest bool `json:"enableHistogramBucketIngest"` // When enabled, you can ingest the `le` dimension, representing explicit histogram buckets.\\\n Enable this if you are using OpenTelemetry histograms or Prometheus histogram metrics.\\\nWhen disabled, only your histograms' sum and count metrics will be ingested.
 }
 
 func (me *Settings) Name() string {
-	return me.Email
+	return "histogram_metrics"
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": {
-			Type:        schema.TypeString,
-			Description: "Name",
-			Required:    true,
-		},
-		"email": {
-			Type:        schema.TypeString,
-			Description: "Contact Email",
+		"enable_histogram_bucket_ingest": {
+			Type:        schema.TypeBool,
+			Description: "When enabled, you can ingest the `le` dimension, representing explicit histogram buckets.\\\n Enable this if you are using OpenTelemetry histograms or Prometheus histogram metrics.\\\nWhen disabled, only your histograms' sum and count metrics will be ingested.",
 			Required:    true,
 		},
 	}
@@ -48,14 +42,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"description": me.Description,
-		"email":       me.Email,
+		"enable_histogram_bucket_ingest": me.EnableHistogramBucketIngest,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"description": &me.Description,
-		"email":       &me.Email,
+		"enable_histogram_bucket_ingest": &me.EnableHistogramBucketIngest,
 	})
 }

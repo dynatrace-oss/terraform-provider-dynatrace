@@ -2,8 +2,8 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Privileged user can manage permissions in the Hub App",
-	"displayName": "Manage Permissions",
+	"description": "Please add at least one admin with all necessary permissions to fulfill the requests.\n\nYou can either enter individual or team email addresses to receive request notifications.",
+	"displayName": "Installation Requests",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -24,7 +24,7 @@
 			],
 			"default": "",
 			"description": "",
-			"displayName": "Description",
+			"displayName": "Name",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -51,7 +51,7 @@
 			],
 			"default": "",
 			"description": "",
-			"displayName": "Email",
+			"displayName": "Contact Email",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -71,5 +71,5 @@
 	],
 	"schemaId": "app:dynatrace.hub:manage.permissions",
 	"types": {},
-	"version": "0.0.4"
+	"version": "0.0.6"
 }

@@ -15,14 +15,14 @@
 * limitations under the License.
  */
 
-package logdebugsettings_test
+package enrichment_test
 
 import (
 	"testing"
 )
 
-func TestAccLogDebugSettings(t *testing.T) {
-	// Temporarily disabled - schema removed from test environment
+func TestAccKubernetesEnrichment(t *testing.T) {
+	// Temporarily disabled - not available on test tenant (enable with v300)
 	// api.TestAcc(t)
 	t.Skip()
 }

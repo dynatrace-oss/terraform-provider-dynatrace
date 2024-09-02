@@ -39,7 +39,7 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-const SchemaVersion = "1.0.1"
+const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:davis.anomaly-detectors"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*anomalydetectors.Settings] {

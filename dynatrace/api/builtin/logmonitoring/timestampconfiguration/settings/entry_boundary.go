@@ -15,47 +15,35 @@
 * limitations under the License.
  */
 
-package permissions
+package timestampconfiguration
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type Settings struct {
-	Description string `json:"description"` // Name
-	Email       string `json:"email"`       // Contact Email
+type EntryBoundary struct {
+	Pattern *string `json:"pattern,omitempty"`
 }
 
-func (me *Settings) Name() string {
-	return me.Email
-}
-
-func (me *Settings) Schema() map[string]*schema.Schema {
+func (me *EntryBoundary) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": {
+		"pattern": {
 			Type:        schema.TypeString,
-			Description: "Name",
-			Required:    true,
-		},
-		"email": {
-			Type:        schema.TypeString,
-			Description: "Contact Email",
-			Required:    true,
+			Description: "no documentation available",
+			Optional:    true, // nullable
 		},
 	}
 }
 
-func (me *Settings) MarshalHCL(properties hcl.Properties) error {
+func (me *EntryBoundary) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"description": me.Description,
-		"email":       me.Email,
+		"pattern": me.Pattern,
 	})
 }
 
-func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *EntryBoundary) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"description": &me.Description,
-		"email":       &me.Email,
+		"pattern": &me.Pattern,
 	})
 }

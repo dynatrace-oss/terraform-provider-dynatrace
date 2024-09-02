@@ -180,6 +180,17 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"entry-boundary": {
+			"description": "Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.",
+			"displayName": "Entry boundary pattern",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/EntryBoundary"
+			}
+		},
 		"matchers": {
 			"description": "",
 			"displayName": "",
@@ -244,6 +255,33 @@
 	],
 	"schemaId": "builtin:logmonitoring.timestamp-configuration",
 	"types": {
+		"EntryBoundary": {
+			"description": "",
+			"displayName": "EntryBoundary",
+			"documentation": "",
+			"properties": {
+				"pattern": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"Matcher": {
 			"constraints": [
 				{
@@ -351,6 +389,11 @@
 					"displayName": "Timestamp Search Limit",
 					"id": "dateSearchLimit",
 					"propertyRef": "date-search-limit"
+				},
+				{
+					"displayName": "Entry boundary",
+					"id": "entryBoundary",
+					"propertyRef": "entry-boundary/pattern"
 				}
 			],
 			"emptyState": {
@@ -358,5 +401,5 @@
 			}
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }

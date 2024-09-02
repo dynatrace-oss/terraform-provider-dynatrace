@@ -25,6 +25,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -141,11 +142,11 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 		return nil, err
 	}
 
-	// if !v.IsPrivate {
-	// 	if err = me.update(ctx, stub.ID, v); err != nil {
-	// 		return nil, err
-	// 	}
-	// }
+	if !v.IsPrivate {
+		if err = me.update(ctx, stub.ID, v); err != nil {
+			return nil, err
+		}
+	}
 	return stub, nil
 }
 
@@ -186,7 +187,7 @@ func (me *service) update(_ context.Context, id string, v *documents.Document) (
 
 	writer.WriteField("type", v.Type)
 	writer.WriteField("name", v.Name)
-	// writer.WriteField("isPrivate", strconv.FormatBool(v.IsPrivate))
+	writer.WriteField("isPrivate", strconv.FormatBool(v.IsPrivate))
 
 	part, err := writer.CreatePart(map[string][]string{
 		"Content-Type":        {"application/json"},

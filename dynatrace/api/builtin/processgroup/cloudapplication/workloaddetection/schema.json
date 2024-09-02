@@ -70,8 +70,8 @@
 			}
 		},
 		"docker": {
-			"description": "Enable this setting for plain Docker environments to get \n * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups).",
-			"displayName": "Docker",
+			"description": "Enable this setting for plain Docker and Podman environments to get \n * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups). \n * Docker support requires OneAgent 1.257+. \n * Podman support requires OneAgent 1.267+.",
+			"displayName": "Docker and Podman",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
@@ -95,6 +95,20 @@
 			"nullable": false,
 			"type": {
 				"$ref": "#/types/KubernetesOpenShiftCAWD"
+			}
+		},
+		"serverless": {
+			"description": "Enable this setting to \n * Detect containers based on captured cloud-vendor metadata such as e.g. AWS ECS / Fargate, Azure Container Apps, [and many more](https://dt-url.net/2m02q7b).\n * Container resource metrics (Container group instance entities) and [related screens](https://www.dynatrace.com/support/help/shortlink/container-groups).",
+			"displayName": "Serverless Container Services",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.297"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ServerlessCAWD"
 			}
 		}
 	},
@@ -136,7 +150,7 @@
 				"enabled": {
 					"default": true,
 					"description": "",
-					"displayName": "Enable cloud application and workload detection for Docker",
+					"displayName": "Enable cloud application and workload detection for Docker and Podman",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
@@ -277,7 +291,7 @@
 				"filters": {
 					"constraints": [
 						{
-							"customMessage": "Namespace name and match operator must be unique",
+							"customMessage": "The list of defined rules violates uniqueness constraints. Check, whether each combination of namespace name and match operator is unique and that there is only one rule present which uses the \"exists\" operator.",
 							"type": "UNIQUE",
 							"uniqueProperties": [
 								"matchFilter.namespace",
@@ -310,22 +324,27 @@
 							"columns": [
 								{
 									"displayName": "Namespace name",
+									"id": "incNamespace",
 									"propertyRef": "./inclusionToggles/incNamespace"
 								},
 								{
 									"displayName": "Base pod name",
+									"id": "incBasepod",
 									"propertyRef": "./inclusionToggles/incBasepod"
 								},
 								{
 									"displayName": "Container name",
+									"id": "incContainer",
 									"propertyRef": "./inclusionToggles/incContainer"
 								},
 								{
 									"displayName": "Stage",
+									"id": "incStage",
 									"propertyRef": "./inclusionToggles/incStage"
 								},
 								{
 									"displayName": "Product",
+									"id": "incProduct",
 									"propertyRef": "./inclusionToggles/incProduct"
 								}
 							]
@@ -385,7 +404,31 @@
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
+		},
+		"ServerlessCAWD": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Enable container detection for serverless container services",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.297"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
 		}
 	},
-	"version": "1.4"
+	"version": "1.5"
 }

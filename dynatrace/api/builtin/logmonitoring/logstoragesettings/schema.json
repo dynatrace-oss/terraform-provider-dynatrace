@@ -129,7 +129,7 @@
 					"type": "LENGTH"
 				},
 				{
-					"customValidatorId": "logMonitoringRuleNameValidator",
+					"customValidatorId": "logMonitoringLogSourceRuleNameValidator",
 					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
@@ -312,5 +312,5 @@
 			}
 		}
 	},
-	"version": "1.0.10"
+	"version": "1.0.11"
 }

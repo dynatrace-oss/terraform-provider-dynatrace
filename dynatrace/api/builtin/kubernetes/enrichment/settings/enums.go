@@ -15,14 +15,26 @@
 * limitations under the License.
  */
 
-package logdebugsettings_test
+package enrichment
 
-import (
-	"testing"
-)
+type MetadataType string
 
-func TestAccLogDebugSettings(t *testing.T) {
-	// Temporarily disabled - schema removed from test environment
-	// api.TestAcc(t)
-	t.Skip()
+var MetadataTypes = struct {
+	Annotation MetadataType
+	Label      MetadataType
+}{
+	"ANNOTATION",
+	"LABEL",
+}
+
+type TargetOption string
+
+var TargetOptions = struct {
+	DtCostCostcenter  TargetOption
+	DtCostProduct     TargetOption
+	DtSecurityContext TargetOption
+}{
+	"dt.cost.costcenter",
+	"dt.cost.product",
+	"dt.security_context",
 }

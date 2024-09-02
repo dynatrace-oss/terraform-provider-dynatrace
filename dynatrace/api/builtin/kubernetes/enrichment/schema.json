@@ -1,0 +1,149 @@
+{
+	"allowedScopes": [
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "Generic metadata enrichment rules for Kubernetes.",
+	"displayName": "Kubernetes metadata enrichment",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"MetadataType": {
+			"description": "",
+			"displayName": "MetadataType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Annotation",
+					"value": "ANNOTATION"
+				},
+				{
+					"displayName": "Label",
+					"value": "LABEL"
+				}
+			],
+			"type": "enum"
+		},
+		"TargetOption": {
+			"description": "",
+			"displayName": "TargetOption",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "dt.security_context",
+					"value": "dt.security_context"
+				},
+				{
+					"displayName": "dt.cost.product",
+					"value": "dt.cost.product"
+				},
+				{
+					"displayName": "dt.cost.costcenter",
+					"value": "dt.cost.costcenter"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"rules": {
+			"description": "Dynatrace allows to use metadata defined on Kubernetes nodes, namespaces, and pods to set security and cost allocation attributes and dimensions for metrics, events, log, spans, and entities associated with the respective Kubernetes resource. \n\n The following annotation keys are considered: \n * `metadata.dynatrace.com/dt.security_context` \n * `metadata.dynatrace.com/dt.cost.product` \n * `metadata.dynatrace.com/dt.cost.costcenter` \n\n Pod annotations determine the attributes of data associated with the pod itself, and containers belonging to the pod. \n\nNamespace annotations determine the attributes of data associated with the namespace itself, workloads, services, and - if not overwritten on pod level - pods, and containers belonging to the namespace. \n\nNode annotations determine the attributes of data associated with only the node. \n\n Depending on your specific use case and environment, you have the following enrichment options: \n\n **Manual annotation:** \n\n Use the aforementioned annotation keys when annotating your namespaces and pods to enrich your Kubernetes data with security and cost allocation attributes.\n\nWith Dynatrace Operator version 1.3.0, the aforementioned namespace annotations are copied down to pods in the namespace, if they are not yet set on the respective pod. \n\n **Rule-based annotation:**\n\nIf you already have labels or annotations defined on your namespaces, and you want to reuse them for enrichment, you can do so with the help of rules definable here. \n\n**Example:**\n\n * Namespace label:\n   * `label/example: test-value`\n\n * Rule: \n   * `Label` \n `label/example --\u003e dt.security_context`\n\n * Pod annotation: \n   * `metadata.dynatrace.com/dt.security_context: test-value`\n\nA maximum of 5 rules can be defined. The first applicable rule will be applied. Preexisting annotations will not be overwritten. For a detailed description of this feature, have a look at our [documentation](https://dt-url.net/pn22sye).",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/Rule"
+				}
+			},
+			"maxObjects": 5,
+			"metadata": {
+				"addItemButton": "Add rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:cloud-and-virtualization"
+	],
+	"schemaId": "builtin:kubernetes.generic.metadata.enrichment",
+	"types": {
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"source": {
+					"constraints": [
+						{
+							"customMessage": "The source must not be empty. The name can have at most 63 characters and the overall length of the source must not exceed 75 characters.",
+							"maxLength": 75,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "The source must follow the syntax of Kubernetes annotation/label keys. Check the tooltip for more information",
+							"customValidatorId": "kubernetes-enrichment-source-format",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source",
+					"documentation": "The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n`source := (prefix/)?name`\n\n`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\nAdditionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"target": {
+					"default": "dt.security_context",
+					"description": "",
+					"displayName": "Target",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/TargetOption"
+					}
+				},
+				"type": {
+					"default": "ANNOTATION",
+					"description": "",
+					"displayName": "Metadata type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/MetadataType"
+					}
+				}
+			},
+			"summaryPattern": "{type} {source} --\u003e {target}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}

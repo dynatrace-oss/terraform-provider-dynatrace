@@ -15,14 +15,14 @@
 * limitations under the License.
  */
 
-package logdebugsettings_test
+package histogrammetrics_test
 
 import (
 	"testing"
 )
 
-func TestAccLogDebugSettings(t *testing.T) {
-	// Temporarily disabled - schema removed from test environment
+func TestAccHistogramMetrics(t *testing.T) {
+	// Temporarily disabled - not available on test tenant (enable with v300)
 	// api.TestAcc(t)
 	t.Skip()
 }

@@ -15,47 +15,35 @@
 * limitations under the License.
  */
 
-package permissions
+package workloaddetection
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type Settings struct {
-	Description string `json:"description"` // Name
-	Email       string `json:"email"`       // Contact Email
+type ServerlessCAWD struct {
+	Enabled bool `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
 }
 
-func (me *Settings) Name() string {
-	return me.Email
-}
-
-func (me *Settings) Schema() map[string]*schema.Schema {
+func (me *ServerlessCAWD) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": {
-			Type:        schema.TypeString,
-			Description: "Name",
-			Required:    true,
-		},
-		"email": {
-			Type:        schema.TypeString,
-			Description: "Contact Email",
+		"enabled": {
+			Type:        schema.TypeBool,
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 	}
 }
 
-func (me *Settings) MarshalHCL(properties hcl.Properties) error {
+func (me *ServerlessCAWD) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"description": me.Description,
-		"email":       me.Email,
+		"enabled": me.Enabled,
 	})
 }
 
-func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *ServerlessCAWD) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"description": &me.Description,
-		"email":       &me.Email,
+		"enabled": &me.Enabled,
 	})
 }
