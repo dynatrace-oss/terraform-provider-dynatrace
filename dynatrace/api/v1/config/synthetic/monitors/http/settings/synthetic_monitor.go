@@ -196,15 +196,24 @@ func (me *SyntheticMonitor) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("enabled"); ok {
 		me.Enabled = value.(bool)
 	}
-	if _, ok := decoder.GetOk("tags.#"); ok {
-		me.Tags = monitors.TagsWithSourceInfo{}
-		if err := me.Tags.UnmarshalHCL(hcl.NewDecoder(decoder, "tags", 0)); err != nil {
-			return err
-		}
-	}
 	if err := decoder.Decode("tags", &me.Tags); err != nil {
 		return err
 	}
+	if me.Tags != nil {
+		// bug in terraform forces us to filter out "empty" entries
+		var finalTags monitors.TagsWithSourceInfo
+		for _, tag := range me.Tags {
+			if tag == nil {
+				continue
+			}
+			if len(tag.Context) == 0 && len(tag.Key) == 0 && (tag.Source == nil || len(*tag.Source) == 0) && (tag.Value == nil || len(*tag.Value) == 0) {
+				continue
+			}
+			finalTags = append(finalTags, tag)
+		}
+		me.Tags = finalTags
+	}
+
 	if err := decoder.Decode("anomaly_detection", &me.AnomalyDetection); err != nil {
 		return err
 	}
