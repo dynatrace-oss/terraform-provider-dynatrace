@@ -16,7 +16,7 @@
 	"enums": {},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "Kubernetes Automation for Workflows"
+		"appName": "Kubernetes Automation (Preview)"
 	},
 	"multiObject": true,
 	"ordered": false,
@@ -135,5 +135,5 @@
 			]
 		}
 	},
-	"version": "0.1.8"
+	"version": "0.1.9"
 }
