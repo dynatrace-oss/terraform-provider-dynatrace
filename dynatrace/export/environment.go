@@ -312,9 +312,14 @@ func (me *Environment) InitialDownload() error {
 
 			keys := me.ResArgs[sResourceType]
 			module := me.Module(ResourceType(sResourceType))
-			if err := module.Download(parallel, keys...); err != nil {
-				return err
-			}
+			// removed error check here
+			// when downloading non-parallel returning an error
+			// just because one of the modules is failing
+			// exits the export too early
+			//
+			// the multithreaded export also just flags failed
+			// modules as erronneous but doesn't exit
+			module.Download(parallel, keys...)
 		}
 	}
 
