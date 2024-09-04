@@ -104,6 +104,7 @@ type Source string
 
 // Sources offers the known enum values
 var Sources = struct {
+	CICSPathName            Source
 	CICSSdk                 Source
 	CICSSystemId            Source
 	CICSTaskId              Source
@@ -135,6 +136,7 @@ var Sources = struct {
 	WebserviceMethod        Source
 	WebserviceName          Source
 }{
+	"CICS_PATH_NAME",
 	"CICS_SDK",
 	"CICS_SYSTEM_ID",
 	"CICS_TASK_ID",
@@ -472,6 +474,8 @@ var ServiceTechnologys = struct {
 	AWSLambda                            ServiceTechnology
 	AWSRds                               ServiceTechnology
 	AWSService                           ServiceTechnology
+	AWSSNSClient                         ServiceTechnology
+	AWSSQS                               ServiceTechnology
 	Axis                                 ServiceTechnology
 	AzureFunctions                       ServiceTechnology
 	AzureServiceBus                      ServiceTechnology
@@ -575,6 +579,8 @@ var ServiceTechnologys = struct {
 	Micronaut                            ServiceTechnology
 	MicrosoftSQLServer                   ServiceTechnology
 	Mongodb                              ServiceTechnology
+	MongodbClient                        ServiceTechnology
+	MongodbClientDotNet                  ServiceTechnology
 	MSSQLClient                          ServiceTechnology
 	MuleEsb                              ServiceTechnology
 	MySQL                                ServiceTechnology
@@ -626,6 +632,7 @@ var ServiceTechnologys = struct {
 	SAPMaxdb                             ServiceTechnology
 	SAPSybase                            ServiceTechnology
 	Scala                                ServiceTechnology
+	SecuritySoftware                     ServiceTechnology
 	Selinux                              ServiceTechnology
 	Sharepoint                           ServiceTechnology
 	Shell                                ServiceTechnology
@@ -686,6 +693,8 @@ var ServiceTechnologys = struct {
 	"AWS_LAMBDA",
 	"AWS_RDS",
 	"AWS_SERVICE",
+	"AWS_SNS_CLIENT",
+	"AWS_SQS",
 	"AXIS",
 	"AZURE_FUNCTIONS",
 	"AZURE_SERVICE_BUS",
@@ -789,6 +798,8 @@ var ServiceTechnologys = struct {
 	"MICRONAUT",
 	"MICROSOFT_SQL_SERVER",
 	"MONGODB",
+	"MONGODB_CLIENT",
+	"MONGODB_CLIENT_DOTNET",
 	"MSSQL_CLIENT",
 	"MULE_ESB",
 	"MYSQL",
@@ -840,6 +851,7 @@ var ServiceTechnologys = struct {
 	"SAP_MAXDB",
 	"SAP_SYBASE",
 	"SCALA",
+	"SECURITY_SOFTWARE",
 	"SELINUX",
 	"SHAREPOINT",
 	"SHELL",
