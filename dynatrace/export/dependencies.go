@@ -806,7 +806,7 @@ func (me *entityds) Replace(environment *Environment, s string, replacingIn Reso
 	s = m1.ReplaceAllStringFunc(s, func(id string) string {
 		dataSource := environment.Module(replacingIn).DataSource(id, DataSourceKindEntity)
 		if dataSource == nil {
-			return s
+			return id
 		}
 		found = true
 		if me.Coalesce {
