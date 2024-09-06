@@ -26,6 +26,7 @@ func (me QueueEntryPointType) Ref() *QueueEntryPointType {
 
 // QueueEntryPointTypes offers the known enum values
 var QueueEntryPointTypes = struct {
+	AWSSQS          QueueEntryPointType
 	IBMMQ           QueueEntryPointType
 	Jms             QueueEntryPointType
 	Kafka           QueueEntryPointType
@@ -34,6 +35,7 @@ var QueueEntryPointTypes = struct {
 	AzureServiceBus QueueEntryPointType
 	Values          func() []string
 }{
+	"AWS_SQS",
 	"IBM_MQ",
 	"JMS",
 	"KAFKA",

@@ -164,6 +164,8 @@ var Attributes = struct {
 	MobileApplicationPlatform                 Attribute
 	MobileApplicationTags                     Attribute
 	NameOfComputeNode                         Attribute
+	NetworkAvailabilityMonitorName            Attribute
+	NetworkAvailabilityMonitorTags            Attribute
 	OpenStackAccountName                      Attribute
 	OpenStackAccountProjectName               Attribute
 	OpenStackAvailabilityZoneName             Attribute
@@ -364,6 +366,8 @@ var Attributes = struct {
 	"MOBILE_APPLICATION_PLATFORM",
 	"MOBILE_APPLICATION_TAGS",
 	"NAME_OF_COMPUTE_NODE",
+	"NETWORK_AVAILABILITY_MONITOR_NAME",
+	"NETWORK_AVAILABILITY_MONITOR_TAGS",
 	"OPENSTACK_ACCOUNT_NAME",
 	"OPENSTACK_ACCOUNT_PROJECT_NAME",
 	"OPENSTACK_AVAILABILITY_ZONE_NAME",
