@@ -34,9 +34,13 @@ type SettingsObjectList struct {
 }
 
 type SettingsObjectListItem struct {
-	ObjectID      string          `json:"objectId"`
-	Scope         string          `json:"scope"`
-	SchemaVersion string          `json:"schemaVersion"`
-	SchemaID      string          `json:"schemaId"`
-	Value         json.RawMessage `json:"value"`
+	ObjectID         string `json:"objectId"`
+	Summary          string `json:"summary"`
+	Scope            string `json:"scope"`
+	SchemaVersion    string `json:"schemaVersion"`
+	SchemaID         string `json:"schemaId"`
+	ModificationInfo struct {
+		Deleteable bool `json:"deletable"`
+	} `json:"modificationInfo"`
+	Value json.RawMessage `json:"value"`
 }
