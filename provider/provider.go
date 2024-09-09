@@ -71,6 +71,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/goldenstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/internetproxy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
@@ -547,9 +548,11 @@ func Provider() *schema.Provider {
 			"dynatrace_discovery_feature_flags":             resources.NewGeneric(export.ResourceTypes.DiscoveryFeatureFlags).Resource(),
 			"dynatrace_histogram_metrics":                   resources.NewGeneric(export.ResourceTypes.HistogramMetrics).Resource(),
 			"dynatrace_kubernetes_enrichment":               resources.NewGeneric(export.ResourceTypes.KubernetesEnrichment).Resource(),
+			"dynatrace_golden_state":                        goldenstate.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
+
 	incubator(prv)
 	return prv
 }
