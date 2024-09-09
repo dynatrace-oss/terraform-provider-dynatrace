@@ -32,14 +32,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+const DisabledMessage = "The resource `dynatrace_golden_state` is currently only available for pilot users. Please reach out via GitHub ticket if you would like to have early access"
+
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	// logging.File.Println("-- CREATE --")
 	d.SetId(uuid.NewString())
+	if !Enabled {
+		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
+	}
 	return update(ctx, d, m, "  ")
 }
 
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	// logging.File.Println("-- UPDATE --")
+	if !Enabled {
+		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
+	}
 	return update(ctx, d, m, "  ")
 }
 

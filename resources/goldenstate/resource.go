@@ -20,6 +20,7 @@ package goldenstate
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
@@ -29,6 +30,8 @@ import (
 )
 
 const Debug = true
+
+var Enabled = os.Getenv("DYNATRACE_GOLDEN_STATE_ENABLED") == "true"
 
 func Resource() *schema.Resource {
 	schemaMap := map[string]*schema.Schema{
@@ -60,5 +63,8 @@ func Resource() *schema.Resource {
 
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("")
+	if !Enabled {
+		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
+	}
 	return diag.Diagnostics{}
 }
