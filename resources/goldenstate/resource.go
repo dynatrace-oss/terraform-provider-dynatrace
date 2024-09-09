@@ -39,8 +39,8 @@ func Resource() *schema.Resource {
 			Type:         schema.TypeString,
 			Optional:     true,
 			Default:      "WARN",
-			Description:  "Possible values are:\n* `DELETE` if you want resources to automatally get deleted`n* `PLAN` if you want to get notified about resources that aren't managed by Terraform by a non-empty plan for this resource\n* `WARN` if you want to get notified about resources that aren't managed by Terraform via a warning message from this resource`\nDefault is `QUIET`.",
-			ValidateFunc: validation.StringInSlice([]string{"DELETE", "PLAN", "WARN"}, false),
+			Description:  "Possible values are:\n* `DELETE` if you want resources to automatally get deleted`n* `WARN` if you want to get notified about resources that aren't managed by Terraform via a warning message from this resource`\nDefault is `WARN`.",
+			ValidateFunc: validation.StringInSlice([]string{"DELETE", "WARN"}, false),
 		},
 	}
 	for resource := range serviceMap {
