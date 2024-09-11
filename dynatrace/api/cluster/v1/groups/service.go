@@ -3,6 +3,7 @@ package groups
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups/settings"
@@ -14,7 +15,7 @@ const SchemaID = "accounts:groups"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*groups.GroupConfig] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
 	}
 }
 

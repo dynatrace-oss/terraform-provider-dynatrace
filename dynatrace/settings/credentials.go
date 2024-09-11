@@ -68,7 +68,9 @@ func getEnv(names ...string) string {
 		return ""
 	}
 	for _, name := range names {
+		fmt.Println("-GETENV-", name)
 		if value := os.Getenv(name); len(value) > 0 {
+			fmt.Println("    ", value)
 			return value
 		}
 	}
@@ -150,6 +152,9 @@ func CreateExportCredentials() (*Credentials, error) {
 	}
 
 	clusterURL := getEnv("DYNATRACE_CLUSTER_URL", "DT_CLUSTER_URL")
+	for strings.HasSuffix(clusterURL, "/") {
+		clusterURL = strings.TrimSuffix(clusterURL, "/")
+	}
 	clusterAPIToken := getEnv("DYNATRACE_CLUSTER_API_TOKEN", "DT_CLUSTER_API_TOKEN")
 
 	if environmentURL == "" && clusterURL == "" && iam_account_id == "" {

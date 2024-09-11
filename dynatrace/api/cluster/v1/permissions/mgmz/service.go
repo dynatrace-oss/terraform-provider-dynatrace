@@ -15,7 +15,7 @@ const SchemaID = "accounts:groups-mgmz"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*mgmz.Permission] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
 	}
 }
 

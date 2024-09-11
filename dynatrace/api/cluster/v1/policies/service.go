@@ -21,7 +21,7 @@ func NewPolicyService(baseURL string, apiToken string) *PolicyServiceClient {
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*policies.Policy] {
 	return &service{
-		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/cluster/v2"), credentials.Cluster.Token),
+		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/cluster/v2"), credentials.Cluster.Token),
 	}
 }
 

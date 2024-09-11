@@ -16,7 +16,7 @@ const SchemaID = "accounts:users"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*users.UserConfig] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", credentials.Cluster.URL, "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
 	}
 }
 
