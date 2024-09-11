@@ -68,9 +68,7 @@ func getEnv(names ...string) string {
 		return ""
 	}
 	for _, name := range names {
-		fmt.Println("-GETENV-", name)
 		if value := os.Getenv(name); len(value) > 0 {
-			fmt.Println("    ", value)
 			return value
 		}
 	}
