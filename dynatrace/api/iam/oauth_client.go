@@ -33,9 +33,27 @@ var mutex *sync.Mutex = new(sync.Mutex)
 
 var msgInvalidOAuthCredentials = "Invalid OAuth credentials"
 
+const errMsgClientIDMissing = ` No OAuth Client configured. Please specify either one of these environment variables: IAM_CLIENT_ID, DYNATRACE_IAM_CLIENT_ID, DT_IAM_CLIENT_ID, DT_CLIENT_ID, DYNATRACE_CLIENT_ID`
+const errMsgAccountIDMissing = ` No Account ID configured. Please specify either one of these environment variables: IAM_ACCOUNT_ID, DYNATRACE_IAM_ACCOUNT_ID, DT_IAM_ACCOUNT_ID, DT_ACCOUNT_ID, DYNATRACE_ACCOUNT_ID`
+const errMsgClientSecretMissing = ` No OAuth Client Secret configured. Please specify either one of these environment variables: IAM_CLIENT_SECRET, DYNATRACE_IAM_CLIENT_SECRET, DT_IAM_CLIENT_SECRET, DYNATRACE_CLIENT_SECRET, DT_CLIENT_SECRET`
+
 func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	mutex.Lock()
 	defer mutex.Unlock()
+
+	clientID := auth.ClientID()
+	if len(strings.TrimSpace(clientID)) == 0 {
+		return "", errors.New(errMsgClientIDMissing)
+	}
+	accountID := auth.AccountID()
+	if len(strings.TrimSpace(accountID)) == 0 {
+		return "", errors.New(errMsgAccountIDMissing)
+	}
+	clientSecret := auth.ClientSecret()
+	if len(strings.TrimSpace(clientSecret)) == 0 {
+		return "", errors.New(errMsgClientSecretMissing)
+	}
+
 	var httpReq *http.Request
 	var httpRes *http.Response
 	var body []byte
