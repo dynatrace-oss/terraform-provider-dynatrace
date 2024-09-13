@@ -101,13 +101,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 	d.SetId(service.SchemaID())
-	if len(settings.Entities) != 0 {
-		marshalled := hcl.Properties{}
-		err := marshalled.Encode("settings", &settings)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		d.Set("entities", marshalled["settings"].([]any)[0].(hcl.Properties)["entities"])
+	marshalled := hcl.Properties{}
+	if err := marshalled.Encode("settings", &settings); err != nil {
+		return diag.FromErr(err)
 	}
+	d.Set("entities", marshalled["settings"].([]any)[0].(hcl.Properties)["entities"])
+
 	return diag.Diagnostics{}
 }
