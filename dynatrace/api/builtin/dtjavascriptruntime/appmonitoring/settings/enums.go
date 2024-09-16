@@ -20,9 +20,33 @@ package appmonitoring
 type DefaultLogLevel string
 
 var DefaultLogLevels = struct {
-	All DefaultLogLevel
-	Off DefaultLogLevel
+	Debug DefaultLogLevel
+	Error DefaultLogLevel
+	Info  DefaultLogLevel
+	Off   DefaultLogLevel
+	Warn  DefaultLogLevel
 }{
-	"all",
+	"debug",
+	"error",
+	"info",
 	"off",
+	"warn",
+}
+
+type OverrideDefaultLogLevel string
+
+var OverrideDefaultLogLevels = struct {
+	Debug      OverrideDefaultLogLevel
+	Error      OverrideDefaultLogLevel
+	Info       OverrideDefaultLogLevel
+	Off        OverrideDefaultLogLevel
+	Usedefault OverrideDefaultLogLevel
+	Warn       OverrideDefaultLogLevel
+}{
+	"debug",
+	"error",
+	"info",
+	"off",
+	"useDefault",
+	"warn",
 }

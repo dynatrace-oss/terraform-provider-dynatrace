@@ -23,7 +23,8 @@ import (
 )
 
 type Settings struct {
-	DefaultLogLevel DefaultLogLevel `json:"defaultLogLevel"` // Possible Values: `All`, `Off`
+	AppMonitoring   AppMonitorings  `json:"appMonitoring,omitempty"` // You can override the default monitoring setting for each app separately
+	DefaultLogLevel DefaultLogLevel `json:"defaultLogLevel"`         // Possible Values: `Debug`, `Error`, `Info`, `Off`, `Warn`
 }
 
 func (me *Settings) Name() string {
@@ -32,9 +33,17 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"app_monitoring": {
+			Type:        schema.TypeList,
+			Description: "You can override the default monitoring setting for each app separately",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(AppMonitorings).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"default_log_level": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `All`, `Off`",
+			Description: "Possible Values: `Debug`, `Error`, `Info`, `Off`, `Warn`",
 			Required:    true,
 		},
 	}
@@ -42,12 +51,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"app_monitoring":    me.AppMonitoring,
 		"default_log_level": me.DefaultLogLevel,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"app_monitoring":    &me.AppMonitoring,
 		"default_log_level": &me.DefaultLogLevel,
 	})
 }

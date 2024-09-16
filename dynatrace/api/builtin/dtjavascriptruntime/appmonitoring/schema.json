@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure the monitoring settings for custom Dynatrace Apps. This setting determines if logs for custom Dynatrace Apps are retained within this environment.\n\n[Check out the documentation for more details and how to find the logs](https://developer.dynatrace.com/develop/troubleshooting/self-monitoring/#accessing-app-function-logs).",
+	"description": "Set up the monitoring parameters for your custom Dynatrace applications. These parameters will establish the default behavior for logging within this environment.\n\n[Check out the documentation for more details and how to find the logs](https://developer.dynatrace.com/develop/troubleshooting/self-monitoring/#accessing-app-function-logs).",
 	"displayName": "App Monitoring",
 	"documentation": "",
 	"dynatrace": "1",
@@ -18,9 +18,62 @@
 					"value": "off"
 				},
 				{
-					"description": "Enable all logs in custom apps.",
-					"displayName": "ALL",
-					"value": "all"
+					"description": "Enable debug logs in custom apps.",
+					"displayName": "DEBUG",
+					"value": "debug"
+				},
+				{
+					"description": "Enable info logs in custom apps.",
+					"displayName": "INFO",
+					"value": "info"
+				},
+				{
+					"description": "Enable warning logs in custom apps.",
+					"displayName": "WARN",
+					"value": "warn"
+				},
+				{
+					"description": "Enable error logs in custom apps.",
+					"displayName": "ERROR",
+					"value": "error"
+				}
+			],
+			"type": "enum"
+		},
+		"overrideDefaultLogLevel": {
+			"description": "",
+			"displayName": "App specific log level",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Use default log level",
+					"displayName": "Use default",
+					"value": "useDefault"
+				},
+				{
+					"description": "Turn off logging in custom apps.",
+					"displayName": "OFF",
+					"value": "off"
+				},
+				{
+					"description": "Enable debug logs in custom apps.",
+					"displayName": "DEBUG",
+					"value": "debug"
+				},
+				{
+					"description": "Enable info logs in custom apps.",
+					"displayName": "INFO",
+					"value": "info"
+				},
+				{
+					"description": "Enable warning logs in custom apps.",
+					"displayName": "WARN",
+					"value": "warn"
+				},
+				{
+					"description": "Enable error logs in custom apps.",
+					"displayName": "ERROR",
+					"value": "error"
 				}
 			],
 			"type": "enum"
@@ -29,12 +82,45 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"appMonitoring": {
+			"constraints": [
+				{
+					"customMessage": "App override already exists!",
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"appId"
+					]
+				}
+			],
+			"description": "You can override the default monitoring setting for each app separately",
+			"displayName": "",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/appMonitoring"
+				}
+			},
+			"maxObjects": 50,
+			"metadata": {
+				"addItemButton": "Add override"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
 		"defaultLogLevel": {
-			"default": "all",
+			"default": "info",
 			"description": "",
 			"displayName": "Default log level",
 			"documentation": "",
 			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": {
@@ -47,6 +133,53 @@
 		"group:preferences"
 	],
 	"schemaId": "builtin:dt-javascript-runtime.app-monitoring",
-	"types": {},
-	"version": "1"
+	"types": {
+		"appMonitoring": {
+			"description": "",
+			"displayName": "appMonitoring",
+			"documentation": "",
+			"properties": {
+				"appId": {
+					"constraints": [
+						{
+							"maxLength": 50,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NO_WHITESPACE"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "App ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"customLogLevel": {
+					"default": "useDefault",
+					"description": "",
+					"displayName": "App specific log level",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/overrideDefaultLogLevel"
+					}
+				}
+			},
+			"summaryPattern": "{appId}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "2"
 }
