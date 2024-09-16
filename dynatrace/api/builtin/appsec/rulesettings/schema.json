@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "By default, all processes are covered by Third-party Vulnerability Analytics. Define custom monitoring rules here. Note that the monitoring rules are ordered, and that the first matching rule will be applied.",
+	"description": "The global third-party vulnerability detection control defines the default monitoring mode. To override the default, define custom monitoring rules here. Note that the monitoring rules are ordered, and that the first matching rule will be applied.",
 	"displayName": "Vulnerability Analytics: Monitoring rules for third-party vulnerabilities",
 	"documentation": "",
 	"dynatrace": "1",
@@ -45,6 +45,7 @@
 			"documentation": "",
 			"items": [
 				{
+					"description": "This property applies to process groups",
 					"displayName": "Process tag",
 					"value": "PROCESS_TAG"
 				},
@@ -171,5 +172,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

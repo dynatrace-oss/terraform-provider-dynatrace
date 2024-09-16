@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.6"
+const SchemaVersion = "1.6.1"
 const SchemaID = "builtin:synthetic.http.performance-thresholds"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*performancethresholds.Settings] {

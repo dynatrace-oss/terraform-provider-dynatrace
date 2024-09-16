@@ -6,7 +6,7 @@
 	],
 	"description": "OneAgent can capture business events from outgoing HTTP requests. To activate this feature, add capture rules below.",
 	"displayName": "Capture business events with OneAgent",
-	"documentation": "\n\nCapture rules tell OneAgent to capture business events when specific webservices or endpoints are called. A capture rule consists of trigger rules, mandatory business event information (e.g. type and provider) and optional event data fields. A trigger defines the criteria that, when met, cause a business event to be captured (e.g. endpoint “/api/buy” is called). By adding event data fields to your business event, you can extract data directly from the incoming request payload. To limit the scope of a capture rule to a certain Host-Group or Host, create the rule directly in the Host-Group or Host setting screen.\n\nLearn more by visiting [our documentation](https://dt-url.net/gg230ij).",
+	"documentation": "\n\nCapture rules tell OneAgent to capture business events when specific webservices or endpoints are called. A capture rule consists of trigger rules, mandatory business event information (e.g. type and provider) and optional event data fields. A trigger defines the criteria that, when met, cause a business event to be captured (e.g. endpoint “/api/buy” is called). By adding event data fields to your business event, you can extract data directly from the outgoing request payload. To limit the scope of a capture rule to a certain Host-Group or Host, create the rule directly in the Host-Group or Host setting screen.\n\nLearn more by visiting [our documentation](https://dt-url.net/gg230ij).",
 	"dynatrace": "1",
 	"enums": {
 		"ComparisonEnum": {
@@ -201,7 +201,7 @@
 			"type": "text"
 		},
 		"triggers": {
-			"description": "Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
+			"description": "Define conditions to trigger business events from outgoing web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
 			"displayName": "Triggers",
 			"documentation": "",
 			"items": {
@@ -727,5 +727,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

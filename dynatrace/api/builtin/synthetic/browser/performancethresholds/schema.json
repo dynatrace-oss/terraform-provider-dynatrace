@@ -11,7 +11,7 @@
 	"multiObject": false,
 	"properties": {
 		"enabled": {
-			"default": true,
+			"default": false,
 			"description": "",
 			"displayName": "Generate a problem and send an alert on performance threshold violations",
 			"documentation": "",
@@ -68,6 +68,7 @@
 						{
 							"customMessage": "ID must identify the synthetic monitor or a synthetic event of the monitor.",
 							"customValidatorId": "step-of-test-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -117,5 +118,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6"
+	"version": "1.6.1"
 }
