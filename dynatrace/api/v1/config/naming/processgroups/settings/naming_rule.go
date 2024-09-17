@@ -87,7 +87,7 @@ func (me *NamingRule) MarshalHCL(properties hcl.Properties) error {
 		"enabled":    me.Enabled,
 		"format":     me.Format,
 		"conditions": me.Conditions,
-		"unknowns":   me.Unknowns,
+		// "unknowns":   me.Unknowns,
 	})
 	delete(me.Unknowns, "metadata")
 	delete(me.Unknowns, "id")
@@ -100,7 +100,7 @@ func (me *NamingRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":    &me.Enabled,
 		"format":     &me.Format,
 		"conditions": &me.Conditions,
-		"unknowns":   &me.Unknowns,
+		// "unknowns":   &me.Unknowns,
 	})
 	delete(me.Unknowns, "metadata")
 	delete(me.Unknowns, "id")
