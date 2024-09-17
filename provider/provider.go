@@ -548,6 +548,7 @@ func Provider() *schema.Provider {
 			"dynatrace_discovery_feature_flags":             resources.NewGeneric(export.ResourceTypes.DiscoveryFeatureFlags).Resource(),
 			"dynatrace_histogram_metrics":                   resources.NewGeneric(export.ResourceTypes.HistogramMetrics).Resource(),
 			"dynatrace_kubernetes_enrichment":               resources.NewGeneric(export.ResourceTypes.KubernetesEnrichment).Resource(),
+			"dynatrace_devobs_git_onprem":                   resources.NewGeneric(export.ResourceTypes.DevObsGitOnPrem).Resource(),
 			"dynatrace_golden_state":                        goldenstate.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,

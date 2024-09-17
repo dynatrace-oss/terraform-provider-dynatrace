@@ -1,0 +1,95 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Specify your On-Premise Git servers to be able to fetch source code from them",
+	"displayName": "Git On-Premise Servers",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"providers": {
+			"description": "",
+			"displayName": "Git Providers",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Github",
+					"value": "GithubOnPrem"
+				},
+				{
+					"displayName": "Gitlab",
+					"value": "GitlabOnPrem"
+				},
+				{
+					"displayName": "Bitbucket",
+					"value": "BitbucketOnPrem"
+				},
+				{
+					"displayName": "Azure Devops",
+					"value": "AzureOnPrem"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Live Debugger"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"IncludeCredentials": {
+			"default": false,
+			"description": "If turned on, requests to your Gitlab server will have the `credentials` option set to `include`. Otherwise, it will be set to `omit`.",
+			"displayName": "Include Credentials",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "GitlabOnPrem",
+				"property": "Provider",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
+		"Provider": {
+			"default": "GithubOnPrem",
+			"description": "The git service provider for this server",
+			"displayName": "Git Provider",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/providers"
+			}
+		},
+		"Url": {
+			"constraints": [
+				{
+					"customMessage": "Not a valid HTTP or HTTPS URL.",
+					"pattern": "^https?://\\S+(/\\S)*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "An HTTP/HTTPS URL of your server",
+			"displayName": "Server URL",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaId": "app:dynatrace.devobs.debugger:git.on.prem",
+	"types": {},
+	"version": "0.2"
+}

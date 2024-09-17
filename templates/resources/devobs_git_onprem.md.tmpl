@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_devobs_git_onprem Resource - terraform-provider-dynatrace"
+subcategory: "Developer Observability"
+description: |-
+  The resource `dynatrace_devobs_git_onprem` covers configuration for Developer Observability git on-premise servers
+---
+
+# dynatrace_devobs_git_onprem (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Developer Observability - https://docs.dynatrace.com/docs/platform-modules/applications-and-microservices/developer-observability
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.devobs.debugger:git.on.prem`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_devobs_git_onprem` downloads existing Developer Observability git on-premise server configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/devobs/debugger/gitonprem/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

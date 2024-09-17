@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/featureflags"
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
@@ -1315,6 +1316,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		enrichment.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
+	ResourceTypes.DevObsGitOnPrem: NewResourceDescriptor(gitonprem.Service),
 }
 
 type ResourceExclusion struct {
