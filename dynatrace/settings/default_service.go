@@ -278,7 +278,7 @@ func (me *defaultService[T]) Update(ctx context.Context, id string, v T) error {
 	return nil
 }
 
-func (me *defaultService[T]) update(ctx context.Context, id string, v T) error {
+func (me *defaultService[T]) update(_ context.Context, id string, v T) error {
 	var err error
 	// some endpoints respond back initially with an internal server error
 	// We're re-trying at least two more times before the update fails for good
