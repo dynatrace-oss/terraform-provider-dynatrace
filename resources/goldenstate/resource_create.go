@@ -25,7 +25,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	cfg "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -78,6 +77,7 @@ func CommonUpdate(ctx context.Context, d *schema.ResourceData, key export.Resour
 			mode = "QUIET"
 		}
 	}
+
 	// logging.File.Println(indent, "CommonUpdate", key)
 	cd := confighcl.DecoderFrom(d, Resource())
 	untypedIDs, ok := cd.GetOk(string(key))
@@ -116,12 +116,9 @@ func CommonUpdate(ctx context.Context, d *schema.ResourceData, key export.Resour
 		case "WARN":
 			diags = append(diags, diag.Diagnostic{Summary: fmt.Sprintf("[ %-24s ] %s", trimName(name), id)})
 		case "DELETE":
-			if Debug {
-				logging.File.Printf("[%s] DELETING (%s) %s", key, name, id)
+			if err := service.Delete(ctx, id); err != nil {
+				return diags, err
 			}
-			// if err := service.Delete(ctx, id); err != nil {
-			// 	return err
-			// }
 		}
 	}
 	return diags, nil
