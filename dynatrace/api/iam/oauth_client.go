@@ -18,6 +18,8 @@ type Authenticator interface {
 	ClientID() string
 	AccountID() string
 	ClientSecret() string
+	TokenURL() string
+	EndpointURL() string
 }
 
 var tokens = map[string]string{}
@@ -36,6 +38,7 @@ var msgInvalidOAuthCredentials = "Invalid OAuth credentials"
 const errMsgClientIDMissing = ` No OAuth Client configured. Please specify either one of these environment variables: IAM_CLIENT_ID, DYNATRACE_IAM_CLIENT_ID, DT_IAM_CLIENT_ID, DT_CLIENT_ID, DYNATRACE_CLIENT_ID`
 const errMsgAccountIDMissing = ` No Account ID configured. Please specify either one of these environment variables: IAM_ACCOUNT_ID, DYNATRACE_IAM_ACCOUNT_ID, DT_IAM_ACCOUNT_ID, DT_ACCOUNT_ID, DYNATRACE_ACCOUNT_ID`
 const errMsgClientSecretMissing = ` No OAuth Client Secret configured. Please specify either one of these environment variables: IAM_CLIENT_SECRET, DYNATRACE_IAM_CLIENT_SECRET, DT_IAM_CLIENT_SECRET, DYNATRACE_CLIENT_SECRET, DT_CLIENT_SECRET`
+const errMsgTokenURLMissing = ` No OAuth Token URL configured. Please specify either one of these environment variables: IAM_TOKEN_URL, DYNATRACE_IAM_TOKEN_URL, DT_IAM_TOKEN_URL, DYNATRACE_TOKEN_URL, DT_TOKEN_URL`
 
 func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	mutex.Lock()
@@ -52,6 +55,10 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	clientSecret := auth.ClientSecret()
 	if len(strings.TrimSpace(clientSecret)) == 0 {
 		return "", errors.New(errMsgClientSecretMissing)
+	}
+	tokenURL := auth.TokenURL()
+	if len(strings.TrimSpace(tokenURL)) == 0 {
+		return "", errors.New(errMsgTokenURLMissing)
 	}
 
 	var httpReq *http.Request
@@ -74,7 +81,7 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	)
 	payload := strings.NewReader(payloadStr)
 
-	if httpReq, err = http.NewRequest(http.MethodPost, "https://sso.dynatrace.com/sso/oauth2/token", payload); err != nil {
+	if httpReq, err = http.NewRequest(http.MethodPost, tokenURL, payload); err != nil {
 		return "", err
 	}
 	httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -91,7 +98,7 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 			url.QueryEscape(auth.ClientID()),
 			url.QueryEscape("<hidden>"),
 		)
-		rest.Logger.Println("POST https://sso.dynatrace.com/sso/oauth2/token")
+		rest.Logger.Println("POST", tokenURL)
 		rest.Logger.Println("  " + debugPayloadStr)
 		rest.Logger.Println("  -> " + string(body))
 	}

@@ -19,6 +19,8 @@ type PermissionServiceClient struct {
 	clientID     string
 	accountID    string
 	clientSecret string
+	tokenURL     string
+	endpointURL  string
 }
 
 func (me *PermissionServiceClient) ClientID() string {
@@ -33,12 +35,20 @@ func (me *PermissionServiceClient) ClientSecret() string {
 	return me.clientSecret
 }
 
-func NewPermissionService(clientID string, accountID string, clientSecret string) *PermissionServiceClient {
-	return &PermissionServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+func (me *PermissionServiceClient) TokenURL() string {
+	return me.tokenURL
+}
+
+func (me *PermissionServiceClient) EndpointURL() string {
+	return me.endpointURL
+}
+
+func NewPermissionService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *PermissionServiceClient {
+	return &PermissionServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*permissions.Permission] {
-	return &PermissionServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+	return &PermissionServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 
 func (me *PermissionServiceClient) SchemaID() string {
@@ -71,7 +81,7 @@ func (me *PermissionServiceClient) Create(ctx context.Context, permission *permi
 		ScopeType: scopeType,
 		Name:      permission.Name,
 	}}
-	if _, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), permission.GroupID), payload, 201, false); err != nil {
+	if _, err = client.POST(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), permission.GroupID), payload, 201, false); err != nil {
 		return nil, err
 	}
 
@@ -97,7 +107,7 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 	scope := parts[2]
 	scopeType := parts[3]
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), 200, false); err != nil {
 		return err
 	}
 
@@ -132,7 +142,7 @@ func (me *PermissionServiceClient) Update(ctx context.Context, email string, per
 }
 
 func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	groupsService := groups.NewGroupService(me.clientID, me.accountID, me.clientSecret)
+	groupsService := groups.NewGroupService(me.clientID, me.accountID, me.clientSecret, me.tokenURL, me.endpointURL)
 	groupStubs, err := groupsService.List(ctx)
 	if err != nil {
 		return nil, err
@@ -147,7 +157,7 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 		accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
 
 		var response GetGroupPermissionsResponse
-		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), 200, false, &response); err != nil {
+		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, groupID), 200, false, &response); err != nil {
 			return nil, err
 		}
 
@@ -172,7 +182,7 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	scope := parts[2]
 	scopeType := parts[3]
 
-	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions?scope=%s&permission-name=%s&scope-type=%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID, url.QueryEscape(scope), url.QueryEscape(name), url.QueryEscape(scopeType)), 200, false)
+	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions?scope=%s&permission-name=%s&scope-type=%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID, url.QueryEscape(scope), url.QueryEscape(name), url.QueryEscape(scopeType)), 200, false)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}

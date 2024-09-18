@@ -36,6 +36,8 @@ type IAM struct {
 	ClientID     string
 	AccountID    string
 	ClientSecret string
+	TokenURL     string
+	EndpointURL  string
 }
 
 type Automation struct {
@@ -57,43 +59,46 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 	switch CredentialValidation {
 	case CredValDefault:
 		if len(conf.EnvironmentURL) == 0 {
-			return fmt.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that.")
+			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
 		if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
-			return fmt.Errorf("The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
+			return fmt.Errorf(" The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
 		}
 		if len(conf.APIToken) == 0 {
-			return fmt.Errorf("No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that.")
+			return fmt.Errorf(" No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that")
 		}
 	case CredValIAM:
 		if len(conf.IAM.AccountID) == 0 {
-			return fmt.Errorf("No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that.")
+			return fmt.Errorf(" No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that")
 		}
 		if len(conf.IAM.ClientID) == 0 {
-			return fmt.Errorf("No OAuth Client ID has been specified. Use either the environment variable `DT_CLIENT_ID` or the configuration attribute `iam_client_id` of the provider for that.")
+			return fmt.Errorf(" No OAuth Client ID has been specified. Use either the environment variable `DT_CLIENT_ID` or the configuration attribute `iam_client_id` of the provider for that")
 		}
 		if len(conf.IAM.ClientSecret) == 0 {
-			return fmt.Errorf("No OAuth Client Secret has been specified. Use either the environment variable `DT_CLIENT_SECRET` or the configuration attribute `iam_client_secret` of the provider for that.")
+			return fmt.Errorf(" No OAuth Client Secret has been specified. Use either the environment variable `DT_CLIENT_SECRET` or the configuration attribute `iam_client_secret` of the provider for that")
+		}
+		if len(conf.IAM.TokenURL) == 0 {
+			return fmt.Errorf(" No OAuth TokenURL has been specified. Use either the environment variable `DT_TOKEN_URL` or the configuration attribute `iam_token_url` of the provider for that")
 		}
 	case CredValCluster:
 		if len(conf.ClusterAPIToken) == 0 {
-			return fmt.Errorf("No Cluster API Token has been specified. Use either the environment variable `DT_CLUSTER_API_TOKEN` or the configuration attribute `dt_cluster_api_token` of the provider for that.")
+			return fmt.Errorf(" No Cluster API Token has been specified. Use either the environment variable `DT_CLUSTER_API_TOKEN` or the configuration attribute `dt_cluster_api_token` of the provider for that")
 		}
 		if len(conf.ClusterAPIV2URL) == 0 {
-			return fmt.Errorf("No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that.")
+			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValAutomation:
 		if len(conf.Automation.ClientID) == 0 {
-			return fmt.Errorf("No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that.")
+			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
 		if len(conf.Automation.ClientSecret) == 0 {
-			return fmt.Errorf("No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that.")
+			return fmt.Errorf(" No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that")
 		}
 		if len(conf.Automation.TokenURL) == 0 {
-			return fmt.Errorf("No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that.")
+			return fmt.Errorf(" No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that")
 		}
 		if len(conf.Automation.EnvironmentURL) == 0 {
-			return fmt.Errorf("No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that.")
+			return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
 		}
 	}
 	return nil
@@ -162,39 +167,42 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	fullNonConfigURL := dtEnvURL + "/api/v1"
 	fullApiV2URL := dtEnvURL + "/api/v2"
 
-	automationEnvironmentURL := getString(d, "automation_env_url")
-	automationTokenURL := getString(d, "automation_token_url")
-	if len(automationEnvironmentURL) == 0 {
+	automation_environment_url := getString(d, "automation_env_url")
+	automation_token_url := getString(d, "automation_token_url")
+	if len(automation_environment_url) == 0 {
 		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automationEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
-			automationTokenURL = "https://sso.dynatrace.com/sso/oauth2/token"
+			automation_environment_url = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
+			automation_token_url = settings.ProdTokenURL
 		}
 		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automationEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
-			automationTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
+			automation_environment_url = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
+			automation_token_url = settings.SprintTokenURL
 		}
 		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automationEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
-			automationTokenURL = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
+			automation_environment_url = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
+			automation_token_url = settings.DevTokenURL
 		}
 	}
 
 	client_id := getString(d, "client_id")
 	client_secret := getString(d, "client_secret")
 	account_id := getString(d, "account_id")
+	token_url := getString(d, "token_url")
+
+	oauth_endpoint_url := "https://api.dynatrace.com"
+	if strings.Contains(dtEnvURL, ".live.dynatrace.com") || strings.Contains(dtEnvURL, ".apps.dynatrace.com") {
+		oauth_endpoint_url = settings.ProdIAMEndpointURL
+	} else if strings.Contains(dtEnvURL, ".sprint.dynatracelabs.com") || strings.Contains(dtEnvURL, ".sprint.apps.dynatracelabs.com") {
+		oauth_endpoint_url = settings.SprintIAMEndpointURL
+	} else if strings.Contains(dtEnvURL, ".dev.dynatracelabs.com") || strings.Contains(dtEnvURL, ".dev.apps.dynatracelabs.com") {
+		oauth_endpoint_url = settings.DevIAMEndpointURL
+	}
 
 	iam_client_id := getString(d, "iam_client_id")
-	if len(iam_client_id) == 0 {
-		iam_client_id = client_id
-	}
 	iam_account_id := getString(d, "iam_account_id")
-	if len(iam_account_id) == 0 {
-		iam_account_id = account_id
-	}
 	iam_client_secret := getString(d, "iam_client_secret")
-	if len(iam_client_secret) == 0 {
-		iam_client_secret = client_secret
-	}
+	iam_token_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_token_url")), "/")
+	iam_endpoint_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_endpoint_url")), "/")
 
 	automation_client_id := getString(d, "automation_client_id")
 	if len(automation_client_id) == 0 {
@@ -204,6 +212,16 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	if len(automation_client_secret) == 0 {
 		automation_client_secret = client_secret
 	}
+
+	automation_client_id = streamlineOAuthCreds(automation_client_id, client_id, iam_client_id)
+	automation_client_secret = streamlineOAuthCreds(automation_client_secret, client_secret, iam_client_secret)
+	automation_token_url = streamlineOAuthCreds(automation_token_url, token_url, iam_token_url)
+
+	iam_client_id = streamlineOAuthCreds(iam_client_id, client_id, automation_client_id)
+	iam_client_secret = streamlineOAuthCreds(iam_client_secret, client_secret, automation_client_secret)
+	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, automation_token_url)
+	iam_account_id = streamlineOAuthCreds(iam_account_id, account_id)
+	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url)
 
 	var diags diag.Diagnostics
 
@@ -218,15 +236,29 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 		IAM: IAM{
 			ClientID:     iam_client_id,
 			AccountID:    iam_account_id,
-			ClientSecret: getString(d, "iam_client_secret"),
+			ClientSecret: iam_client_secret,
+			TokenURL:     iam_token_url,
+			EndpointURL:  iam_endpoint_url,
 		},
 		Automation: Automation{
-			ClientID:       getString(d, "automation_client_id"),
-			ClientSecret:   getString(d, "automation_client_secret"),
-			TokenURL:       automationTokenURL,
-			EnvironmentURL: automationEnvironmentURL,
+			ClientID:       automation_client_id,
+			ClientSecret:   automation_client_secret,
+			TokenURL:       automation_token_url,
+			EnvironmentURL: automation_environment_url,
 		},
 	}, diags
+}
+
+func streamlineOAuthCreds(values ...string) string {
+	if len(values) == 0 {
+		return ""
+	}
+	for _, value := range values {
+		if len(value) != 0 {
+			return value
+		}
+	}
+	return ""
 }
 
 func getString(d Getter, key string) string {
@@ -234,4 +266,23 @@ func getString(d Getter, key string) string {
 		return value.(string)
 	}
 	return ""
+}
+
+type ConfigGetter struct {
+	Provider *schema.Provider
+}
+
+func (me ConfigGetter) Get(key string) any {
+	schema, found := me.Provider.Schema[key]
+	if !found {
+		return ""
+	}
+	if schema.DefaultFunc == nil {
+		return ""
+	}
+	result, _ := schema.DefaultFunc()
+	if result == nil {
+		return ""
+	}
+	return result
 }

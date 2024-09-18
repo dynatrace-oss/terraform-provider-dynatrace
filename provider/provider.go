@@ -104,7 +104,7 @@ func Provider() *schema.Provider {
 			"dt_env_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_ENV_URL", "DT_ENV_URL"}, nil),
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_ENV_URL", "DT_ENV_URL", "DYNATRACE_ENVIRONMENT_URL", "DT_ENVIRONMENT_URL"}, nil),
 			},
 			"dt_api_token": {
 				Type:        schema.TypeString,
@@ -159,6 +159,18 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_CLIENT_SECRET", "DYNATRACE_IAM_CLIENT_SECRET", "DT_IAM_CLIENT_SECRET", "DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET"}, nil),
+			},
+			"iam_endpoint_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_ENDPOINT_URL", "DYNATRACE_IAM_ENDPOINT_URL", "DT_IAM_ENDPOINT_URL", "DYNATRACE_ENDPOINT_URL", "DT_ENDPOINT_URL"}, nil),
+			},
+			"iam_token_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IAM_TOKEN_URL", "DYNATRACE_IAM_TOKEN_URL", "DT_IAM_TOKEN_URL", "DYNATRACE_TOKEN_URL", "DT_TOKEN_URL"}, nil),
 			},
 			"automation_client_id": {
 				Type:        schema.TypeString,

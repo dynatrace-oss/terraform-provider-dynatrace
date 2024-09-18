@@ -4,8 +4,8 @@ type GlobalPolicyServiceClient struct {
 	PolicyClient *BasePolicyServiceClient
 }
 
-func NewGlobalPolicyService(clientID string, accountID string, clientSecret string) *GlobalPolicyServiceClient {
-	return &GlobalPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret)}
+func NewGlobalPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *GlobalPolicyServiceClient {
+	return &GlobalPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)}
 }
 
 func (me *GlobalPolicyServiceClient) GET(levelID string, uuid string) (*Policy, error) {

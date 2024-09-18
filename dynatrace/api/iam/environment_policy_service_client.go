@@ -4,8 +4,8 @@ type EnvironmentPolicyServiceClient struct {
 	PolicyClient *BasePolicyServiceClient
 }
 
-func NewEnvironmentPolicyService(clientID string, accountID string, clientSecret string) *EnvironmentPolicyServiceClient {
-	return &EnvironmentPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret)}
+func NewEnvironmentPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *EnvironmentPolicyServiceClient {
+	return &EnvironmentPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)}
 }
 
 func (me *EnvironmentPolicyServiceClient) CREATE(policy *Policy) (string, error) {

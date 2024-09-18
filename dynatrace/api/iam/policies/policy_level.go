@@ -35,7 +35,7 @@ func CheckPolicyExists(auth iam.Authenticator, levelType string, levelID string,
 		Name string `json:"name"`
 	}{}
 	client := iam.NewIAMClient(auth)
-	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), 200, false, &response); err != nil {
+	if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", auth.EndpointURL(), levelType, levelID, policyUUID), 200, false, &response); err != nil {
 		// TODO: this is dirty. The IAM client unfortunately doesn't produce special kinds errors. string compare is the only option atm
 		if strings.HasPrefix(err.Error(), "response code 404") {
 			return false, "", nil
@@ -208,7 +208,7 @@ func fetchGlobalPolicies(auth iam.Authenticator) (results chan *api.Stub) {
 		}()
 
 		var response ListPoliciesResponse
-		if err := iam.GET(client, "https://api.dynatrace.com/iam/v1/repo/global/global/policies", 200, false, &response); err != nil {
+		if err := iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/global/global/policies", auth.EndpointURL()), 200, false, &response); err != nil {
 			return
 		}
 
@@ -291,14 +291,14 @@ func getEnvironmentIDs(auth iam.Authenticator) ([]string, error) {
 	var err error
 
 	var envResponse ListEnvResponse
-	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", accountID), 200, false, &envResponse); err != nil {
+	if err = iam.GET(client, fmt.Sprintf("%s/env/v2/accounts/%s/environments", auth.EndpointURL(), accountID), 200, false, &envResponse); err != nil {
 		return nil, err
 	}
 
 	environmentIDs := []string{}
 
 	for _, dataStub := range envResponse.Data {
-		if len(dataStub.ID) > 0 { // we don't trust api.dynatrace.com
+		if len(dataStub.ID) > 0 {
 			environmentIDs = append(environmentIDs, dataStub.ID)
 		}
 	}

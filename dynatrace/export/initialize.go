@@ -18,6 +18,7 @@
 package export
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
@@ -26,9 +27,10 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Initialize() (environment *Environment, err error) {
+func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 	flags, tailArgs := createFlags()
 	if flags.FlagMigrationOutput && flags.FollowReferences {
 		return nil, errors.New("-ref and -migrate are mutually exclusive")
@@ -161,7 +163,9 @@ func Initialize() (environment *Environment, err error) {
 	}
 
 	var credentials *settings.Credentials
-	if credentials, err = settings.CreateExportCredentials(); err != nil {
+
+	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
+	if credentials, err = config.Credentials(configResult, config.CredValNone); err != nil {
 		return nil, err
 	}
 
