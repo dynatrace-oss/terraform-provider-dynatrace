@@ -561,6 +561,7 @@ func Provider() *schema.Provider {
 			"dynatrace_histogram_metrics":                   resources.NewGeneric(export.ResourceTypes.HistogramMetrics).Resource(),
 			"dynatrace_kubernetes_enrichment":               resources.NewGeneric(export.ResourceTypes.KubernetesEnrichment).Resource(),
 			"dynatrace_devobs_git_onprem":                   resources.NewGeneric(export.ResourceTypes.DevObsGitOnPrem).Resource(),
+			"dynatrace_automation_workflow_aws_connections": resources.NewGeneric(export.ResourceTypes.AWSAutomationConnections).Resource(),
 			"dynatrace_golden_state":                        goldenstate.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,

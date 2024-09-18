@@ -122,6 +122,7 @@ import (
 	hostmonitoringmode "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/mode"
 	hostprocessgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hub/subscriptions"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/awsconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
@@ -1316,7 +1317,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		enrichment.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.DevObsGitOnPrem: NewResourceDescriptor(gitonprem.Service),
+	ResourceTypes.DevObsGitOnPrem:          NewResourceDescriptor(gitonprem.Service),
+	ResourceTypes.AWSAutomationConnections: NewResourceDescriptor(awsconnection.Service),
 }
 
 type ResourceExclusion struct {

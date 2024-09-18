@@ -460,6 +460,7 @@ var ResourceTypes = struct {
 	HistogramMetrics                    ResourceType
 	KubernetesEnrichment                ResourceType
 	DevObsGitOnPrem                     ResourceType
+	AWSAutomationConnections            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -767,6 +768,7 @@ var ResourceTypes = struct {
 	"dynatrace_histogram_metrics",
 	"dynatrace_kubernetes_enrichment",
 	"dynatrace_devobs_git_onprem",
+	"dynatrace_automation_workflow_aws_connections",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

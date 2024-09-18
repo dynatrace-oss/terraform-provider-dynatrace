@@ -429,9 +429,9 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 
 	var req rest.Request
 	if me.skipRepairInput() {
-		req = me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200)
+		req = me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200, 201)
 	} else {
-		req = me.client.Post("/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200)
+		req = me.client.Post("/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200, 201)
 	}
 
 	objectID := []SettingsObjectCreateResponse{}

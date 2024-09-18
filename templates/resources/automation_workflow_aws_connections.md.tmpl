@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_automation_workflow_aws_connections Resource - terraform-provider-dynatrace"
+subcategory: "Automation"
+description: |-
+  The resource `dynatrace_automation_workflow_aws_connections` covers configuration for AWS connections for Workflows app
+---
+
+# dynatrace_automation_workflow_aws_connections (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- AWS for Workflows - https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/aws
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:hyperscaler-authentication.aws.connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_automation_workflow_aws_connections` downloads existing AWS connections for Workflows configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/hyperscalerauthentication/awsconnection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

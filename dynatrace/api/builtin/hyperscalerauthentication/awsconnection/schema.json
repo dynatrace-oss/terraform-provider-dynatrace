@@ -1,0 +1,161 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the required secrets to save the new configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Available connections for [AWS for Workflows](https://dt-url.net/s803q9r). A connection is used to authenticate against your AWS account. The retrieved, temporary AWS credentials are used to execute the AWS workflow actions.",
+	"displayName": "AWS Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Web identity",
+					"value": "webIdentity"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The symbol : is not allowed the name",
+					"pattern": "^[^:]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": "text"
+		},
+		"type": {
+			"default": "webIdentity",
+			"description": "",
+			"displayName": "Credential Type",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		},
+		"webIdentity": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "webIdentity",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/WebIdentity"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "There is another set of credentials defined under this name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "builtin:hyperscaler-authentication.aws.connection",
+	"types": {
+		"WebIdentity": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"policyArns": {
+					"description": "An optional list of policies that can be used to restrict the AWS role",
+					"displayName": "Policy ARNs",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 2048,
+								"minLength": 20,
+								"type": "LENGTH"
+							},
+							{
+								"customMessage": "Policy must be valid with given pattern ^arn:aws:iam::aws:policy.*$",
+								"pattern": "^arn:aws:iam::aws:policy.*$",
+								"type": "PATTERN"
+							}
+						],
+						"description": "",
+						"displayName": "Policy ARN",
+						"documentation": "",
+						"type": "secret"
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "NEVER",
+					"nullable": false,
+					"type": "list"
+				},
+				"roleArn": {
+					"constraints": [
+						{
+							"maxLength": 2048,
+							"minLength": 20,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Role must be valid with given pattern ^arn:aws:iam::.*:role.*$",
+							"pattern": "^arn:aws:iam::.*:role.*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "The ARN of the AWS role that should be assumed",
+					"displayName": "Role ARN",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "NEVER",
+					"nullable": false,
+					"type": "secret"
+				}
+			},
+			"searchPattern": "",
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.1"
+}
