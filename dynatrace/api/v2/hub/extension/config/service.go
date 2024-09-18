@@ -58,8 +58,19 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var extensionsList ExtensionsList
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 
-	if err := client.Get("/api/v2/extensions/info", 200).Finish(&extensionsList); err != nil {
-		return stubs, err
+	nextPageKey := "first"
+	for len(nextPageKey) > 0 {
+		extensionsList = ExtensionsList{}
+		query := ""
+		if len(nextPageKey) > 0 && nextPageKey != "first" {
+			query = "?nextPageKey=" + url.QueryEscape(nextPageKey)
+		} else {
+			query = "?pageSize=100"
+		}
+		if err := client.Get("/api/v2/extensions/info"+query, 200).Finish(&extensionsList); err != nil {
+			return stubs, err
+		}
+		nextPageKey = extensionsList.NextPageKey
 	}
 	for _, extension := range extensionsList.Extensions {
 		nextPageKey := "first"
@@ -263,6 +274,7 @@ type ExtensionsList struct {
 		Version       string `json:"version"`
 		ActiveVersion string `json:"activeVersion"`
 	} `json:"extensions"`
+	NextPageKey string `json:"nextPageKey"`
 }
 
 type MonitoringConfigurationList struct {
