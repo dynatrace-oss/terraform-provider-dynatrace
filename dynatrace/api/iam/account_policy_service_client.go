@@ -4,8 +4,8 @@ type AccountPolicyServiceClient struct {
 	PolicyClient *BasePolicyServiceClient
 }
 
-func NewAccountPolicyService(clientID string, accountID string, clientSecret string) *AccountPolicyServiceClient {
-	return &AccountPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret)}
+func NewAccountPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *AccountPolicyServiceClient {
+	return &AccountPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)}
 }
 
 func (me *AccountPolicyServiceClient) CREATE(policy *Policy) (string, error) {

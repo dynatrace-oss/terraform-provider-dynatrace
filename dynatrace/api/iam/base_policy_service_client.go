@@ -9,6 +9,8 @@ type BasePolicyServiceClient struct {
 	clientID     string
 	accountID    string
 	clientSecret string
+	tokenURL     string
+	endpointURL  string
 }
 
 func (me *BasePolicyServiceClient) ClientID() string {
@@ -23,8 +25,16 @@ func (me *BasePolicyServiceClient) ClientSecret() string {
 	return me.clientSecret
 }
 
-func NewBasePolicyService(clientID string, accountID string, clientSecret string) *BasePolicyServiceClient {
-	return &BasePolicyServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+func (me *BasePolicyServiceClient) TokenURL() string {
+	return me.tokenURL
+}
+
+func (me *BasePolicyServiceClient) EndpointURL() string {
+	return me.endpointURL
+}
+
+func NewBasePolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *BasePolicyServiceClient {
+	return &BasePolicyServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func (me *BasePolicyServiceClient) CREATE(level PolicyLevel, levelID string, policy *Policy) (string, error) {
@@ -32,7 +42,7 @@ func (me *BasePolicyServiceClient) CREATE(level PolicyLevel, levelID string, pol
 	var responseBytes []byte
 
 	client := NewIAMClient(me)
-	if responseBytes, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies", level, levelID), policy, 201, false); err != nil {
+	if responseBytes, err = client.POST(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), policy, 201, false); err != nil {
 		return "", err
 	}
 
@@ -49,7 +59,7 @@ func (me *BasePolicyServiceClient) GET(level PolicyLevel, levelID string, uuid s
 
 	client := NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -65,7 +75,7 @@ func (me *BasePolicyServiceClient) UPDATE(level PolicyLevel, levelID string, pol
 
 	client := NewIAMClient(me)
 
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), policy, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), policy, 200, false); err != nil {
 		return err
 	}
 	return nil
@@ -85,7 +95,7 @@ func (me *BasePolicyServiceClient) List(level PolicyLevel, levelID string) ([]Po
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = NewIAMClient(me).GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies", level, levelID), 200, false); err != nil {
+	if responseBytes, err = NewIAMClient(me).GET(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -111,6 +121,6 @@ func (me *BasePolicyServiceClient) LIST(level PolicyLevel, levelID string) ([]st
 }
 
 func (me *BasePolicyServiceClient) DELETE(level PolicyLevel, levelID string, uuid string) error {
-	_, err := NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), 204, false)
+	_, err := NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 204, false)
 	return err
 }

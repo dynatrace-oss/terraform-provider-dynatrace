@@ -29,6 +29,8 @@ type GroupServiceClient struct {
 	clientID     string
 	accountID    string
 	clientSecret string
+	tokenURL     string
+	endpointURL  string
 }
 
 func (me *GroupServiceClient) ClientID() string {
@@ -43,12 +45,20 @@ func (me *GroupServiceClient) ClientSecret() string {
 	return me.clientSecret
 }
 
-func NewGroupService(clientID string, accountID string, clientSecret string) settings.CRUDService[*groups.Group] {
-	return &GroupServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+func (me *GroupServiceClient) TokenURL() string {
+	return me.tokenURL
+}
+
+func (me *GroupServiceClient) EndpointURL() string {
+	return me.endpointURL
+}
+
+func NewGroupService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) settings.CRUDService[*groups.Group] {
+	return &GroupServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*groups.Group] {
-	return &GroupServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+	return &GroupServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 
 func (me *GroupServiceClient) SchemaID() string {
@@ -70,7 +80,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	var responseBytes []byte
 
 	client := iam.NewIAMClient(me)
-	if responseBytes, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), []*groups.Group{group}, 201, false); err != nil {
+	if responseBytes, err = client.POST(fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), []*groups.Group{group}, 201, false); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +92,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	groupName := responseGroups[0].Name
 
 	if len(group.Permissions) > 0 {
-		if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), group.Permissions, 200, false); err != nil {
+		if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), groupID), group.Permissions, 200, false); err != nil {
 			return nil, err
 		}
 	}
@@ -100,7 +110,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	var err error
 
 	client := iam.NewIAMClient(me)
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), group, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), group, 200, false); err != nil {
 		return err
 	}
 
@@ -109,7 +119,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	if len(group.Permissions) > 0 {
 		permissions = group.Permissions
 	}
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), permissions, 200, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), uuid), permissions, 200, false); err != nil {
 		return err
 	}
 
@@ -176,7 +186,7 @@ func (me *GroupServiceClient) listUnguarded() ([]*ListGroup, error) {
 	client := iam.NewIAMClient(me)
 	var response ListGroupsResponse
 	accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
-	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups", accountID), 200, false, &response); err != nil {
+	if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, accountID), 200, false, &response); err != nil {
 		return nil, err
 	}
 	return response.Items, nil
@@ -192,7 +202,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 			accountID := strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")
 			client := iam.NewIAMClient(me)
 			var groupStub ListGroup
-			if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), 200, false, &groupStub); err != nil {
+			if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, id), 200, false, &groupStub); err != nil {
 				return err
 			}
 
@@ -209,7 +219,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/accounts/%s/groups/%s", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
+	_, err := iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since

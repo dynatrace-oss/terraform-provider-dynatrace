@@ -24,90 +24,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
-// func tf2json(args []string) bool {
-// 	if len(args) == 1 {
-// 		return false
-// 	}
-// 	if strings.TrimSpace(args[1]) != "-tf2json" {
-// 		return false
-// 	}
-
-// 	flag.Bool("tf2json", true, "")
-// 	flag.Parse()
-// 	tailArgs := flag.Args()
-
-// 	if len(tailArgs) == 0 {
-// 		fmt.Println("Usage: terraform-provider-dynatrace -tf2json <folder>")
-// 		return true
-// 	}
-
-// 	for _, filePath := range tailArgs {
-// 		fileInfo, err := os.Stat(filePath)
-// 		if err != nil {
-// 			fmt.Println(err)
-// 			return true
-// 		}
-// 		if !fileInfo.IsDir() {
-// 			if err := tf2jsonFile(filePath, fileInfo, nil); err != nil {
-// 				fmt.Println(err)
-// 				return true
-// 			}
-// 			continue
-// 		}
-
-// 		filepath.Walk(filePath, tf2jsonFile)
-// 	}
-
-// 	return true
-// }
-
-// func tf2jsonFile(childPath string, info os.FileInfo, err error) error {
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if info.IsDir() {
-// 		return nil
-// 	}
-// 	if !strings.HasSuffix(info.Name(), ".tf") {
-// 		return nil
-// 	}
-// 	if info.Name() == "data_source.tf" {
-// 		return nil
-// 	}
-// 	if info.Name() == "providers.tf" {
-// 		return nil
-// 	}
-// 	if info.Name() == "main.tf" {
-// 		return nil
-// 	}
-// 	if strings.Contains(childPath, ".flawed") {
-// 		return nil
-// 	}
-// 	jsonPath := strings.TrimSuffix(childPath, info.Name()) + info.Name() + ".json"
-// 	var module *hcl2json.Module
-// 	if module, err = hcl2json.HCL2Config(childPath); err != nil {
-// 		fmt.Println(err)
-// 		return nil
-// 	}
-// 	var data []byte
-// 	if data, err = json.MarshalIndent(module, "", "  "); err != nil {
-// 		return err
-// 	}
-// 	os.Remove(jsonPath)
-// 	if err = os.WriteFile(jsonPath, data, 0644); err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-
 func main() {
 	defer export.CleanUp.Finish()
 
-	if dynatrace.Export(os.Args) {
+	if dynatrace.Export(os.Args, config.ConfigGetter{Provider: provider.Provider()}) {
 		return
 	}
 

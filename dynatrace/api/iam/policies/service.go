@@ -19,6 +19,8 @@ type PolicyServiceClient struct {
 	clientID     string
 	accountID    string
 	clientSecret string
+	tokenURL     string
+	endpointURL  string
 }
 
 func (me *PolicyServiceClient) ClientID() string {
@@ -33,16 +35,24 @@ func (me *PolicyServiceClient) ClientSecret() string {
 	return me.clientSecret
 }
 
-func NewPolicyService(clientID string, accountID string, clientSecret string) *PolicyServiceClient {
-	return &PolicyServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+func (me *PolicyServiceClient) TokenURL() string {
+	return me.tokenURL
+}
+
+func (me *PolicyServiceClient) EndpointURL() string {
+	return me.endpointURL
+}
+
+func NewPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *PolicyServiceClient {
+	return &PolicyServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*policies.Policy] {
-	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 
 func ServiceWithGloabals(credentials *settings.Credentials) *PolicyServiceClient {
-	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+	return &PolicyServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 
 func (me *PolicyServiceClient) SchemaID() string {
@@ -64,7 +74,7 @@ func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (
 	levelType, levelID := getLevel(v)
 
 	client := iam.NewIAMClient(me)
-	if responseBytes, err = client.POST(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies", levelType, levelID), v, 201, false); err != nil {
+	if responseBytes, err = client.POST(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, levelType, levelID), v, 201, false); err != nil {
 		return nil, err
 	}
 	var pcr PolicyCreateResponse
@@ -111,7 +121,7 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 		return nil
 	}
 
-	if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 200, false, &v); err != nil {
+	if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 200, false, &v); err != nil {
 		return err
 	}
 	if levelType == "account" {
@@ -143,7 +153,7 @@ func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *poli
 	}
 	client := iam.NewIAMClient(me)
 
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, 204, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), user, 204, false); err != nil {
 		return err
 	}
 	return nil
@@ -174,7 +184,7 @@ func listForEnvironment(auth iam.Authenticator, environmentID string) (results c
 		client := iam.NewIAMClient(auth)
 
 		var response ListPoliciesResponse
-		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/policies", environmentID), 200, false, &response); err != nil {
+		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/environment/%s/policies", auth.EndpointURL(), environmentID), 200, false, &response); err != nil {
 			return
 		}
 
@@ -223,7 +233,7 @@ func listForAccount(auth iam.Authenticator) (results chan *api.Stub, err error) 
 	go func() {
 		defer close(results)
 		var response ListPoliciesResponse
-		if err = iam.GET(client, fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/policies", accountID), 200, false, &response); err != nil {
+		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/account/%s/policies", auth.EndpointURL(), accountID), 200, false, &response); err != nil {
 			return
 		}
 
@@ -326,7 +336,7 @@ func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 
-	_, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), 204, false)
+	_, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 204, false)
 	return err
 }
 

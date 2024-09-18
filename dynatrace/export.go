@@ -24,9 +24,10 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Export(args []string) bool {
+func Export(args []string, cfgGetter config.Getter) bool {
 	if len(args) == 1 {
 		return false
 	}
@@ -61,13 +62,13 @@ func Export(args []string) bool {
 	}
 
 	// defer export.CleanUp.Finish()
-	if err := runExport(); err != nil {
+	if err := runExport(cfgGetter); err != nil {
 		fmt.Println(err.Error())
 	}
 	return true
 }
 
-func runExport() (err error) {
+func runExport(cfgGetter config.Getter) (err error) {
 	start := time.Now()
 	defer func() {
 		fmt.Printf("... finished after %v seconds\n", int64(time.Since(start).Seconds()))
@@ -75,7 +76,7 @@ func runExport() (err error) {
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
 	var environment *export.Environment
-	if environment, err = export.Initialize(); err != nil {
+	if environment, err = export.Initialize(cfgGetter); err != nil {
 		return err
 	}
 

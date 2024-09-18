@@ -17,6 +17,8 @@ type BindingServiceClient struct {
 	clientID     string
 	accountID    string
 	clientSecret string
+	tokenURL     string
+	endpointURL  string
 }
 
 func (me *BindingServiceClient) ClientID() string {
@@ -31,12 +33,20 @@ func (me *BindingServiceClient) ClientSecret() string {
 	return me.clientSecret
 }
 
-func NewPolicyService(clientID string, accountID string, clientSecret string) *BindingServiceClient {
-	return &BindingServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret}
+func (me *BindingServiceClient) TokenURL() string {
+	return me.tokenURL
+}
+
+func (me *BindingServiceClient) EndpointURL() string {
+	return me.endpointURL
+}
+
+func NewPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *BindingServiceClient {
+	return &BindingServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
-	return &BindingServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret}
+	return &BindingServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 
 func (me *BindingServiceClient) SchemaID() string {
@@ -69,7 +79,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false); err != nil {
 		return err
 	}
 	if err = json.Unmarshal(responseBytes, &v); err != nil {
@@ -109,7 +119,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 	}
 	bindings.PolicyIDs = policyIDs
 
-	if _, err = client.PUT(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, 204, false); err != nil {
+	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), bindings, 204, false); err != nil {
 		return err
 	}
 	return nil
@@ -136,7 +146,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var responseBytes []byte
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/env/v2/accounts/%s/environments", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("%s/env/v2/accounts/%s/environments", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -145,7 +155,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		return nil, err
 	}
 
-	if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/account/%s/bindings", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+	if responseBytes, err = client.GET(fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -167,7 +177,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	}
 
 	for _, environment := range envResponse.Data {
-		if responseBytes, err = client.GET(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/environment/%s/bindings", environment.ID), 200, false); err != nil {
+		if responseBytes, err = client.GET(fmt.Sprintf("%s/iam/v1/repo/environment/%s/bindings", me.endpointURL, environment.ID), 200, false); err != nil {
 			return nil, err
 		}
 
@@ -200,7 +210,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {
-		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("https://api.dynatrace.com/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), 204, false); err != nil {
 			return err
 		}
 	}
