@@ -8,6 +8,10 @@ description: |-
 
 # dynatrace_iam_user (Data Source)
 
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permission: **Allow read access for identity resources (users and groups)** (`account-idm-read`).
+
 This data source allows you to specify the email address of the user and produces an ordered list of group IDs this user is a member of
 
 ## Example Usage

@@ -8,13 +8,15 @@ description: |-
 
 # dynatrace_davis_anomaly_detectors (Resource)
 
+-> **Dynatrace SaaS only**
+
 !> Please use the [export utility](https://dt-url.net/h203qmc) to create templates for this resource as the underlying schema is hidden and cannot be easily created from scratch.
 
 -> This resource requires the `Davis Anomaly Detection` app to be installed via the Dynatrace Hub.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
--> This resource requires an OAuth client with the permissions **View settings objects for schema** (`settings:objects:read`), **Create settings objects for schema** (`settings:objects:write`), and **View bizevents** (`storage:bizevents:read`). Please set the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` with the client ID and secret. 
+-> This resource requires an OAuth client with the permissions **View settings objects for schema** (`settings:objects:read`), **Create settings objects for schema** (`settings:objects:write`), and **View bizevents** (`storage:bizevents:read`). Please set the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` for the OAuth client. 
 
 ## Dynatrace Documentation
 

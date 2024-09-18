@@ -8,8 +8,10 @@ description: |-
 
 # dynatrace_generic_setting (Resource)
 
+-> **Dynatrace SaaS only**
+
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
--> In case the Platform App configured by such a settings explicitly validates them, authentication via API Token may not be enough. In such a case the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` are required. That OAuth Client will require the permissions `app-engine:apps:run` and `settings:objects:write`. In any case, Terraform will primarily attempt to create or modify the settings using the API Token and if that fails will utilize the OAuth Client for authentication.
+-> In case the Platform App configured by such a settings explicitly validates them, authentication via API Token may not be enough. In such a case the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` are required. That OAuth Client will require the permissions `app-engine:apps:run` and `settings:objects:write`. In any case, Terraform will primarily attempt to create or modify the settings using the API Token and if that fails will utilize the OAuth Client for authentication.
 
 ## Export Example Usage
 

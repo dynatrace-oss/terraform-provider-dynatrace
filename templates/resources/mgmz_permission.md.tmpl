@@ -8,26 +8,15 @@ description: |-
 
 # dynatrace_mgmz_permission (Resource)
 
--> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+-> **Dynatrace Managed only**
+
+-> To utilize this resource, please define the environment variables `DT_CLUSTER_URL` and `DT_CLUSTER_API_TOKEN` with the cluster API token scope **Service Provider API** (`ServiceProviderAPI`).
 
 ## Dynatrace Documentation
 
 - Manage Groups and Permissions - https://docs.dynatrace.com/managed/manage/identity-access-management/user-and-group-management/user-groups-and-permissions#mz
 
 - User management API - https://www.dynatrace.com/support/help/dynatrace-api/account-management-api/user-management-api
-
-## Prerequisites
-
-The recommended way to configure the provider is via environment variables.
-Please set `DYNATRACE_CLUSTER_URL` and `DYNATRACE_CLUSTER_API_TOKEN` to use this resource.
-
-Alternatively, you can set the variables in the `provider` block - not recommended for production environments.
-```terraform
-provider "dynatrace" {
-  dt_cluster_url = "https://####.######.#####"
-  dt_cluster_api_token = "######.#########################################################################################"
-}
-```
 
 ## Export Example Usage
 

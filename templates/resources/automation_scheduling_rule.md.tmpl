@@ -8,31 +8,15 @@ description: |-
 
 # dynatrace_automation_scheduling_rule (Resource)
 
--> This resource is excluded by default in the export utility. You can, of course, specify that resource explicitly in order to export it. In that case, don't forget to specify the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` for authentication.
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View rules** (`automation:rules:read`) and **Create and edit rules** (`automation:rules:write`).
+
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
 ## Dynatrace Documentation
 
 - Dynatrace Workflows - https://www.dynatrace.com/support/help/platform-modules/cloud-automation/workflows
-
-## Prerequisites
-
-Using this resource requires an OAuth client to be configured within your account settings.
-The scopes of the OAuth Client need to include `View rules (automation:rules:read)` and `Create and edit rules (automation:rules:write)`.
-
-Finally the provider configuration requires the credentials for that OAuth Client.
-The configuration section of your provider needs to look like this.
-```terraform
-provider "dynatrace" {
-  dt_env_url   = "https://########.live.dynatrace.com/"  
-  dt_api_token = "######.########################.################################################################"  
-
-  # Usually not required. Terraform will deduct it if `dt_env_url` has been specified
-  # automation_env_url = "https://########.apps.dynatrace.com/" 
-  automation_client_id = "######.########"
-  automation_client_secret = "######.########.################################################################"  
-}
-```
--> In order to handle credentials in a secure manner we recommend to use the environment variables `DYNATRACE_AUTOMATION_CLIENT_ID` and `DYNATRACE_AUTOMATION_CLIENT_SECRET` as an alternative.
 
 ## Resource Examples
 
