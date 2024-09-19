@@ -102,6 +102,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultmode"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
 	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/devobs/agentoptin"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
@@ -1319,6 +1320,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.DevObsGitOnPrem:          NewResourceDescriptor(gitonprem.Service),
 	ResourceTypes.AWSAutomationConnections: NewResourceDescriptor(awsconnection.Service),
+	ResourceTypes.DevObsAgentOptin: NewResourceDescriptor(
+		agentoptin.Service,
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 type ResourceExclusion struct {

@@ -1,0 +1,33 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP",
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "Developer Observability allows you to instantly access the code-level data you need without adding code or waiting for deployment. With Developer Observability, you can troubleshoot faster and understand complex, modern, cloud-native applications.\n\nNote: Enabling Developer Observability consumes Container Monitoring units.\n\nFor further details, see the [Container Monitoring documentation](https://docs.dynatrace.com/docs/manage/dynatrace-platform-subscription/capabilities/container-monitoring)",
+	"displayName": "Enable Developer Observability",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enable Developer Observability",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:developer-observability"
+	],
+	"schemaId": "builtin:devobs.agent.optin",
+	"types": {},
+	"version": "0.3"
+}
