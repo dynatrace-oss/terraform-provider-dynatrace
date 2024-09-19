@@ -16,6 +16,14 @@ description: |-
 
 - Web application configuration API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/rum/web-application-configuration-api
 
+## Environment Variables (Optional)
+
+There may be a delay for this resource to be fully available as a dependency for a subsequent resource. E.g. Utilizing this resource and application detection rules together.
+ 
+A default polling mechanism exists to validate the creation but may require adjustment due to load. The following environment variable can be used to fine tune this setting.
+
+- `DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION` (Default: 60, Max: 300) configures the number of successful consecutive retries expected.
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_web_application` downloads all existing web application configuration

@@ -8,33 +8,17 @@ description: |-
 
 # dynatrace_iam_permission (Resource)
 
--> This resource is excluded by default in the export utility since it is part of the account management API. You can, of course, specify that resource explicitly in order to export it. In that case, don't forget to specify the environment variables `DT_CLIENT_ID`, `DT_ACCOUNT_ID` and `DT_CLIENT_SECRET` for authentication.
+-> **Dynatrace SaaS only**
 
--> This resource requires the OAuth client permissions **Allow read access for identity resources (users and groups)** (`account-idm-read`) and **Allow write access for identity resources (users and groups)** (`account-idm-write`)
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **Allow read access for identity resources (users and groups)** (`account-idm-read`) and **Allow write access for identity resources (users and groups)** (`account-idm-write`).
+
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
 ## Dynatrace Documentation
 
 - Dynatrace IAM - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions
 
 - Settings API - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions/iam/iam-getting-started
-
-## Prerequisites
-
-Using this resource requires an OAuth client to be configured within your account settings.
-The scopes of the OAuth Client need to include `account-idm-read`, `account-idm-write`, `account-env-read`, `account-env-write`, `iam-policies-management`, `iam:policies:write`, `iam:policies:read`, `iam:bindings:write`, `iam:bindings:read` and `iam:effective-permissions:read`.
-
-Finally the provider configuration requires the credentials for that OAuth Client.
-The configuration section of your provider needs to look like this.
-```terraform
-provider "dynatrace" {
-  dt_env_url   = "https://########.live.dynatrace.com/"
-  dt_api_token = "######.########################.################################################################"  
-
-  iam_client_id = "######.########"
-  iam_account_id = "########-####-####-####-############"
-  iam_client_secret = "######.########.################################################################"  
-}
-```
 
 ## Resource Example Usage
 

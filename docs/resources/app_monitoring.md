@@ -35,9 +35,28 @@ resource "dynatrace_app_monitoring" "#name#" {
 
 ### Required
 
-- `default_log_level` (String) Possible Values: `All`, `Off`
+- `default_log_level` (String) Possible Values: `Debug`, `Error`, `Info`, `Off`, `Warn`
+
+### Optional
+
+- `app_monitoring` (Block List, Max: 1) You can override the default monitoring setting for each app separately (see [below for nested schema](#nestedblock--app_monitoring))
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--app_monitoring"></a>
+### Nested Schema for `app_monitoring`
+
+Required:
+
+- `app_monitoring` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--app_monitoring--app_monitoring))
+
+<a id="nestedblock--app_monitoring--app_monitoring"></a>
+### Nested Schema for `app_monitoring.app_monitoring`
+
+Required:
+
+- `app_id` (String) App ID
+- `custom_log_level` (String) Possible Values: `Debug`, `Error`, `Info`, `Off`, `UseDefault`, `Warn`
  

@@ -12,7 +12,7 @@ description: |-
 
 ## Dynatrace Documentation
 
-- Manage your monitoring environments - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-managed/operation/manage-your-monitoring-environments
+- Manage your monitoring environments - https://docs.dynatrace.com/managed/managed-cluster/operation/manage-your-monitoring-environments
 
 - Cluster API v2 - Environments - https://www.dynatrace.com/support/help/shortlink/cluster-api#environments
 

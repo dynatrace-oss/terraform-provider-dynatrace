@@ -8,6 +8,10 @@ description: |-
 
 # dynatrace_iam_policy (Data Source)
 
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **Allow IAM policy configuration for environments** (`iam-policies-management`) and **View environments** (`account-env-read`).
+
 The IAM policy data source allows the policy UUID to be retrieved by its name and account/environment (exclude for global).
 
 ## Example Usage

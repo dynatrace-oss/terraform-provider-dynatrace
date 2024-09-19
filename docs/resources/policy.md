@@ -8,24 +8,13 @@ description: |-
 
 # dynatrace_policy (Resource)
 
--> This resource requires the cluster API token scope **Service Provider API** (`ServiceProviderAPI`)
+-> **Dynatrace Managed only**
+
+-> To utilize this resource, please define the environment variables `DT_CLUSTER_URL` and `DT_CLUSTER_API_TOKEN` with the cluster API token scope **Service Provider API** (`ServiceProviderAPI`).
 
 ## Dynatrace Documentation
 
-- Dynatrace IAM Policy Management - https://www.dynatrace.com/support/help/manage/access-control/user-management-and-sso/manage-groups-and-permissions/iam/iam-policy-mgt
-
-## Prerequisites
-
-The recommended way to configure the provider is via environment variables.
-Please set `DYNATRACE_CLUSTER_URL` and `DYNATRACE_CLUSTER_API_TOKEN` to use this resource.
-
-Alternatively, you can set the variables in the `provider` block - not recommended for production environments.
-```terraform
-provider "dynatrace" {
-  dt_cluster_url = "https://####.######.#####"
-  dt_cluster_api_token = "######.#########################################################################################"
-}
-```
+- Dynatrace IAM Policy Management - https://docs.dynatrace.com/managed/manage/identity-access-management/permission-management/manage-user-permissions-policies
 
 ## Export Example Usage
 
