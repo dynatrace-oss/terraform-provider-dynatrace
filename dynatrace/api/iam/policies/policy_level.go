@@ -7,6 +7,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
 
 var cachedEnvironmentIDs []string
@@ -100,7 +101,7 @@ func fetchPolicyLevel(auth iam.Authenticator, uuid string) (levelType string, le
 		}
 	}
 
-	return "", "", name, fmt.Errorf("unable to resolve levelType and levelID of policy `%s`", uuid)
+	return "", "", name, rest.Error{Code: 404, Message: fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)}
 }
 
 // ResolvePolicyLevel determines the `levelType` and `levelID` of a policy using different strategies
