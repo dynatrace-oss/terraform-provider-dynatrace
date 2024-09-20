@@ -85,11 +85,36 @@ func (attributes Attributes) collect(addr address, v any) {
 			attributes.collect(addr.dot(idx), value[idx])
 		}
 	default:
-		// data, err := json.Marshal(value)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// attributes[string(addr)] = string(data)
+		// ignore
+	}
+}
+
+func (attributes Attributes) collectForSecretExact(addr address, v any) {
+	switch value := v.(type) {
+	case string:
+		attributes[string(addr)] = value
+	case int, int8, int16, int32, int64, float32, float64, uint, uint8, uint16, uint32, uint64, bool:
+		attributes[string(addr)] = fmt.Sprintf("%v", value)
+	case map[string]any:
+		for k := range value {
+			attributes.collectForSecretExact(addr.dot(k), value[k])
+		}
+	case hcl.Properties:
+		for k := range value {
+			attributes.collectForSecretExact(addr.dot(k), value[k])
+		}
+	case []any:
+		attributes[fmt.Sprintf("%s.#", addr)] = fmt.Sprintf("%v", len(value))
+		for idx := range value {
+			attributes.collectForSecretExact(addr.dot(idx), value[idx])
+		}
+	case []string:
+		attributes[fmt.Sprintf("%s.#", addr)] = fmt.Sprintf("%v", len(value))
+		for idx := range value {
+			attributes.collectForSecretExact(addr.dot(idx), value[idx])
+		}
+	default:
+		// ignore
 	}
 }
 
@@ -213,6 +238,10 @@ func store(m map[string]any, key string, value string) {
 	case map[string]any:
 		store(container, remainder, value)
 		return
+	case []string:
+		if idx, sce := strconv.Atoi(remainder); sce == nil && idx >= 0 && idx < len(container) {
+			container[idx] = value
+		}
 	case []any:
 		idx = strings.Index(remainder, ".")
 		prefix = remainder[:idx]

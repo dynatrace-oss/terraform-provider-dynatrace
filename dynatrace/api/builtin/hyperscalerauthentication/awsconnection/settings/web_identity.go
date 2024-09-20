@@ -50,8 +50,8 @@ func (me *WebIdentity) Schema() map[string]*schema.Schema {
 func (me *WebIdentity) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
 		me.Schema(), map[string]any{
-			"policy_arns": me.PolicyArns,
-			"role_arn":    "${state.secret_value}",
+			"policy_arns": sensitive.SecretifyExact(me.PolicyArns),
+			"role_arn":    sensitive.SecretValueExact,
 		},
 	))
 }

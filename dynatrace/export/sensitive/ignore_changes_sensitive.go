@@ -29,6 +29,19 @@ import (
 // Avoid overwriting password that the user has changed manually with known bad data
 var IGNORE_CHANGES_REQUIRES_ATTENTION = os.Getenv("DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION") == "true"
 
+const SecretValueExact = "${state.secret_value.exact}"
+const SecretValue = "${state.secret_value}"
+
+// Replaces all values within the given string slice with `${state.secret_value.exact}`,
+// signalling that before handing over attributes to Terraform, the state should get
+// searched for the exact same key and that state value get taken for it
+func SecretifyExact(values []string) []string {
+	for idx := range values {
+		values[idx] = SecretValueExact
+	}
+	return values
+}
+
 func ConditionalIgnoreChangesMap(schema map[string]*schema.Schema, itemsToEncode map[string]any) map[string]any {
 	return ConditionalIgnoreChangesMapPlus(schema, itemsToEncode, []string{})
 }

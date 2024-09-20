@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -306,11 +307,61 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 	marshalled := hcl.Properties{}
 	err = sttngs.MarshalHCL(marshalled)
 	if os.Getenv("DT_TERRAFORM_IMPORT") != "true" {
+		stateAttributes := NewAttributes(d.State().Attributes)
+
+		// Replacing Algorithm A
+		//   Looks for attributes that contain the value `${state.secret_value.exact}`
+		//   As opposed to Algorithm B it doesn't even TRY to take any sets within the configuration into consideration.
+		//
+		//   As a consequence `${state.secret_value.exact}` should only be used
+		//   for attributes of schema.TypeString or schema.TypeList (with elems of schema.TypeString).
+		//
+		//   If that algorithm finds an attribute with the EXACT SAME address within the state
+		//   it replaces the value with the value found within the state.
+		//
+		//   In case the state does NOT contain an attribute with the exact same address
+		//   it assumes that one of these situations
+		//
+		//   * The value at a specific index within the list of string has indeed changed on the remote side
+		//   * The number of entries within the list of strings has changed (i.e. has grown)
+		//   * The attribute is part of a SET of blocks within the resource block - where there's exists no
+		//     predictable (generic) way to determine the matching address. Replacing with a value from the
+		//     state is therefore not possible.
+		secretExactAttributes := Attributes{}
+		secretExactAttributes.collectForSecretExact("", map[string]any(marshalled))
+
+		for key, value := range secretExactAttributes {
+			if value == sensitive.SecretValueExact {
+				if stateAttributeValue, found := stateAttributes[key]; found {
+					store(marshalled, key, stateAttributeValue)
+				}
+			}
+		}
+
+		// -- Replacing Algorithm B --
+		//   Looks for attributes that contain the value `${state.secret_value}`
+		//   This algorithm unfortunately behaves unpredictably in situations where
+		//   multiple "sensitive" attributes are contained within the same block
+		//   The flaw emerges because it's trying to deal with sets of blocks
+		//
+		//   TODO: Identify all resources that are currently using `${state.secret_value}`
+		//         for their sensitive attributes.
+		//         For resources wheree the address(es) of these attributes don't contain any
+		//         hash codes (i.e. there are no schema.TypeSet involved) change that value
+		//         to `${state.secret_value.exact}`. That allows Algorithm A to kick in.
+		//
+		//         For resources where a switch to Algorithm A isn't possible there is currently
+		//         no predictable and bullet proof way to identify the exact match for the secret
+		//         value from the state.
+		//         Here it's likely better to generate `lifecycle` blocks containing `ignore_changes`
+		//         for the relevant addresses.
+		//         In other words, the author of the HCL code simply needs to be aware of the fact
+		//         that by default the plan for these attributes cannot be empty.
 		attributes := Attributes{}
 		attributes.collect("", map[string]any(marshalled))
-		stateAttributes := NewAttributes(d.State().Attributes)
+
 		for key, value := range attributes {
-			if value == "${state.secret_value}" {
+			if value == sensitive.SecretValue {
 				stored := false
 				matches := stateAttributes.MatchingKeys(key)
 				siblings := attributes.Siblings(key)
