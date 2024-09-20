@@ -103,6 +103,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion"
 	oneagentupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/devobs/agentoptin"
+	devobsmasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/devobs/sensitivedatamasking"
 	diskanalytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/analytics/extension"
 	diskoptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections"
@@ -1326,6 +1327,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
 	),
+	ResourceTypes.DevObsDataMasking: NewResourceDescriptor(devobsmasking.Service),
 }
 
 type ResourceExclusion struct {

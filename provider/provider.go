@@ -563,6 +563,7 @@ func Provider() *schema.Provider {
 			"dynatrace_devobs_git_onprem":                   resources.NewGeneric(export.ResourceTypes.DevObsGitOnPrem).Resource(),
 			"dynatrace_automation_workflow_aws_connections": resources.NewGeneric(export.ResourceTypes.AWSAutomationConnections).Resource(),
 			"dynatrace_devobs_agent_optin":                  resources.NewGeneric(export.ResourceTypes.DevObsAgentOptin).Resource(),
+			"dynatrace_devobs_data_masking":                 resources.NewGeneric(export.ResourceTypes.DevObsDataMasking).Resource(),
 			"dynatrace_golden_state":                        goldenstate.Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,

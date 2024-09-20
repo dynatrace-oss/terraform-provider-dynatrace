@@ -1,0 +1,218 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Create rules to mask any information you consider to be sensitive. Masking is done on OneAgent and no personal data is sent or stored on Dynatrace servers.",
+	"displayName": "Sensitive Data Masking",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"replacementType": {
+			"description": "",
+			"displayName": "Data Replacement",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Optionally choose a string to replace the data being masked. The default value is ***.",
+					"displayName": "Replace with string",
+					"value": "STRING"
+				},
+				{
+					"description": "Redacted data will be replaced with a SHA-256 hash string.",
+					"displayName": "Replace with SHA-256",
+					"value": "SHA256"
+				}
+			],
+			"type": "enum"
+		},
+		"ruleType": {
+			"description": "",
+			"displayName": "Rule Type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Redact the value of all variables that match a name. The entire value will be masked.",
+					"displayName": "Redact by variable name",
+					"value": "VAR_NAME"
+				},
+				{
+					"description": "Redact any values that match the regex you supply here",
+					"displayName": "Redact by regex",
+					"value": "REGEX"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"appName": "Debugger",
+		"minAgentVersion": "1.295"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Active",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"replacementPattern": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "***",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "STRING",
+				"property": "replacementType",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"replacementType": {
+			"default": "STRING",
+			"description": "",
+			"displayName": "Data Replacement",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "radio",
+			"type": {
+				"$ref": "#/enums/replacementType"
+			}
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 3,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "No leading or trailing whitespaces are allowed.",
+					"type": "TRIMMED"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Rule Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"ruleRegex": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"customValidatorId": "logMonitoringRegexValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "REGEX",
+				"property": "ruleType",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"ruleType": {
+			"default": "VAR_NAME",
+			"description": "",
+			"displayName": "Rule Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "radio",
+			"type": {
+				"$ref": "#/enums/ruleType"
+			}
+		},
+		"ruleVarName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "VAR_NAME",
+				"property": "ruleType",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:developer-observability"
+	],
+	"schemaId": "builtin:devobs.sensitive.data.masking",
+	"types": {},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule Name"
+				},
+				{
+					"displayName": "Rule Type",
+					"id": "ruleType",
+					"propertyRef": "./ruleType"
+				}
+			],
+			"emptyState": {
+				"text": "No rules defined"
+			}
+		}
+	},
+	"version": "0.2"
+}
