@@ -32,6 +32,7 @@ type Settings struct {
 	RuleRegex          *string         `json:"ruleRegex,omitempty"`
 	RuleType           RuleType        `json:"ruleType"` // Possible Values: `REGEX`, `VAR_NAME`
 	RuleVarName        *string         `json:"ruleVarName,omitempty"`
+	InsertAfter        string          `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -75,6 +76,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "no documentation available",
 			Optional:    true, // precondition
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -87,6 +94,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"rule_regex":          me.RuleRegex,
 		"rule_type":           me.RuleType,
 		"rule_var_name":       me.RuleVarName,
+		"insert_after":        me.InsertAfter,
 	})
 }
 
@@ -112,5 +120,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"rule_regex":          &me.RuleRegex,
 		"rule_type":           &me.RuleType,
 		"rule_var_name":       &me.RuleVarName,
+		"insert_after":        &me.InsertAfter,
 	})
 }
