@@ -1,0 +1,32 @@
+---
+layout: ""
+page_title: dynatrace_davis_copilot Resource - terraform-provider-dynatrace"
+subcategory: "Service Settings"
+description: |-
+  The resource `dynatrace_davis_copilot` covers configuration for Davis CoPilot
+---
+
+# dynatrace_davis_copilot (Resource)
+
+-> **This is in Preview** Davis CoPilot is currently in Preview and only accessible to selected customers. If you would like to share feedback or ideas, please join our dedicated Community user group, or reach out to your Customer Success Manager.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Davis CoPilot overview - https://docs.dynatrace.com/docs/platform/davis-ai/copilot
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `service:davis.copilot.datamining-blocklist`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_davis_copilot` downloads existing Davis CoPilot configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/service/daviscopilot/dataminingblocklist/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

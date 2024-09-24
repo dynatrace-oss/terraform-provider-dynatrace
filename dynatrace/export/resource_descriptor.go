@@ -263,6 +263,7 @@ import (
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/service/daviscopilot/dataminingblocklist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/reports"
 
 	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
@@ -1328,6 +1329,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.DevObsDataMasking: NewResourceDescriptor(devobsmasking.Service),
+	ResourceTypes.DavisCoPilot:      NewResourceDescriptor(dataminingblocklist.Service),
 }
 
 type ResourceExclusion struct {
