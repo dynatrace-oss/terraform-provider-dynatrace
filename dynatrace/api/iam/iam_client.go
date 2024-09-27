@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -154,6 +155,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 	// httplog(fmt.Sprintf("[%s] %s", method, url))
 
 	num504Retries := 0
+	sleepTime429 := int64(500)
 
 	for {
 		var err error
@@ -217,6 +219,12 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 		}
 
 		if isNotExpectedResponseCode {
+			if httpResponse.StatusCode == 429 {
+				time.Sleep(time.Duration(sleepTime429) * time.Millisecond)
+				// logging.File.Println(".... 429 ... waiting for another", sleepTime429, "milliseconds")
+				sleepTime429 = int64(math.Round(float64(sleepTime429) * float64(1.6)))
+				continue
+			}
 			var iamErr IAMError
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
 				if (forceNewBearerRetryCount < 20) && iamErr.Error() == "Failed to validate access token." {
@@ -225,6 +233,15 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 				}
 				return nil, iamErr
 			} else {
+				errEnv := struct {
+					Error *rest.Error `json:"error"`
+				}{}
+				if len(responseBytes) > 0 {
+					if err = json.Unmarshal(responseBytes, &errEnv); err == nil && errEnv.Error != nil {
+						// {"error":{"code":400,"message":"Policy c1f6bc44-c66d-4964-938c-ab00823a5e22 can't be bound to levelType: environment, levelId: siz65484","errorsMap":null}}
+						return nil, *errEnv.Error
+					}
+				}
 				return nil, rest.Error{Code: httpResponse.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)}
 			}
 		}
