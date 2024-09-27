@@ -210,7 +210,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {
-		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(me).DELETE_MULTI_RESPONSE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), []int{204, 400}, false); err != nil {
 			return err
 		}
 	}

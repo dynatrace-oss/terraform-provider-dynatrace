@@ -12,6 +12,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -41,10 +42,6 @@ func (me *PermissionServiceClient) TokenURL() string {
 
 func (me *PermissionServiceClient) EndpointURL() string {
 	return me.endpointURL
-}
-
-func NewPermissionService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *PermissionServiceClient {
-	return &PermissionServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*permissions.Permission] {
@@ -134,7 +131,7 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 		}
 	}
 
-	return fmt.Errorf("there exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)
+	return rest.Error{Code: 404, Message: fmt.Sprintf("there exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)}
 }
 
 func (me *PermissionServiceClient) Update(ctx context.Context, email string, permission *permissions.Permission) error {
