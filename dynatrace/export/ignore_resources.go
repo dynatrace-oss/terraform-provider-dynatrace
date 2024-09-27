@@ -73,7 +73,8 @@ func LoadIgnoreResourcesMap() error {
 			}
 		}
 	}
-	fmt.Println("\n")
+	fmt.Println()
+	fmt.Println()
 
 	return nil
 }

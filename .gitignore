@@ -1,4 +1,7 @@
 
+# IDEs
+.idea/*
+
 apply.cmd
 main.tf
 terraform-provider-dynatrace
