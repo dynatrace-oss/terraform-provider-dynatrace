@@ -89,7 +89,7 @@ func (me *service) Get(ctx context.Context, id string, v *services.Settings) err
 		return err
 	}
 	for _, service := range response.Services {
-		if strings.ToLower(service.Name) == strings.ToLower(serviceName) {
+		if strings.EqualFold(service.Name, serviceName) {
 			v.CredentialsID = credentialsID
 			v.MonitoredMetrics = service.MonitoredMetrics
 			v.Name = serviceName
@@ -123,7 +123,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 	}
 	var service *services.Settings
 	for _, s := range response.Services {
-		if strings.ToLower(s.Name) == strings.ToLower(v.Name) {
+		if strings.EqualFold(s.Name, v.Name) {
 			service = s
 			break
 		}
@@ -144,12 +144,12 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 	retry := true
 	for retry {
 		if err = me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", credentialsID), response).Expect(204).Finish(); err != nil {
-			r := regexp.MustCompile("Invalid\\sservices\\sconfiguration\\:\\srecommended\\smetrics\\s\\[([^\\]]*)\\]\\sfor\\sservice\\s'([^']*)'\\smust\\sbe\\sselected")
-			r2 := regexp.MustCompile("Invalid\\sservices\\sconfiguration\\:\\smetric\\s'([^']*)'\\sfor\\sservice\\s'([^']*)'\\shas\\smissing\\sdimension\\s\\[([^\\]]*)\\],\\suse\\sall\\srecommended\\sdimensions\\s\\[([^\\]]*)\\]")
+			r := regexp.MustCompile(`Invalid\sservices\sconfiguration\:\srecommended\smetrics\s\[([^\]]*)\]\sfor\sservice\s'([^']*)'\smust\sbe\sselected`)
+			r2 := regexp.MustCompile(`Invalid\sservices\sconfiguration\:\smetric\s'([^']*)'\sfor\sservice\s'([^']*)'\shas\smissing\sdimension\s\[([^\]]*)\],\suse\sall\srecommended\sdimensions\s\[([^\]]*)\]`)
 			if m := r.FindStringSubmatch(err.Error()); m != nil {
 				var service *services.Settings
 				for _, service = range response.Services {
-					if strings.ToLower(service.Name) == strings.ToLower(v.Name) {
+					if strings.EqualFold(service.Name, v.Name) {
 						break
 					}
 				}
@@ -166,7 +166,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 			} else if m := r2.FindStringSubmatch(err.Error()); m != nil {
 				var service *services.Settings
 				for _, service = range response.Services {
-					if strings.ToLower(service.Name) == strings.ToLower(v.Name) {
+					if strings.EqualFold(service.Name, v.Name) {
 						break
 					}
 				}
@@ -222,7 +222,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	var reducedServices servicesResponse
 	found := false
 	for _, service := range response.Services {
-		if strings.ToLower(service.Name) == strings.ToLower(serviceName) {
+		if strings.EqualFold(service.Name, serviceName) {
 			found = true
 		} else {
 			reducedServices.Services = append(reducedServices.Services, service)
