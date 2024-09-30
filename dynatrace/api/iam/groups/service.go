@@ -10,6 +10,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/google/uuid"
 )
@@ -215,7 +216,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 			return nil
 		}
 	}
-	return fmt.Errorf("no group with id `%s` found", id)
+	return rest.Error{Code: 404, Message: fmt.Sprintf("no group with id `%s` found", id)}
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
