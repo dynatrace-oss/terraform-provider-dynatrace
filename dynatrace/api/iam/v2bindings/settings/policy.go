@@ -19,7 +19,6 @@ func (me *Policy) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "Either the attribute `id` or the attribute `uuid` of a `dynatrace_iam_policy`. Initially just the `id` attribute was supported (which is a concatenation of several configuration settings) - and is still supported for backwards compatibility",
-			ForceNew:    true,
 		},
 		"parameters": {
 			Type:     schema.TypeMap,
