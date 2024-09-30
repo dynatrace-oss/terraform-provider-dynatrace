@@ -97,7 +97,7 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 		},
 		"remove_defaults": {
 			Type:        schema.TypeBool,
-			Description: "Instructs the provider to remove the supporting services Dynatrace applies by default to newly created AWS Credentials. Supporting Services applied by via `dynatrace_aws_service` subsequently won't get touched.",
+			Description: "Instructs the provider to remove the supporting services Dynatrace applies by default to newly created AWS Credentials. Supporting Services applied by via `dynatrace_aws_service` subsequently won't get touched.\nNote: This attribute is only getting considered during creation of the resource. Changing it afterwards won't have an effect",
 			Optional:    true,
 			Default:     false,
 		},

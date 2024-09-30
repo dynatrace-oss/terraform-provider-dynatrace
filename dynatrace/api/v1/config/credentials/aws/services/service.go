@@ -146,6 +146,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 		if err = me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", credentialsID), response).Expect(204).Finish(); err != nil {
 			r := regexp.MustCompile(`Invalid\sservices\sconfiguration\:\srecommended\smetrics\s\[([^\]]*)\]\sfor\sservice\s'([^']*)'\smust\sbe\sselected`)
 			r2 := regexp.MustCompile(`Invalid\sservices\sconfiguration\:\smetric\s'([^']*)'\sfor\sservice\s'([^']*)'\shas\smissing\sdimension\s\[([^\]]*)\],\suse\sall\srecommended\sdimensions\s\[([^\]]*)\]`)
+			r3 := regexp.MustCompile("Invalid services configuration: you can't have (.*) and (.*) services turned on simultaneously")
 			if m := r.FindStringSubmatch(err.Error()); m != nil {
 				var service *services.Settings
 				for _, service = range response.Services {
@@ -192,6 +193,43 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 					metric.Dimensions = append(metric.Dimensions, k)
 				}
 				v.MonitoredMetrics = service.MonitoredMetrics
+			} else if m := r3.FindStringSubmatch(err.Error()); len(m) == 3 {
+				// Example:
+				// Invalid services configuration: you can't have lambda and lambda_builtin services turned on simultaneously
+				builtin_service := ""
+				if strings.HasSuffix(m[1], "_builtin") {
+					builtin_service = m[1]
+					if strings.HasSuffix(m[2], "_builtin") {
+						// if both services mentioned within the error messages are
+						// apparently "builtin" we don't know which one to axe
+						return nil, err
+					}
+				} else if strings.HasSuffix(m[2], "_builtin") {
+					builtin_service = m[2]
+				}
+				// if neither of the two services mentioned within the error message is "builtin"
+				// (i.e. its name ends with "_builtin") we don't know which one to axe
+				if len(builtin_service) == 0 {
+					return nil, err
+				}
+				// rebuilding the payloads "Services" property
+				// all entries except the one where the "name" matches the service to remove
+				// will remain
+				var newServices []*services.Settings
+				removedOneEntry := false
+				for _, entry := range response.Services {
+					if entry.Name != builtin_service {
+						newServices = append(newServices, entry)
+					} else {
+						removedOneEntry = true
+					}
+				}
+				// sanity check - did we ACTUALLY remove something from the payload?
+				if !removedOneEntry {
+					return nil, err
+				}
+				// re-assigning reduced slice to payload
+				response.Services = newServices
 			} else {
 				return nil, err
 			}
