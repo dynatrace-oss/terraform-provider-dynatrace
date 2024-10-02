@@ -25,6 +25,7 @@ import (
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -105,7 +106,24 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
 		if strings.Contains(err.Error(), "Scope: mzname. Management-Zone not found:") {
 			d.Set("entities", []any{})
-			return diag.Diagnostics{}
+			if violations := rest.ConstraintViolations(err); len(violations) > 0 {
+				messages := map[string]string{}
+				for _, violation := range violations {
+					message := strings.TrimSpace(violation.Message)
+					if _, found := messages[message]; !found {
+						messages[message] = message
+					}
+				}
+				if len(messages) == 0 {
+					return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: err.Error()}}
+				}
+				d := diag.Diagnostics{}
+				for message := range messages {
+					d = append(d, diag.Diagnostic{Severity: diag.Warning, Summary: message})
+				}
+				return d
+			}
+			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: err.Error()}}
 		}
 		return diag.FromErr(err)
 	}

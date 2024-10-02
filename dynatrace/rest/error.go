@@ -37,6 +37,18 @@ type Error struct {
 	Method               string                `json:"-"`
 }
 
+func ConstraintViolations(err error) []ConstraintViolation {
+	if err == nil {
+		return []ConstraintViolation{}
+	}
+	if restErr, ok := err.(Error); ok {
+		return restErr.ConstraintViolations
+	} else if restErr, ok := err.(*Error); ok {
+		return restErr.ConstraintViolations
+	}
+	return []ConstraintViolation{}
+}
+
 func Is404(err error) bool {
 	if err == nil {
 		return false
