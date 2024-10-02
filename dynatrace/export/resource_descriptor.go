@@ -18,6 +18,7 @@
 package export
 
 import (
+	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	"os"
 	"reflect"
 	"strings"
@@ -530,6 +531,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DirectShares: NewResourceDescriptor(
 		directshares.Service,
 	),
+	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
+		openpipeline.LogsService),
+	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
+		openpipeline.EventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineSecurityEvents: NewResourceDescriptor(
+		openpipeline.SecurityEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineBusinessEvents: NewResourceDescriptor(
+		openpipeline.BusinessEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineSDLCEvents: NewResourceDescriptor(
+		openpipeline.SDLCEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
 		ResourceTypes.JSONDashboardBase,

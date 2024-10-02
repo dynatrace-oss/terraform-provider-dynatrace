@@ -464,6 +464,11 @@ var ResourceTypes = struct {
 	DevObsAgentOptin                    ResourceType
 	DevObsDataMasking                   ResourceType
 	DavisCoPilot                        ResourceType
+	OpenPipelineLogs                    ResourceType
+	OpenPipelineEvents                  ResourceType
+	OpenPipelineSecurityEvents          ResourceType
+	OpenPipelineBusinessEvents          ResourceType
+	OpenPipelineSDLCEvents              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -775,6 +780,11 @@ var ResourceTypes = struct {
 	"dynatrace_devobs_agent_optin",
 	"dynatrace_devobs_data_masking",
 	"dynatrace_davis_copilot",
+	"dynatrace_openpipeline_logs",
+	"dynatrace_openpipeline_events",
+	"dynatrace_openpipeline_security_events",
+	"dynatrace_openpipeline_business_events",
+	"dynatrace_openpipeline_sdlc_events",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
