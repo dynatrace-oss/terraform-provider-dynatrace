@@ -19,6 +19,8 @@ package entities
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	srv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
@@ -97,10 +99,16 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	var settings entities.Settings
 	service := srv.Service(entityType, "", entitySelector, from, to, creds)
+
+	d.SetId(fmt.Sprintf("%s#%s#%s#%s#%s", service.SchemaID(), entityType, entitySelector, from, to))
+
 	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+		if strings.Contains(err.Error(), "Scope: mzname. Management-Zone not found:") {
+			d.Set("entities", []any{})
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
-	d.SetId(service.SchemaID())
 	marshalled := hcl.Properties{}
 	if err := marshalled.Encode("settings", &settings); err != nil {
 		return diag.FromErr(err)
