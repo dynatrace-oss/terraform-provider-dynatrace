@@ -37,6 +37,19 @@ type Error struct {
 	Method               string                `json:"-"`
 }
 
+func Is404(err error) bool {
+	if err == nil {
+		return false
+	}
+	if restErr, ok := err.(Error); ok {
+		return restErr.Code == 404
+	}
+	if restErr, ok := err.(*Error); ok {
+		return restErr.Code == 404
+	}
+	return false
+}
+
 // CorrectPayload investigates a failed request and the
 // error that got returned.
 // If it is an error message originating from Settings 2.0

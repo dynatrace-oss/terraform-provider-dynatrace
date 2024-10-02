@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
 	mgmzsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -91,6 +92,10 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	}
 	config := mgmzsettings.Permission{}
 	if err = NewService(m).Get(ctx, d.Id(), &config); err != nil {
+		if rest.Is404(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
 	marshalled := hcl.Properties{}
