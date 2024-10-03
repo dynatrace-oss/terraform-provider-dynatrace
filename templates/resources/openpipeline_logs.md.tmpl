@@ -1,0 +1,53 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_logs Resource - terraform-provider-dynatrace"
+subcategory: "OpenPipeline"
+description: |-
+  The resource `dynatrace_openpipeline_logs` covers configuration of OpenPipeline for Logs
+---
+
+# dynatrace_openpipeline_logs (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View OpenPipeline configurations** (`openpipeline:configurations:read`), and **Edit OpenPipeline configurations** (`openpipeline:configurations:write`).
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_logs` downloads all existing OpenPipeline definitions for Logs
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_openpipeline_logs" "logs" {
+  pipelines {
+    pipeline {
+      enabled      = true
+      display_name = "test"
+      id           = "pipeline_test_5036"
+      processing {
+        processor {
+          fields_rename_processor {
+            description = "test"
+            enabled     = true
+            id          = "processor_test_8644"
+            matcher     = "true"
+            field {
+              from_name = "bar"
+              to_name   = "foo"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
