@@ -47,7 +47,6 @@ import (
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mobileapplication"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/remoteenvironments"
@@ -245,7 +244,7 @@ func Provider() *schema.Provider {
 			"dynatrace_generic_setting":              genericsettingsds.DataSource(),
 			"dynatrace_api_tokens":                   apitoken.DataSourceMultiple(),
 			"dynatrace_api_token":                    apitoken.DataSource(),
-			"dynatrace_openpipeline":                 openpipeline.DataSource(),
+			// "dynatrace_openpipeline":                 openpipeline.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -568,11 +567,11 @@ func Provider() *schema.Provider {
 			"dynatrace_devobs_data_masking":                 resources.NewGeneric(export.ResourceTypes.DevObsDataMasking).Resource(),
 			"dynatrace_davis_copilot":                       resources.NewGeneric(export.ResourceTypes.DavisCoPilot).Resource(),
 			"dynatrace_golden_state":                        goldenstate.Resource(),
-			"dynatrace_openpipeline_logs":                   resources.NewGeneric(export.ResourceTypes.OpenPipelineLogs).Resource(),
-			"dynatrace_openpipeline_events":                 resources.NewGeneric(export.ResourceTypes.OpenPipelineEvents).Resource(),
-			"dynatrace_openpipeline_security_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineSecurityEvents).Resource(),
-			"dynatrace_openpipeline_business_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineBusinessEvents).Resource(),
-			"dynatrace_openpipeline_sdlc_events":            resources.NewGeneric(export.ResourceTypes.OpenPipelineSDLCEvents).Resource(),
+			// "dynatrace_openpipeline_logs":                   resources.NewGeneric(export.ResourceTypes.OpenPipelineLogs).Resource(),
+			// "dynatrace_openpipeline_events":                 resources.NewGeneric(export.ResourceTypes.OpenPipelineEvents).Resource(),
+			// "dynatrace_openpipeline_security_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineSecurityEvents).Resource(),
+			// "dynatrace_openpipeline_business_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineBusinessEvents).Resource(),
+			// "dynatrace_openpipeline_sdlc_events":            resources.NewGeneric(export.ResourceTypes.OpenPipelineSDLCEvents).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
