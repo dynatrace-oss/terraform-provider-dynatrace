@@ -244,7 +244,6 @@ func Provider() *schema.Provider {
 			"dynatrace_generic_setting":              genericsettingsds.DataSource(),
 			"dynatrace_api_tokens":                   apitoken.DataSourceMultiple(),
 			"dynatrace_api_token":                    apitoken.DataSource(),
-			// "dynatrace_openpipeline":                 openpipeline.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
