@@ -19,7 +19,7 @@ func (f *SecurityContextStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Groups all processors applicable for the SecurityContextStage.\nApplicable processor is SecurityContextProcessor.",
 			Elem:        &schema.Resource{Schema: new(SecContextProcessor).Schema()},
 			Optional:    true,
 		},
@@ -42,7 +42,7 @@ func (ep *SecContextProcessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"security_context_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to set the security context field.",
+			Description: "Processor to set the security context field",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(SecurityContextProcessor).Schema()},

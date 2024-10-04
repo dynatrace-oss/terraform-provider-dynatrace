@@ -18,7 +18,7 @@ func (f *DataExtractionStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Groups all processors applicable for the DataExtractionStage.\nApplicable processors are DavisEventExtractionProcessor and BizeventExtractionProcessor.",
 			Elem:        &schema.Resource{Schema: new(DataExtractionProcessor).Schema()},
 			Optional:    true,
 		},

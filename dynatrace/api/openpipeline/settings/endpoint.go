@@ -24,7 +24,7 @@ func (ep *Endpoints) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"endpoint": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Definition of a single ingest source",
 			Elem:        &schema.Resource{Schema: new(EndpointDefinition).Schema()},
 			Optional:    true,
 		},
@@ -63,17 +63,17 @@ func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"default_bucket": {
 			Type:        schema.TypeString,
-			Description: "The default bucket assigned to records for the ingest source.",
+			Description: "The default bucket assigned to records for the ingest source",
 			Optional:    true,
 		},
 		"display_name": {
 			Type:        schema.TypeString,
-			Description: "Display name of the ingest source.",
+			Description: "Display name of the ingest source",
 			Required:    true,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Indicates if the object is active.",
+			Description: "Indicates if the object is active",
 			Required:    true,
 		},
 		"segment": {
@@ -83,7 +83,7 @@ func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 		},
 		"routing": {
 			Type:        schema.TypeList,
-			Description: "Routing strategy, either dynamic or static.",
+			Description: "Routing strategy, either dynamic or static",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Routing).Schema()},
@@ -91,7 +91,7 @@ func (d *EndpointDefinition) Schema() map[string]*schema.Schema {
 		},
 		"processors": {
 			Type:        schema.TypeList,
-			Description: "The pre-processing done in the ingest source.",
+			Description: "The pre-processing done in the ingest source",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(EndpointProcessors).Schema()},

@@ -20,7 +20,7 @@ func (t *RoutingTable) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"entry": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Dynamic routing entry",
 			Elem:        &schema.Resource{Schema: new(RoutingTableEntry).Schema()},
 			Optional:    true,
 		},
@@ -77,22 +77,22 @@ func (e *RoutingTableEntry) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "todo",
+			Description: "Indicates if the object is active",
 			Required:    true,
 		},
 		"matcher": {
 			Type:        schema.TypeString,
-			Description: "todo",
+			Description: "Matching condition to apply on incoming records",
 			Required:    true,
 		},
 		"note": {
 			Type:        schema.TypeString,
-			Description: "todo",
+			Description: "Unique note describing the dynamic route",
 			Required:    true,
 		},
 		"pipeline_id": {
 			Type:        schema.TypeString,
-			Description: "todo",
+			Description: "Identifier of the pipeline the record is routed into",
 			Required:    true,
 		},
 	}

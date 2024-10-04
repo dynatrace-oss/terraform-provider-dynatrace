@@ -17,7 +17,7 @@ func (ep *EndpointProcessors) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Groups all processors applicable for processing in the EndpointDefinition.\nApplicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor, FieldsRenameProcessor and DropProcessor.",
 			Elem:        &schema.Resource{Schema: new(EndpointProcessor).Schema()},
 			Optional:    true,
 		},
@@ -83,7 +83,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_add_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to add fields.",
+			Description: "Processor to add fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsAddProcessor).Schema()},
@@ -91,7 +91,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_remove_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to remove fields.",
+			Description: "Processor to remove fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsRemoveProcessor).Schema()},
@@ -99,7 +99,7 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_rename_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to rename fields.",
+			Description: "Processor to rename fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},

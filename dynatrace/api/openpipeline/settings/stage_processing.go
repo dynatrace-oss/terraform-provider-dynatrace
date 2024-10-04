@@ -18,7 +18,7 @@ func (f *ProcessingStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Groups all processors applicable for the ProcessingStage.\nApplicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor, FieldsRenameProcessor, TechnologyProcessor and DropProcessor.",
 			Elem:        &schema.Resource{Schema: new(ProcessingStageProcessor).Schema()},
 			Optional:    true,
 		},
@@ -53,7 +53,7 @@ func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_add_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to add fields.",
+			Description: "Processor to add fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsAddProcessor).Schema()},
@@ -61,7 +61,7 @@ func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_remove_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to remove fields.",
+			Description: "Processor to remove fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsRemoveProcessor).Schema()},
@@ -69,7 +69,7 @@ func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
 		},
 		"fields_rename_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to rename fields.",
+			Description: "Processor to rename fields",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},
@@ -77,7 +77,7 @@ func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
 		},
 		"technology_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to apply a technology processors.",
+			Description: "Processor to apply a technology processors",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(TechnologyProcessor).Schema()},
