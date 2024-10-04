@@ -127,7 +127,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		delConfig.Tags = deleteTags
 		srv := customtags.Service(creds)
 		if fullDeleter, ok := srv.(FullDeleter); ok {
-			if err := fullDeleter.DeleteValue(delConfig); err != nil {
+			if err := fullDeleter.DeleteValue(ctx, delConfig); err != nil {
 				if !strings.HasPrefix(err.Error(), "Unable to find tag") {
 					return diag.FromErr(err)
 				}
@@ -220,7 +220,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 	srv := customtags.Service(creds)
 	if fullDeleter, ok := srv.(FullDeleter); ok {
-		if err := fullDeleter.DeleteValue(stateConfig); err != nil {
+		if err := fullDeleter.DeleteValue(ctx, stateConfig); err != nil {
 			if strings.HasPrefix(err.Error(), "Unable to find tag") {
 				return diag.Diagnostics{}
 			}
@@ -237,5 +237,5 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 }
 
 type FullDeleter interface {
-	DeleteValue(v *settings.Settings) error
+	DeleteValue(ctx context.Context, v *settings.Settings) error
 }
