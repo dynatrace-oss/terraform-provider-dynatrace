@@ -22,7 +22,7 @@ func (ep *Pipelines) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"pipeline": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Definition of a single pipeline",
 			Elem:        &schema.Resource{Schema: new(Pipeline).Schema()},
 			Optional:    true,
 		},
@@ -146,7 +146,7 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"data_extraction": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Data extraction stage configuration of the pipeline",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(DataExtractionStage).Schema()},
@@ -154,7 +154,7 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 		},
 		"metric_extraction": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Metric extraction stage configuration of the pipeline",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(MetricExtractionStage).Schema()},
@@ -162,7 +162,7 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 		},
 		"security_context": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Security context stage configuration of the pipeline",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(SecurityContextStage).Schema()},
@@ -170,7 +170,7 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 		},
 		"storage": {
 			Type:        schema.TypeList,
-			Description: "Data extraction stage configuration of the pipeline.",
+			Description: "Data extraction stage configuration of the pipeline",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(StorageStage).Schema()},
@@ -178,17 +178,17 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 		},
 		"display_name": {
 			Type:        schema.TypeString,
-			Description: "Display name of the pipeline.",
+			Description: "Display name of the pipeline",
 			Required:    true,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Indicates if the object is active.",
+			Description: "Indicates if the object is active",
 			Required:    true,
 		},
 		"id": {
 			Type:        schema.TypeString,
-			Description: "Identifier of the pipeline.",
+			Description: "Identifier of the pipeline",
 			Required:    true,
 		},
 	}
@@ -271,7 +271,7 @@ func (p *DefaultPipeline) Schema() map[string]*schema.Schema {
 	s := p.BasePipeline.Schema()
 	s["processing"] = &schema.Schema{
 		Type:        schema.TypeList,
-		Description: "todo",
+		Description: "Processing stage configuration of the pipeline",
 		MinItems:    1,
 		MaxItems:    1,
 		Elem:        &schema.Resource{Schema: new(ProcessingStage).Schema()},

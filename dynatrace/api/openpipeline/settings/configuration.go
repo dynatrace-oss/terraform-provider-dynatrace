@@ -22,7 +22,7 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"endpoints": {
 			Type:        schema.TypeList,
-			Description: "List of all ingest sources of the configuration.",
+			Description: "List of all ingest sources of the configuration",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Endpoints).Schema()},
@@ -30,7 +30,7 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 		},
 		"routing": {
 			Type:        schema.TypeList,
-			Description: "Dynamic routing definition.",
+			Description: "Dynamic routing definition",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(RoutingTable).Schema()},
@@ -38,7 +38,7 @@ func (d *Configuration) Schema() map[string]*schema.Schema {
 		},
 		"pipelines": {
 			Type:        schema.TypeList,
-			Description: "List of all pipelines of the configuration.",
+			Description: "List of all pipelines of the configuration",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Pipelines).Schema()},
