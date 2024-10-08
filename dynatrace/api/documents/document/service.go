@@ -20,6 +20,7 @@ package documents
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -126,7 +127,12 @@ func (me *service) List(_ context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, r := range result {
-		stubs = append(stubs, &api.Stub{ID: r.ID, Name: r.Name})
+		if marshalledDocument, merr := json.Marshal(r); merr == nil {
+			value := new(documents.Document)
+			if json.Unmarshal(marshalledDocument, value) == nil {
+				stubs = append(stubs, &api.Stub{ID: r.ID, Name: r.Name, Value: value})
+			}
+		}
 	}
 
 	return stubs, nil
