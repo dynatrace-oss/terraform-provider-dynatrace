@@ -29,6 +29,6 @@ type Service[T Settings] interface {
 	Create(ctx context.Context, v T) (*api.Stub, error)
 	Update(ctx context.Context, id string, v T) error
 	Delete(ctx context.Context, id string) error
-	Validate(v T) error
+	Validate(ctx context.Context, v T) error
 	SchemaID() string
 }

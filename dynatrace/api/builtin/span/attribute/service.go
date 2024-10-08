@@ -67,7 +67,7 @@ func (me *service) Create(ctx context.Context, v *attribute.Settings) (*api.Stub
 		Value:         v,
 	}
 
-	req := me.client.Post("/api/v2/settings/objects", []settings20.SettingsObjectCreate{soc}).Expect(200)
+	req := me.client.Post(ctx, "/api/v2/settings/objects", []settings20.SettingsObjectCreate{soc}).Expect(200)
 	resp := []settings20.SettingsObjectCreateResponse{}
 
 	var stub *api.Stub
@@ -102,9 +102,9 @@ func (me *service) Create(ctx context.Context, v *attribute.Settings) (*api.Stub
 }
 
 func (me *service) Update(ctx context.Context, id string, v *attribute.Settings) error {
-	if err := me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
+	if err := me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
 		sou := settings20.SettingsObjectUpdate{Value: v, SchemaVersion: SchemaVersion}
-		if err := me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
+		if err := me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
 			return err
 		}
 	} else {
@@ -191,8 +191,8 @@ func (me *service) Validate(v *attribute.Settings) error {
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
-	if err = me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
-		if err = me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish(); err != nil {
+	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
+		if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish(); err != nil {
 			return err
 		}
 	} else {
@@ -216,7 +216,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 			if allowlistId != nil {
-				if err = me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*allowlistId)), 204).Finish(); err != nil {
+				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*allowlistId)), 204).Finish(); err != nil {
 					return err
 				}
 			}
@@ -234,7 +234,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 			if maskingId != nil {
-				if err = me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*maskingId)), 204).Finish(); err != nil {
+				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*maskingId)), 204).Finish(); err != nil {
 					return err
 				}
 			}
@@ -249,8 +249,8 @@ func (me *service) Delete(ctx context.Context, id string) error {
 func (me *service) Get(ctx context.Context, id string, v *attribute.Settings) error {
 	var err error
 	var settingsObject settings20.SettingsObject
-	if err = me.client.Get("/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
-		req := me.client.Get(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
+	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-attribute", 200).Finish(); err == nil {
+		req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
 		if err = req.Finish(&settingsObject); err != nil {
 			return err
 		}
@@ -316,7 +316,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
 		}
-		req := me.client.Get(urlStr, 200)
+		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}

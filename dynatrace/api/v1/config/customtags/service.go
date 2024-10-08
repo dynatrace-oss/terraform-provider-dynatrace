@@ -44,7 +44,7 @@ var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
 
 func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings) (err error) {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Get(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
+	if err = client.Get(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
 	}
 	v.EntitySelector = selector
@@ -54,7 +54,7 @@ func (me *service) Get(ctx context.Context, selector string, v *customtags.Setti
 				DisplayName string `json:"displayName"`
 			}
 		}{}
-		if err = client.Get(fmt.Sprintf("/api/v2/entities?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(&response); err == nil {
+		if err = client.Get(ctx, fmt.Sprintf("/api/v2/entities?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(&response); err == nil {
 			if len(response.Entities) > 0 {
 				v.ExportName = response.Entities[0].DisplayName
 			}
@@ -69,10 +69,10 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return list.List(rest.DefaultClient(me.credentials.URL, me.credentials.Token))
+	return list.List(ctx, rest.DefaultClient(me.credentials.URL, me.credentials.Token))
 }
 
-func (me *service) Validate(v *customtags.Settings) error {
+func (me *service) Validate(ctx context.Context, v *customtags.Settings) error {
 	return nil // no endpoint for that
 }
 
@@ -88,7 +88,7 @@ func (me *service) Update(ctx context.Context, id string, v *customtags.Settings
 
 	var settingsObj customtags.Settings
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post(fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
+	if err = client.Post(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
 		return err
 	}
 	v.MatchedEntities = settingsObj.MatchedEntities
@@ -104,11 +104,11 @@ func (me *service) DeleteValue(ctx context.Context, v *customtags.Settings) erro
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	for _, tag := range v.Tags {
 		if tag.Value == nil || len(*tag.Value) == 0 {
-			if err := client.Delete(fmt.Sprintf("/api/v2/tags?key=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {
+			if err := client.Delete(ctx, fmt.Sprintf("/api/v2/tags?key=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {
 				return err
 			}
 		} else {
-			if err := client.Delete(fmt.Sprintf("/api/v2/tags?key=%s&value=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(*tag.Value), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {
+			if err := client.Delete(ctx, fmt.Sprintf("/api/v2/tags?key=%s&value=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(*tag.Value), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {
 				return err
 			}
 		}

@@ -18,6 +18,7 @@
 package httpcache
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -108,7 +109,7 @@ var REGEX_PRIVATE_SYNTHETIC_LOCATIONS_LIST, _ = regexp.Compile(`\/api\/v1\/synth
 var REGEX_PRIVATE_SYNTHETIC_LOCATIONS_GET, _ = regexp.Compile(`\/api\/v1\/synthetic\/locations\/([^\/]*)$`)
 var REGEX_CREDENTIALS_LIST, _ = regexp.Compile(`\/api\/config\/v1\/credentials$`)
 
-func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
+func (me *client) Get(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
 	doGet := func(modSchemaID string, id string) rest.Request {
 		return Get(modSchemaID, id, me.schemaID)
 	}
@@ -241,21 +242,21 @@ func (me *client) Get(url string, expectedStatusCodes ...int) rest.Request {
 	logging.Debug.Info.Printf("[HTTP_CACHE] [%s] [FAILED] [%s] Could not find a cache match", me.schemaID, url)
 	logging.Debug.Warn.Printf("[HTTP_CACHE] [%s] [FAILED] [%s] Could not find a cache match", me.schemaID, url)
 	fmt.Printf("\nERROR: Could not find a cache match for: %s, url: %s", me.schemaID, url)
-	return me.client.Get(url, expectedStatusCodes...)
+	return me.client.Get(ctx, url, expectedStatusCodes...)
 }
 
-func (me *client) Post(url string, payload any, expectedStatusCodes ...int) rest.Request {
+func (me *client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) rest.Request {
 	return &rest.Forbidden{Method: "POST"}
 }
 
-func (me *client) Put(url string, payload any, expectedStatusCodes ...int) rest.Request {
+func (me *client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) rest.Request {
 	return &rest.Forbidden{Method: "PUT"}
 }
 
-func (me *client) Delete(url string, expectedStatusCodes ...int) rest.Request {
+func (me *client) Delete(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
 	return &rest.Forbidden{Method: "DELETE"}
 }
 
-func (me *client) Upload(url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) rest.Request {
+func (me *client) Upload(ctx context.Context, url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) rest.Request {
 	return &rest.Forbidden{Method: "Upload"}
 }

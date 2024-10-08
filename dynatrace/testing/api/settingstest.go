@@ -115,7 +115,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 					createSettings := allSettings[0]
 
 					if validator, ok := service.(settings.Validator[V]); ok {
-						if err = validator.Validate(createSettings); err != nil {
+						if err = validator.Validate(context.Background(), createSettings); err != nil {
 							assert.Error(err)
 							return
 						}

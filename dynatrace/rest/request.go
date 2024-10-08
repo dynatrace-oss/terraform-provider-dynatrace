@@ -36,12 +36,14 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"golang.org/x/sync/semaphore"
 )
 
 const MinWaitTime = 5 * time.Second
 const MaxWaitTime = 1 * time.Minute
 
+var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
 var logger = initLogger()
 var Logger = logger
 var errorLogger = initErrorLogger()
@@ -62,7 +64,7 @@ func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 
 func initLogger() *log.Logger {
 	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" {
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
@@ -74,7 +76,7 @@ func initLogger() *log.Logger {
 
 func initErrorLogger() *log.Logger {
 	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" {
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: strings.TrimSuffix(restLogFileName, ".log") + ".err.log"})
@@ -116,6 +118,7 @@ func (me statuscodes) contains(code int) bool {
 }
 
 type request struct {
+	ctx        context.Context
 	client     *defaultClient
 	url        string
 	expect     statuscodes
@@ -208,8 +211,14 @@ func (me *request) Raw() ([]byte, error) {
 	// if os.Getenv("DT_REST_DEBUG_REQUEST_PAYLOAD") == "true" && me.payload != nil {
 	if len(data) > 0 {
 		logger.Println(me.method, url+"\n    "+string(data))
+		if stdoutLog {
+			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url+"\n    "+string(data)))
+		}
 	} else {
 		logger.Println(me.method, url)
+		if stdoutLog {
+			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url))
+		}
 	}
 
 	// } else {
@@ -283,8 +292,15 @@ func (me *request) Raw() ([]byte, error) {
 	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 		if data != nil {
 			logger.Println(res.Status, string(data))
+			if stdoutLog {
+				tflog.Debug(me.ctx, fmt.Sprintf("%s %s", res.Status, string(data)))
+			}
 		} else {
 			logger.Println(res.Status)
+			if stdoutLog {
+				tflog.Debug(me.ctx, res.Status)
+			}
+
 		}
 	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {

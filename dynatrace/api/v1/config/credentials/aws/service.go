@@ -42,7 +42,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 			settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
 				WithStubs(&api.Stubs{}).
 				WithMutex(mu.Lock, mu.Unlock).
-				WithAfterCreate(func(client rest.Client, stub *api.Stub) (*api.Stub, error) {
+				WithAfterCreate(func(ctx context.Context, client rest.Client, stub *api.Stub) (*api.Stub, error) {
 					// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
 					// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created
 					// Last resort is to populate that value right after GET has happened (see below) - which is already cheating
@@ -50,7 +50,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 					numRetries := 0
 					configIsValid := false
 					for !configIsValid && numRetries < 30 {
-						client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
+						client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
 						if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
 							configIsValid = true
 							break
@@ -61,7 +61,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 					return stub, nil
 				}).
 				WithDuplicates(Duplicates).
-				WithCompleteGet(func(client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
+				WithCompleteGet(func(ctx context.Context, client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
 					// This is a sanity (last resort) function
 					// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
 					// ... even after a miniute of waiting
@@ -77,7 +77,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 						tokenResponse := struct {
 							Token string `json:"token"`
 						}{}
-						client.Get("/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
+						client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
 						if len(tokenResponse.Token) > 0 {
 							v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
 						}
@@ -139,14 +139,14 @@ func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig) (*ap
 		return nil, err
 	}
 	if v.RemoveDefaults {
-		err = me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}, 204).Finish()
+		err = me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}, 204).Finish()
 	}
 	return stub, err
 }
 
 func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsConfig) error {
 	var updv aws.AWSCredentialsConfigUpdate
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id)).Finish(&updv); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id)).Finish(&updv); err != nil {
 		return err
 	}
 	updv.AuthenticationData = v.AuthenticationData
@@ -154,7 +154,7 @@ func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsC
 	updv.PartitionType = v.PartitionType
 	updv.TaggedOnly = v.TaggedOnly
 	updv.TagsToMonitor = v.TagsToMonitor
-	return me.client.Put(fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
+	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {

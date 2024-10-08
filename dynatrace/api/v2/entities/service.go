@@ -58,7 +58,7 @@ func (me *service) Get(ctx context.Context, id string, v *entities.Settings) (er
 
 	var dataObj entities.Settings
 	if len(me.entitySelector) > 0 {
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(me.entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	} else {
@@ -72,7 +72,7 @@ func (me *service) Get(ctx context.Context, id string, v *entities.Settings) (er
 		// shouldn't happen - just sanity
 		// in case there was no type but a name
 		entitySelector = strings.TrimPrefix(entitySelector, ",")
-		if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
+		if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000%s&from=%s&entitySelector=%s&fields=tags,properties,lastSeenTms`, to, url.QueryEscape(from), url.QueryEscape(entitySelector)), 200).Finish(&dataObj); err != nil {
 			return err
 		}
 	}
@@ -83,7 +83,7 @@ func (me *service) Get(ctx context.Context, id string, v *entities.Settings) (er
 		key := *dataObj.NextPageKey
 		for {
 			var tempObj entities.Settings
-			if err = me.client.Get(fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.PathEscape(key)), 200).Finish(&tempObj); err != nil {
+			if err = me.client.Get(ctx, fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.PathEscape(key)), 200).Finish(&tempObj); err != nil {
 				return err
 			}
 			dataObj.Entities = append(dataObj.Entities, tempObj.Entities...)

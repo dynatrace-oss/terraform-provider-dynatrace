@@ -1,6 +1,7 @@
 package envs
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -44,7 +45,7 @@ func evalRetry(rerr *rest.Error, environment *Environment) bool {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, environment *Environment) (*api.Stub, error) {
 	var err error
 
 	if len(opt.String(environment.ID)) > 0 {
@@ -53,7 +54,7 @@ func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
 	var stub api.Stub
 	retry := true
 	for retry {
-		if err = cs.client.Post("/environments", environment, 201).Finish(&stub); err != nil {
+		if err = cs.client.Post(ctx, "/environments", environment, 201).Finish(&stub); err != nil {
 			switch rerr := err.(type) {
 			case *rest.Error:
 				retry = evalRetry(rerr, environment)
@@ -70,11 +71,11 @@ func (cs *ServiceClient) Create(environment *Environment) (*api.Stub, error) {
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(environment *Environment) error {
+func (cs *ServiceClient) Update(ctx context.Context, environment *Environment) error {
 	retry := true
 
 	for retry {
-		if err := cs.client.Put(fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
+		if err := cs.client.Put(ctx, fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
 			switch rerr := err.(type) {
 			case *rest.Error:
 				retry = evalRetry(rerr, environment)
@@ -91,11 +92,11 @@ func (cs *ServiceClient) Update(environment *Environment) error {
 }
 
 // Delete TODO: documentation
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the Dashboard to delete")
 	}
-	env, err := cs.Get(id)
+	env, err := cs.Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -103,7 +104,7 @@ func (cs *ServiceClient) Delete(id string) error {
 		env.State = States.Disabled
 		retry := true
 		for retry {
-			if err = cs.Update(env); err != nil {
+			if err = cs.Update(ctx, env); err != nil {
 				switch rerr := err.(type) {
 				case *rest.Error:
 					retry = evalRetry(rerr, env)
@@ -117,14 +118,14 @@ func (cs *ServiceClient) Delete(id string) error {
 			}
 		}
 	}
-	if err := cs.client.Delete(fmt.Sprintf("/environments/%s", id), 204).Finish(); err != nil {
+	if err := cs.client.Delete(ctx, fmt.Sprintf("/environments/%s", id), 204).Finish(); err != nil {
 		return err
 	}
 	return nil
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get(id string) (*Environment, error) {
+func (cs *ServiceClient) Get(ctx context.Context, id string) (*Environment, error) {
 	if len(id) == 0 {
 		return nil, errors.New("empty ID provided for the Dashboard to fetch")
 	}
@@ -132,18 +133,18 @@ func (cs *ServiceClient) Get(id string) (*Environment, error) {
 	var err error
 
 	var environment Environment
-	if err = cs.client.Get(fmt.Sprintf("/environments/%s?includeConsumptionInfo=true&includeStorageInfo=true", id), 200).Finish(&environment); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/environments/%s?includeConsumptionInfo=true&includeStorageInfo=true", id), 200).Finish(&environment); err != nil {
 		return nil, err
 	}
 	return &environment, nil
 }
 
 // ListAll TODO: documentation
-func (cs *ServiceClient) ListAll() (*EnvironmentList, error) {
+func (cs *ServiceClient) ListAll(ctx context.Context) (*EnvironmentList, error) {
 	var err error
 
 	var environmentList EnvironmentList
-	if err = cs.client.Get("/environments", 200).Finish(&environmentList); err != nil {
+	if err = cs.client.Get(ctx, "/environments", 200).Finish(&environmentList); err != nil {
 		return nil, err
 	}
 	return &environmentList, nil

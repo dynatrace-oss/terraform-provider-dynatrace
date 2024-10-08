@@ -85,7 +85,7 @@ func (me *SupportedServicesService) List(ctx context.Context) (map[string]*Suppo
 		return stored, nil
 	}
 	var servicesResponse supportedServicesResponse
-	if err := me.client.Get("/api/config/v1/aws/supportedServices").Expect(200).Finish(&servicesResponse); err != nil {
+	if err := me.client.Get(ctx, "/api/config/v1/aws/supportedServices").Expect(200).Finish(&servicesResponse); err != nil {
 		return nil, err
 	}
 	if servicesResponse.Services == nil {

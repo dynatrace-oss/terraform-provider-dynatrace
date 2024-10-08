@@ -18,6 +18,8 @@
 package preferences
 
 import (
+	"context"
+
 	preferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/preferences/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -35,13 +37,13 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(config *preferences.Settings) error {
-	return cs.Update(config)
+func (cs *ServiceClient) Create(ctx context.Context, config *preferences.Settings) error {
+	return cs.Update(ctx, config)
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(config *preferences.Settings) error {
-	return cs.client.Post("/preferences", config, 200).Finish()
+func (cs *ServiceClient) Update(ctx context.Context, config *preferences.Settings) error {
+	return cs.client.Post(ctx, "/preferences", config, 200).Finish()
 }
 
 // Delete TODO: documentation
@@ -50,10 +52,10 @@ func (cs *ServiceClient) Delete(config *preferences.Settings) error {
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get() (*preferences.Settings, error) {
+func (cs *ServiceClient) Get(ctx context.Context) (*preferences.Settings, error) {
 	var err error
 	var config preferences.Settings
-	if err = cs.client.Get("/preferences", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/preferences", 200).Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

@@ -63,7 +63,7 @@ func (me *service) Get(ctx context.Context, id string, v *items.HubItemList) err
 				queryString = queryString + url.QueryEscape(key) + "=" + url.QueryEscape(value)
 			}
 		}
-		if err := me.client.Get(fmt.Sprintf(`/api/v2/hub/items%s`, queryString), 200).Finish(&hubItemList); err != nil {
+		if err := me.client.Get(ctx, fmt.Sprintf(`/api/v2/hub/items%s`, queryString), 200).Finish(&hubItemList); err != nil {
 			return err
 		}
 		v.Items = append(v.Items, hubItemList.Items...)

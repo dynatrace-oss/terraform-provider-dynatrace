@@ -67,7 +67,7 @@ type QueryForWebAppIDResponse struct {
 
 func (me *service) Get(ctx context.Context, id string, v *keyuseractions.Settings) error {
 
-	applicationID, realId, err := getIDs(id, me)
+	applicationID, realId, err := getIDs(ctx, id, me)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (me *service) Get(ctx context.Context, id string, v *keyuseractions.Setting
 	id = realId
 
 	var kuaList KeyUserActionsList
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), 200).Finish(&kuaList); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), 200).Finish(&kuaList); err != nil {
 		return err
 	}
 	if len(kuaList.Values) > 0 {
@@ -94,13 +94,13 @@ func (me *service) Get(ctx context.Context, id string, v *keyuseractions.Setting
 	return rest.Error{Code: 404, Message: fmt.Sprintf("Key User Action with ID '%s' not found", id)}
 }
 
-func getIDs(id string, me *service) (string, string, error) {
+func getIDs(ctx context.Context, id string, me *service) (string, string, error) {
 	found, applicationID, realId := multiuse.ExtractIDParent(id)
 	if found {
 		return applicationID, realId, nil
 	}
 
-	applicationID, err := me.fetchApplicationID(id)
+	applicationID, err := me.fetchApplicationID(ctx, id)
 	if err != nil {
 		return "", "", err
 	}
@@ -108,11 +108,11 @@ func getIDs(id string, me *service) (string, string, error) {
 	return applicationID, id, nil
 }
 
-func (me *service) fetchApplicationID(id string) (string, error) {
+func (me *service) fetchApplicationID(ctx context.Context, id string) (string, error) {
 	var err error
 	var response QueryForWebAppIDResponse
 	entitySelector := fmt.Sprintf("type(APPLICATION),toRelationships.isApplicationMethodOf(type(APPLICATION_METHOD),entityId(%s))", id)
-	if err = me.client.Get(fmt.Sprintf(`/api/v2/entities?from=now-10y&entitySelector=%s&fields=fromRelationships`, url.QueryEscape(entitySelector)), 200).Finish(&response); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?from=now-10y&entitySelector=%s&fields=fromRelationships`, url.QueryEscape(entitySelector)), 200).Finish(&response); err != nil {
 		return "", err
 	}
 	if len(response.Entities) == 0 {
@@ -137,11 +137,11 @@ func (me *service) Update(ctx context.Context, id string, v *keyuseractions.Sett
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	applicationID, err := me.fetchApplicationID(id)
+	applicationID, err := me.fetchApplicationID(ctx, id)
 	if err != nil {
 		return nil
 	}
-	me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+	me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
 	var maxTries = 100
 	var successes = 0
 	var requiredSuccesses = 10
@@ -160,12 +160,12 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			} else {
 				successes = 0
-				me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+				me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
 				time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 			}
 		} else {
 			successes = 0
-			me.client.Delete(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
+			me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(applicationID), url.PathEscape(id)), 204).Finish()
 			time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 		}
 	}
@@ -179,7 +179,7 @@ type KeyUserActionCreateResponse struct {
 func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api.Stub, error) {
 	applicationID := v.ApplicationID
 	var createReponse KeyUserActionCreateResponse
-	if err := me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse); err != nil {
+	if err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse); err != nil {
 		return nil, err
 	}
 	stub := &api.Stub{ID: createReponse.ID}
@@ -199,12 +199,12 @@ func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api
 				continue
 			} else {
 				successes = 0
-				me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
+				me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
 				time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 			}
 		} else {
 			successes = 0
-			me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
+			me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse)
 			time.Sleep(time.Duration(200+i*100) * time.Millisecond)
 		}
 	}
@@ -220,7 +220,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	for _, appStub := range appStubs {
 		var kuaList KeyUserActionsList
-		if err := me.client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(appStub.ID)), 200).Finish(&kuaList); err != nil {
+		if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(appStub.ID)), 200).Finish(&kuaList); err != nil {
 			return nil, err
 		}
 		for _, keyUserAction := range kuaList.Values {

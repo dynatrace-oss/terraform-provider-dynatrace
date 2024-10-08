@@ -17,12 +17,15 @@
 
 package rest
 
-import "io"
+import (
+	"context"
+	"io"
+)
 
 type Client interface {
-	Get(url string, expectedStatusCodes ...int) Request
-	Post(url string, payload any, expectedStatusCodes ...int) Request
-	Put(url string, payload any, expectedStatusCodes ...int) Request
-	Delete(url string, expectedStatusCodes ...int) Request
-	Upload(url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request
+	Get(ctx context.Context, url string, expectedStatusCodes ...int) Request
+	Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
+	Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
+	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
+	Upload(ctx context.Context, url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request
 }

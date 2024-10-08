@@ -43,7 +43,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 	name, configurationID := splitID(id)
 	var response GetMonitoringConfigurationResponse
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err := client.Get(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configurationID)), 200).Finish(&response); err != nil {
+	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configurationID)), 200).Finish(&response); err != nil {
 		return err
 	}
 	injectScope(response.Scope, v)
@@ -67,7 +67,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 		} else {
 			query = "?pageSize=100"
 		}
-		if err := client.Get("/api/v2/extensions/info"+query, 200).Finish(&extensionsList); err != nil {
+		if err := client.Get(ctx, "/api/v2/extensions/info"+query, 200).Finish(&extensionsList); err != nil {
 			return stubs, err
 		}
 		nextPageKey = extensionsList.NextPageKey
@@ -80,7 +80,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 			if len(nextPageKey) > 0 && nextPageKey != "first" {
 				query = query + "&nextPageKey=" + url.QueryEscape(nextPageKey)
 			}
-			if err := client.Get(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations%s", url.PathEscape(extension.Name), query), 200).Finish(&configList); err != nil {
+			if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations%s", url.PathEscape(extension.Name), query), 200).Finish(&configList); err != nil {
 				return stubs, err
 			}
 			nextPageKey = configList.NextPageKey
@@ -101,7 +101,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 	}
 
 	name := v.Name
-	if err := me.ensureInstalled(name, version); err != nil {
+	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return nil, err
 	}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
@@ -109,7 +109,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 	retry := 10
 	for retry > 0 {
 		payload := []MonitoringConfigCreateDto{{Scope: extractScope(v), Value: []byte(v.Value)}}
-		if err := client.Post(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations", url.PathEscape(name)), &payload, 200).Finish(&createResponse); err != nil {
+		if err := client.Post(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations", url.PathEscape(name)), &payload, 200).Finish(&createResponse); err != nil {
 			if err.Error() == fmt.Sprintf("No schema with identifier 'ext:%s'", name) {
 				time.Sleep(1 * time.Second)
 				retry--
@@ -126,13 +126,13 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 	return &api.Stub{ID: joinID(name, createResponse[0].ObjectID)}, nil
 }
 
-func (me *service) ensureInstalled(name string, version string) error {
+func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	response := struct {
 		Name    string `json:"extensionName"`
 		Version string `json:"extensionVersion"`
 	}{}
-	if err := client.Post(fmt.Sprintf("/api/v2/extensions/%s?version=%s", url.PathEscape(name), url.QueryEscape(version)), nil, 200).Finish(&response); err != nil {
+	if err := client.Post(ctx, fmt.Sprintf("/api/v2/extensions/%s?version=%s", url.PathEscape(name), url.QueryEscape(version)), nil, 200).Finish(&response); err != nil {
 		if restErr, ok := err.(rest.Error); ok {
 			if (restErr.Code == 400) && restErr.Message == fmt.Sprintf("Extension %s has already been added to environment", name) {
 				return nil
@@ -150,13 +150,13 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 		return err
 	}
 	name := v.Name
-	if err := me.ensureInstalled(name, version); err != nil {
+	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return err
 	}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	createResponse := CreateMonitoringConfigResponse{}
 	payload := MonitoringConfigCreateDto{Value: []byte(v.Value)}
-	if err := client.Put(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), &payload, 200).Finish(&createResponse); err != nil {
+	if err := client.Put(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), &payload, 200).Finish(&createResponse); err != nil {
 		return err
 	}
 	if createResponse.ObjectID != configID {
@@ -168,7 +168,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 func (me *service) Delete(ctx context.Context, id string) error {
 	name, configID := splitID(id)
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err := client.Delete(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
+	if err := client.Delete(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
 		if restErr, ok := err.(rest.Error); ok {
 			if restErr.Code != 404 {
 				return err

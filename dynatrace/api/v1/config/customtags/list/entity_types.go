@@ -1,6 +1,7 @@
 package list
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -31,7 +32,7 @@ type EntityTypeProperty struct {
 	Type        string `json:"type,omitempty"`
 }
 
-func GETEntityTypes(client rest.Client) ([]EntityType, error) {
+func GETEntityTypes(ctx context.Context, client rest.Client) ([]EntityType, error) {
 	entityTypes := []EntityType{}
 	var nextPageKey string
 	for {
@@ -40,7 +41,7 @@ func GETEntityTypes(client rest.Client) ([]EntityType, error) {
 			u = fmt.Sprintf("/api/v2/entityTypes?nextPageKey=%s", url.QueryEscape(nextPageKey))
 		}
 		var response GetEntityTypesResponse
-		err := client.Get(u, 200).Finish(&response)
+		err := client.Get(ctx, u, 200).Finish(&response)
 		if err != nil {
 			return nil, err
 		}
@@ -54,10 +55,10 @@ func GETEntityTypes(client rest.Client) ([]EntityType, error) {
 	return entityTypes, nil
 }
 
-func (et EntityType) GetCustomTags(client rest.Client) ([]Tag, error) {
+func (et EntityType) GetCustomTags(ctx context.Context, client rest.Client) ([]Tag, error) {
 	u := fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=%s", url.QueryEscape(fmt.Sprintf("type(%s)", et.Type)), url.QueryEscape(TIME_FRAME))
 	var response GetCustomTagsResponse
-	err := client.Get(u, 200).Finish(&response)
+	err := client.Get(ctx, u, 200).Finish(&response)
 	if err != nil {
 		return nil, err
 	}

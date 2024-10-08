@@ -46,9 +46,9 @@ func (me *GenericCRUDService[T]) Create(ctx context.Context, v Settings) (*api.S
 	return me.Service.Create(ctx, v.(T))
 }
 
-func (me *GenericCRUDService[T]) Validate(v Settings) error {
+func (me *GenericCRUDService[T]) Validate(ctx context.Context, v Settings) error {
 	if validator, ok := me.Service.(Validator[T]); ok {
-		return validator.Validate(v.(T))
+		return validator.Validate(ctx, v.(T))
 	}
 	return nil
 }

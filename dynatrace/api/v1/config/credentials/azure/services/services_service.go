@@ -18,6 +18,7 @@
 package services
 
 import (
+	"context"
 	"strings"
 	"sync"
 
@@ -56,16 +57,16 @@ type supportedServicesResponse struct {
 	Services []*SupportedService `json:"services"`
 }
 
-func (me *SupportedServicesService) IsBuiltIn(name string) (bool, error) {
-	s, e := me.Get(name)
+func (me *SupportedServicesService) IsBuiltIn(ctx context.Context, name string) (bool, error) {
+	s, e := me.Get(ctx, name)
 	if e != nil {
 		return false, e
 	}
 	return s != nil && s.BuiltIn, nil
 }
 
-func (me *SupportedServicesService) Get(name string) (*SupportedService, error) {
-	services, err := me.List()
+func (me *SupportedServicesService) Get(ctx context.Context, name string) (*SupportedService, error) {
+	services, err := me.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +77,7 @@ func (me *SupportedServicesService) Get(name string) (*SupportedService, error) 
 	return result, nil
 }
 
-func (me *SupportedServicesService) List() (map[string]*SupportedService, error) {
+func (me *SupportedServicesService) List(ctx context.Context) (map[string]*SupportedService, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -84,7 +85,7 @@ func (me *SupportedServicesService) List() (map[string]*SupportedService, error)
 		return stored, nil
 	}
 	var servicesResponse supportedServicesResponse
-	if err := me.client.Get("/api/config/v1/azure/supportedServices").Expect(200).Finish(&servicesResponse); err != nil {
+	if err := me.client.Get(ctx, "/api/config/v1/azure/supportedServices").Expect(200).Finish(&servicesResponse); err != nil {
 		return nil, err
 	}
 	if servicesResponse.Services == nil {

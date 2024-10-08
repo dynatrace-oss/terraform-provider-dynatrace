@@ -63,11 +63,11 @@ func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardShari
 	id = strings.TrimSuffix(id, "-sharing")
 
 	var dbm DashbordMeta
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
 		return err
 	}
 
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", url.PathEscape(id)), 200).Finish(v); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
 
@@ -105,10 +105,10 @@ func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardShari
 	return nil
 }
 
-func (me *service) Validate(v *sharing.DashboardSharing) error {
+func (me *service) Validate(ctx context.Context, v *sharing.DashboardSharing) error {
 	id := v.DashboardID
 	id = strings.TrimSuffix(id, "-sharing")
-	if err := me.client.Post(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings/validator", id), v, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
+	if err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings/validator", id), v, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return err
 	}
 	return nil
@@ -124,11 +124,11 @@ func (me *service) update(ctx context.Context, id string, v *sharing.DashboardSh
 	id = strings.TrimSuffix(id, "-sharing")
 
 	var dbm DashbordMeta
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/dashboards/%s", url.PathEscape(id)), 200).Finish(&dbm); err != nil {
 		return err
 	}
 
-	if err := me.client.Put(fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/dashboards/%s/shareSettings", id), v, 201, 204).Finish(); err != nil && !strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		// newly created dashboards are sometimes not yet known cluster wide
 		// this retry functionality tries to make up for that
 		if strings.Contains(err.Error(), "Dashboard does not exist") {

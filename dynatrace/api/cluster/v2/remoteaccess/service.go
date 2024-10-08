@@ -18,6 +18,7 @@
 package remoteaccess
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -38,11 +39,11 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(config *remoteaccess.Settings) (*api.Stub, error) {
+func (cs *ServiceClient) Create(ctx context.Context, config *remoteaccess.Settings) (*api.Stub, error) {
 	config.State = nil
 
 	response := remoteaccess.Settings{}
-	if err := cs.client.Post("/remoteaccess/requests", config, 201).Finish(&response); err != nil {
+	if err := cs.client.Post(ctx, "/remoteaccess/requests", config, 201).Finish(&response); err != nil {
 		return nil, err
 	}
 
@@ -50,8 +51,8 @@ func (cs *ServiceClient) Create(config *remoteaccess.Settings) (*api.Stub, error
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(id string, config *remoteaccess.UpdateSettings) error {
-	return cs.client.Put(fmt.Sprintf("/remoteaccess/requests/%s/state", id), config, 200).Finish()
+func (cs *ServiceClient) Update(ctx context.Context, id string, config *remoteaccess.UpdateSettings) error {
+	return cs.client.Put(ctx, fmt.Sprintf("/remoteaccess/requests/%s/state", id), config, 200).Finish()
 }
 
 // Delete TODO: documentation
@@ -60,10 +61,10 @@ func (cs *ServiceClient) Delete() error {
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get(id string) (*remoteaccess.Settings, error) {
+func (cs *ServiceClient) Get(ctx context.Context, id string) (*remoteaccess.Settings, error) {
 	var err error
 	var config remoteaccess.Settings
-	if err = cs.client.Get(fmt.Sprintf("/remoteaccess/requests/%s", id), 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/remoteaccess/requests/%s", id), 200).Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

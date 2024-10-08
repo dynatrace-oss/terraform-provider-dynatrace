@@ -62,7 +62,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Create(config); err != nil {
+	if err := NewService(m).Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.NewString())
@@ -89,7 +89,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Update(config); err != nil {
+	if err := NewService(m).Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -121,22 +121,22 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	service := NewService(m)
 
 	if stateConfig.WebUiAddress != nil && *stateConfig.WebUiAddress != "" {
-		if config.WebUiAddress, err = service.GetWebUiAddress(); err != nil {
+		if config.WebUiAddress, err = service.GetWebUiAddress(ctx); err != nil {
 			return diag.FromErr(err)
 		}
 	}
 	if len(stateConfig.AdditionalWebUiAddresses) > 0 {
-		if config.AdditionalWebUiAddresses, err = service.GetAdditionalWebUiAddresses(); err != nil {
+		if config.AdditionalWebUiAddresses, err = service.GetAdditionalWebUiAddresses(ctx); err != nil {
 			return diag.FromErr(err)
 		}
 	}
 	if stateConfig.BeaconForwarderAddress != nil && *stateConfig.BeaconForwarderAddress != "" {
-		if config.BeaconForwarderAddress, err = service.GetBeaconForwarderAddress(); err != nil {
+		if config.BeaconForwarderAddress, err = service.GetBeaconForwarderAddress(ctx); err != nil {
 			return diag.FromErr(err)
 		}
 	}
 	if stateConfig.CDNAddress != nil && *stateConfig.CDNAddress != "" {
-		if config.CDNAddress, err = service.GetCDNAddress(); err != nil {
+		if config.CDNAddress, err = service.GetCDNAddress(ctx); err != nil {
 			return diag.FromErr(err)
 		}
 	}

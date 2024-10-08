@@ -68,7 +68,7 @@ func (me *service) Create(ctx context.Context, v *azure.AzureCredentials) (*api.
 	}
 	logging.File.Println("RemoveDefault:", v.RemoveDefaults)
 	if v.RemoveDefaults {
-		if err := me.client.Put(fmt.Sprintf("%s/%s/services", BasePath, stub.ID), struct {
+		if err := me.client.Put(ctx, fmt.Sprintf("%s/%s/services", BasePath, stub.ID), struct {
 			Services []string `json:"services"`
 		}{Services: []string{}}, 204).Finish(); err != nil {
 			me.Delete(ctx, stub.ID)

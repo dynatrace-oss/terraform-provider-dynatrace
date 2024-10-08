@@ -42,13 +42,13 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedServiceMetric) error {
-	return me.client.Get(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	req := me.client.Get("/api/config/v1/calculatedMetrics/service", 200)
+	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/service", 200)
 	var stubList api.StubList
 	if err = req.Finish(&stubList); err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return stubList.Values, nil
 }
 
-func (me *service) Validate(v *mysettings.CalculatedServiceMetric) error {
+func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedServiceMetric) error {
 	var err error
 
 	client := me.client
@@ -67,7 +67,7 @@ func (me *service) Validate(v *mysettings.CalculatedServiceMetric) error {
 
 	for retry {
 		attempts = attempts + 1
-		req := client.Post("/api/config/v1/calculatedMetrics/service/validator", v, 204)
+		req := client.Post(ctx, "/api/config/v1/calculatedMetrics/service/validator", v, 204)
 		if err = req.Finish(); err != nil {
 			if !strings.Contains(err.Error(), "Metric definition must specify a known request attribute") {
 				return err
@@ -97,7 +97,7 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedServiceMe
 
 	for retry {
 		attempts = attempts + 1
-		req := client.Post("/api/config/v1/calculatedMetrics/service", v, 201)
+		req := client.Post(ctx, "/api/config/v1/calculatedMetrics/service", v, 201)
 		if err = req.Finish(&stub); err != nil {
 			if strings.Contains(err.Error(), "Metric definition must specify a known request attribute") {
 				if attempts < maxAttempts {
@@ -127,7 +127,7 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedServiceMe
 }
 
 func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedServiceMetric) error {
-	if err := me.client.Put(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
@@ -138,7 +138,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	attempts := 30
 
 	for i := 0; i < attempts; i++ {
-		if err = me.client.Delete(fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 204).Finish(); err != nil {
+		if err = me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/service/%s", url.PathEscape(id)), 204).Finish(); err != nil {
 			if strings.Contains(err.Error(), fmt.Sprintf("Service metric with %s not found", id)) {
 				return nil
 			}

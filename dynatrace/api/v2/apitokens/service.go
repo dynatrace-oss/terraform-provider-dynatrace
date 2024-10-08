@@ -42,7 +42,7 @@ func (me *service) Get(ctx context.Context, id string, v *apitokens.APIToken) er
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	req := client.Get(fmt.Sprintf("/api/v2/apiTokens/%s", id)).Expect(200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id)).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	req := client.Get("/api/v2/apiTokens?pageSize=10000&fields=%2Bscopes%2C%2BexpirationDate%2C%2BpersonalAccessToken&sort=-creationDate").Expect(200)
+	req := client.Get(ctx, "/api/v2/apiTokens?pageSize=10000&fields=%2Bscopes%2C%2BexpirationDate%2C%2BpersonalAccessToken&sort=-creationDate").Expect(200)
 	var tokenlist apitokens.TokenList
 	if err = req.Finish(&tokenlist); err != nil {
 		return nil, err
@@ -80,13 +80,13 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 
 	resultToken := apitokens.APIToken{}
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post("/api/v2/apiTokens", v, 201).Finish(&resultToken); err != nil {
+	if err = client.Post(ctx, "/api/v2/apiTokens", v, 201).Finish(&resultToken); err != nil {
 		return nil, err
 	}
 	item := v
 	if item.Enabled == nil || !*item.Enabled {
 		item.Enabled = opt.NewBool(false)
-		if err = client.Put(fmt.Sprintf("/api/v2/apiTokens/%s", *resultToken.ID), item, 204).Finish(); err != nil {
+		if err = client.Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", *resultToken.ID), item, 204).Finish(); err != nil {
 			return nil, err
 		}
 		resultToken.Enabled = item.Enabled
@@ -98,11 +98,11 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 }
 
 func (me *service) Update(ctx context.Context, id string, v *apitokens.APIToken) error {
-	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Put(fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
+	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Delete(fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
+	return rest.DefaultClient(me.credentials.URL, me.credentials.Token).Delete(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
 }
 
 func (me *service) New() *apitokens.APIToken {

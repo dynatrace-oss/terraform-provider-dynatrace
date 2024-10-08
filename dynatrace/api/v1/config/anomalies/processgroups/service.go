@@ -60,7 +60,7 @@ func (me *service) Create(ctx context.Context, config *processgroups.AnomalyDete
 func (me *service) Update(ctx context.Context, id string, config *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Put(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), config, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), config, 204).Finish(); err != nil {
 		return err
 	}
 
@@ -68,10 +68,10 @@ func (me *service) Update(ctx context.Context, id string, config *processgroups.
 }
 
 // Validate TODO: documentation
-func (me *service) Validate(config *processgroups.AnomalyDetection) error {
+func (me *service) Validate(ctx context.Context, config *processgroups.AnomalyDetection) error {
 	id := strings.TrimSuffix(config.ProcessGroupId, "-anomalydetection")
 
-	if err := me.client.Put(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s/validator", id), config, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s/validator", id), config, 204).Finish(); err != nil {
 		return err
 	}
 
@@ -82,7 +82,7 @@ func (me *service) Validate(config *processgroups.AnomalyDetection) error {
 func (me *service) Delete(ctx context.Context, id string) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Delete(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 204).Finish(); err != nil {
+	if err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 204).Finish(); err != nil {
 		return err
 	}
 
@@ -93,7 +93,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 func (me *service) Get(ctx context.Context, id string, v *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 200).Finish(v); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 200).Finish(v); err != nil {
 		return err
 	}
 	v.ProcessGroupId = id

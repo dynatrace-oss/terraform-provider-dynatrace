@@ -1,6 +1,7 @@
 package list
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -26,7 +27,7 @@ type EntityTag struct {
 	Context              string `json:"context"`
 }
 
-func GETEntities(entityType string, client rest.Client, c chan Entity) error {
+func GETEntities(ctx context.Context, entityType string, client rest.Client, c chan Entity) error {
 	var nextPageKey string
 	for {
 		u := fmt.Sprintf("/api/v2/entities?entitySelector=%s&pageSize=500&from=%s&fields=tags", url.QueryEscape(fmt.Sprintf("type(%s)", entityType)), url.QueryEscape("now-6M"))
@@ -34,7 +35,7 @@ func GETEntities(entityType string, client rest.Client, c chan Entity) error {
 			u = fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))
 		}
 		var response GETEntitiesResponse
-		err := client.Get(u, 200).Finish(&response)
+		err := client.Get(ctx, u, 200).Finish(&response)
 		if err != nil {
 			close(c)
 			return err
@@ -51,7 +52,7 @@ func GETEntities(entityType string, client rest.Client, c chan Entity) error {
 	return nil
 }
 
-func GETEntitiesWithTags(entityType string, tags []Tag, client rest.Client, c chan Entity) error {
+func GETEntitiesWithTags(ctx context.Context, entityType string, tags []Tag, client rest.Client, c chan Entity) error {
 	entityIds := map[string]string{}
 	for _, tag := range tags {
 		nextPageKey := ""
@@ -61,7 +62,7 @@ func GETEntitiesWithTags(entityType string, tags []Tag, client rest.Client, c ch
 				u = fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))
 			}
 			var response GETEntitiesResponse
-			err := client.Get(u, 200).Finish(&response)
+			err := client.Get(ctx, u, 200).Finish(&response)
 			if err != nil {
 				close(c)
 				return err

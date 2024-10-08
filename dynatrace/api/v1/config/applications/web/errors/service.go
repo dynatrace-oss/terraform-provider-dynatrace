@@ -51,7 +51,7 @@ type service struct {
 
 func (me *service) Get(ctx context.Context, id string, v *errors.Rules) error {
 	id = strings.TrimSuffix(id, "-error-rules")
-	if err := me.client.Get(fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", url.PathEscape(id)), 200).Finish(v); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
 
@@ -69,10 +69,10 @@ func (me *service) Get(ctx context.Context, id string, v *errors.Rules) error {
 	return nil
 }
 
-func (me *service) Validate(v *errors.Rules) error {
+func (me *service) Validate(ctx context.Context, v *errors.Rules) error {
 	id := v.WebApplicationID
 	id = strings.TrimSuffix(id, "-data-privacy")
-	err := me.client.Post(fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules/validator", id), v, 204).Finish()
+	err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules/validator", id), v, 204).Finish()
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
 	}
@@ -81,7 +81,7 @@ func (me *service) Validate(v *errors.Rules) error {
 
 func (me *service) Update(ctx context.Context, id string, v *errors.Rules) error {
 	id = strings.TrimSuffix(id, "-error-rules")
-	err := me.client.Put(fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", id), v, 201, 204).Finish()
+	err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", id), v, 201, 204).Finish()
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
 	}

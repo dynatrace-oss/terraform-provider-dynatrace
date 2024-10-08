@@ -47,7 +47,7 @@ func (me *service) Get(ctx context.Context, id string, v *entity.Entity) error {
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
 		return errors.New("entity calls disabled when using Migration Cache")
 	}
-	return me.client.Get(fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
 }
 
 func (me *service) SchemaID() string {
@@ -73,10 +73,10 @@ func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entit
 
 	entityType := evalEntityType(id)
 	if len(entityType) == 0 {
-		return me.client.Get(fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
+		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
 	}
 
-	result := getEntity(id, me.client, getEntitiesRecord(entityType))
+	result := getEntity(ctx, id, me.client, getEntitiesRecord(entityType))
 	if result == nil {
 		return rest.Error{Code: 404, Message: fmt.Sprintf("Unable to find entity with id %s", id)}
 	}
@@ -144,7 +144,7 @@ type EntitiesListResponse struct {
 	NextPageKey string `json:"nextPageKey"`
 }
 
-func getEntity(id string, client rest.Client, record *EntitiesRecord) *entity.Entity {
+func getEntity(ctx context.Context, id string, client rest.Client, record *EntitiesRecord) *entity.Entity {
 	record.Lock.Lock()
 	defer record.Lock.Unlock()
 	if record.Entities != nil {
@@ -154,7 +154,7 @@ func getEntity(id string, client rest.Client, record *EntitiesRecord) *entity.En
 		}
 		return entity
 	}
-	entities := fetchEntities(client, record)
+	entities := fetchEntities(ctx, client, record)
 	if entities == nil {
 		return nil
 	}
@@ -166,7 +166,7 @@ func getEntity(id string, client rest.Client, record *EntitiesRecord) *entity.En
 	return entity
 }
 
-func fetchEntities(client rest.Client, record *EntitiesRecord) map[string]*entity.Entity {
+func fetchEntities(ctx context.Context, client rest.Client, record *EntitiesRecord) map[string]*entity.Entity {
 	results := map[string]*entity.Entity{}
 	nextPageKey := "-"
 	for len(nextPageKey) > 0 {
@@ -178,7 +178,7 @@ func fetchEntities(client rest.Client, record *EntitiesRecord) map[string]*entit
 			u = fmt.Sprintf("/api/v2/entities?pageSize=4000&entitySelector=%s&from=%s&fields=tags", url.QueryEscape(entitySelector), url.QueryEscape("now-3y"))
 		}
 		var response EntitiesListResponse
-		if err := client.Get(u, 200).Finish(&response); err != nil {
+		if err := client.Get(ctx, u, 200).Finish(&response); err != nil {
 			return nil
 		}
 		for _, elem := range response.Entities {

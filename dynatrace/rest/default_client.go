@@ -17,7 +17,10 @@
 
 package rest
 
-import "io"
+import (
+	"context"
+	"io"
+)
 
 type ClientFactory func(envURL, apiToken, schemaID string) Client
 
@@ -30,40 +33,40 @@ type defaultClient struct {
 	apiToken string
 }
 
-func (me *defaultClient) Get(url string, expectedStatusCodes ...int) Request {
-	req := &request{client: me, url: url, method: "GET"}
+func (me *defaultClient) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
+	req := &request{ctx: ctx, client: me, url: url, method: "GET"}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
 	return req
 }
 
-func (me *defaultClient) Post(url string, payload any, expectedStatusCodes ...int) Request {
-	req := &request{client: me, url: url, method: "POST", payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+func (me *defaultClient) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
+	req := &request{ctx: ctx, client: me, url: url, method: "POST", payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
 	return req
 }
 
-func (me *defaultClient) Put(url string, payload any, expectedStatusCodes ...int) Request {
-	req := &request{client: me, url: url, method: "PUT", payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+func (me *defaultClient) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
+	req := &request{ctx: ctx, client: me, url: url, method: "PUT", payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
 	return req
 }
 
-func (me *defaultClient) Delete(url string, expectedStatusCodes ...int) Request {
-	req := &request{client: me, url: url, method: "DELETE"}
+func (me *defaultClient) Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request {
+	req := &request{ctx: ctx, client: me, url: url, method: "DELETE"}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
 	return req
 }
 
-func (me *defaultClient) Upload(url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request {
-	req := &request{client: me, url: url, method: "POST", upload: reader, fileName: fileName, headers: map[string]string{"Content-Type": "application/json"}}
+func (me *defaultClient) Upload(ctx context.Context, url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request {
+	req := &request{ctx: ctx, client: me, url: url, method: "POST", upload: reader, fileName: fileName, headers: map[string]string{"Content-Type": "application/json"}}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}

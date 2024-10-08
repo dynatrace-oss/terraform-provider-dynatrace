@@ -67,10 +67,10 @@ func (me *service) Get(ctx context.Context, id string, v *dashboardsbase.JSONDas
 	return nil
 }
 
-func (me *service) Validate(v *dashboardsbase.JSONDashboardBase) error {
+func (me *service) Validate(ctx context.Context, v *dashboardsbase.JSONDashboardBase) error {
 	if JSON_DASHBOARD_BASE_PLUS {
 		if validator, ok := me.service.(settings.Validator[*dashboardsbase.JSONDashboardBase]); ok {
-			return validator.Validate(v)
+			return validator.Validate(ctx, v)
 		}
 	}
 	return nil

@@ -35,7 +35,7 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *iam.Settings) error {
-	return me.client.Get("/api/config/v1/aws/iamExternalId", 200).Finish(v)
+	return me.client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

@@ -62,7 +62,7 @@ type ListIDCRUDService[T Settings] interface {
 }
 
 type Validator[T Settings] interface {
-	Validate(v T) error
+	Validate(ctx context.Context, v T) error
 }
 
 func NewSettings[T Settings](service RService[T]) T {

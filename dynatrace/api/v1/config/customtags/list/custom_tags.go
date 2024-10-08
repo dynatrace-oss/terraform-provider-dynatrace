@@ -1,6 +1,7 @@
 package list
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 
@@ -19,10 +20,10 @@ type Tag struct {
 	Context              string `json:"context"`
 }
 
-func GETCustomTags(entityID string, client rest.Client) ([]Tag, error) {
+func GETCustomTags(ctx context.Context, entityID string, client rest.Client) ([]Tag, error) {
 	u := fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=%s", url.QueryEscape(fmt.Sprintf("entityId(%s)", entityID)), url.QueryEscape("now-6M"))
 	var response GetCustomTagsResponse
-	err := client.Get(u, 200).Finish(&response)
+	err := client.Get(ctx, u, 200).Finish(&response)
 	if err != nil {
 		return nil, err
 	}

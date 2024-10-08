@@ -18,6 +18,8 @@
 package internetproxy
 
 import (
+	"context"
+
 	internetproxy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/internetproxy/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -35,25 +37,25 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(config *internetproxy.Settings) error {
-	return cs.client.Put("/proxy/configuration", config, 201).Finish()
+func (cs *ServiceClient) Create(ctx context.Context, config *internetproxy.Settings) error {
+	return cs.client.Put(ctx, "/proxy/configuration", config, 201).Finish()
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(config *internetproxy.Settings) error {
-	return cs.client.Put("/proxy/configuration", config, 204).Finish()
+func (cs *ServiceClient) Update(ctx context.Context, config *internetproxy.Settings) error {
+	return cs.client.Put(ctx, "/proxy/configuration", config, 204).Finish()
 }
 
 // Delete TODO: documentation
-func (cs *ServiceClient) Delete() error {
-	return cs.client.Delete("/proxy/configuration", 200).Finish()
+func (cs *ServiceClient) Delete(ctx context.Context) error {
+	return cs.client.Delete(ctx, "/proxy/configuration", 200).Finish()
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get() (*internetproxy.Settings, error) {
+func (cs *ServiceClient) Get(ctx context.Context) (*internetproxy.Settings, error) {
 	var err error
 	var config internetproxy.Settings
-	if err = cs.client.Get("/proxy/configuration", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/proxy/configuration", 200).Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil
