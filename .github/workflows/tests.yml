@@ -3670,7 +3670,7 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/builtin/generic
-        - name: TestCustomDevices
+      - name: TestCustomDevices
         if: success() || failure()
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -3683,7 +3683,7 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/v2/customdevice
-        - name: TestOpenPipeline
+      - name: TestOpenPipeline
         if: success() || failure()
         env:
           GOPROXY: "https://proxy.golang.org"
