@@ -22,8 +22,8 @@ There may be a delay for this resource to be fully available as a dependency for
  
 A default polling mechanism exists to validate the creation but may require adjustment due to load. The following environment variables can be used to fine tune these settings.
 
-- `DT_MGMZ_RETRIES` (Default: 50, Max: 150) configures the maximum attempts to confirm that the create operation has succeeded.
-- `DT_MGMZ_SUCCESSES` (Default: 5, Max: 25) configures the number of successful consecutive retries expected.
+- `DT_MGMZ_RETRIES` (Default: 50, Max: 600) configures the maximum attempts to confirm that the create operation has succeeded.
+- `DT_MGMZ_SUCCESSES` (Default: 5, Max: 100) configures the number of successful consecutive retries expected.
 
 ## Export Example Usage
 

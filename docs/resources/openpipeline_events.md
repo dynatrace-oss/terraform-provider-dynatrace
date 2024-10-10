@@ -1,0 +1,763 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_events Resource - terraform-provider-dynatrace"
+subcategory: "OpenPipeline"
+description: |-
+  The resource `dynatrace_openpipeline_events` covers configuration of OpenPipeline for Events
+---
+
+# dynatrace_openpipeline_events (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View OpenPipeline configurations** (`openpipeline:configurations:read`), and **Edit OpenPipeline configurations** (`openpipeline:configurations:write`).
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_events` downloads all existing OpenPipeline definitions for Events
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_openpipeline_events" "events" {
+  endpoints {
+    endpoint {
+      enabled        = true
+      default_bucket = "default_events"
+      display_name   = "Custom ingest source"
+      segment        = "something"
+      routing {
+        type        = "static"
+        pipeline_id = "default"
+      }
+    }
+  }
+  pipelines {
+    pipeline {
+      enabled      = true
+      display_name = "Custom pipeline 1"
+      id           = "pipeline_Pipeline_8075"
+      processing {
+        processor {
+          fields_add_processor {
+            description = "Add a field 1"
+            enabled     = true
+            id          = "processor_Add_a_field_6856"
+            matcher     = "true"
+            field {
+              name  = "field"
+              value = "value"
+            }
+          }
+        }
+      }
+    }
+    pipeline {
+      enabled      = true
+      display_name = "Custom pipeline 2"
+      id           = "pipeline_Pipeline_8076"
+      data_extraction {
+        processor {
+          davis_event_extraction_processor {
+            description = "Custom event"
+            enabled     = true
+            id          = "processor_Custom_event_3193"
+            matcher     = "true"
+            properties {
+              key   = "event.type"
+              value = "CUSTOM_ALERT"
+            }
+            properties {
+              key   = "event.name"
+              value = "test"
+            }
+          }
+        }
+      }
+      metric_extraction {
+        processor {
+          value_metric_extraction_processor {
+            description = "Custom value metric extraction"
+            enabled     = true
+            dimensions  = [ "availability" ]
+            field       = "field1"
+            id          = "processor_Custom_metric_extraction_7786"
+            matcher     = "true"
+            metric_key  = "events.custom"
+          }
+        }
+        processor {
+          counter_metric_extraction_processor {
+            description = "Custom counter metric extraction"
+            enabled     = true
+            id          = "processor_Custom_counter_metric_extraction_2885"
+            matcher     = "true"
+            metric_key  = "events.counter"
+          }
+        }
+      }
+      processing {
+        processor {
+          fields_add_processor {
+            description = "Custom add field"
+            enabled     = true
+            id          = "processor_Add_a_field_6856"
+            matcher     = "true"
+            field {
+              name  = "field"
+              value = "value"
+            }
+          }
+        }
+        processor {
+          fields_rename_processor {
+            description = "Custom rename field"
+            enabled     = true
+            id          = "processor_Custom_rename_field_7712"
+            matcher     = "true"
+            field {
+              from_name = "new"
+              to_name   = "old"
+            }
+          }
+        }
+        processor {
+          fields_remove_processor {
+            description = "Custom remove field"
+            enabled     = true
+            fields      = [ "field" ]
+            id          = "processor_Custom_remove_field_7320"
+            matcher     = "true"
+          }
+        }
+        processor {
+          dql_processor {
+            description = "Custom DQL"
+            enabled     = true
+            dql_script  = "fieldsAdd (\"test\")"
+            id          = "processor_Custom_DQL_1783"
+            matcher     = "true"
+          }
+        }
+      }
+      security_context {
+        processor {
+          security_context_processor {
+            description = "Custom security contet"
+            enabled     = true
+            id          = "processor_Custom_security_contet_4309"
+            matcher     = "true"
+            value {
+              type     = "constant"
+              constant = "string"
+            }
+          }
+        }
+        processor {
+          security_context_processor {
+            description = "Custom security context 2"
+            enabled     = true
+            id          = "processor_Custom_security_context_2_9052"
+            matcher     = "true"
+            value {
+              type  = "field"
+              field = "fieldname"
+            }
+          }
+        }
+      }
+      storage {
+        catch_all_bucket_name = "default_events"
+        processor {
+          bucket_assignment_processor {
+            description = "Custom bucket assignment"
+            enabled     = true
+            bucket_name = "default_events"
+            id          = "processor_Custom_bucket_assignment_5664"
+            matcher     = "true"
+          }
+        }
+        processor {
+          no_storage_processor {
+            description = "Custom no storage assignment"
+            enabled     = true
+            id          = "processor_Custom_no_storage_assignment_2070"
+            matcher     = "true"
+          }
+        }
+      }
+    }
+  }
+  routing {
+    entry {
+      enabled     = true
+      matcher     = "true "
+      note        = "Custom route"
+      pipeline_id = "pipeline_Pipeline_8075"
+    }
+  }
+}
+```
+
+<!-- schema generated by tfplugindocs -->
+## Schema
+
+### Optional
+
+- `endpoints` (Block List, Max: 1) List of all ingest sources of the configuration (see [below for nested schema](#nestedblock--endpoints))
+- `pipelines` (Block List, Max: 1) List of all pipelines of the configuration (see [below for nested schema](#nestedblock--pipelines))
+- `routing` (Block List, Max: 1) Dynamic routing definition (see [below for nested schema](#nestedblock--routing))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
+
+<a id="nestedblock--endpoints"></a>
+### Nested Schema for `endpoints`
+
+Optional:
+
+- `endpoint` (Block List) Definition of a single ingest source (see [below for nested schema](#nestedblock--endpoints--endpoint))
+
+<a id="nestedblock--endpoints--endpoint"></a>
+### Nested Schema for `endpoints.endpoint`
+
+Required:
+
+- `display_name` (String) Display name of the ingest source
+- `enabled` (Boolean) Indicates if the object is active
+- `routing` (Block List, Min: 1, Max: 1) Routing strategy, either dynamic or static (see [below for nested schema](#nestedblock--endpoints--endpoint--routing))
+- `segment` (String) The segment of the ingest source, which is applied to the base path. Must be unique within a configuration."
+
+Optional:
+
+- `default_bucket` (String) The default bucket assigned to records for the ingest source
+- `processors` (Block List, Max: 1) The pre-processing done in the ingest source (see [below for nested schema](#nestedblock--endpoints--endpoint--processors))
+
+<a id="nestedblock--endpoints--endpoint--routing"></a>
+### Nested Schema for `endpoints.endpoint.routing`
+
+Required:
+
+- `type` (String) Type of routing, static or dynamic
+
+Optional:
+
+- `pipeline_id` (String) Pipeline ID of the static routing
+
+
+<a id="nestedblock--endpoints--endpoint--processors"></a>
+### Nested Schema for `endpoints.endpoint.processors`
+
+Optional:
+
+- `processor` (Block List) Groups all processors applicable for processing in the EndpointDefinition.
+Applicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor, FieldsRenameProcessor and DropProcessor. (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor))
+
+<a id="nestedblock--endpoints--endpoint--processors--processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor`
+
+Optional:
+
+- `dql_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--dql_processor))
+- `fields_add_processor` (Block List, Max: 1) Processor to add fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_add_processor))
+- `fields_remove_processor` (Block List, Max: 1) Processor to remove fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_remove_processor))
+- `fields_rename_processor` (Block List, Max: 1) Processor to rename fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor))
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--dql_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.dql_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `dql_script` (String) The DQL script to apply on the record
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--fields_add_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.fields_add_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `field` (Block List, Min: 1) Field to add to the record (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_add_processor--field))
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--fields_add_processor--field"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.fields_add_processor.field`
+
+Required:
+
+- `name` (String) Name of the field
+- `value` (String) Value to assign to the field
+
+
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--fields_remove_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.fields_remove_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `fields` (List of String) Field to add to the record
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.fields_rename_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `field` (Block List, Min: 1) Field to rename on the record (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor--field))
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor--field"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.fields_rename_processor.field`
+
+Required:
+
+- `from_name` (String) The field to rename
+- `to_name` (String) The new field name
+
+
+
+
+
+
+
+<a id="nestedblock--pipelines"></a>
+### Nested Schema for `pipelines`
+
+Optional:
+
+- `pipeline` (Block List) Definition of a single pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline))
+
+<a id="nestedblock--pipelines--pipeline"></a>
+### Nested Schema for `pipelines.pipeline`
+
+Required:
+
+- `display_name` (String) Display name of the pipeline
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the pipeline
+
+Optional:
+
+- `data_extraction` (Block List, Max: 1) Data extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction))
+- `metric_extraction` (Block List, Max: 1) Metric extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction))
+- `processing` (Block List, Max: 1) Processing stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--processing))
+- `security_context` (Block List, Max: 1) Security context stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--security_context))
+- `storage` (Block List, Max: 1) Data extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--storage))
+
+<a id="nestedblock--pipelines--pipeline--data_extraction"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction`
+
+Optional:
+
+- `processor` (Block List) Groups all processors applicable for the DataExtractionStage.
+Applicable processors are DavisEventExtractionProcessor and BizeventExtractionProcessor. (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor))
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor`
+
+Optional:
+
+- `bizevent_extraction_processor` (Block List, Max: 1) (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor))
+- `davis_event_extraction_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--davis_event_extraction_processor))
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.bizevent_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `event_provider` (Block List, Min: 1, Max: 1) Strategy to assign a value (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_provider))
+- `event_type` (Block List, Min: 1, Max: 1) Strategy to assign a value (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_type))
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `field_extraction` (Block List, Max: 1) (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction))
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_provider"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.bizevent_extraction_processor.event_provider`
+
+Required:
+
+- `type` (String) Strategy to assign a value
+
+Optional:
+
+- `constant` (String) Strategy to assign a value
+- `field` (String) Strategy to assign a value
+
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_type"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.bizevent_extraction_processor.event_type`
+
+Required:
+
+- `type` (String) Strategy to assign a value
+
+Optional:
+
+- `constant` (String) Strategy to assign a value
+- `field` (String) Strategy to assign a value
+
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.bizevent_extraction_processor.field_extraction`
+
+Required:
+
+- `fields` (List of String)
+- `semantic` (String)
+
+
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--davis_event_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.davis_event_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `properties` (Block List, Min: 1) List of properties for the extracted davis event (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--davis_event_extraction_processor--properties))
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--davis_event_extraction_processor--properties"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.davis_event_extraction_processor.properties`
+
+Required:
+
+- `key` (String) The key to set on the davis event
+- `value` (String) The value assigned to the key
+
+
+
+
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction`
+
+Optional:
+
+- `processor` (Block List) Data extraction processor to use (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor))
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction--processor"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction.processor`
+
+Optional:
+
+- `counter_metric_extraction_processor` (Block List, Max: 1) Processor to write the occurrences as a metric (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--counter_metric_extraction_processor))
+- `value_metric_extraction_processor` (Block List, Max: 1) Processor to extract a value from a field as a metric (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--value_metric_extraction_processor))
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction--processor--counter_metric_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction.processor.counter_metric_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `metric_key` (String) The key of the metric to write
+
+Optional:
+
+- `dimensions` (List of String) List of dimensions to add to the metric
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction--processor--value_metric_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction.processor.value_metric_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `field` (String) The field to extract the value for the metric
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `metric_key` (String) The key of the metric to write
+
+Optional:
+
+- `dimensions` (List of String) List of dimensions to add to the metric
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+
+
+<a id="nestedblock--pipelines--pipeline--processing"></a>
+### Nested Schema for `pipelines.pipeline.processing`
+
+Optional:
+
+- `processor` (Block List) Groups all processors applicable for the ProcessingStage.
+Applicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcessor, FieldsRenameProcessor, TechnologyProcessor and DropProcessor. (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor))
+
+<a id="nestedblock--pipelines--pipeline--processing--processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor`
+
+Optional:
+
+- `dql_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--dql_processor))
+- `fields_add_processor` (Block List, Max: 1) Processor to add fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_add_processor))
+- `fields_remove_processor` (Block List, Max: 1) Processor to remove fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_remove_processor))
+- `fields_rename_processor` (Block List, Max: 1) Processor to rename fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_rename_processor))
+- `technology_processor` (Block List, Max: 1) Processor to apply a technology processors (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--technology_processor))
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--dql_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.dql_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `dql_script` (String) The DQL script to apply on the record
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--fields_add_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.fields_add_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `field` (Block List, Min: 1) Field to add to the record (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_add_processor--field))
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--fields_add_processor--field"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.fields_add_processor.field`
+
+Required:
+
+- `name` (String) Name of the field
+- `value` (String) Value to assign to the field
+
+
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--fields_remove_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.fields_remove_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `fields` (List of String) Field to add to the record
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--fields_rename_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.fields_rename_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `field` (Block List, Min: 1) Field to rename on the record (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_rename_processor--field))
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--fields_rename_processor--field"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.fields_rename_processor.field`
+
+Required:
+
+- `from_name` (String) The field to rename
+- `to_name` (String) The new field name
+
+
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--technology_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.technology_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `technology_id` (String) Identifier of the processor. Must be unique within a stage.
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+
+
+<a id="nestedblock--pipelines--pipeline--security_context"></a>
+### Nested Schema for `pipelines.pipeline.security_context`
+
+Optional:
+
+- `processor` (Block List) Groups all processors applicable for the SecurityContextStage.
+Applicable processor is SecurityContextProcessor. (see [below for nested schema](#nestedblock--pipelines--pipeline--security_context--processor))
+
+<a id="nestedblock--pipelines--pipeline--security_context--processor"></a>
+### Nested Schema for `pipelines.pipeline.security_context.processor`
+
+Optional:
+
+- `security_context_processor` (Block List, Max: 1) Processor to set the security context field (see [below for nested schema](#nestedblock--pipelines--pipeline--security_context--processor--security_context_processor))
+
+<a id="nestedblock--pipelines--pipeline--security_context--processor--security_context_processor"></a>
+### Nested Schema for `pipelines.pipeline.security_context.processor.security_context_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `value` (Block List, Min: 1, Max: 1) Strategy to assign a value (see [below for nested schema](#nestedblock--pipelines--pipeline--security_context--processor--security_context_processor--value))
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--security_context--processor--security_context_processor--value"></a>
+### Nested Schema for `pipelines.pipeline.security_context.processor.security_context_processor.value`
+
+Required:
+
+- `type` (String) Strategy to assign a value
+
+Optional:
+
+- `constant` (String) Strategy to assign a value
+- `field` (String) Strategy to assign a value
+
+
+
+
+
+<a id="nestedblock--pipelines--pipeline--storage"></a>
+### Nested Schema for `pipelines.pipeline.storage`
+
+Optional:
+
+- `catch_all_bucket_name` (String) Default bucket assigned to records which do not match any other storage processor
+- `processor` (Block List) Groups all processors applicable for the StorageStage.
+Applicable processors are BucketAssignmentProcessor and NoStorageProcessor. (see [below for nested schema](#nestedblock--pipelines--pipeline--storage--processor))
+
+<a id="nestedblock--pipelines--pipeline--storage--processor"></a>
+### Nested Schema for `pipelines.pipeline.storage.processor`
+
+Optional:
+
+- `bucket_assignment_processor` (Block List, Max: 1) Processor to assign a bucket (see [below for nested schema](#nestedblock--pipelines--pipeline--storage--processor--bucket_assignment_processor))
+- `no_storage_processor` (Block List, Max: 1) Processor to skip storage assignment (see [below for nested schema](#nestedblock--pipelines--pipeline--storage--processor--no_storage_processor))
+
+<a id="nestedblock--pipelines--pipeline--storage--processor--bucket_assignment_processor"></a>
+### Nested Schema for `pipelines.pipeline.storage.processor.bucket_assignment_processor`
+
+Required:
+
+- `bucket_name` (String) Bucket that is assigned when the record is matched
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--storage--processor--no_storage_processor"></a>
+### Nested Schema for `pipelines.pipeline.storage.processor.no_storage_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+
+
+
+
+<a id="nestedblock--routing"></a>
+### Nested Schema for `routing`
+
+Optional:
+
+- `entry` (Block List) Dynamic routing entry (see [below for nested schema](#nestedblock--routing--entry))
+
+<a id="nestedblock--routing--entry"></a>
+### Nested Schema for `routing.entry`
+
+Required:
+
+- `enabled` (Boolean) Indicates if the object is active
+- `matcher` (String) Matching condition to apply on incoming records
+- `note` (String) Unique note describing the dynamic route
+- `pipeline_id` (String) Identifier of the pipeline the record is routed into
