@@ -254,7 +254,6 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			EnvironmentURL: automation_environment_url,
 		},
 	}
-	fmt.Println("pc.ClusterAPIV2URL:", pc.ClusterAPIV2URL)
 	return pc, diags
 }
 
