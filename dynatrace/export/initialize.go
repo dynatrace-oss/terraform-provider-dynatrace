@@ -76,13 +76,25 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 			delete(resArgs, key)
 		}
 	} else {
-		effectiveTailArgs := []string{}
+		effectiveTailArgs := map[string]string{}
+		excludeMode := false
 		for _, idx := range tailArgs {
-			if idx == "*" {
-				effectiveTailArgs = append(effectiveTailArgs, "*")
+			if excludeMode {
+				key, _ := ValidateResource(idx)
+				if len(key) == 0 {
+					return nil, fmt.Errorf("unknown resource `%s`", idx)
+				}
+				delete(effectiveTailArgs, key)
+				continue
+			}
+			if idx == "-exclude" {
+				excludeMode = true
+				continue
+			} else if idx == "*" {
+				effectiveTailArgs["*"] = "*"
 			} else {
 				idx = ToParent(idx)
-				effectiveTailArgs = append(effectiveTailArgs, idx)
+				effectiveTailArgs[idx] = idx
 				key, id := ValidateResource(idx)
 				if len(key) == 0 {
 					return nil, fmt.Errorf("unknown resource `%s`", idx)
@@ -90,9 +102,9 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 				for _, child := range ResourceType(key).GetChildren() {
 					if len(id) == 0 {
-						effectiveTailArgs = append(effectiveTailArgs, string(child))
+						effectiveTailArgs[string(child)] = string(child)
 					} else {
-						effectiveTailArgs = append(effectiveTailArgs, string(child)+"="+id)
+						effectiveTailArgs[string(child)+"="+id] = string(child) + "=" + id
 					}
 				}
 			}
