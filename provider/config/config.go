@@ -114,6 +114,13 @@ func Credentials(m any, CredentialValidation int) (*settings.Credentials, error)
 		URL:        conf.EnvironmentURL,
 		IAM:        conf.IAM,
 		Automation: conf.Automation,
+		Cluster: struct {
+			URL   string
+			Token string
+		}{
+			URL:   conf.ClusterAPIV2URL,
+			Token: conf.ClusterAPIToken,
+		},
 	}, nil
 }
 
@@ -225,7 +232,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 
 	var diags diag.Diagnostics
 
-	return &ProviderConfiguration{
+	pc := &ProviderConfiguration{
 		EnvironmentURL:    dtEnvURL,
 		DTenvURL:          fullURL,
 		DTApiV2URL:        fullApiV2URL,
@@ -246,7 +253,9 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			TokenURL:       automation_token_url,
 			EnvironmentURL: automation_environment_url,
 		},
-	}, diags
+	}
+	fmt.Println("pc.ClusterAPIV2URL:", pc.ClusterAPIV2URL)
+	return pc, diags
 }
 
 func streamlineOAuthCreds(values ...string) string {
