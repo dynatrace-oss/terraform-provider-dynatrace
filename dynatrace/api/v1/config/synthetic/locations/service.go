@@ -39,7 +39,7 @@ type service struct {
 
 func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	var stubList locations.SyntheticLocations
-	if err = me.client.Get("/api/v1/synthetic/locations", 200).Finish(&stubList); err != nil {
+	if err = me.client.Get(ctx, "/api/v1/synthetic/locations", 200).Finish(&stubList); err != nil {
 		return nil, err
 	}
 	for _, location := range stubList.Locations {

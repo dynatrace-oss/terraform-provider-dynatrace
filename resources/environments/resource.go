@@ -60,7 +60,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 	config.ID = nil
-	objStub, err := NewService(m).Create(config)
+	objStub, err := NewService(m).Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -79,7 +79,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 	config.ID = opt.NewString(d.Id())
-	if err := NewService(m).Update(config); err != nil {
+	if err := NewService(m).Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -91,7 +91,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config, err := NewService(m).Get(d.Id())
+	config, err := NewService(m).Get(ctx, d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -112,7 +112,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Delete(d.Id()); err != nil {
+	if err := NewService(m).Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}

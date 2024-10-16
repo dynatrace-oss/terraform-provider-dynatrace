@@ -64,7 +64,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 	srvc := services.NewSupportedServicesService(creds)
-	all, err := srvc.List()
+	all, err := srvc.List(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}

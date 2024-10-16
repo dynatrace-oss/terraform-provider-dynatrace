@@ -44,7 +44,7 @@ type nodeList struct {
 
 func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	var stubList nodeList
-	if err = me.client.Get("/api/v1/synthetic/nodes", 200).Finish(&stubList); err != nil {
+	if err = me.client.Get(ctx, "/api/v1/synthetic/nodes", 200).Finish(&stubList); err != nil {
 		return nil, err
 	}
 	for _, node := range stubList.Nodes {
@@ -55,7 +55,7 @@ func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *nodes.Settings) (err error) {
-	return me.client.Get(fmt.Sprintf("/api/v1/synthetic/nodes/%v", id), 200).Finish(&v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/v1/synthetic/nodes/%v", id), 200).Finish(&v)
 }
 
 func (me *service) SchemaID() string {

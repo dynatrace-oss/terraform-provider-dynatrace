@@ -218,7 +218,7 @@ func (me *crudService[T]) Update(ctx context.Context, id string, v T) error {
 	return me.tarFolder.Delete(id)
 }
 
-func (me *crudService[T]) Validate(v T) error {
+func (me *crudService[T]) Validate(ctx context.Context, v T) error {
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
@@ -227,7 +227,7 @@ func (me *crudService[T]) Validate(v T) error {
 		return nil
 	}
 	if validator, ok := me.service.(settings.Validator[T]); ok {
-		return validator.Validate(v)
+		return validator.Validate(ctx, v)
 	}
 	return nil
 }

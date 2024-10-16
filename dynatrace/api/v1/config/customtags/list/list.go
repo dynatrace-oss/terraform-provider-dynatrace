@@ -1,6 +1,7 @@
 package list
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -15,8 +16,8 @@ type EntityTags struct {
 	Tags []Tag  `json:"tags"`
 }
 
-func List(client rest.Client) (api.Stubs, error) {
-	entityTypes, err := GETEntityTypes(client)
+func List(ctx context.Context, client rest.Client) (api.Stubs, error) {
+	entityTypes, err := GETEntityTypes(ctx, client)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +25,7 @@ func List(client rest.Client) (api.Stubs, error) {
 	for _, entityType := range entityTypes {
 		results := make(chan EntityTags, 100)
 		channels = append(channels, results)
-		go GetEntities(entityType, client, results)
+		go GetEntities(ctx, entityType, client, results)
 	}
 	m := map[string]EntityTags{}
 	for _, channel := range channels {
@@ -43,9 +44,9 @@ func List(client rest.Client) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func GetEntities(entityType EntityType, client rest.Client, results chan EntityTags) {
+func GetEntities(ctx context.Context, entityType EntityType, client rest.Client, results chan EntityTags) {
 	defer close(results)
-	tags, err := entityType.GetCustomTags(client)
+	tags, err := entityType.GetCustomTags(ctx, client)
 	if err != nil {
 		panic(err)
 	}
@@ -53,22 +54,22 @@ func GetEntities(entityType EntityType, client rest.Client, results chan EntityT
 		return
 	}
 	chanEntities := make(chan Entity, 100)
-	go GETEntitiesWithTags(entityType.Type, tags, client, chanEntities)
+	go GETEntitiesWithTags(ctx, entityType.Type, tags, client, chanEntities)
 	for entity := range chanEntities {
 		if len(entity.Tags) == 0 {
 			continue
 		}
 		chanEntityTags := make(chan EntityTags, 100)
-		go GetCustomTags(entity, client, chanEntityTags)
+		go GetCustomTags(ctx, entity, client, chanEntityTags)
 		for entityTag := range chanEntityTags {
 			results <- entityTag
 		}
 	}
 }
 
-func GetCustomTags(entity Entity, client rest.Client, results chan EntityTags) {
+func GetCustomTags(ctx context.Context, entity Entity, client rest.Client, results chan EntityTags) {
 	defer close(results)
-	tags, err := GETCustomTags(entity.ID, client)
+	tags, err := GETCustomTags(ctx, entity.ID, client)
 	if err != nil {
 		panic(err)
 	}

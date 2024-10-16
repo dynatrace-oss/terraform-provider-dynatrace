@@ -18,6 +18,8 @@
 package backup
 
 import (
+	"context"
+
 	backup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/backup/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -35,13 +37,13 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(config *backup.Settings) error {
-	return cs.Update(config)
+func (cs *ServiceClient) Create(ctx context.Context, config *backup.Settings) error {
+	return cs.Update(ctx, config)
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(config *backup.Settings) error {
-	return cs.client.Put("/backup/config", config, 200).Finish()
+func (cs *ServiceClient) Update(ctx context.Context, config *backup.Settings) error {
+	return cs.client.Put(ctx, "/backup/config", config, 200).Finish()
 }
 
 // Delete TODO: documentation
@@ -50,10 +52,10 @@ func (cs *ServiceClient) Delete(config *backup.Settings) error {
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get() (*backup.Settings, error) {
+func (cs *ServiceClient) Get(ctx context.Context) (*backup.Settings, error) {
 	var err error
 	var config backup.Settings
-	if err = cs.client.Get("/backup/config", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/backup/config", 200).Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

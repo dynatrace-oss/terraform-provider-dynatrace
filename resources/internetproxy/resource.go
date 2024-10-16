@@ -61,7 +61,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Create(config); err != nil {
+	if err := NewService(m).Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.NewString())
@@ -80,7 +80,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Update(config); err != nil {
+	if err := NewService(m).Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -94,7 +94,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 
-	config, err := NewService(m).Get()
+	config, err := NewService(m).Get(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -116,7 +116,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Delete(); err != nil {
+	if err := NewService(m).Delete(ctx); err != nil {
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}

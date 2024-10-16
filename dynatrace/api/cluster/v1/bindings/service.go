@@ -79,7 +79,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 		return err
 	}
 
-	if err = me.client.Get(fmt.Sprintf("/iam/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200).Finish(&v); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), 200).Finish(&v); err != nil {
 		return err
 	}
 	if levelType == "cluster" {
@@ -114,7 +114,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 	}
 	bindings.PolicyIDs = policyIDs
 
-	if err = me.client.Put(fmt.Sprintf("/iam/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, 204).Finish(); err != nil {
+	if err = me.client.Put(ctx, fmt.Sprintf("/iam/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
@@ -127,7 +127,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	clusterInfoResponse := struct {
 		ClusterUUID string `json:"clusterUuid"`
 	}{}
-	if err = me.client.Get("/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
+	if err = me.client.Get(ctx, "/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
 		return stubs, err
 	}
 	bindingsResponse := struct {
@@ -136,7 +136,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 			Groups     []string `json:"groups"`
 		} `json:"policyBindings"`
 	}{}
-	if err = me.client.Get(fmt.Sprintf("/iam/repo/cluster/%s/bindings", clusterInfoResponse.ClusterUUID), 200).Finish(&bindingsResponse); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/cluster/%s/bindings", clusterInfoResponse.ClusterUUID), 200).Finish(&bindingsResponse); err != nil {
 		return stubs, err
 	}
 	bindingsMap := map[string]bool{}
@@ -155,7 +155,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 			ID string `json:"id"`
 		} `json:"environments"`
 	}{}
-	if err = me.client.Get("/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
+	if err = me.client.Get(ctx, "/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
 		return stubs, err
 	}
 	for _, environment := range environmentsResponse.Environments {
@@ -165,7 +165,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 				Groups     []string `json:"groups"`
 			} `json:"policyBindings"`
 		}{}
-		if err = me.client.Get(fmt.Sprintf("/iam/repo/environment/%s/bindings", environment.ID), 200).Finish(&bindingsResponse); err != nil {
+		if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/environment/%s/bindings", environment.ID), 200).Finish(&bindingsResponse); err != nil {
 			return stubs, err
 		}
 		for _, bindings := range bindingsResponse.PolicyBindings {
@@ -192,7 +192,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {
-		if err = me.client.Delete(fmt.Sprintf("/iam/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 204).Finish(); err != nil {
+		if err = me.client.Delete(ctx, fmt.Sprintf("/iam/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), 204).Finish(); err != nil {
 			return err
 		}
 	}

@@ -75,7 +75,7 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 	// The result from the GET API enpoint is not very stable, so attepting to get the custom device once is not enough.
 	// 20 is an arbitraty number (it takes 40s before the method gives up) that should be long enough for the endpoint to return a value.
 	for i := 0; i < maxIteration; i++ {
-		req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships", url.QueryEscape(entitySelector))).Expect(200)
+		req := client.Get(ctx, fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships", url.QueryEscape(entitySelector))).Expect(200)
 		req.Finish(&CustomDeviceGetResponse)
 		if len(CustomDeviceGetResponse.Entities) != 0 {
 			break
@@ -99,7 +99,7 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 			}{}
 
 			for i := 0; i < maxIteration; i++ {
-				req := client.Get(fmt.Sprintf("/api/v2/entities/%s?from=now-3y", *isInstance.ID)).Expect(200)
+				req := client.Get(ctx, fmt.Sprintf("/api/v2/entities/%s?from=now-3y", *isInstance.ID)).Expect(200)
 				req.Finish(&listResponse)
 				if listResponse.DisplayName != "" {
 					break
@@ -134,11 +134,11 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 	return nil
 }
 
-func (me *service) CheckGet(id string, v *customdevice.CustomDevice) error {
+func (me *service) CheckGet(ctx context.Context, id string, v *customdevice.CustomDevice) error {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
-	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties", url.QueryEscape(entitySelector))).Expect(200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties", url.QueryEscape(entitySelector))).Expect(200)
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 	if err = req.Finish(&CustomDeviceGetResponse); err != nil {
 		return err
@@ -185,7 +185,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
 	entitySelector := `type("CUSTOM_DEVICE")`
-	req := client.Get(fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships&pageSize=500", url.QueryEscape(entitySelector))).Expect(200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships&pageSize=500", url.QueryEscape(entitySelector))).Expect(200)
 	listResponse := lresponse{}
 	if err = req.Finish(&listResponse); err != nil {
 		return nil, err
@@ -210,7 +210,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 		if len(listResponse.NextPageKey) == 0 {
 			break
 		}
-		req = client.Get(fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(listResponse.NextPageKey))).Expect(200)
+		req = client.Get(ctx, fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(listResponse.NextPageKey))).Expect(200)
 		listResponse = lresponse{}
 		if err = req.Finish(&listResponse); err != nil {
 			return nil, err
@@ -236,7 +236,7 @@ func (me *service) Create(ctx context.Context, v *customdevice.CustomDevice) (*a
 	if v.UIBased != nil && *v.UIBased {
 		uiBasedQuery = "?uiBased=true"
 	}
-	if err = client.Post("/api/v2/entities/custom"+uiBasedQuery, v, 201, 204).Finish(); err != nil {
+	if err = client.Post(ctx, "/api/v2/entities/custom"+uiBasedQuery, v, 201, 204).Finish(); err != nil {
 		return nil, err
 	}
 
@@ -256,7 +256,7 @@ func (me *service) Create(ctx context.Context, v *customdevice.CustomDevice) (*a
 	maxIteration := applyTimeout / 5
 	// Check the custom device was indeed created before finishing up
 	for i := 0; i < maxIteration; i++ {
-		me.CheckGet(v.CustomDeviceID, v)
+		me.CheckGet(ctx, v.CustomDeviceID, v)
 		time.Sleep(5 * time.Second)
 		if v.EntityId != "" {
 			break
@@ -270,7 +270,7 @@ func (me *service) Update(ctx context.Context, id string, v *customdevice.Custom
 	v.CustomDeviceID = id
 	v.EntityId = ""
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err = client.Post("/api/v2/entities/custom", v, 201, 204).Finish(); err != nil {
+	if err = client.Post(ctx, "/api/v2/entities/custom", v, 201, 204).Finish(); err != nil {
 		return err
 	}
 	return nil

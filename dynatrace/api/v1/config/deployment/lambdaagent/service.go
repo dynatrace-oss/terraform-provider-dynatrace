@@ -38,7 +38,7 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *lambdaagent.Latest) error {
-	if err := me.client.Get(BasePath, 200).Finish(&v); err != nil {
+	if err := me.client.Get(ctx, BasePath, 200).Finish(&v); err != nil {
 		return err
 	}
 	return nil

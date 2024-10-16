@@ -60,7 +60,7 @@ type DashboardPresetPayload struct {
 const dummUserGroupID = "0d80b6f2-64c8-430e-8c10-83b8beda3fd3"
 const userGroupViolationMessagePrefix = "Given property 'UserGroup' with value: '0d80b6f2-64c8-430e-8c10-83b8beda3fd3' is not a valid value in datasource. Value must be one of ["
 
-func AfterCreate(client rest.Client, stub *api.Stub) (stubs *api.Stub, err error) {
+func AfterCreate(ctx context.Context, client rest.Client, stub *api.Stub) (stubs *api.Stub, err error) {
 	// This function just ATTEMPTS to validate whether the Dashboard is ready for use via Dashboard Presets
 	// If an error happens (e.g. because of missing / wrong credentials) it doesn't error out
 	//
@@ -90,7 +90,7 @@ func AfterCreate(client rest.Client, stub *api.Stub) (stubs *api.Stub, err error
 	numSuccesses := 0
 	for numRetries > 0 && numSuccesses < 5 {
 		numRetries--
-		validated, err := ValidatePreset(client, &payload)
+		validated, err := ValidatePreset(ctx, client, &payload)
 		if err != nil {
 			// some other error has happened - we will silently ignore that
 			// the dashboard HAS been created, the sanity check just couldn't be done
@@ -104,9 +104,9 @@ func AfterCreate(client rest.Client, stub *api.Stub) (stubs *api.Stub, err error
 	return stub, nil
 }
 
-func ValidatePreset(client rest.Client, payload *DashboardPresetPayload) (validated bool, err error) {
+func ValidatePreset(ctx context.Context, client rest.Client, payload *DashboardPresetPayload) (validated bool, err error) {
 	p := []*DashboardPresetPayload{payload}
-	err = client.Post("/api/v2/settings/objects?repairInput=true&validateOnly=true", &p, 200).Finish(nil)
+	err = client.Post(ctx, "/api/v2/settings/objects?repairInput=true&validateOnly=true", &p, 200).Finish(nil)
 	if err != nil {
 		if restErr, ok := err.(rest.Error); ok {
 			for _, violation := range restErr.ConstraintViolations {
@@ -165,9 +165,9 @@ func (me *service) Get(ctx context.Context, id string, v *dashboards.JSONDashboa
 	return nil
 }
 
-func (me *service) Validate(v *dashboards.JSONDashboard) error {
+func (me *service) Validate(ctx context.Context, v *dashboards.JSONDashboard) error {
 	if validator, ok := me.service.(settings.Validator[*dashboards.JSONDashboard]); ok {
-		return validator.Validate(v)
+		return validator.Validate(ctx, v)
 	}
 	return nil
 }

@@ -99,12 +99,12 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	var credentialStubs api.Stubs
 	var err error
-	if err = me.client.Get("/api/config/v1/azure/credentials").Expect(200).Finish(&credentialStubs); err != nil {
+	if err = me.client.Get(ctx, "/api/config/v1/azure/credentials").Expect(200).Finish(&credentialStubs); err != nil {
 		return nil, err
 	}
 	for _, credentialStub := range credentialStubs {
 		var servicesStubs srvStubs
-		if err = me.client.Get(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialStub.ID)).Expect(200).Finish(&servicesStubs); err != nil {
+		if err = me.client.Get(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialStub.ID)).Expect(200).Finish(&servicesStubs); err != nil {
 			return nil, err
 		}
 		for _, servicesStub := range servicesStubs.Services {
@@ -122,7 +122,7 @@ func (me *service) Get(ctx context.Context, id string, v *services.Settings) err
 	serviceName := parts[1]
 	var response servicesResponse
 	var err error
-	if err = me.client.Get(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
 		return err
 	}
 	for _, service := range response.Services {
@@ -130,7 +130,7 @@ func (me *service) Get(ctx context.Context, id string, v *services.Settings) err
 			v.CredentialsID = credentialsID
 			v.MonitoredMetrics = service.MonitoredMetrics
 			v.Name = serviceName
-			v.BuiltIn, _ = me.supService.IsBuiltIn(v.Name)
+			v.BuiltIn, _ = me.supService.IsBuiltIn(ctx, v.Name)
 			return nil
 		}
 	}
@@ -147,14 +147,14 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 	credentialsID := v.CredentialsID
 	var response servicesResponse
 	var err error
-	if err = me.client.Get(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
 		return nil, err
 	}
 	if v.UseRecommendedMetrics {
 		v.MonitoredMetrics = nil
 	}
 
-	isBuiltIn, e := me.supService.IsBuiltIn(strings.ToLower(v.Name))
+	isBuiltIn, e := me.supService.IsBuiltIn(ctx, strings.ToLower(v.Name))
 	if e != nil {
 		return nil, e
 	}
@@ -180,7 +180,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 
 	retry := true
 	for retry {
-		if err = me.client.Put(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID), response).Expect(204).Finish(); err != nil {
+		if err = me.client.Put(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID), response).Expect(204).Finish(); err != nil {
 			r := regexp.MustCompile("Invalid\\sservices\\sconfiguration\\:\\srecommended\\smetrics\\s\\[([^\\]]*)\\]\\sfor\\sservice\\s'([^']*)'\\smust\\sbe\\sselected")
 			r2 := regexp.MustCompile("Invalid\\sservices\\sconfiguration\\:\\smetric\\s'([^']*)'\\sfor\\sservice\\s'([^']*)'\\shas\\smissing\\sdimension\\s\\[([^\\]]*)\\],\\suse\\sall\\srecommended\\sdimensions\\s\\[([^\\]]*)\\]")
 			if m := r.FindStringSubmatch(err.Error()); m != nil {
@@ -253,7 +253,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	serviceName := parts[1]
 	var response servicesResponse
 	var err error
-	if err = me.client.Get(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID)).Expect(200).Finish(&response); err != nil {
 		return err
 	}
 	var reducedServices servicesResponse
@@ -271,5 +271,5 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if len(reducedServices.Services) == 0 {
 		reducedServices.Services = []*services.Settings{}
 	}
-	return me.client.Put(fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID), reducedServices).Expect(204).Finish()
+	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialsID), reducedServices).Expect(204).Finish()
 }

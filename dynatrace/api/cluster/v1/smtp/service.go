@@ -18,6 +18,8 @@
 package smtp
 
 import (
+	"context"
+
 	smtp "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/smtp/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 )
@@ -35,13 +37,13 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(smtpConfig *smtp.Settings) error {
-	return cs.Update(smtpConfig)
+func (cs *ServiceClient) Create(ctx context.Context, smtpConfig *smtp.Settings) error {
+	return cs.Update(ctx, smtpConfig)
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(smtpConfig *smtp.Settings) error {
-	return cs.client.Post("/smtp", smtpConfig, 200).Finish()
+func (cs *ServiceClient) Update(ctx context.Context, smtpConfig *smtp.Settings) error {
+	return cs.client.Post(ctx, "/smtp", smtpConfig, 200).Finish()
 }
 
 // Delete TODO: documentation
@@ -50,10 +52,10 @@ func (cs *ServiceClient) Delete() error {
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get() (*smtp.Settings, error) {
+func (cs *ServiceClient) Get(ctx context.Context) (*smtp.Settings, error) {
 	var err error
 	var smtpConfig smtp.Settings
-	if err = cs.client.Get("/smtp", 200).Finish(&smtpConfig); err != nil {
+	if err = cs.client.Get(ctx, "/smtp", 200).Finish(&smtpConfig); err != nil {
 		return nil, err
 	}
 	return &smtpConfig, nil

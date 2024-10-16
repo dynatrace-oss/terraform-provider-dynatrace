@@ -92,7 +92,7 @@ func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error
 	return nil
 }
 
-func (me *service) Validate(v *slo.Settings) error {
+func (me *service) Validate(ctx context.Context, v *slo.Settings) error {
 	soc := settings20.SettingsObjectCreate{
 		SchemaID:      SchemaID,
 		SchemaVersion: SchemaVersion,
@@ -100,7 +100,7 @@ func (me *service) Validate(v *slo.Settings) error {
 		Value:         v,
 	}
 
-	if err := me.client.Post("/api/v2/settings/objects?validateOnly=true", []settings20.SettingsObjectCreate{soc}).Expect(200).Finish(); err != nil {
+	if err := me.client.Post(ctx, "/api/v2/settings/objects?validateOnly=true", []settings20.SettingsObjectCreate{soc}).Expect(200).Finish(); err != nil {
 		return err
 	}
 
@@ -150,7 +150,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 
 	service := slo_env2_service.Service(me.credentials)
 	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, service.SchemaID())
-	req := client.Get(fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
 	if err := req.Finish(slo); err != nil {
 		return err
 	}
@@ -162,10 +162,10 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.listSettings20()
+	return me.listSettings20(ctx)
 }
 
-func (me *service) listSettings20() (api.Stubs, error) {
+func (me *service) listSettings20(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	stubs := api.Stubs{}
@@ -180,7 +180,7 @@ func (me *service) listSettings20() (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
 		}
-		req := me.client.Get(urlStr, 200)
+		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}

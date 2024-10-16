@@ -80,14 +80,14 @@ func Duplicates(ctx context.Context, service settings.RService[*mobile.Applicati
 	return nil, nil
 }
 
-func LoadKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mobile.Application) error {
+func LoadKeyUserActionsAndSessionProperties(ctx context.Context, client rest.Client, id string, v *mobile.Application) error {
 	var err error
 	resp := struct {
 		KeyUserActions []struct {
 			Name string `json:"name"`
 		} `json:"keyUserActions"`
 	}{}
-	if err = client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions", id), 200).Finish(&resp); err != nil {
+	if err = client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions", id), 200).Finish(&resp); err != nil {
 		return err
 	}
 	names := []string{}
@@ -108,7 +108,7 @@ func LoadKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mo
 			DisplayName string `json:"displayName"`
 		} `json:"userActionProperties"`
 	}{}
-	if err = client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", id), 200).Finish(&presp); err != nil {
+	if err = client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", id), 200).Finish(&presp); err != nil {
 		return err
 	}
 	remoteProperties := map[string]*mobile.UserActionAndSessionProperty{}
@@ -121,7 +121,7 @@ func LoadKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mo
 	}
 	for propKey := range propKeys {
 		var property mobile.UserActionAndSessionProperty
-		if err = client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", id, url.PathEscape(propKey)), 200).Finish(&property); err != nil {
+		if err = client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", id, url.PathEscape(propKey)), 200).Finish(&property); err != nil {
 			return err
 		}
 		remoteProperties[propKey] = &property
@@ -135,10 +135,10 @@ func LoadKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mo
 	return nil
 }
 
-func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *mobile.Application) error {
+func StoreKeyUserActionsAndSessionProperties(ctx context.Context, client rest.Client, id string, v *mobile.Application) error {
 	var err error
 
-	req := client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions", id), 200)
+	req := client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions", id), 200)
 	remoteKeyUserActions := map[string]string{}
 	resp := struct {
 		KeyUserActions []struct {
@@ -166,13 +166,13 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 		}
 	}
 	for keyUserAction := range keyUserActionsToDelete {
-		req := client.Delete(fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserAction)), 204)
+		req := client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserAction)), 204)
 		if err = req.Finish(); err != nil {
 			return err
 		}
 	}
 	for _, keyUserAction := range keyUserActionsToAdd {
-		req := client.Post(fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserAction)), map[string]any{}, 200)
+		req := client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserAction)), map[string]any{}, 200)
 		if err = req.Finish(); err != nil {
 			return err
 		}
@@ -191,7 +191,7 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 		}{}
 
 		for i := 0; i < maxTries; i++ {
-			if err = client.Get(fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("DEVICE_APPLICATION_METHOD"),fromRelationships.isDeviceApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
+			if err = client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("DEVICE_APPLICATION_METHOD"),fromRelationships.isDeviceApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
 				return err
 			}
 
@@ -233,7 +233,7 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 			DisplayName string `json:"displayName"`
 		} `json:"userActionProperties"`
 	}{}
-	if err = client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", id), 200).Finish(&getPropertiesResponse); err != nil {
+	if err = client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", id), 200).Finish(&getPropertiesResponse); err != nil {
 		return err
 	}
 	propKeys := map[string]string{}
@@ -246,7 +246,7 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 	remoteProperties := map[string]*mobile.UserActionAndSessionProperty{}
 	for propKey := range propKeys {
 		var property mobile.UserActionAndSessionProperty
-		if err = client.Get(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", url.PathEscape(id), url.PathEscape(propKey)), 200).Finish(&property); err != nil {
+		if err = client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", url.PathEscape(id), url.PathEscape(propKey)), 200).Finish(&property); err != nil {
 			return err
 		}
 		remoteProperties[propKey] = &property
@@ -269,17 +269,17 @@ func StoreKeyUserActionsAndSessionProperties(client rest.Client, id string, v *m
 		}
 	}
 	for propKey := range propsToDelete {
-		if err = client.Delete(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", url.PathEscape(id), url.PathEscape(propKey)), 204).Finish(); err != nil {
+		if err = client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", url.PathEscape(id), url.PathEscape(propKey)), 204).Finish(); err != nil {
 			return err
 		}
 	}
 	for _, property := range propsToCreate {
-		if err = client.Post(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", url.PathEscape(id)), property, 201, 204).Finish(); err != nil {
+		if err = client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties", url.PathEscape(id)), property, 201, 204).Finish(); err != nil {
 			return err
 		}
 	}
 	for propKey, property := range propsToUpdate {
-		if err = client.Put(fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", id, url.PathEscape(propKey)), property, 201, 204).Finish(); err != nil {
+		if err = client.Put(ctx, fmt.Sprintf("/api/config/v1/applications/mobile/%s/userActionAndSessionProperties/%s", id, url.PathEscape(propKey)), property, 201, 204).Finish(); err != nil {
 			if !strings.Contains(err.Error(), "No Content (PUT)") {
 				return err
 			}

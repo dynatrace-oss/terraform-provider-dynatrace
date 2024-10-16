@@ -87,7 +87,7 @@ func (cs *ServiceClient) Create(ctx context.Context, v *networkzones.NetworkZone
 	}
 
 	response := networkzones.NetworkZone{}
-	if err := cs.client.Put(fmt.Sprintf("/networkZones/%s", url.PathEscape(id)), v, 201, 204).Finish(&response); err != nil {
+	if err := cs.client.Put(ctx, fmt.Sprintf("/networkZones/%s", url.PathEscape(id)), v, 201, 204).Finish(&response); err != nil {
 		return nil, err
 	}
 
@@ -95,22 +95,22 @@ func (cs *ServiceClient) Create(ctx context.Context, v *networkzones.NetworkZone
 }
 
 func (cs *ServiceClient) Update(ctx context.Context, id string, v *networkzones.NetworkZone) error {
-	return cs.client.Put(fmt.Sprintf("/networkZones/%s", id), v, 204).Finish()
+	return cs.client.Put(ctx, fmt.Sprintf("/networkZones/%s", id), v, 204).Finish()
 }
 
 func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
-	return cs.client.Delete(fmt.Sprintf("/networkZones/%s", url.PathEscape(id))).Expect(204).Finish()
+	return cs.client.Delete(ctx, fmt.Sprintf("/networkZones/%s", url.PathEscape(id))).Expect(204).Finish()
 }
 
 func (cs *ServiceClient) Get(ctx context.Context, id string, v *networkzones.NetworkZone) error {
-	return cs.client.Get(fmt.Sprintf("/networkZones/%s", url.PathEscape(id)), 200).Finish(v)
+	return cs.client.Get(ctx, fmt.Sprintf("/networkZones/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
 func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubList networkzones.NetworkZones
 
-	if err = cs.client.Get("/networkZones", 200).Finish(&stubList); err != nil {
+	if err = cs.client.Get(ctx, "/networkZones", 200).Finish(&stubList); err != nil {
 		return nil, err
 	}
 	stubs := api.Stubs{}

@@ -66,7 +66,7 @@ func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (
 	levelType, levelID := getLevel(v)
 
 	var pcr PolicyCreateResponse
-	if err = me.client.Post(fmt.Sprintf("/iam/repo/%s/%s/policies", levelType, levelID), v, 201).Finish(&pcr); err != nil {
+	if err = me.client.Post(ctx, fmt.Sprintf("/iam/repo/%s/%s/policies", levelType, levelID), v, 201).Finish(&pcr); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
@@ -78,7 +78,7 @@ func (me *PolicyServiceClient) Get(ctx context.Context, id string, v *policies.P
 		return err
 	}
 
-	if err = me.client.Get(fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), 200).Finish(&v); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), 200).Finish(&v); err != nil {
 		return err
 	}
 	if levelType == "cluster" {
@@ -95,7 +95,7 @@ func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *poli
 		return err
 	}
 
-	if err = me.client.Put(fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, 204).Finish(); err != nil {
+	if err = me.client.Put(ctx, fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
@@ -109,7 +109,7 @@ func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		ClusterUUID string `json:"clusterUuid"`
 	}{}
 
-	if err = me.client.Get("/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
+	if err = me.client.Get(ctx, "/license/consumption/hour", 200).Finish(&clusterInfoResponse); err != nil {
 		return stubs, err
 	}
 	policiesResponse := struct {
@@ -118,7 +118,7 @@ func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 			Name string `json:"name"`
 		} `json:"policies"`
 	}{}
-	if err = me.client.Get(fmt.Sprintf("/iam/repo/cluster/%s/policies", clusterInfoResponse.ClusterUUID), 200).Finish(&policiesResponse); err != nil {
+	if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/cluster/%s/policies", clusterInfoResponse.ClusterUUID), 200).Finish(&policiesResponse); err != nil {
 		return stubs, err
 	}
 	for _, policy := range policiesResponse.Policies {
@@ -130,7 +130,7 @@ func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 			ID string `json:"id"`
 		} `json:"environments"`
 	}{}
-	if err = me.client.Get("/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
+	if err = me.client.Get(ctx, "/environments?pageSize=1000", 200).Finish(&environmentsResponse); err != nil {
 		return stubs, err
 	}
 	for _, environment := range environmentsResponse.Environments {
@@ -140,7 +140,7 @@ func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 				Name string `json:"name"`
 			} `json:"policies"`
 		}{}
-		if err = me.client.Get(fmt.Sprintf("/iam/repo/environment/%s/policies", environment.ID), 200).Finish(&policiesResponse); err != nil {
+		if err = me.client.Get(ctx, fmt.Sprintf("/iam/repo/environment/%s/policies", environment.ID), 200).Finish(&policiesResponse); err != nil {
 			return stubs, err
 		}
 		for _, policy := range policiesResponse.Policies {
@@ -156,7 +156,7 @@ func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	return me.client.Delete(fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), 204).Finish()
+	return me.client.Delete(ctx, fmt.Sprintf("/iam/repo/%s/%s/policies/%s", levelType, levelID, uuid), 204).Finish()
 }
 
 func SplitID(id string) (uuid string, levelType string, levelID string, err error) {

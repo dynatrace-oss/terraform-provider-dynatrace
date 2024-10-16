@@ -68,7 +68,7 @@ func (cs *ServiceClient) Create(ctx context.Context, groupConfig *groups.GroupCo
 	var err error
 
 	var createdGroupConfig groups.GroupConfig
-	if err = cs.client.Post("/groups", groupConfig, 200).Finish(&createdGroupConfig); err != nil {
+	if err = cs.client.Post(ctx, "/groups", groupConfig, 200).Finish(&createdGroupConfig); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: *createdGroupConfig.ID, Name: createdGroupConfig.Name}, nil
@@ -76,19 +76,19 @@ func (cs *ServiceClient) Create(ctx context.Context, groupConfig *groups.GroupCo
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, groupConfig *groups.GroupConfig) error {
-	return cs.client.Put("/groups", groupConfig, 200).Finish()
+	return cs.client.Put(ctx, "/groups", groupConfig, 200).Finish()
 }
 
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
-	return cs.client.Delete(fmt.Sprintf("/groups/%s", id), 200).Finish()
+	return cs.client.Delete(ctx, fmt.Sprintf("/groups/%s", id), 200).Finish()
 }
 
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context, id string, v *groups.GroupConfig) error {
 	var err error
 
-	if err = cs.client.Get(fmt.Sprintf("/groups/%s", id), 200).Finish(&v); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/groups/%s", id), 200).Finish(&v); err != nil {
 		return err
 	}
 	return nil
@@ -99,7 +99,7 @@ func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var groups []*groups.GroupConfig
-	if err = cs.client.Get("/groups", 200).Finish(&groups); err != nil {
+	if err = cs.client.Get(ctx, "/groups", 200).Finish(&groups); err != nil {
 		return nil, err
 	}
 	for _, group := range groups {

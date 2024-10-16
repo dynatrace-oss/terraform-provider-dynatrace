@@ -32,12 +32,12 @@ type ServiceOptions[T Settings] struct {
 	UpdateURL      func(id string, v T) string
 	DeleteURL      func(id string) string
 	Stubs          api.RecordStubs
-	CompleteGet    func(client rest.Client, id string, v T) error
+	CompleteGet    func(ctx context.Context, client rest.Client, id string, v T) error
 	CreateRetry    func(v T, err error) T
-	OnAfterCreate  func(client rest.Client, stub *api.Stub) (*api.Stub, error)
-	DeleteRetry    func(id string, err error) (bool, error)
+	OnAfterCreate  func(ctx context.Context, client rest.Client, stub *api.Stub) (*api.Stub, error)
+	DeleteRetry    func(ctx context.Context, id string, err error) (bool, error)
 	CreateConfirm  int
-	OnChanged      func(rest.Client, string, T) error
+	OnChanged      func(context.Context, rest.Client, string, T) error
 	OnBeforeUpdate func(id string, v T) error
 	HasNoValidator bool
 	Name           func(id string, v T) (string, error)
@@ -52,7 +52,7 @@ func (me *ServiceOptions[T]) Hijack(fn func(err error, service RService[T], v T)
 	return me
 }
 
-func (me *ServiceOptions[T]) WithCompleteGet(fn func(client rest.Client, id string, v T) error) *ServiceOptions[T] {
+func (me *ServiceOptions[T]) WithCompleteGet(fn func(ctx context.Context, client rest.Client, id string, v T) error) *ServiceOptions[T] {
 	me.CompleteGet = fn
 	return me
 }
@@ -67,7 +67,7 @@ func (me *ServiceOptions[T]) WithCreateRetry(fn func(v T, err error) T) *Service
 	return me
 }
 
-func (me *ServiceOptions[T]) WithAfterCreate(fn func(client rest.Client, stub *api.Stub) (*api.Stub, error)) *ServiceOptions[T] {
+func (me *ServiceOptions[T]) WithAfterCreate(fn func(ctx context.Context, client rest.Client, stub *api.Stub) (*api.Stub, error)) *ServiceOptions[T] {
 	me.OnAfterCreate = fn
 	return me
 }
@@ -93,11 +93,11 @@ func (me *ServiceOptions[T]) NoValidator() *ServiceOptions[T] {
 	return me
 }
 
-func (me *ServiceOptions[T]) WithOnChanged(onChanged func(rest.Client, string, T) error) *ServiceOptions[T] {
+func (me *ServiceOptions[T]) WithOnChanged(onChanged func(context.Context, rest.Client, string, T) error) *ServiceOptions[T] {
 	me.OnChanged = onChanged
 	return me
 }
-func (me *ServiceOptions[T]) WithDeleteRetry(deleteRetry func(id string, err error) (bool, error)) *ServiceOptions[T] {
+func (me *ServiceOptions[T]) WithDeleteRetry(deleteRetry func(ctx context.Context, id string, err error) (bool, error)) *ServiceOptions[T] {
 	me.DeleteRetry = deleteRetry
 	return me
 }

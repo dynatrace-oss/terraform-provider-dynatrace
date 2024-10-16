@@ -59,7 +59,7 @@ func (me *service) Get(ctx context.Context, id string, v *dashboards.Dashboard) 
 	return settings.FromJSON(data, v)
 }
 
-func (me *service) Validate(v *dashboards.Dashboard) error {
+func (me *service) Validate(ctx context.Context, v *dashboards.Dashboard) error {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -70,7 +70,7 @@ func (me *service) Validate(v *dashboards.Dashboard) error {
 		return err
 	}
 	if validator, ok := me.service.(settings.Validator[*dashboards.JSONDashboard]); ok {
-		return validator.Validate(jsondb)
+		return validator.Validate(ctx, jsondb)
 	}
 	return nil
 }

@@ -57,9 +57,9 @@ func (me *FilterService[T]) List(ctx context.Context) (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *FilterService[T]) Validate(v T) error {
+func (me *FilterService[T]) Validate(ctx context.Context, v T) error {
 	if validator, ok := me.Service.(settings.Validator[T]); ok {
-		return validator.Validate(v)
+		return validator.Validate(ctx, v)
 	}
 	return nil
 }

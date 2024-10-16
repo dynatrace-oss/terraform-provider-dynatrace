@@ -60,7 +60,7 @@ func (me *service) Get(ctx context.Context, id string, v *opentelemetrymetrics.S
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
 	v.Mode = resolveMode(v, stateConfig)
-	existingValue, err := me.fetchExistingRecord()
+	existingValue, err := me.fetchExistingRecord(ctx)
 	if err != nil {
 		return err
 	}
@@ -120,7 +120,7 @@ func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings)
 	mu.Lock()
 	defer mu.Unlock()
 	v.Mode = resolveMode(v, nil)
-	existingValue, err := me.fetchExistingRecord()
+	existingValue, err := me.fetchExistingRecord(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetric
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
 	v.Mode = resolveMode(v, stateConfig)
-	existingValue, err := me.fetchExistingRecord()
+	existingValue, err := me.fetchExistingRecord(ctx)
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	stateConfig := getStateConfig(ctx)
 	mode := resolveMode(stateConfig, nil)
 
-	existingValue, err := me.fetchExistingRecord()
+	existingValue, err := me.fetchExistingRecord(ctx)
 	if err != nil {
 		return err
 	}
@@ -313,10 +313,10 @@ func resolveMode(v, stateConfig *opentelemetrymetrics.Settings) opentelemetrymet
 	return stateConfig.Mode
 }
 
-func (me *service) fetchExistingRecord() (*opentelemetrymetrics.Settings, error) {
+func (me *service) fetchExistingRecord(ctx context.Context) (*opentelemetrymetrics.Settings, error) {
 	var err error
 	var sol settings20.SettingsObjectList
-	req := me.client.Get(fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=1", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion")), 200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=1", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion")), 200)
 	if err = req.Finish(&sol); err != nil {
 		return nil, err
 	}

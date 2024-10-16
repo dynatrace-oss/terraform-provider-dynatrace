@@ -89,7 +89,7 @@ func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 	var err error
 	var settingsObject SettingsObject
 
-	req := me.client.Get(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
 	if err = req.Finish(&settingsObject); err != nil {
 		return err
 	}
@@ -102,20 +102,20 @@ func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 		settings.SetLegacyID(id, me.options.LegacyID, v)
 	}
 
-	if err = me.handleOrdering(id, v); err != nil {
+	if err = me.handleOrdering(ctx, id, v); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (me *service[T]) handleOrdering(id string, v T) error {
+func (me *service[T]) handleOrdering(ctx context.Context, id string, v T) error {
 	if DISABLE_ORDERING_SUPPORT {
 		return nil
 	}
 
 	if settings.HasInsertAfter(v) || settings.HasInsertBefore(v) {
-		insertBefore, insertAfter, err := me.getInsertIDs(id)
+		insertBefore, insertAfter, err := me.getInsertIDs(ctx, id)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func (me *service[T]) handleOrdering(id string, v T) error {
 	return nil
 }
 
-func (me *service[T]) getInsertIDs(id string, optIds ...[]string) (*string, *string, error) {
+func (me *service[T]) getInsertIDs(ctx context.Context, id string, optIds ...[]string) (*string, *string, error) {
 	if len(id) == 0 {
 		return nil, nil, nil
 	}
@@ -137,7 +137,7 @@ func (me *service[T]) getInsertIDs(id string, optIds ...[]string) (*string, *str
 	if len(optIds) > 0 {
 		ids = optIds[0]
 	} else {
-		listedIDs, err := me.listIDs()
+		listedIDs, err := me.listIDs(ctx)
 		if err != nil {
 			return nil, nil, nil
 		}
@@ -220,7 +220,7 @@ func (me *service[T]) ListIDs(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,summary,modificationInfo,scope,schemaVersion"))
 		}
-		req := me.client.Get(urlStr, 200)
+		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -243,7 +243,7 @@ func (me *service[T]) ListIDs(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service[T]) listIDs() ([]string, error) {
+func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 	var err error
 
 	ids := []string{}
@@ -258,7 +258,7 @@ func (me *service[T]) listIDs() ([]string, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,scope,schemaVersion"))
 		}
-		req := me.client.Get(urlStr, 200)
+		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -281,7 +281,7 @@ func (me *service[T]) listIDs() ([]string, error) {
 func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	ids, err := me.listIDs()
+	ids, err := me.listIDs(ctx)
 	if err != nil {
 		return api.Stubs{}, err
 	}
@@ -298,7 +298,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
 		}
-		req := me.client.Get(urlStr, 200)
+		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -316,7 +316,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 					settings.SetLegacyID(item.ObjectID, me.options.LegacyID, newItem)
 				}
 				settings.SetScope(newItem, item.Scope)
-				insertBefore, insertAfter, err := me.getInsertIDs(item.ObjectID, ids)
+				insertBefore, insertAfter, err := me.getInsertIDs(ctx, item.ObjectID, ids)
 				if err != nil {
 					return api.Stubs{}, err
 				}
@@ -429,9 +429,9 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 
 	var req rest.Request
 	if me.skipRepairInput() {
-		req = me.client.Post("/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200, 201)
+		req = me.client.Post(ctx, "/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200, 201)
 	} else {
-		req = me.client.Post("/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200, 201)
+		req = me.client.Post(ctx, "/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200, 201)
 	}
 
 	objectID := []SettingsObjectCreateResponse{}
@@ -514,9 +514,9 @@ func (me *service[T]) update(ctx context.Context, id string, v T, retry bool, no
 	}
 	var req rest.Request
 	if me.skipRepairInput() {
-		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
+		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
 	} else {
-		req = me.client.Put(fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou, 200)
+		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou, 200)
 	}
 
 	if err := req.Finish(); err != nil {
@@ -551,7 +551,7 @@ func (me *service[T]) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service[T]) delete(ctx context.Context, id string, numRetries int) error {
-	err := me.client.Delete(fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
+	err := me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
 	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
 		return nil
 	}

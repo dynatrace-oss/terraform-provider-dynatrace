@@ -42,7 +42,7 @@ func StaticService[T Settings](credentials *Credentials, schemaID string, url st
 }
 
 func (me *staticService[T]) Get(ctx context.Context, id string, v T) error {
-	return me.client.Get(me.url, 200).Finish(v)
+	return me.client.Get(ctx, me.url, 200).Finish(v)
 }
 
 func (me *staticService[T]) List(ctx context.Context) (api.Stubs, error) {
@@ -53,8 +53,8 @@ func (me *staticService[T]) Create(ctx context.Context, v T) (*api.Stub, error) 
 	return &me.stub, me.Update(ctx, me.stub.ID, v)
 }
 
-func (me *staticService[T]) Validate(v T) error {
-	return me.client.Post(me.url+"/validator", v, 204).Finish()
+func (me *staticService[T]) Validate(ctx context.Context, v T) error {
+	return me.client.Post(ctx, me.url+"/validator", v, 204).Finish()
 }
 
 func (me *staticService[T]) Delete(ctx context.Context, id string) error {
@@ -62,7 +62,7 @@ func (me *staticService[T]) Delete(ctx context.Context, id string) error {
 }
 
 func (me *staticService[T]) Update(ctx context.Context, id string, v T) error {
-	return me.client.Put(me.url, v, 204).Finish()
+	return me.client.Put(ctx, me.url, v, 204).Finish()
 }
 
 func (me *staticService[T]) SchemaID() string {
