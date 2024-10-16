@@ -97,7 +97,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	from := "now-3y"
 	fields := "properties.monitoringMode,properties.state"
 	fullURL := fmt.Sprintf("/api/v2/entities?pageSize=500&entitySelector=%s&from=%s&fields=%s", url.QueryEscape("type(HOST)"), url.QueryEscape(from), url.QueryEscape(fields))
-	err := me.client.Get(fullURL).Expect(200).Finish(listResponse)
+	err := me.client.Get(ctx, fullURL).Expect(200).Finish(listResponse)
 	if err != nil {
 		return stubs, err
 	}
@@ -105,7 +105,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	nextPageKey := listResponse.NextPageKey
 	for len(nextPageKey) > 0 {
 		listResponse := new(ListResponse)
-		err := me.client.Get(fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))).Expect(200).Finish(listResponse)
+		err := me.client.Get(ctx, fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))).Expect(200).Finish(listResponse)
 		if err != nil {
 			return stubs, err
 		}
@@ -120,7 +120,7 @@ func (me *service) Get(ctx context.Context, id string, v *mode.Settings) error {
 	from := "now-3y"
 	fields := "properties.monitoringMode,properties.state"
 	fullURL := fmt.Sprintf("/api/v2/entities?pageSize=1&entitySelector=%s&from=%s&fields=%s", url.QueryEscape(fmt.Sprintf("type(HOST),entityId(%s)", id)), url.QueryEscape(from), url.QueryEscape(fields))
-	err := me.client.Get(fullURL).Expect(200).Finish(listResponse)
+	err := me.client.Get(ctx, fullURL).Expect(200).Finish(listResponse)
 	if err != nil {
 		return err
 	}
