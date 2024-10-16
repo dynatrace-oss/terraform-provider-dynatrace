@@ -54,10 +54,10 @@ type service struct {
 
 const DefaultNumRequiredSuccesses = 5
 const MinNumRequiredSuccesses = 5
-const MaxNumRequiredSuccesses = 25
+const MaxNumRequiredSuccesses = 100
 
 const DefaultMaxConfirmationRetries = 50
-const MaxMaxConfirmationRetries = 150
+const MaxMaxConfirmationRetries = 600
 const MinMaxConfirmationRetries = 50
 
 func getEnv(key string, def int, min int, max int) int {

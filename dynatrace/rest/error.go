@@ -29,6 +29,14 @@ type errorEnvelope struct {
 	Error *Error `json:"error"`
 }
 
+type Warning struct {
+	Message string
+}
+
+func (w Warning) Error() string {
+	return w.Message
+}
+
 type Error struct {
 	Code                 int                   `json:"code"`
 	Message              string                `json:"message"`

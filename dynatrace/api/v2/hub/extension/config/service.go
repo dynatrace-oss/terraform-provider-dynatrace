@@ -168,7 +168,15 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 func (me *service) Delete(ctx context.Context, id string) error {
 	name, configID := splitID(id)
 	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
-	if err := client.Delete(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
+	if err := client.Delete(fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
+		// Potential response when the configuration contains
+		//    import {
+		//     ...
+		//    }
+		// with an invalid ID
+		if strings.Contains(err.Error(), "Version property invalid. Required format is: 1.0.0") {
+			return nil
+		}
 		if restErr, ok := err.(rest.Error); ok {
 			if restErr.Code != 404 {
 				return err

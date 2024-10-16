@@ -18,7 +18,7 @@ func (f *MetricExtractionStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "Data extraction processor to use.",
+			Description: "Data extraction processor to use",
 			Elem:        &schema.Resource{Schema: new(MetricExtractionProcessor).Schema()},
 			Optional:    true,
 		},
@@ -42,7 +42,7 @@ func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"counter_metric_extraction_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to write the occurrences as a metric.",
+			Description: "Processor to write the occurrences as a metric",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(CounterMetricExtractionProcessor).Schema()},
@@ -50,7 +50,7 @@ func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
 		},
 		"value_metric_extraction_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to extract a value from a field as a metric.",
+			Description: "Processor to extract a value from a field as a metric",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(ValueMetricExtractionProcessor).Schema()},

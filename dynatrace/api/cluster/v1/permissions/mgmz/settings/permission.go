@@ -6,7 +6,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type Permission struct {
@@ -43,8 +42,9 @@ func (me *Permission) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "The permissions to assign for that management zone. Allowed values are `DEMO_USER`, `LOG_VIEWER`, `MANAGE_SECURITY_PROBLEMS`, `MANAGE_SETTINGS`, `REPLAY_SESSION_DATA`, `REPLAY_SESSION_DATA_WITHOUT_MASKING`, `VIEWER`, `VIEW_SENSITIVE_REQUEST_DATA`.\nNote: In order to produce non-empty plans specifying at least the permission `VIEWER` is recommended. Your Dynatrace Cluster will enforce that permission, regardless of whether it has been specified or not.",
 			Elem: &schema.Schema{
-				Type:         schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{"DEMO_USER", "LOG_VIEWER", "MANAGE_SECURITY_PROBLEMS", "MANAGE_SETTINGS", "REPLAY_SESSION_DATA", "REPLAY_SESSION_DATA_WITHOUT_MASKING", "VIEWER", "VIEW_SENSITIVE_REQUEST_DATA"}, false),
+				Type: schema.TypeString,
+				/* Validation disabled because of #563. There exist meanwhile many more permissions - some of them enforced by the CLUSTER REST API */
+				// ValidateFunc: validation.StringInSlice([]string{"DEMO_USER", "LOG_VIEWER", "MANAGE_SECURITY_PROBLEMS", "MANAGE_SETTINGS", "REPLAY_SESSION_DATA", "REPLAY_SESSION_DATA_WITHOUT_MASKING", "VIEWER", "VIEW_SENSITIVE_REQUEST_DATA"}, false),
 			},
 		},
 	}

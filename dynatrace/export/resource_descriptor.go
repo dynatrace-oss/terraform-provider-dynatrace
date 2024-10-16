@@ -18,10 +18,11 @@
 package export
 
 import (
-	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	"os"
 	"reflect"
 	"strings"
+
+	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
@@ -1503,6 +1504,7 @@ func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 	return append(excludeListedResourceGroups, ResourceExclusionGroup{
 		Reason: "Production environments may contain 10k+ dashboards",
 		Exclusions: []ResourceExclusion{
+			{ResourceTypes.Reports, ""},
 			{ResourceTypes.JSONDashboard, ""},
 			{ResourceTypes.DashboardSharing, ""},
 			{ResourceTypes.JSONDashboardBase, ""},

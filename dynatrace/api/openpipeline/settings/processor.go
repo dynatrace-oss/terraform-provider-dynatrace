@@ -44,7 +44,7 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Indicates if the object is active.",
+			Description: "Indicates if the object is active",
 			Required:    true,
 		},
 		"id": {
@@ -54,12 +54,12 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 		},
 		"matcher": {
 			Type:        schema.TypeString,
-			Description: "Matching condition to apply on incoming records.",
+			Description: "Matching condition to apply on incoming records",
 			Required:    true,
 		},
 		"sample_data": {
 			Type:        schema.TypeString,
-			Description: "Sample data related to the processor for documentation or testing.",
+			Description: "Sample data related to the processor for documentation or testing",
 			Optional:    true,
 		},
 	}
@@ -94,7 +94,7 @@ func (p *DqlProcessor) Schema() map[string]*schema.Schema {
 	s := p.Processor.Schema()
 	s["dql_script"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "The DQL script to apply on the record.",
+		Description: "The DQL script to apply on the record",
 		Required:    true,
 	}
 
@@ -130,7 +130,7 @@ func (p *FieldsAddProcessor) Schema() map[string]*schema.Schema {
 	s["field"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Resource{Schema: new(FieldsAddItem).Schema()},
-		Description: "Field to add to the record.",
+		Description: "Field to add to the record",
 		Required:    true,
 	}
 
@@ -200,7 +200,7 @@ func (p *FieldsRemoveProcessor) Schema() map[string]*schema.Schema {
 	s["fields"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Schema{Type: schema.TypeString},
-		Description: "Field to add to the record.",
+		Description: "Field to add to the record",
 		Required:    true,
 	}
 
@@ -236,7 +236,7 @@ func (p *FieldsRenameProcessor) Schema() map[string]*schema.Schema {
 	s["field"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Resource{Schema: new(FieldsRenameItem).Schema()},
-		Description: "Field to rename on the record.",
+		Description: "Field to rename on the record",
 		Required:    true,
 	}
 
@@ -348,7 +348,7 @@ func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
 		MinItems:    1,
 		MaxItems:    1,
 		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
-		Description: "Strategy to assign a value.",
+		Description: "Strategy to assign a value",
 		Required:    true,
 	}
 
@@ -357,7 +357,7 @@ func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
 		MinItems:    1,
 		MaxItems:    1,
 		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
-		Description: "Strategy to assign a value.",
+		Description: "Strategy to assign a value",
 		Required:    true,
 	}
 
@@ -413,7 +413,7 @@ func (ep *DavisEventExtractionProcessor) Schema() map[string]*schema.Schema {
 	s["properties"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Resource{Schema: new(DavisEventProperty).Schema()},
-		Description: "List of properties for the extracted davis event.",
+		Description: "List of properties for the extracted davis event",
 		Required:    true,
 	}
 	return s
@@ -448,12 +448,12 @@ func (ep *DavisEventProperty) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
-			Description: "The key to set on the davis event.",
+			Description: "The key to set on the davis event",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "The value assigned to the key.",
+			Description: "The value assigned to the key",
 			Required:    true,
 		},
 	}
@@ -484,17 +484,17 @@ func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value.",
+			Description: "Strategy to assign a value",
 			Required:    true,
 		},
 		"field": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value.",
+			Description: "Strategy to assign a value",
 			Optional:    true,
 		},
 		"constant": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value.",
+			Description: "Strategy to assign a value",
 			Optional:    true,
 		},
 	}
@@ -562,7 +562,7 @@ func (p *SqlxProcessor) Schema() map[string]*schema.Schema {
 	s := p.Processor.Schema()
 	s["sqlx_script"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "The SQLX script to apply on the record.",
+		Description: "The SQLX script to apply on the record",
 		Required:    true,
 	}
 
@@ -594,12 +594,12 @@ func (p *CounterMetricExtractionProcessor) Schema() map[string]*schema.Schema {
 	s["dimensions"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Schema{Type: schema.TypeString},
-		Description: "List of dimensions to add to the metric.",
+		Description: "List of dimensions to add to the metric",
 		Optional:    true,
 	}
 	s["metric_key"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "The key of the metric to write.",
+		Description: "The key of the metric to write",
 		Required:    true,
 	}
 
@@ -647,17 +647,17 @@ func (p *ValueMetricExtractionProcessor) Schema() map[string]*schema.Schema {
 	s["dimensions"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Elem:        &schema.Schema{Type: schema.TypeString},
-		Description: "List of dimensions to add to the metric.",
+		Description: "List of dimensions to add to the metric",
 		Optional:    true,
 	}
 	s["field"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "The field to extract the value for the metric.",
+		Description: "The field to extract the value for the metric",
 		Required:    true,
 	}
 	s["metric_key"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "The key of the metric to write.",
+		Description: "The key of the metric to write",
 		Required:    true,
 	}
 
@@ -708,7 +708,7 @@ func (p *BucketAssignmentProcessor) Schema() map[string]*schema.Schema {
 	s := p.Processor.Schema()
 	s["bucket_name"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "Bucket that is assigned when the record is matched.",
+		Description: "Bucket that is assigned when the record is matched",
 		Required:    true,
 	}
 
@@ -772,7 +772,7 @@ func (p *SecurityContextProcessor) Schema() map[string]*schema.Schema {
 		MinItems:    1,
 		MaxItems:    1,
 		Elem:        &schema.Resource{Schema: new(ValueAssignment).Schema()},
-		Description: "Strategy to assign a value.",
+		Description: "Strategy to assign a value",
 		Required:    true,
 	}
 

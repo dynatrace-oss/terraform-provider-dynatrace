@@ -47,7 +47,6 @@ import (
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mobileapplication"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/remoteenvironments"
@@ -245,7 +244,6 @@ func Provider() *schema.Provider {
 			"dynatrace_generic_setting":              genericsettingsds.DataSource(),
 			"dynatrace_api_tokens":                   apitoken.DataSourceMultiple(),
 			"dynatrace_api_token":                    apitoken.DataSource(),
-			"dynatrace_openpipeline":                 openpipeline.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

@@ -203,6 +203,12 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	var err error
 	stub, err = service.Create(ctx, sttngs)
 	if err != nil {
+		if restWarning, ok := err.(rest.Warning); ok {
+			if stub != nil && len(stub.ID) > 0 {
+				d.SetId(stub.ID)
+			}
+			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
+		}
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
 			if len(vm) > 0 {
@@ -262,6 +268,9 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	err = service.Update(ctx, d.Id(), sttngs)
 	if err != nil {
+		if restWarning, ok := err.(rest.Warning); ok {
+			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
+		}
 		if restError, ok := err.(rest.Error); ok {
 			vm := restError.ViolationMessage()
 			if len(vm) > 0 {

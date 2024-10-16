@@ -19,12 +19,12 @@ func (f *StorageStage) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"catch_all_bucket_name": {
 			Type:        schema.TypeString,
-			Description: "todo",
+			Description: "Default bucket assigned to records which do not match any other storage processor",
 			Optional:    true,
 		},
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "todo",
+			Description: "Groups all processors applicable for the StorageStage.\nApplicable processors are BucketAssignmentProcessor and NoStorageProcessor.",
 			Elem:        &schema.Resource{Schema: new(StorageStageProcessor).Schema()},
 			Optional:    true,
 		},
@@ -56,7 +56,7 @@ func (ep *StorageStageProcessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"bucket_assignment_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to assign a bucket.",
+			Description: "Processor to assign a bucket",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(BucketAssignmentProcessor).Schema()},
@@ -64,7 +64,7 @@ func (ep *StorageStageProcessor) Schema() map[string]*schema.Schema {
 		},
 		"no_storage_processor": {
 			Type:        schema.TypeList,
-			Description: "Processor to skip storage assignment.",
+			Description: "Processor to skip storage assignment",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(NoStorageProcessor).Schema()},

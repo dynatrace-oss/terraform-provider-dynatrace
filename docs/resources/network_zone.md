@@ -29,6 +29,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 - `alternative_zones` (List of String) A list of alternative network zones.
 - `description` (String) A short description of the network zone
+- `fallback_mode` (String) The fallback mode of the network zone. Possible values: `ANY_ACTIVE_GATE`, `NONE`, `ONLY_DEFAULT_ZONE`
 - `name` (String) Name of the network zone cannot be modified once created. Dynatrace stores the field in lowercase, allowed characters: alphanumeric, hyphen, underscore, dot
 - `num_of_configured_activegates` (Number) The number of ActiveGates in the network zone.
 - `num_of_configured_oneagents` (Number) The number of OneAgents that are configured to use the network zone as primary.

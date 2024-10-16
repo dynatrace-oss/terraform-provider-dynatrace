@@ -43,7 +43,8 @@ resource "dynatrace_mgmz_permission" "some-perm" {
 - `environment` (String) The UUID of the environment
 - `group` (String) The ID of the group the permissions are valid for. You may refer to the id of a resource `dynatrace_user_group` here
 - `management_zone` (String) The ID of the management zone the permissions are valid for. When referring to resource `dynatrace_management_zone_v2` or data source `dynatrace_management_zone` you need to refer to the attribute `legacy_id`.
-- `permissions` (Set of String) The permissions to assign for that management zone. Allowed values are `DEMO_USER`, `LOG_VIEWER`, `MANAGE_SECURITY_PROBLEMS`, `MANAGE_SETTINGS`, `REPLAY_SESSION_DATA`, `REPLAY_SESSION_DATA_WITHOUT_MASKING`, `VIEWER`, `VIEW_SENSITIVE_REQUEST_DATA`
+- `permissions` (Set of String) The permissions to assign for that management zone. Allowed values are `DEMO_USER`, `LOG_VIEWER`, `MANAGE_SECURITY_PROBLEMS`, `MANAGE_SETTINGS`, `REPLAY_SESSION_DATA`, `REPLAY_SESSION_DATA_WITHOUT_MASKING`, `VIEWER`, `VIEW_SENSITIVE_REQUEST_DATA`.
+Note: In order to produce non-empty plans specifying at least the permission `VIEWER` is recommended. Your Dynatrace Cluster will enforce that permission, regardless of whether it has been specified or not.
 
 ### Read-Only
 

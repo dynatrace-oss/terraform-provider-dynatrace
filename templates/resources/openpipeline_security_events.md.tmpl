@@ -1,0 +1,50 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_security_events Resource - terraform-provider-dynatrace"
+subcategory: "OpenPipeline"
+description: |-
+  The resource `dynatrace_openpipeline_security_events` covers configuration of OpenPipeline for Security Events
+---
+
+# dynatrace_openpipeline_security_events (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View OpenPipeline configurations** (`openpipeline:configurations:read`), and **Edit OpenPipeline configurations** (`openpipeline:configurations:write`).
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_security_events` downloads all existing OpenPipeline definitions for Security Events
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_openpipeline_security_events" "events_security" {
+  pipelines {
+    pipeline {
+      enabled      = true
+      display_name = "test"
+      id           = "pipeline_test_9035"
+      processing {
+        processor {
+          fields_remove_processor {
+            description = "test"
+            enabled     = true
+            fields      = [ "test" ]
+            id          = "processor_test_5725"
+            matcher     = "true"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
