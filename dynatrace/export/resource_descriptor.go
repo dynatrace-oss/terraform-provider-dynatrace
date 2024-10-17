@@ -1094,6 +1094,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.LogStorage: NewResourceDescriptor(
 		logstoragesettings.Service,
 		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.K8sCluster),
 		Coalesce(Dependencies.HostGroup),
 	),
 	ResourceTypes.OwnershipTeams: NewResourceDescriptor(teams.Service),

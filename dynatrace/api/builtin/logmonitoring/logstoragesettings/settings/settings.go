@@ -26,7 +26,7 @@ type Settings struct {
 	Name            string   `json:"config-item-title"` // Name
 	Enabled         bool     `json:"enabled"`           // This setting is enabled (`true`) or disabled (`false`)
 	Matchers        Matchers `json:"matchers,omitempty"`
-	Scope           *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Scope           *string  `json:"-" scope:"scope"` // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	Send_to_storage bool     `json:"send-to-storage"` // If `true` matching logs will be included in storage. If `false` matching logs will be excluded from storage.
 	InsertAfter     string   `json:"-"`
 }
@@ -53,7 +53,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
+			Description: "The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
 			ForceNew:    true,
