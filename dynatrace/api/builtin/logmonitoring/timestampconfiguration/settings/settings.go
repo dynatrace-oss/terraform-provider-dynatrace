@@ -29,7 +29,7 @@ type Settings struct {
 	Enabled           bool           `json:"enabled"`                     // This setting is enabled (`true`) or disabled (`false`)
 	Entry_boundary    *EntryBoundary `json:"entry-boundary,omitempty"`    // Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.
 	Matchers          Matchers       `json:"matchers,omitempty"`
-	Scope             *string        `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Scope             *string        `json:"-" scope:"scope"` // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	Timezone          string         `json:"timezone"`        // Timezone
 	InsertAfter       string         `json:"-"`
 }
@@ -78,7 +78,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
+			Description: "The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
 		},

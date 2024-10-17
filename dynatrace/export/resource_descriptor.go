@@ -1025,8 +1025,13 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		logdpprules.Service,
 		Dependencies.ID(ResourceTypes.LogProcessing),
 	),
-	ResourceTypes.LogEvents:          NewResourceDescriptor(logevents.Service),
-	ResourceTypes.LogTimestamp:       NewResourceDescriptor(timestampconfiguration.Service),
+	ResourceTypes.LogEvents: NewResourceDescriptor(logevents.Service),
+	ResourceTypes.LogTimestamp: NewResourceDescriptor(
+		timestampconfiguration.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
+	),
 	ResourceTypes.LogGrail:           NewResourceDescriptor(logsongrailactivate.Service),
 	ResourceTypes.LogCustomAttribute: NewResourceDescriptor(logcustomattributes.Service),
 	ResourceTypes.LogSensitiveDataMasking: NewResourceDescriptor(

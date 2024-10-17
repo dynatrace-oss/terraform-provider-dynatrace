@@ -1,6 +1,7 @@
 {
 	"allowedScopes": [
 		"HOST",
+		"KUBERNETES_CLUSTER",
 		"HOST_GROUP",
 		"environment"
 	],
@@ -401,5 +402,5 @@
 			}
 		}
 	},
-	"version": "1.0.9"
+	"version": "1.0.10"
 }
