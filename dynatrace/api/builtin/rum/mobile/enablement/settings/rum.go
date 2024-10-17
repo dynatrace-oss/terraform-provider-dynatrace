@@ -18,13 +18,15 @@
 package enablement
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Rum struct {
-	CostAndTrafficControl int  `json:"costAndTrafficControl"` // Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
-	Enabled               bool `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
+	CostAndTrafficControl int   `json:"costAndTrafficControl"`    // Percentage of user sessions captured and analyzed. By default, Dynatrace captures all user actions and user sessions for analysis. This approach ensures complete insight into your application’s performance and customer experience. You can optionally reduce the granularity of user-action and user-session analysis by capturing a lower percentage of user sessions. While this approach can reduce monitoring costs, it also results in lower visibility into how your customers are using your applications. For example, a setting of 10% results in Dynatrace analyzing only every tenth user session.
+	Enabled               bool  `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
+	EnabledOnGrail        *bool `json:"enabledOnGrail,omitempty"` // Please be aware that only mobile agents with version **8.303 or higher** can ingest Grail events
 }
 
 func (me *Rum) Schema() map[string]*schema.Schema {
@@ -39,6 +41,11 @@ func (me *Rum) Schema() map[string]*schema.Schema {
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
+		"enabled_on_grail": {
+			Type:        schema.TypeBool,
+			Description: "Please be aware that only mobile agents with version **8.303 or higher** can ingest Grail events",
+			Optional:    true, // nullable & precondition
+		},
 	}
 }
 
@@ -46,12 +53,21 @@ func (me *Rum) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"cost_and_traffic_control": me.CostAndTrafficControl,
 		"enabled":                  me.Enabled,
+		"enabled_on_grail":         me.EnabledOnGrail,
 	})
+}
+
+func (me *Rum) HandlePreconditions() error {
+	if (me.EnabledOnGrail == nil) && (me.Enabled) {
+		me.EnabledOnGrail = opt.NewBool(false)
+	}
+	return nil
 }
 
 func (me *Rum) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"cost_and_traffic_control": &me.CostAndTrafficControl,
 		"enabled":                  &me.Enabled,
+		"enabled_on_grail":         &me.EnabledOnGrail,
 	})
 }

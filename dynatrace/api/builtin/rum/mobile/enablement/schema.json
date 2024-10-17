@@ -87,6 +87,31 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				},
+				"enabledOnGrail": {
+					"constraints": [
+						{
+							"customValidatorId": "grail-can-be-enabled",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "Please be aware that only mobile agents with version **8.303 or higher** can ingest Grail events",
+					"displayName": "Enable Real User Monitoring powered by Grail",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.rum-settings-show-enable-monitoring-on-3rd-gen-switch.resemo3g.feature",
+						"maturity": "IN_DEVELOPMENT"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -116,5 +141,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.1"
+	"version": "2.1.2"
 }
