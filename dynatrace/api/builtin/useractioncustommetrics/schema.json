@@ -89,15 +89,17 @@
 				{
 					"customMessage": "The dimensions must be unique (case insensitive)",
 					"customValidatorId": "unique-case-insensitive-dimension-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customMessage": "The metric cannot contain more than 2 high cardinality dimensions",
 					"customValidatorId": "high-cardinality-dimension-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "Defines the fields that are used as dimensions. A dimension is a collection of reference information about a metric data point that is of interest to your business. Dimensions are parameters like \"application\", \"type\", \"name\". For example, using \"type\" as a dimension allows you to split chart data based on the user action type.",
+			"description": "Defines the fields that are used as dimensions. A dimension is a collection of reference information about a metric data point that is of interest to your business. Dimensions are parameters like \"application\", \"type\", \"apdexCategory\". For example, using \"type\" as a dimension allows you to split chart data based on the user action type.",
 			"displayName": "Add a dimension",
 			"documentation": "",
 			"items": {
@@ -110,11 +112,13 @@
 					{
 						"customMessage": "Field must be a valid USQL one",
 						"customValidatorId": "field-name-validator",
+						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					},
 					{
-						"customMessage": "Field is not a valid dimension",
+						"customMessage": "Field is not a valid dimension. Only non-numeric fields with low cardinality are allowed as dimension",
 						"customValidatorId": "dimension-field-validator",
+						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					}
 				],
@@ -147,6 +151,7 @@
 				{
 					"customMessage": "The filters must be unique (case insensitive)",
 					"customValidatorId": "unique-case-insensitive-filter-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -212,6 +217,14 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "The metric key must be unique (case insensitive)",
+			"customValidatorId": "unique-case-insensitive-metric-key-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring",
 		"group:web-and-mobile-monitoring.usql-custom-metrics"
@@ -222,6 +235,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "filter-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -239,6 +253,7 @@
 						{
 							"customMessage": "Field must be a valid USQL one",
 							"customValidatorId": "field-name-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -347,11 +362,13 @@
 						{
 							"customMessage": "Field must be a valid USQL one",
 							"customValidatorId": "field-name-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
 							"customMessage": "Field is not a valid value",
 							"customValidatorId": "value-field-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -388,5 +405,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }

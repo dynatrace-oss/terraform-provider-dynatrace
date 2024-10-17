@@ -89,6 +89,7 @@
 				{
 					"customMessage": "The dimensions must be unique (case insensitive)",
 					"customValidatorId": "unique-case-insensitive-dimension-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -105,11 +106,13 @@
 					{
 						"customMessage": "Field must be a valid USQL one",
 						"customValidatorId": "field-name-validator",
+						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					},
 					{
-						"customMessage": "Field is not a valid dimension",
+						"customMessage": "Field is not a valid dimension. Only non-numeric fields with low cardinality are allowed as dimension",
 						"customValidatorId": "dimension-field-validator",
+						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					}
 				],
@@ -142,6 +145,7 @@
 				{
 					"customMessage": "The filters must be unique (case insensitive)",
 					"customValidatorId": "unique-case-insensitive-filter-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -207,6 +211,14 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "The metric key must be unique (case insensitive)",
+			"customValidatorId": "unique-case-insensitive-metric-key-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring",
 		"group:web-and-mobile-monitoring.usql-custom-metrics"
@@ -217,6 +229,7 @@
 			"constraints": [
 				{
 					"customValidatorId": "filter-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -234,6 +247,7 @@
 						{
 							"customMessage": "Field must be a valid USQL one",
 							"customValidatorId": "field-name-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -342,11 +356,13 @@
 						{
 							"customMessage": "Field must be a valid USQL one",
 							"customValidatorId": "field-name-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
 							"customMessage": "Field is not a valid value",
 							"customValidatorId": "value-field-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -383,5 +399,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

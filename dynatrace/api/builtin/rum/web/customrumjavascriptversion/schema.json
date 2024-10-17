@@ -6,6 +6,13 @@
 		{
 			"customMessage": "Please choose a valid JavaScript version",
 			"customValidatorId": "customVersionNotNullValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "RUM JavaScript version not supported for Real User Monitoring powered by Grail",
+			"customValidatorId": "rumCustomJavaScriptVersionRumOnGrailValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -54,5 +61,5 @@
 	],
 	"schemaId": "builtin:rum.web.custom-rum-javascript-version",
 	"types": {},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

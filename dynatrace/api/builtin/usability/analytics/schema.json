@@ -28,5 +28,5 @@
 	],
 	"schemaId": "builtin:usability-analytics",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

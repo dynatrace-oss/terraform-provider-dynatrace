@@ -7,11 +7,19 @@
 		{
 			"customMessage": "No JavaScriptVersion is defined for CUSTOM",
 			"customValidatorId": "rumJavaScriptVersionToCustomValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "Environment too new to set Latest IE7-10 supported",
 			"customValidatorId": "rumJavaScriptVersionToLatestIESupportedValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "RUM JavaScript version not supported for Real User Monitoring powered by Grail",
+			"customValidatorId": "rumJavaScriptVersionRumOnGrailValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -81,5 +89,5 @@
 	],
 	"schemaId": "builtin:rum.web.rum-javascript-updates",
 	"types": {},
-	"version": "1.1"
+	"version": "1.1.1"
 }
