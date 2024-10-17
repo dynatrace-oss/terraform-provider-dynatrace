@@ -31,6 +31,7 @@ type Rule struct {
 	Priority         string  `json:"priority"`
 	Query            string  `json:"query"` // Rule query
 	Title            string  `json:"title"`
+	ZeroRated        *bool   `json:"zeroRated,omitempty"` // Zero rated
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
@@ -78,6 +79,11 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 			Description: "no documentation available",
 			Required:    true,
 		},
+		"zero_rated": {
+			Type:        schema.TypeBool,
+			Description: "Zero rated",
+			Optional:    true, // nullable
+		},
 	}
 }
 
@@ -91,6 +97,7 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 		"priority":          me.Priority,
 		"query":             me.Query,
 		"title":             me.Title,
+		"zero_rated":        me.ZeroRated,
 	})
 }
 
@@ -104,5 +111,6 @@ func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 		"priority":          &me.Priority,
 		"query":             &me.Query,
 		"title":             &me.Title,
+		"zero_rated":        &me.ZeroRated,
 	})
 }

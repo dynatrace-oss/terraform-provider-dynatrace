@@ -270,6 +270,15 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				},
+				"zeroRated": {
+					"description": "",
+					"displayName": "Zero rated",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "{title}",
@@ -299,5 +308,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }
