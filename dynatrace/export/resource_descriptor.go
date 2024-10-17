@@ -1050,7 +1050,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
 		Dependencies.ID(ResourceTypes.ManagementZoneV2),
 	),
-	ResourceTypes.LogOneAgent:              NewResourceDescriptor(logagentconfiguration.Service),
+	ResourceTypes.LogOneAgent: NewResourceDescriptor(
+		logagentconfiguration.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
+	),
 	ResourceTypes.IssueTracking:            NewResourceDescriptor(issuetracking.Service),
 	ResourceTypes.GeolocationSettings:      NewResourceDescriptor(geosettings.Service),
 	ResourceTypes.UserSessionCustomMetrics: NewResourceDescriptor(custommetrics.Service),

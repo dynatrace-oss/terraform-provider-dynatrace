@@ -1,6 +1,7 @@
 {
 	"allowedScopes": [
 		"HOST",
+		"KUBERNETES_CLUSTER",
 		"HOST_GROUP",
 		"environment"
 	],
@@ -115,7 +116,7 @@
 		},
 		"LAConfigLogScannerLinuxNfsEnabled": {
 			"default": false,
-			"description": "Allows detection of logs written to mounted network storage drives.",
+			"description": "Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For other OSes it's always enabled.",
 			"displayName": "Detect logs on network file systems",
 			"documentation": "",
 			"maxObjects": 1,
@@ -163,7 +164,7 @@
 		"LAConfigMonitorOwnLogsEnabled": {
 			"default": false,
 			"description": "Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).",
-			"displayName": "Allow OneAgent to monitor OneAgent logs",
+			"displayName": "Allow OneAgent to monitor Dynatrace logs",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -234,5 +235,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.16"
+	"version": "1.1.17"
 }
