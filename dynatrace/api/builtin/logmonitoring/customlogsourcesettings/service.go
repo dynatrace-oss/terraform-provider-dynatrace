@@ -28,7 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.1"
+const SchemaVersion = "1.1.1"
 const SchemaID = "builtin:logmonitoring.custom-log-source-settings"
 
 // The custom service below was created to gracefully deal with the breaking change from attribute `values` to `values-and-enrichment` introduced in v292.

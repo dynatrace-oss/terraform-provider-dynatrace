@@ -1091,8 +1091,13 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
 	),
-	ResourceTypes.OwnershipTeams:  NewResourceDescriptor(teams.Service),
-	ResourceTypes.LogCustomSource: NewResourceDescriptor(customlogsourcesettings.Service),
+	ResourceTypes.OwnershipTeams: NewResourceDescriptor(teams.Service),
+	ResourceTypes.LogCustomSource: NewResourceDescriptor(
+		customlogsourcesettings.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
+	),
 	ResourceTypes.ApplicationDetectionV2: NewResourceDescriptor(
 		appdetection.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
