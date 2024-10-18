@@ -534,6 +534,7 @@ var ServiceTechnologys = struct {
 	HadoopYarn                           ServiceTechnology
 	Haproxy                              ServiceTechnology
 	Heat                                 ServiceTechnology
+	Helidon                              ServiceTechnology
 	Hessian                              ServiceTechnology
 	HornetQ                              ServiceTechnology
 	IBMCICSRegion                        ServiceTechnology
@@ -753,6 +754,7 @@ var ServiceTechnologys = struct {
 	"HADOOP_YARN",
 	"HAPROXY",
 	"HEAT",
+	"HELIDON",
 	"HESSIAN",
 	"HORNET_Q",
 	"IBM_CICS_REGION",
