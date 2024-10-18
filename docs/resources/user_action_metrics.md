@@ -53,7 +53,7 @@ resource "dynatrace_user_action_metrics" "#name#" {
 
 ### Optional
 
-- `dimensions` (List of String) Defines the fields that are used as dimensions. A dimension is a collection of reference information about a metric data point that is of interest to your business. Dimensions are parameters like "application", "type", "name". For example, using "type" as a dimension allows you to split chart data based on the user action type.
+- `dimensions` (List of String) Defines the fields that are used as dimensions. A dimension is a collection of reference information about a metric data point that is of interest to your business. Dimensions are parameters like "application", "type", "apdexCategory". For example, using "type" as a dimension allows you to split chart data based on the user action type.
 - `filters` (Block List, Max: 1) Defines the filters for the user action. Filters apply at the moment of extracting the data and only sessions that satisfy the filtering criteria will be used to extract the custom metrics. You will not be able to modify these filters in the metric data explorer. For example, using "type equals Xhr" will give you only data from xhr actions, while forcing the rest of user actions of different types to be ignored. (see [below for nested schema](#nestedblock--filters))
 
 ### Read-Only

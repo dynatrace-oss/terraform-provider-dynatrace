@@ -39,7 +39,7 @@ resource "dynatrace_session_replay_resource_capture" "#name#" {
 
 ### Required
 
-- `enable_resource_capturing` (Boolean) (Field has overlap with `dynatrace_web_application`) When turned on, all CSS resources from all sessions are captured. For details, see [Resource capture](https://dt-url.net/sr-resource-capturing).
+- `enable_resource_capturing` (Boolean) (Field has overlap with `dynatrace_web_application`) When turned on, Dynatrace captures resources for up to 0.1% of user sessions recorded with Session Replay. For details, see [Resource capture](https://dt-url.net/sr-resource-capturing).
 
 ### Optional
 

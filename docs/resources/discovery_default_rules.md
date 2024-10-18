@@ -85,6 +85,7 @@ Required:
 Optional:
 
 - `actions` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rule--actions))
+- `zero_rated` (Boolean) Zero rated
 
 <a id="nestedblock--rule--actions"></a>
 ### Nested Schema for `rule.actions`

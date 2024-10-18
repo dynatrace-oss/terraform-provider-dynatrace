@@ -55,7 +55,7 @@ resource "dynatrace_log_oneagent" "#name#" {
 - `default_timezone` (String) Default timezone for agent if more specific configurations is not defined.
 - `event_log_query_timeout_sec` (Number) Defines the maximum timeout value, in seconds, for the query extracting Windows Event Logs
 - `iisdetection_enabled` (Boolean) Allows detection of logs and event logs written by IIS server.
-- `log_scanner_linux_nfs_enabled` (Boolean) Allows detection of logs written to mounted network storage drives.
+- `log_scanner_linux_nfs_enabled` (Boolean) Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For other OSes it's always enabled.
 - `max_lgis_per_entity_count` (Number) Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.
 - `min_binary_detection_limit_bytes` (Number) Defines the minimum number of bytes in log file required for binary detection.
 - `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).
@@ -66,7 +66,7 @@ resource "dynatrace_log_oneagent" "#name#" {
 
 ### Optional
 
-- `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
 

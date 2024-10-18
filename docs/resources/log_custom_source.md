@@ -64,7 +64,7 @@ resource "dynatrace_log_custom_source" "#name#" {
 ### Optional
 
 - `context` (Block List, Max: 1) Define Custom Log Source only within context if provided (see [below for nested schema](#nestedblock--context))
-- `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
 

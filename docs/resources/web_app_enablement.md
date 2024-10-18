@@ -63,6 +63,10 @@ Required:
 - `cost_and_traffic_control` (Number) (Field has overlap with `dynatrace_web_application`) Percentage of user sessions captured and analyzed
 - `enabled` (Boolean) (Field has overlap with `dynatrace_web_application`) This setting is enabled (`true`) or disabled (`false`)
 
+Optional:
+
+- `enabled_on_grail` (Boolean) Enable Real User Monitoring powered by Grail
+
 
 <a id="nestedblock--session_replay"></a>
 ### Nested Schema for `session_replay`
