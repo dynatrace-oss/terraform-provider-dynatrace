@@ -84,12 +84,18 @@ var CredentialsTypes = struct {
 	PublicCertificate CredentialsType
 	Token             CredentialsType
 	UsernamePassword  CredentialsType
+	SNMPV3            CredentialsType
+	AWSKeyBased       CredentialsType
+	AWSRoleBased      CredentialsType
 	Unknown           CredentialsType
 }{
 	"CERTIFICATE",
 	"PUBLIC_CERTIFICATE",
 	"TOKEN",
 	"USERNAME_PASSWORD",
+	"SNMPV3",
+	"AWS_KEY_BASED",
+	"AWS_ROLE_BASED",
 	"UNKNOWN",
 }
 
