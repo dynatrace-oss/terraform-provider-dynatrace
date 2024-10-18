@@ -54,12 +54,12 @@ resource "dynatrace_declarative_grouping" "#name#" {
 
 ### Required
 
+- `detection` (Block List, Min: 1, Max: 1) Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group. (see [below for nested schema](#nestedblock--detection))
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `name` (String) Monitored technology name
 
 ### Optional
 
-- `detection` (Block List, Max: 1) Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group. (see [below for nested schema](#nestedblock--detection))
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
@@ -82,10 +82,7 @@ Required:
 - `id` (String) Process group identifier
 - `process_group_name` (String) This identifier is used by Dynatrace to recognize this process group.
 - `report` (String) Possible Values: `never`, `always`, `highResourceUsage`
-
-Optional:
-
-- `rules` (Block List, Max: 1) Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--detection--process_definition--rules))
+- `rules` (Block List, Min: 1, Max: 1) Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--detection--process_definition--rules))
 
 <a id="nestedblock--detection--process_definition--rules"></a>
 ### Nested Schema for `detection.process_definition.rules`
