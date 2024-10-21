@@ -18,24 +18,19 @@
 package documents
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
-	"io"
-	"mime/multipart"
 	"net/http"
-	"os"
-	"strconv"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
+	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
+	"golang.org/x/oauth2/clientcredentials"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
-	document "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/documents"
 )
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*documents.Document] {
@@ -46,67 +41,36 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-type MyRoundTripper struct {
-	RoundTripper http.RoundTripper
-}
-
-var lock sync.Mutex
-
-func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	lock.Lock()
-	rest.Logger.Println(req.Method, req.URL)
-	if req.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, req.Body)
-		data := buf.Bytes()
-		rest.Logger.Println("  ", string(data))
-		req.Body = io.NopCloser(bytes.NewBuffer(data))
-	}
-	lock.Unlock()
-	resp, err := rt.RoundTripper.RoundTrip(req)
-	if err != nil {
-		rest.Logger.Println(err.Error())
-	}
-	if resp != nil {
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-			if resp.Body != nil {
-				buf := new(bytes.Buffer)
-				io.Copy(buf, resp.Body)
-				data := buf.Bytes()
-				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				rest.Logger.Println(resp.Status, string(data))
-			} else {
-				rest.Logger.Println(resp.Status)
-			}
-		}
-	}
-	return resp, err
-}
-
-func (me *service) client() *document.Client {
-	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
+func (me *service) client() *docclient.Client {
+	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
 		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultTransport}
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
 		} else {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultClient.Transport}
+			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
 		}
 	}
-	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
-		ClientID:     me.credentials.Automation.ClientID,
-		ClientSecret: me.credentials.Automation.ClientSecret,
-		TokenURL:     me.credentials.Automation.TokenURL,
-	})
-	return document.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
+
+	clientsFactory := clients.Factory().
+		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
+		WithOAuthCredentials(clientcredentials.Config{
+			ClientID:     me.credentials.Automation.ClientID,
+			ClientSecret: me.credentials.Automation.ClientSecret,
+			TokenURL:     me.credentials.Automation.TokenURL,
+		}).
+		WithUserAgent("Dynatrace Terraform Provider")
+
+	documentClient, _ := clientsFactory.DocumentClient()
+	return documentClient
 }
 
-func (me *service) Get(_ context.Context, id string, v *documents.Document) (err error) {
-	var result *document.Response
-	if result, err = me.client().GET(document.Documents, id); err != nil {
+func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
+	result, err := me.client().Get(ctx, id)
+	if err != nil {
 		return err
 	}
 
 	v.Actor = result.Actor
-	v.Content = result.Content
+	v.Content = string(result.Data)
 	v.IsPrivate = result.IsPrivate
 	v.Name = result.Name
 	v.Owner = result.Owner
@@ -120,19 +84,14 @@ func (me *service) SchemaID() string {
 	return "document:documents"
 }
 
-func (me *service) List(_ context.Context) (api.Stubs, error) {
-	result, err := me.client().LIST(document.Documents)
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	listResponse, err := me.client().List(ctx, "")
 	if err != nil {
 		return nil, err
 	}
 	var stubs api.Stubs
-	for _, r := range result {
-		if marshalledDocument, merr := json.Marshal(r); merr == nil {
-			value := new(documents.Document)
-			if json.Unmarshal(marshalledDocument, value) == nil {
-				stubs = append(stubs, &api.Stub{ID: r.ID, Name: r.Name, Value: value})
-			}
-		}
+	for _, response := range listResponse.Responses {
+		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name})
 	}
 
 	return stubs, nil
@@ -156,61 +115,46 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 	return stub, nil
 }
 
-func (me *service) createPrivate(_ context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	var id string
-
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	writer.WriteField("type", v.Type)
-	writer.WriteField("name", v.Name)
-
-	part, err := writer.CreatePart(map[string][]string{
-		"Content-Type":        {"application/json"},
-		"Content-Disposition": {fmt.Sprintf(`form-data; name="content"; filename="%s"`, v.Name)},
-	})
+func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
+	c := me.client()
+	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
-		panic(err)
-	}
-
-	part.Write([]byte(v.Content))
-	writer.Close()
-
-	if id, err = me.client().INSERT(document.Documents, body, writer.FormDataContentType()); err != nil {
 		return nil, err
 	}
-
-	return &api.Stub{ID: id, Name: v.Name}, nil
+	if response.IsSuccess() {
+		json.Unmarshal(response.Data, &stub)
+		return stub, nil
+	}
+	return nil, rest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
 	return me.update(ctx, id, v)
 }
 
-func (me *service) update(_ context.Context, id string, v *documents.Document) (err error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	writer.WriteField("type", v.Type)
-	writer.WriteField("name", v.Name)
-	writer.WriteField("isPrivate", strconv.FormatBool(v.IsPrivate))
-
-	part, err := writer.CreatePart(map[string][]string{
-		"Content-Type":        {"application/json"},
-		"Content-Disposition": {fmt.Sprintf(`form-data; name="content"; filename="%s"`, v.Name)},
-	})
+func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
+	c := me.client()
+	response, err := c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
-		panic(err)
+		return err
+	}
+	if response.IsSuccess() {
+		return nil
 	}
 
-	part.Write([]byte(v.Content))
-	writer.Close()
-
-	return me.client().UPDATE(document.Documents, id, body, writer.FormDataContentType())
+	return rest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
-func (me *service) Delete(_ context.Context, id string) error {
-	return me.client().DELETE(document.Documents, id)
+func (me *service) Delete(ctx context.Context, id string) error {
+	response, err := me.client().Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	if response.IsSuccess() {
+		return nil
+	}
+
+	return rest.Error{Code: response.StatusCode, Message: string(response.Data)}
 }
 
 func (me *service) New() *documents.Document {
