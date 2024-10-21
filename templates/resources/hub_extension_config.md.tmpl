@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_hub_extension_config (Resource)
 
--> This resource requires the API token scopes `extensions.write` and `extension.read`.
+-> This resource requires the API token scopes `extensions.write`, `extension.read` and `hub.read`.
 
 This resource configures a monitoring configuration for the given extension with the specified version. In case the extension has not yet gotten installed for the specified version the installation happens automatically.
 
