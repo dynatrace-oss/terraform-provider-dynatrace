@@ -2,4 +2,4 @@ package export
 
 import "context"
 
-var Context = context.Background()
+var BackgroundContext = context.Background()

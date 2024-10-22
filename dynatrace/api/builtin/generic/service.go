@@ -18,17 +18,15 @@
 package generic
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	generic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -51,58 +49,6 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-var httpListener = &crest.HTTPListener{
-	Callback: func(response crest.RequestResponse) {
-		if response.Request != nil {
-			if response.Request.URL != nil {
-				if response.Request.Body != nil {
-					body, _ := io.ReadAll(response.Request.Body)
-					rest.Logger.Println(response.Request.Method, response.Request.URL.String()+"\n    "+string(body))
-				} else {
-					rest.Logger.Println(response.Request.Method, response.Request.URL)
-				}
-			}
-		}
-		if response.Response != nil {
-			if response.Response.Body != nil {
-				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-					body, _ := io.ReadAll(response.Response.Body)
-					if body != nil {
-						rest.Logger.Println(response.Response.StatusCode, string(body))
-					} else {
-						rest.Logger.Println(response.Response.StatusCode)
-					}
-				}
-			}
-		}
-	},
-}
-
-type LoggingRoundTripper struct {
-	RoundTripper http.RoundTripper
-}
-
-func (lrt *LoggingRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
-	rest.Logger.Println(r.Method, r.URL)
-	if r.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, r.Body)
-		rest.Logger.Println("  ", buf.String())
-		r.Body = io.NopCloser(bytes.NewBuffer(buf.Bytes()))
-	}
-	res, err := lrt.RoundTripper.RoundTrip(r)
-	if err != nil {
-		rest.Logger.Println("  error:", err.Error())
-	}
-	if res != nil && res.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, res.Body)
-		rest.Logger.Println("  =>", buf.String())
-		res.Body = io.NopCloser(bytes.NewBuffer(buf.Bytes()))
-	}
-	return res, err
-}
-
 func (me *service) TokenClient() *crest.Client {
 	var parsedURL *url.URL
 	parsedURL, _ = url.Parse(me.credentials.URL)
@@ -110,7 +56,7 @@ func (me *service) TokenClient() *crest.Client {
 	tokenClient := crest.NewClient(
 		parsedURL,
 		http.DefaultClient,
-		crest.WithHTTPListener(httpListener),
+		crest.WithHTTPListener(httplog.HTTPListener),
 	)
 
 	tokenClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
@@ -118,26 +64,24 @@ func (me *service) TokenClient() *crest.Client {
 	return tokenClient
 }
 
-func (me *service) Client(schemaIDs string) *settings20.Client {
+func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Client {
 	var parsedURL *url.URL
 	parsedURL, _ = url.Parse(me.credentials.URL)
 
 	tokenClient := me.TokenClient()
 
-	if os.Getenv("DYNATRACE_DEBUG_GENERIC_SETTINGS") == "true" {
-		http.DefaultClient.Transport = &LoggingRoundTripper{http.DefaultTransport}
-	}
+	httplog.InstallRoundTripper()
 
 	oauthClient := crest.NewClient(
 		parsedURL,
 		auth.NewOAuthBasedClient(
-			context.TODO(),
+			ctx,
 			clientcredentials.Config{
 				ClientID:     me.credentials.Automation.ClientID,
 				ClientSecret: me.credentials.Automation.ClientSecret,
 				TokenURL:     me.credentials.Automation.TokenURL,
 				AuthStyle:    oauth2.AuthStyleInParams}),
-		crest.WithHTTPListener(httpListener),
+		crest.WithHTTPListener(httplog.HTTPListener),
 	)
 
 	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
@@ -151,7 +95,7 @@ func (me *service) Get(ctx context.Context, id string, v *generic.Settings) erro
 	var response settings20.Response
 	var settingsObject SettingsObject
 
-	response, err = me.Client("").Get(context.TODO(), id)
+	response, err = me.Client(ctx, "").Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -182,7 +126,7 @@ type schemataResponse struct {
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	tokenClient := me.TokenClient()
-	response, err := tokenClient.GET(context.TODO(), "api/v2/settings/schemas", crest.RequestOptions{})
+	response, err := tokenClient.GET(ctx, "api/v2/settings/schemas", crest.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +148,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, schemaID := range schemaIDs {
-		response, err := me.Client(schemaID).List(context.TODO())
+		response, err := me.Client(ctx, schemaID).List(ctx)
 		if response.StatusCode != 200 {
 			if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 				return nil, err
@@ -246,7 +190,7 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
-	response, err := me.Client(v.SchemaID).Create(ctx, scope, []byte(v.Value))
+	response, err := me.Client(ctx, v.SchemaID).Create(ctx, scope, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
@@ -265,7 +209,7 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 }
 
 func (me *service) Update(ctx context.Context, id string, v *generic.Settings) error {
-	response, err := me.Client("").Update(ctx, id, []byte(v.Value))
+	response, err := me.Client(ctx, "").Update(ctx, id, []byte(v.Value))
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -284,7 +228,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service) delete(ctx context.Context, id string, numRetries int) error {
-	response, err := me.Client("").Delete(ctx, id)
+	response, err := me.Client(ctx, "").Delete(ctx, id)
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -316,7 +260,7 @@ type QueryParams struct {
 	Filter string
 }
 
-func (me *service) ListSpecific(query QueryParams) (api.Stubs, error) {
+func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stubs, error) {
 	client := me.TokenClient()
 
 	stubs := api.Stubs{}
@@ -339,7 +283,7 @@ func (me *service) ListSpecific(query QueryParams) (api.Stubs, error) {
 			}
 		}
 
-		response, err := client.GET(context.TODO(), "api/v2/settings/objects", options)
+		response, err := client.GET(ctx, "api/v2/settings/objects", options)
 		if err != nil {
 			return nil, err
 		}

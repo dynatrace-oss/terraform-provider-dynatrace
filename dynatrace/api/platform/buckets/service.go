@@ -73,7 +73,7 @@ var httpListener = &crest.HTTPListener{
 	},
 }
 
-func (me *service) client() *bucket.Client {
+func (me *service) client(_ context.Context) *bucket.Client {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
 		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
@@ -90,7 +90,7 @@ func (me *service) client() *bucket.Client {
 
 func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
 	var result bucket.Response
-	if result, err = me.client().Get(context.TODO(), id); err != nil {
+	if result, err = me.client(ctx).Get(ctx, id); err != nil {
 		return err
 	}
 	if !result.IsSuccess() {
@@ -104,7 +104,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	result, err := me.client().List(context.TODO())
+	result, err := me.client(ctx).List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +154,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	client := me.client()
+	client := me.client(ctx)
 	var response bucket.Response
 	if response, err = client.Create(ctx, v.Name, data); err != nil {
 		return nil, err
@@ -170,7 +170,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	var responseBucket buckets.Bucket
 	for requiredSuccessesLeft > 0 || len(responseBucket.Status) == 0 || responseBucket.Status == buckets.Statuses.Creating {
 		responseBucket = buckets.Bucket{}
-		response, err := client.Get(context.TODO(), v.Name)
+		response, err := client.Get(ctx, v.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -202,7 +202,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 		return err
 	}
 	var response bucket.Response
-	response, err = me.client().Update(context.TODO(), id, data)
+	response, err = me.client(ctx).Update(ctx, id, data)
 	if err != nil {
 		return err
 	}
@@ -232,16 +232,16 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client := me.client()
-	_, err := client.Delete(context.TODO(), id)
+	client := me.client(ctx)
+	_, err := client.Delete(ctx, id)
 	if err != nil {
 		return err
 	}
 	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	retries := 0
-	response, err := client.Get(context.TODO(), id)
+	response, err := client.Get(ctx, id)
 	for response.StatusCode != 404 {
-		response, err = client.Get(context.TODO(), id)
+		response, err = client.Get(ctx, id)
 		retries++
 		if retries > maxConfirmationRetries {
 			break

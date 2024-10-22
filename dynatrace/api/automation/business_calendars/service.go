@@ -20,7 +20,6 @@ package business_calendars
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -44,15 +43,9 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) client() *automation.Client {
-	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
-	}
-	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
+func (me *service) client(ctx context.Context) *automation.Client {
+	httplog.InstallRoundTripper()
+	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
 		ClientID:     me.credentials.Automation.ClientID,
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
@@ -65,7 +58,7 @@ func (me *service) client() *automation.Client {
 
 func (me *service) Get(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
 	var response automation.Response
-	if response, err = me.client().Get(context.TODO(), apiClient.BusinessCalendars, id); err != nil {
+	if response, err = me.client(ctx).Get(ctx, apiClient.BusinessCalendars, id); err != nil {
 		return err
 	}
 	if response.StatusCode != 200 {
@@ -88,7 +81,7 @@ type BusinessCalendarStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	listResponse, err := me.client().List(context.TODO(), apiClient.BusinessCalendars)
+	listResponse, err := me.client(ctx).List(ctx, apiClient.BusinessCalendars)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +109,7 @@ func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (
 		return nil, err
 	}
 	var response automation.Response
-	if response, err = me.client().Create(context.TODO(), apiClient.BusinessCalendars, data); err != nil {
+	if response, err = me.client(ctx).Create(ctx, apiClient.BusinessCalendars, data); err != nil {
 		return nil, err
 	}
 	if response.StatusCode == 201 {
@@ -139,7 +132,7 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 		return err
 	}
 	var response automation.Response
-	if response, err = me.client().Update(context.TODO(), apiClient.BusinessCalendars, id, data); err != nil {
+	if response, err = me.client(ctx).Update(ctx, apiClient.BusinessCalendars, id, data); err != nil {
 		return err
 	}
 	if response.StatusCode == 200 {
@@ -153,7 +146,7 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.client().Delete(context.TODO(), apiClient.BusinessCalendars, id)
+	response, err := me.client(ctx).Delete(ctx, apiClient.BusinessCalendars, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil
 	}

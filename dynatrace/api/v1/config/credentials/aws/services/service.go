@@ -93,7 +93,7 @@ func (me *service) Get(ctx context.Context, id string, v *services.Settings) err
 			v.CredentialsID = credentialsID
 			v.MonitoredMetrics = service.MonitoredMetrics
 			v.Name = serviceName
-			v.BuiltIn, _ = me.supService.IsBuiltIn(v.Name)
+			v.BuiltIn, _ = me.supService.IsBuiltIn(ctx, v.Name)
 			return nil
 		}
 	}
@@ -117,7 +117,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 		v.MonitoredMetrics = nil
 	}
 
-	isBuiltIn, e := me.supService.IsBuiltIn(strings.ToLower(v.Name))
+	isBuiltIn, e := me.supService.IsBuiltIn(ctx, strings.ToLower(v.Name))
 	if e != nil {
 		return nil, e
 	}

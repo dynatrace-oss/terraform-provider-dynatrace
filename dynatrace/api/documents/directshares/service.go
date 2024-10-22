@@ -18,19 +18,14 @@
 package directshares
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"io"
-	"net/http"
-	"os"
 	"strings"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
 	directshare "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/directshares"
@@ -44,52 +39,9 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-type MyRoundTripper struct {
-	RoundTripper http.RoundTripper
-}
-
-var lock sync.Mutex
-
-func (rt *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	lock.Lock()
-	rest.Logger.Println(req.Method, req.URL)
-	if req.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, req.Body)
-		data := buf.Bytes()
-		rest.Logger.Println("  ", string(data))
-		req.Body = io.NopCloser(bytes.NewBuffer(data))
-	}
-	lock.Unlock()
-	resp, err := rt.RoundTripper.RoundTrip(req)
-	if err != nil {
-		rest.Logger.Println(err.Error())
-	}
-	if resp != nil {
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-			if resp.Body != nil {
-				buf := new(bytes.Buffer)
-				io.Copy(buf, resp.Body)
-				data := buf.Bytes()
-				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				rest.Logger.Println(resp.Status, string(data))
-			} else {
-				rest.Logger.Println(resp.Status)
-			}
-		}
-	}
-	return resp, err
-}
-
-func (me *service) client() *directshare.Client {
-	if _, ok := http.DefaultClient.Transport.(*MyRoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &MyRoundTripper{http.DefaultClient.Transport}
-		}
-	}
-	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
+func (me *service) client(ctx context.Context) *directshare.Client {
+	httplog.InstallRoundTripper()
+	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
 		ClientID:     me.credentials.Automation.ClientID,
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
@@ -99,7 +51,7 @@ func (me *service) client() *directshare.Client {
 
 func (me *service) Get(ctx context.Context, id string, v *directshares.DirectShare) (err error) {
 	var result *directshare.Response
-	if result, err = me.client().GET(directshare.DirectShares, id); err != nil {
+	if result, err = me.client(ctx).GET(directshare.DirectShares, id); err != nil {
 		return err
 	}
 
@@ -133,7 +85,7 @@ func (me *service) Create(ctx context.Context, v *directshares.DirectShare) (stu
 		return nil, err
 	}
 
-	if id, err = me.client().INSERT(directshare.DirectShares, data); err != nil {
+	if id, err = me.client(ctx).INSERT(directshare.DirectShares, data); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id}, nil
@@ -146,11 +98,11 @@ func (me *service) Update(ctx context.Context, id string, v *directshares.Direct
 		return err
 	}
 
-	return me.client().UPDATE(directshare.DirectShares, id, data)
+	return me.client(ctx).UPDATE(directshare.DirectShares, id, data)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return me.client().DELETE(directshare.DirectShares, id)
+	return me.client(ctx).DELETE(directshare.DirectShares, id)
 }
 
 func (me *service) New() *directshares.DirectShare {

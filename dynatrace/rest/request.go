@@ -43,7 +43,7 @@ import (
 const MinWaitTime = 5 * time.Second
 const MaxWaitTime = 1 * time.Minute
 
-var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
+var StdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
 var logger = initLogger()
 var Logger = logger
 var errorLogger = initErrorLogger()
@@ -64,7 +64,7 @@ func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 
 func initLogger() *log.Logger {
 	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !StdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
@@ -76,7 +76,7 @@ func initLogger() *log.Logger {
 
 func initErrorLogger() *log.Logger {
 	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !StdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: strings.TrimSuffix(restLogFileName, ".log") + ".err.log"})
@@ -211,12 +211,12 @@ func (me *request) Raw() ([]byte, error) {
 	// if os.Getenv("DT_REST_DEBUG_REQUEST_PAYLOAD") == "true" && me.payload != nil {
 	if len(data) > 0 {
 		logger.Println(me.method, url+"\n    "+string(data))
-		if stdoutLog {
+		if StdoutLog {
 			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url+"\n    "+string(data)))
 		}
 	} else {
 		logger.Println(me.method, url)
-		if stdoutLog {
+		if StdoutLog {
 			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url))
 		}
 	}
@@ -269,7 +269,7 @@ func (me *request) Raw() ([]byte, error) {
 	} else {
 		httpClient.Transport = http.DefaultTransport
 	}
-	response, err := me.execute(func() (*http.Response, error) {
+	response, err := me.execute(me.ctx, func() (*http.Response, error) {
 		if res, err = httpClient.Do(req); err != nil {
 			return nil, err
 		}
@@ -292,12 +292,12 @@ func (me *request) Raw() ([]byte, error) {
 	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 		if data != nil {
 			logger.Println(res.Status, string(data))
-			if stdoutLog {
+			if StdoutLog {
 				tflog.Debug(me.ctx, fmt.Sprintf("%s %s", res.Status, string(data)))
 			}
 		} else {
 			logger.Println(res.Status)
-			if stdoutLog {
+			if StdoutLog {
 				tflog.Debug(me.ctx, res.Status)
 			}
 
@@ -387,8 +387,11 @@ func resolveMaxWorkers() int64 {
 
 var sem = semaphore.NewWeighted(maxWorkers)
 
-func (s *request) execute(callback func() (*http.Response, error)) (*http.Response, error) {
-	err := sem.Acquire(context.Background(), 1)
+func (s *request) execute(ctx context.Context, callback func() (*http.Response, error)) (*http.Response, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	err := sem.Acquire(ctx, 1)
 	if err != nil {
 		return nil, err
 	}

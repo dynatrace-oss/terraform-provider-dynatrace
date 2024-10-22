@@ -224,7 +224,7 @@ func (me *defaultService[T]) create(ctx context.Context, v T) (*api.Stub, error)
 	if err = req.Finish(&stub); err != nil {
 		if me.options.HijackOnCreate != nil {
 			var hijackedStub *api.Stub
-			if hijackedStub, err = me.options.HijackOnCreate(err, me, v); err != nil {
+			if hijackedStub, err = me.options.HijackOnCreate(ctx, err, me, v); err != nil {
 				return nil, err
 			}
 			if hijackedStub != nil {
