@@ -53,7 +53,7 @@ func (me *Recipient) Schema() map[string]*schema.Schema {
 func (me *Recipients) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"recipient": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Optional:    true,
 			MinItems:    1,
 			MaxItems:    1000,
@@ -130,7 +130,7 @@ func (me *Recipient) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
-func (me *Recipients) MarshalHCL(properties hcl.Properties) error {
+func (me Recipients) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeSlice("recipient", me)
 }
 
