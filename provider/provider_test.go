@@ -29,6 +29,9 @@ import (
 )
 
 func TestIAMClientID(t *testing.T) {
+	if len(os.Getenv("TF_ACC")) > 0 {
+		return
+	}
 	assert := Assert{t}
 	provider := provider.Provider()
 
@@ -56,6 +59,9 @@ func TestIAMClientID(t *testing.T) {
 }
 
 func TestIAMClientSecret(t *testing.T) {
+	if len(os.Getenv("TF_ACC")) > 0 {
+		return
+	}
 	assert := Assert{t}
 	provider := provider.Provider()
 
@@ -82,6 +88,9 @@ func TestIAMClientSecret(t *testing.T) {
 	}
 }
 func TestSSOTokenURL(t *testing.T) {
+	if len(os.Getenv("TF_ACC")) > 0 {
+		return
+	}
 	assert := Assert{t}
 	provider := provider.Provider()
 
