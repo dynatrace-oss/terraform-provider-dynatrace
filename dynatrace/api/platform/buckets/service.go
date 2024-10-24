@@ -20,7 +20,6 @@ package buckets
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -31,8 +30,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets/settings"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 	"golang.org/x/oauth2/clientcredentials"
@@ -46,33 +45,6 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-var httpListener = &crest.HTTPListener{
-	Callback: func(response crest.RequestResponse) {
-		if response.Request != nil {
-			if response.Request.URL != nil {
-				if response.Request.Body != nil {
-					body, _ := io.ReadAll(response.Request.Body)
-					rest.Logger.Println(response.Request.Method, response.Request.URL.String()+"\n    "+string(body))
-				} else {
-					rest.Logger.Println(response.Request.Method, response.Request.URL)
-				}
-			}
-		}
-		if response.Response != nil {
-			if response.Response.Body != nil {
-				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-					body, _ := io.ReadAll(response.Response.Body)
-					if body != nil {
-						rest.Logger.Println(response.Response.StatusCode, string(body))
-					} else {
-						rest.Logger.Println(response.Response.StatusCode)
-					}
-				}
-			}
-		}
-	},
-}
-
 func (me *service) client(_ context.Context) *bucket.Client {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
@@ -82,8 +54,7 @@ func (me *service) client(_ context.Context) *bucket.Client {
 			ClientSecret: me.credentials.Automation.ClientSecret,
 			TokenURL:     me.credentials.Automation.TokenURL,
 		}).
-		WithHTTPListener(httpListener)
-
+		WithHTTPListener(httplog.HTTPListener)
 	bucketClient, _ := factory.BucketClient()
 	return bucketClient
 }

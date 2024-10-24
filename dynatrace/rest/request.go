@@ -36,17 +36,15 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"golang.org/x/sync/semaphore"
 )
 
 const MinWaitTime = 5 * time.Second
 const MaxWaitTime = 1 * time.Minute
 
-var StdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
+var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
 var logger = initLogger()
 var Logger = logger
-var errorLogger = initErrorLogger()
 
 type onDemandWriter struct {
 	logFileName string
@@ -62,32 +60,20 @@ func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 	return odw.file.Write(p)
 }
 
-func initLogger() *log.Logger {
+func initLogger() *RESTLogger {
 	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" && !StdoutLog {
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
 		}
-		return logger
+		return &RESTLogger{log: logger}
 	}
-	return log.New(io.Discard, "", log.LstdFlags)
-}
-
-func initErrorLogger() *log.Logger {
-	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" && !StdoutLog {
-		logger := log.New(os.Stderr, "", log.LstdFlags)
-		if restLogFileName != "true" {
-			logger.SetOutput(&onDemandWriter{logFileName: strings.TrimSuffix(restLogFileName, ".log") + ".err.log"})
-		}
-		return logger
-	}
-	return log.New(io.Discard, "", log.LstdFlags)
+	return &RESTLogger{log: log.New(io.Discard, "", log.LstdFlags)}
 }
 
 func SetLogWriter(writer io.Writer) error {
-	logger.SetOutput(writer)
+	logger.log.SetOutput(writer)
 	return nil
 }
 
@@ -118,6 +104,7 @@ func (me statuscodes) contains(code int) bool {
 }
 
 type request struct {
+	id         string
 	ctx        context.Context
 	client     *defaultClient
 	url        string
@@ -210,15 +197,10 @@ func (me *request) Raw() ([]byte, error) {
 	}
 	// if os.Getenv("DT_REST_DEBUG_REQUEST_PAYLOAD") == "true" && me.payload != nil {
 	if len(data) > 0 {
-		logger.Println(me.method, url+"\n    "+string(data))
-		if StdoutLog {
-			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url+"\n    "+string(data)))
-		}
+		logger.Printf(me.ctx, "[%s] %s %s", me.id, me.method, url)
+		logger.Printf(me.ctx, "[%s] [PAYLOAD] %s", me.id, string(data))
 	} else {
-		logger.Println(me.method, url)
-		if StdoutLog {
-			tflog.Debug(me.ctx, fmt.Sprintf("%s %s", me.method, url))
-		}
+		logger.Printf(me.ctx, "[%s] %s %s", me.id, me.method, url)
 	}
 
 	// } else {
@@ -282,39 +264,19 @@ func (me *request) Raw() ([]byte, error) {
 		me.onResponse(response)
 	}
 	if err != nil {
-		errorLogger.Println(me.method, url+"\n    "+err.Error())
 		return nil, err
 	}
-	requestData := data
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
 	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 		if data != nil {
-			logger.Println(res.Status, string(data))
-			if StdoutLog {
-				tflog.Debug(me.ctx, fmt.Sprintf("%s %s", res.Status, string(data)))
-			}
+			logger.Printf(me.ctx, "[%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
 		} else {
-			logger.Println(res.Status)
-			if StdoutLog {
-				tflog.Debug(me.ctx, res.Status)
-			}
-
+			logger.Printf(me.ctx, "[%s] [RESPONSE] %s", me.id, res.Status)
 		}
 	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
-		if len(requestData) > 0 {
-			errorLogger.Println(me.method, url+"\n    "+string(requestData))
-		} else {
-			errorLogger.Println(me.method, url)
-		}
-		if os.Getenv("DYNATRACE_HTTP_ERROR_RESPONSE_HEADERS") == "true" && len(res.Header) > 0 {
-			for headerName, headerValues := range res.Header {
-				errorLogger.Println("  HEADER", headerName, headerValues)
-			}
-		}
-		errorLogger.Println("  ", res.StatusCode, string(data))
 		var env errorEnvelope
 		if err = json.Unmarshal(data, &env); err == nil && env.Error != nil {
 			return nil, Error{Code: env.Error.Code, Method: me.method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
@@ -411,8 +373,8 @@ func (s *request) execute(ctx context.Context, callback func() (*http.Response, 
 	for response.StatusCode == http.StatusTooManyRequests && currentIteration < maxIterationCount {
 
 		if limit, humanReadableTimestamp, timeInMicroseconds, err := s.extractRateLimitHeaders(response); err == nil {
-			logger.Printf("Rate limit of %s requests/min reached (iteration: %d)", limit, currentIteration+1)
-			logger.Printf("Attempting to sleep until %s", humanReadableTimestamp)
+			logger.Printf(ctx, "Rate limit of %s requests/min reached (iteration: %d)", limit, currentIteration+1)
+			logger.Printf(ctx, "Attempting to sleep until %s", humanReadableTimestamp)
 
 			now := Now()                                            // client time
 			resetTime := MicrosecondsToUnixTime(timeInMicroseconds) // server time

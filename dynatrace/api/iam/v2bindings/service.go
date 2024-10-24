@@ -112,7 +112,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	policyUUIDStruct := struct {
 		PolicyUuids []string `json:"policyUuids"`
 	}{}
-	if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false, &policyUUIDStruct); err != nil {
+	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false, &policyUUIDStruct); err != nil {
 		return err
 	}
 	if levelType == "account" {
@@ -125,14 +125,14 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 
 	for _, policyID := range policyUUIDStruct.PolicyUuids {
 		var bindingsResponse BindingsResponse
-		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
 			return err
 		}
 		if len(bindingsResponse.PolicyBindings) == 0 {
 			return nil
 		}
 
-		resolvedPolicies, err := me.resolvePolicies(policyID, bindingsResponse, stateConfig)
+		resolvedPolicies, err := me.resolvePolicies(ctx, policyID, bindingsResponse, stateConfig)
 		if err != nil {
 			return err
 		}
@@ -142,14 +142,14 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	return nil
 }
 
-func (me *BindingServiceClient) resolvePolicies(uuid string, bindingsResponse BindingsResponse, stateConfig *bindings.PolicyBinding) ([]*bindings.Policy, error) {
+func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string, bindingsResponse BindingsResponse, stateConfig *bindings.PolicyBinding) ([]*bindings.Policy, error) {
 	results := []*bindings.Policy{}
 	for _, policyBinding := range bindingsResponse.PolicyBindings {
 		existingPolicies := []*bindings.Policy{}
 		if stateConfig != nil {
 			existingPolicies = stateConfig.Policies
 		}
-		levelType, levelID, _, err := policies.ResolvePolicyLevel(me, uuid)
+		levelType, levelID, _, err := policies.ResolvePolicyLevel(ctx, me, uuid)
 		if err != nil {
 			return nil, err
 		}
@@ -183,7 +183,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 
 	for _, policy := range policiesList {
 		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
-		if _, err = client.DELETE_MULTI_RESPONSE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), []int{204, 400, 404}, false); err != nil {
+		if _, err = client.DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), []int{204, 400, 404}, false); err != nil {
 			return err
 		}
 	}
@@ -198,7 +198,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 		}
 		retries := 0
 		for retries < 10 {
-			if _, err = client.POST(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
+			if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
 				return err
 			}
 			break
@@ -224,7 +224,7 @@ type ListPolicyBindingsResponse struct {
 	PolicyBindings []PolicyBindingStub `json:"policyBindings"`
 }
 
-func (me *BindingServiceClient) FetchAccountBindings() chan *api.Stub {
+func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *api.Stub {
 	results := make(chan *api.Stub)
 	go func() {
 		defer func() {
@@ -235,7 +235,7 @@ func (me *BindingServiceClient) FetchAccountBindings() chan *api.Stub {
 		var response ListPolicyBindingsResponse
 		client := iam.NewIAMClient(me)
 
-		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false, &response); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false, &response); err != nil {
 			return
 		}
 
@@ -257,7 +257,7 @@ func (me *BindingServiceClient) FetchAccountBindings() chan *api.Stub {
 	return results
 }
 
-func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
+func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) chan *api.Stub {
 	results := make(chan *api.Stub)
 	go func() {
 		defer func() {
@@ -267,14 +267,14 @@ func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
 		client := iam.NewIAMClient(me)
 
 		var environmentIDs []string
-		if environmentIDs, err = policies.GetEnvironmentIDs(me); err != nil {
+		if environmentIDs, err = policies.GetEnvironmentIDs(ctx, me); err != nil {
 			return
 		}
 
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
 			var response ListPolicyBindingsResponse
-			if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/environment/%s/bindings", me.endpointURL, environmentID), 200, false, &response); err != nil {
+			if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/environment/%s/bindings", me.endpointURL, environmentID), 200, false, &response); err != nil {
 				return
 			}
 
@@ -298,8 +298,8 @@ func (me *BindingServiceClient) FetchEnvironmentBindings() chan *api.Stub {
 
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
-	accountStubs := me.FetchAccountBindings()
-	environmentStubs := me.FetchEnvironmentBindings()
+	accountStubs := me.FetchAccountBindings(ctx)
+	environmentStubs := me.FetchEnvironmentBindings(ctx)
 
 	for {
 		if accountStubs == nil && environmentStubs == nil {
@@ -350,7 +350,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		policyUUIDs[policyUUID] = policyUUID
 	}
 	for policyUUID := range policyUUIDs {
-		if _, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), 204, false); err != nil {
 			return err
 		}
 	}

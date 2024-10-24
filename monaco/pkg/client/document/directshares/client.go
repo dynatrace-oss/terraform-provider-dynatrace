@@ -17,6 +17,7 @@
 package directshare
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -66,17 +67,17 @@ func NewClient(url string, client *http.Client) *Client {
 }
 
 // LIST returns all document objects
-func (a Client) LIST(resourceType ResourceType) (res []Response, err error) {
+func (a Client) LIST(ctx context.Context, resourceType ResourceType) (res []Response, err error) {
 	return nil, nil // not implemented
 }
 
 // GET returns one specific automation object
-func (a Client) GET(resourceType ResourceType, id string) (res *Response, err error) {
+func (a Client) GET(ctx context.Context, resourceType ResourceType, id string) (res *Response, err error) {
 	var resp rest.Response
 	var resp_recipients rest.Response
 	var e Response
 
-	if resp, err = rest.Get(a.client, a.url+a.resources[resourceType].Path+"/"+id); err != nil {
+	if resp, err = rest.Get(ctx, a.client, a.url+a.resources[resourceType].Path+"/"+id); err != nil {
 		return nil, fmt.Errorf("unable to get object with ID %s: %w", id, err)
 	}
 
@@ -89,7 +90,7 @@ func (a Client) GET(resourceType ResourceType, id string) (res *Response, err er
 		return &e, fmt.Errorf("unable to unmarshal response: %w", err)
 	}
 
-	if resp_recipients, err = rest.Get(a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients"); err != nil {
+	if resp_recipients, err = rest.Get(ctx, a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients"); err != nil {
 		return &e, fmt.Errorf("unable to get recipients for object with ID %s: %w", id, err)
 	}
 
@@ -109,12 +110,12 @@ func (a Client) GET(resourceType ResourceType, id string) (res *Response, err er
 }
 
 // UPDATE updates a given automation object
-func (a Client) UPDATE(resourceType ResourceType, id string, data []byte) (err error) {
+func (a Client) UPDATE(ctx context.Context, resourceType ResourceType, id string, data []byte) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
 	}
 
-	ds, err := a.GET(resourceType, id)
+	ds, err := a.GET(ctx, resourceType, id)
 	if err != nil {
 		return fmt.Errorf("unable to get object with ID %s: %w", id, err)
 	}
@@ -151,12 +152,12 @@ func (a Client) UPDATE(resourceType ResourceType, id string, data []byte) (err e
 		return fmt.Errorf("unable to marshal toRemove: %w", err)
 	}
 
-	resp_add, err := rest.Post(a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients/add", toAddData)
+	resp_add, err := rest.Post(ctx, a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients/add", toAddData)
 	if err != nil {
 		return fmt.Errorf("unable to update object, add recipientes, with ID %s: %w", id, err)
 	}
 
-	resp_remove, err := rest.Post(a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients/remove", toRemoveData)
+	resp_remove, err := rest.Post(ctx, a.client, a.url+a.resources[resourceType].Path+"/"+id+"/recipients/remove", toRemoveData)
 	if err != nil {
 		return fmt.Errorf("unable to update object, remove recipients, with ID %s: %w", id, err)
 	}
@@ -169,8 +170,8 @@ func (a Client) UPDATE(resourceType ResourceType, id string, data []byte) (err e
 }
 
 // INSERT creates a given document object
-func (a Client) INSERT(resourceType ResourceType, data []byte) (id string, err error) {
-	resp, err := rest.Post(a.client, a.url+a.resources[resourceType].Path, data)
+func (a Client) INSERT(ctx context.Context, resourceType ResourceType, data []byte) (id string, err error) {
+	resp, err := rest.Post(ctx, a.client, a.url+a.resources[resourceType].Path, data)
 	if err != nil {
 		return "", err
 	}
@@ -185,7 +186,7 @@ func (a Client) INSERT(resourceType ResourceType, data []byte) (id string, err e
 }
 
 // DELETE removes a given automation object by ID
-func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
+func (a Client) DELETE(ctx context.Context, resourceType ResourceType, id string) (err error) {
 	if id == "" {
 		return fmt.Errorf("id must be non empty")
 	}
@@ -196,7 +197,7 @@ func (a Client) DELETE(resourceType ResourceType, id string) (err error) {
 
 	var urlParams = make(map[string]string)
 
-	if err = rest.DeleteConfig(a.client, a.url+a.resources[resourceType].Path, id, urlParams); err != nil {
+	if err = rest.DeleteConfig(ctx, a.client, a.url+a.resources[resourceType].Path, id, urlParams); err != nil {
 		return fmt.Errorf("unable to delete object with ID %s: %w", id, err)
 	}
 

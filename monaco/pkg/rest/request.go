@@ -18,6 +18,7 @@ package rest
 
 import (
 	"bytes"
+	"context"
 	"math/rand"
 	"os"
 
@@ -33,20 +34,20 @@ import (
 const MinWaitDuration = 1 * time.Second
 const MaxWaitDuration = 1 * time.Minute
 
-func Get(client *http.Client, url string) (response Response, err error) {
-	req, err := request(http.MethodGet, url)
+func Get(ctx context.Context, client *http.Client, url string) (response Response, err error) {
+	req, err := request(ctx, http.MethodGet, url)
 
 	if err != nil {
 		return response, err
 	}
 
-	return executeRequest(client, req)
+	return executeRequest(ctx, client, req)
 }
 
 // the name delete() would collide with the built-in function
-func DeleteConfig(client *http.Client, url string, id string, urlParams map[string]string) error {
+func DeleteConfig(ctx context.Context, client *http.Client, url string, id string, urlParams map[string]string) error {
 	fullPath := url + "/" + id
-	req, err := request(http.MethodDelete, fullPath)
+	req, err := request(ctx, http.MethodDelete, fullPath)
 
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func DeleteConfig(client *http.Client, url string, id string, urlParams map[stri
 	}
 	req.URL.RawQuery = q.Encode()
 
-	resp, err := executeRequest(client, req)
+	resp, err := executeRequest(ctx, client, req)
 
 	if err != nil {
 		return err
@@ -76,18 +77,18 @@ func DeleteConfig(client *http.Client, url string, id string, urlParams map[stri
 	return nil
 }
 
-func Post(client *http.Client, url string, data []byte) (Response, error) {
-	req, err := requestWithBody(http.MethodPost, url, bytes.NewBuffer(data))
+func Post(ctx context.Context, client *http.Client, url string, data []byte) (Response, error) {
+	req, err := requestWithBody(ctx, http.MethodPost, url, bytes.NewBuffer(data))
 
 	if err != nil {
 		return Response{}, err
 	}
 
-	return executeRequest(client, req)
+	return executeRequest(ctx, client, req)
 }
 
-func PostMultiPartFile(client *http.Client, url string, data *bytes.Buffer, contentType string) (Response, error) {
-	req, err := requestWithBody(http.MethodPost, url, data)
+func PostMultiPartFile(ctx context.Context, client *http.Client, url string, data *bytes.Buffer, contentType string) (Response, error) {
+	req, err := requestWithBody(ctx, http.MethodPost, url, data)
 
 	if err != nil {
 		return Response{}, err
@@ -95,21 +96,21 @@ func PostMultiPartFile(client *http.Client, url string, data *bytes.Buffer, cont
 
 	req.Header.Set("Content-type", contentType)
 
-	return executeRequest(client, req)
+	return executeRequest(ctx, client, req)
 }
 
-func Put(client *http.Client, url string, data []byte) (Response, error) {
-	req, err := requestWithBody(http.MethodPut, url, bytes.NewBuffer(data))
+func Put(ctx context.Context, client *http.Client, url string, data []byte) (Response, error) {
+	req, err := requestWithBody(ctx, http.MethodPut, url, bytes.NewBuffer(data))
 
 	if err != nil {
 		return Response{}, err
 	}
 
-	return executeRequest(client, req)
+	return executeRequest(ctx, client, req)
 }
 
-func PatchMultiPartFile(client *http.Client, url string, data *bytes.Buffer, contentType string, urlParams map[string]string) (Response, error) {
-	req, err := requestWithBody(http.MethodPatch, url, data)
+func PatchMultiPartFile(ctx context.Context, client *http.Client, url string, data *bytes.Buffer, contentType string, urlParams map[string]string) (Response, error) {
+	req, err := requestWithBody(ctx, http.MethodPatch, url, data)
 
 	if err != nil {
 		return Response{}, err
@@ -123,22 +124,22 @@ func PatchMultiPartFile(client *http.Client, url string, data *bytes.Buffer, con
 
 	req.Header.Set("Content-type", contentType)
 
-	return executeRequest(client, req)
+	return executeRequest(ctx, client, req)
 }
 
-func request(method string, url string) (*http.Request, error) {
-	return requestWithBody(method, url, nil)
+func request(ctx context.Context, method string, url string) (*http.Request, error) {
+	return requestWithBody(ctx, method, url, nil)
 }
 
-func requestWithBody(method string, url string, body io.Reader) (*http.Request, error) {
+func requestWithBody(ctx context.Context, method string, url string, body io.Reader) (*http.Request, error) {
 	var data []byte
 	if buf, ok := body.(*bytes.Buffer); ok {
 		data = buf.Bytes()
 	}
 	if len(data) > 0 {
-		rest.Logger.Println(method, url+"\n    "+string(data))
+		rest.Logger.Println(ctx, method, url+"\n    "+string(data))
 	} else {
-		rest.Logger.Println(method, url)
+		rest.Logger.Println(ctx, method, url)
 	}
 	req, err := http.NewRequest(method, url, body)
 
@@ -149,7 +150,7 @@ func requestWithBody(method string, url string, body io.Reader) (*http.Request, 
 	return req, nil
 }
 
-func executeRequest(client *http.Client, request *http.Request) (Response, error) {
+func executeRequest(ctx context.Context, client *http.Client, request *http.Request) (Response, error) {
 
 	request.Header.Set("User-Agent", "Dynatrace Terraform Provider")
 
@@ -165,9 +166,9 @@ func executeRequest(client *http.Client, request *http.Request) (Response, error
 		body, err := io.ReadAll(resp.Body)
 		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 			if body != nil {
-				rest.Logger.Println(resp.Status, string(body))
+				rest.Logger.Println(ctx, resp.Status, string(body))
 			} else {
-				rest.Logger.Println(resp.Status)
+				rest.Logger.Println(ctx, resp.Status)
 			}
 		}
 		return Response{

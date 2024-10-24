@@ -18,16 +18,18 @@
 package policies
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceRead,
+		ReadContext: DataSourceRead,
 		Schema: map[string]*schema.Schema{
 			"accounts": {
 				Type:        schema.TypeList,
@@ -96,7 +98,7 @@ func (l LevelID) Matches(value string) bool {
 	return string(l) == "*" || string(l) == value
 }
 
-func DataSourceRead(d *schema.ResourceData, m any) error {
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var global bool
 	if v, ok := d.GetOk("global"); ok {
 		global = v.(bool)
@@ -116,13 +118,13 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	dataSourceID := fmt.Sprintf("%#v.%#v.%#v", global, environments, accounts)
 	creds, err := config.Credentials(m, config.CredValIAM)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := policies.ServiceWithGloabals(creds)
-	stubs, err := service.ListWithGlobals()
+	stubs, err := service.ListWithGlobals(ctx)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	results := []map[string]any{}
 	if len(stubs) > 0 {
@@ -169,5 +171,5 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	}
 	d.Set("policies", results)
 	d.SetId(dataSourceID)
-	return nil
+	return diag.Diagnostics{}
 }

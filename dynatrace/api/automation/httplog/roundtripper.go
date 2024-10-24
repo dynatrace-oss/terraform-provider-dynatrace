@@ -6,10 +6,11 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/google/uuid"
 )
 
 var lock sync.Mutex
@@ -32,25 +33,26 @@ type RoundTripper struct {
 }
 
 func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	id := uuid.NewString()
 	rt.lock.Lock()
-	rest.Logger.Println(req.Method, req.URL)
-	if rest.StdoutLog {
-		tflog.Debug(req.Context(), fmt.Sprintf("%s %s", req.Method, req.URL.String()))
+	ctx := req.Context()
+	category := ""
+	if strings.Contains(req.URL.String(), "oauth2") {
+		category = " [OAUTH]"
 	}
+
+	rest.Logger.Println(ctx, fmt.Sprintf("[%s]%s %s %s", id, category, req.Method, req.URL.String()))
 	if req.Body != nil {
 		buf := new(bytes.Buffer)
 		io.Copy(buf, req.Body)
 		data := buf.Bytes()
-		rest.Logger.Println("  ", string(data))
-		if rest.StdoutLog {
-			tflog.Debug(req.Context(), fmt.Sprintf("  %s", string(data)))
-		}
+		rest.Logger.Printf(ctx, "[%s]%s [PAYLOAD] %s", id, category, string(data))
 		req.Body = io.NopCloser(bytes.NewBuffer(data))
 	}
 	rt.lock.Unlock()
 	resp, err := rt.RoundTripper.RoundTrip(req)
 	if err != nil {
-		rest.Logger.Println(err.Error())
+		rest.Logger.Printf(ctx, "[%s]%s [ERROR] %s", id, category, err.Error())
 	}
 	if resp != nil {
 		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
@@ -59,15 +61,11 @@ func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 				io.Copy(buf, resp.Body)
 				data := buf.Bytes()
 				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				rest.Logger.Println(resp.Status, string(data))
-				if rest.StdoutLog {
-					tflog.Debug(req.Context(), fmt.Sprintf("%v %v", resp.Status, string(data)))
+				if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" || category != " [OAUTH]" {
+					rest.Logger.Printf(ctx, "[%s]%s [RESPONSE] %v %v", id, category, resp.Status, string(data))
 				}
 			} else {
-				rest.Logger.Println(resp.Status)
-				if rest.StdoutLog {
-					tflog.Debug(req.Context(), resp.Status)
-				}
+				rest.Logger.Printf(ctx, "[%s]%s [RESPONSE] %s", id, category, resp.Status)
 			}
 		}
 	}

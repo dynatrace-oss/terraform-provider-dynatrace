@@ -74,7 +74,7 @@ func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (
 	levelType, levelID := getLevel(v)
 
 	client := iam.NewIAMClient(me)
-	if responseBytes, err = client.POST(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, levelType, levelID), v, 201, false); err != nil {
+	if responseBytes, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, levelType, levelID), v, 201, false); err != nil {
 		return nil, err
 	}
 	var pcr PolicyCreateResponse
@@ -82,7 +82,7 @@ func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (
 		return nil, err
 	}
 	v.UUID = pcr.UUID
-	RegisterPolicyLevel(me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
+	RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
@@ -111,7 +111,7 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 	client := iam.NewIAMClient(me)
 	var policyName string
 
-	levelType, levelID, policyName, err = ResolvePolicyLevel(me, uuid)
+	levelType, levelID, policyName, err = ResolvePolicyLevel(ctx, me, uuid)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 		return nil
 	}
 
-	if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 200, false, &v); err != nil {
+	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 200, false, &v); err != nil {
 		return err
 	}
 	if levelType == "account" {
@@ -136,7 +136,7 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 		}
 	}
 	v.UUID = uuid
-	RegisterPolicyLevel(me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
+	RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return nil
 }
 
@@ -147,13 +147,13 @@ func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *poli
 	if err != nil {
 		return err
 	}
-	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	levelType, levelID, _, err = ResolvePolicyLevel(ctx, me, uuid)
 	if err != nil {
 		return err
 	}
 	client := iam.NewIAMClient(me)
 
-	if _, err = client.PUT(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), user, 204, false); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), user, 204, false); err != nil {
 		return err
 	}
 	return nil
@@ -177,14 +177,14 @@ type ListPoliciesResponse struct {
 	Policies []PolicyStub `json:"policies"`
 }
 
-func listForEnvironment(auth iam.Authenticator, environmentID string) (results chan *api.Stub, err error) {
+func listForEnvironment(ctx context.Context, auth iam.Authenticator, environmentID string) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
 		client := iam.NewIAMClient(auth)
 
 		var response ListPoliciesResponse
-		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/environment/%s/policies", auth.EndpointURL(), environmentID), 200, false, &response); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/environment/%s/policies", auth.EndpointURL(), environmentID), 200, false, &response); err != nil {
 			return
 		}
 
@@ -195,10 +195,10 @@ func listForEnvironment(auth iam.Authenticator, environmentID string) (results c
 	return results, nil
 }
 
-func listForEnvironments(auth iam.Authenticator) (results chan *api.Stub, err error) {
+func listForEnvironments(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 	var environmentIDs []string
-	if environmentIDs, err = GetEnvironmentIDs(auth); err != nil {
+	if environmentIDs, err = GetEnvironmentIDs(ctx, auth); err != nil {
 		return nil, err
 	}
 	var wg sync.WaitGroup
@@ -206,7 +206,7 @@ func listForEnvironments(auth iam.Authenticator) (results chan *api.Stub, err er
 	for _, environmentID := range environmentIDs {
 		wg.Add(1)
 		var envIdxChan chan *api.Stub
-		if envIdxChan, err = listForEnvironment(auth, environmentID); err != nil {
+		if envIdxChan, err = listForEnvironment(ctx, auth, environmentID); err != nil {
 			wg.Done()
 			return nil, err
 		}
@@ -226,14 +226,14 @@ func listForEnvironments(auth iam.Authenticator) (results chan *api.Stub, err er
 	return results, nil
 }
 
-func listForAccount(auth iam.Authenticator) (results chan *api.Stub, err error) {
+func listForAccount(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub, err error) {
 	client := iam.NewIAMClient(auth)
 	accountID := strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
 		var response ListPoliciesResponse
-		if err = iam.GET(client, fmt.Sprintf("%s/iam/v1/repo/account/%s/policies", auth.EndpointURL(), accountID), 200, false, &response); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/policies", auth.EndpointURL(), accountID), 200, false, &response); err != nil {
 			return
 		}
 
@@ -244,16 +244,16 @@ func listForAccount(auth iam.Authenticator) (results chan *api.Stub, err error) 
 	return results, nil
 }
 
-func list(auth iam.Authenticator) (results chan *api.Stub, err error) {
+func list(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 
 	var envChan chan *api.Stub
 	var accChan chan *api.Stub
 
-	if envChan, err = listForEnvironments(auth); err != nil {
+	if envChan, err = listForEnvironments(ctx, auth); err != nil {
 		return nil, err
 	}
-	if accChan, err = listForAccount(auth); err != nil {
+	if accChan, err = listForAccount(ctx, auth); err != nil {
 		return nil, err
 	}
 
@@ -296,7 +296,7 @@ func list(auth iam.Authenticator) (results chan *api.Stub, err error) {
 
 func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	stubs := api.Stubs{}
-	policyLevels, err := FetchAllPolicyLevels(me)
+	policyLevels, err := FetchAllPolicyLevels(ctx, me)
 	if err != nil {
 		return stubs, err
 	}
@@ -309,9 +309,9 @@ func (me *PolicyServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *PolicyServiceClient) ListWithGlobals() (api.Stubs, error) {
+func (me *PolicyServiceClient) ListWithGlobals(ctx context.Context) (api.Stubs, error) {
 	stubs := api.Stubs{}
-	policyLevels, err := FetchAllPolicyLevels(me)
+	policyLevels, err := FetchAllPolicyLevels(ctx, me)
 	if err != nil {
 		return stubs, err
 	}
@@ -331,12 +331,12 @@ func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	levelType, levelID, _, err = ResolvePolicyLevel(me, uuid)
+	levelType, levelID, _, err = ResolvePolicyLevel(ctx, me, uuid)
 	if err != nil {
 		return err
 	}
 
-	_, err = iam.NewIAMClient(me).DELETE(fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 204, false)
+	_, err = iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, levelType, levelID, uuid), 204, false)
 	return err
 }
 

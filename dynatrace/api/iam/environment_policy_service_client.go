@@ -1,5 +1,7 @@
 package iam
 
+import "context"
+
 type EnvironmentPolicyServiceClient struct {
 	PolicyClient *BasePolicyServiceClient
 }
@@ -8,26 +10,26 @@ func NewEnvironmentPolicyService(clientID string, accountID string, clientSecret
 	return &EnvironmentPolicyServiceClient{PolicyClient: NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)}
 }
 
-func (me *EnvironmentPolicyServiceClient) CREATE(policy *Policy) (string, error) {
-	return me.PolicyClient.CREATE(PolicyLevels.Environment, me.PolicyClient.accountID, policy)
+func (me *EnvironmentPolicyServiceClient) CREATE(ctx context.Context, policy *Policy) (string, error) {
+	return me.PolicyClient.CREATE(ctx, PolicyLevels.Environment, me.PolicyClient.accountID, policy)
 }
 
-func (me *EnvironmentPolicyServiceClient) GET(levelID string, uuid string) (*Policy, error) {
-	return me.PolicyClient.GET(PolicyLevels.Environment, me.PolicyClient.accountID, uuid)
+func (me *EnvironmentPolicyServiceClient) GET(ctx context.Context, levelID string, uuid string) (*Policy, error) {
+	return me.PolicyClient.GET(ctx, PolicyLevels.Environment, me.PolicyClient.accountID, uuid)
 }
 
-func (me *EnvironmentPolicyServiceClient) UPDATE(policy *Policy, uuid string) error {
-	return me.PolicyClient.UPDATE(PolicyLevels.Environment, me.PolicyClient.accountID, policy, uuid)
+func (me *EnvironmentPolicyServiceClient) UPDATE(ctx context.Context, policy *Policy, uuid string) error {
+	return me.PolicyClient.UPDATE(ctx, PolicyLevels.Environment, me.PolicyClient.accountID, policy, uuid)
 }
 
-func (me *EnvironmentPolicyServiceClient) List() ([]PolicyStub, error) {
-	return me.PolicyClient.List(PolicyLevels.Environment, me.PolicyClient.accountID)
+func (me *EnvironmentPolicyServiceClient) List(ctx context.Context) ([]PolicyStub, error) {
+	return me.PolicyClient.List(ctx, PolicyLevels.Environment, me.PolicyClient.accountID)
 }
 
-func (me *EnvironmentPolicyServiceClient) LIST(level PolicyLevel, levelID string) ([]string, error) {
-	return me.PolicyClient.LIST(PolicyLevels.Environment, me.PolicyClient.accountID)
+func (me *EnvironmentPolicyServiceClient) LIST(ctx context.Context, level PolicyLevel, levelID string) ([]string, error) {
+	return me.PolicyClient.LIST(ctx, PolicyLevels.Environment, me.PolicyClient.accountID)
 }
 
-func (me *EnvironmentPolicyServiceClient) DELETE(level PolicyLevel, levelID string, uuid string) error {
-	return me.PolicyClient.DELETE(PolicyLevels.Environment, me.PolicyClient.accountID, uuid)
+func (me *EnvironmentPolicyServiceClient) DELETE(ctx context.Context, level PolicyLevel, levelID string, uuid string) error {
+	return me.PolicyClient.DELETE(ctx, PolicyLevels.Environment, me.PolicyClient.accountID, uuid)
 }

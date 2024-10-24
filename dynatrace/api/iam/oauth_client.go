@@ -1,6 +1,7 @@
 package iam
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/google/uuid"
 )
 
 type Authenticator interface {
@@ -40,7 +42,7 @@ const errMsgAccountIDMissing = ` No Account ID configured. Please specify either
 const errMsgClientSecretMissing = ` No OAuth Client Secret configured. Please specify either one of these environment variables: IAM_CLIENT_SECRET, DYNATRACE_IAM_CLIENT_SECRET, DT_IAM_CLIENT_SECRET, DYNATRACE_CLIENT_SECRET, DT_CLIENT_SECRET`
 const errMsgTokenURLMissing = ` No OAuth Token URL configured. Please specify either one of these environment variables: IAM_TOKEN_URL, DYNATRACE_IAM_TOKEN_URL, DT_IAM_TOKEN_URL, DYNATRACE_TOKEN_URL, DT_TOKEN_URL`
 
-func getBearer(auth Authenticator, forceNew bool) (string, error) {
+func getBearer(ctx context.Context, auth Authenticator, forceNew bool) (string, error) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -92,15 +94,16 @@ func getBearer(auth Authenticator, forceNew bool) (string, error) {
 	if body, err = io.ReadAll(httpRes.Body); err != nil {
 		return "", err
 	}
+	debugPayloadStr := fmt.Sprintf(
+		"grant_type=client_credentials&client_id=%s&client_secret=%s",
+		url.QueryEscape(auth.ClientID()),
+		url.QueryEscape("<hidden>"),
+	)
+	id := uuid.NewString()
+	rest.Logger.Printf(ctx, "[%s] [OAUTH] POST %s", id, tokenURL)
+	rest.Logger.Printf(ctx, "[%s] [OAUTH] [PAYLOAD] %s", id, debugPayloadStr)
 	if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" {
-		debugPayloadStr := fmt.Sprintf(
-			"grant_type=client_credentials&client_id=%s&client_secret=%s",
-			url.QueryEscape(auth.ClientID()),
-			url.QueryEscape("<hidden>"),
-		)
-		rest.Logger.Println("POST", tokenURL)
-		rest.Logger.Println("  " + debugPayloadStr)
-		rest.Logger.Println("  -> " + string(body))
+		rest.Logger.Printf(ctx, "[%s] -> %s", id, string(body))
 	}
 	if httpRes.StatusCode == 400 {
 		return "", errors.New(msgInvalidOAuthCredentials)

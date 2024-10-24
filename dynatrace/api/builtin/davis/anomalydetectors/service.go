@@ -21,10 +21,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -50,33 +48,6 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-var httpListener = &crest.HTTPListener{
-	Callback: func(response crest.RequestResponse) {
-		if response.Request != nil {
-			if response.Request.URL != nil {
-				if response.Request.Body != nil {
-					body, _ := io.ReadAll(response.Request.Body)
-					rest.Logger.Println(response.Request.Method, response.Request.URL.String()+"\n    "+string(body))
-				} else {
-					rest.Logger.Println(response.Request.Method, response.Request.URL)
-				}
-			}
-		}
-		if response.Response != nil {
-			if response.Response.Body != nil {
-				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-					body, _ := io.ReadAll(response.Response.Body)
-					if body != nil {
-						rest.Logger.Println(response.Response.StatusCode, string(body))
-					} else {
-						rest.Logger.Println(response.Response.StatusCode)
-					}
-				}
-			}
-		}
-	},
-}
-
 func (me *service) TokenClient() *crest.Client {
 	var parsedURL *url.URL
 	parsedURL, _ = url.Parse(me.credentials.URL)
@@ -84,7 +55,7 @@ func (me *service) TokenClient() *crest.Client {
 	tokenClient := crest.NewClient(
 		parsedURL,
 		http.DefaultClient,
-		crest.WithHTTPListener(httpListener),
+		crest.WithHTTPListener(httplog.HTTPListener),
 	)
 
 	tokenClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
@@ -109,7 +80,7 @@ func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Cli
 				ClientSecret: me.credentials.Automation.ClientSecret,
 				TokenURL:     me.credentials.Automation.TokenURL,
 				AuthStyle:    oauth2.AuthStyleInParams}),
-		crest.WithHTTPListener(httpListener),
+		crest.WithHTTPListener(httplog.HTTPListener),
 	)
 
 	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")

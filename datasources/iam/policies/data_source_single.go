@@ -18,14 +18,17 @@
 package policies
 
 import (
+	"context"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceSingle() *schema.Resource {
 	return &schema.Resource{
-		Read: DataSourceSingleRead,
+		ReadContext: DataSourceSingleRead,
 		Schema: map[string]*schema.Schema{
 			"account": {
 				Type:        schema.TypeString,
@@ -52,7 +55,7 @@ func DataSourceSingle() *schema.Resource {
 	}
 }
 
-func DataSourceSingleRead(d *schema.ResourceData, m any) error {
+func DataSourceSingleRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
@@ -72,13 +75,13 @@ func DataSourceSingleRead(d *schema.ResourceData, m any) error {
 
 	creds, err := config.Credentials(m, config.CredValIAM)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	service := policies.ServiceWithGloabals(creds)
-	stubs, err := service.ListWithGlobals()
+	stubs, err := service.ListWithGlobals(ctx)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
@@ -91,23 +94,23 @@ func DataSourceSingleRead(d *schema.ResourceData, m any) error {
 				if global.Matches(levelID) {
 					d.SetId(stub.ID)
 					d.Set("uuid", uuid)
-					return nil
+					return diag.Diagnostics{}
 				}
 			case "environment":
 				if environment.Matches(levelID) {
 					d.SetId(stub.ID)
 					d.Set("uuid", uuid)
-					return nil
+					return diag.Diagnostics{}
 				}
 			case "account":
 				if account.Matches(levelID) {
 					d.SetId(stub.ID)
 					d.Set("uuid", uuid)
-					return nil
+					return diag.Diagnostics{}
 				}
 			}
 		}
 	}
 	d.SetId("")
-	return nil
+	return diag.Diagnostics{}
 }

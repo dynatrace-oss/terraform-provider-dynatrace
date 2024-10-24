@@ -18,22 +18,30 @@
 package httplog
 
 import (
+	"context"
 	"io"
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/google/uuid"
 )
 
 var HTTPListener = &crest.HTTPListener{
 	Callback: func(response crest.RequestResponse) {
+		id := uuid.NewString()
+		ctx := context.TODO()
+		if response.Request != nil && response.Request.Context() != nil {
+			ctx = response.Request.Context()
+		}
 		if response.Request != nil {
 			if response.Request.URL != nil {
 				if response.Request.Body != nil {
 					body, _ := io.ReadAll(response.Request.Body)
-					rest.Logger.Println(response.Request.Method, response.Request.URL.String()+"\n    "+string(body))
+					rest.Logger.Printf(ctx, "[%s] %s %s", id, response.Request.Method, response.Request.URL.String())
+					rest.Logger.Printf(ctx, "[%s] [PAYLOAD] %s", id, string(body))
 				} else {
-					rest.Logger.Println(response.Request.Method, response.Request.URL)
+					rest.Logger.Printf(ctx, "[%s] %s %s", id, response.Request.Method, response.Request.URL.String())
 				}
 			}
 		}
@@ -42,9 +50,9 @@ var HTTPListener = &crest.HTTPListener{
 				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 					body, _ := io.ReadAll(response.Response.Body)
 					if body != nil {
-						rest.Logger.Println(response.Response.StatusCode, string(body))
+						rest.Logger.Printf(ctx, "[%s] [RESPONSE] %d %s", id, response.Response.StatusCode, string(body))
 					} else {
-						rest.Logger.Println(response.Response.StatusCode)
+						rest.Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.Response.StatusCode)
 					}
 				}
 			}

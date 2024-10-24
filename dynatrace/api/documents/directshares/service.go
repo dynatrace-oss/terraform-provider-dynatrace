@@ -51,7 +51,7 @@ func (me *service) client(ctx context.Context) *directshare.Client {
 
 func (me *service) Get(ctx context.Context, id string, v *directshares.DirectShare) (err error) {
 	var result *directshare.Response
-	if result, err = me.client(ctx).GET(directshare.DirectShares, id); err != nil {
+	if result, err = me.client(ctx).GET(ctx, directshare.DirectShares, id); err != nil {
 		return err
 	}
 
@@ -85,7 +85,7 @@ func (me *service) Create(ctx context.Context, v *directshares.DirectShare) (stu
 		return nil, err
 	}
 
-	if id, err = me.client(ctx).INSERT(directshare.DirectShares, data); err != nil {
+	if id, err = me.client(ctx).INSERT(ctx, directshare.DirectShares, data); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id}, nil
@@ -98,11 +98,11 @@ func (me *service) Update(ctx context.Context, id string, v *directshares.Direct
 		return err
 	}
 
-	return me.client(ctx).UPDATE(directshare.DirectShares, id, data)
+	return me.client(ctx).UPDATE(ctx, directshare.DirectShares, id, data)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return me.client(ctx).DELETE(directshare.DirectShares, id)
+	return me.client(ctx).DELETE(ctx, directshare.DirectShares, id)
 }
 
 func (me *service) New() *directshares.DirectShare {
