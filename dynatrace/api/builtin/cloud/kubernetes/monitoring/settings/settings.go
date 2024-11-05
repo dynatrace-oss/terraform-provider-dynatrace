@@ -82,7 +82,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"pvc_monitoring_enabled": {
 			Type:        schema.TypeBool,
 			Description: "To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.",
-			Required:    true,
+			Optional:    true,
+			Deprecated:  "This attribute is deprecated, see [this community guide](https://dt-url.net/v2200u4m) for details.",
 		},
 		"scope": {
 			Type:        schema.TypeString,
