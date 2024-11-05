@@ -148,6 +148,11 @@
 						},
 						{
 							"type": "NO_WHITESPACE"
+						},
+						{
+							"customMessage": "App ID must not start with 'dynatrace.'",
+							"pattern": "^(?!dynatrace\\.).*$",
+							"type": "PATTERN"
 						}
 					],
 					"default": "",
@@ -181,5 +186,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2"
+	"version": "2.3"
 }

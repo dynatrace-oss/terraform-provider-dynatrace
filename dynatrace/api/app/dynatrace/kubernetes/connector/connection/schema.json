@@ -9,8 +9,8 @@
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Available connections for [Kubernetes Automation with Workflows](https://dt-url.net/qx03q4d). A connection is bound to a Kubernetes cluster where the workflow actions operate. We recommend following the steps described [here](https://dt-url.net/mf03qvf) using the Dynatrace Operator, which automatically creates the connection.",
-	"displayName": "Kubernetes Automation Connections (Preview)",
+	"description": "Available connections for [Kubernetes Automation (Preview)](https://dt-url.net/qx03q4d). A connection is bound to a Kubernetes cluster where the workflow actions operate. We recommend following the steps described [here](https://dt-url.net/mf03qvf) using the Dynatrace Operator, which automatically creates the connection.",
+	"displayName": "Kubernetes Automation (Preview)",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
@@ -135,5 +135,5 @@
 			]
 		}
 	},
-	"version": "0.1.9"
+	"version": "0.1.10"
 }

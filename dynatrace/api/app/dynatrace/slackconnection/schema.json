@@ -10,13 +10,13 @@
 		}
 	],
 	"description": "Authentication details for Slack API",
-	"displayName": "Slack Connections",
+	"displayName": "Slack",
 	"documentation": "(for more information read the [Slack api documentation](https://api.slack.com/authentication/basics/ \"Visit Slack document\"))",
 	"dynatrace": "1",
 	"enums": {},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "Slack for Workflows"
+		"appName": "Slack"
 	},
 	"multiObject": true,
 	"ordered": false,
@@ -31,7 +31,7 @@
 				}
 			],
 			"default": "",
-			"description": "The name of the Slack connection",
+			"description": "Provide a unique and clearly identifiable connection name to your Slack App.",
 			"displayName": "Connection name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -59,7 +59,7 @@
 				}
 			],
 			"default": "",
-			"description": "The bot token obtained from the Slack App Management UI",
+			"description": "The bot token obtained from the Slack App Management UI.",
 			"displayName": "Bot token",
 			"documentation": "Bot token in the format `xoxb-******`",
 			"maxObjects": 1,
@@ -79,5 +79,5 @@
 	],
 	"schemaId": "app:dynatrace.slack:connection",
 	"types": {},
-	"version": "0.0.13"
+	"version": "0.0.14"
 }
