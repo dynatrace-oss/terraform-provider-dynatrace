@@ -63,6 +63,7 @@ import (
 	web_app_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/web"
 	service_anomalies_v2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services"
 	apidetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apis/detectionrules"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appengineregistry/clouddevelopmentenvironments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionadvancedconfig"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionallowlistconfig"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionsettings"
@@ -1361,8 +1362,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.DevObsDataMasking: NewResourceDescriptor(devobsmasking.Service),
-	ResourceTypes.DavisCoPilot:      NewResourceDescriptor(dataminingblocklist.Service),
+	ResourceTypes.DevObsDataMasking:            NewResourceDescriptor(devobsmasking.Service),
+	ResourceTypes.DavisCoPilot:                 NewResourceDescriptor(dataminingblocklist.Service),
+	ResourceTypes.CloudDevelopmentEnvironments: NewResourceDescriptor(clouddevelopmentenvironments.Service),
 }
 
 type ResourceExclusion struct {

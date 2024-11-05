@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_cloud_development_environments Resource - terraform-provider-dynatrace"
+subcategory: "Environment Settings"
+description: |-
+  The resource `dynatrace_cloud_development_environments` covers configuration for cloud development environments
+---
+
+# dynatrace_cloud_development_environments (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- AppEngine - https://docs.dynatrace.com/docs/platform/appengine
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:app-engine-registry.cloud-development-environments`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_cloud_development_environments` downloads existing cloud development environments configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/appengineregistry/clouddevelopmentenvironments/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

@@ -1,0 +1,65 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "In order to enable Cloud Development Environment (CDE) for application development, the respective domains need to be configured here.",
+	"displayName": "Cloud Development Environments",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cloudDevelopmentEnvironments": {
+			"description": "The URL to allow app development from. E.g. `https://*.my-company.my-cde-provider.com`.",
+			"displayName": "Cloud Development Environments",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"customMessage": "Not a valid URL. Use \"https://[*.]host[:port]\"",
+						"pattern": "^https://(\\x2a\\.)?[^\\s/?#.\\x2a:]+?(\\.[^\\s/?#.\\x2a:]+?)*(:[0-9]{1,5})?$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "Special characters [;'] are not supported",
+						"pattern": "^[^;']+$",
+						"type": "PATTERN"
+					},
+					{
+						"maxLength": 500,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"customMessage": "Not a valid URI",
+						"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "Not a valid http(s) URL",
+						"pattern": "^https?://.*$",
+						"type": "PATTERN"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"subType": "url",
+				"type": "text"
+			},
+			"maxObjects": 20,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaGroups": [
+		"group:dt-apps-development",
+		"group:preferences"
+	],
+	"schemaId": "builtin:app-engine-registry.cloud-development-environments",
+	"types": {},
+	"version": "1.1"
+}
