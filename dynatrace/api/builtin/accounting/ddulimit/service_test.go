@@ -19,10 +19,8 @@ package ddulimit_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDDUPools(t *testing.T) {
-	api.TestAcc(t)
+	t.Skip() // Test tenant on DPS - not applicable. Error: Not allowed for DPS_GA license
 }
