@@ -57,8 +57,8 @@ type supportedServicesResponse struct {
 	Services []*SupportedService `json:"services"`
 }
 
-func (me *SupportedServicesService) IsBuiltIn(name string) (bool, error) {
-	s, e := me.Get(context.Background(), name)
+func (me *SupportedServicesService) IsBuiltIn(ctx context.Context, name string) (bool, error) {
+	s, e := me.Get(ctx, name)
 	if e != nil {
 		return false, e
 	}

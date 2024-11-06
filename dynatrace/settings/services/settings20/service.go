@@ -328,7 +328,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 				}
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
-					if itemName, err = me.options.Name(item.ObjectID, newItem); err != nil {
+					if itemName, err = me.options.Name(ctx, item.ObjectID, newItem); err != nil {
 						itemName = settings.Name(newItem, item.ObjectID)
 					}
 				} else {

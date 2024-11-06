@@ -20,7 +20,6 @@ package documents
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -42,13 +41,7 @@ type service struct {
 }
 
 func (me *service) client() *docclient.Client {
-	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
-	}
+	httplog.InstallRoundTripper()
 
 	clientsFactory := clients.Factory().
 		WithPlatformURL(me.credentials.Automation.EnvironmentURL).

@@ -31,7 +31,7 @@ func (mrd mockResourceData) Get(k string) any {
 }
 
 func TestProviderConfigure(t *testing.T) {
-	ctx := context.TODO()
+	ctx := context.Background()
 	d := mockResourceData{
 		"dt_env_url":   "https://something.live.dynatrace.com",
 		"dt_api_token": "faketoken",

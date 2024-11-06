@@ -56,7 +56,7 @@ func init() {
 }
 
 func TestAccPreCheck(t *testing.T) {
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	if v := os.Getenv("DYNATRACE_ENV_URL"); v == "" {
 		t.Fatalf("[WARN] DYNATRACE_ENV_URL has not been set for acceptance tests")

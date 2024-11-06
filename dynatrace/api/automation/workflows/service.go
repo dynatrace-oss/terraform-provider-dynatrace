@@ -20,7 +20,6 @@ package workflows
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -46,15 +45,9 @@ type service struct {
 
 var R automation.Response
 
-func (me *service) client() *automation.Client {
-	if _, ok := http.DefaultClient.Transport.(*httplog.RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &httplog.RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
-	}
-	httpClient := auth.NewOAuthClient(context.TODO(), auth.OauthCredentials{
+func (me *service) client(ctx context.Context) *automation.Client {
+	httplog.InstallRoundTripper()
+	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
 		ClientID:     me.credentials.Automation.ClientID,
 		ClientSecret: me.credentials.Automation.ClientSecret,
 		TokenURL:     me.credentials.Automation.TokenURL,
@@ -68,7 +61,7 @@ func (me *service) client() *automation.Client {
 func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
 	var err error
 	var response automation.Response
-	if response, err = me.client().Get(context.TODO(), apiClient.Workflows, id); err != nil {
+	if response, err = me.client(ctx).Get(ctx, apiClient.Workflows, id); err != nil {
 		return err
 	}
 	if response.StatusCode != 200 {
@@ -92,7 +85,7 @@ type WorkflowStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	listResponse, err := me.client().List(context.TODO(), apiClient.Workflows)
+	listResponse, err := me.client(ctx).List(ctx, apiClient.Workflows)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +113,7 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 		return nil, err
 	}
 	var response automation.Response
-	if response, err = me.client().Create(context.TODO(), apiClient.Workflows, data); err != nil {
+	if response, err = me.client(ctx).Create(ctx, apiClient.Workflows, data); err != nil {
 		return nil, err
 	}
 	if response.StatusCode == 201 {
@@ -143,7 +136,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 		return err
 	}
 	var response automation.Response
-	if response, err = me.client().Update(context.TODO(), apiClient.Workflows, id, data); err != nil {
+	if response, err = me.client(ctx).Update(ctx, apiClient.Workflows, id, data); err != nil {
 		return err
 	}
 	if response.StatusCode == 200 {
@@ -157,7 +150,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.client().Delete(context.TODO(), apiClient.Workflows, id)
+	response, err := me.client(ctx).Delete(ctx, apiClient.Workflows, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil
 	}

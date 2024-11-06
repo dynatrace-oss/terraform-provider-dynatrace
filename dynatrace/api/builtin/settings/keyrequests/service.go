@@ -40,9 +40,9 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*keyrequest
 		topologyService = cache.Read(toposervices.Service(credentials))
 	}
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.KeyRequest]{
-		Name: func(id string, v *keyrequests.KeyRequest) (string, error) {
+		Name: func(ctx context.Context, id string, v *keyrequests.KeyRequest) (string, error) {
 			service := settings.NewSettings(topologyService)
-			if err := topologyService.Get(context.Background(), v.ServiceID, service); err != nil {
+			if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
 				return "", err
 			}
 			return "Key Requests for " + *service.DisplayName, nil

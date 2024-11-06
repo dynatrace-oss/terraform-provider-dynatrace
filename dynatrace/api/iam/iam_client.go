@@ -2,6 +2,7 @@ package iam
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/google/uuid"
 )
 
 type IAMError struct {
@@ -29,11 +31,11 @@ func (me IAMError) Error() string {
 }
 
 type IAMClient interface {
-	POST(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	PUT(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	GET(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	DELETE(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error)
+	POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
+	PUT(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
+	GET(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
+	DELETE(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
+	DELETE_MULTI_RESPONSE(ctx context.Context, url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error)
 }
 
 type iamClient struct {
@@ -44,11 +46,11 @@ func NewIAMClient(auth Authenticator) IAMClient {
 	return &iamClient{auth}
 }
 
-func (me *iamClient) authenticate(httpRequest *http.Request, forceNew bool) error {
+func (me *iamClient) authenticate(ctx context.Context, httpRequest *http.Request, forceNew bool) error {
 	var bearerToken string
 	var err error
 
-	if bearerToken, err = getBearer(me.auth, forceNew); err != nil {
+	if bearerToken, err = getBearer(ctx, me.auth, forceNew); err != nil {
 		return err
 	}
 
@@ -66,24 +68,24 @@ func (me *iamClient) authenticate(httpRequest *http.Request, forceNew bool) erro
 	return nil
 }
 
-func (me *iamClient) POST(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
+func (me *iamClient) POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+	return me.request(ctx, url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
 }
 
-func (me *iamClient) PUT(url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
+func (me *iamClient) PUT(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+	return me.request(ctx, url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
 }
 
-func (me *iamClient) GET(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
+func (me *iamClient) GET(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+	return me.request(ctx, url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
 }
 
-func (me *iamClient) DELETE(url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
+func (me *iamClient) DELETE(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+	return me.request(ctx, url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
 }
 
-func (me *iamClient) DELETE_MULTI_RESPONSE(url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	return me.request(url, http.MethodDelete, expectedResponseCodes, forceNewBearer, 0, nil, nil)
+func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
+	return me.request(ctx, url, http.MethodDelete, expectedResponseCodes, forceNewBearer, 0, nil, nil)
 }
 
 type RateLimiter struct {
@@ -135,25 +137,19 @@ func (rl *RateLimiter) CanCall() bool {
 
 var limiter = NewRateLimiter()
 
-func httplog(v ...any) {
-	currentTime := time.Now()
-	formattedTime := currentTime.Format("2006-01-02 15:04:05")
-	tt := fmt.Sprintf("[HTTP] [%s]", formattedTime)
-	rest.Logger.Println(append([]any{tt}, v...)...)
-}
-
-func (me *iamClient) request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) request(ctx context.Context, url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
 	for {
 		if limiter.CanCall() {
-			return me._request(url, method, expectedResponseCodes, forceNewBearer, forceNewBearerRetryCount, payload, headers)
+			return me._request(ctx, url, method, expectedResponseCodes, forceNewBearer, forceNewBearerRetryCount, payload, headers)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
-func (me *iamClient) _request(url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) _request(ctx context.Context, url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
 	// httplog(fmt.Sprintf("[%s] %s", method, url))
 
+	id := uuid.NewString()
 	num504Retries := 0
 	sleepTime429 := int64(500)
 
@@ -164,13 +160,13 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 		var responseBytes []byte
 		var requestBody []byte
 
-		rest.Logger.Println(method, url)
+		rest.Logger.Printf(ctx, "[%s] %s %s", id, method, url)
 
 		if requestBody, err = json.Marshal(payload); err != nil {
 			return nil, err
 		}
 		if payload != nil {
-			rest.Logger.Println("  ", string(requestBody))
+			rest.Logger.Printf(ctx, "[%s] [PAYLOAD] %s", id, string(requestBody))
 		}
 
 		var body io.Reader
@@ -183,7 +179,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 			return nil, err
 		}
 
-		if err = me.authenticate(httpRequest, forceNewBearer); err != nil {
+		if err = me.authenticate(ctx, httpRequest, forceNewBearer); err != nil {
 			return nil, err
 		}
 
@@ -198,7 +194,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 		if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
 			return nil, err
 		}
-		rest.Logger.Println("  ", httpResponse.StatusCode, string(responseBytes))
+		rest.Logger.Printf(ctx, "[%s] [RESPONSE] %d %s", id, httpResponse.StatusCode, string(responseBytes))
 
 		if httpResponse.StatusCode == 504 {
 			// httplog("-------------------- FIVE-O-FOUR --------------------")
@@ -229,7 +225,7 @@ func (me *iamClient) _request(url string, method string, expectedResponseCodes [
 			if err = json.Unmarshal(responseBytes, &iamErr); err == nil {
 				if (forceNewBearerRetryCount < 20) && iamErr.Error() == "Failed to validate access token." {
 					// httplog("-------------------- TOKEN-SWITCH --------------------")
-					return me.request(url, method, expectedResponseCodes, true, forceNewBearerRetryCount+1, payload, headers)
+					return me.request(ctx, url, method, expectedResponseCodes, true, forceNewBearerRetryCount+1, payload, headers)
 				}
 				return nil, iamErr
 			} else {

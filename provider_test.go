@@ -69,7 +69,7 @@ func TestProvider_impl(t *testing.T) {
 
 func TestProvider_configure(t *testing.T) {
 	t.Skip()
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	rc := terraform.NewResourceConfigRaw(map[string]any{})
 	p := provider.Provider()
