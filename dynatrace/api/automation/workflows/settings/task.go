@@ -181,6 +181,13 @@ func (me *Task) MarshalHCL(properties hcl.Properties) error {
 		}
 		inputJSON = opt.NewString(string(data))
 	}
+	// Fix for #579. The REST API apparently now produces an empty `conditions` property
+	// That leads to non-empty plans
+	if me.Conditions != nil {
+		if me.Conditions.Custom == nil && me.Conditions.Else == nil && len(me.Conditions.States) == 0 {
+			me.Conditions = nil
+		}
+	}
 	return properties.EncodeAll(map[string]any{
 		"name":        me.Name,
 		"action":      me.Action,
