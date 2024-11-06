@@ -471,6 +471,7 @@ var ResourceTypes = struct {
 	OpenPipelineSDLCEvents              ResourceType
 	CloudDevelopmentEnvironments        ResourceType
 	KubernetesSPM                       ResourceType
+	LogAgentFeatureFlags                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -789,6 +790,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_sdlc_events",
 	"dynatrace_cloud_development_environments",
 	"dynatrace_kubernetes_spm",
+	"dynatrace_log_agent_feature_flags",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

@@ -137,6 +137,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/securityposturemanagement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentfeatureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
 	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdebugsettings"
@@ -1368,6 +1369,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.CloudDevelopmentEnvironments: NewResourceDescriptor(clouddevelopmentenvironments.Service),
 	ResourceTypes.KubernetesSPM: NewResourceDescriptor(
 		securityposturemanagement.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
+	ResourceTypes.LogAgentFeatureFlags: NewResourceDescriptor(
+		logagentfeatureflags.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
 		Coalesce(Dependencies.K8sCluster),
 	),
 }

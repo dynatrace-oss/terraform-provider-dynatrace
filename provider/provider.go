@@ -573,6 +573,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_sdlc_events":            resources.NewGeneric(export.ResourceTypes.OpenPipelineSDLCEvents).Resource(),
 			"dynatrace_cloud_development_environments":      resources.NewGeneric(export.ResourceTypes.CloudDevelopmentEnvironments).Resource(),
 			"dynatrace_kubernetes_spm":                      resources.NewGeneric(export.ResourceTypes.KubernetesSPM).Resource(),
+			"dynatrace_log_agent_feature_flags":             resources.NewGeneric(export.ResourceTypes.LogAgentFeatureFlags).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

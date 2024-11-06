@@ -1,0 +1,37 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "When additional features become available with newer OneAgent versions, they can be activated here to make them available across your environment.",
+	"displayName": "Log Agent Feature Flags",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"NewContainerLogDetector": {
+			"default": false,
+			"description": "Enable Log Agent to use new container log detector. Please do not turn it off once enabled. For more details, check our [documentation](https://dt-url.net/jn02ey0).",
+			"displayName": "New Container Log Detector",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.305"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:log-monitoring",
+		"group:log-monitoring.ingest-and-processing"
+	],
+	"schemaId": "builtin:logmonitoring.log-agent-feature-flags",
+	"types": {},
+	"version": "1"
+}

@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_log_agent_feature_flags Resource - terraform-provider-dynatrace"
+subcategory: "Log Monitoring"
+description: |-
+  The resource `dynatrace_log_agent_feature_flags` covers configuration for log agent feature flags
+---
+
+# dynatrace_log_agent_feature_flags (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Log Management and Analytics - https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:logmonitoring.log-agent-feature-flags`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_log_agent_feature_flags` downloads all existing log agent feature flags
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/logmonitoring/logagentfeatureflags/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
