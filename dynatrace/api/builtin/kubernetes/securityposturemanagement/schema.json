@@ -1,0 +1,35 @@
+{
+	"allowedScopes": [
+		"KUBERNETES_CLUSTER",
+		"environment"
+	],
+	"description": "[Kubernetes Security Posture Management (KSPM)](https://dt-url.net/b303utv) helps you assess and ensure the security and compliance of a Kubernetes environment by adhering to security best practices and regulatory standards.",
+	"displayName": "Security Posture Management: Kubernetes",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"configurationDatasetPipelineEnabled": {
+			"default": false,
+			"description": "Follow the [installation instructions](https://dt-url.net/4x23ut5) to deploy the Security Posture Management components.",
+			"displayName": "Enable Security Posture Management",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minActiveGateVersion": "1.303"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:appsec.security-posture-management",
+		"group:appsec"
+	],
+	"schemaId": "builtin:kubernetes.security-posture-management",
+	"types": {},
+	"version": "0.0.3"
+}

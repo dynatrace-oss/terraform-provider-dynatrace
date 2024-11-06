@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_kubernetes_spm Resource - terraform-provider-dynatrace"
+subcategory: "Application Security"
+description: |-
+  The resource `dynatrace_kubernetes_spm` covers configuration for Kubernetes security posture management
+---
+
+# dynatrace_kubernetes_spm (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Security Posture Management: Kubernetes - https://docs.dynatrace.com/docs/shortlink/kspm-start
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:kubernetes.security-posture-management`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_kubernetes_spm` downloads all existing configuration for Kubernetes security posture management
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/kubernetes/securityposturemanagement/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

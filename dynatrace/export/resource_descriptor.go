@@ -134,6 +134,7 @@ import (
 	diskedgeanomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors"
 	issuetracking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/enrichment"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/securityposturemanagement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/customlogsourcesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
@@ -1365,6 +1366,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DevObsDataMasking:            NewResourceDescriptor(devobsmasking.Service),
 	ResourceTypes.DavisCoPilot:                 NewResourceDescriptor(dataminingblocklist.Service),
 	ResourceTypes.CloudDevelopmentEnvironments: NewResourceDescriptor(clouddevelopmentenvironments.Service),
+	ResourceTypes.KubernetesSPM: NewResourceDescriptor(
+		securityposturemanagement.Service,
+		Coalesce(Dependencies.K8sCluster),
+	),
 }
 
 type ResourceExclusion struct {
