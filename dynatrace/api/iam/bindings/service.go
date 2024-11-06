@@ -141,6 +141,25 @@ type ListPolicyBindingsResponse struct {
 	PolicyBindings []PolicyBindingStub `json:"policyBindings"`
 }
 
+type ListPolicyUUIDsForGroupResponse struct {
+	PolicyUUIDs []string `json:"policyUuids"`
+}
+
+func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, groupID string, levelType string, levelID string) ([]string, error) {
+	var err error
+	var responseBytes []byte
+	client := iam.NewIAMClient(me)
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false); err != nil {
+		return nil, err
+	}
+
+	var response ListPolicyUUIDsForGroupResponse
+	if err = json.Unmarshal(responseBytes, &response); err != nil {
+		return nil, err
+	}
+	return response.PolicyUUIDs, nil
+}
+
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
@@ -197,6 +216,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 			}
 		}
 	}
+
 	return stubs, nil
 }
 
