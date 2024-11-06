@@ -20,7 +20,9 @@ package policies
 import (
 	"context"
 	"fmt"
+	"slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -49,6 +51,13 @@ func DataSource() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "If `true` the results will contain global policies",
+			},
+			"groups": {
+				Type:        schema.TypeList,
+				MinItems:    1,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "The results will only contain policies that are bound to the specified groups. Omit this attribute if you want to retrieve all policies",
 			},
 			"policies": {
 				Type:     schema.TypeList,
@@ -115,11 +124,21 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			accounts = append(accounts, LevelID(elem.(string)))
 		}
 	}
-	dataSourceID := fmt.Sprintf("%#v.%#v.%#v", global, environments, accounts)
+
+	var groupIDs []string
+	if v, ok := d.GetOk("groups"); ok {
+		for _, elem := range v.([]any) {
+			groupIDs = append(groupIDs, elem.(string))
+		}
+	}
+
+	dataSourceID := fmt.Sprintf("%#v.%#v.%#v.%#v", global, environments, accounts, groupIDs)
 	creds, err := config.Credentials(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	discoveredLevels := map[string]string{}
 
 	service := policies.ServiceWithGloabals(creds)
 	stubs, err := service.ListWithGlobals(ctx)
@@ -130,6 +149,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
 			uuid, levelType, levelID, _ := policies.SplitIDNoDefaults(stub.ID)
+			discoveredLevels[levelID] = levelType
 			switch levelType {
 			case "global":
 				if global {
@@ -169,7 +189,32 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			}
 		}
 	}
+
+	if len(groupIDs) > 0 {
+		bindingsService := bindings.Service(creds).(*bindings.BindingServiceClient)
+
+		allPolicyUUIDs := []string{}
+		for levelID, levelType := range discoveredLevels {
+			for _, groupID := range groupIDs {
+				if policyUUIDs, err := bindingsService.GetPolicyUUIDsForGroup(ctx, groupID, levelType, levelID); err == nil {
+					allPolicyUUIDs = append(allPolicyUUIDs, policyUUIDs...)
+				}
+			}
+		}
+		finalResults := []map[string]any{}
+		for _, result := range results {
+			if uuid, found := result["uuid"]; found {
+				if slices.Contains(allPolicyUUIDs, uuid.(string)) {
+					finalResults = append(finalResults, result)
+				}
+			}
+		}
+
+		results = finalResults
+	}
+
 	d.Set("policies", results)
+
 	d.SetId(dataSourceID)
 	return diag.Diagnostics{}
 }
