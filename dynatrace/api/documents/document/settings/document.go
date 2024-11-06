@@ -53,9 +53,9 @@ func (me *Document) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:             schema.TypeString,
-			Description:      "Type of the document. Possible Values are `dashboard` and `notebook`",
+			Description:      "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
 			Required:         true,
-			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook"}),
+			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook", "launchpad"}),
 		},
 		"actor": {
 			Type:             schema.TypeString,
