@@ -27,6 +27,10 @@ var MatcherTypes = struct {
 	K8SContainerName       MatcherType
 	K8SDeploymentName      MatcherType
 	K8SNamespaceName       MatcherType
+	K8SPodAnnotation       MatcherType
+	K8SPodLabel            MatcherType
+	K8SWorkloadKind        MatcherType
+	K8SWorkloadName        MatcherType
 	LogSource              MatcherType
 	LogSourceOrigin        MatcherType
 	ProcessTechnology      MatcherType
@@ -38,6 +42,10 @@ var MatcherTypes = struct {
 	"k8s.container.name",
 	"k8s.deployment.name",
 	"k8s.namespace.name",
+	"k8s.pod.annotation",
+	"k8s.pod.label",
+	"k8s.workload.kind",
+	"k8s.workload.name",
 	"log.source",
 	"log.source.origin",
 	"process.technology",

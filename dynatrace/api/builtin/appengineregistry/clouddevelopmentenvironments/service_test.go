@@ -15,17 +15,14 @@
 * limitations under the License.
  */
 
-package connection
+package clouddevelopmentenvironments_test
 
 import (
-	connection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-const SchemaVersion = "0.1.10"
-const SchemaID = "app:dynatrace.kubernetes.connector:connection"
-
-func Service(credentials *settings.Credentials) settings.CRUDService[*connection.Settings] {
-	return settings20.Service[*connection.Settings](credentials, SchemaID, SchemaVersion)
+func TestAccCloudDevelopmentEnvironments(t *testing.T) {
+	api.TestAcc(t)
 }

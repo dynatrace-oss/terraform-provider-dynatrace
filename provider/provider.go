@@ -571,6 +571,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_security_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineSecurityEvents).Resource(),
 			"dynatrace_openpipeline_business_events":        resources.NewGeneric(export.ResourceTypes.OpenPipelineBusinessEvents).Resource(),
 			"dynatrace_openpipeline_sdlc_events":            resources.NewGeneric(export.ResourceTypes.OpenPipelineSDLCEvents).Resource(),
+			"dynatrace_cloud_development_environments":      resources.NewGeneric(export.ResourceTypes.CloudDevelopmentEnvironments).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -56,22 +56,42 @@
 					"value": "host.tag"
 				},
 				{
-					"displayName": "K8s container name",
+					"displayName": "Kubernetes container name",
 					"icon": "kubernetes-container-services",
 					"value": "k8s.container.name"
 				},
 				{
-					"displayName": "K8s namespace name",
+					"displayName": "Kubernetes namespace name",
 					"icon": "kubernetes-ns",
 					"value": "k8s.namespace.name"
 				},
 				{
-					"displayName": "K8s deployment name",
+					"displayName": "Kubernetes deployment name",
 					"icon": "kubernetes-deploy",
 					"value": "k8s.deployment.name"
 				},
 				{
-					"displayName": "Container name",
+					"displayName": "Kubernetes pod annotation",
+					"icon": "filter",
+					"value": "k8s.pod.annotation"
+				},
+				{
+					"displayName": "Kubernetes pod label",
+					"icon": "filter",
+					"value": "k8s.pod.label"
+				},
+				{
+					"displayName": "Kubernetes workload name",
+					"icon": "filter",
+					"value": "k8s.workload.name"
+				},
+				{
+					"displayName": "Kubernetes workload kind",
+					"icon": "filter",
+					"value": "k8s.workload.kind"
+				},
+				{
+					"displayName": "Docker container name",
 					"icon": "container",
 					"value": "container.name"
 				},
@@ -280,8 +300,12 @@
 		"Matcher": {
 			"constraints": [
 				{
-					"customMessage": "Invalid host tag format: correct format 'key=value'",
 					"customValidatorId": "logMonitoringHostTagValueValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "logMonitoringK8sInternalMatcherValueValidator",
 					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
@@ -377,5 +401,5 @@
 			}
 		}
 	},
-	"version": "1.0.9"
+	"version": "1.0.12"
 }

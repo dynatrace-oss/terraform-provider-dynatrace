@@ -4,7 +4,7 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "The *Disk Edge* feature within Dynatrace provides automatic detection of performance anomalies related to disk infrastructure.\nUse these settings to tailor detection sensitivity to a specific disk's name and/or custom metadata. Defining custom properties can help with post processing of the event. \n\n**Policy Hierarchy and Scope**\n\nThe order of policies establishes a hierarchical structure. Disk is assigned to a policy it matches to (based on disk name and/or metadata) according  to the policies hierarchy.\n\nPolicies  can be defined within Host, Host Group and Tenant scope. Lower scope has priority over the higher one.\n\nTo learn more about Disk Edge visit its [official documentation](https://dt-url.net/diskEdgeDoc).",
+	"description": "The *Disk Edge* feature within Dynatrace provides automatic detection of performance anomalies related to disk infrastructure.\nUse these settings to tailor detection sensitivity to a specific disk's name and/or custom metadata. Defining custom properties can help with post processing of the event. \n\n**Policy Hierarchy and Scope**\n\nThe order of policies establishes a hierarchical structure. Disk is assigned to the first policy it matches to (based on disk name and/or metadata) according  to the policies hierarchy.\n\nPolicies  can be defined within Host, Host Group and Tenant scope. Lower scope has priority over the higher one.\n\nTo learn more about Disk Edge visit its [official documentation](https://dt-url.net/diskEdgeDoc).",
 	"displayName": "Anomaly detection for infrastructure: Disk Edge",
 	"documentation": "",
 	"dynatrace": "1",
@@ -798,5 +798,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.16"
+	"version": "0.0.17"
 }

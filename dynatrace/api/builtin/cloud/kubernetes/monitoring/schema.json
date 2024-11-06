@@ -125,19 +125,6 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "boolean"
-		},
-		"pvcMonitoringEnabled": {
-			"default": false,
-			"description": "This toggle will be removed in a future version. The persistent volume claim monitoring is now builtin and independent of this toggle. See [this community guide](https://dt-url.net/v2200u4m) for details.",
-			"displayName": "Monitor persistent volume claims",
-			"documentation": "The persistent volume claims feature is based on custom metrics and is, therefore, subject to licensing.\n\nIf you have DPS licensing see [licensing documentation](https://dt-url.net/nd0348b) for details.\n\nIf you have non-DPS licensing see [DDUs for custom metrics](https://dt-url.net/k8smcc) for details.",
-			"maxObjects": 1,
-			"metadata": {
-				"minActiveGateVersion": "1.239"
-			},
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "boolean"
 		}
 	},
 	"schemaGroups": [
@@ -221,5 +208,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

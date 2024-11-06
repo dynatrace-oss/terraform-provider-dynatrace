@@ -4,7 +4,7 @@
 	],
 	"constraints": [
 		{
-			"customMessage": "Management zone should be selected",
+			"customMessage": "You do not have global ‘settings.write’ permission. Please select a management zone where you have access to.",
 			"customValidatorId": "alerting-profile-mz-validator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -534,6 +534,13 @@
 			"type": "set"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "alerting-profile-unique-complex-filters-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:alerting"
 	],
@@ -986,5 +993,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.5"
+	"version": "8.6"
 }

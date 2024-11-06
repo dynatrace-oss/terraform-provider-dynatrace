@@ -37,7 +37,7 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-const SchemaVersion = "0.0.13"
+const SchemaVersion = "0.0.14"
 const SchemaID = "app:dynatrace.slack:connection"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*slackconnection.Settings] {
