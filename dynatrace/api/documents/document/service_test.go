@@ -23,6 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestAccWorkflows(t *testing.T) {
+func TestAccDocuments(t *testing.T) {
 	api.TestAcc(t)
 }
