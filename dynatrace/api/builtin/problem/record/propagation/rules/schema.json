@@ -1,0 +1,91 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Problem Grail record propagation rules allow you to define rules for propagating specific fields from events to problems. Events are stored in dt.davis.events and problems in dt.davis.problems. Each setting represents a unique rule, specifying which event fields should be propagated to the problem, ensuring critical information is carried over and easily accessible.",
+	"displayName": "Problem record field propagation rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 35,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "If this is true, the value of the specified key is persisted.",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"sourceAttributeKey": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "problem-record-propagation-rule-source-key-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Attribute key from the event that will be propagated.",
+			"displayName": "Source attribute key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"targetAttributeKey": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "problem-record-propagation-rule-target-key-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Attribute key under which the propagated event data will be stored on the problem.",
+			"displayName": "Target attribute key",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "problem-record-propagation-rule-duplicate-target-key-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"schemaId": "builtin:problem.record.propagation.rules",
+	"types": {},
+	"version": "1.0.1"
+}

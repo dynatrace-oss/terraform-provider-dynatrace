@@ -574,6 +574,7 @@ func Provider() *schema.Provider {
 			"dynatrace_cloud_development_environments":      resources.NewGeneric(export.ResourceTypes.CloudDevelopmentEnvironments).Resource(),
 			"dynatrace_kubernetes_spm":                      resources.NewGeneric(export.ResourceTypes.KubernetesSPM).Resource(),
 			"dynatrace_log_agent_feature_flags":             resources.NewGeneric(export.ResourceTypes.LogAgentFeatureFlags).Resource(),
+			"dynatrace_problem_record_propagation_rules":    resources.NewGeneric(export.ResourceTypes.ProblemRecordPropagationRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

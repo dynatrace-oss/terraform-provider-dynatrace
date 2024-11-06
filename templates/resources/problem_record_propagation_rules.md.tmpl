@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_problem_record_propagation_rules Resource - terraform-provider-dynatrace"
+subcategory: "Platform"
+description: |-
+  The resource `dynatrace_problem_record_propagation_rules` covers configuration for problem record propagation rules
+---
+
+# dynatrace_problem_record_propagation_rules (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Grail - https://docs.dynatrace.com/docs/platform/grail
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:problem.record.propagation.rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_problem_record_propagation_rules` downloads existing problem record propagation rules
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/problem/record/propagation/rules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
