@@ -92,6 +92,7 @@ type Task struct {
 	Concurrency  *VarInt              `json:"concurrency" minimum:"1" maximum:"99"`
 	Retry        *TaskRetryOption     `json:"retry,omitempty"`
 	Timeout      *VarInt              `json:"timeout" default:"900" minimum:"1" maximum:"604800"` // Specifies a default task timeout. 15 * 60 (15min) is used when not set
+	WaitBefore   *VarInt              `json:"waitBefore" default:"0" minimum:"0" maximum:"86400"` // Specifies a default task wait before in seconds. 0 is used when not set
 }
 
 func (me *Task) Schema(prefix string) map[string]*schema.Schema {
@@ -167,6 +168,13 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 			ValidateDiagFunc: ValidateRange(1, 604800),
 			Default:          "900",
 		},
+		"wait_before": {
+			Type:             schema.TypeString,
+			Description:      "Specifies a default task wait before in seconds. 0 is used when not set",
+			Optional:         true,
+			ValidateDiagFunc: ValidateRange(0, 86400),
+			Default:          "0",
+		},
 	}
 }
 
@@ -199,6 +207,7 @@ func (me *Task) MarshalHCL(properties hcl.Properties) error {
 		"with_items":  me.WithItems,
 		"retry":       me.Retry,
 		"timeout":     me.Timeout,
+		"wait_before": me.WaitBefore,
 	})
 }
 
@@ -215,6 +224,7 @@ func (me *Task) UnmarshalHCL(decoder hcl.Decoder) error {
 		"with_items":  &me.WithItems,
 		"retry":       &me.Retry,
 		"timeout":     &me.Timeout,
+		"wait_before": &me.WaitBefore,
 	}); err != nil {
 		return err
 	}
