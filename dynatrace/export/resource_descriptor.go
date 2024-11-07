@@ -1027,7 +1027,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DashboardsPresets: NewResourceDescriptor(dashboardspresets.Service),
 	ResourceTypes.LogProcessing: NewResourceDescriptor(
 		logdpprules.Service,
-		Dependencies.ID(ResourceTypes.LogProcessing),
+		// Dependency onto other LogProcessing resources only exists because of `insertAfter`
+		// Using `WeakID` here enforces that dependencies are only supposed to get replaced
+		// when the LogProcessing rule that is referred to is also a candidate for the export
+		Dependencies.WeakID(ResourceTypes.LogProcessing),
 	),
 	ResourceTypes.LogEvents: NewResourceDescriptor(logevents.Service),
 	ResourceTypes.LogTimestamp: NewResourceDescriptor(

@@ -29,7 +29,7 @@ import (
 var ATOMIC_DEPENDENCIES = os.Getenv("DYNATRACE_ATOMIC_DEPENDENCIES") == "true"
 
 type Dependency interface {
-	Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any)
+	Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any)
 	ResourceType() ResourceType
 	DataSourceType() DataSourceType
 	IsParent() bool
@@ -49,6 +49,7 @@ var Dependencies = struct {
 	HyperLinkDashboardID func() Dependency
 	LegacyID             func(resourceType ResourceType) Dependency
 	ID                   func(resourceType ResourceType) Dependency
+	WeakID               func(resourceType ResourceType) Dependency
 	QuotedID             func(resourceType ResourceType) Dependency
 	ResourceID           func(resourceType ResourceType, parent bool) Dependency
 	ServiceMethod        Dependency
@@ -78,6 +79,9 @@ var Dependencies = struct {
 	HyperLinkDashboardID: func() Dependency { return &dashdep{ResourceTypes.JSONDashboardBase, false} },
 	LegacyID:             func(resourceType ResourceType) Dependency { return &legacyID{resourceType} },
 	ID:                   func(resourceType ResourceType) Dependency { return &iddep{resourceType: resourceType, quoted: false} },
+	WeakID: func(resourceType ResourceType) Dependency {
+		return &iddep{resourceType: resourceType, quoted: false, onlyNonPostProcessed: true}
+	},
 	QuotedID:             func(resourceType ResourceType) Dependency { return &iddep{resourceType: resourceType, quoted: true} },
 	ResourceID:           func(resourceType ResourceType, parent bool) Dependency { return &resourceIDDep{resourceType, parent} },
 	ServiceMethod:        &entityds{"SERVICE_METHOD", "SERVICE_METHOD-[A-Z0-9]{16}", false},
@@ -119,7 +123,7 @@ func (me *mgmzdep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.name}"
@@ -208,7 +212,7 @@ func (me *dashlinkdep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *dashlinkdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	replacePattern := "${%s.%s.id}"
 	resources := []any{}
 
@@ -279,7 +283,7 @@ func (me *dashdep) DataSourceType() DataSourceType {
 
 var dashboardHyperLinkIdRegex = regexp.MustCompile(`#dashboard;[^)]*id=([^${;)-]+-[^;)-]+-[^;)-]+-[^;)-]+-[^-;)]+)`)
 
-func (me *dashdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *dashdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	resources := []any{}
 
 	resourcesMap := map[string]*Resource{}
@@ -364,7 +368,7 @@ func (me *legacyID) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.legacy_id}"
@@ -520,6 +524,10 @@ func updateMinMaxMzId(id string) {
 type iddep struct {
 	resourceType ResourceType
 	quoted       bool
+	// Some references (like `insertAfter`) would automatically lead to
+	// the whole train of configs getting pulled
+	// setting this to `true` ensures that this doesn't happend
+	onlyNonPostProcessed bool
 }
 
 func (me *iddep) IsParent() bool {
@@ -534,7 +542,7 @@ func (me *iddep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *iddep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	childDescriptor := environment.Module(replacingIn).GetDescriptor()
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
@@ -612,7 +620,7 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 
 			resource, exists := environment.Module(me.resourceType).Resources[extractedId]
 
-			if exists {
+			if exists && (!me.onlyNonPostProcessed || ContainsResource(nonPostProcessedResources, resource)) {
 				applyReplacement(resource, extractedId)
 				delete(environment.Module(replacingIn).Resources[resourceId].ExtractedIdsPerDependencyModule[idRegexType], extractedId)
 			}
@@ -622,12 +630,12 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	} else {
 
 		for id, resource := range environment.Module(me.resourceType).Resources {
-
-			valueToReplace, _ := getReplaceValues(id)
-			if strings.Contains(s, valueToReplace) {
-				applyReplacement(resource, id)
+			if !me.onlyNonPostProcessed || ContainsResource(nonPostProcessedResources, resource) {
+				valueToReplace, _ := getReplaceValues(id)
+				if strings.Contains(s, valueToReplace) {
+					applyReplacement(resource, id)
+				}
 			}
-
 		}
 	}
 
@@ -651,7 +659,7 @@ func (me *resourceIDDep) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *resourceIDDep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	replacePattern := "${%s.%s.id}"
 	resources := []any{}
 
@@ -714,7 +722,7 @@ func (me *tenantds) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *tenantds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *tenantds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	tenantID := environment.TenantID()
 	if len(tenantID) == 0 {
 		return s, []any{}
@@ -747,7 +755,7 @@ func (me *policyds) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *policyds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *policyds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
@@ -792,7 +800,7 @@ func (me *entityds) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
 	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
@@ -837,7 +845,7 @@ func (me *reqAttName) DataSourceType() DataSourceType {
 	return ""
 }
 
-func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string) (string, []any) {
+func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
 	if ATOMIC_DEPENDENCIES {
 		replacePattern = "${var.%s_%s.value.name}"
@@ -907,4 +915,22 @@ func mergeMaps(maps ...map[string]optimizedIdDep) map[string]optimizedIdDep {
 	}
 
 	return mergedMap
+}
+
+func ContainsResource(nonPostProcessedResources []*Resource, resource *Resource) bool {
+	if resource == nil {
+		return false
+	}
+	if len(nonPostProcessedResources) == 0 {
+		return false
+	}
+	for _, r := range nonPostProcessedResources {
+		if r == nil {
+			continue
+		}
+		if r.ID == resource.ID {
+			return true
+		}
+	}
+	return false
 }

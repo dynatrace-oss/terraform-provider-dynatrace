@@ -404,7 +404,7 @@ func (me *Resource) Download() error {
 	return nil
 }
 
-func (me *Resource) PostProcess() error {
+func (me *Resource) PostProcess(nonPostProcessedResources []*Resource) error {
 	if shutdown.System.Stopped() {
 		return nil
 	}
@@ -466,7 +466,7 @@ func (me *Resource) PostProcess() error {
 			}
 		}
 
-		if fileBody, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID); len(foundItemsInFileContents) > 0 {
+		if fileBody, foundItemsInFileContents = dependency.Replace(me.Module.Environment, fileBody, me.Type, me.ID, nonPostProcessedResources); len(foundItemsInFileContents) > 0 {
 			isModifiedFile = true
 
 			for _, item := range foundItemsInFileContents {

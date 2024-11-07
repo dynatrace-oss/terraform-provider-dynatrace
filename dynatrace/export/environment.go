@@ -351,7 +351,7 @@ func (me *Environment) PostProcess() error {
 					if shutdown.System.Stopped() {
 						return nil
 					}
-					if err := resource.PostProcess(); err != nil {
+					if err := resource.PostProcess(resources); err != nil {
 						return err
 					}
 					fmt.Print("\r")
@@ -412,7 +412,7 @@ func (me *Environment) PostProcess() error {
 					if shutdown.System.Stopped() {
 						return nil
 					}
-					if err := resource.PostProcess(); err != nil {
+					if err := resource.PostProcess(resources); err != nil {
 						return err
 					}
 					fmt.Print(ClearLine)
