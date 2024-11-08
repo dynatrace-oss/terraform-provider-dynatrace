@@ -590,7 +590,7 @@ func (me *Module) WriteDataSourcesFile(logToScreen bool) (err error) {
 	return nil
 }
 
-func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
+func (me *Module) ProvideDataSources(except map[string]*DataSource) (dsm map[string]string, err error) {
 	if me.IsReferencedAsDataSource() {
 		return map[string]string{}, nil
 	}
@@ -608,6 +608,18 @@ func (me *Module) ProvideDataSources() (dsm map[string]string, err error) {
 	for _, dataSource := range me.SortedDataSources() {
 		dataSourceName := dataSource.Name
 		dataSourceID := dataSource.ID
+		if len(except) > 0 {
+			skip := false
+			for exID := range except {
+				if dataSourceID == exID {
+					skip = true
+					break
+				}
+			}
+			if skip {
+				continue
+			}
+		}
 		dd, _ := json.Marshal(dataSourceName)
 		dsm["dynatrace_entity."+dataSource.Type+"."+string(dd)] = fmt.Sprintf(`data "dynatrace_entity" "%s" {
 			type = "%s"

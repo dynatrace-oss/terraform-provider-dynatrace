@@ -702,7 +702,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 		}
 		dsm := map[string]string{}
 		for _, module := range me.Modules {
-			mdsm, err := module.ProvideDataSources()
+			mdsm, err := module.ProvideDataSources(dataSources)
 			if err != nil {
 				return err
 			}
