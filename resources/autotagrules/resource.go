@@ -161,7 +161,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	for _, stateRule := range stateConfig.Rules {
 		found := false
 		for _, tfRule := range tfConfig.Rules {
-			if reflect.DeepEqual(*stateRule, *tfRule) {
+			if RuleEquals(stateRule, tfRule) {
 				found = true
 				break
 			}
@@ -237,8 +237,9 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	// Find matching rules with state and API
 	matchingRules := auto_tag_settings.Rules{}
 	for _, stateRule := range stateConfig.Rules {
+
 		for _, apiRule := range apiConfig.Rules {
-			if reflect.DeepEqual(*stateRule, *apiRule) {
+			if RuleEquals(stateRule, apiRule) {
 				matchingRules = append(matchingRules, stateRule)
 			}
 		}
@@ -292,7 +293,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	// If matching rule is found from the state, remove from API
 	for _, stateRule := range stateConfig.Rules {
 		for i, apiRule := range apiConfig.Rules {
-			if reflect.DeepEqual(*stateRule, *apiRule) {
+			if RuleEquals(stateRule, apiRule) {
 				apiConfig.Rules = append(apiConfig.Rules[:i], apiConfig.Rules[i+1:]...)
 			}
 		}
@@ -303,4 +304,211 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 
 	return diag.Diagnostics{}
+}
+
+// --- COMPARATORS ---
+
+func strPtrEquals(a, b *string) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	return *a == *b
+}
+
+func intPtrEquals(a, b *int) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	return *a == *b
+}
+
+func boolPtrEquals(a, b *bool) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if a == nil && b != nil {
+		return !*b
+	}
+	if a != nil && b == nil {
+		return !*a
+	}
+	return *a == *b
+}
+
+func AttributeConditionsEquals(a, b auto_tag_settings.AttributeConditions) bool {
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if len(a) != len(b) {
+		return false
+	}
+	for _, ca := range a {
+		found := false
+		for _, cb := range b {
+			if AttributeConditionEquals(ca, cb) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+
+	return true
+}
+
+func AttributeConditionEquals(a, b *auto_tag_settings.AttributeCondition) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if !boolPtrEquals(a.CaseSensitive, b.CaseSensitive) {
+		return false
+	}
+	if !strPtrEquals(a.DynamicKey, b.DynamicKey) {
+		return false
+	}
+	if !strPtrEquals(a.DynamicKeySource, b.DynamicKeySource) {
+		return false
+	}
+	if !strPtrEquals(a.EntityID, b.EntityID) {
+		return false
+	}
+	if !strPtrEquals(a.EnumValue, b.EnumValue) {
+		return false
+	}
+	if !intPtrEquals(a.IntegerValue, b.IntegerValue) {
+		return false
+	}
+	if string(a.Key) != string(b.Key) {
+		return false
+	}
+	if string(a.Operator) != string(b.Operator) {
+		return false
+	}
+	if !strPtrEquals(a.StringValue, b.StringValue) {
+		return false
+	}
+	if !strPtrEquals(a.Tag, b.Tag) {
+		return false
+	}
+
+	return true
+}
+
+func AutoTagAttributeRuleEquals(a, b *auto_tag_settings.AutoTagAttributeRule) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if !boolPtrEquals(a.AzureToPGPropagation, b.AzureToPGPropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.AzureToServicePropagation, b.AzureToServicePropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.AzureToServicePropagation, b.AzureToServicePropagation) {
+		return false
+	}
+	if !AttributeConditionsEquals(a.Conditions, b.Conditions) {
+		return false
+	}
+	if string(a.EntityType) != string(b.EntityType) {
+		return false
+	}
+	if !boolPtrEquals(a.HostToPGPropagation, b.HostToPGPropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.PGToHostPropagation, b.PGToHostPropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.PGToServicePropagation, b.PGToServicePropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.ServiceToHostPropagation, b.ServiceToHostPropagation) {
+		return false
+	}
+	if !boolPtrEquals(a.ServiceToPGPropagation, b.ServiceToPGPropagation) {
+		return false
+	}
+	return true
+
+}
+
+func RuleEquals(a, b *auto_tag_settings.Rule) bool {
+	if a == b {
+		return true
+	}
+	if a == nil && b != nil {
+		return false
+	}
+	if a != nil && b == nil {
+		return false
+	}
+	if a == nil && b == nil {
+		return true
+	}
+	if !AutoTagAttributeRuleEquals(a.AttributeRule, b.AttributeRule) {
+		return false
+	}
+	if a.Enabled != b.Enabled {
+		return false
+	}
+	if !strPtrEquals(a.EntitySelector, b.EntitySelector) {
+		return false
+	}
+	if string(a.Type) != string(b.Type) {
+		return false
+	}
+	if !strPtrEquals(a.ValueFormat, b.ValueFormat) {
+		return false
+	}
+	if string(a.ValueNormalization) != string(b.ValueNormalization) {
+		return false
+	}
+	return true
 }
