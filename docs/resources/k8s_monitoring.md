@@ -32,7 +32,6 @@ resource "dynatrace_k8s_monitoring" "#name#" {
   include_all_fdi_events             = true
   open_metrics_builtin_enabled       = false
   open_metrics_pipeline_enabled      = true
-  pvc_monitoring_enabled             = true
   scope                              = "KUBERNETES_CLUSTER-1234567890000000"
   event_patterns {
     event_pattern {
@@ -57,13 +56,13 @@ If you have a DPS license see [licensing documentation](https://dt-url.net/cee34
 If you have a non-DPS license see [DDUs for events](https://dt-url.net/5n03vcu) for details.
 - `open_metrics_builtin_enabled` (Boolean) Workload and node resource metrics are based on a subset of cAdvisor metrics. Depending on your Kubernetes cluster size, this may increase the CPU/memory resource consumption of your ActiveGate.
 - `open_metrics_pipeline_enabled` (Boolean) For annotation guidance, see the [documentation](https://dt-url.net/g42i0ppw).
-- `pvc_monitoring_enabled` (Boolean) To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
 
 ### Optional
 
 - `event_patterns` (Block List, Max: 1) Define Kubernetes event filters to ingest events into your environment. For more details, see the [documentation](https://dt-url.net/2201p0u). (see [below for nested schema](#nestedblock--event_patterns))
 - `filter_events` (Boolean) Include only events specified by Events Field Selectors
 - `include_all_fdi_events` (Boolean) For a list of included events, see the [documentation](https://dt-url.net/l61d02no).
+- `pvc_monitoring_enabled` (Boolean, Deprecated) To enable dashboards and alerts, add the [Kubernetes persistent volume claims](ui/hub/ext/com.dynatrace.extension.kubernetes-pvc) extension to your environment.
 - `scope` (String) The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
 
 ### Read-Only

@@ -162,6 +162,7 @@ Optional:
 - `position` (Block List, Max: 1) Layouting information about the task tile when visualized. If not specified Dynatrace will position the task tiles automatically (see [below for nested schema](#nestedblock--tasks--task--position))
 - `retry` (Block List, Max: 1) Configure whether to automatically rerun the task on failure. If not specified no retries will be attempted (see [below for nested schema](#nestedblock--tasks--task--retry))
 - `timeout` (String) Specifies a default task timeout in seconds. 15 * 60 (15min) is used when not set. Minimum 1. Maximum 604800
+- `wait_before` (String) Specifies a default task wait before in seconds. 0 is used when not set
 - `with_items` (String) Iterates over items in a list, allowing actions to be executed repeatedly. Example: Specifying `item in [1, 2, 3]` here will execute the task three times for the numbers 1, 2 and 3 - with the current number available for scripting using the expression `{{ _.item }}`
 
 <a id="nestedblock--tasks--task--conditions"></a>

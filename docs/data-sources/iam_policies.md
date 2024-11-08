@@ -90,6 +90,7 @@ Changes to Outputs:
 - `accounts` (List of String) The results will contain policies defined for the given accountID. If one of the entries contains `*` the results will contain policies for all accounts
 - `environments` (List of String) The results will contain policies defined for the given environments. If one of the entries contains `*` the results will contain policies for all environments
 - `global` (Boolean) If `true` the results will contain global policies
+- `groups` (List of String) The results will only contain policies that are bound to the specified groups. Omit this attribute if you want to retrieve all policies
 
 ### Read-Only
 
