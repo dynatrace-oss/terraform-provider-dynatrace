@@ -19,10 +19,10 @@ package infraopssettings_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccInfraOpsAppSettings(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - re-enable v305
+	// api.TestAcc(t)
+	t.Skip()
 }

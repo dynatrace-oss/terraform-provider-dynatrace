@@ -23,8 +23,9 @@ import (
 )
 
 type Settings struct {
-	Show_monitoring_candidates bool `json:"show.monitoring.candidates"` // When set to true, the app will display monitoring candidates in the Hosts table
-	Show_standalone_hosts      bool `json:"show.standalone.hosts"`      // When set to true, the app will display app only hosts in the Hosts table
+	Interface_saturation_threshold float64 `json:"interface.saturation.threshold,omitempty"` // (Required v305+) The threshold at which a network device interface is deemed to be saturated.
+	Show_monitoring_candidates     bool    `json:"show.monitoring.candidates"`               // When set to true, the app will display monitoring candidates in the Hosts table
+	Show_standalone_hosts          bool    `json:"show.standalone.hosts"`                    // When set to true, the app will display app only hosts in the Hosts table
 }
 
 func (me *Settings) Name() string {
@@ -33,6 +34,12 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"interface_saturation_threshold": {
+			Type:        schema.TypeFloat,
+			Description: "(Required v305+) The threshold at which a network device interface is deemed to be saturated.",
+			Optional:    true,
+			// Default:     0.95,
+		},
 		"show_monitoring_candidates": {
 			Type:        schema.TypeBool,
 			Description: "When set to true, the app will display monitoring candidates in the Hosts table",
@@ -48,14 +55,16 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"show_monitoring_candidates": me.Show_monitoring_candidates,
-		"show_standalone_hosts":      me.Show_standalone_hosts,
+		"interface_saturation_threshold": me.Interface_saturation_threshold,
+		"show_monitoring_candidates":     me.Show_monitoring_candidates,
+		"show_standalone_hosts":          me.Show_standalone_hosts,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"show_monitoring_candidates": &me.Show_monitoring_candidates,
-		"show_standalone_hosts":      &me.Show_standalone_hosts,
+		"interface_saturation_threshold": &me.Interface_saturation_threshold,
+		"show_monitoring_candidates":     &me.Show_monitoring_candidates,
+		"show_standalone_hosts":          &me.Show_standalone_hosts,
 	})
 }
