@@ -19,10 +19,10 @@ package infraops_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccInfraOpsAppFeatureFlags(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - schema no longer exists
+	// api.TestAcc(t)
+	t.Skip()
 }
