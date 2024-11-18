@@ -220,7 +220,9 @@ func (me *service) Delete(ctx context.Context, id string) error {
 		if shutdown.System.Stopped() {
 			return nil
 		}
-
+		if response.StatusCode == 404 {
+			return nil
+		}
 		time.Sleep(5 * time.Second)
 	}
 	return err
