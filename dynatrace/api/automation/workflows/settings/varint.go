@@ -36,6 +36,7 @@ func (me *VarInt) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err == nil {
 		*me = VarInt(s)
+		return nil
 	}
 	var i int
 	if err := json.Unmarshal(data, &i); err != nil {
