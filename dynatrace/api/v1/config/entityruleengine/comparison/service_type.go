@@ -79,8 +79,10 @@ func (stc *ServiceType) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("operator", string(stc.Operator)); err != nil {
 		return err
 	}
-	if err := properties.Encode("value", stc.Value.String()); err != nil {
-		return err
+	if stc.Value != nil {
+		if err := properties.Encode("value", stc.Value.String()); err != nil {
+			return err
+		}
 	}
 	return nil
 }
