@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -64,7 +65,8 @@ func (s *service) createClient() (*caclib.Client, error) {
 			ClientID:     s.credentials.Automation.ClientID,
 			ClientSecret: s.credentials.Automation.ClientSecret,
 			TokenURL:     s.credentials.Automation.TokenURL,
-		})
+		}).
+		WithHTTPListener(httplog.HTTPListener)
 
 	return factory.OpenPipelineClient()
 }
