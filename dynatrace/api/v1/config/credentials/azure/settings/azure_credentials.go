@@ -54,7 +54,7 @@ func (ac *AzureCredentials) Schema() map[string]*schema.Schema {
 		"label": {
 			Type:        schema.TypeString,
 			Description: "The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed",
-			Optional:    true,
+			Required:    true,
 		},
 		"directory_id": {
 			Type:        schema.TypeString,
