@@ -1,0 +1,59 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Dynatrace is automatically detecting frequent issues over a period of one week. A problem is automatically converted into a frequent issue if the problem is detected multiple times throughout a day and over a weeks period of time and if it is not getting worse. Once it's classified as a frequent issue alerting is automatically disabled. In case that the frequent issue is getting worse problem alerts are again sent out. Within this page you can disable the frequent issue detection for all topological levels.  \nSee our [help documentation](https://dt-url.net/ex4v0pcw) about frequent issue detection.",
+	"displayName": "Frequent issue detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"detectFrequentIssuesInApplications": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect frequent issues within applications",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"detectFrequentIssuesInEnvironment": {
+			"description": "",
+			"displayName": "Detect frequent issues on the environment singleton entity",
+			"documentation": "Events raised at this level typically occur when no specific topological entity is applicable, often based on data such as logs and metrics. This does not impact the detection of issues within applications, transactions, services, or infrastructure.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
+		},
+		"detectFrequentIssuesInInfrastructure": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect frequent issues within infrastructure",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"detectFrequentIssuesInTransactionsAndServices": {
+			"default": true,
+			"description": "",
+			"displayName": "Detect frequent issues within transactions and services",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:anomaly-detection"
+	],
+	"schemaId": "builtin:anomaly-detection.frequent-issues",
+	"types": {},
+	"version": "1.0.3"
+}
