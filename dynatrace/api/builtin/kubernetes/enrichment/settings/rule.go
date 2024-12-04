@@ -45,10 +45,10 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Rule struct {
-	Enabled bool         `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
-	Source  string       `json:"source"`  // The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n`source := (prefix/)?name`\n\n`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\nAdditionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
-	Target  TargetOption `json:"target"`  // Possible Values: `Dt_cost_costcenter`, `Dt_cost_product`, `Dt_security_context`
-	Type    MetadataType `json:"type"`    // Possible Values: `ANNOTATION`, `LABEL`
+	Enabled *bool        `json:"enabled,omitempty"` // This setting is enabled (`true`) or disabled (`false`)
+	Source  string       `json:"source"`            // The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n`source := (prefix/)?name`\n\n`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\nAdditionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
+	Target  TargetOption `json:"target"`            // Possible Values: `Dt_cost_costcenter`, `Dt_cost_product`, `Dt_security_context`
+	Type    MetadataType `json:"type"`              // Possible Values: `ANNOTATION`, `LABEL`
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
@@ -56,7 +56,8 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		"enabled": {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
-			Required:    true,
+			Optional:    true,
+			Deprecated:  "Attribute no longer exists in the schema.",
 		},
 		"source": {
 			Type:        schema.TypeString,

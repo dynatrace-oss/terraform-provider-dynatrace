@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccKubernetesEnrichment(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v300)
+	// Temporarily disabled - not available on test tenant (enable with v306)
 	// api.TestAcc(t)
 	t.Skip()
 }
