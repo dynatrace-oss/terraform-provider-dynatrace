@@ -125,7 +125,7 @@
 			"items": {
 				"constraints": [
 					{
-						"customValidatorId": "universal-tag-validator",
+						"customValidatorId": "builtin:universal-tag-validator",
 						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					},
@@ -133,6 +133,11 @@
 						"maxLength": 500,
 						"minLength": 1,
 						"type": "LENGTH"
+					},
+					{
+						"customValidatorId": "universal-tag-validator",
+						"skipAsyncValidation": false,
+						"type": "CUSTOM_VALIDATOR_REF"
 					}
 				],
 				"description": "",
@@ -242,7 +247,7 @@
 				"dqlQuery": {
 					"constraints": [
 						{
-							"maxLength": 2000,
+							"maxLength": 4000,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -387,5 +392,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.3.1"
+	"version": "1.3.2"
 }

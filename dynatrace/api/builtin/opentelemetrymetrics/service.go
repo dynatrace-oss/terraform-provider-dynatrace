@@ -34,7 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.2.1"
+const SchemaVersion = "1.3"
 const SchemaID = "builtin:opentelemetry-metrics"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*opentelemetrymetrics.Settings] {

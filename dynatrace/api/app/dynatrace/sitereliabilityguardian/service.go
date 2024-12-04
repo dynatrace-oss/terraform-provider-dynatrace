@@ -37,7 +37,7 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-const SchemaVersion = "1.3.1"
+const SchemaVersion = "1.3.2"
 const SchemaID = "app:dynatrace.site.reliability.guardian:guardians"
 
 // func Service(credentials *settings.Credentials) settings.CRUDService[*sitereliabilityguardian.Settings] {

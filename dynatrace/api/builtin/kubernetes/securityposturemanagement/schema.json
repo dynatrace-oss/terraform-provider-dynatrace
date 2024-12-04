@@ -3,7 +3,7 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "[Kubernetes Security Posture Management (KSPM)](https://dt-url.net/b303utv) helps you assess and ensure the security and compliance of a Kubernetes environment by adhering to security best practices and regulatory standards.",
+	"description": "[Kubernetes Security Posture Management (KSPM)](https://dt-url.net/b303utv) helps you assess and ensure the security and compliance of a Kubernetes environment by adhering to security best practices and regulatory standards. \n\nNote: You can [enable Kubernetes Security Posture Management per environment or cluster](https://dt-url.net/o003ue9).",
 	"displayName": "Security Posture Management: Kubernetes",
 	"documentation": "",
 	"dynatrace": "1",
@@ -31,5 +31,5 @@
 	],
 	"schemaId": "builtin:kubernetes.security-posture-management",
 	"types": {},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }

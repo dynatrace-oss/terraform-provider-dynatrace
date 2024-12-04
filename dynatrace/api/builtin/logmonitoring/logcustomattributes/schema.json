@@ -16,7 +16,7 @@
 	"properties": {
 		"aggregableAttribute": {
 			"default": false,
-			"description": "Change applies only to newly ingested log events. Any log events ingested before this option was toggled on will not be searchable by this attribute.",
+			"description": "In the case of Log Monitoring Classic, the change applies to newly ingested log events. This attribute won't search any log events ingested before this option was toggled on. In Logs on Grail's case, the switch's state is ignored.",
 			"displayName": "Show attribute values in side bar",
 			"documentation": "",
 			"maxObjects": 1,
@@ -48,7 +48,7 @@
 				}
 			],
 			"default": "",
-			"description": "The attribute key is case insensitive in log data ingestion.",
+			"description": "The attribute key is case sensitive in log data ingestion.",
 			"displayName": "Key",
 			"documentation": "",
 			"maxObjects": 1,
@@ -68,9 +68,11 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customValidatorId": "attribute-key-unique-validator",
-			"skipAsyncValidation": false,
-			"type": "CUSTOM_VALIDATOR_REF"
+			"customMessage": "Custom attribute with the specified key already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"key"
+			]
 		}
 	],
 	"schemaGroups": [
@@ -79,5 +81,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-custom-attributes",
 	"types": {},
-	"version": "1.0.14"
+	"version": "1.0.16"
 }

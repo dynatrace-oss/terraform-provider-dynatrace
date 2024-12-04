@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.1"
+const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:problem.record.propagation.rules"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*rules.Settings] {

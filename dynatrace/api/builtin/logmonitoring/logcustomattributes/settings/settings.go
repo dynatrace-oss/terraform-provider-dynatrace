@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	AggregableAttribute bool   `json:"aggregableAttribute"` // Change applies only to newly ingested log events. Any log events ingested before this option was toggled on will not be searchable by this attribute.
-	Key                 string `json:"key"`                 // The attribute key is case insensitive in log data ingestion.
+	AggregableAttribute bool   `json:"aggregableAttribute"` // In the case of Log Monitoring Classic, the change applies to newly ingested log events. This attribute won't search any log events ingested before this option was toggled on. In Logs on Grail's case, the switch's state is ignored.
+	Key                 string `json:"key"`                 // The attribute key is case sensitive in log data ingestion.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -36,7 +36,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"key": {
 			Type:        schema.TypeString,
-			Description: "The attribute key is case insensitive in log data ingestion.",
+			Description: "The attribute key is case sensitive in log data ingestion.",
 			Required:    true,
 			ForceNew:    true,
 		},

@@ -11,6 +11,12 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
+	"deletionConstraints": [
+		{
+			"customMessage": "Real User Monitoring powered by Grail can't be enabled because this application uses Code Snippet in the Automatic Injection settings.",
+			"customValidatorId": "rumOnGrailAutomaticInjectionValidator"
+		}
+	],
 	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
 	"displayName": "Enablement and cost control",
 	"documentation": "",
@@ -180,5 +186,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1.2"
+	"version": "1.1.3"
 }
