@@ -139,6 +139,19 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"securitySoftwareDetectionEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Automatically detect security software",
+			"documentation": "This flag enables the detection of security software such as anti-malware protection.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.307"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"shortLivedProcessesMonitoring": {
 			"default": true,
 			"description": "",
@@ -192,7 +205,7 @@
 			"default": false,
 			"description": "",
 			"displayName": "Use Docker container name to distinguish multiple containers",
-			"documentation": "By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. Use this flag with caution!",
+			"documentation": "**For Docker outside container platforms only.** By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. **Use this flag with caution!**",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -205,5 +218,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.8"
+	"version": "0.0.10"
 }
