@@ -84,7 +84,7 @@ type Task struct {
 	Action       string               `json:"action" pattern:"^.+:.+$"`
 	Description  *string              `json:"description,omitempty"` // A description for this task
 	Input        map[string]any       `json:"input"`
-	Active       bool                 `json:"active" default:"true"` // Specifies whether a task should be skipped as a no operation or not
+	Active       *bool                `json:"active,omitempty" default:"true"` // Specifies whether a task should be skipped as a no operation or not
 	Position     *TaskPosition        `json:"position"`
 	Predecessors []string             `json:"predecessors,omitempty"`
 	Conditions   *TaskConditionOption `json:"conditions,omitempty"`
