@@ -39,6 +39,7 @@ type primitiveEntry struct {
 	Computed    bool
 	BreadCrumbs string
 	Value       any
+	DefValTrue  bool
 }
 
 func unquote(w *hclwrite.Body, key string, val *string) {
@@ -207,6 +208,9 @@ func (me *primitiveEntry) IsComputed() bool {
 func (me *primitiveEntry) IsDefault() bool {
 	switch rv := me.Value.(type) {
 	case bool:
+		if me.DefValTrue {
+			return rv
+		}
 		return !rv
 	case string:
 		return len(rv) == 0

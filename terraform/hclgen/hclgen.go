@@ -95,6 +95,27 @@ func resOpt0(key string, bc string, sch *schema.Schema) bool {
 	}
 }
 
+func resDefValTrue(bc string, sch map[string]*schema.Schema) bool {
+	bc = strings.TrimPrefix(bc, ".")
+	if strings.Contains(bc, ".") {
+		idx := strings.Index(bc, ".")
+		return resDefValTrue0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
+	}
+	return resDefValTrue0(bc, "", sch[bc])
+}
+
+func resDefValTrue0(key string, bc string, sch *schema.Schema) bool {
+	if sch == nil {
+		return false
+	}
+	switch sch.Type {
+	case schema.TypeBool:
+		return sch.Default == true
+	default:
+		return false
+	}
+}
+
 func resComputed(bc string, sch map[string]*schema.Schema) bool {
 	bc = strings.TrimPrefix(bc, ".")
 	if strings.Contains(bc, ".") {
@@ -161,7 +182,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 	}
 	switch v := value.(type) {
 	case string, bool, int, int32, int64, int8, int16, uint, uint32, uint64, uint8, uint16, float32, float64:
-		entry := &primitiveEntry{Key: key, Value: value, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: value, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema), DefValTrue: resDefValTrue(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case *string, *bool, *int, *int32, *int64, *int8, *int16, *uint, *uint32, *uint64, *uint8, *uint16, *float32, *float64:
 		if v == nil {

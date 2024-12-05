@@ -20,6 +20,7 @@ package workflows
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,7 +33,7 @@ type Workflow struct {
 
 	Actor         string   `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the workflow will happen with
 	Owner         string   `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this workflow
-	Private       bool     `json:"isPrivate" default:"true"`                     // Defines whether this workflow is private to the owner or not. Default is `true`
+	Private       *bool    `json:"isPrivate" default:"true"`                     // Defines whether this workflow is private to the owner or not. Default is `true`
 	SchemaVersion int      `json:"schemaVersion,omitempty"`                      //
 	Trigger       *Trigger `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
 	Tasks         Tasks    `json:"tasks,omitempty"`                              // The tasks to run for every execution of this workflow
@@ -94,6 +95,9 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 }
 
 func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
+	if me.Private == nil {
+		me.Private = opt.NewBool(true)
+	}
 	return properties.EncodeAll(map[string]any{
 		"title":       me.Title,
 		"description": me.Description,
@@ -107,7 +111,7 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
+	if err := decoder.DecodeAll(map[string]any{
 		"title":       &me.Title,
 		"description": &me.Description,
 
@@ -116,17 +120,26 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"private": &me.Private,
 		"trigger": &me.Trigger,
 		"tasks":   &me.Tasks,
-	})
+	}); err != nil {
+		return err
+	}
+	if me.Private == nil {
+		me.Private = opt.NewBool(true)
+	}
+	return nil
 }
 
 func (me *Workflow) MarshalJSON() ([]byte, error) {
+	if me.Private == nil {
+		me.Private = opt.NewBool(true)
+	}
 	wf := struct {
 		Title       string `json:"title"`
 		Description string `json:"description,omitempty"`
 
 		Actor         string   `json:"actor,omitempty"`
 		Owner         string   `json:"owner,omitempty"`
-		Private       bool     `json:"isPrivate"`
+		Private       *bool    `json:"isPrivate"`
 		SchemaVersion int      `json:"schemaVersion,omitempty"`
 		Trigger       *Trigger `json:"trigger,omitempty"`
 		Tasks         Tasks    `json:"tasks,omitempty"`
