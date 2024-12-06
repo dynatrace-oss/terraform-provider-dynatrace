@@ -188,7 +188,7 @@ func (e *exportEntries) eval(key string, value any, breadCrumbs string, schema m
 		if v == nil {
 			return
 		}
-		entry := &primitiveEntry{Key: key, Value: v, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema)}
+		entry := &primitiveEntry{Key: key, Value: v, BreadCrumbs: breadCrumbs, Optional: resOpt(breadCrumbs, schema), Computed: resComputed(breadCrumbs, schema), DefValTrue: resDefValTrue(breadCrumbs, schema)}
 		*e = append(*e, entry)
 	case []any:
 		if len(v) == 0 {
