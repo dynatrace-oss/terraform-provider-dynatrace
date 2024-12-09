@@ -96,10 +96,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241118161853-e35b6eb85952 h1:jqp5DfqEjTo1tcho6yxm/C6To3Lwgrv+kbEVRun+Uaw=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241118161853-e35b6eb85952/go.mod h1:ZEqPmEOAnMtCzPmIJ4Rd9nkX6qmLup9Az0r1e1KlIeU=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241120133258-d514d28440ee h1:hsGmVOg0uv7FENo3PIbrbnxM/0A0XPr3vf/sBtdhuOg=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241120133258-d514d28440ee/go.mod h1:ZEqPmEOAnMtCzPmIJ4Rd9nkX6qmLup9Az0r1e1KlIeU=
 github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241203095532-6211d1be0eb7 h1:OYTSC/vJETxZHWZEaZsmxH26xIThpDQ9es8rHA6cI9o=
 github.com/dynatrace/dynatrace-configuration-as-code-core v0.7.1-0.20241203095532-6211d1be0eb7/go.mod h1:uexblPw82NA/x+hnBOMhHdc3xlM9tuUPW4+sVcd80Ow=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
@@ -396,8 +392,7 @@ github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.2/go.mod h1:R6va5+xMeoiuVRoj+gSkQ7d3FALtqAAGI1FQKckRals=
-github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
-github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
+github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
 github.com/ulikunitz/xz v0.5.8/go.mod h1:nbz6k7qbPmH4IRqmfOplQw/tblSgqTqBwxkY0oWt/14=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
