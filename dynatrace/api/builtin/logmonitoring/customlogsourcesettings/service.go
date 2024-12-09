@@ -88,7 +88,7 @@ func (me *service) Get(ctx context.Context, id string, v *customlogsourcesetting
 	if v.Custom_log_source != nil && len(v.Custom_log_source.Values) == 0 {
 		var values []string
 		cfg := ctx.Value(settings.ContextKeyStateConfig)
-		if logConfig, ok := cfg.(*customlogsourcesettings.Settings); ok {
+		if logConfig, ok := cfg.(*customlogsourcesettings.Settings); ok && logConfig.Custom_log_source != nil {
 			values = logConfig.Custom_log_source.Values
 		}
 
