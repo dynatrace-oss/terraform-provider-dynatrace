@@ -39,6 +39,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/entity"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
 	genericsettingsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/generic/settings"
+	geocities "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/cities"
 	geocountries "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/countries"
 	georegions "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/regions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
@@ -248,6 +249,7 @@ func Provider() *schema.Provider {
 			"dynatrace_api_token":                    apitoken.DataSource(),
 			"dynatrace_geo_countries":                geocountries.DataSource(),
 			"dynatrace_geo_regions":                  georegions.DataSource(),
+			"dynatrace_geo_cities":                   geocities.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
