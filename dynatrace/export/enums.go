@@ -473,6 +473,7 @@ var ResourceTypes = struct {
 	KubernetesSPM                       ResourceType
 	LogAgentFeatureFlags                ResourceType
 	ProblemRecordPropagationRules       ResourceType
+	ProblemFields                       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -793,6 +794,7 @@ var ResourceTypes = struct {
 	"dynatrace_kubernetes_spm",
 	"dynatrace_log_agent_feature_flags",
 	"dynatrace_problem_record_propagation_rules",
+	"dynatrace_problem_fields",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

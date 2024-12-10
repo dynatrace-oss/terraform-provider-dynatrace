@@ -181,6 +181,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/ipaddressmasking"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/fields"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/ansible"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/email"
@@ -1382,6 +1383,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.ProblemRecordPropagationRules: NewResourceDescriptor(problemrecordpropagation.Service),
+	ResourceTypes.ProblemFields:                 NewResourceDescriptor(fields.Service),
 }
 
 type ResourceExclusion struct {

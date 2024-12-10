@@ -1,0 +1,91 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Problem fields allow you to define rules for extracting specific fields from events to problems. Events are stored in dt.davis.events and problems in dt.davis.problems. Each setting represents a unique rule, specifying which event fields should be extracted to the problem, ensuring critical information is carried over and easily accessible.",
+	"displayName": "Problem fields",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 35,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "If this is true, the field is extracted from events to problems.",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"eventField": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "problem-fields-event-field-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Field from the event that will be extracted.",
+			"displayName": "Event field",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"problemField": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "problem-fields-problem-field-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Field under which the extracted event data will be stored on the problem.",
+			"displayName": "Problem field",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "problem-fields-duplicate-problem-field-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"schemaId": "builtin:problem.fields",
+	"types": {},
+	"version": "1"
+}
