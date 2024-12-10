@@ -474,6 +474,7 @@ var ResourceTypes = struct {
 	LogAgentFeatureFlags                ResourceType
 	ProblemRecordPropagationRules       ResourceType
 	ProblemFields                       ResourceType
+	AutomationControllerConnections     ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -795,6 +796,7 @@ var ResourceTypes = struct {
 	"dynatrace_log_agent_feature_flags",
 	"dynatrace_problem_record_propagation_rules",
 	"dynatrace_problem_fields",
+	"dynatrace_automation_controller_connections",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

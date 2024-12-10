@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_automation_controller_connections Resource - terraform-provider-dynatrace"
+subcategory: "AppEngine"
+description: |-
+  The resource `dynatrace_automation_controller_connections` covers configuration for Red Hat Ansible automation controller connections
+---
+
+# dynatrace_automation_controller_connections (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Red Hat Ansible Automation - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/red-hat/redhat-ansible
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.redhat.ansible:automation-controller.connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_automation_controller_connections` downloads all existing Red Hat Ansible automation controller connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

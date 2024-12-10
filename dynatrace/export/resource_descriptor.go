@@ -33,6 +33,7 @@ import (
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
+	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
@@ -1382,8 +1383,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.HostGroup),
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.ProblemRecordPropagationRules: NewResourceDescriptor(problemrecordpropagation.Service),
-	ResourceTypes.ProblemFields:                 NewResourceDescriptor(fields.Service),
+	ResourceTypes.ProblemRecordPropagationRules:   NewResourceDescriptor(problemrecordpropagation.Service),
+	ResourceTypes.ProblemFields:                   NewResourceDescriptor(fields.Service),
+	ResourceTypes.AutomationControllerConnections: NewResourceDescriptor(automationcontroller.Service),
 }
 
 type ResourceExclusion struct {
