@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_event_driven_ansible_connections Resource - terraform-provider-dynatrace"
+subcategory: "AppEngine"
+description: |-
+  The resource `dynatrace_event_driven_ansible_connections` covers configuration for Red Hat event-driven Ansible connections
+---
+
+# dynatrace_event_driven_ansible_connections (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Red Hat Ansible Automation - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/red-hat/redhat-ansible
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.redhat.ansible:eda-webhook.connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_event_driven_ansible_connections` downloads all existing Red Hat event-driven Ansible connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/redhat/ansible/edawebhook/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

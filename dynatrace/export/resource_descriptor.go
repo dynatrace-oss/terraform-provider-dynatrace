@@ -34,6 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
 	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
+	edawebhookconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/edawebhook/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars"
@@ -1386,6 +1387,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ProblemRecordPropagationRules:   NewResourceDescriptor(problemrecordpropagation.Service),
 	ResourceTypes.ProblemFields:                   NewResourceDescriptor(fields.Service),
 	ResourceTypes.AutomationControllerConnections: NewResourceDescriptor(automationcontroller.Service),
+	ResourceTypes.EventDrivenAnsibleConnections:   NewResourceDescriptor(edawebhookconnection.Service),
 }
 
 type ResourceExclusion struct {

@@ -583,6 +583,7 @@ func Provider() *schema.Provider {
 			"dynatrace_problem_record_propagation_rules":    resources.NewGeneric(export.ResourceTypes.ProblemRecordPropagationRules).Resource(),
 			"dynatrace_problem_fields":                      resources.NewGeneric(export.ResourceTypes.ProblemFields).Resource(),
 			"dynatrace_automation_controller_connections":   resources.NewGeneric(export.ResourceTypes.AutomationControllerConnections).Resource(),
+			"dynatrace_event_driven_ansible_connections":    resources.NewGeneric(export.ResourceTypes.EventDrivenAnsibleConnections).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -1,0 +1,139 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Connections containing access tokens for the Red Hat Ansible app. This connection can be used for connecting to the DT Event-Driven plugin within Red Hat Event-Driven Ansible.",
+	"displayName": "Red Hat Event-Driven Ansible Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "API Access Token",
+					"value": "api-token"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Red Hat Ansible"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A unique and clearly identifiable connection name.",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "Token has to be between 1 and 100 characters long",
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "API access token for the Event-Driven Ansible Controller. Please note that this token is not refreshed and can expire.",
+			"displayName": "API access token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"api-token"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
+		"type": {
+			"default": "api-token",
+			"description": "Type of authentication method that should be used.",
+			"displayName": "Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		},
+		"url": {
+			"constraints": [
+				{
+					"customMessage": "URL has to be between 1 and 255 characters long",
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "URL cannot contain whitespaces",
+					"type": "NO_WHITESPACE"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "URL of the Event-Driven Ansible source plugin webhook. For example, https://eda.yourdomain.com:5010",
+			"displayName": "API URL",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.redhat.ansible:eda-webhook.connection",
+	"types": {},
+	"version": "1.0.2"
+}

@@ -475,6 +475,7 @@ var ResourceTypes = struct {
 	ProblemRecordPropagationRules       ResourceType
 	ProblemFields                       ResourceType
 	AutomationControllerConnections     ResourceType
+	EventDrivenAnsibleConnections       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -797,6 +798,7 @@ var ResourceTypes = struct {
 	"dynatrace_problem_record_propagation_rules",
 	"dynatrace_problem_fields",
 	"dynatrace_automation_controller_connections",
+	"dynatrace_event_driven_ansible_connections",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
