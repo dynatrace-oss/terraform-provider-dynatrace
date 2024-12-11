@@ -1,0 +1,107 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Authentication details for the Microsoft Teams App",
+	"displayName": "Microsoft Teams",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Microsoft Teams"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"channelName": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Optional",
+			"displayName": "The targeted Channel name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "{team-name}-{channel-name}",
+			"description": "The name of the Microsoft Teams connection",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"teamName": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Optional",
+			"displayName": "The targeted Microsoft Team",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"webhook": {
+			"constraints": [
+				{
+					"customMessage": "Token has to be between 5 and 500 characters long",
+					"maxLength": 500,
+					"minLength": 5,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The Webhook URL that links to the channel",
+			"displayName": "Webhook URL",
+			"documentation": "The URL is created using the `Incoming Webhook` app on Teams",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.msteams:connection",
+	"types": {},
+	"version": "1.0.1"
+}

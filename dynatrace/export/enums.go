@@ -478,6 +478,7 @@ var ResourceTypes = struct {
 	EventDrivenAnsibleConnections       ResourceType
 	ServiceNowConnection                ResourceType
 	PagerDutyConnection                 ResourceType
+	MSTeamsConnection                   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -803,6 +804,7 @@ var ResourceTypes = struct {
 	"dynatrace_event_driven_ansible_connections",
 	"dynatrace_servicenow_connection",
 	"dynatrace_pagerduty_connection",
+	"dynatrace_msteams_connection",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

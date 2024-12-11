@@ -33,6 +33,7 @@ import (
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
+	msteamsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/msteams/connection"
 	pagerdutyconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/pagerduty/connection"
 	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
 	edawebhookconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/edawebhook/connection"
@@ -1392,6 +1393,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.EventDrivenAnsibleConnections:   NewResourceDescriptor(edawebhookconnection.Service),
 	ResourceTypes.ServiceNowConnection:            NewResourceDescriptor(servicenowconnection.Service),
 	ResourceTypes.PagerDutyConnection:             NewResourceDescriptor(pagerdutyconnection.Service),
+	ResourceTypes.MSTeamsConnection:               NewResourceDescriptor(msteamsconnection.Service),
 }
 
 type ResourceExclusion struct {

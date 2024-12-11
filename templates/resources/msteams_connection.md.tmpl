@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_msteams_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_msteams_connection` covers configuration for Microsoft Teams connections
+---
+
+# dynatrace_msteams_connection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Microsoft Teams Connector - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/microsoft-teams
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.msteams:connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_msteams_connection` downloads all existing Microsoft Teams connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/msteams/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
