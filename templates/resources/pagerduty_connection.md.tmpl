@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_pagerduty_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_pagerduty_connection` covers configuration for PagerDuty connections
+---
+
+# dynatrace_pagerduty_connection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- PagerDuty - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/pagerduty
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.pagerduty:connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_pagerduty_connection` downloads all existing PagerDuty connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/pagerduty/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

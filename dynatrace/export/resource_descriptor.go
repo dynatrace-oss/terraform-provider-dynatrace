@@ -33,6 +33,7 @@ import (
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
+	pagerdutyconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/pagerduty/connection"
 	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
 	edawebhookconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/edawebhook/connection"
 	servicenowconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/servicenow/connection"
@@ -1390,6 +1391,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AutomationControllerConnections: NewResourceDescriptor(automationcontroller.Service),
 	ResourceTypes.EventDrivenAnsibleConnections:   NewResourceDescriptor(edawebhookconnection.Service),
 	ResourceTypes.ServiceNowConnection:            NewResourceDescriptor(servicenowconnection.Service),
+	ResourceTypes.PagerDutyConnection:             NewResourceDescriptor(pagerdutyconnection.Service),
 }
 
 type ResourceExclusion struct {
