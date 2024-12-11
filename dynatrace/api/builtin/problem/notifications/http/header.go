@@ -18,12 +18,16 @@
 package http
 
 import (
+	"os"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
+var ForceNewOnHeaders = os.Getenv("DYNATRACE_FORCE_NEW_ON_HEADERS") == "true"
 
 type Headers []*Header
 
@@ -35,6 +39,7 @@ func (me *Headers) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "An additional HTTP Header to include when sending requests",
 			Elem:        &schema.Resource{Schema: new(Header).Schema()},
+			ForceNew:    ForceNewOnHeaders,
 		},
 	}
 }
@@ -140,17 +145,20 @@ func (me *Header) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The name of the HTTP header",
 			Required:    true,
+			ForceNew:    ForceNewOnHeaders,
 		},
 		"secret_value": {
 			Type:        schema.TypeString,
 			Description: "The value of the HTTP header as a sensitive property. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.",
 			Sensitive:   true,
 			Optional:    true,
+			ForceNew:    ForceNewOnHeaders,
 		},
 		"value": {
 			Type:        schema.TypeString,
 			Description: "The value of the HTTP header. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.",
 			Optional:    true,
+			ForceNew:    ForceNewOnHeaders,
 		},
 	}
 }
