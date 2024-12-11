@@ -109,6 +109,7 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Description: "A list of the additional HTTP headers",
 			Elem:        &schema.Resource{Schema: new(http.Headers).Schema()},
+			ForceNew:    http.ForceNewOnHeaders,
 		},
 		"payload": {
 			Type:             schema.TypeString,
