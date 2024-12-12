@@ -99,5 +99,5 @@ func (me *Settings) FillDemoValues() []string {
 	if me.Password != nil {
 		me.Password = opt.NewString("#######")
 	}
-	return []string{"REST API didn't provide token data"}
+	return []string{"REST API didn't provide password data"}
 }

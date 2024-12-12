@@ -77,5 +77,5 @@ func (me *Settings) FillDemoValues() []string {
 	if me.Password != "" {
 		me.Password = "#######"
 	}
-	return []string{"REST API didn't provide token data"}
+	return []string{"REST API didn't provide password data"}
 }
