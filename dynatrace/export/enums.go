@@ -479,6 +479,7 @@ var ResourceTypes = struct {
 	ServiceNowConnection                ResourceType
 	PagerDutyConnection                 ResourceType
 	MSTeamsConnection                   ResourceType
+	DefaultLaunchpad                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -805,6 +806,7 @@ var ResourceTypes = struct {
 	"dynatrace_servicenow_connection",
 	"dynatrace_pagerduty_connection",
 	"dynatrace_msteams_connection",
+	"dynatrace_default_launchpad",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

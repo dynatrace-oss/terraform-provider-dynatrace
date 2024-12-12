@@ -33,6 +33,7 @@ import (
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/launchpad"
 	msteamsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/msteams/connection"
 	pagerdutyconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/pagerduty/connection"
 	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
@@ -1394,6 +1395,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ServiceNowConnection:            NewResourceDescriptor(servicenowconnection.Service),
 	ResourceTypes.PagerDutyConnection:             NewResourceDescriptor(pagerdutyconnection.Service),
 	ResourceTypes.MSTeamsConnection:               NewResourceDescriptor(msteamsconnection.Service),
+	ResourceTypes.DefaultLaunchpad:                NewResourceDescriptor(launchpad.Service),
 }
 
 type ResourceExclusion struct {

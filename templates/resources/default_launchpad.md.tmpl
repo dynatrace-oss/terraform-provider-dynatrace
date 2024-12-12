@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_default_launchpad Resource - terraform-provider-dynatrace"
+subcategory: "Documents"
+description: |-
+  The resource `dynatrace_default_launchpad` covers configuration to set default Launchpads by user group
+---
+
+# dynatrace_default_launchpad (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Launchpads - https://docs.dynatrace.com/docs/discover-dynatrace/get-started/dynatrace-ui/launchpads
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.launcher:default.launchpad`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_default_launchpad` downloads all existing default Launchpads by user group configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/launchpad/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

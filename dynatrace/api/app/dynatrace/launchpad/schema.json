@@ -1,0 +1,97 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Set up your teams default launchpads to streamline your workflow and enhance productivity. Configure up to 100 custom default launchpads in this environment to suit your specific needs.",
+	"displayName": "Launcher",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"metadata": {
+		"appName": "Launcher"
+	},
+	"multiObject": false,
+	"properties": {
+		"groupLaunchpads": {
+			"description": "Set default launchpads for user groups. The highest ranked will be shown to the user of a group.",
+			"displayName": "Default Launchpad",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/GroupLaunchpadItem"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add default launchpad"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaId": "app:dynatrace.launcher:default.launchpad",
+	"types": {
+		"GroupLaunchpadItem": {
+			"description": "",
+			"displayName": "GroupLaunchpadItem",
+			"documentation": "",
+			"properties": {
+				"isEnabled": {
+					"default": true,
+					"description": "",
+					"displayName": "State",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"launchpadId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Launchpad",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"userGroupId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "User Group",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{launchpadId} {userGroupId} {isEnabled}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.3"
+}
