@@ -588,6 +588,7 @@ func Provider() *schema.Provider {
 			"dynatrace_pagerduty_connection":                resources.NewGeneric(export.ResourceTypes.PagerDutyConnection).Resource(),
 			"dynatrace_msteams_connection":                  resources.NewGeneric(export.ResourceTypes.MSTeamsConnection).Resource(),
 			"dynatrace_default_launchpad":                   resources.NewGeneric(export.ResourceTypes.DefaultLaunchpad).Resource(),
+			"dynatrace_jenkins_connection":                  resources.NewGeneric(export.ResourceTypes.JenkinsConnection).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

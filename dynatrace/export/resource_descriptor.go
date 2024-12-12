@@ -31,6 +31,7 @@ import (
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
+	jenkinsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jenkins/connector/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/launchpad"
@@ -1396,6 +1397,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.PagerDutyConnection:             NewResourceDescriptor(pagerdutyconnection.Service),
 	ResourceTypes.MSTeamsConnection:               NewResourceDescriptor(msteamsconnection.Service),
 	ResourceTypes.DefaultLaunchpad:                NewResourceDescriptor(launchpad.Service),
+	ResourceTypes.JenkinsConnection:               NewResourceDescriptor(jenkinsconnection.Service),
 }
 
 type ResourceExclusion struct {

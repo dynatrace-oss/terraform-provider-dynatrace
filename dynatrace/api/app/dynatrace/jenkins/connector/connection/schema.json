@@ -1,0 +1,133 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Connections contain the access information for the Jenkins app. This connection can be used to connect to the Jenkins instance.",
+	"displayName": "Jenkins Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Jenkins"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "Name has to be between 1 and 100 characters long",
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of the Jenkins connection",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"password": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The password of the user or API token obtained from the Jenkins UI (Dashboard \u003e User \u003e Configure \u003e API Token)",
+			"displayName": "Password",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"url": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"customMessage": "URL cannot contain whitespaces",
+					"type": "NO_WHITESPACE"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Base URL of your Jenkins instance (e.g. https://[YOUR_JENKINS_DOMAIN]/)",
+			"displayName": "Jenkins URL",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		},
+		"username": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of your Jenkins user (e.g. jenkins)",
+			"displayName": "Username",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.jenkins.connector:connection",
+	"types": {},
+	"version": "0.0.5"
+}
