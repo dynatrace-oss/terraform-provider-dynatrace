@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_gitlab_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_gitlab_connection` covers configuration for GitLab connections
+---
+
+# dynatrace_gitlab_connection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- GitLab - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/gitlab
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.gitlab.connector:connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_gitlab_connection` downloads all existing GitLab connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/gitlab/connector/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

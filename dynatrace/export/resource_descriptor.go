@@ -28,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/featureflags"
+	gitlabconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/gitlab/connector/connection"
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
 	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
@@ -1398,6 +1399,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MSTeamsConnection:               NewResourceDescriptor(msteamsconnection.Service),
 	ResourceTypes.DefaultLaunchpad:                NewResourceDescriptor(launchpad.Service),
 	ResourceTypes.JenkinsConnection:               NewResourceDescriptor(jenkinsconnection.Service),
+	ResourceTypes.GitLabConnection:                NewResourceDescriptor(gitlabconnection.Service),
 }
 
 type ResourceExclusion struct {

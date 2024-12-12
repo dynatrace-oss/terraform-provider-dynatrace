@@ -1,0 +1,107 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Connections containing access tokens for the GitLab Platform",
+	"displayName": "GitLab Connections",
+	"documentation": "(for more information read the [GitLab API documentation](https://docs.gitlab.com/ee/api/rest/ \"Visit GitLab document\"))",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "GitLab"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A unique and clearly identifiable connection name to your GitLab instance.  ",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "Token has to be between 5 and 500 characters long",
+					"maxLength": 500,
+					"minLength": 5,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The GitLab token to use for authentication. Please note that this token is not refreshed and can expire.",
+			"displayName": "GitLab token",
+			"documentation": "GitLab token in the form of `******`. Not a secret for now due to problems retrieving it from the API functions",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "secret"
+		},
+		"url": {
+			"constraints": [
+				{
+					"customMessage": "URL has to be between 5 and 500 characters long",
+					"maxLength": 500,
+					"minLength": 5,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "URL cannot contain whitespaces",
+					"type": "NO_WHITESPACE"
+				},
+				{
+					"customMessage": "Not a valid URI",
+					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Not a valid http(s) URL",
+					"pattern": "^https?://.*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "The GitLab URL instance you want to connect. For example, https://gitlab.com",
+			"displayName": "GitLab URL",
+			"documentation": "Include the http(s):// prefix",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"subType": "url",
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.gitlab.connector:connection",
+	"types": {},
+	"version": "0.1.2"
+}

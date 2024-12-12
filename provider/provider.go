@@ -589,6 +589,7 @@ func Provider() *schema.Provider {
 			"dynatrace_msteams_connection":                  resources.NewGeneric(export.ResourceTypes.MSTeamsConnection).Resource(),
 			"dynatrace_default_launchpad":                   resources.NewGeneric(export.ResourceTypes.DefaultLaunchpad).Resource(),
 			"dynatrace_jenkins_connection":                  resources.NewGeneric(export.ResourceTypes.JenkinsConnection).Resource(),
+			"dynatrace_gitlab_connection":                   resources.NewGeneric(export.ResourceTypes.GitLabConnection).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

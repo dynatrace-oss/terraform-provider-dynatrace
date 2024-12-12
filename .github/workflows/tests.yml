@@ -190,6 +190,19 @@ jobs:
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
         run: go test -v ./dynatrace/api/app/dynatrace/infraops/settings 
+      - name: TestAccGitLabConnection
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DT_NO_REPAIR_INPUT: false
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+        run: go test -v ./dynatrace/api/app/dynatrace/gitlab/connector/connection
       - name: TestAccJenkinsConnection
         if: success() || failure()
         env:
