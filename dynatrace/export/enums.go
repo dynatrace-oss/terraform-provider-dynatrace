@@ -482,6 +482,7 @@ var ResourceTypes = struct {
 	DefaultLaunchpad                    ResourceType
 	JenkinsConnection                   ResourceType
 	GitLabConnection                    ResourceType
+	MSEntraIDConnection                 ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -811,6 +812,7 @@ var ResourceTypes = struct {
 	"dynatrace_default_launchpad",
 	"dynatrace_jenkins_connection",
 	"dynatrace_gitlab_connection",
+	"dynatrace_msentraid_connection",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

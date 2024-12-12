@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_msentraid_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_msentraid_connection` covers configuration for Microsoft Entra ID connections
+---
+
+# dynatrace_msentraid_connection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Azure Connector - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/microsoft-entra-id
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.azure.connector:microsoft-entra-identity-developer-connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_msentraid_connection` downloads all existing Microsoft Entra ID connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

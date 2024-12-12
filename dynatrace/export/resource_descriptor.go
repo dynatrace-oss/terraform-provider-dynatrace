@@ -24,6 +24,7 @@ import (
 
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 
+	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
@@ -1400,6 +1401,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DefaultLaunchpad:                NewResourceDescriptor(launchpad.Service),
 	ResourceTypes.JenkinsConnection:               NewResourceDescriptor(jenkinsconnection.Service),
 	ResourceTypes.GitLabConnection:                NewResourceDescriptor(gitlabconnection.Service),
+	ResourceTypes.MSEntraIDConnection:             NewResourceDescriptor(msentraidconnection.Service),
 }
 
 type ResourceExclusion struct {
