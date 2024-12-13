@@ -36,7 +36,7 @@ resource "dynatrace_log_custom_attribute" "#name#" {
 
 ### Required
 
-- `key` (String) The attribute key is case insensitive in log data ingestion.
+- `key` (String) The attribute key is case sensitive in log data ingestion.
 - `sidebar` (Boolean) Show attribute values in side bar
 
 ### Read-Only

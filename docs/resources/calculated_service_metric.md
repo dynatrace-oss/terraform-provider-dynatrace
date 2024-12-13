@@ -477,6 +477,7 @@ Optional:
 * All other values: The delimiter string to look for
 - `end_delimiter` (String) The closing delimiter string to look for. Required if the `kind` value is `BETWEEN_DELIMITER`. Not applicable otherwise
 - `normalization` (String) The format of the extracted string. Possible values are `ORIGINAL`, `TO_LOWER_CASE` and `TO_UPPER_CASE`
+- `oneagent_attribute_key` (String) The One Agent attribute to extract from. Required if the kind value is `ONE_AGENT_ATTRIBUTE`. Not applicable otherwise.
 - `request_attribute` (String) The request attribute to extract from. Required if the `kind` value is `SERVICE_REQUEST_ATTRIBUTE`. Not applicable otherwise
 - `source` (Block List, Max: 1) Defines valid sources of request attributes for conditions or placeholders (see [below for nested schema](#nestedblock--dimension_definition--placeholders--placeholder--source))
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider

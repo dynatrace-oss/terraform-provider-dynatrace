@@ -41,6 +41,10 @@ resource "dynatrace_frequent_issues" "#name#" {
 - `detect_infra` (Boolean) Detect frequent issues within infrastructure, enabled (`true`) or disabled (`false`)
 - `detect_txn` (Boolean) Detect frequent issues within transactions and services, enabled (`true`) or disabled (`false`)
 
+### Optional
+
+- `detect_env` (Boolean) Events raised at this level typically occur when no specific topological entity is applicable, often based on data such as logs and metrics. This does not impact the detection of issues within applications, transactions, services, or infrastructure.
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.

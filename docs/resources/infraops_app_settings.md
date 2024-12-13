@@ -28,6 +28,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 resource "dynatrace_infraops_app_settings" "#name#" {
   show_monitoring_candidates = true
   show_standalone_hosts      = true
+  interface_saturation_threshold = 0.95
 }
 ```
 
@@ -38,6 +39,10 @@ resource "dynatrace_infraops_app_settings" "#name#" {
 
 - `show_monitoring_candidates` (Boolean) When set to true, the app will display monitoring candidates in the Hosts table
 - `show_standalone_hosts` (Boolean) When set to true, the app will display app only hosts in the Hosts table
+
+### Optional
+
+- `interface_saturation_threshold` (Number) (Required v305+) The threshold at which a network device interface is deemed to be saturated.
 
 ### Read-Only
 

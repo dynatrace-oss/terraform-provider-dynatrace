@@ -69,6 +69,7 @@ resource "dynatrace_process_group_detection_flags" "#name#" {
 ### Optional
 
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `security_software_detection_enabled` (Boolean) This flag enables the detection of security software such as anti-malware protection.
 
 ### Read-Only
 

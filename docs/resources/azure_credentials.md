@@ -48,6 +48,7 @@ resource "dynatrace_azure_credentials" "#name#" {
 ### Required
 
 - `active` (Boolean) The monitoring is enabled (`true`) or disabled (`false`).  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected
+- `label` (String) The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed
 - `monitor_only_tagged_entities` (Boolean) Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
 
 ### Optional
@@ -56,7 +57,6 @@ resource "dynatrace_azure_credentials" "#name#" {
 - `auto_tagging` (Boolean) The automatic capture of Azure tags is on (`true`) or off (`false`)
 - `directory_id` (String) The Directory ID (also referred to as Tenant ID)  The combination of Application ID and Directory ID must be unique
 - `key` (String, Sensitive) The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`. Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
-- `label` (String) The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed
 - `monitor_only_excluding_tag_pairs` (Block List, Max: 20) A list of Azure tags to be excluded from monitoring.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`. (see [below for nested schema](#nestedblock--monitor_only_excluding_tag_pairs))
 - `monitor_only_tag_pairs` (Block List, Max: 20) A list of Azure tags to be monitored.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true` (see [below for nested schema](#nestedblock--monitor_only_tag_pairs))
 - `remove_defaults` (Boolean) Instructs the provider to remove the supporting services Dynatrace applies by default to newly created Azure Credentials. Supporting Services applied by via `dynatrace_azure_service` subsequently won't get touched.

@@ -61,7 +61,7 @@ resource "dynatrace_synthetic_location" "#name#" {
 - `city` (String) The city of the location
 - `country_code` (String) The country code of the location. 
 
- Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland)
+ To fetch the list of available country codes, use the [GET all countries](https://dt-url.net/37030go) request
 - `deployment_type` (String) The deployment type of the location: 
 
 * `STANDARD`: The location is deployed on Windows or Linux.
@@ -77,9 +77,7 @@ resource "dynatrace_synthetic_location" "#name#" {
  You can retrieve the list of available nodes with the [GET all nodes](https://dt-url.net/miy3rpl) call
 - `region_code` (String) The region code of the location. 
 
- For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes (without `US-` or `CA-` prefix), for example, `VA` for Virginia or `OR` for Oregon. 
-
- For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes)
+ To fetch the list of available region codes, use the [GET regions of the country](https://dt-url.net/az230x0) request
 
 ### Read-Only
 

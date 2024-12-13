@@ -30,13 +30,11 @@ resource "dynatrace_kubernetes_enrichment" "#name#" {
   rules {
     rule {
       type    = "LABEL"
-      enabled = true
       source  = "#name#"
       target  = "dt.cost.product"
     }
     rule {
       type    = "ANNOTATION"
-      enabled = true
       source  = "#name#"
       target  = "dt.security_context"
     }
@@ -105,7 +103,6 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `source` (String) The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).
 
 `source := (prefix/)?name`
@@ -117,4 +114,8 @@ Required:
 Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
 - `target` (String) Possible Values: `Dt_cost_costcenter`, `Dt_cost_product`, `Dt_security_context`
 - `type` (String) Possible Values: `ANNOTATION`, `LABEL`
+
+Optional:
+
+- `enabled` (Boolean, Deprecated) This setting is enabled (`true`) or disabled (`false`)
  
