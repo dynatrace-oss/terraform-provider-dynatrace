@@ -109,6 +109,7 @@ var Sources = struct {
 	CICSSystemId            Source
 	CICSTaskId              Source
 	CICSTransactionCallType Source
+	CICSTransactionGroupId  Source
 	CICSUnitOfWorkId        Source
 	CICSUserId              Source
 	ClientIP                Source
@@ -141,6 +142,7 @@ var Sources = struct {
 	"CICS_SYSTEM_ID",
 	"CICS_TASK_ID",
 	"CICS_TRANSACTION_CALL_TYPE",
+	"CICS_TRANSACTION_GROUP_ID",
 	"CICS_UNIT_OF_WORK_ID",
 	"CICS_USER_ID",
 	"CLIENT_IP",
@@ -471,6 +473,7 @@ var ServiceTechnologys = struct {
 	ASPDotNetSignalr                     ServiceTechnology
 	AsyncHTTPClient                      ServiceTechnology
 	AWSDynamoDB                          ServiceTechnology
+	AWSEventBridge                       ServiceTechnology
 	AWSLambda                            ServiceTechnology
 	AWSRds                               ServiceTechnology
 	AWSService                           ServiceTechnology
@@ -497,6 +500,7 @@ var ServiceTechnologys = struct {
 	CloudFoundryAuctioneer               ServiceTechnology
 	CloudFoundryBosh                     ServiceTechnology
 	CloudFoundryGorouter                 ServiceTechnology
+	CLR                                  ServiceTechnology
 	CodeIgniter                          ServiceTechnology
 	Coldfusion                           ServiceTechnology
 	ConfluentKafkaClient                 ServiceTechnology
@@ -574,6 +578,7 @@ var ServiceTechnologys = struct {
 	Libvirt                              ServiceTechnology
 	Linkerd                              ServiceTechnology
 	LinuxSystem                          ServiceTechnology
+	LogstachLogbackEncoder               ServiceTechnology
 	Magento                              ServiceTechnology
 	Mariadb                              ServiceTechnology
 	Memcached                            ServiceTechnology
@@ -603,6 +608,7 @@ var ServiceTechnologys = struct {
 	OracleDbListener                     ServiceTechnology
 	OracleWeblogic                       ServiceTechnology
 	Owin                                 ServiceTechnology
+	OwinKatana                           ServiceTechnology
 	Perl                                 ServiceTechnology
 	PHP                                  ServiceTechnology
 	PHPFpm                               ServiceTechnology
@@ -616,6 +622,7 @@ var ServiceTechnologys = struct {
 	QosLogback                           ServiceTechnology
 	Quarkus                              ServiceTechnology
 	RabbitMq                             ServiceTechnology
+	RabbitMqClient                       ServiceTechnology
 	ReactorCore                          ServiceTechnology
 	Redis                                ServiceTechnology
 	Resteasy                             ServiceTechnology
@@ -653,6 +660,7 @@ var ServiceTechnologys = struct {
 	Vios                                 ServiceTechnology
 	VirtualMachineKvm                    ServiceTechnology
 	VirtualMachineQemu                   ServiceTechnology
+	WCF                                  ServiceTechnology
 	Wildfly                              ServiceTechnology
 	WindowsContainers                    ServiceTechnology
 	WindowsSystem                        ServiceTechnology
@@ -691,6 +699,7 @@ var ServiceTechnologys = struct {
 	"ASP_DOTNET_SIGNALR",
 	"ASYNC_HTTP_CLIENT",
 	"AWS_DYNAMO_DB",
+	"AWS_EVENT_BRIDGE",
 	"AWS_LAMBDA",
 	"AWS_RDS",
 	"AWS_SERVICE",
@@ -717,6 +726,7 @@ var ServiceTechnologys = struct {
 	"CLOUDFOUNDRY_AUCTIONEER",
 	"CLOUDFOUNDRY_BOSH",
 	"CLOUDFOUNDRY_GOROUTER",
+	"CLR",
 	"CODEIGNITER",
 	"COLDFUSION",
 	"CONFLUENT_KAFKA_CLIENT",
@@ -794,6 +804,7 @@ var ServiceTechnologys = struct {
 	"LIBVIRT",
 	"LINKERD",
 	"LINUX_SYSTEM",
+	"LOGSTASH_LOGBACK_ENCODER",
 	"MAGENTO",
 	"MARIADB",
 	"MEMCACHED",
@@ -823,6 +834,7 @@ var ServiceTechnologys = struct {
 	"ORACLE_DB_LISTENER",
 	"ORACLE_WEBLOGIC",
 	"OWIN",
+	"OWIN_KATANA",
 	"PERL",
 	"PHP",
 	"PHP_FPM",
@@ -836,6 +848,7 @@ var ServiceTechnologys = struct {
 	"QOS_LOGBACK",
 	"QUARKUS",
 	"RABBIT_MQ",
+	"RABBITMQ_CLIENT",
 	"REACTOR_CORE",
 	"REDIS",
 	"RESTEASY",
@@ -873,6 +886,7 @@ var ServiceTechnologys = struct {
 	"VIOS",
 	"VIRTUAL_MACHINE_KVM",
 	"VIRTUAL_MACHINE_QEMU",
+	"WCF",
 	"WILDFLY",
 	"WINDOWS_CONTAINERS",
 	"WINDOWS_SYSTEM",
