@@ -38,22 +38,23 @@ type Type string
 
 // Types offers the known enum values
 var Types = struct {
-	Boolean                Type
-	ESBInputNodeType       Type
-	FailedState            Type
-	FailureReason          Type
-	FastString             Type
-	FlawState              Type
-	HTTPMethod             Type
-	HTTPStatusClass        Type
-	IIBInputNodeType       Type
-	Number                 Type
-	NumberRequestAttribute Type
-	ServiceType            Type
-	String                 Type
-	StringRequestAttribute Type
-	Tag                    Type
-	ZosCallType            Type
+	Boolean                 Type
+	ESBInputNodeType        Type
+	FailedState             Type
+	FailureReason           Type
+	FastString              Type
+	FlawState               Type
+	HTTPMethod              Type
+	HTTPStatusClass         Type
+	IIBInputNodeType        Type
+	Number                  Type
+	NumberRequestAttribute  Type
+	ServiceType             Type
+	String                  Type
+	StringOneAgentAttribute Type
+	StringRequestAttribute  Type
+	Tag                     Type
+	ZosCallType             Type
 }{
 	"BOOLEAN",
 	"ESB_INPUT_NODE_TYPE",
@@ -68,6 +69,7 @@ var Types = struct {
 	"NUMBER_REQUEST_ATTRIBUTE",
 	"SERVICE_TYPE",
 	"STRING",
+	"STRING_ONE_AGENT_ATTRIBUTE",
 	"STRING_REQUEST_ATTRIBUTE",
 	"TAG",
 	"ZOS_CALL_TYPE",

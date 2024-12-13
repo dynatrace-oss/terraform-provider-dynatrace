@@ -171,6 +171,7 @@ var Attributes = struct {
 	NetworkIoTime              Attribute
 	NonDatabaseChildCallCount  Attribute
 	NonDatabaseChildCallTime   Attribute
+	OneAgentAttribute          Attribute
 	ProcessGroupName           Attribute
 	ProcessGroupTag            Attribute
 	RemoteEndpoint             Attribute
@@ -264,6 +265,7 @@ var Attributes = struct {
 	"NETWORK_IO_TIME",
 	"NON_DATABASE_CHILD_CALL_COUNT",
 	"NON_DATABASE_CHILD_CALL_TIME",
+	"ONE_AGENT_ATTRIBUTE",
 	"PROCESS_GROUP_NAME",
 	"PROCESS_GROUP_TAG",
 	"REMOTE_ENDPOINT",

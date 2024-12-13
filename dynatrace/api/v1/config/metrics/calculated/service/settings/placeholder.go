@@ -33,17 +33,18 @@ import (
 //
 //	It enables you to extract a request attribute value or other request attribute and use it in the naming pattern.
 type Placeholder struct {
-	Name              string                     `json:"name"`                        // The name of the placeholder. Use it in the naming pattern as `{name}`.
-	Aggregation       *Aggregation               `json:"aggregation,omitempty"`       // Which value of the request attribute must be used when it occurs across multiple child requests.  Only applicable for the `SERVICE_REQUEST_ATTRIBUTE` attribute, when **useFromChildCalls** is `true`.  For the `COUNT` aggregation, the **kind** field is not applicable.
-	Attribute         Attribute                  `json:"attribute"`                   // The attribute to extract from. You can only use attributes of the **string** type.
-	Source            *propagation.Source        `json:"source,omitempty"`            // Defines valid sources of request attributes for conditions or placeholders.
-	Normalization     *Normalization             `json:"normalization,omitempty"`     // The format of the extracted string.
-	DelimiterOrRegex  *string                    `json:"delimiterOrRegex,omitempty"`  // Depending on the **type** value:   * `REGEX_EXTRACTION`: The regular expression.   * `BETWEEN_DELIMITER`: The opening delimiter string to look for.   * All other values: The delimiter string to look for.
-	UseFromChildCalls *bool                      `json:"useFromChildCalls,omitempty"` // If `true` request attribute will be taken from a child service call.   Only applicable for the `SERVICE_REQUEST_ATTRIBUTE` attribute. Defaults to `false`.
-	RequestAttribute  *string                    `json:"requestAttribute,omitempty"`  // The request attribute to extract from.   Required if the **kind** value is `SERVICE_REQUEST_ATTRIBUTE`. Not applicable otherwise.
-	EndDelimiter      *string                    `json:"endDelimiter,omitempty"`      // The closing delimiter string to look for.   Required if the **kind** value is `BETWEEN_DELIMITER`. Not applicable otherwise.
-	Kind              Kind                       `json:"kind"`                        // The type of extraction.   Defines either usage of regular expression (`regex`) or the position of request attribute value to be extracted.  When the **attribute** is `SERVICE_REQUEST_ATTRIBUTE` attribute and **aggregation** is `COUNT`, needs to be set to `ORIGINAL_TEXT`
-	Unknowns          map[string]json.RawMessage `json:"-"`
+	Name                 string                     `json:"name"`                           // The name of the placeholder. Use it in the naming pattern as `{name}`.
+	Aggregation          *Aggregation               `json:"aggregation,omitempty"`          // Which value of the request attribute must be used when it occurs across multiple child requests.  Only applicable for the `SERVICE_REQUEST_ATTRIBUTE` attribute, when **useFromChildCalls** is `true`.  For the `COUNT` aggregation, the **kind** field is not applicable.
+	Attribute            Attribute                  `json:"attribute"`                      // The attribute to extract from. You can only use attributes of the **string** type.
+	Source               *propagation.Source        `json:"source,omitempty"`               // Defines valid sources of request attributes for conditions or placeholders.
+	Normalization        *Normalization             `json:"normalization,omitempty"`        // The format of the extracted string.
+	DelimiterOrRegex     *string                    `json:"delimiterOrRegex,omitempty"`     // Depending on the **type** value:   * `REGEX_EXTRACTION`: The regular expression.   * `BETWEEN_DELIMITER`: The opening delimiter string to look for.   * All other values: The delimiter string to look for.
+	UseFromChildCalls    *bool                      `json:"useFromChildCalls,omitempty"`    // If `true` request attribute will be taken from a child service call.   Only applicable for the `SERVICE_REQUEST_ATTRIBUTE` attribute. Defaults to `false`.
+	RequestAttribute     *string                    `json:"requestAttribute,omitempty"`     // The request attribute to extract from.   Required if the **kind** value is `SERVICE_REQUEST_ATTRIBUTE`. Not applicable otherwise.
+	EndDelimiter         *string                    `json:"endDelimiter,omitempty"`         // The closing delimiter string to look for.   Required if the **kind** value is `BETWEEN_DELIMITER`. Not applicable otherwise.
+	Kind                 Kind                       `json:"kind"`                           // The type of extraction.   Defines either usage of regular expression (`regex`) or the position of request attribute value to be extracted.  When the **attribute** is `SERVICE_REQUEST_ATTRIBUTE` attribute and **aggregation** is `COUNT`, needs to be set to `ORIGINAL_TEXT`
+	OneAgentAttributeKey *string                    `json:"oneAgentAttributeKey,omitempty"` // The One Agent attribute to extract from. Required if the kind value is `ONE_AGENT_ATTRIBUTE`. Not applicable otherwise.
+	Unknowns             map[string]json.RawMessage `json:"-"`
 }
 
 func (me *Placeholder) Schema() map[string]*schema.Schema {
@@ -101,6 +102,11 @@ func (me *Placeholder) Schema() map[string]*schema.Schema {
 			Description: "Defines valid sources of request attributes for conditions or placeholders",
 			Elem:        &schema.Resource{Schema: new(propagation.Source).Schema()},
 		},
+		"oneagent_attribute_key": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The One Agent attribute to extract from. Required if the kind value is `ONE_AGENT_ATTRIBUTE`. Not applicable otherwise.",
+		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
@@ -114,33 +120,35 @@ func (me *Placeholder) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	return properties.EncodeAll(map[string]any{
-		"name":                 me.Name,
-		"aggregation":          me.Aggregation,
-		"attribute":            me.Attribute,
-		"normalization":        me.Normalization,
-		"delimiter_or_regex":   me.DelimiterOrRegex,
-		"use_from_child_calls": me.UseFromChildCalls,
-		"request_attribute":    me.RequestAttribute,
-		"end_delimiter":        me.EndDelimiter,
-		"kind":                 me.Kind,
-		"source":               me.Source,
-		"unknowns":             me.Unknowns,
+		"name":                   me.Name,
+		"aggregation":            me.Aggregation,
+		"attribute":              me.Attribute,
+		"normalization":          me.Normalization,
+		"delimiter_or_regex":     me.DelimiterOrRegex,
+		"use_from_child_calls":   me.UseFromChildCalls,
+		"request_attribute":      me.RequestAttribute,
+		"end_delimiter":          me.EndDelimiter,
+		"kind":                   me.Kind,
+		"source":                 me.Source,
+		"oneagent_attribute_key": me.OneAgentAttributeKey,
+		"unknowns":               me.Unknowns,
 	})
 }
 
 func (me *Placeholder) UnmarshalHCL(decoder hcl.Decoder) error {
 	err := decoder.DecodeAll(map[string]any{
-		"name":                 &me.Name,
-		"aggregation":          &me.Aggregation,
-		"attribute":            &me.Attribute,
-		"normalization":        &me.Normalization,
-		"delimiter_or_regex":   &me.DelimiterOrRegex,
-		"use_from_child_calls": &me.UseFromChildCalls,
-		"request_attribute":    &me.RequestAttribute,
-		"end_delimiter":        &me.EndDelimiter,
-		"kind":                 &me.Kind,
-		"source":               &me.Source,
-		"unknowns":             &me.Unknowns,
+		"name":                   &me.Name,
+		"aggregation":            &me.Aggregation,
+		"attribute":              &me.Attribute,
+		"normalization":          &me.Normalization,
+		"delimiter_or_regex":     &me.DelimiterOrRegex,
+		"use_from_child_calls":   &me.UseFromChildCalls,
+		"request_attribute":      &me.RequestAttribute,
+		"end_delimiter":          &me.EndDelimiter,
+		"kind":                   &me.Kind,
+		"source":                 &me.Source,
+		"oneagent_attribute_key": &me.OneAgentAttributeKey,
+		"unknowns":               &me.Unknowns,
 	})
 	return err
 }
