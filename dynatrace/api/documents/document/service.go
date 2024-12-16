@@ -24,6 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	docapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
 	"golang.org/x/oauth2/clientcredentials"
@@ -59,6 +60,9 @@ func (me *service) client() *docclient.Client {
 func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
 	result, err := me.client().Get(ctx, id)
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return err
 	}
 
@@ -80,6 +84,9 @@ func (me *service) SchemaID() string {
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	listResponse, err := me.client().List(ctx, "")
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return nil, err
 	}
 	var stubs api.Stubs
@@ -97,6 +104,9 @@ func (me *service) Validate(_ *documents.Document) error {
 func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub, error) {
 	stub, err := me.createPrivate(ctx, v)
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return nil, err
 	}
 
@@ -112,6 +122,9 @@ func (me *service) createPrivate(ctx context.Context, v *documents.Document) (st
 	c := me.client()
 	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return nil, err
 	}
 	if response.IsSuccess() {
@@ -129,6 +142,9 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 	c := me.client()
 	response, err := c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return err
 	}
 	if response.IsSuccess() {
@@ -141,6 +157,9 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 func (me *service) Delete(ctx context.Context, id string) error {
 	response, err := me.client().Delete(ctx, id)
 	if err != nil {
+		if apiError, ok := err.(docapi.APIError); ok {
+			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+		}
 		return err
 	}
 	if response.IsSuccess() {
