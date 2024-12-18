@@ -30,12 +30,14 @@ import (
 
 // Decoder has no documentation
 type MinDecoder interface {
+	GetOkExists(key string) (any, bool)
 	GetOk(key string) (any, bool)
 	Get(key string) any
 }
 
 // Decoder has no documentation
 type Decoder interface {
+	GetOkExists(key string) (any, bool)
 	GetOk(key string) (any, bool)
 	Get(key string) any
 	Decode(key string, v any) error
@@ -48,6 +50,11 @@ type Decoder interface {
 
 type logmin struct {
 	parent *mindecoder
+}
+
+func (d *logmin) GetOkExists(key string) (any, bool) {
+	res, ok := d.parent.GetOkExists(key)
+	return res, ok
 }
 
 func (d *logmin) GetOk(key string) (any, bool) {
@@ -491,6 +498,10 @@ func (d *mindecoder) GetOk(key string) (any, bool) {
 	return d.parent.GetOk(key)
 }
 
+func (d *mindecoder) GetOkExists(key string) (any, bool) {
+	return d.parent.GetOkExists(key)
+}
+
 func (d *mindecoder) Get(key string) any {
 	return d.parent.Get(key)
 }
@@ -553,6 +564,14 @@ func (d *decoder) GetOk(key string) (any, bool) {
 	return d.parent.GetOk(d.address + "." + key)
 }
 
+func (d *decoder) GetOkExists(key string) (any, bool) {
+	if d.address == "" {
+		res, ok := d.parent.GetOkExists(key)
+		return res, ok
+	}
+	return d.parent.GetOk(d.address + "." + key)
+}
+
 func (d *decoder) Get(key string) any {
 	if d.address == "" {
 		return d.parent.Get(key)
@@ -575,6 +594,10 @@ func (d *voidDecoder) DecodeAny(m map[string]any) (any, error) {
 }
 
 func (vd *voidDecoder) GetOk(key string) (any, bool) {
+	return nil, false
+}
+
+func (vd *voidDecoder) GetOkExists(key string) (any, bool) {
 	return nil, false
 }
 

@@ -115,16 +115,24 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"title":       &me.Title,
 		"description": &me.Description,
 
-		"actor":   &me.Actor,
-		"owner":   &me.Owner,
-		"private": &me.Private,
+		"actor": &me.Actor,
+		"owner": &me.Owner,
+		// "private": &me.Private,
 		"trigger": &me.Trigger,
 		"tasks":   &me.Tasks,
 	}); err != nil {
 		return err
 	}
-	if me.Private == nil {
+	// Because `private` has a default value of `true` we need to check
+	// with `GetOkExists`
+	// This is a shortcoming of the TF Plugin SDK. They've struggled
+	// with providing proper "found" return values when calling `GetOk`.
+	// `GetOkExists` SHOULD meanwhile produce the correct value.
+	isPrivate, isPrivateExists := decoder.GetOkExists("private")
+	if !isPrivateExists {
 		me.Private = opt.NewBool(true)
+	} else {
+		me.Private = opt.NewBool(isPrivate.(bool))
 	}
 	return nil
 }
