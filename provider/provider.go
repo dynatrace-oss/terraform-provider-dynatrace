@@ -591,6 +591,7 @@ func Provider() *schema.Provider {
 			"dynatrace_jenkins_connection":                  resources.NewGeneric(export.ResourceTypes.JenkinsConnection).Resource(),
 			"dynatrace_gitlab_connection":                   resources.NewGeneric(export.ResourceTypes.GitLabConnection).Resource(),
 			"dynatrace_msentraid_connection":                resources.NewGeneric(export.ResourceTypes.MSEntraIDConnection).Resource(),
+			"dynatrace_github_connection":                   resources.NewGeneric(export.ResourceTypes.GitHubConnection).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

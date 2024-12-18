@@ -1,0 +1,111 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter token to save the new configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "GitHub authentication details",
+	"displayName": "GitHub Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Personal Access Token (PAT for GitHub and GitHub Enterprise Cloud)",
+					"value": "pat"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "GitHub for Workflows"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long.",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The name of the GitHub connection",
+			"displayName": "Connection name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"token": {
+			"constraints": [
+				{
+					"customMessage": "Tokens have to be between 1 and 255 characters long.",
+					"maxLength": 255,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Token character set is limited to [A-Za-z0-9_].",
+					"pattern": "^[A-Za-z0-9_]*$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Token for the selected authentication type",
+			"displayName": "Token",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"pat"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
+		"type": {
+			"default": "pat",
+			"description": "Type of authentication method that should be used",
+			"displayName": "Type",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.github.connector:connection",
+	"types": {},
+	"version": "0.1.1"
+}
