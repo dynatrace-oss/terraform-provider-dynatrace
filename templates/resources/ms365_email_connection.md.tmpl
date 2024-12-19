@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: dynatrace_ms365_email_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_ms365_email_connection` covers configuration for Microsoft 365 email connections
+---
+
+# dynatrace_ms365_email_connection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Microsoft 365 for Workflows - https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/microsoft365
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `app:dynatrace.microsoft365.connector:mail.connection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_ms365_email_connection` downloads all existing Microsoft 365 email connections
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/app/dynatrace/microsoft365/connector/mail/connection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

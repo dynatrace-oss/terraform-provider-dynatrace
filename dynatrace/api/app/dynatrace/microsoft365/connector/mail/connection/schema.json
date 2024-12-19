@@ -1,0 +1,186 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"checkAllProperties": false,
+			"customMessage": "For security reasons please re-enter the Client Secret before saving the configuration.",
+			"type": "SECRET_RESUBMISSION"
+		}
+	],
+	"description": "Microsoft 365 connections for sending emails",
+	"displayName": "Microsoft 365 Email Connections",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Access token request with a shared secret",
+					"displayName": "Client secret",
+					"value": "client_secret"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"appName": "Microsoft 365 for Workflows"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"client_id": {
+			"constraints": [
+				{
+					"customMessage": "Client has to be between 5 and 100 characters",
+					"maxLength": 100,
+					"minLength": 5,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Please provide a valid application (client) ID. Example: 1234abcd-1234-abcd-1234-abcd1234abcd",
+					"pattern": "^[\\w-]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "Application (client) ID of your app registered in Microsoft Azure App registrations",
+			"displayName": "Application (client) ID",
+			"documentation": "Please find the Application (client) ID in the Microsoft Azure Portal using the service App registrations.",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"client_secret": {
+			"constraints": [
+				{
+					"customMessage": "Please provide a Client Secret",
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Client secret of your app registered in Microsoft Azure App registrations",
+			"displayName": "Client Secret",
+			"documentation": "Please find the Client Secret in the Microsoft Azure Portal using the service App registrations.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "client_secret",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": "secret"
+		},
+		"from_address": {
+			"constraints": [
+				{
+					"customMessage": "Please provide the \"From\" email address",
+					"type": "NOT_EMPTY"
+				},
+				{
+					"customMessage": "Please provide a valid from email address. Example: service.user@company.com",
+					"pattern": "^\\S+@\\S+$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The email address from which the messages will be sent",
+			"displayName": "\"From\" email address",
+			"documentation": "Please provide a valid email address from which the messages will be sent. Example: service.user@company.com",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"customMessage": "Name has to be between 1 and 50 characters long",
+					"maxLength": 50,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A unique name for the Microsoft 365 email connection",
+			"displayName": "Connection name",
+			"documentation": "This name needs to be unique and will be listed and selectable within the connection field of the Microsoft 365 send-email workflow action",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"tenant_id": {
+			"constraints": [
+				{
+					"customMessage": "Please provide a Directory (tenant) ID",
+					"type": "NOT_EMPTY"
+				},
+				{
+					"customMessage": "Please provide a valid directory (tenant) ID. Example: abcd1234-abcd-1234-abcd-1234abcd1234",
+					"pattern": "^[\\w-]+$",
+					"type": "PATTERN"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Directory (tenant) ID of your Azure Active Directory",
+			"displayName": "Directory (tenant) ID",
+			"documentation": "Please find the Directory (tenant) ID in the Microsoft Azure Portal using the service Azure Active Directory.",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"type": {
+			"default": "client_secret",
+			"description": "Type of authentication method that should be used",
+			"displayName": "Type",
+			"documentation": "",
+			"forceSecretResubmission": true,
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "app:dynatrace.microsoft365.connector:mail.connection",
+	"types": {},
+	"version": "0.0.5"
+}

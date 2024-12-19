@@ -38,6 +38,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
 	k8sautomationconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/launchpad"
+	ms365emailconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/microsoft365/connector/mail/connection"
 	msteamsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/msteams/connection"
 	pagerdutyconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/pagerduty/connection"
 	automationcontroller "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/redhat/ansible/automationcontroller/connection"
@@ -1404,6 +1405,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.GitLabConnection:                NewResourceDescriptor(gitlabconnection.Service),
 	ResourceTypes.MSEntraIDConnection:             NewResourceDescriptor(msentraidconnection.Service),
 	ResourceTypes.GitHubConnection:                NewResourceDescriptor(githubconnection.Service),
+	ResourceTypes.Microsoft365EmailConnection:     NewResourceDescriptor(ms365emailconnection.Service),
 }
 
 type ResourceExclusion struct {
