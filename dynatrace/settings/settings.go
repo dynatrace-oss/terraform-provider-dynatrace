@@ -21,8 +21,10 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"math"
 	"math/big"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -187,7 +189,17 @@ var LegacyLongDecode = func(id string) string {
 	if err != nil {
 		return err.Error()
 	}
-	return fmt.Sprintf("%v", result)
+	finalResult := fmt.Sprintf("%v", result)
+	num, err := strconv.Atoi(finalResult)
+	if err != nil {
+		return finalResult
+	}
+
+	absoluteValue := int(math.Abs(float64(num)))
+	if absoluteValue < 1000 {
+		return ""
+	}
+	return finalResult
 }
 
 func SetLegacyID(id string, converter func(string) string, v any) {
