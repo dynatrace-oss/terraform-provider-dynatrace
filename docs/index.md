@@ -76,3 +76,12 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
 
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.
+
+## How can I troubleshoot the Dynatrace Terraform provider?
+Set the following environment variables to generate logs in the working directory.
+```
+export DYNATRACE_DEBUG=true
+export DYNATRACE_LOG_HTTP=terraform-provider-dynatrace.http.log
+export DYNATRACE_HTTP_RESPONSE=true
+```
+For any assistance, please create a [GitHub](https://github.com/dynatrace-oss/terraform-provider-dynatrace/issues) issue.
