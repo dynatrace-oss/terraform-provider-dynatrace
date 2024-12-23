@@ -495,7 +495,9 @@ func SetOptimizedRegexResource(resource *Resource) {
 }
 
 func updateMinMaxMzId(id string) {
-
+	if len(id) == 0 {
+		return
+	}
 	len := len(id)
 	if []byte(id)[0] == '-' {
 		len -= 1
