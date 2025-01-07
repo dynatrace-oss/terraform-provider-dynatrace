@@ -82,7 +82,14 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	listResponse, err := me.client().List(ctx, "")
+	if me == nil {
+		return api.Stubs{}, nil
+	}
+	cl := me.client()
+	if cl == nil {
+		return api.Stubs{}, nil
+	}
+	listResponse, err := cl.List(ctx, "")
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
