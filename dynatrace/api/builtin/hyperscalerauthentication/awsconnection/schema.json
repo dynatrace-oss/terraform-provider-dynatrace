@@ -111,8 +111,8 @@
 								"type": "LENGTH"
 							},
 							{
-								"customMessage": "Policy must be valid with given pattern ^arn:aws:iam::aws:policy.*$",
-								"pattern": "^arn:aws:iam::aws:policy.*$",
+								"customMessage": "Policy must be valid with given pattern ^arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):policy\\/.*$",
+								"pattern": "^arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):policy\\/.*$",
 								"type": "PATTERN"
 							}
 						],
@@ -135,8 +135,8 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Role must be valid with given pattern ^arn:aws:iam::.*:role.*$",
-							"pattern": "^arn:aws:iam::.*:role.*$",
+							"customMessage": "Role must be valid with given pattern ^arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):role\\/.*$",
+							"pattern": "^arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):role\\/.*$",
 							"type": "PATTERN"
 						}
 					],
@@ -157,5 +157,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }
