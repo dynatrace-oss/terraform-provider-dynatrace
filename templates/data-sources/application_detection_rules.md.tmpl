@@ -1,0 +1,24 @@
+---
+layout: ""
+page_title: "dynatrace_application_detection_rules Data Source - terraform-provider-dynatrace"
+subcategory: "Web Applications"
+description: |-
+  The data source `dynatrace_application_detection_rules` covers queries for application detection rules
+---
+
+# dynatrace_application_detection_rules (Data Source)
+
+The application detection rules data source allows retrieval of all existing rules.
+
+## Example Usage
+
+```terraform
+data "dynatrace_application_detection_rules" "test" {
+}
+
+output "application_detection_rules" {
+  value = data.dynatrace_application_detection_rules.test
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/apitoken"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appdetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/application"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/attackalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/appsec/vulnerabilityalerting"
@@ -250,6 +251,7 @@ func Provider() *schema.Provider {
 			"dynatrace_geo_countries":                geocountries.DataSource(),
 			"dynatrace_geo_regions":                  georegions.DataSource(),
 			"dynatrace_geo_cities":                   geocities.DataSource(),
+			"dynatrace_application_detection_rules":  appdetection.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
