@@ -155,7 +155,7 @@ func (me *Module) SortedDataSources() (result []*DataSource) {
 
 func (me *Module) ContainsPostProcessedResources() bool {
 	for _, resource := range me.Resources {
-		if resource.Status.IsOneOf(ResourceStati.PostProcessed) {
+		if resource.GetStatus().IsOneOf(ResourceStati.PostProcessed) {
 			return true
 		}
 	}
@@ -218,13 +218,13 @@ func (me *Module) GetResourceReferences() []*Resource {
 		return []*Resource{}
 	}
 	for _, resource := range myResources {
-		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
+		if !resource.GetStatus().IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
 		key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
 		resources[key] = resource
 		for _, resource := range resource.GetResourceReferences() {
-			if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
+			if !resource.GetStatus().IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 				continue
 			}
 			key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
@@ -263,7 +263,7 @@ func (me *Module) Resource(id string) *Resource {
 		ID:                              id,
 		Type:                            me.Type,
 		Module:                          me,
-		Status:                          ResourceStati.Discovered,
+		PrivateStatus:                   ResourceStati.Discovered,
 		ExtractedIdsPerDependencyModule: map[string]map[string]bool{},
 		ResourceMutex:                   new(sync.Mutex),
 	}
@@ -767,7 +767,7 @@ func (me *Module) GetChildOfResources() []*Resource {
 		isParent := !me.Environment.ChildResourceOverride && childDescriptor != nil && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.Type)
 		if isParent {
 			for _, resource := range module.Resources {
-				if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
+				if resource.GetStatus() == ResourceStati.PostProcessed && resource.GetParent() != nil {
 					resources = append(resources, resource)
 				}
 			}
@@ -783,7 +783,7 @@ func (me *Module) GetChildResources() []*Resource {
 		return resources
 	}
 	for _, resource := range me.Resources {
-		if resource.Status == ResourceStati.PostProcessed && resource.GetParent() != nil {
+		if resource.GetStatus() == ResourceStati.PostProcessed && resource.GetParent() != nil {
 			resources = append(resources, resource)
 		}
 	}
@@ -793,7 +793,7 @@ func (me *Module) GetChildResources() []*Resource {
 func (me *Module) GetNonPostProcessedResources() []*Resource {
 	resources := []*Resource{}
 	for _, resource := range me.Resources {
-		if resource.Status == ResourceStati.Downloaded {
+		if resource.GetStatus() == ResourceStati.Downloaded {
 			resources = append(resources, resource)
 		}
 	}
@@ -803,7 +803,7 @@ func (me *Module) GetNonPostProcessedResources() []*Resource {
 func (me *Module) GetPostProcessedResources() []*Resource {
 	resources := []*Resource{}
 	for _, resource := range me.Resources {
-		if resource.Status == ResourceStati.PostProcessed {
+		if resource.GetStatus() == ResourceStati.PostProcessed {
 			resources = append(resources, resource)
 		}
 	}
@@ -1416,7 +1416,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 	resList = make(resources, 0, len(me.Resources))
 
 	for _, res := range me.Resources {
-		if !res.Status.IsOneOf(ResourceStati.PostProcessed) {
+		if !res.GetStatus().IsOneOf(ResourceStati.PostProcessed) {
 			continue
 		}
 

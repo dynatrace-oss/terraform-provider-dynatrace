@@ -30,6 +30,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"sync/atomic"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
@@ -244,6 +245,7 @@ func (me *Environment) ProcessPrevState() error {
 
 func (me *Environment) InitialDownload() error {
 	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
 		resourceTypes = append(resourceTypes, string(resourceType))
@@ -252,6 +254,8 @@ func (me *Environment) InitialDownload() error {
 	sort.Strings(resourceTypes)
 
 	if parallel {
+		var successfulDownloads atomic.Uint32
+		var erroneousDownloads atomic.Uint32
 		var wg sync.WaitGroup
 		itemCount := len(resourceTypes)
 		channel := make(chan string, itemCount)
@@ -265,8 +269,10 @@ func (me *Environment) InitialDownload() error {
 			keys := me.ResArgs[sResourceType]
 			module := me.Module(ResourceType(sResourceType))
 			if err := module.Download(parallel, keys...); err != nil {
+				erroneousDownloads.Add(1)
 				return err
 			}
+			successfulDownloads.Add(1)
 			return nil
 		}
 
@@ -305,6 +311,15 @@ func (me *Environment) InitialDownload() error {
 
 		close(channel)
 		wg.Wait()
+		logging.Debug.Info.Println("===========================================")
+		logging.Debug.Info.Println("  DOWNLOAD STATISTICS")
+		logging.Debug.Info.Println("===========================================")
+		logging.Debug.Info.Println("   SCHEDULED:", len(resourceTypes))
+		logging.Debug.Info.Println("  SUCCESSFUL:", successfulDownloads.Load())
+		logging.Debug.Info.Println("   ERRONEOUS:", erroneousDownloads.Load())
+		logging.Debug.Info.Println("-------------------------------------------")
+		logging.Debug.Info.Println("       TOTAL:", erroneousDownloads.Load()+successfulDownloads.Load())
+		logging.Debug.Info.Println("===========================================")
 	} else {
 		for _, sResourceType := range resourceTypes {
 			if shutdown.System.Stopped() {
@@ -330,13 +345,20 @@ func (me *Environment) InitialDownload() error {
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
 	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resources := me.GetNonPostProcessedResources()
 
 	if parallel {
-		for len(resources) > 0 {
+		var successfulPostProcesses atomic.Uint32
+		var erroneousPostProcesses atomic.Uint32
 
+		turn := 0
+		for len(resources) > 0 {
 			m := getResMap(resources)
 			for _, reslist := range m {
+				successfulPostProcesses.Store(0)
+				erroneousPostProcesses.Store(0)
+				turn++
 
 				var wg sync.WaitGroup
 				itemCount := len(reslist)
@@ -352,10 +374,13 @@ func (me *Environment) PostProcess() error {
 						return nil
 					}
 					if err := resource.PostProcess(resources); err != nil {
+						erroneousPostProcesses.Add(1)
 						return err
 					}
 					fmt.Print("\r")
 					fmt.Printf("- [POSTPROCESS] %s - %s", resource.Type, resource.UniqueName)
+					logging.Debug.Info.Printf("[POST-PROCESS] [%s] [%s]", resource.Type, resource.ID)
+					successfulPostProcesses.Add(1)
 
 					return nil
 				}
@@ -388,12 +413,23 @@ func (me *Environment) PostProcess() error {
 
 				}
 
+				numScheduled := len(reslist)
 				for _, res := range reslist {
 					channel <- res
 				}
 
 				close(channel)
 				wg.Wait()
+				logging.Debug.Info.Println("===========================================")
+				logging.Debug.Info.Println("  POSTPROCESS STATISTICS / TURN", turn)
+				logging.Debug.Info.Println("===========================================")
+				logging.Debug.Info.Println("   SCHEDULED:", numScheduled)
+				logging.Debug.Info.Println("  SUCCESSFUL:", successfulPostProcesses.Load())
+				logging.Debug.Info.Println("   ERRONEOUS:", erroneousPostProcesses.Load())
+				logging.Debug.Info.Println("-------------------------------------------")
+				logging.Debug.Info.Println("       TOTAL:", successfulPostProcesses.Load()+erroneousPostProcesses.Load())
+				logging.Debug.Info.Println("===========================================")
+
 			}
 
 			resources = me.GetNonPostProcessedResources()
@@ -433,7 +469,7 @@ func (me *Environment) PostProcess() error {
 
 	fmt.Println("Post-Processing Resources - Group child configs with parent configs ...")
 	for _, resource := range me.GetChildResources(true) {
-		if resource.GetParent().Status == ResourceStati.Erronous {
+		if resource.GetParent().GetStatus() == ResourceStati.Erronous {
 			continue
 		}
 		parent := resource.GetParent()
@@ -915,7 +951,7 @@ func (me *Environment) GetResourceTypesWithDownloads() []ResourceType {
 	resourceTypesWithDownloads := map[ResourceType]ResourceType{}
 	for _, module := range me.Modules {
 		for _, resource := range module.Resources {
-			if resource.Status == ResourceStati.PostProcessed {
+			if resource.GetStatus() == ResourceStati.PostProcessed {
 				resourceTypesWithDownloads[resource.Type] = resource.Type
 			}
 		}

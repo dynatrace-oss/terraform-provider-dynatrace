@@ -45,7 +45,7 @@ type Resource struct {
 	UniqueName                      string
 	Type                            ResourceType
 	Module                          *Module
-	Status                          ResourceStatus
+	PrivateStatus                   ResourceStatus
 	Error                           error
 	ResourceReferences              []*Resource
 	DataSourceReferences            []*DataSource
@@ -57,8 +57,20 @@ type Resource struct {
 	BundleFilePath                  string
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
 	ResourceMutex                   *sync.Mutex
+	StatusMutex                     sync.Mutex
 }
 
+func (me *Resource) GetStatus() ResourceStatus {
+	me.StatusMutex.Lock()
+	defer me.StatusMutex.Unlock()
+	return me.PrivateStatus
+}
+
+func (me *Resource) SetStatus(status ResourceStatus) {
+	me.StatusMutex.Lock()
+	defer me.StatusMutex.Unlock()
+	me.PrivateStatus = status
+}
 func (me *Resource) GetReferringResources() []*Resource {
 	return me.Module.Environment.GetReferringResources(me)
 }
@@ -114,7 +126,7 @@ func (me *Resource) SetName(name string) *Resource {
 		nameModule.ChildParentIDNameMap[me.ID] = me.UniqueName
 	}
 
-	me.Status = ResourceStati.Discovered
+	me.SetStatus(ResourceStati.Discovered)
 	return me
 }
 
@@ -145,7 +157,7 @@ func (me *Resource) getResourceReferences(resources map[string]*Resource) map[st
 		return resources
 	}
 	for _, resource := range me.ResourceReferences {
-		if !resource.Status.IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
+		if !resource.GetStatus().IsOneOf(ResourceStati.PostProcessed, ResourceStati.Downloaded) {
 			continue
 		}
 		key := fmt.Sprintf("%s.%s", resource.ID, resource.Type)
@@ -232,14 +244,14 @@ func (me *Resource) Download() error {
 	if shutdown.System.Stopped() {
 		return nil
 	}
-	if me.Status.IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded, ResourceStati.Downloaded, ResourceStati.PostProcessed) {
+	if me.GetStatus().IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded, ResourceStati.Downloaded, ResourceStati.PostProcessed) {
 		return nil
 	}
 
 	var err error
 
 	if me.Module.Status == ModuleStati.Erronous {
-		me.Status = ResourceStati.Erronous
+		me.SetStatus(ResourceStati.Erronous)
 	}
 
 	if me.Module.Status == ModuleStati.Untouched {
@@ -250,7 +262,7 @@ func (me *Resource) Download() error {
 
 	if except := me.Module.GetDescriptor().except; except != nil {
 		if except(me.ID, me.Name) {
-			me.Status = ResourceStati.Excluded
+			me.SetStatus(ResourceStati.Excluded)
 			return nil
 		}
 	}
@@ -264,42 +276,42 @@ func (me *Resource) Download() error {
 	if err = service.Get(context.Background(), getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
-				me.Status = ResourceStati.Erronous
+				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 404 {
 				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
 				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
-				me.Status = ResourceStati.Erronous
+				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 400 {
 				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
 				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
-				me.Status = ResourceStati.Erronous
+				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 500 {
 				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
 				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
-				me.Status = ResourceStati.Erronous
+				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if strings.HasPrefix(restError.Message, "Token is missing required scope") {
 				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
 				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
-				me.Status = ResourceStati.Erronous
+				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 		}
 		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
 		logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
-		me.Status = ResourceStati.Erronous
+		me.SetStatus(ResourceStati.Erronous)
 		me.Error = err
 		return err
 	}
@@ -383,22 +395,22 @@ func (me *Resource) Download() error {
 		return err
 	}
 
-	if !me.Flawed && me.Status != ResourceStati.Erronous && len(comments) > 0 {
+	if !me.Flawed && me.GetStatus() != ResourceStati.Erronous && len(comments) > 0 {
 		orig, _ := filepath.Abs(me.GetFile())
 		att, _ := filepath.Abs(me.GetAttentionFile())
 		absdir, _ := filepath.Abs(path.Dir(me.GetAttentionFile()))
 		os.MkdirAll(absdir, os.ModePerm)
 		os.Link(orig, att)
 	}
-	if me.Flawed && me.Status != ResourceStati.Erronous {
+	if me.Flawed && me.GetStatus() != ResourceStati.Erronous {
 		orig, _ := filepath.Abs(me.GetFile())
 		att, _ := filepath.Abs(me.GetFlawedFile())
 		absdir, _ := filepath.Abs(path.Dir(me.GetFlawedFile()))
 		os.MkdirAll(absdir, os.ModePerm)
 		os.Link(orig, att)
 	}
-	if me.Status != ResourceStati.Erronous {
-		me.Status = ResourceStati.Downloaded
+	if me.GetStatus() != ResourceStati.Erronous {
+		me.SetStatus(ResourceStati.Downloaded)
 	}
 	SetOptimizedRegexResource(me)
 	return nil
@@ -409,16 +421,16 @@ func (me *Resource) PostProcess(nonPostProcessedResources []*Resource) error {
 		return nil
 	}
 
-	if me.Status.IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded, ResourceStati.PostProcessed) {
+	if me.GetStatus().IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded, ResourceStati.PostProcessed) {
 		return nil
 	}
 	var err error
-	if me.Status == ResourceStati.Discovered {
+	if me.GetStatus() == ResourceStati.Discovered {
 		if err = me.Download(); err != nil {
 			return err
 		}
 	}
-	me.Status = ResourceStati.PostProcessed
+	me.SetStatus(ResourceStati.PostProcessed)
 
 	descriptor := me.Module.GetDescriptor()
 

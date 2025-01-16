@@ -135,7 +135,7 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 	}
 	resources := []any{}
 	for _, resource := range environment.Module(me.resourceType).Resources {
-		if resource.Status.IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded) {
+		if resource.GetStatus().IsOneOf(ResourceStati.Erronous, ResourceStati.Excluded) {
 			continue
 		}
 		found := false
