@@ -19,7 +19,6 @@ package jsondashboardsbase
 
 import (
 	"context"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -28,7 +27,8 @@ import (
 	dashboardsbase "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboardsbase/settings"
 )
 
-var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
+// var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
+var JSON_DASHBOARD_BASE_PLUS = true
 
 const SchemaID = "v1:config:json-dashboards-base"
 
