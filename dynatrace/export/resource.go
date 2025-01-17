@@ -427,6 +427,7 @@ func (me *Resource) PostProcess(nonPostProcessedResources []*Resource) error {
 	var err error
 	if me.GetStatus() == ResourceStati.Discovered {
 		if err = me.Download(); err != nil {
+			me.SetStatus(ResourceStati.Erronous)
 			return err
 		}
 	}
