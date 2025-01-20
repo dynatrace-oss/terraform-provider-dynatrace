@@ -133,7 +133,7 @@ func (me *JSONDashboardBase) Schema() map[string]*schema.Schema {
 		return map[string]*schema.Schema{
 			"contents": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Contains the JSON Code of the Dashboard",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if len(old) == 0 && len(new) != 0 {
