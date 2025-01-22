@@ -258,14 +258,7 @@ func (me *Environment) InitialDownload() error {
 	if parallel {
 		var successfulDownloads atomic.Uint32
 		var erroneousDownloads atomic.Uint32
-		var wg sync.WaitGroup
 		itemCount := len(resourceTypes)
-		channel := make(chan string, itemCount)
-		maxThreads := 10
-		if maxThreads > itemCount {
-			maxThreads = itemCount
-		}
-		wg.Add(maxThreads)
 
 		processItem := func(sResourceType string) error {
 			keys := me.ResArgs[sResourceType]
@@ -278,41 +271,32 @@ func (me *Environment) InitialDownload() error {
 			return nil
 		}
 
-		for i := 0; i < maxThreads; i++ {
+		var wg sync.WaitGroup
+		numThreads := 10
+		if numThreads > itemCount {
+			numThreads = itemCount
+		}
 
-			go func() error {
+		sem := make(chan struct{}, numThreads)
 
-				for {
-					sResourceTypeLoop, ok := <-channel
-					if !ok {
-						wg.Done()
-						return nil
-					}
-					if shutdown.System.Stopped() {
-						wg.Done()
-						return nil
-					}
+		for _, resourceType := range resourceTypes {
+			wg.Add(1)
+			sem <- struct{}{} // acquire a slot
+			go func(rt string) {
+				defer wg.Done()
+				err := processItem(rt)
 
-					err := processItem(sResourceTypeLoop)
-
-					if err != nil {
-						wg.Done()
-
-						logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
-						logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] %+v", sResourceTypeLoop, err)
-						return err
-					}
+				if err != nil {
+					logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] %+v", rt, err)
+					logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] %+v", rt, err)
 				}
-			}()
 
+				<-sem // release the slot
+			}(resourceType)
 		}
 
-		for _, sResourceType := range resourceTypes {
-			channel <- sResourceType
-		}
-
-		close(channel)
 		wg.Wait()
+
 		logging.Debug.Info.Println("===========================================")
 		logging.Debug.Info.Println("  DOWNLOAD STATISTICS")
 		logging.Debug.Info.Println("===========================================")
@@ -362,15 +346,6 @@ func (me *Environment) PostProcess() error {
 				erroneousPostProcesses.Store(0)
 				turn++
 
-				var wg sync.WaitGroup
-				itemCount := len(reslist)
-				channel := make(chan *Resource, itemCount)
-				maxThreads := 50
-				if maxThreads > itemCount {
-					maxThreads = itemCount
-				}
-				wg.Add(maxThreads)
-
 				processItem := func(resource *Resource) error {
 					if shutdown.System.Stopped() {
 						return nil
@@ -387,41 +362,32 @@ func (me *Environment) PostProcess() error {
 					return nil
 				}
 
-				for i := 0; i < maxThreads; i++ {
-
-					go func() error {
-
-						for {
-							res, ok := <-channel
-							if !ok {
-								wg.Done()
-								return nil
-							}
-							if shutdown.System.Stopped() {
-								wg.Done()
-								return nil
-							}
-
-							err := processItem(res)
-
-							if err != nil {
-								wg.Done()
-								logging.Debug.Info.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
-								logging.Debug.Warn.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
-								return err
-							}
-						}
-					}()
-
+				var wg sync.WaitGroup
+				numThreads := 10
+				if numThreads > len(reslist) {
+					numThreads = len(reslist)
 				}
+				sem := make(chan struct{}, numThreads)
+
+				for _, res := range reslist {
+					wg.Add(1)
+					sem <- struct{}{} // acquire a slot
+					go func(resource *Resource) {
+						defer wg.Done()
+						err := processItem(res)
+
+						if err != nil {
+							logging.Debug.Info.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
+							logging.Debug.Warn.Printf("[POST-PROCESS] [%s] [%s] [FAILED] %+v", res.Type, res.ID, err)
+						}
+						<-sem // release the slot
+					}(res)
+				}
+
+				wg.Wait()
 
 				numScheduled := len(reslist)
-				for _, res := range reslist {
-					channel <- res
-				}
 
-				close(channel)
-				wg.Wait()
 				logging.Debug.Info.Println("===========================================")
 				logging.Debug.Info.Println("  POSTPROCESS STATISTICS / TURN", turn)
 				logging.Debug.Info.Println("===========================================")
