@@ -39,12 +39,13 @@ import (
 )
 
 type Module struct {
+	DebugID                string
 	Environment            *Environment
 	Type                   ResourceType
 	Resources              map[string]*Resource
 	DataSources            map[string]*DataSource
 	namer                  UniqueNamer
-	Status                 ModuleStatus
+	PrivateStatus          ModuleStatus
 	Error                  error
 	PrivDescriptor         *ResourceDescriptor
 	Service                settings.CRUDService[settings.Settings]
@@ -57,6 +58,31 @@ type Module struct {
 	LegacyIdMap            map[string]*Resource
 	DataSourceLock         *sync.Mutex
 	DescriptorLock         sync.Mutex
+	StatusLock             sync.Mutex
+
+	DiscoveryLock sync.Mutex
+	DownloadLock  sync.Mutex
+}
+
+func (me *Module) SetStatus(status ModuleStatus) {
+	me.StatusLock.Lock()
+	defer me.StatusLock.Unlock()
+	me.PrivateStatus = status
+}
+
+func (me *Module) StatusIsOneOf(stati ...ModuleStatus) bool {
+	if me == nil {
+		return false
+	}
+	me.StatusLock.Lock()
+	defer me.StatusLock.Unlock()
+	return me.PrivateStatus.IsOneOf(stati...)
+}
+
+func (me *Module) GetStatus() ModuleStatus {
+	me.StatusLock.Lock()
+	defer me.StatusLock.Unlock()
+	return me.PrivateStatus
 }
 
 func (me *Module) GetDescriptor() *ResourceDescriptor {
@@ -817,13 +843,23 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 		return nil
 	}
 
-	if me.Status.IsOneOf(ModuleStati.Erronous) {
+	if me.StatusIsOneOf(ModuleStati.Erronous, ModuleStati.Downloaded) {
 		return nil
 	}
-	if !me.Status.IsOneOf(ModuleStati.Discovered) {
+	if !me.StatusIsOneOf(ModuleStati.Discovered) {
 		if err := me.Discover(); err != nil {
 			return err
 		}
+	}
+
+	me.DownloadLock.Lock()
+	defer func() {
+		me.SetStatus(ModuleStati.Downloaded)
+		me.DownloadLock.Unlock()
+	}()
+
+	if me.StatusIsOneOf(ModuleStati.Downloaded, ModuleStati.Erronous) {
+		return nil
 	}
 
 	resourcesToDownload := []*Resource{}
@@ -1008,7 +1044,7 @@ func (me *Module) downloadResources(resourcesToDownload []*Resource, multiThread
 	}
 
 	if len(resourcesToDownload) > 0 {
-		logging.Debug.Info.Printf("[DOWNLOAD] [%s]", me.Type)
+		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [%s]", me.Type, me.DebugID)
 	}
 	for _, resource := range resourcesToDownload {
 		channel <- resource
@@ -1262,7 +1298,17 @@ func (me *Module) Discover() error {
 		return nil
 	}
 
-	if me.Status.IsOneOf(ModuleStati.Downloaded, ModuleStati.Discovered, ModuleStati.Erronous) {
+	if me.StatusIsOneOf(ModuleStati.Downloaded, ModuleStati.Discovered, ModuleStati.Erronous) {
+		return nil
+	}
+
+	me.DiscoveryLock.Lock()
+	defer func() {
+		me.SetStatus(ModuleStati.Discovered)
+		me.DiscoveryLock.Unlock()
+	}()
+
+	if me.StatusIsOneOf(ModuleStati.Downloaded, ModuleStati.Discovered, ModuleStati.Erronous) {
 		return nil
 	}
 
@@ -1278,13 +1324,13 @@ func (me *Module) Discover() error {
 	if stubs, err = me.Service.List(context.Background()); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
 			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. Token is missing required scope.", me.Type)
-			me.Status = ModuleStati.Erronous
+			me.SetStatus(ModuleStati.Erronous)
 			me.Error = err
 			return nil
 		}
 		if strings.Contains(err.Error(), "No schema with topic identifier") {
 			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. The schema doesn't exist on that environment.", me.Type)
-			me.Status = ModuleStati.Erronous
+			me.SetStatus(ModuleStati.Erronous)
 			me.Error = err
 			return nil
 		}
@@ -1307,12 +1353,11 @@ func (me *Module) Discover() error {
 			res.ParentID = stub.ParentID
 		}
 	}
-	me.Status = ModuleStati.Discovered
 	hide(stubs)
 
 	SetOptimizedRegexModule(me)
 
-	logging.Debug.Info.Printf("[DISCOVER] [%s] %d items found.", me.Type, len(stubs))
+	logging.Debug.Info.Printf("[DISCOVER] [%s] [%s] %d items found.", me.Type, me.DebugID, len(stubs))
 	return nil
 }
 
@@ -1409,7 +1454,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 	if !me.Environment.Flags.ImportStateV2 {
 		return nil, nil
 	}
-	if me.Status.IsOneOf(ModuleStati.Imported, ModuleStati.Erronous, ModuleStati.Untouched) {
+	if me.StatusIsOneOf(ModuleStati.Imported, ModuleStati.Erronous, ModuleStati.Untouched) {
 		return nil, nil
 	}
 
@@ -1463,7 +1508,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 		})
 	}
 
-	me.Status = ModuleStati.Imported
+	me.SetStatus(ModuleStati.Imported)
 
 	return resList, nil
 }

@@ -250,11 +250,11 @@ func (me *Resource) Download() error {
 
 	var err error
 
-	if me.Module.Status == ModuleStati.Erronous {
+	if me.Module.StatusIsOneOf(ModuleStati.Erronous) {
 		me.SetStatus(ResourceStati.Erronous)
 	}
 
-	if me.Module.Status == ModuleStati.Untouched {
+	if me.Module.StatusIsOneOf(ModuleStati.Untouched) {
 		if err = me.Module.Discover(); err != nil {
 			return err
 		}
@@ -281,36 +281,36 @@ func (me *Resource) Download() error {
 				return nil
 			}
 			if restError.Code == 404 {
-				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
-				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
+				logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 404 not found", me.Type, me.ID)
 				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 400 {
-				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
-				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
+				logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
+				logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 400 %s", me.Type, me.ID, err.Error())
 				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if restError.Code == 500 {
-				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
-				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
+				logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] 500 Internal Server error", me.Type, me.ID)
 				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 			if strings.HasPrefix(restError.Message, "Token is missing required scope") {
-				logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
-				logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
+				logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
+				logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] Token is missing required scope", me.Type, me.ID)
 				me.SetStatus(ResourceStati.Erronous)
 				me.Error = err
 				return nil
 			}
 		}
-		logging.Debug.Info.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
-		logging.Debug.Warn.Printf("[DOWNLOAD] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		logging.Debug.Info.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
+		logging.Debug.Warn.Printf("[DOWNLOAD-RESOURCE] [%s] [FAILED] [%s] %s", me.Type, me.ID, err.Error())
 		me.SetStatus(ResourceStati.Erronous)
 		me.Error = err
 		return err
@@ -469,10 +469,10 @@ func (me *Resource) PostProcess(nonPostProcessedResources []*Resource) error {
 		resourceType := dependency.ResourceType()
 		if len(resourceType) > 0 {
 			module := me.Module.Environment.Module(resourceType)
-			if module.Status == ModuleStati.Erronous {
+			if module.StatusIsOneOf(ModuleStati.Erronous) {
 				continue
 			}
-			if !module.Status.IsOneOf(ModuleStati.Downloaded, ModuleStati.Discovered, ModuleStati.Erronous) {
+			if !module.StatusIsOneOf(ModuleStati.Downloaded, ModuleStati.Discovered, ModuleStati.Erronous) {
 				if err = module.Discover(); err != nil {
 					return err
 				}

@@ -621,11 +621,12 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		return stored
 	}
 	module := &Module{
+		DebugID:              uuid.NewString(),
 		Type:                 resType,
 		Resources:            map[string]*Resource{},
 		DataSources:          map[string]*DataSource{},
 		namer:                NewUniqueNamer().Replace(ResourceName),
-		Status:               ModuleStati.Untouched,
+		PrivateStatus:        ModuleStati.Untouched,
 		Environment:          me,
 		ChildParentIDNameMap: map[string]string{},
 		ModuleMutex:          new(sync.Mutex),
