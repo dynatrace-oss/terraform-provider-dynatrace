@@ -44,6 +44,15 @@
 			"displayName": "Action",
 			"documentation": "",
 			"properties": {
+				"instantAction": {
+					"description": "",
+					"displayName": "Instant action",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"name": {
 					"constraints": [
 						{
@@ -308,5 +317,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

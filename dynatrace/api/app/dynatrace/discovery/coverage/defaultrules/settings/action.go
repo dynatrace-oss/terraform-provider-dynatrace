@@ -45,12 +45,18 @@ func (me *Actions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Action struct {
-	Name       string           `json:"name"`
-	Parameters ActionParameters `json:"parameters,omitempty"`
+	InstantAction *bool            `json:"instantAction,omitempty"` // Instant action
+	Name          string           `json:"name"`
+	Parameters    ActionParameters `json:"parameters,omitempty"`
 }
 
 func (me *Action) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"instant_action": {
+			Type:        schema.TypeBool,
+			Description: "Instant action",
+			Optional:    true, // nullable
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "no documentation available",
@@ -69,14 +75,16 @@ func (me *Action) Schema() map[string]*schema.Schema {
 
 func (me *Action) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":       me.Name,
-		"parameters": me.Parameters,
+		"instant_action": me.InstantAction,
+		"name":           me.Name,
+		"parameters":     me.Parameters,
 	})
 }
 
 func (me *Action) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":       &me.Name,
-		"parameters": &me.Parameters,
+		"instant_action": &me.InstantAction,
+		"name":           &me.Name,
+		"parameters":     &me.Parameters,
 	})
 }
