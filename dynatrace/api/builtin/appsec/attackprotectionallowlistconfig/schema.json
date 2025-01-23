@@ -24,6 +24,64 @@
 				}
 			],
 			"type": "enum"
+		},
+		"ResourceAttributeValueMatcher": {
+			"description": "",
+			"displayName": "ResourceAttributeValueMatcher",
+			"documentation": "",
+			"items": [
+				{
+					"description": "The resource attribute value must be equal to the specified value.",
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"description": "The resource attribute value must not be equal to the specified value.",
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				},
+				{
+					"description": "The resource attribute value must contain the specified value.",
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"description": "The resource attribute value must not contain the specified value.",
+					"displayName": "does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"description": "The resource attribute value must start with the specified value.",
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"description": "The resource attribute value must not start with the specified value.",
+					"displayName": "does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"description": "The resource attribute value must end with the specified value.",
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"description": "The resource attribute value must not end with the specified value.",
+					"displayName": "does not end with",
+					"value": "DOES_NOT_END_WITH"
+				},
+				{
+					"description": "The resource attribute must be defined (regardless of its value).",
+					"displayName": "exists",
+					"value": "EXISTS"
+				},
+				{
+					"description": "The resource attribute must not be defined (regardless of its value).",
+					"displayName": "does not exist",
+					"value": "DOES_NOT_EXIST"
+				}
+			],
+			"type": "enum"
 		}
 	},
 	"maxObjects": 1000,
@@ -114,6 +172,7 @@
 				{
 					"customMessage": "Please specify at least one of source IP or attack pattern.",
 					"customValidatorId": "allowlistedAttacksCriteriaValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -142,6 +201,7 @@
 						{
 							"customMessage": "Please enter a valid IP address.",
 							"customValidatorId": "ipValidator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -191,7 +251,105 @@
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
+		},
+		"ResourceAttributeCondition": {
+			"description": "",
+			"displayName": "ResourceAttributeCondition",
+			"documentation": "",
+			"properties": {
+				"matcher": {
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ResourceAttributeValueMatcher"
+					}
+				},
+				"resourceAttributeKey": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "resourceAttributeKeyDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"default": "",
+					"description": "",
+					"displayName": "Resource attribute key",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"resourceAttributeValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [
+							"resourceAttributeKey"
+						],
+						"fullContext": false,
+						"identifier": "resourceAttributeValueDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": false
+					},
+					"description": "",
+					"displayName": "Resource attribute value",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"autoSelectFirst": "disabled",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"EXISTS",
+								"DOES_NOT_EXIST"
+							],
+							"property": "matcher",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{matcher|enumValue, select, EXISTS {\"{resourceAttributeKey}\" {matcher}} DOES_NOT_EXIST {\"{resourceAttributeKey}\" {matcher}} other {\"{resourceAttributeKey}\" {matcher} \"{resourceAttributeValue}\"}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

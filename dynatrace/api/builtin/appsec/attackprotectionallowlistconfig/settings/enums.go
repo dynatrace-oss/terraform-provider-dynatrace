@@ -26,3 +26,29 @@ var BlockingStrategies = struct {
 	"MONITOR",
 	"OFF",
 }
+
+type ResourceAttributeValueMatcher string
+
+var ResourceAttributeValueMatchers = struct {
+	Contains         ResourceAttributeValueMatcher
+	DoesNotContain   ResourceAttributeValueMatcher
+	DoesNotEndWith   ResourceAttributeValueMatcher
+	DoesNotExist     ResourceAttributeValueMatcher
+	DoesNotStartWith ResourceAttributeValueMatcher
+	EndsWith         ResourceAttributeValueMatcher
+	Equals           ResourceAttributeValueMatcher
+	Exists           ResourceAttributeValueMatcher
+	NotEquals        ResourceAttributeValueMatcher
+	StartsWith       ResourceAttributeValueMatcher
+}{
+	"CONTAINS",
+	"DOES_NOT_CONTAIN",
+	"DOES_NOT_END_WITH",
+	"DOES_NOT_EXIST",
+	"DOES_NOT_START_WITH",
+	"ENDS_WITH",
+	"EQUALS",
+	"EXISTS",
+	"NOT_EQUALS",
+	"STARTS_WITH",
+}
