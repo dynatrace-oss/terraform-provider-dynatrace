@@ -14,7 +14,7 @@ description: |-
 
 - Business event capture - https://www.dynatrace.com/support/help/platform-modules/business-analytics/ba-events-capturing#report-business-event-oneagent
 
-- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.outgoingg`)
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.outgoing`)
 
 ## Export Example Usage
 
