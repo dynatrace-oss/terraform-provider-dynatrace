@@ -91,6 +91,7 @@ import (
 	attributespreferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/preferences"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/capturingvariants"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/outgoing"
 	bizevents_buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/buckets"
@@ -1406,6 +1407,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MSEntraIDConnection:             NewResourceDescriptor(msentraidconnection.Service),
 	ResourceTypes.GitHubConnection:                NewResourceDescriptor(githubconnection.Service),
 	ResourceTypes.Microsoft365EmailConnection:     NewResourceDescriptor(ms365emailconnection.Service),
+	ResourceTypes.BusinessEventsCapturingVariants: NewResourceDescriptor(
+		capturingvariants.Service,
+		Coalesce(Dependencies.Host),
+		Coalesce(Dependencies.HostGroup),
+	),
 }
 
 type ResourceExclusion struct {

@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_business_events_capturing_variants Resource - terraform-provider-dynatrace"
+subcategory: "Business Events"
+description: |-
+  The resource `dynatrace_business_events_capturing_variants` covers configuration for OneAgent business event capturing variants
+---
+
+# dynatrace_business_events_capturing_variants (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Business event capture - https://docs.dynatrace.com/docs/observe/business-analytics/ba-events-capturing
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:bizevents.http.capturing-variants`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_business_events_capturing_variants` downloads all existing OneAgent business event capturing variants configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/bizevents/http/capturingvariants/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

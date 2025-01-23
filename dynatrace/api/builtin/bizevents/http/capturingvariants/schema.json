@@ -1,0 +1,124 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "OneAgent capturing variants.",
+	"displayName": "OneAgent Business events capturing variants",
+	"documentation": "Capture rules tell OneAgent to capture generic content-types, add capture variants below.",
+	"dynatrace": "1",
+	"enums": {
+		"ContentTypeMatcher": {
+			"description": "",
+			"displayName": "Content type matcher",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "contains",
+					"value": "CONTAINS"
+				}
+			],
+			"type": "enum"
+		},
+		"Parser": {
+			"description": "",
+			"displayName": "Parser",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "JSON",
+					"value": "JSON"
+				},
+				{
+					"displayName": "XML",
+					"value": "XML"
+				},
+				{
+					"displayName": "URL encoded",
+					"value": "URL encoded"
+				},
+				{
+					"displayName": "Text",
+					"value": "Text"
+				},
+				{
+					"displayName": "Raw/Binary",
+					"value": "Raw"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add variant"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"contentTypeMatcher": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Content-type matcher",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ContentTypeMatcher"
+			}
+		},
+		"contentTypeValue": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 129,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Content-type match value",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"parser": {
+			"default": "Text",
+			"description": "",
+			"displayName": "Parser",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Parser"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:business-analytics.business-events-sources",
+		"group:business-analytics"
+	],
+	"schemaId": "builtin:bizevents.http.capturing-variants",
+	"types": {},
+	"version": "1"
+}

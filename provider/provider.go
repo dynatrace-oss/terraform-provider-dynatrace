@@ -595,6 +595,7 @@ func Provider() *schema.Provider {
 			"dynatrace_msentraid_connection":                resources.NewGeneric(export.ResourceTypes.MSEntraIDConnection).Resource(),
 			"dynatrace_github_connection":                   resources.NewGeneric(export.ResourceTypes.GitHubConnection).Resource(),
 			"dynatrace_ms365_email_connection":              resources.NewGeneric(export.ResourceTypes.Microsoft365EmailConnection).Resource(),
+			"dynatrace_business_events_capturing_variants":  resources.NewGeneric(export.ResourceTypes.BusinessEventsCapturingVariants).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
