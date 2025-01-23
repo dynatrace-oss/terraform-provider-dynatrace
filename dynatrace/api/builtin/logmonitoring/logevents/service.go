@@ -27,7 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "3.2.3"
+const SchemaVersion = "3.2.4"
 const SchemaID = "builtin:logmonitoring.log-events"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*logevents.Settings] {

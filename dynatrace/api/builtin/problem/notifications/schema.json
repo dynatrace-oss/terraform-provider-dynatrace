@@ -1065,7 +1065,7 @@
 						}
 					],
 					"default": "",
-					"description": "The API key to access PagerDuty.",
+					"description": "The Events API key to access PagerDuty.",
 					"displayName": "Service key",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1963,5 +1963,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6"
+	"version": "1.6.1"
 }

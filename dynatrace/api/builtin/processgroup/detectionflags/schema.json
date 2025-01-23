@@ -143,7 +143,7 @@
 			"default": true,
 			"description": "",
 			"displayName": "Automatically detect security software",
-			"documentation": "This flag enables the detection of security software such as anti-malware protection.",
+			"documentation": "This flag enables the detection of security software, such as anti-malware protection. The currently detected utilities are Carbon Black EDR (on Windows only), CrowdStrike Falcon XDR and Trellix Endpoint Security (former McAfee).",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.307"
@@ -218,5 +218,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.10"
+	"version": "0.0.11"
 }

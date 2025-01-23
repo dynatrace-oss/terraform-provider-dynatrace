@@ -30,7 +30,7 @@ import (
 )
 
 const SchemaID = "builtin:problem.notifications"
-const SchemaVersion = "1.6"
+const SchemaVersion = "1.6.1"
 
 type filter struct {
 	Type Type

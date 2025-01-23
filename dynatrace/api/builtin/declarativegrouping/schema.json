@@ -6,7 +6,7 @@
 	],
 	"description": "Dynatrace automatically monitors process groups that are of known technology types or that consume significant resources. With declarative process grouping, you can automatically monitor additional technologies.",
 	"displayName": "Declarative process grouping",
-	"documentation": "\n\nNote that declarative grouping does not work for processes that have [deep monitoring enabled](https://dt-url.net/3203vvp).\n\nTo add a new process group, you must first define the technology type. The technology type can be a generic technology name or a custom name. Each technology type can be associated with multiple process groups.\n\nNext, give your process group a unique name and identifier. This name is used to identify the process group throughout your Dynatrace environment. Finally, add detection rules so that Dynatrace can automatically identify processes that belong in this group.\n\nFor complete details, see [Declarative process grouping](https://dt-url.net/j142w57)",
+	"documentation": "\n\nTo add a new process group, you must first define the technology type. The technology type can be a generic technology name or a custom name. Each technology type can be associated with multiple process groups.\n\nNext, give your process group a unique name and identifier. This name is used to identify the process group throughout your Dynatrace environment. Finally, add detection rules so that Dynatrace can automatically identify processes that belong in this group.\n\nFor complete details, see [Declarative process grouping](https://dt-url.net/j142w57)",
 	"dynatrace": "1",
 	"enums": {
 		"ProcessItem": {
@@ -23,7 +23,7 @@
 					"value": "executablePath"
 				},
 				{
-					"displayName": "Command line",
+					"displayName": "Command line arguments",
 					"value": "commandLine"
 				}
 			],
@@ -180,7 +180,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "This identifier is used by Dynatrace to recognize this process group.",
 					"displayName": "Process group identifier",
 					"documentation": "",
 					"maxObjects": 1,
@@ -200,7 +200,7 @@
 						}
 					],
 					"default": "",
-					"description": "This identifier is used by Dynatrace to recognize this process group.",
+					"description": "",
 					"displayName": "Process group display name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -255,5 +255,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.23"
+	"version": "1.0.25"
 }

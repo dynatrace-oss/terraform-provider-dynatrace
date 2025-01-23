@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure log patterns that trigger events for alerting and Davis® analysis. [View Documentation](https://dt-url.net/no02x5g). \nNote that log event detection consumes [Davis® data units](https://dt-url.net/hk03ulj)",
+	"description": "Configure log patterns that trigger events for alerting and Davis® analysis. Note that log event detection consumes [Davis® data units](https://dt-url.net/hk03ulj)",
 	"displayName": "Log events",
 	"documentation": "",
 	"dynatrace": "1",
@@ -94,16 +94,18 @@
 				{
 					"customMessage": "Invisible unicode chars (for example: ZeroWidthSpace) aren't allowed.",
 					"customValidatorId": "invisible-chars-query-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customValidatorId": "log-matcher-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"default": "",
 			"description": "",
-			"displayName": "Log query",
+			"displayName": "Matcher",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
@@ -135,6 +137,15 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Log event summary with the specified name already exists.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"summary"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:log-monitoring.analysis",
 		"group:log-monitoring"
@@ -197,7 +208,7 @@
 					}
 				},
 				"metadata": {
-					"description": "Set of additional key-value properties to be attached to the triggered event.",
+					"description": "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).",
 					"displayName": "Properties",
 					"documentation": "",
 					"items": {
@@ -258,6 +269,7 @@
 						{
 							"customMessage": "Unknown predefined property key.",
 							"customValidatorId": "event-property-key-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
@@ -315,5 +327,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.2.3"
+	"version": "3.2.4"
 }
