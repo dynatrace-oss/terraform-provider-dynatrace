@@ -222,6 +222,22 @@
 					"nullable": true,
 					"type": "boolean"
 				},
+				"encoding": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Encoding",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
 				"type": {
 					"default": "LOG_PATH_PATTERN",
 					"description": "",
@@ -392,5 +408,5 @@
 			}
 		}
 	},
-	"version": "1.1.1"
+	"version": "1.1.2"
 }

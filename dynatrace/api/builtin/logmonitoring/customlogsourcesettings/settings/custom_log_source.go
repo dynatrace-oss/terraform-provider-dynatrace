@@ -27,6 +27,7 @@ type CustomLogSource struct {
 	Type                  LogSourceType                  `json:"type"`                            // Possible Values: `LOG_PATH_PATTERN`, `WINDOWS_EVENT_LOG`
 	Values                []string                       `json:"values,omitempty"`                // (Required attribute for cluster v1.291 and under) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
 	Values_and_enrichment CustomLogSourceWithEnrichments `json:"values-and-enrichment,omitempty"` // (Required attribute for cluster v1.292+) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
+	Encoding              *string                        `json:"encoding,omitempty"`
 }
 
 func (me *CustomLogSource) Schema() map[string]*schema.Schema {
@@ -55,6 +56,11 @@ func (me *CustomLogSource) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"encoding": {
+			Type:        schema.TypeString,
+			Description: "no documentation available",
+			Optional:    true, // nullable
+		},
 	}
 }
 
@@ -64,6 +70,7 @@ func (me *CustomLogSource) MarshalHCL(properties hcl.Properties) error {
 		"type":                  me.Type,
 		"values":                me.Values,
 		"values_and_enrichment": me.Values_and_enrichment,
+		"encoding":              me.Encoding,
 	})
 }
 
@@ -73,5 +80,6 @@ func (me *CustomLogSource) UnmarshalHCL(decoder hcl.Decoder) error {
 		"type":                  &me.Type,
 		"values":                &me.Values,
 		"values_and_enrichment": &me.Values_and_enrichment,
+		"encoding":              &me.Encoding,
 	})
 }
