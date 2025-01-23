@@ -187,7 +187,7 @@
 			},
 			"summaryPattern": "{name}",
 			"type": "object",
-			"version": "0.0.1",
+			"version": "0.0.2",
 			"versionInfo": ""
 		},
 		"AnalyzerInputField": {
@@ -225,7 +225,7 @@
 				"value": {
 					"constraints": [
 						{
-							"maxLength": 10000,
+							"maxLength": 50000,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -355,6 +355,35 @@
 			"displayName": "ExecutionSettings",
 			"documentation": "",
 			"properties": {
+				"actor": {
+					"constraints": [
+						{
+							"pattern": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+							"type": "PATTERN"
+						},
+						{
+							"customValidatorId": "detector-actor-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "UUID of a service user. Queries will be executed on behalf of the service user.",
+					"displayName": "Actor",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.alerting.enableServiceUserImpersonation.feature",
+						"maturity": "IN_DEVELOPMENT"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
 				"queryOffset": {
 					"constraints": [
 						{
@@ -378,5 +407,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
