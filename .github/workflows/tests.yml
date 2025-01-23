@@ -3946,7 +3946,7 @@ jobs:
           DYNATRACE_HTTP_RESPONSE: true
         run: go test -v ./dynatrace/api/platform/buckets
       - name: Upload Go test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TestPlatformBucketsResults
           path: ./dynatrace/api/platform/buckets/terraform_provider_dynatrace.http.log
