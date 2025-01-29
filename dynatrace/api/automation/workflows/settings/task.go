@@ -60,13 +60,13 @@ func (me *Tasks) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var useTypeSet = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_SET") == "true"
+var useTypeList = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST") == "true"
 
 func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
-	if useTypeSet {
+	if useTypeList {
 		return map[string]*schema.Schema{
 			"task": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Description: "TODO: No documentation available",
 				MinItems:    1,
 				Optional:    true,
@@ -76,7 +76,7 @@ func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
 	}
 	return map[string]*schema.Schema{
 		"task": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "TODO: No documentation available",
 			MinItems:    1,
 			Optional:    true,
