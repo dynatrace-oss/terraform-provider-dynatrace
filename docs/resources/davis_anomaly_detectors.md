@@ -172,5 +172,6 @@ Required:
 
 Optional:
 
+- `actor` (String) UUID of a service user. Queries will be executed on behalf of the service user.
 - `query_offset` (Number) Minute offset of sliding evaluation window for metrics with latency
  

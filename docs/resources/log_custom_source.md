@@ -80,6 +80,7 @@ Required:
 Optional:
 
 - `accept_binary` (Boolean) Accept binary content
+- `encoding` (String) no documentation available
 - `values` (Set of String) (Required attribute for cluster v1.291 and under) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name.
 - `values_and_enrichment` (Block List, Max: 1) (Required attribute for cluster v1.292+) It might be either an absolute path to log(s) with optional wildcards or Windows Event Log name. (see [below for nested schema](#nestedblock--custom_log_source--values_and_enrichment))
 

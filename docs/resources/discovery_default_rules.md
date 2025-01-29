@@ -103,6 +103,7 @@ Required:
 
 Optional:
 
+- `instant_action` (Boolean) Instant action
 - `parameters` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rule--actions--action--parameters))
 
 <a id="nestedblock--rule--actions--action--parameters"></a>
