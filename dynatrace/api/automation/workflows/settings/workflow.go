@@ -98,6 +98,16 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 	if me.Private == nil {
 		me.Private = opt.NewBool(true)
 	}
+	if len(me.Tasks) > 0 {
+		fixedTasks := Tasks{}
+		for _, task := range me.Tasks {
+			if len(task.Name) == 0 || len(task.Action) == 0 {
+				continue
+			}
+			fixedTasks = append(fixedTasks, task)
+		}
+		me.Tasks = fixedTasks
+	}
 	return properties.EncodeAll(map[string]any{
 		"title":       me.Title,
 		"description": me.Description,
@@ -123,6 +133,18 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 	}); err != nil {
 		return err
 	}
+
+	if len(me.Tasks) > 0 {
+		fixedTasks := Tasks{}
+		for _, task := range me.Tasks {
+			if len(task.Name) == 0 || len(task.Action) == 0 {
+				continue
+			}
+			fixedTasks = append(fixedTasks, task)
+		}
+		me.Tasks = fixedTasks
+	}
+
 	// Because `private` has a default value of `true` we need to check
 	// with `GetOkExists`
 	// This is a shortcoming of the TF Plugin SDK. They've struggled

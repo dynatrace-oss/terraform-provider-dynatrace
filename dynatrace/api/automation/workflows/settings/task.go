@@ -19,6 +19,7 @@ package workflows
 
 import (
 	"encoding/json"
+	"os"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -59,16 +60,30 @@ func (me *Tasks) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var useTypeSet = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_SET") == "true"
+
 func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
+	if useTypeSet {
+		return map[string]*schema.Schema{
+			"task": {
+				Type:        schema.TypeSet,
+				Description: "TODO: No documentation available",
+				MinItems:    1,
+				Optional:    true,
+				Elem:        &schema.Resource{Schema: new(Task).Schema(prefix + ".0.task")},
+			},
+		}
+	}
 	return map[string]*schema.Schema{
 		"task": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Description: "TODO: No documentation available",
 			MinItems:    1,
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(Task).Schema(prefix + ".0.task")},
 		},
 	}
+
 }
 
 func (me Tasks) MarshalHCL(properties hcl.Properties) error {
