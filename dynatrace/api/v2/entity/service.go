@@ -76,7 +76,13 @@ func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entit
 		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
 	}
 
-	result := getEntity(ctx, id, me.client, getEntitiesRecord(entityType))
+	var result *entity.Entity
+
+	if os.Getenv("DYNATRACE_DISABLE_ENTITY_CACHE") == "true" {
+		result = getEntityByID(ctx, me.client, id)
+	} else {
+		result = getEntity(ctx, id, me.client, getEntitiesRecord(entityType))
+	}
 	if result == nil {
 		return rest.Error{Code: 404, Message: fmt.Sprintf("Unable to find entity with id %s", id)}
 	}
@@ -160,6 +166,41 @@ func getEntity(ctx context.Context, id string, client rest.Client, record *Entit
 	}
 	record.Entities = entities
 	entity, found := record.Entities[id]
+	if !found {
+		return nil
+	}
+	return entity
+}
+
+func getEntityByID(ctx context.Context, client rest.Client, id string) *entity.Entity {
+	entities := map[string]*entity.Entity{}
+	nextPageKey := "-"
+	for len(nextPageKey) > 0 {
+		entitySelector := fmt.Sprintf("entityId(%s)", id)
+		var u string
+		if nextPageKey != "-" {
+			u = fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))
+		} else {
+			u = fmt.Sprintf("/api/v2/entities?pageSize=4000&entitySelector=%s&from=%s&fields=tags", url.QueryEscape(entitySelector), url.QueryEscape("now-3y"))
+		}
+		var response EntitiesListResponse
+		if err := client.Get(ctx, u, 200).Finish(&response); err != nil {
+			return nil
+		}
+		for _, elem := range response.Entities {
+			entity := &entity.Entity{
+				EntityId:    &elem.ID,
+				DisplayName: &elem.DisplayName,
+				Type:        &elem.Type,
+			}
+			entities[elem.ID] = entity
+		}
+		nextPageKey = response.NextPageKey
+	}
+	if entities == nil {
+		return nil
+	}
+	entity, found := entities[id]
 	if !found {
 		return nil
 	}
