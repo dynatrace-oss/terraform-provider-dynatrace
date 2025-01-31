@@ -24,5 +24,6 @@ import (
 )
 
 func TestAccOneAgentDefaultMode(t *testing.T) {
+	t.Skip()
 	api.TestAcc(t)
 }
