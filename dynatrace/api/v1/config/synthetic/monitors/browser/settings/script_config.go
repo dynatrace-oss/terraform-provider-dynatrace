@@ -248,6 +248,10 @@ type JavascriptSettings struct {
 	TimeoutSettings         *TimeoutSettings         `json:"timeoutSettings"`
 	CustomProperties        *string                  `json:"customProperties"`
 	VisuallyCompleteOptions *VisuallyCompleteOptions `json:"visuallyCompleteOptions"`
+	FetchRequests           bool                     `json:"fetchRequests" `
+	XMLHttpRequests         bool                     `json:"xmlHttpRequests"`
+	JavaScriptErrors        bool                     `json:"javaScriptErrors"`
+	TimedActions            bool                     `json:"timedActions"`
 }
 
 func (me *JavascriptSettings) Schema() map[string]*schema.Schema {
@@ -271,6 +275,30 @@ func (me *JavascriptSettings) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(VisuallyCompleteOptions).Schema()},
 		},
+		"fetch_requests": {
+			Type:        schema.TypeBool,
+			Description: "Capture fetch() requests",
+			Optional:    true,
+			Default:     true,
+		},
+		"xml_http_requests": {
+			Type:        schema.TypeBool,
+			Description: "Capture XMLHttpRequests (XHR)",
+			Optional:    true,
+			Default:     true,
+		},
+		"javascript_errors": {
+			Type:        schema.TypeBool,
+			Description: "JavaScript error report",
+			Optional:    true,
+			Default:     true,
+		},
+		"timed_actions": {
+			Type:        schema.TypeBool,
+			Description: "Timed action support",
+			Optional:    true,
+			Default:     true,
+		},
 	}
 }
 
@@ -286,6 +314,18 @@ func (me *JavascriptSettings) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
+	if err := properties.Encode("fetch_requests", me.FetchRequests); err != nil {
+		return err
+	}
+	if err := properties.Encode("xml_http_requests", me.XMLHttpRequests); err != nil {
+		return err
+	}
+	if err := properties.Encode("javascript_errors", me.JavaScriptErrors); err != nil {
+		return err
+	}
+	if err := properties.Encode("timed_actions", me.TimedActions); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -297,6 +337,18 @@ func (me *JavascriptSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("custom_properties", &me.CustomProperties); err != nil {
+		return err
+	}
+	if err := decoder.Decode("fetch_requests", &me.FetchRequests); err != nil {
+		return err
+	}
+	if err := decoder.Decode("xml_http_requests", &me.XMLHttpRequests); err != nil {
+		return err
+	}
+	if err := decoder.Decode("javascript_errors", &me.JavaScriptErrors); err != nil {
+		return err
+	}
+	if err := decoder.Decode("timed_actions", &me.TimedActions); err != nil {
 		return err
 	}
 	return nil
