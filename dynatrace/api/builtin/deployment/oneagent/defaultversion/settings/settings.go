@@ -18,11 +18,8 @@
 package defaultversion
 
 import (
-	"fmt"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type Settings struct {
@@ -37,14 +34,18 @@ func (me *Settings) Name() string {
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"default_version": {
-			Type:        schema.TypeString,
-			Description: "Default version",
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "Default version",
+			Required:         true,
+			StateFunc:        func(i any) string { return "" },
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 		"revision": {
-			Type:        schema.TypeString,
-			Description: "Revision",
-			Optional:    true, // precondition
+			Type:             schema.TypeString,
+			Description:      "Revision",
+			Optional:         true, // precondition
+			StateFunc:        func(i any) string { return "" },
+			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return true },
 		},
 	}
 }
@@ -54,13 +55,6 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"default_version": me.DefaultVersion,
 		"revision":        me.Revision,
 	})
-}
-
-func (me *Settings) HandlePreconditions() error {
-	if me.Revision == nil && !slices.Contains([]string{"latest"}, string(me.DefaultVersion)) {
-		return fmt.Errorf("'revision' must be specified if 'default_version' is not set to '%v'", me.DefaultVersion)
-	}
-	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {

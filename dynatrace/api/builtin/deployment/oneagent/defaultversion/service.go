@@ -18,14 +18,43 @@
 package defaultversion
 
 import (
+	"context"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	defaultversion "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/google/uuid"
 )
 
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:deployment.oneagent.default-version"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*defaultversion.Settings] {
-	return settings20.Service[*defaultversion.Settings](credentials, SchemaID, SchemaVersion)
+	return &service{}
+}
+
+type service struct{}
+
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return api.Stubs{}, nil
+}
+
+func (me *service) Get(ctx context.Context, id string, v *defaultversion.Settings) error {
+	return nil
+}
+
+func (me *service) SchemaID() string {
+	return SchemaID
+}
+
+func (me *service) Create(ctx context.Context, v *defaultversion.Settings) (*api.Stub, error) {
+	return &api.Stub{ID: uuid.NewString()}, nil
+}
+
+func (me *service) Update(ctx context.Context, id string, v *defaultversion.Settings) error {
+	return nil
+}
+
+func (me *service) Delete(ctx context.Context, id string) error {
+	return nil
 }

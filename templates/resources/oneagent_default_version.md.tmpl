@@ -1,30 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_oneagent_default_version Resource - terraform-provider-dynatrace"
-subcategory: "Environment Settings"
+subcategory: "Deprecated"
 description: |-
-  The resource `dynatrace_oneagent_default_version` covers configuration for OneAgent default version
+    The resource `dynatrace_oneagent_default_version` just exists for backwards compatibility. The settings it addresses are no longer configurable. The resource `dynatrace_oneagent_updates` covers this functionality now.
 ---
-
-# dynatrace_oneagent_default_version (Resource)
-
--> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
-
-## Dynatrace Documentation
-
-- OneAgent update - https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-update
-
-- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:deployment.oneagent.default-version`)
-
-## Export Example Usage
-
-- `terraform-provider-dynatrace -export dynatrace_oneagent_default_version` downloads existing OneAgent default version configuration
-
-The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
-
-## Resource Example Usage
-
-{{ tffile "dynatrace/api/builtin/deployment/oneagent/defaultversion/testdata/terraform/example_a.tf" }}
-
-{{ .SchemaMarkdown | trimspace }}
- 
