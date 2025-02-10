@@ -8,6 +8,8 @@ description: |-
 
 # dynatrace_slo (Resource)
 
+!> This resource API endpoint has been deprecated, please use [dynatrace_slo_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/slo_v2) instead.
+
 -> This resource requires the API token scopes **Read SLO** (`slo.read`) and **Write SLO** (`slo.write`)
 
 ## Dynatrace Documentation

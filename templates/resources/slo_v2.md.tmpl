@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_slo_v2 (Resource)
 
--> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+-> This resource requires the API token scopes  **Read SLO** (`slo.read`), **Write SLO** (`slo.write`), **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 ## Dynatrace Documentation
 

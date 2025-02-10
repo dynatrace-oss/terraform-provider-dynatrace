@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/settings"
@@ -66,14 +67,25 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 	}
 	stub.LegacyID = &stub.ID
 
-	if stubs, err := me.List(ctx); err == nil {
-		for _, listStub := range stubs {
-			if listStub.Name == stub.Name {
-				stub.ID = listStub.ID
+	retries := 12
+	for i := 1; i <= retries; i++ {
+		if stubs, err := me.List(ctx); err == nil {
+			for _, listStub := range stubs {
+				if listStub.Name == stub.Name {
+					stub.ID = listStub.ID
+				}
 			}
 		}
-	} else {
-		return nil, err
+		if len(stub.ID) > 0 {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+	if len(stub.ID) == 0 {
+		if err := service.Delete(ctx, *stub.LegacyID); err != nil {
+			return nil, err
+		}
+		return nil, errors.New("SLO creation failed, unable to retrieve ID. Please create a GitHub issue.")
 	}
 
 	return stub, nil
@@ -128,7 +140,14 @@ func (me *service) Get(ctx context.Context, id string, v *slo.Settings) error {
 	err := me.get(ctx, id, v)
 	if err != nil {
 		if err.Error() == "Cannot access a disabled SLO." {
-			return errors.New("inaccessible")
+			settingsObject := settings20.SettingsObject{}
+			req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", id), 200)
+			if err = req.Finish(&settingsObject); err != nil {
+				return err
+			}
+			if err = json.Unmarshal(settingsObject.Value, v); err != nil {
+				return err
+			}
 		}
 		return err
 	}
