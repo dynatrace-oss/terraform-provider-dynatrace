@@ -50,6 +50,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *Settings) Deprecated() string {
+	return "The resource `dynatrace_oneagent_default_version` just exists for backwards compatibility. The settings it addresses are no longer configurable. The resource `dynatrace_oneagent_updates` covers this functionality now"
+}
+
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"default_version": me.DefaultVersion,
