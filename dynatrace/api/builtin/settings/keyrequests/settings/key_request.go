@@ -25,8 +25,9 @@ import (
 
 // KeyRequest has no documentation
 type KeyRequest struct {
-	Names     []string `json:"keyRequestNames,omitempty"`
-	ServiceID string   `json:"-" scope:"serviceId"`
+	Names         []string          `json:"keyRequestNames,omitempty"`
+	ServiceID     string            `json:"-" scope:"serviceId"`
+	KeyRequestIDs map[string]string `json:"-"`
 }
 
 func (me *KeyRequest) Name() string {
@@ -48,19 +49,28 @@ func (me *KeyRequest) Schema() map[string]*schema.Schema {
 			Description: "The names of the key requests",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
+		"key_request_ids": {
+			Type:        schema.TypeMap,
+			Description: "The ids of the key requests",
+			Computed:    true,
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
 	}
 }
 
 func (me *KeyRequest) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"names":   me.Names,
-		"service": me.ServiceID,
+		"names":           me.Names,
+		"service":         me.ServiceID,
+		"key_request_ids": me.KeyRequestIDs,
 	})
 }
 
 func (me *KeyRequest) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"names":   &me.Names,
-		"service": &me.ServiceID,
+		"names":           &me.Names,
+		"service":         &me.ServiceID,
+		"key_request_ids": &me.KeyRequestIDs,
 	})
 }
