@@ -19,16 +19,12 @@ package jsondashboardsbase
 
 import (
 	"context"
-	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	dashboardsbase "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboardsbase/settings"
 )
-
-// var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
-var JSON_DASHBOARD_BASE_PLUS = true
 
 const SchemaID = "v1:config:json-dashboards-base"
 
@@ -59,40 +55,18 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
-	if JSON_DASHBOARD_BASE_PLUS {
-		if err := me.service.Get(ctx, id, v); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
 func (me *service) Validate(ctx context.Context, v *dashboardsbase.JSONDashboardBase) error {
-	if JSON_DASHBOARD_BASE_PLUS {
-		if validator, ok := me.service.(settings.Validator[*dashboardsbase.JSONDashboardBase]); ok {
-			return validator.Validate(ctx, v)
-		}
-	}
 	return nil
 }
 
 func (me *service) Create(ctx context.Context, v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
-	if JSON_DASHBOARD_BASE_PLUS {
-		return me.service.Create(ctx, v.EnrichRequireds())
-	}
 	return me.service.Create(ctx, v)
 }
 
 func (me *service) Update(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
-
-	if JSON_DASHBOARD_BASE_PLUS {
-		jsonDashboard := v
-		oldContents := jsonDashboard.Contents
-		jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
-		err := me.service.Update(ctx, id, v.EnrichRequireds())
-		jsonDashboard.Contents = oldContents
-		return err
-	}
 	return nil
 }
 
