@@ -99,9 +99,14 @@ func resDefValTrue(bc string, sch map[string]*schema.Schema) bool {
 	bc = strings.TrimPrefix(bc, ".")
 	if strings.Contains(bc, ".") {
 		idx := strings.Index(bc, ".")
+		schpart := sch[bc[:idx]]
+		if res, ok := schpart.Elem.(*schema.Resource); ok {
+			return resDefValTrue(bc[idx+1:], res.Schema)
+		}
 		return resDefValTrue0(bc[:idx], bc[idx+1:], sch[bc[:idx]])
 	}
-	return resDefValTrue0(bc, "", sch[bc])
+	ret := resDefValTrue0(bc, "", sch[bc])
+	return ret
 }
 
 func resDefValTrue0(key string, bc string, sch *schema.Schema) bool {
