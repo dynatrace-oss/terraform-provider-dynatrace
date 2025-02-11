@@ -19,6 +19,7 @@ package browser
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/request"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -248,10 +249,10 @@ type JavascriptSettings struct {
 	TimeoutSettings         *TimeoutSettings         `json:"timeoutSettings"`
 	CustomProperties        *string                  `json:"customProperties"`
 	VisuallyCompleteOptions *VisuallyCompleteOptions `json:"visuallyCompleteOptions"`
-	FetchRequests           bool                     `json:"fetchRequests" `
-	XMLHttpRequests         bool                     `json:"xmlHttpRequests"`
-	JavaScriptErrors        bool                     `json:"javaScriptErrors"`
-	TimedActions            bool                     `json:"timedActions"`
+	FetchRequests           *bool                    `json:"fetchRequests" `
+	XMLHttpRequests         *bool                    `json:"xmlHttpRequests"`
+	JavaScriptErrors        *bool                    `json:"javaScriptErrors"`
+	TimedActions            *bool                    `json:"timedActions"`
 }
 
 func (me *JavascriptSettings) Schema() map[string]*schema.Schema {
@@ -302,6 +303,13 @@ func (me *JavascriptSettings) Schema() map[string]*schema.Schema {
 	}
 }
 
+func setDefaultTrue(properties hcl.Properties, name string, value *bool) {
+	if value == nil {
+		value = opt.NewBool(true)
+	}
+	properties[name] = *value
+}
+
 func (me *JavascriptSettings) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("timeout_settings", me.TimeoutSettings); err != nil {
 		return err
@@ -314,19 +322,16 @@ func (me *JavascriptSettings) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	if err := properties.Encode("fetch_requests", me.FetchRequests); err != nil {
-		return err
-	}
-	if err := properties.Encode("xml_http_requests", me.XMLHttpRequests); err != nil {
-		return err
-	}
-	if err := properties.Encode("javascript_errors", me.JavaScriptErrors); err != nil {
-		return err
-	}
-	if err := properties.Encode("timed_actions", me.TimedActions); err != nil {
-		return err
-	}
+	setDefaultTrue(properties, "fetch_requests", me.FetchRequests)
+	setDefaultTrue(properties, "xml_http_requests", me.XMLHttpRequests)
+	setDefaultTrue(properties, "javascript_errors", me.JavaScriptErrors)
+	setDefaultTrue(properties, "timed_actions", me.TimedActions)
 	return nil
+}
+
+func decodeDefaultTrue(decoder hcl.Decoder, name string) *bool {
+	boolValue, _ := decoder.GetOk(name)
+	return opt.NewBool(boolValue.(bool))
 }
 
 func (me *JavascriptSettings) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -339,18 +344,11 @@ func (me *JavascriptSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("custom_properties", &me.CustomProperties); err != nil {
 		return err
 	}
-	if err := decoder.Decode("fetch_requests", &me.FetchRequests); err != nil {
-		return err
-	}
-	if err := decoder.Decode("xml_http_requests", &me.XMLHttpRequests); err != nil {
-		return err
-	}
-	if err := decoder.Decode("javascript_errors", &me.JavaScriptErrors); err != nil {
-		return err
-	}
-	if err := decoder.Decode("timed_actions", &me.TimedActions); err != nil {
-		return err
-	}
+
+	me.FetchRequests = decodeDefaultTrue(decoder, "fetch_requests")
+	me.XMLHttpRequests = decodeDefaultTrue(decoder, "xml_http_requests")
+	me.JavaScriptErrors = decodeDefaultTrue(decoder, "javascript_errors")
+	me.TimedActions = decodeDefaultTrue(decoder, "timed_actions")
 	return nil
 }
 
