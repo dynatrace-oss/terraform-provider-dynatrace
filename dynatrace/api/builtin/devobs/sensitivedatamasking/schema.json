@@ -192,7 +192,7 @@
 		}
 	},
 	"schemaGroups": [
-		"group:developer-observability"
+		"group:observability-for-developers"
 	],
 	"schemaId": "builtin:devobs.sensitive.data.masking",
 	"types": {},
@@ -214,5 +214,5 @@
 			}
 		}
 	},
-	"version": "0.2"
+	"version": "0.3"
 }

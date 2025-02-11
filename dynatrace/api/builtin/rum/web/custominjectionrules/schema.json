@@ -164,10 +164,18 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "The number of custom injection rules across all applications exceeds the tenant-wide limit.",
+			"customValidatorId": "RumCustomInjectionRulesTenantWideLimitsValidator",
+			"skipAsyncValidation": false,
+			"type": "MULTI_SCOPE_CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"schemaGroups": [
 		"group:rum-injection"
 	],
 	"schemaId": "builtin:rum.web.custom-injection-rules",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

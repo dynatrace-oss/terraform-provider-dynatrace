@@ -496,6 +496,13 @@
 			"documentation": "",
 			"properties": {
 				"endTime": {
+					"constraints": [
+						{
+							"customValidatorId": "maintenance-window-date-time-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
 					"default": "1970-01-01T00:00:00",
 					"description": "",
 					"displayName": "End time",
@@ -510,6 +517,13 @@
 					"type": "local_date_time"
 				},
 				"startTime": {
+					"constraints": [
+						{
+							"customValidatorId": "maintenance-window-date-time-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
 					"default": "1970-01-01T00:00:00",
 					"description": "",
 					"displayName": "Start time",
@@ -554,6 +568,13 @@
 			"documentation": "",
 			"properties": {
 				"scheduleEndDate": {
+					"constraints": [
+						{
+							"customValidatorId": "maintenance-window-date-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
 					"default": "1970-01-01",
 					"description": "",
 					"displayName": "End date",
@@ -568,6 +589,13 @@
 					"type": "local_date"
 				},
 				"scheduleStartDate": {
+					"constraints": [
+						{
+							"customValidatorId": "maintenance-window-date-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
 					"default": "1970-01-01",
 					"description": "",
 					"displayName": "Start date",
@@ -805,5 +833,5 @@
 			]
 		}
 	},
-	"version": "2.14.7"
+	"version": "2.15"
 }

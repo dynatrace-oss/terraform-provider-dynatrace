@@ -7,7 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
-	"maxObjects": 35,
+	"maxObjects": 37,
 	"multiObject": true,
 	"ordered": false,
 	"properties": {
@@ -87,5 +87,5 @@
 	],
 	"schemaId": "builtin:problem.fields",
 	"types": {},
-	"version": "1"
+	"version": "1.2"
 }

@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "The global third-party vulnerability detection control defines the default monitoring mode. To override the default, define custom monitoring rules here. Note that the monitoring rules are ordered, and that the first matching rule will be applied.",
+	"description": "The global third-party vulnerability detection control defines the default monitoring mode. To override the default, define custom monitoring rules here. Note that monitoring rules are ordered; the first matching rule applies.",
 	"displayName": "Vulnerability Analytics: Monitoring rules for third-party vulnerabilities",
 	"documentation": "",
 	"dynatrace": "1",
@@ -172,5 +172,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }
