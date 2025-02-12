@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Set up the monitoring parameters for your custom Dynatrace applications. These parameters will establish the default behavior for logging within this environment.\n\n[Check out the documentation for more details and how to find the logs](https://developer.dynatrace.com/develop/troubleshooting/self-monitoring/#accessing-app-function-logs).",
+	"description": "Set up the monitoring parameters for your custom Dynatrace applications. These parameters will establish the default behavior for logging and tracing within this environment.\n\n[Discover more about App functions and their monitoring.](https://dt-url.net/dz23v17).",
 	"displayName": "App Monitoring",
 	"documentation": "",
 	"dynatrace": "1",
@@ -36,6 +36,24 @@
 					"description": "Enable error logs in custom apps.",
 					"displayName": "ERROR",
 					"value": "error"
+				}
+			],
+			"type": "enum"
+		},
+		"defaultServerlessTraces": {
+			"description": "",
+			"displayName": "App function traces",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Turn off traces in custom apps.",
+					"displayName": "OFF",
+					"value": "off"
+				},
+				{
+					"description": "Enable traces in custom apps.",
+					"displayName": "ON",
+					"value": "on"
 				}
 			],
 			"type": "enum"
@@ -74,6 +92,29 @@
 					"description": "Enable error logs in custom apps.",
 					"displayName": "ERROR",
 					"value": "error"
+				}
+			],
+			"type": "enum"
+		},
+		"overrideServerlessTraces": {
+			"description": "",
+			"displayName": "App function traces",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Turn off traces in custom apps.",
+					"displayName": "OFF",
+					"value": "off"
+				},
+				{
+					"description": "Enable traces in custom apps.",
+					"displayName": "ON",
+					"value": "on"
+				},
+				{
+					"description": "Use default value for traces",
+					"displayName": "Use default",
+					"value": "useDefault"
 				}
 			],
 			"type": "enum"
@@ -125,6 +166,18 @@
 			"nullable": false,
 			"type": {
 				"$ref": "#/enums/DefaultLogLevel"
+			}
+		},
+		"defaultTraceLevel": {
+			"default": "on",
+			"description": "",
+			"displayName": "App function traces",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/defaultServerlessTraces"
 			}
 		}
 	},
@@ -178,6 +231,18 @@
 					"type": {
 						"$ref": "#/enums/overrideDefaultLogLevel"
 					}
+				},
+				"customTraceLevel": {
+					"default": "useDefault",
+					"description": "",
+					"displayName": "App specific function traces",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/overrideServerlessTraces"
+					}
 				}
 			},
 			"summaryPattern": "{appId}",
@@ -186,5 +251,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.3"
+	"version": "2.4.1"
 }

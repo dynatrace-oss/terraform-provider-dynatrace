@@ -33,6 +33,16 @@ var DefaultLogLevels = struct {
 	"warn",
 }
 
+type DefaultServerlessTraces string
+
+var DefaultServerlessTracess = struct {
+	Off DefaultServerlessTraces
+	On  DefaultServerlessTraces
+}{
+	"off",
+	"on",
+}
+
 type OverrideDefaultLogLevel string
 
 var OverrideDefaultLogLevels = struct {
@@ -49,4 +59,16 @@ var OverrideDefaultLogLevels = struct {
 	"off",
 	"useDefault",
 	"warn",
+}
+
+type OverrideServerlessTraces string
+
+var OverrideServerlessTracess = struct {
+	Off        OverrideServerlessTraces
+	On         OverrideServerlessTraces
+	Usedefault OverrideServerlessTraces
+}{
+	"off",
+	"on",
+	"useDefault",
 }

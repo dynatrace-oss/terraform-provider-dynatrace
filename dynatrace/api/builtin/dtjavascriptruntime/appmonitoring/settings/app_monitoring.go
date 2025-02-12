@@ -45,8 +45,9 @@ func (me *AppMonitorings) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type AppMonitoring struct {
-	AppID          string                  `json:"appId"`          // App ID
-	CustomLogLevel OverrideDefaultLogLevel `json:"customLogLevel"` // Possible Values: `Debug`, `Error`, `Info`, `Off`, `UseDefault`, `Warn`
+	AppID            string                    `json:"appId"`                      // App ID
+	CustomLogLevel   OverrideDefaultLogLevel   `json:"customLogLevel"`             // Possible Values: `debug`, `error`, `info`, `off`, `useDefault`, `warn`
+	CustomTraceLevel *OverrideServerlessTraces `json:"customTraceLevel,omitempty"` // Possible Values: `off`, `on`, `useDefault`
 }
 
 func (me *AppMonitoring) Schema() map[string]*schema.Schema {
@@ -58,22 +59,29 @@ func (me *AppMonitoring) Schema() map[string]*schema.Schema {
 		},
 		"custom_log_level": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Debug`, `Error`, `Info`, `Off`, `UseDefault`, `Warn`",
+			Description: "Possible Values: `debug`, `error`, `info`, `off`, `useDefault`, `warn`",
 			Required:    true,
+		},
+		"custom_trace_level": {
+			Type:        schema.TypeString,
+			Description: "Possible Values: `off`, `on`, `useDefault`",
+			Optional:    true,
 		},
 	}
 }
 
 func (me *AppMonitoring) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"app_id":           me.AppID,
-		"custom_log_level": me.CustomLogLevel,
+		"app_id":             me.AppID,
+		"custom_log_level":   me.CustomLogLevel,
+		"custom_trace_level": me.CustomTraceLevel,
 	})
 }
 
 func (me *AppMonitoring) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"app_id":           &me.AppID,
-		"custom_log_level": &me.CustomLogLevel,
+		"app_id":             &me.AppID,
+		"custom_log_level":   &me.CustomLogLevel,
+		"custom_trace_level": &me.CustomTraceLevel,
 	})
 }
