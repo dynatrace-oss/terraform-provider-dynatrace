@@ -661,6 +661,16 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"-72": {
+			"default": true,
+			"description": "Rule id: 72",
+			"displayName": "Do not monitor processes if EXE name equals 'yq'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-8": {
 			"default": true,
 			"description": "Rule id: 8",
@@ -688,5 +698,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.3"
+	"version": "0.4.4"
 }
