@@ -33,7 +33,7 @@ func (me *TaskConditionOption) Schema(prefix string) map[string]*schema.Schema {
 		"states": {
 			Type:        schema.TypeMap,
 			Description: "key/value pairs where the `key` is the name of another task and the value the status it needs to be for the current task to get executed. Possible values are `SUCCESS`, `ERROR`, `ANY`, `OK` (Success or Skipped) and `NOK` (Error or Cancelled)",
-			Required:    true,
+			Optional:    true,
 		},
 		"custom": {
 			Type:        schema.TypeString,
