@@ -19,10 +19,10 @@ package builtinprocessmonitoringrule_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccBuiltinProcessMonitoring(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - new required field (enable with v309)
+	// api.TestAcc(t)
+	t.Skip()
 }
