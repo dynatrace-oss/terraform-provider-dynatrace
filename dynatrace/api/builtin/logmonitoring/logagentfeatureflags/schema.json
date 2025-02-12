@@ -5,22 +5,35 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "When additional features become available with newer OneAgent versions, they can be activated here to make them available across your environment.",
-	"displayName": "Log Agent Feature Flags",
+	"description": "Unlock new features of the Log module in Dynatrace.",
+	"displayName": "Log module feature flags",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
-		"NewContainerLogDetector": {
+		"JournaldLogDetector": {
 			"default": false,
-			"description": "Enable Log Agent to use new container log detector. Please do not turn it off once enabled. For more details, check our [documentation](https://dt-url.net/jn02ey0).",
-			"displayName": "New Container Log Detector",
+			"description": "Enable OneAgent to collect logs from Journald on Linux systems. \nThis setting enables:\n* Detection and to have logs ingested matching ingest rule is required.",
+			"displayName": "Enable Journald log detector",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
-				"minAgentVersion": "1.305"
+				"minAgentVersion": "1.307"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"NewContainerLogDetector": {
+			"default": false,
+			"description": "Enable OneAgent to collect all container logs in Kubernetes environments. \nThis setting enables:\n* Detection and collection of logs from short-lived containers and processes in Kubernetes.\n* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n* Log events decoration according to semantic dictionary.\n **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.1+**.\n\n For more details, check our [documentation](https://dt-url.net/jn02ey0).",
+			"displayName": "Collect all container logs",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.309"
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -33,5 +46,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-feature-flags",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

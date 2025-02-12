@@ -23,8 +23,9 @@ import (
 )
 
 type Settings struct {
-	NewContainerLogDetector bool    `json:"NewContainerLogDetector"` // Enable Log Agent to use new container log detector. Please do not turn it off once enabled. For more details, check our [documentation](https://dt-url.net/jn02ey0).
-	Scope                   *string `json:"-" scope:"scope"`         // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	JournaldLogDetector     *bool   `json:"JournaldLogDetector,omitempty"` // Enable OneAgent to collect logs from Journald on Linux systems. \nThis setting enables:\n* Detection and to have logs ingested matching ingest rule is required.
+	NewContainerLogDetector bool    `json:"NewContainerLogDetector"`       // Enable OneAgent to collect all container logs in Kubernetes environments. \nThis setting enables:\n* Detection and collection of logs from short-lived containers and processes in Kubernetes.\n* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n* Log events decoration according to semantic dictionary.\n **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.1+**.\n\n For more details, check our [documentation](https://dt-url.net/jn02ey0).
+	Scope                   *string `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Name() string {
@@ -33,9 +34,14 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"journald_log_detector": {
+			Type:        schema.TypeBool,
+			Description: "Enable OneAgent to collect logs from Journald on Linux systems. \nThis setting enables:\n* Detection and to have logs ingested matching ingest rule is required.",
+			Optional:    true,
+		},
 		"new_container_log_detector": {
 			Type:        schema.TypeBool,
-			Description: "Enable Log Agent to use new container log detector. Please do not turn it off once enabled. For more details, check our [documentation](https://dt-url.net/jn02ey0).",
+			Description: "Enable OneAgent to collect all container logs in Kubernetes environments. \nThis setting enables:\n* Detection and collection of logs from short-lived containers and processes in Kubernetes.\n* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n* Log events decoration according to semantic dictionary.\n **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.1+**.\n\n For more details, check our [documentation](https://dt-url.net/jn02ey0).",
 			Required:    true,
 		},
 		"scope": {
@@ -49,6 +55,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"journald_log_detector":      me.JournaldLogDetector,
 		"new_container_log_detector": me.NewContainerLogDetector,
 		"scope":                      me.Scope,
 	})
@@ -56,6 +63,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"journald_log_detector":      &me.JournaldLogDetector,
 		"new_container_log_detector": &me.NewContainerLogDetector,
 		"scope":                      &me.Scope,
 	})
