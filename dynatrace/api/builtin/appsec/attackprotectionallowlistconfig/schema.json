@@ -7,6 +7,102 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
+		"AgentSideAttributeKey": {
+			"description": "",
+			"displayName": "Criteria",
+			"documentation": "",
+			"items": [
+				{
+					"description": "",
+					"displayName": "detection.type",
+					"value": "DETECTION_TYPE"
+				},
+				{
+					"description": "",
+					"displayName": "actor.ip",
+					"value": "ACTOR_IP"
+				},
+				{
+					"description": "",
+					"displayName": "entry_point.url.path",
+					"value": "ENTRY_POINT_URL_PATH"
+				},
+				{
+					"description": "",
+					"displayName": "entry_point.payload",
+					"value": "ENTRY_POINT_PAYLOAD"
+				},
+				{
+					"description": "",
+					"displayName": "entry_point.payload.domain",
+					"value": "ENTRY_POINT_PAYLOAD_DOMAIN"
+				},
+				{
+					"description": "",
+					"displayName": "entry_point.payload.port",
+					"value": "ENTRY_POINT_PAYLOAD_PORT"
+				}
+			],
+			"type": "enum"
+		},
+		"AgentSideAttributeMatcher": {
+			"description": "",
+			"displayName": "Matcher",
+			"documentation": "",
+			"items": [
+				{
+					"description": "The criteria value must contain the specified value.",
+					"displayName": "contains",
+					"value": "CONTAINS"
+				},
+				{
+					"description": "The criteria value must not contain the specified value.",
+					"displayName": "does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"description": "The criteria value must start with the specified value.",
+					"displayName": "starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"description": "The criteria value must not start with the specified value.",
+					"displayName": "does not start with",
+					"value": "DOES_NOT_STARTS_WITH"
+				},
+				{
+					"description": "The criteria value must end with the specified value.",
+					"displayName": "ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"description": "The criteria value must not end with the specified value.",
+					"displayName": "does not end with",
+					"value": "DOES_NOT_END_WITH"
+				},
+				{
+					"description": "The criteria value must be contained in specified IP CIDR.",
+					"displayName": "is part of IP CIDR",
+					"value": "IP_CIDR"
+				},
+				{
+					"description": "The criteria value must not be contained in specified IP CIDR.",
+					"displayName": "is not part of IP CIDR",
+					"value": "NOT_IN_IP_CIDR"
+				},
+				{
+					"description": "The criteria value must be equal to the specified value.",
+					"displayName": "equals",
+					"value": "EQUALS"
+				},
+				{
+					"description": "The criteria value must not be equal to the specified value.",
+					"displayName": "does not equal",
+					"value": "NOT_EQUALS"
+				}
+			],
+			"type": "enum"
+		},
 		"BlockingStrategy": {
 			"description": "The attack handling strategy for allowlisted attacks.",
 			"displayName": "Attack control",
@@ -21,6 +117,34 @@
 					"description": "Attacks will be recorded.",
 					"displayName": "Monitor; incoming attacks detected only.",
 					"value": "MONITOR"
+				}
+			],
+			"type": "enum"
+		},
+		"DetectionType": {
+			"description": "",
+			"displayName": "Detection type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "SQL injection detection type",
+					"displayName": "SQL injection",
+					"value": "SQL_INJECTION"
+				},
+				{
+					"description": "Command injection attack type",
+					"displayName": "Command injection",
+					"value": "CMD_INJECTION"
+				},
+				{
+					"description": "JNDI injection attack type",
+					"displayName": "JNDI injection",
+					"value": "JNDI_INJECTION"
+				},
+				{
+					"description": "SSRF attack type",
+					"displayName": "SSRF",
+					"value": "SSRF"
 				}
 			],
 			"type": "enum"
@@ -141,6 +265,104 @@
 	],
 	"schemaId": "builtin:appsec.attack-protection-allowlist-config",
 	"types": {
+		"AgentSideCriteria": {
+			"constraints": [
+				{
+					"customValidatorId": "criteriaValueValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "AgentSideCriteria",
+			"documentation": "",
+			"properties": {
+				"criteriaKey": {
+					"default": "ENTRY_POINT_PAYLOAD",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/AgentSideAttributeKey"
+					}
+				},
+				"criteriaMatcher": {
+					"datasource": {
+						"filterProperties": [
+							"criteriaKey"
+						],
+						"fullContext": false,
+						"identifier": "criteriaMatcherDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "EQUALS",
+					"description": "",
+					"displayName": "Matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": {
+						"$ref": "#/enums/AgentSideAttributeMatcher"
+					}
+				},
+				"criteriaValueDetectionType": {
+					"default": "SQL_INJECTION",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DETECTION_TYPE",
+						"property": "criteriaKey",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/DetectionType"
+					}
+				},
+				"criteriaValueFreeText": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "DETECTION_TYPE",
+							"property": "criteriaKey",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{criteriaMatcher|enumValue, select, EXISTS {\"{criteriaKey}\" {criteriaMatcher}} DOES_NOT_EXIST {\"{criteriaKey}\" {criteriaMatcher}} other {\"{criteriaKey}\" {criteriaMatcher} {criteriaValueFreeText|valueSet, select, true {\"{criteriaValueFreeText}\"} other {\"{criteriaValueDetectionType}\"}}}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"AttackHandling": {
 			"description": "",
 			"displayName": "Allowlisted attacks - Attack handling",
@@ -217,6 +439,38 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CriteriaList": {
+			"description": "",
+			"displayName": "CriteriaList",
+			"documentation": "",
+			"properties": {
+				"list": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "Condition",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/AgentSideCriteria"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add new criteria"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
 				}
 			},
 			"summaryPattern": "",
@@ -351,5 +605,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.4"
 }
