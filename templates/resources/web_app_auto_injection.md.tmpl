@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: "dynatrace_web_app_auto_injection Resource - terraform-provider-dynatrace"
+subcategory: "Web Applications"
+description: |-
+  The resource `dynatrace_web_app_auto_injection` covers configuration for web application automatic injection
+---
+
+# dynatrace_web_app_auto_injection (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- RUM JavaScript injection - https://docs.dynatrace.com/docs/observe/digital-experience/web-applications/initial-setup/rum-injection
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.web.automatic-injection`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_web_app_auto_injection` downloads existing automatic injection configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/web/automaticinjection/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 

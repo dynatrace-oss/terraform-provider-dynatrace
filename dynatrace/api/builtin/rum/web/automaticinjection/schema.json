@@ -1,0 +1,221 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"constraints": [
+		{
+			"customMessage": "OneAgent JavaScript Tag with SRI is only available for the Real User Monitoring code source CDN.",
+			"customValidatorId": "rumAutomaticInjectionSubresourceIntegrityValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Dynatrace OneAgent automatically injects the RUM JavaScript into the HTML head of monitored application pages. Use this page to control and adjust the injection.",
+	"displayName": "Automatic injection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"CodeSnippetType": {
+			"description": "",
+			"displayName": "CodeSnippetType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "synchronously",
+					"value": "SYNCHRONOUSLY"
+				},
+				{
+					"displayName": "deferred",
+					"value": "DEFERRED"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"cacheControlHeaders": {
+			"description": "",
+			"displayName": "Cache control headers",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/CacheControlHeaders"
+			}
+		},
+		"monitoringCodeSourceSection": {
+			"description": "",
+			"displayName": "Real User Monitoring code source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/MonitoringCodeSource"
+			}
+		},
+		"snippetFormat": {
+			"description": "",
+			"displayName": "Snippet format",
+			"documentation": "*Code Snippet:* OneAgent injects an inline script that initializes Dynatrace and dynamically downloads the monitoring code into your application. Use when you want to inject the monitoring code in deferred mode.\n\n *Inline Code:* OneAgent injects the configuration and the monitoring code inline into your application. Use this injection type when you need to keep the number of web requests at a minimum.\n\n *OneAgent JavaScript Tag:* OneAgent injects a JavaScript tag into your application, containing the configuration and a link to the monitoring code. This is our default injection type, since it's most versatile.\n\nCompare the different [injection formats](https://dt-url.net/vx5g0ptn).",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/SnippetFormat"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-injection"
+	],
+	"schemaId": "builtin:rum.web.automatic-injection",
+	"types": {
+		"CacheControlHeaders": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"cacheControlHeaders": {
+					"default": true,
+					"description": "[How to ensure timely configuration updates for automatic injection?](https://dt-url.net/m9039ea)",
+					"displayName": "Optimize the value of cache control headers for use with Dynatrace Real User Monitoring",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"MonitoringCodeSource": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"codeSource": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "codeSourceDataSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "OneAgent",
+					"description": "",
+					"displayName": "Real User Monitoring code source",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				},
+				"monitoringCodePath": {
+					"constraints": [
+						{
+							"customMessage": "Path must be relative and a maximum of 255 characters long",
+							"customValidatorId": "rumAutomaticInjectionMonitoringCodePathValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Specify the source path for placement of your application's custom JavaScript library file. By default, this path is set to the root directory of your web server. A custom source path may be necessary if your server operates behind a firewall.",
+					"displayName": "Specify location for JavaScript library file",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "For example, /serverpath/"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": "OneAgent",
+						"property": "codeSource",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.2",
+			"versionInfo": ""
+		},
+		"SnippetFormat": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"codeSnippetType": {
+					"default": "SYNCHRONOUSLY",
+					"description": "",
+					"displayName": "Load the monitoring code",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "Code Snippet",
+						"property": "snippetFormat",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/CodeSnippetType"
+					}
+				},
+				"snippetFormat": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "autoInjectedSnippetFormatDatasource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "OneAgent JavaScript Tag",
+					"description": "",
+					"displayName": "Snippet format",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}

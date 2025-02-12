@@ -232,6 +232,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
+	webappautoinjection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/automaticinjection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	webappbeaconendpoint "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beaconendpoint"
 	webappcustomconfigproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties"
@@ -1411,6 +1412,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		capturingvariants.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.WebAppAutoInjection: NewResourceDescriptor(
+		webappautoinjection.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 }
 
