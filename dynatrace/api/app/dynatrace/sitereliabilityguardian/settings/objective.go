@@ -51,6 +51,7 @@ type Objective struct {
 	AutoAdaptiveThresholdEnabled *bool              `json:"autoAdaptiveThresholdEnabled,omitempty"` // Enable auto adaptive threshold
 	ComparisonOperator           ComparisonOperator `json:"comparisonOperator"`                     // Possible Values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
 	Description                  *string            `json:"description,omitempty"`
+	DisplayUnit                  *DisplayUnit       `json:"displayUnit,omitempty"`  // Display Unit
 	DqlQuery                     *string            `json:"dqlQuery,omitempty"`     // DQL query
 	Name                         string             `json:"name"`                   // Objective name
 	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Possible Values: `DQL`, `REFERENCE_SLO`
@@ -64,7 +65,7 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		"auto_adaptive_threshold_enabled": {
 			Type:        schema.TypeBool,
 			Description: "Enable auto adaptive threshold",
-			Optional:    true, // precondition
+			Optional:    true, // nullable & precondition
 		},
 		"comparison_operator": {
 			Type:        schema.TypeString,
@@ -75,6 +76,14 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "no documentation available",
 			Optional:    true, // nullable
+		},
+		"display_unit": {
+			Type:        schema.TypeList,
+			Description: "Display Unit",
+			Optional:    true, // nullable & precondition
+			Elem:        &schema.Resource{Schema: new(DisplayUnit).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"dql_query": {
 			Type:        schema.TypeString,
@@ -114,6 +123,7 @@ func (me *Objective) MarshalHCL(properties hcl.Properties) error {
 		"auto_adaptive_threshold_enabled": me.AutoAdaptiveThresholdEnabled,
 		"comparison_operator":             me.ComparisonOperator,
 		"description":                     me.Description,
+		"display_unit":                    me.DisplayUnit,
 		"dql_query":                       me.DqlQuery,
 		"name":                            me.Name,
 		"objective_type":                  me.ObjectiveType,
@@ -141,6 +151,7 @@ func (me *Objective) UnmarshalHCL(decoder hcl.Decoder) error {
 		"auto_adaptive_threshold_enabled": &me.AutoAdaptiveThresholdEnabled,
 		"comparison_operator":             &me.ComparisonOperator,
 		"description":                     &me.Description,
+		"display_unit":                    &me.DisplayUnit,
 		"dql_query":                       &me.DqlQuery,
 		"name":                            &me.Name,
 		"objective_type":                  &me.ObjectiveType,

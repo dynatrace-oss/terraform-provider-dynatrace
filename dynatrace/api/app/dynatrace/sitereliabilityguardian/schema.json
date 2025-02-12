@@ -197,6 +197,68 @@
 	],
 	"schemaId": "app:dynatrace.site.reliability.guardian:guardians",
 	"types": {
+		"DisplayUnit": {
+			"description": "",
+			"displayName": "Display Unit",
+			"documentation": "",
+			"properties": {
+				"base": {
+					"constraints": [
+						{
+							"maxLength": 20,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "None",
+					"description": "",
+					"displayName": "Base Unit",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"decimals": {
+					"constraints": [
+						{
+							"maximum": 4,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 2,
+					"description": "",
+					"displayName": "Decimals",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"display": {
+					"constraints": [
+						{
+							"maxLength": 20,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "Default",
+					"description": "",
+					"displayName": "display as unit",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{base} -\u003e {display}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"Objective": {
 			"description": "",
 			"displayName": "Objective",
@@ -243,6 +305,22 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"type": "text"
+				},
+				"displayUnit": {
+					"description": "",
+					"displayName": "Display Unit",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": "DQL",
+						"property": "objectiveType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DisplayUnit"
+					}
 				},
 				"dqlQuery": {
 					"constraints": [
@@ -392,5 +470,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.3.2"
+	"version": "1.5"
 }
