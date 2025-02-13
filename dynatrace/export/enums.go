@@ -487,6 +487,7 @@ var ResourceTypes = struct {
 	Microsoft365EmailConnection         ResourceType
 	BusinessEventsCapturingVariants     ResourceType
 	WebAppAutoInjection                 ResourceType
+	SecurityContext                     ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -821,6 +822,7 @@ var ResourceTypes = struct {
 	"dynatrace_ms365_email_connection",
 	"dynatrace_business_events_capturing_variants",
 	"dynatrace_web_app_auto_injection",
+	"dynatrace_security_context",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

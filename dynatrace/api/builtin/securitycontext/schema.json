@@ -1,0 +1,31 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Determines whether security context or management zones rules have priority when assigning actual management zones. If true(default), security context information will be prioritized, otherwise management zone rules will be used to assign management zones. Learn more by visiting [our documentation](https://dt-url.net/vc034se)",
+	"displayName": "Security context settings",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Override management zone rules with security context",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:management-zones",
+		"group:preferences"
+	],
+	"schemaId": "builtin:security-context",
+	"types": {},
+	"version": "1.0.3"
+}
