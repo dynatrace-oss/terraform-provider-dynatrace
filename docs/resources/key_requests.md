@@ -31,6 +31,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ### Optional
 
+- `key_request_ids` (Map of String) The ids of the key requests
 - `names` (Set of String) The names of the key requests
 
 ### Read-Only

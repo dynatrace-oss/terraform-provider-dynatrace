@@ -168,14 +168,11 @@ Optional:
 <a id="nestedblock--tasks--task--conditions"></a>
 ### Nested Schema for `tasks.task.conditions`
 
-Required:
-
-- `states` (Map of String) key/value pairs where the `key` is the name of another task and the value the status it needs to be for the current task to get executed. Possible values are `SUCCESS`, `ERROR`, `ANY`, `OK` (Success or Skipped) and `NOK` (Error or Cancelled)
-
 Optional:
 
 - `custom` (String) A custom condition that needs to be met for the current task to get executed
 - `else` (String) Possible values are `SKIP` and `STOP`
+- `states` (Map of String) key/value pairs where the `key` is the name of another task and the value the status it needs to be for the current task to get executed. Possible values are `SUCCESS`, `ERROR`, `ANY`, `OK` (Success or Skipped) and `NOK` (Error or Cancelled)
 
 
 <a id="nestedblock--tasks--task--position"></a>

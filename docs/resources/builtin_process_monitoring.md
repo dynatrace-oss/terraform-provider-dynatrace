@@ -95,6 +95,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
 - `exe_uipath` (Boolean) Rule id: 70 - Do not monitor processes if EXE name contains 'UiPath'
 - `exe_userbinpiper` (Boolean) Rule id: 67 - Do not monitor processes if EXE path equals '/usr/bin/piper'
 - `exe_w3wp` (Boolean) Rule id: 4 - Do monitor processes if EXE name equals 'w3wp.exe'
+- `exe_yq` (Boolean) Rule id: 72 - Do not monitor processes if EXE name equals 'yq'
 - `go_static` (Boolean) Rule id: 47 - Do not monitor processes if Go Binary Linkage equals 'static'
 - `host_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `jar_dtibmmqconnector` (Boolean) Rule id: 60 - Do not monitor processes if JAR file name equals 'dynatrace_ibm_mq_connector.jar'

@@ -395,8 +395,12 @@ Optional:
 Optional:
 
 - `custom_properties` (String) Additional Javascript Agent Properties
+- `fetch_requests` (Boolean) Capture fetch() requests
+- `javascript_errors` (Boolean) JavaScript error report
+- `timed_actions` (Boolean) Timed action support
 - `timeout_settings` (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--timeout_settings))
 - `visually_complete_options` (Block List, Max: 1) Parameters for Visually complete and Speed index calculation (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings--visually_complete_options))
+- `xml_http_requests` (Boolean) Capture XMLHttpRequests (XHR)
 
 <a id="nestedblock--script--configuration--javascript_setttings--timeout_settings"></a>
 ### Nested Schema for `script.configuration.javascript_setttings.timeout_settings`

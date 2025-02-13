@@ -97,10 +97,21 @@ Optional:
 
 - `auto_adaptive_threshold_enabled` (Boolean) Enable auto adaptive threshold
 - `description` (String) no documentation available
+- `display_unit` (Block List, Max: 1) Display Unit (see [below for nested schema](#nestedblock--objectives--objective--display_unit))
 - `dql_query` (String) DQL query
 - `reference_slo` (String) Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
 - `target` (Number) no documentation available
 - `warning` (Number) no documentation available
+
+<a id="nestedblock--objectives--objective--display_unit"></a>
+### Nested Schema for `objectives.objective.display_unit`
+
+Required:
+
+- `base` (String) Base Unit
+- `decimals` (Number) Decimals
+- `display` (String) display as unit
+
 
 
 
