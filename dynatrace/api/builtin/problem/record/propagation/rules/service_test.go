@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccProblemRecordPropagationRules(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v305)
+	// Temporarily disabled - not available on test tenant (enable with v309)
 	// api.TestAcc(t)
 	t.Skip()
 }

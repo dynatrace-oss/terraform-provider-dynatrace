@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccDevObsDataMasking(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v301)
+	// Temporarily disabled - not licensed and enabled on test tenant
 	// api.TestAcc(t)
 	t.Skip()
 }

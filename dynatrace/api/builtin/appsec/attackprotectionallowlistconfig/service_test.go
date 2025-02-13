@@ -24,6 +24,6 @@ import (
 )
 
 func TestAccAppSecAttackProtectionAllowlist(t *testing.T) {
-	t.Skip()
+	// t.Skip()
 	api.TestAcc(t)
 }
