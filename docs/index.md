@@ -74,6 +74,17 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
  * **View and manage policies** (`iam-policies-management`)
  * **View environments** (`account-env-read`)
 
+In addition to using environment variables, the provider itself can also be configured.
+```
+provider "dynatrace" {
+  dt_env_url    = "<env url>"
+  dt_api_token  = "<api token>"
+  client_id     = "<client id>"
+  client_secret = "<client secret>"
+  account_id    = "<account id>"
+}
+```
+
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.
 
