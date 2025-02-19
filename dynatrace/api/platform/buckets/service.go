@@ -32,6 +32,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets/settings"
+	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 	"golang.org/x/oauth2/clientcredentials"
@@ -212,6 +213,13 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	retries := 0
 	response, err := client.Get(ctx, id)
 	for response.StatusCode != 404 {
+		if err != nil {
+			if apiErr, ok := err.(coreapi.APIError); ok {
+				if apiErr.StatusCode == 404 {
+					return nil
+				}
+			}
+		}
 		response, err = client.Get(ctx, id)
 		retries++
 		if retries > maxConfirmationRetries {
