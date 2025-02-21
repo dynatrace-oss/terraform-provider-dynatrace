@@ -60,7 +60,28 @@ func (me *service) client(_ context.Context) *bucket.Client {
 	return bucketClient
 }
 
+var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_BUCKETS_IGNORE_UNEXPECTED_EOF") == "true")
+
 func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
+	err = me.get(ctx, id, v)
+	if IGNORE_UNEXPECTED_EOF && err != nil {
+		if strings.Contains(err.Error(), "unexpected EOF") {
+			cfg := ctx.Value(settings.ContextKeyStateConfig)
+			if stateBucket, ok := cfg.(*buckets.Bucket); ok {
+				v.DisplayName = stateBucket.DisplayName
+				v.Name = stateBucket.Name
+				v.RetentionDays = stateBucket.RetentionDays
+				v.Status = stateBucket.Status
+				v.Table = stateBucket.Table
+				v.Version = stateBucket.Version
+				return nil
+			}
+		}
+	}
+	return err
+}
+
+func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
 	var result bucket.Response
 	if result, err = me.client(ctx).Get(ctx, id); err != nil {
 		return err
