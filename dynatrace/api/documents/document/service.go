@@ -98,7 +98,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, response := range listResponse.Responses {
-		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name})
+		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: map[string]any{"type": response.Type, "owner": response.Owner}})
 	}
 
 	return stubs, nil

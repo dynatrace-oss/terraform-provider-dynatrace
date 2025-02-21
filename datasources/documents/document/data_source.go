@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -92,17 +91,19 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
+			if len(stub.Extra) == 0 {
+				continue
+			}
 			if len(docType) > 0 {
-				stubDocType := stub.Value.(*documents.Document).Type
-				if stubDocType != docType {
+				if stub.Extra["type"] != docType {
 					continue
 				}
 			}
 			m := map[string]any{
 				"id":    stub.ID,
 				"name":  stub.Name,
-				"type":  stub.Value.(*documents.Document).Type,
-				"owner": stub.Value.(*documents.Document).Owner,
+				"type":  stub.Extra["type"],
+				"owner": stub.Extra["owner"],
 			}
 
 			values = append(values, m)

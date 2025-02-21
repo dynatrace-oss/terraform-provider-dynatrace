@@ -28,6 +28,7 @@ type Stub struct {
 	Value    any     `json:"-"`
 	LegacyID *string `json:"legacyID,omitempty"`
 	ParentID *string `json:"parentID,omitempty"`
+	Extra    map[string]any
 }
 
 type Stubs []*Stub
