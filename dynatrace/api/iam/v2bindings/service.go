@@ -98,6 +98,7 @@ type BindingsResponse struct {
 		GroupUUIDs []string          `json:"groups"`
 		Parameters map[string]string `json:"parameters"`
 		Metadata   map[string]string `json:"metadata"`
+		Boundaries []string          `json:"boundaries"`
 	} `json:"policyBindings"`
 }
 
@@ -166,6 +167,9 @@ func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string
 				policy.Metadata[key] = value
 			}
 		}
+		if len(policyBinding.Boundaries) > 0 {
+			policy.Boundaries = append([]string{}, policyBinding.Boundaries...)
+		}
 		results = append(results, policy)
 	}
 	return results, nil
@@ -192,9 +196,11 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 		payload := struct {
 			Parameters map[string]string `json:"parameters"`
 			Metadata   map[string]string `json:"metadata"`
+			Boundaries []string          `json:"boundaries"`
 		}{
 			Parameters: policy.Parameters,
 			Metadata:   policy.Metadata,
+			Boundaries: policy.Boundaries,
 		}
 		retries := 0
 		for retries < 10 {

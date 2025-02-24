@@ -290,6 +290,7 @@ import (
 	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
@@ -777,7 +778,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.IAMPolicy),
 		Dependencies.GlobalPolicy,
 	),
-	ResourceTypes.DDUPool: NewResourceDescriptor(ddupool.Service),
+	ResourceTypes.IAMPolicyBoundary: NewResourceDescriptor(boundaries.Service),
+	ResourceTypes.DDUPool:           NewResourceDescriptor(ddupool.Service),
 	ResourceTypes.ProcessGroupAnomalies: NewResourceDescriptor(
 		pg_anomalies.Service,
 		Coalesce(Dependencies.ProcessGroup),
