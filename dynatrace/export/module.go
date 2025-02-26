@@ -1339,7 +1339,8 @@ func (me *Module) Discover() error {
 	stubs = stubs.Sort()
 	for _, stub := range stubs {
 		if stub.Name == "" {
-			panic(me.Type)
+			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
+			continue
 		}
 		if IsIgnoredResource(me.Type, stub.ID) {
 			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
