@@ -815,6 +815,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		declarativegrouping.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
+		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.HostMonitoring: NewResourceDescriptor(
 		hostmonitoring.Service,
