@@ -38,11 +38,6 @@
 					"value": "log.source.origin"
 				},
 				{
-					"displayName": "Journald Unit",
-					"icon": "filter",
-					"value": "journald.unit"
-				},
-				{
 					"displayName": "Host tag",
 					"icon": "filter",
 					"value": "host.tag"
@@ -431,5 +426,5 @@
 			}
 		}
 	},
-	"version": "1.0.14"
+	"version": "1.0.15"
 }
