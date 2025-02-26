@@ -748,7 +748,7 @@
 					}
 				}
 			},
-			"summaryPattern": "{titleFilter.enabled|valueSet, select, true {Title {titleFilter}} other {}}{titleFilter.enabled|valueSet, select, true {{descriptionFilter.enabled|valueSet, select, true { **OR** } other {}}} other {}}{descriptionFilter.enabled|valueSet, select, true {Description {descriptionFilter}} other {}}{metadataFilter|valueSet, select, true {{titleFilter.enabled|valueSet, select, true { **OR** } other {{descriptionFilter.enabled|valueSet, select, true { **OR** } other {}}}}} other {}}{metadataFilter|valueSet, select, true {{metadataFilter}} other {}}",
+			"summaryPattern": "{titleFilter.enabled|valueSet, select, true {Title {titleFilter}} other {}}{titleFilter.enabled|valueSet, select, true {{descriptionFilter.enabled|valueSet, select, true {{titleFilter.negate, select, true { **AND** } other {{descriptionFilter.negate, select, true { **AND** } other { **OR** }}}}} other {}}} other {}}{descriptionFilter.enabled|valueSet, select, true {Description {descriptionFilter}} other {}} {metadataFilter|valueSet, select, true {{descriptionFilter.enabled|valueSet, select, true {{descriptionFilter.negate, select, true { **AND** } other { **OR**}}} other {{titleFilter.enabled|valueSet, select, true {{titleFilter.negate, select, true { **AND** } other { **OR** }}} other {}}}}} other {}} {metadataFilter|valueSet, select, true {{metadataFilter}} other {}}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -993,5 +993,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.6"
+	"version": "8.6.1"
 }
