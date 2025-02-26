@@ -1,0 +1,30 @@
+---
+layout: ""
+page_title: dynatrace_monitored_technologies_python Resource - terraform-provider-dynatrace"
+subcategory: "Monitored Technologies"
+description: |-
+  The resource `dynatrace_monitored_technologies_python` covers configuration to enable/disable Python monitoring
+---
+
+# dynatrace_monitored_technologies_python (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Hosts - https://www.dynatrace.com/support/help/platform-modules/infrastructure-monitoring/hosts
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:monitored-technologies.python`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_monitored_technologies_python` downloads all existing Python monitoring configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/monitoredtechnologies/python/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+ 
