@@ -60,7 +60,7 @@ func (me *service) Get(ctx context.Context, id string, v *customservices.CustomS
 }
 
 func (me *service) GetWithTechnology(ctx context.Context, id string, technology string, v *customservices.CustomService) error {
-	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s?includeProcessGroupReferences=true", url.PathEscape(technology), url.PathEscape(id))).Expect(200)
 	if err := req.Finish(v); err != nil {
 		return err
 	}
