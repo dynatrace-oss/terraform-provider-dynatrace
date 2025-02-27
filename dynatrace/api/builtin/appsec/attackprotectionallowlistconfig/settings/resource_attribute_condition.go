@@ -25,6 +25,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+type ResourceAttributeConditions []*ResourceAttributeCondition
+
+func (me *ResourceAttributeConditions) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"resource_attribute_condition": {
+			Type:        schema.TypeList,
+			Required:    true,
+			MinItems:    1,
+			Description: "",
+			Elem:        &schema.Resource{Schema: new(ResourceAttributeCondition).Schema()},
+		},
+	}
+}
+
+func (me ResourceAttributeConditions) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeSlice("resource_attribute_condition", me)
+}
+
+func (me *ResourceAttributeConditions) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeSlice("resource_attribute_condition", me)
+}
+
+// ResourceAttributeCondition. We provide suggestions for resource attribute keys and values based on what we currently see in your environment. You can also enter any value that isn't in the list. Key and value matches are case-sensitive. Resource attributes come out of the box from OneAgent, and you can set them up from [data enrichment](https://docs.dynatrace.com/docs/extend-dynatrace/extend-data).
 type ResourceAttributeCondition struct {
 	Matcher                ResourceAttributeValueMatcher `json:"matcher"`                          // Possible Values: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_END_WITH`, `DOES_NOT_EXIST`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `NOT_EQUALS`, `STARTS_WITH`
 	ResourceAttributeKey   string                        `json:"resourceAttributeKey"`             // Resource attribute key

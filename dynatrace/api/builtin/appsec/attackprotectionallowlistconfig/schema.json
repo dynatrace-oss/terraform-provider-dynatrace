@@ -13,32 +13,32 @@
 			"documentation": "",
 			"items": [
 				{
-					"description": "",
+					"description": "Type of detection. Example: \"SSRF\".",
 					"displayName": "detection.type",
 					"value": "DETECTION_TYPE"
 				},
 				{
-					"description": "",
+					"description": "IP address of the client (IPv4 or IPv6) from which the actor operates. Example: \"192.168.1.2\".",
 					"displayName": "actor.ip",
 					"value": "ACTOR_IP"
 				},
 				{
-					"description": "",
+					"description": "URI path of the entry point. Example: \"/user/2/demo\".",
 					"displayName": "entry_point.url.path",
 					"value": "ENTRY_POINT_URL_PATH"
 				},
 				{
-					"description": "",
+					"description": "Payload at the vulnerable function. Example: \"https://example.dynatrace.com:8080/resources\".",
 					"displayName": "entry_point.payload",
 					"value": "ENTRY_POINT_PAYLOAD"
 				},
 				{
-					"description": "",
+					"description": "URI host of the payload at the vulnerable function (only for SSRF detection type). Example: \"example.dynatrace.com\".",
 					"displayName": "entry_point.payload.domain",
 					"value": "ENTRY_POINT_PAYLOAD_DOMAIN"
 				},
 				{
-					"description": "",
+					"description": "URI port of the payload at the vulnerable function (only for SSRF detection type). Example: \"8080\".",
 					"displayName": "entry_point.payload.port",
 					"value": "ENTRY_POINT_PAYLOAD_PORT"
 				}
@@ -217,24 +217,13 @@
 	"properties": {
 		"attackHandling": {
 			"description": "",
-			"displayName": "Step 2: Define attack control for chosen criteria",
+			"displayName": "Step 1: Define attack control for chosen criteria",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": {
 				"$ref": "#/types/AttackHandling"
-			}
-		},
-		"criteria": {
-			"description": "",
-			"displayName": "Step 1: Define criteria",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": {
-				"$ref": "#/types/Criteria"
 			}
 		},
 		"enabled": {
@@ -249,7 +238,7 @@
 		},
 		"metadata": {
 			"description": "",
-			"displayName": "Step 3: Leave comment (optional)",
+			"displayName": "Step 4: Leave comment (optional)",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -257,6 +246,74 @@
 			"type": {
 				"$ref": "#/types/Metadata"
 			}
+		},
+		"resourceAttributeConditions": {
+			"description": "When you add multiple conditions, the rule applies if all conditions apply.\n\nIf you want the rule to apply only to a subset of your environment, provide the resource attributes that should be used to identify that part of the environment.",
+			"displayName": "Step 3: Specify where the rule is applied (optional)",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Condition",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/ResourceAttributeCondition"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add new condition"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list",
+			"uiCustomization": {
+				"table": {
+					"columns": [
+						{
+							"builtinColumnRef": "summary",
+							"displayName": "Condition"
+						}
+					]
+				}
+			}
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"rules": {
+			"description": "Provide conditions that must be met by the detection finding you want to allowlist.",
+			"displayName": "Step 2: Define the rule",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Condition",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/AgentSideCriteria"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add new condition"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
 		}
 	},
 	"schemaGroups": [
@@ -389,95 +446,6 @@
 			"version": "0",
 			"versionInfo": ""
 		},
-		"Criteria": {
-			"constraints": [
-				{
-					"customMessage": "Please specify at least one of source IP or attack pattern.",
-					"customValidatorId": "allowlistedAttacksCriteriaValidator",
-					"skipAsyncValidation": false,
-					"type": "CUSTOM_VALIDATOR_REF"
-				}
-			],
-			"description": "",
-			"displayName": "Allowlisted attacks - Criteria",
-			"documentation": "",
-			"properties": {
-				"attackPattern": {
-					"constraints": [
-						{
-							"maxLength": 500,
-							"minLength": 1,
-							"type": "LENGTH"
-						}
-					],
-					"description": "",
-					"displayName": "Attack pattern",
-					"documentation": "Only consider attacks matching the specified pattern.",
-					"maxObjects": 1,
-					"modificationPolicy": "DEFAULT",
-					"nullable": true,
-					"type": "text"
-				},
-				"sourceIp": {
-					"constraints": [
-						{
-							"customMessage": "Please enter a valid IP address.",
-							"customValidatorId": "ipValidator",
-							"skipAsyncValidation": false,
-							"type": "CUSTOM_VALIDATOR_REF"
-						},
-						{
-							"maxLength": 500,
-							"minLength": 1,
-							"type": "LENGTH"
-						}
-					],
-					"description": "",
-					"displayName": "Source IP",
-					"documentation": "",
-					"maxObjects": 1,
-					"modificationPolicy": "DEFAULT",
-					"nullable": true,
-					"type": "text"
-				}
-			},
-			"summaryPattern": "",
-			"type": "object",
-			"version": "0",
-			"versionInfo": ""
-		},
-		"CriteriaList": {
-			"description": "",
-			"displayName": "CriteriaList",
-			"documentation": "",
-			"properties": {
-				"list": {
-					"description": "",
-					"displayName": "",
-					"documentation": "",
-					"items": {
-						"description": "",
-						"displayName": "Condition",
-						"documentation": "",
-						"type": {
-							"$ref": "#/types/AgentSideCriteria"
-						}
-					},
-					"maxObjects": 100,
-					"metadata": {
-						"addItemButton": "Add new criteria"
-					},
-					"minObjects": 0,
-					"modificationPolicy": "DEFAULT",
-					"nullable": false,
-					"type": "list"
-				}
-			},
-			"summaryPattern": "",
-			"type": "object",
-			"version": "0",
-			"versionInfo": ""
-		},
 		"Metadata": {
 			"description": "",
 			"displayName": "Allowlisted attacks - Comment",
@@ -509,7 +477,7 @@
 		"ResourceAttributeCondition": {
 			"description": "",
 			"displayName": "ResourceAttributeCondition",
-			"documentation": "",
+			"documentation": "We provide suggestions for resource attribute keys and values based on what we currently see in your environment. You can also enter any value that isn't in the list. Key and value matches are case-sensitive. Resource attributes come out of the box from OneAgent, and you can set them up from [data enrichment](https://docs.dynatrace.com/docs/extend-dynatrace/extend-data).",
 			"properties": {
 				"matcher": {
 					"default": "EQUALS",
@@ -605,5 +573,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.4"
+	"version": "2.0.2"
 }

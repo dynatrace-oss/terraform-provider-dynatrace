@@ -24,11 +24,13 @@ import (
 )
 
 type Settings struct {
-	AttackHandling *AttackHandling `json:"attackHandling"` // Step 2: Define attack control for chosen criteria
-	Criteria       *Criteria       `json:"criteria"`       // Step 1: Define criteria. Please specify at least one of source IP or attack pattern.
-	Enabled        bool            `json:"enabled"`        // This setting is enabled (`true`) or disabled (`false`)
-	Metadata       *Metadata       `json:"metadata"`       // Step 3: Leave comment
-	InsertAfter    string          `json:"-"`
+	AttackHandling              *AttackHandling             `json:"attackHandling"`                        // Step 1: Define attack control for chosen criteria
+	Enabled                     bool                        `json:"enabled"`                               // This setting is enabled (`true`) or disabled (`false`)
+	Metadata                    *Metadata                   `json:"metadata"`                              // Step 4: Leave comment (optional)
+	ResourceAttributeConditions ResourceAttributeConditions `json:"resourceAttributeConditions,omitempty"` // When you add multiple conditions, the rule applies if all conditions apply.\n\nIf you want the rule to apply only to a subset of your environment, provide the resource attributes that should be used to identify that part of the environment.
+	RuleName                    *string                     `json:"ruleName,omitempty"`                    // Rule name
+	Rules                       AgentSideCriterias          `json:"rules"`                                 // Provide conditions that must be met by the detection finding you want to allowlist.
+	InsertAfter                 string                      `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -39,7 +41,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attack_handling": {
 			Type:        schema.TypeList,
-			Description: "Step 2: Define attack control for chosen criteria",
+			Description: "Step 1: Define attack control for chosen criteria",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(AttackHandling).Schema()},
 			MinItems:    1,
@@ -48,10 +50,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"criteria": {
 			Type:        schema.TypeList,
 			Description: "Step 1: Define criteria. Please specify at least one of source IP or attack pattern.",
-			Required:    true,
+			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(Criteria).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
+			Deprecated:  "The `criteria` attribute has been deprecated, please use the `rules` and `resource_attribute_conditions` attributes instead.",
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -60,9 +63,30 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"metadata": {
 			Type:        schema.TypeList,
-			Description: "Step 3: Leave comment",
+			Description: "Step 4: Leave comment (optional)",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Metadata).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"resource_attribute_conditions": {
+			Type:        schema.TypeList,
+			Description: "When you add multiple conditions, the rule applies if all conditions apply.\n\nIf you want the rule to apply only to a subset of your environment, provide the resource attributes that should be used to identify that part of the environment.",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(ResourceAttributeConditions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"rule_name": {
+			Type:        schema.TypeString,
+			Description: "Rule name",
+			Optional:    true, // nullable
+		},
+		"rules": {
+			Type:        schema.TypeList,
+			Description: "Provide conditions that must be met by the detection finding you want to allowlist.",
+			Required:    true,
+			Elem:        &schema.Resource{Schema: new(AgentSideCriterias).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -77,20 +101,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"attack_handling": me.AttackHandling,
-		"criteria":        me.Criteria,
-		"enabled":         me.Enabled,
-		"metadata":        me.Metadata,
-		"insert_after":    me.InsertAfter,
+		"attack_handling":               me.AttackHandling,
+		"enabled":                       me.Enabled,
+		"metadata":                      me.Metadata,
+		"resource_attribute_conditions": me.ResourceAttributeConditions,
+		"rule_name":                     me.RuleName,
+		"rules":                         me.Rules,
+		"insert_after":                  me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"attack_handling": &me.AttackHandling,
-		"criteria":        &me.Criteria,
-		"enabled":         &me.Enabled,
-		"metadata":        &me.Metadata,
-		"insert_after":    &me.InsertAfter,
+		"attack_handling":               &me.AttackHandling,
+		"enabled":                       &me.Enabled,
+		"metadata":                      &me.Metadata,
+		"resource_attribute_conditions": &me.ResourceAttributeConditions,
+		"rule_name":                     &me.RuleName,
+		"rules":                         &me.Rules,
+		"insert_after":                  &me.InsertAfter,
 	})
 }
