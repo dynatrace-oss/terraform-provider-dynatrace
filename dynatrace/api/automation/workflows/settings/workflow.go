@@ -192,6 +192,7 @@ func (me *Workflow) MarshalJSON() ([]byte, error) {
 		Private:       me.Private,
 		Trigger:       me.Trigger,
 		Tasks:         me.Tasks,
+		Type:          me.Type,
 	}
 	return json.Marshal(wf)
 }
