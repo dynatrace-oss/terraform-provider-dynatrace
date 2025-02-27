@@ -37,6 +37,7 @@ type Workflow struct {
 	SchemaVersion int      `json:"schemaVersion,omitempty"`                      //
 	Trigger       *Trigger `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
 	Tasks         Tasks    `json:"tasks,omitempty"`                              // The tasks to run for every execution of this workflow
+	Type          string   `json:"type"`
 }
 
 func (me *Workflow) Name() string {
@@ -91,6 +92,12 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Tasks).Schema("tasks")},
 		},
+		"type": {
+			Type:        schema.TypeString,
+			Description: "The type of the workflow. Possible values are `STANDARD` and `SIMPLE`. Defaults to `STANDARD`. Workflows of type `SIMPLE` are allowed to contain only one action",
+			Optional:    true,
+			Default:     "STANDARD",
+		},
 	}
 }
 
@@ -117,6 +124,7 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 		"private": me.Private,
 		"trigger": me.Trigger,
 		"tasks":   me.Tasks,
+		"type":    me.Type,
 	})
 }
 
@@ -130,6 +138,7 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		// "private": &me.Private,
 		"trigger": &me.Trigger,
 		"tasks":   &me.Tasks,
+		"type":    &me.Type,
 	}); err != nil {
 		return err
 	}
@@ -173,6 +182,7 @@ func (me *Workflow) MarshalJSON() ([]byte, error) {
 		SchemaVersion int      `json:"schemaVersion,omitempty"`
 		Trigger       *Trigger `json:"trigger,omitempty"`
 		Tasks         Tasks    `json:"tasks,omitempty"`
+		Type          string   `json:"type,omitempty"`
 	}{
 		SchemaVersion: SchemaVersion, // adding the Schema Version is the purpose of this custome `MarshalJSON` function
 		Title:         me.Title,
