@@ -11,6 +11,7 @@ type Policy struct {
 	ID         string
 	Parameters map[string]string
 	Metadata   map[string]string
+	Boundaries []string
 }
 
 func (me *Policy) Schema() map[string]*schema.Schema {
@@ -30,6 +31,11 @@ func (me *Policy) Schema() map[string]*schema.Schema {
 			Optional: true,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
+		"boundaries": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
 	}
 }
 
@@ -43,6 +49,9 @@ func (me *Policy) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("metadata", me.Metadata); err != nil {
 		return err
 	}
+	if err := properties.Encode("boundaries", me.Boundaries); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -54,6 +63,9 @@ func (me *Policy) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("metadata", &me.Metadata); err != nil {
+		return err
+	}
+	if err := decoder.Decode("boundaries", &me.Boundaries); err != nil {
 		return err
 	}
 	return nil

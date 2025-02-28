@@ -341,6 +341,7 @@ func Provider() *schema.Provider {
 			"dynatrace_iam_policy":                          resources.NewGeneric(export.ResourceTypes.IAMPolicy, resources.CredValIAM).Resource(),
 			"dynatrace_iam_policy_bindings":                 resources.NewGeneric(export.ResourceTypes.IAMPolicyBindings, resources.CredValIAM).Resource(),
 			"dynatrace_iam_policy_bindings_v2":              resources.NewGeneric(export.ResourceTypes.IAMPolicyBindingsV2, resources.CredValIAM).Resource(),
+			"dynatrace_iam_policy_boundary":                 resources.NewGeneric(export.ResourceTypes.IAMPolicyBoundary, resources.CredValIAM).Resource(),
 			"dynatrace_api_token":                           apitokens.Resource(),
 			"dynatrace_custom_tags":                         customtags.Resource(),
 			"dynatrace_pg_anomalies":                        resources.NewGeneric(export.ResourceTypes.ProcessGroupAnomalies).Resource(),

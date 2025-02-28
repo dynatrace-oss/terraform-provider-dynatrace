@@ -235,6 +235,7 @@ var ResourceTypes = struct {
 	IAMPolicy                           ResourceType
 	IAMPolicyBindings                   ResourceType
 	IAMPolicyBindingsV2                 ResourceType
+	IAMPolicyBoundary                   ResourceType
 	ProcessGroupAnomalies               ResourceType
 	DDUPool                             ResourceType
 	ProcessGroupAlerting                ResourceType
@@ -571,6 +572,7 @@ var ResourceTypes = struct {
 	"dynatrace_iam_policy",
 	"dynatrace_iam_policy_bindings",
 	"dynatrace_iam_policy_bindings_v2",
+	"dynatrace_iam_policy_boundary",
 	"dynatrace_pg_anomalies",
 	"dynatrace_ddu_pool",
 	"dynatrace_pg_alerting",
