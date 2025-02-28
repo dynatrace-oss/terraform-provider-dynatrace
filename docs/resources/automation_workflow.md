@@ -132,6 +132,7 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
 - `owner` (String) The ID of the owner of this workflow
 - `private` (Boolean) Defines whether this workflow is private to the owner or not. Default is `true`
 - `trigger` (Block List, Max: 1) Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered (see [below for nested schema](#nestedblock--trigger))
+- `type` (String) The type of the workflow. Possible values are `STANDARD` and `SIMPLE`. Defaults to `STANDARD`. Workflows of type `SIMPLE` are allowed to contain only one action
 
 ### Read-Only
 

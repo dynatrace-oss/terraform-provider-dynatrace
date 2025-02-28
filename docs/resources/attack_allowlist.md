@@ -28,15 +28,38 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_attack_allowlist" "#name#" {
-  criteria {
-    source_ip = "192.168.0.1"
-  }
-  enabled = false
+  enabled      = true
+  insert_after = ""
+  rule_name    = "#name#"
   attack_handling {
     blocking_strategy = "MONITOR"
   }
   metadata {
-    comment = ""
+    comment = "Example"
+  }
+  resource_attribute_conditions {
+    resource_attribute_condition {
+      matcher                  = "STARTS_WITH"
+      resource_attribute_key   = "AttributeKey2"
+      resource_attribute_value = "AttributeValue2"
+    }
+    resource_attribute_condition {
+      matcher                  = "EQUALS"
+      resource_attribute_key   = "AttributeKey1"
+      resource_attribute_value = "AttributeValue1"
+    }
+  }
+  rules {
+    rule {
+      criteria_key                  = "DETECTION_TYPE"
+      criteria_matcher              = "EQUALS"
+      criteria_value_detection_type = "SSRF"
+    }
+    rule {
+      criteria_key             = "ACTOR_IP"
+      criteria_matcher         = "CONTAINS"
+      criteria_value_free_text = "192.168.1.2"
+    }
   }
 }
 ```
@@ -46,14 +69,19 @@ resource "dynatrace_attack_allowlist" "#name#" {
 
 ### Required
 
-- `attack_handling` (Block List, Min: 1, Max: 1) Step 2: Define attack control for chosen criteria (see [below for nested schema](#nestedblock--attack_handling))
-- `criteria` (Block List, Min: 1, Max: 1) Step 1: Define criteria. Please specify at least one of source IP or attack pattern. (see [below for nested schema](#nestedblock--criteria))
+- `attack_handling` (Block List, Min: 1, Max: 1) Step 1: Define attack control for chosen criteria (see [below for nested schema](#nestedblock--attack_handling))
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `metadata` (Block List, Min: 1, Max: 1) Step 3: Leave comment (see [below for nested schema](#nestedblock--metadata))
+- `metadata` (Block List, Min: 1, Max: 1) Step 4: Leave comment (optional) (see [below for nested schema](#nestedblock--metadata))
+- `rules` (Block List, Min: 1, Max: 1) Provide conditions that must be met by the detection finding you want to allowlist. (see [below for nested schema](#nestedblock--rules))
 
 ### Optional
 
+- `criteria` (Block List, Max: 1, Deprecated) Step 1: Define criteria. Please specify at least one of source IP or attack pattern. (see [below for nested schema](#nestedblock--criteria))
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+- `resource_attribute_conditions` (Block List, Max: 1) When you add multiple conditions, the rule applies if all conditions apply.
+
+If you want the rule to apply only to a subset of your environment, provide the resource attributes that should be used to identify that part of the environment. (see [below for nested schema](#nestedblock--resource_attribute_conditions))
+- `rule_name` (String) Rule name
 
 ### Read-Only
 
@@ -67,6 +95,36 @@ Required:
 - `blocking_strategy` (String) Possible Values: `MONITOR`, `OFF`
 
 
+<a id="nestedblock--metadata"></a>
+### Nested Schema for `metadata`
+
+Required:
+
+- `comment` (String) no documentation available
+
+
+<a id="nestedblock--rules"></a>
+### Nested Schema for `rules`
+
+Required:
+
+- `rule` (Block List, Min: 1) (see [below for nested schema](#nestedblock--rules--rule))
+
+<a id="nestedblock--rules--rule"></a>
+### Nested Schema for `rules.rule`
+
+Required:
+
+- `criteria_key` (String) Possible Values: `ACTOR_IP`, `DETECTION_TYPE`, `ENTRY_POINT_PAYLOAD`, `ENTRY_POINT_PAYLOAD_DOMAIN`, `ENTRY_POINT_PAYLOAD_PORT`, `ENTRY_POINT_URL_PATH`
+- `criteria_matcher` (String) Possible Values: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_END_WITH`, `DOES_NOT_STARTS_WITH`, `ENDS_WITH`, `EQUALS`, `IP_CIDR`, `NOT_EQUALS`, `NOT_IN_IP_CIDR`, `STARTS_WITH`
+
+Optional:
+
+- `criteria_value_detection_type` (String) Possible Values: `CMD_INJECTION`, `JNDI_INJECTION`, `SQL_INJECTION`, `SSRF`
+- `criteria_value_free_text` (String) Value
+
+
+
 <a id="nestedblock--criteria"></a>
 ### Nested Schema for `criteria`
 
@@ -76,10 +134,22 @@ Optional:
 - `source_ip` (String) Source IP
 
 
-<a id="nestedblock--metadata"></a>
-### Nested Schema for `metadata`
+<a id="nestedblock--resource_attribute_conditions"></a>
+### Nested Schema for `resource_attribute_conditions`
 
 Required:
 
-- `comment` (String) no documentation available
+- `resource_attribute_condition` (Block List, Min: 1) (see [below for nested schema](#nestedblock--resource_attribute_conditions--resource_attribute_condition))
+
+<a id="nestedblock--resource_attribute_conditions--resource_attribute_condition"></a>
+### Nested Schema for `resource_attribute_conditions.resource_attribute_condition`
+
+Required:
+
+- `matcher` (String) Possible Values: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_END_WITH`, `DOES_NOT_EXIST`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `NOT_EQUALS`, `STARTS_WITH`
+- `resource_attribute_key` (String) Resource attribute key
+
+Optional:
+
+- `resource_attribute_value` (String) Resource attribute value
  

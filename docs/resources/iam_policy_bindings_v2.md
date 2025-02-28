@@ -130,5 +130,6 @@ Required:
 
 Optional:
 
+- `boundaries` (Set of String)
 - `metadata` (Map of String)
 - `parameters` (Map of String)
