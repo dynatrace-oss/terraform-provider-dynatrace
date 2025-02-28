@@ -7,8 +7,6 @@ import (
 )
 
 type PolicyBoundary struct {
-	// LevelType string `json:"levelType"`
-	// LevelID   string `json:"levelId"`
 	Name  string `json:"name"`
 	Query string `json:"boundaryQuery"`
 }
