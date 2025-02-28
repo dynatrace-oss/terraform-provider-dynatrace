@@ -1491,6 +1491,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.IAMPolicy, ""},
 			{ResourceTypes.IAMPolicyBindings, ""},
 			{ResourceTypes.IAMPolicyBindingsV2, ""},
+			{ResourceTypes.IAMPolicyBoundary, ""},
 		},
 	},
 	{
