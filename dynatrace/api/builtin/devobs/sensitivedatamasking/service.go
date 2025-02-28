@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.3"
+const SchemaVersion = "0.4"
 const SchemaID = "builtin:devobs.sensitive.data.masking"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*sensitivedatamasking.Settings] {

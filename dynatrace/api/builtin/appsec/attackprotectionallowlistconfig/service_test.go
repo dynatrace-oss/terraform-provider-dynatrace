@@ -22,6 +22,7 @@ import (
 )
 
 func TestAccAppSecAttackProtectionAllowlist(t *testing.T) {
-	t.Skip()
+	// Temporarily disabled - not available on test tenant (enable with v310)
 	// api.TestAcc(t)
+	t.Skip()
 }

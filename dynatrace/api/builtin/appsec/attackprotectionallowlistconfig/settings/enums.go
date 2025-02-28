@@ -17,6 +17,50 @@
 
 package attackprotectionallowlistconfig
 
+type AgentSideAttributeKey string
+
+var AgentSideAttributeKeies = struct {
+	ActorIp                 AgentSideAttributeKey
+	DetectionType           AgentSideAttributeKey
+	EntryPointPayload       AgentSideAttributeKey
+	EntryPointPayloadDomain AgentSideAttributeKey
+	EntryPointPayloadPort   AgentSideAttributeKey
+	EntryPointUrlPath       AgentSideAttributeKey
+}{
+	"ACTOR_IP",
+	"DETECTION_TYPE",
+	"ENTRY_POINT_PAYLOAD",
+	"ENTRY_POINT_PAYLOAD_DOMAIN",
+	"ENTRY_POINT_PAYLOAD_PORT",
+	"ENTRY_POINT_URL_PATH",
+}
+
+type AgentSideAttributeMatcher string
+
+var AgentSideAttributeMatchers = struct {
+	Contains          AgentSideAttributeMatcher
+	DoesNotContain    AgentSideAttributeMatcher
+	DoesNotEndWith    AgentSideAttributeMatcher
+	DoesNotStartsWith AgentSideAttributeMatcher
+	EndsWith          AgentSideAttributeMatcher
+	Equals            AgentSideAttributeMatcher
+	IpCidr            AgentSideAttributeMatcher
+	NotEquals         AgentSideAttributeMatcher
+	NotInIpCidr       AgentSideAttributeMatcher
+	StartsWith        AgentSideAttributeMatcher
+}{
+	"CONTAINS",
+	"DOES_NOT_CONTAIN",
+	"DOES_NOT_END_WITH",
+	"DOES_NOT_STARTS_WITH",
+	"ENDS_WITH",
+	"EQUALS",
+	"IP_CIDR",
+	"NOT_EQUALS",
+	"NOT_IN_IP_CIDR",
+	"STARTS_WITH",
+}
+
 type BlockingStrategy string
 
 var BlockingStrategies = struct {
@@ -25,6 +69,20 @@ var BlockingStrategies = struct {
 }{
 	"MONITOR",
 	"OFF",
+}
+
+type DetectionType string
+
+var DetectionTypes = struct {
+	CmdInjection  DetectionType
+	JndiInjection DetectionType
+	SqlInjection  DetectionType
+	Ssrf          DetectionType
+}{
+	"CMD_INJECTION",
+	"JNDI_INJECTION",
+	"SQL_INJECTION",
+	"SSRF",
 }
 
 type ResourceAttributeValueMatcher string

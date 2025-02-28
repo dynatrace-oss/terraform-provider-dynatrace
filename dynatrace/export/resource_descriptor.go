@@ -179,6 +179,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nodejs"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/opentracingnative"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/python"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/varnish"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/wsmb"
 	slov2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
@@ -817,6 +818,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		declarativegrouping.Service,
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.HostGroup),
+		Coalesce(Dependencies.K8sCluster),
 	),
 	ResourceTypes.HostMonitoring: NewResourceDescriptor(
 		hostmonitoring.Service,
@@ -928,6 +930,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.MonitoredTechnologiesPHP: NewResourceDescriptor(
 		php.Service,
+		Coalesce(Dependencies.Host),
+	),
+	ResourceTypes.MonitoredTechnologiesPython: NewResourceDescriptor(
+		python.Service,
 		Coalesce(Dependencies.Host),
 	),
 	ResourceTypes.MonitoredTechnologiesVarnish: NewResourceDescriptor(

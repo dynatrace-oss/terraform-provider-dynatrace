@@ -23,7 +23,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.0.1"
+const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-advanced-config"
 
 func Service(credentials *settings.Credentials) settings.CRUDService[*attackprotectionadvancedconfig.Settings] {

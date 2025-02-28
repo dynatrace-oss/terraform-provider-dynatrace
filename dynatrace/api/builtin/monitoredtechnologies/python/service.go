@@ -15,17 +15,17 @@
 * limitations under the License.
  */
 
-package codelevelvulnerability
+package python
 
 import (
-	codelevelvulnerability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/codelevelvulnerability/settings"
+	python "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/python/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "3.0.5"
-const SchemaID = "builtin:appsec.code-level-vulnerability-rule-settings"
+const SchemaVersion = "1.0.1"
+const SchemaID = "builtin:monitored-technologies.python"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*codelevelvulnerability.Settings] {
-	return settings20.Service[*codelevelvulnerability.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *settings.Credentials) settings.CRUDService[*python.Settings] {
+	return settings20.Service[*python.Settings](credentials, SchemaID, SchemaVersion)
 }

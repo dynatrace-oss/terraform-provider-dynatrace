@@ -291,6 +291,7 @@ var ResourceTypes = struct {
 	MonitoredTechnologiesNodeJS         ResourceType
 	MonitoredTechnologiesOpenTracing    ResourceType
 	MonitoredTechnologiesPHP            ResourceType
+	MonitoredTechnologiesPython         ResourceType
 	MonitoredTechnologiesVarnish        ResourceType
 	MonitoredTechnologiesWSMB           ResourceType
 	ProcessVisibility                   ResourceType
@@ -627,6 +628,7 @@ var ResourceTypes = struct {
 	"dynatrace_monitored_technologies_nodejs",
 	"dynatrace_monitored_technologies_opentracing",
 	"dynatrace_monitored_technologies_php",
+	"dynatrace_monitored_technologies_python",
 	"dynatrace_monitored_technologies_varnish",
 	"dynatrace_monitored_technologies_wsmb",
 	"dynatrace_process_visibility",
