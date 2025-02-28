@@ -777,6 +777,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		v2bindings.Service,
 		Dependencies.ID(ResourceTypes.IAMGroup),
 		Dependencies.ID(ResourceTypes.IAMPolicy),
+		Dependencies.ID(ResourceTypes.IAMPolicyBoundary),
 		Dependencies.GlobalPolicy,
 	),
 	ResourceTypes.IAMPolicyBoundary: NewResourceDescriptor(boundaries.Service),
