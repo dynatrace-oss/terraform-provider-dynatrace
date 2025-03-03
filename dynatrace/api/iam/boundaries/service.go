@@ -128,11 +128,11 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.PUT(
+	if responseBytes, err = client.PUT_MULTI_RESPONSE(
 		ctx,
 		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
 		v,
-		201,
+		[]int{201, 204},
 		false,
 	); err != nil {
 		return err
