@@ -254,6 +254,12 @@ func (me *Events) UnmarshalJSON(data []byte) error {
 				return err
 			}
 			*me = append(*me, &re)
+		} else if e.Type == Types.SelectOption {
+			var re SelectOption
+			if err := json.Unmarshal(record, &re); err != nil {
+				return err
+			}
+			*me = append(*me, &re)
 		} else if e.Type == Types.Javascript {
 			var re Javascript
 			if err := json.Unmarshal(record, &re); err != nil {

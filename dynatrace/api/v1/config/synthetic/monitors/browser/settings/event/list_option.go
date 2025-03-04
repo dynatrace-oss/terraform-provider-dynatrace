@@ -46,7 +46,7 @@ func (me ListOptions) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ListOptions) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := decoder.DecodeSlice("option", &me); err != nil {
+	if err := decoder.DecodeSlice("option", me); err != nil {
 		return err
 	}
 	return nil
