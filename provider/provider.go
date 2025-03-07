@@ -600,6 +600,7 @@ func Provider() *schema.Provider {
 			"dynatrace_business_events_capturing_variants":  resources.NewGeneric(export.ResourceTypes.BusinessEventsCapturingVariants).Resource(),
 			"dynatrace_web_app_auto_injection":              resources.NewGeneric(export.ResourceTypes.WebAppAutoInjection).Resource(),
 			"dynatrace_security_context":                    resources.NewGeneric(export.ResourceTypes.SecurityContext).Resource(),
+			"dynatrace_segments":                            resources.NewGeneric(export.ResourceTypes.Segments).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
