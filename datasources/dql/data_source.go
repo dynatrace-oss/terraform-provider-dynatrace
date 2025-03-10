@@ -138,7 +138,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		}).
 		WithUserAgent("Dynatrace Terraform Provider")
 
-	restClient, _ := clientsFactory.CreatePlatformClient()
+	restClient, _ := clientsFactory.CreatePlatformClient(ctx)
 
 	client := NewClient(restClient)
 

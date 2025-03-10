@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
@@ -1428,6 +1429,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
 	ResourceTypes.SecurityContext: NewResourceDescriptor(securitycontextsettings.Service),
+	ResourceTypes.Segments:        NewResourceDescriptor(segments.Service),
 }
 
 type ResourceExclusion struct {
@@ -1530,6 +1532,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AutomationWorkflow, ""},
 			{ResourceTypes.Documents, ""},
 			{ResourceTypes.PlatformBucket, ""},
+			{ResourceTypes.Segments, ""},
 		},
 	},
 	{

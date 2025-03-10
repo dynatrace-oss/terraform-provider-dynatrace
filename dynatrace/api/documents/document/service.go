@@ -41,7 +41,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) client() *docclient.Client {
+func (me *service) client(ctx context.Context) *docclient.Client {
 	httplog.InstallRoundTripper()
 
 	clientsFactory := clients.Factory().
@@ -53,12 +53,12 @@ func (me *service) client() *docclient.Client {
 		}).
 		WithUserAgent("Dynatrace Terraform Provider")
 
-	documentClient, _ := clientsFactory.DocumentClient()
+	documentClient, _ := clientsFactory.DocumentClient(ctx)
 	return documentClient
 }
 
 func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
-	result, err := me.client().Get(ctx, id)
+	result, err := me.client(ctx).Get(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -85,7 +85,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	if me == nil {
 		return api.Stubs{}, nil
 	}
-	cl := me.client()
+	cl := me.client(ctx)
 	if cl == nil {
 		return api.Stubs{}, nil
 	}
@@ -126,7 +126,7 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 }
 
 func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	c := me.client()
+	c := me.client(ctx)
 	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
@@ -146,7 +146,7 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
-	c := me.client()
+	c := me.client(ctx)
 	response, err := c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
@@ -162,7 +162,7 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.client().Delete(ctx, id)
+	response, err := me.client(ctx).Delete(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}

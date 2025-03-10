@@ -57,7 +57,7 @@ type service struct {
 	credentials  *settings.Credentials
 }
 
-func (s *service) createClient() (*caclib.Client, error) {
+func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
 		WithPlatformURL(s.credentials.Automation.EnvironmentURL).
@@ -68,7 +68,7 @@ func (s *service) createClient() (*caclib.Client, error) {
 		}).
 		WithHTTPListener(httplog.HTTPListener)
 
-	return factory.OpenPipelineClient()
+	return factory.OpenPipelineClient(ctx)
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {
@@ -79,7 +79,7 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configuration) error {
-	client, err := s.createClient()
+	client, err := s.createClient(ctx)
 	if err != nil {
 		return err
 	}
@@ -115,7 +115,7 @@ func (s *service) Create(ctx context.Context, v *openpipeline.Configuration) (*a
 }
 
 func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configuration) error {
-	client, err := s.createClient()
+	client, err := s.createClient(ctx)
 	if err != nil {
 		return err
 	}

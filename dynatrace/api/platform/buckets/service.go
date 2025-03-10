@@ -46,7 +46,7 @@ type service struct {
 	credentials *settings.Credentials
 }
 
-func (me *service) client(_ context.Context) *bucket.Client {
+func (me *service) client(ctx context.Context) *bucket.Client {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
 		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
@@ -56,7 +56,7 @@ func (me *service) client(_ context.Context) *bucket.Client {
 			TokenURL:     me.credentials.Automation.TokenURL,
 		}).
 		WithHTTPListener(httplog.HTTPListener)
-	bucketClient, _ := factory.BucketClient()
+	bucketClient, _ := factory.BucketClient(ctx)
 	return bucketClient
 }
 
