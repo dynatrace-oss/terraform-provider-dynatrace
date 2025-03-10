@@ -828,7 +828,7 @@ var ResourceTypes = struct {
 	"dynatrace_business_events_capturing_variants",
 	"dynatrace_web_app_auto_injection",
 	"dynatrace_security_context",
-	"dynatrace_segments",
+	"dynatrace_segment",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

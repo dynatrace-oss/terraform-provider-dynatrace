@@ -24,7 +24,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	segmentsapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
@@ -108,7 +107,6 @@ func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.S
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	logging.File.Println(string(data))
 	response, err := me.client(ctx).Create(ctx, data)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {

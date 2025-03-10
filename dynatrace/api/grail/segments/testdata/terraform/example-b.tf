@@ -1,5 +1,5 @@
 # ID 1AL7hE2Ysvf
-resource "dynatrace_segments" "#name#" {
+resource "dynatrace_segment" "#name#" {
   name        = "#name#"
   is_public   = false
   includes {
