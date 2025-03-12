@@ -749,6 +749,11 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 }
 
 func (me *Environment) WriteResourceFiles() (err error) {
+
+	if me.Flags.Consolidated {
+        return me.writeConsolidatedResourceFile()
+    }
+
 	if me.Flags.Flat {
 		return nil
 	}
@@ -778,6 +783,37 @@ func (me *Environment) WriteResourceFiles() (err error) {
 		}
 	}
 	return nil
+}
+
+func (me *Environment) writeConsolidatedResourceFile() error {
+    fmt.Println("Writing consolidated.tf (all resources in one file)")
+
+    var builder strings.Builder
+
+    for _, module := range me.Modules {
+        for _, resource := range module.Resources {
+            resourceBytes, err := resource.ReadFile()
+            if err != nil {
+                return err
+            }
+            builder.Write(resourceBytes)
+            builder.WriteString("\n\n")
+        }
+    }
+
+    consolidatedFile, err := os.Create(path.Join(me.OutputFolder, "consolidated.tf"))
+    if err != nil {
+        return err
+    }
+    defer func() {
+        consolidatedFile.Close()
+        format(consolidatedFile.Name(), true)
+    }()
+
+    if _, err = consolidatedFile.WriteString(builder.String()); err != nil {
+        return err
+    }
+    return nil
 }
 
 func (me *Environment) RemoveNonReferencedModules() (err error) {
