@@ -155,7 +155,7 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 		return fmt.Errorf("decoding slices requires a pointer to a slice to be specified. %T doesn't qualify", v)
 	}
 	elemType := rv.Type().Elem().Elem()
-	if !elemType.Implements(reflect.TypeOf((*Unmarshaler)(nil)).Elem()) {
+	if !elemType.AssignableTo(stringType) && !elemType.Implements(reflect.TypeOf((*Unmarshaler)(nil)).Elem()) {
 		return fmt.Errorf("decoding slices requires a pointer to a slice of elements that implement hcl.Unmarshaler to be specified. %T doesn't qualify (%v is not implementing %v)", v, elemType, reflect.TypeOf((*Unmarshaler)(nil)).Elem())
 	}
 	if result, ok := d.GetOk(fmt.Sprintf("%v", key)); ok {
@@ -163,13 +163,20 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 			vSlice := rv.Elem()
 			for _, element := range resultSet.List() {
 				hash := resultSet.F(element)
-				entry := reflect.New(elemType.Elem()).Interface()
+				var entry any
 				invalid := false
-				if err := UnmarshalHCL(entry.(Unmarshaler), NewDecoder(d, key, hash)); err != nil {
-					if err.Error() != "invalid" {
-						return err
-					} else {
-						invalid = true
+				if str, ok := element.(string); ok {
+					entry = str
+				} else {
+					entry = reflect.New(elemType.Elem()).Interface()
+					if unmarshaler, ok := entry.(Unmarshaler); ok {
+						if err := UnmarshalHCL(unmarshaler, NewDecoder(d, key, hash)); err != nil {
+							if err.Error() != "invalid" {
+								return err
+							} else {
+								invalid = true
+							}
+						}
 					}
 				}
 				if !invalid {
@@ -180,9 +187,20 @@ func (d *decoder) DecodeSlice(key string, v any) error {
 			vSlice := rv.Elem()
 			if result, ok := d.GetOk(fmt.Sprintf("%v.#", key)); ok {
 				for idx := 0; idx < result.(int); idx++ {
-					entry := reflect.New(elemType.Elem()).Interface()
-					if err := UnmarshalHCL(entry.(Unmarshaler), NewDecoder(d, key, idx)); err != nil {
-						return err
+					var entry any
+					if elemType.AssignableTo(stringType) {
+						if strv, ok := d.GetOk(fmt.Sprintf("%v.%d", key, idx)); ok {
+							if str, ok := strv.(string); ok {
+								entry = str
+							}
+						}
+					} else {
+						entry = reflect.New(elemType.Elem()).Interface()
+						if unmarshaler, ok := entry.(Unmarshaler); ok {
+							if err := UnmarshalHCL(unmarshaler, NewDecoder(d, key, idx)); err != nil {
+								return err
+							}
+						}
 					}
 					vSlice.Set(reflect.Append(vSlice, reflect.ValueOf(entry)))
 				}
