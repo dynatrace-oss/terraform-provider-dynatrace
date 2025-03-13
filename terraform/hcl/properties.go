@@ -56,6 +56,8 @@ func (me Properties) EncodeSlice(key string, v any) error {
 			} else {
 				return err
 			}
+		} else if str, ok := elem.(string); ok {
+			entries = append(entries, str)
 		} else {
 			return fmt.Errorf("slice entries of type %T are expected to implement hcl.Marshaler but don't", elem)
 		}
