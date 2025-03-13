@@ -290,4 +290,5 @@ type Flags struct {
 	DataSources         bool
 	SkipTerraformInit   bool
 	Include             bool
+	Consolidated 		bool
 }
