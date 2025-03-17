@@ -27,6 +27,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 ```terraform
 resource "dynatrace_app_monitoring" "#name#" {
   default_log_level = "off"
+  default_trace_level = "off"
 }
 ```
 
