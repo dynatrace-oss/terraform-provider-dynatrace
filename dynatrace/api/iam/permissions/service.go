@@ -44,7 +44,7 @@ func (me *PermissionServiceClient) EndpointURL() string {
 	return me.endpointURL
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*permissions.Permission] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Permission] {
 	return &PermissionServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 

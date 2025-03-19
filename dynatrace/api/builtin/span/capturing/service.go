@@ -18,6 +18,7 @@
 package capturing
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
@@ -27,6 +28,6 @@ import (
 const SchemaID = "builtin:span-capturing"
 const SchemaVersion = "0.1.15"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*capturing.SpanCaptureSetting] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*capturing.SpanCaptureSetting] {
 	return settings20.Service[*capturing.SpanCaptureSetting](credentials, SchemaID, SchemaVersion)
 }

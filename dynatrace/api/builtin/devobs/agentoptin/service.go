@@ -19,6 +19,7 @@ package agentoptin
 
 import (
 	agentoptin "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/devobs/agentoptin/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.5"
 const SchemaID = "builtin:devobs.agent.optin"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*agentoptin.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*agentoptin.Settings] {
 	return settings20.Service[*agentoptin.Settings](credentials, SchemaID, SchemaVersion)
 }

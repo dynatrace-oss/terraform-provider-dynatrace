@@ -47,6 +47,7 @@ var HTTPListener = &crest.HTTPListener{
 		}
 		if response.Response != nil {
 			if response.Response.Body != nil {
+				rest.Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.Response.StatusCode)
 				if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 					body, _ := io.ReadAll(response.Response.Body)
 					if body != nil {

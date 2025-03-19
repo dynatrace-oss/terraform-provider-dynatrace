@@ -9,10 +9,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	boundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
 	return &BoundaryServiceClient{
 		clientID:     credentials.IAM.ClientID,
 		accountID:    credentials.IAM.AccountID,

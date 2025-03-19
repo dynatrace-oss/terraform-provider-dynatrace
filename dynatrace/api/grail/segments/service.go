@@ -33,23 +33,23 @@ import (
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*segments.Segment] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*segments.Segment] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 func (me *service) client(ctx context.Context) *segmentsclient.Client {
 	httplog.InstallRoundTripper()
 
 	clientsFactory := clients.Factory().
-		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
+		WithPlatformURL(me.credentials.OAuth.EnvironmentURL).
 		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     me.credentials.Automation.ClientID,
-			ClientSecret: me.credentials.Automation.ClientSecret,
-			TokenURL:     me.credentials.Automation.TokenURL,
+			ClientID:     me.credentials.OAuth.ClientID,
+			ClientSecret: me.credentials.OAuth.ClientSecret,
+			TokenURL:     me.credentials.OAuth.TokenURL,
 		}).
 		WithUserAgent("Dynatrace Terraform Provider")
 

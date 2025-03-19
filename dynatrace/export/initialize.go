@@ -25,6 +25,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -174,7 +175,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		os.RemoveAll(targetFolder)
 	}
 
-	var credentials *settings.Credentials
+	var credentials *rest.Credentials
 
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
 	if credentials, err = config.Credentials(configResult, config.CredValNone); err != nil {

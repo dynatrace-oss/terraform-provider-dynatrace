@@ -403,7 +403,7 @@ func (me *ConfigGetter) Get(key string) any {
 	return result
 }
 
-func createCredentials(getter config.Getter) *settings.Credentials {
+func createCredentials(getter config.Getter) *rest.Credentials {
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), getter)
 	creds, _ := config.Credentials(configResult, config.CredValNone)
 	return creds
@@ -414,11 +414,11 @@ func createCredentials(getter config.Getter) *settings.Credentials {
 type ServiceCache struct {
 	mu          sync.Mutex
 	t           *testing.T
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	services    map[export.ResourceType]settings.CRUDService[settings.Settings]
 }
 
-func NewServiceCache(t *testing.T, credentials *settings.Credentials) *ServiceCache {
+func NewServiceCache(t *testing.T, credentials *rest.Credentials) *ServiceCache {
 	return &ServiceCache{t: t, credentials: credentials, services: map[export.ResourceType]settings.CRUDService[settings.Settings]{}}
 }
 

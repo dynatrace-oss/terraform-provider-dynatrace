@@ -19,6 +19,7 @@ package custominjectionrules
 
 import (
 	custominjectionrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/custominjectionrules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:rum.web.custom-injection-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*custominjectionrules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*custominjectionrules.Settings] {
 	return settings20.Service[*custominjectionrules.Settings](credentials, SchemaID, SchemaVersion)
 }

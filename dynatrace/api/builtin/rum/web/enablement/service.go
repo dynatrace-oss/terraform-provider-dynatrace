@@ -19,6 +19,7 @@ package enablement
 
 import (
 	enablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/enablement/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1.3"
 const SchemaID = "builtin:rum.web.enablement"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*enablement.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*enablement.Settings] {
 	return settings20.Service[*enablement.Settings](credentials, SchemaID, SchemaVersion)
 }

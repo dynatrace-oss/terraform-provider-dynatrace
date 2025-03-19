@@ -19,6 +19,7 @@ package options
 
 import (
 	options "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/disk/options/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.2.11"
 const SchemaID = "builtin:disk.options"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*options.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*options.Settings] {
 	return settings20.Service[*options.Settings](credentials, SchemaID, SchemaVersion)
 }

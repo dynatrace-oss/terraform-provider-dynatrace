@@ -19,6 +19,7 @@ package txstartfilters
 
 import (
 	txstartfilters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txstartfilters/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:mainframe.txstartfilters"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*txstartfilters.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*txstartfilters.Settings] {
 	return settings20.Service[*txstartfilters.Settings](credentials, SchemaID, SchemaVersion)
 }

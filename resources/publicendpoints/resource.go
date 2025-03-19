@@ -19,7 +19,6 @@ package publicendpoints
 
 import (
 	"context"
-	"fmt"
 
 	publicendpoints "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/publicendpoints"
 	publicendpoints_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/publicendpoints/settings"
@@ -45,10 +44,14 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *publicendpoints.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := publicendpoints.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/v1.0/onpremise"), conf.ClusterAPIToken)
-	return apiService
+func NewService(m any) (*publicendpoints.ServiceClient, error) {
+	creds, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return nil, err
+	}
+
+	apiService := publicendpoints.NewService(creds)
+	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
@@ -62,7 +65,12 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Create(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.NewString())
@@ -89,7 +97,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Update(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -118,7 +131,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	}
 
 	config := publicendpoints_settings.Settings{}
-	service := NewService(m)
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	if stateConfig.WebUiAddress != nil && *stateConfig.WebUiAddress != "" {
 		if config.WebUiAddress, err = service.GetWebUiAddress(ctx); err != nil {

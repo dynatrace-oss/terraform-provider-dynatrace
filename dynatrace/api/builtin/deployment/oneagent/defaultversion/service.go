@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	defaultversion "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/defaultversion/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/google/uuid"
 )
@@ -29,7 +30,7 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:deployment.oneagent.default-version"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*defaultversion.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*defaultversion.Settings] {
 	return &service{}
 }
 

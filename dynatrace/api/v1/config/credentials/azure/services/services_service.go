@@ -23,8 +23,6 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
 const ServiceSchemaID = "v1:config:credentials:azure:services:all"
@@ -41,10 +39,10 @@ type SupportedService struct {
 
 var supportedServicesRepo = map[string]map[string]*SupportedService{}
 
-func NewSupportedServicesService(credentials *settings.Credentials) *SupportedServicesService {
+func NewSupportedServicesService(credentials *rest.Credentials) *SupportedServicesService {
 	return &SupportedServicesService{
 		url:    credentials.URL,
-		client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client: rest.APITokenClient(credentials),
 	}
 }
 

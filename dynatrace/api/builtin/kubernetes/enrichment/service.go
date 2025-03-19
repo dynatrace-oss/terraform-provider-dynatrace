@@ -19,6 +19,7 @@ package enrichment
 
 import (
 	enrichment "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/enrichment/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1.1"
 const SchemaID = "builtin:kubernetes.generic.metadata.enrichment"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*enrichment.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*enrichment.Settings] {
 	return settings20.Service[*enrichment.Settings](credentials, SchemaID, SchemaVersion)
 }

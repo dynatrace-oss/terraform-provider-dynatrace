@@ -19,6 +19,7 @@ package outgoing
 
 import (
 	outgoing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/outgoing/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:bizevents.http.outgoing"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*outgoing.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*outgoing.Settings] {
 	return settings20.Service[*outgoing.Settings](credentials, SchemaID, SchemaVersion)
 }

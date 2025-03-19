@@ -19,6 +19,7 @@ package securityposturemanagement
 
 import (
 	securityposturemanagement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/kubernetes/securityposturemanagement/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:kubernetes.security-posture-management"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*securityposturemanagement.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*securityposturemanagement.Settings] {
 	return settings20.Service[*securityposturemanagement.Settings](credentials, SchemaID, SchemaVersion)
 }

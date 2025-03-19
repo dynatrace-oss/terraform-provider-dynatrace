@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	maintenancewindow "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/maintenancewindow/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -30,7 +31,7 @@ import (
 const SchemaID = "builtin:alerting.maintenance-window"
 const SchemaVersion = "2.15"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*maintenancewindow.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*maintenancewindow.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenancewindow.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 

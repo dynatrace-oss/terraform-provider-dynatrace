@@ -14,9 +14,9 @@ import (
 
 const SchemaID = "accounts:policy-bindings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
 	return &service{
-		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/cluster/v2"), credentials.Cluster.Token),
+		serviceClient: NewPolicyService(credentials),
 	}
 }
 
@@ -48,8 +48,8 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func NewPolicyService(baseURL string, apiToken string) *BindingServiceClient {
-	return &BindingServiceClient{client: rest.DefaultClient(baseURL, apiToken)}
+func NewPolicyService(credentials *rest.Credentials) *BindingServiceClient {
+	return &BindingServiceClient{client: rest.ClusterV2Client(credentials)}
 }
 
 type service struct {

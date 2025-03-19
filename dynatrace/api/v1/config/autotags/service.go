@@ -19,14 +19,15 @@ package autotags
 
 import (
 	autotags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/autotags/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 const SchemaID = "v1:config:auto-tags"
 const BasePath = "/api/config/v1/autoTags"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*autotags.AutoTag] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*autotags.AutoTag] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*autotags.AutoTag](BasePath),

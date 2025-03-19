@@ -28,7 +28,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
@@ -43,15 +42,15 @@ import (
 const SchemaID = "builtin:span-attribute"
 const SchemaVersion = "0.0.42"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*attribute.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*attribute.Settings] {
 	return &service{
 		credentials: credentials,
-		client:      httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client:      rest.HybridClient(credentials),
 	}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 

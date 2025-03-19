@@ -3,7 +3,6 @@ package groups
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/groups/settings"
@@ -13,9 +12,9 @@ import (
 
 const SchemaID = "accounts:groups"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*groups.GroupConfig] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*groups.GroupConfig] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(credentials),
 	}
 }
 
@@ -27,8 +26,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://#######.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
 }
 
 type service struct {

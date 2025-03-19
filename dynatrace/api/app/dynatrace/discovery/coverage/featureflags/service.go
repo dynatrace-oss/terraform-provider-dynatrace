@@ -19,6 +19,7 @@ package featureflags
 
 import (
 	featureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/featureflags/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "app:dynatrace.discovery.coverage:feature-flags"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*featureflags.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*featureflags.Settings] {
 	return settings20.Service[*featureflags.Settings](credentials, SchemaID, SchemaVersion)
 }

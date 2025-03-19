@@ -19,6 +19,7 @@ package buckets
 
 import (
 	buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/buckets/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:bizevents-processing-buckets.rule"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*buckets.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*buckets.Settings] {
 	return settings20.Service[*buckets.Settings](credentials, SchemaID, SchemaVersion)
 }

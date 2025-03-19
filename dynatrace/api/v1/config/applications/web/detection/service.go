@@ -23,14 +23,15 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	detection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/detection/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 const SchemaID = "v1:config:applications:detection"
 const BasePath = "/api/config/v1/applicationDetectionRules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*detection.Rule] {
-	return &service{settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*detection.Rule] {
+	return &service{settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*detection.Rule](BasePath),

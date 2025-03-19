@@ -33,8 +33,8 @@ import (
 
 const SchemaID = "v1:config:applications:mobile"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*mobile.Application] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*mobile.Application] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		&settings.ServiceOptions[*mobile.Application]{

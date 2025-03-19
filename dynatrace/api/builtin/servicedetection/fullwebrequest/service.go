@@ -19,6 +19,7 @@ package fullwebrequest
 
 import (
 	fullwebrequest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/fullwebrequest/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "2.1.14"
 const SchemaID = "builtin:service-detection.full-web-request"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*fullwebrequest.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*fullwebrequest.Settings] {
 	return settings20.Service[*fullwebrequest.Settings](credentials, SchemaID, SchemaVersion)
 }

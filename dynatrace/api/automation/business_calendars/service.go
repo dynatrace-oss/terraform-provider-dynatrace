@@ -35,22 +35,22 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*business_calendars.Settings] {
+func Service(credentials *tfrest.Credentials) settings.CRUDService[*business_calendars.Settings] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *tfrest.Credentials
 }
 
 func (me *service) client(ctx context.Context) *automation.Client {
 	httplog.InstallRoundTripper()
 	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
-		ClientID:     me.credentials.Automation.ClientID,
-		ClientSecret: me.credentials.Automation.ClientSecret,
-		TokenURL:     me.credentials.Automation.TokenURL,
+		ClientID:     me.credentials.OAuth.ClientID,
+		ClientSecret: me.credentials.OAuth.ClientSecret,
+		TokenURL:     me.credentials.OAuth.TokenURL,
 	})
-	u, _ := url.Parse(me.credentials.Automation.EnvironmentURL)
+	u, _ := url.Parse(me.credentials.OAuth.EnvironmentURL)
 	restClient := rest.NewClient(u, httpClient)
 	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
 	return automation.NewClient(restClient)

@@ -27,19 +27,19 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*slo.SLO] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*slo.SLO] {
 	return &service{credentials: credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 func (me *service) Get(ctx context.Context, id string, v *slo.SLO) error {
@@ -56,7 +56,7 @@ func (me *service) Get(ctx context.Context, id string, v *slo.SLO) error {
 func (me *service) get(ctx context.Context, id string, v *slo.SLO) error {
 	var err error
 
-	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
+	client := rest.HybridClient(me.credentials)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
 	if err = req.Finish(v); err != nil {
 		return err
@@ -83,7 +83,7 @@ type sloListEntry struct {
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
+	client := rest.HybridClient(me.credentials)
 	req := client.Get(ctx, "/api/v2/slo?pageSize=4000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", 200)
 	var slos sloList
 	if err = req.Finish(&slos); err != nil {
@@ -109,7 +109,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 
 	var id string
 
-	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID())
+	client := rest.HybridClient(me.credentials)
 	req := client.Post(ctx, "/api/v2/slo", v, 201).OnResponse(func(resp *http.Response) {
 		if resp == nil {
 			return
@@ -190,11 +190,11 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *slo.SLO) error {
-	return httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID()).Put(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
+	return rest.HybridClient(me.credentials).Put(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, me.SchemaID()).Delete(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
+	return rest.HybridClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *slo.SLO {

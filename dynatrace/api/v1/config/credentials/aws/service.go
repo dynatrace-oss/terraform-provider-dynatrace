@@ -34,9 +34,9 @@ const BasePath = "/api/config/v1/aws/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCredentialsConfig] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*aws.AWSCredentialsConfig] {
 	return &service{
-		service: settings.NewCRUDService(
+		service: settings.NewAPITokenService(
 			credentials,
 			SchemaID,
 			settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
@@ -85,7 +85,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*aws.AWSCre
 					return nil
 				}),
 		),
-		client: rest.DefaultClient(credentials.URL, credentials.Token),
+		client: rest.APITokenClient(credentials),
 	}
 }
 

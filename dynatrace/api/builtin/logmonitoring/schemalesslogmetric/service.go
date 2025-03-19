@@ -19,6 +19,7 @@ package schemalesslogmetric
 
 import (
 	schemalesslogmetric "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/schemalesslogmetric/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "8.0.51"
 const SchemaID = "builtin:logmonitoring.schemaless-log-metric"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*schemalesslogmetric.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*schemalesslogmetric.Settings] {
 	return settings20.Service[*schemalesslogmetric.Settings](credentials, SchemaID, SchemaVersion)
 }

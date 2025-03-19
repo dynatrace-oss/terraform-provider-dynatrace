@@ -24,6 +24,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/filtered"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -44,7 +45,7 @@ func (me *filter) Suffix() string {
 	return string(me.Type)
 }
 
-func Service(credentials *settings.Credentials, t Type) settings.CRUDService[*Notification] {
+func Service(credentials *rest.Credentials, t Type) settings.CRUDService[*Notification] {
 	return filtered.Service[*Notification](
 		settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
 			LegacyID:    settings.LegacyObjIDDecode,

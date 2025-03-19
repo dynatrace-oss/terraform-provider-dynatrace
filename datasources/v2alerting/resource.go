@@ -22,6 +22,7 @@ import (
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	restlogging "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -46,9 +47,9 @@ func XResource() *schema.Resource {
 	}
 }
 
-func createCredentials(m any) *settings.Credentials {
+func createCredentials(m any) *rest.Credentials {
 	conf := m.(*config.ProviderConfiguration)
-	return &settings.Credentials{
+	return &rest.Credentials{
 		Token: conf.APIToken,
 		URL:   conf.EnvironmentURL,
 	}
@@ -97,7 +98,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		if restLogFile, err = os.Create(restLogFileName); err != nil {
 			return diag.FromErr(err)
 		}
-		rest.SetLogWriter(restLogFile)
+		restlogging.SetLogWriter(restLogFile)
 	}
 	settings := Settings()
 	if err := Service(m).Get(ctx, d.Id(), settings); err != nil {

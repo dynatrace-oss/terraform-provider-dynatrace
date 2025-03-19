@@ -32,8 +32,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://siz65484.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
 }
 
 type AddressSettings struct {

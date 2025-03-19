@@ -26,7 +26,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	web "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/settings"
 )
@@ -36,9 +35,9 @@ const SchemaID = "v1:config:applications:web"
 var DefaultCreateConfirmTimeout = 60
 var createConfirmTimeout = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION", DefaultCreateConfirmTimeout, 20, 300)
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*web.Application] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*web.Application] {
 	return &service{
-		service: settings.NewCRUDService(
+		service: settings.NewAPITokenService(
 			credentials,
 			SchemaID,
 			&settings.ServiceOptions[*web.Application]{
@@ -48,7 +47,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*web.Applic
 				Duplicates:    Duplicates,
 			},
 		),
-		client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client: rest.APITokenClient(credentials),
 	}
 }
 

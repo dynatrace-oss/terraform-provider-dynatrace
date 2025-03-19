@@ -19,6 +19,7 @@ package general
 
 import (
 	general "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/general/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.17"
 const SchemaID = "builtin:dashboards.general"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*general.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*general.Settings] {
 	return settings20.Service[*general.Settings](credentials, SchemaID, SchemaVersion)
 }

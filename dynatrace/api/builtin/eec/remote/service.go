@@ -19,6 +19,7 @@ package remote
 
 import (
 	remote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.1.1"
 const SchemaID = "builtin:eec.remote"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*remote.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*remote.Settings] {
 	return settings20.Service[*remote.Settings](credentials, SchemaID, SchemaVersion)
 }

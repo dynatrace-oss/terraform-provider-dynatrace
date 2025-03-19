@@ -40,17 +40,17 @@ var WarnOnAgentOffline = os.Getenv("DYNATRACE_HOST_MONITORING_WARNINGS") == "tru
 var ExportOfflineHosts = os.Getenv("DYNATRACE_HOST_MONITORING_OFFLINE") == "true"
 var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*mode.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
 	return &service{
 		service:     settings20.Service[*mode.Settings](credentials, SchemaID, SchemaVersion),
 		credentials: credentials,
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      rest.HybridClient(credentials),
 	}
 }
 
 type service struct {
 	service     settings.CRUDService[*mode.Settings]
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 

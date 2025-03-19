@@ -29,8 +29,8 @@ import (
 const SchemaID = "v1:deployment:lambdaagent"
 const BasePath = "/api/v1/deployment/lambda/agent/latest"
 
-func Service(credentials *settings.Credentials) settings.RService[*lambdaagent.Latest] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(credentials *rest.Credentials) settings.RService[*lambdaagent.Latest] {
+	return &service{client: rest.HybridClient(credentials)}
 }
 
 type service struct {

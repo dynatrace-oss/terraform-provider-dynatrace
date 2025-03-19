@@ -19,6 +19,7 @@ package fields
 
 import (
 	fields "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/fields/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:problem.fields"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*fields.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*fields.Settings] {
 	return settings20.Service[*fields.Settings](credentials, SchemaID, SchemaVersion)
 }

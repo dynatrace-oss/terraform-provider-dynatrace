@@ -19,6 +19,7 @@ package requesterrors
 
 import (
 	requesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/requesterrors/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:rum.mobile.request-errors"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*requesterrors.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*requesterrors.Settings] {
 	return settings20.Service[*requesterrors.Settings](credentials, SchemaID, SchemaVersion)
 }

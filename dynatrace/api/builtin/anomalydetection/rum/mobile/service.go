@@ -19,6 +19,7 @@ package rummobile
 
 import (
 	mobile "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/mobile/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.rum-mobile"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*mobile.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*mobile.Settings] {
 	return settings20.Service[*mobile.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,7 +19,8 @@ package rest
 
 import (
 	"context"
-	"io"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 )
 
 type Client interface {
@@ -27,5 +28,7 @@ type Client interface {
 	Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
-	Upload(ctx context.Context, url string, reader io.ReadCloser, fileName string, expectedStatusCodes ...int) Request
+	Credentials() *Credentials
 }
+
+var Logger = logging.Logger

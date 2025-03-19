@@ -19,6 +19,7 @@ package outagehandling
 
 import (
 	outagehandling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/browser/outagehandling/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.3.2"
 const SchemaID = "builtin:synthetic.browser.outage-handling"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*outagehandling.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*outagehandling.Settings] {
 	return settings20.Service[*outagehandling.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,7 +19,6 @@ package remoteaccess
 
 import (
 	"context"
-	"fmt"
 
 	remoteaccess "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/remoteaccess"
 	remoteaccess_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/remoteaccess/settings"
@@ -43,10 +42,14 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *remoteaccess.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := remoteaccess.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/cluster/v2"), conf.ClusterAPIToken)
-	return apiService
+func NewService(m any) (*remoteaccess.ServiceClient, error) {
+	creds, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return nil, err
+	}
+
+	apiService := remoteaccess.NewService(creds)
+	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
@@ -61,7 +64,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	objStub, err := NewService(m).Create(ctx, config)
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	objStub, err := service.Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -89,8 +96,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	if err := NewService(m).Update(ctx, d.Id(), &remoteaccess_settings.UpdateSettings{State: *config.State}); err != nil {
+	if err := service.Update(ctx, d.Id(), &remoteaccess_settings.UpdateSettings{State: *config.State}); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -103,7 +114,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 
-	config, err := NewService(m).Get(ctx, d.Id())
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	config, err := service.Get(ctx, d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}

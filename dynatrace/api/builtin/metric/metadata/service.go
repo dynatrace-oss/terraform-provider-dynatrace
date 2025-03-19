@@ -19,6 +19,7 @@ package metadata
 
 import (
 	metadata "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/metadata/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "4.28"
 const SchemaID = "builtin:metric.metadata"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*metadata.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*metadata.Settings] {
 	return settings20.Service[*metadata.Settings](credentials, SchemaID, SchemaVersion)
 }

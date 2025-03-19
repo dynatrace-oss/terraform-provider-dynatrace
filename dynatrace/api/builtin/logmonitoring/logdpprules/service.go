@@ -19,6 +19,7 @@ package logdpprules
 
 import (
 	logdpprules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.22"
 const SchemaID = "builtin:logmonitoring.log-dpp-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logdpprules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*logdpprules.Settings] {
 	return settings20.Service[*logdpprules.Settings](credentials, SchemaID, SchemaVersion)
 }

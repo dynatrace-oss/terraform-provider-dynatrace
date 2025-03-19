@@ -28,7 +28,6 @@ import (
 	enablesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/google/uuid"
 
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
@@ -36,12 +35,12 @@ import (
 
 const SchemaID = "v2:environment:network-zones"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
-	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID), credentials: credentials}
+func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
+	return &service{client: rest.HybridClient(credentials), credentials: credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 

@@ -19,6 +19,7 @@ package customactions
 
 import (
 	customactions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/customactions/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:rum.web.key-performance-metric-custom-actions"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*customactions.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*customactions.Settings] {
 	return settings20.Service[*customactions.Settings](credentials, SchemaID, SchemaVersion)
 }

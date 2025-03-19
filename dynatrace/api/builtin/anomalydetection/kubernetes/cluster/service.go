@@ -19,6 +19,7 @@ package cluster
 
 import (
 	cluster "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.4"
 const SchemaID = "builtin:anomaly-detection.kubernetes.cluster"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*cluster.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*cluster.Settings] {
 	return settings20.Service[*cluster.Settings](credentials, SchemaID, SchemaVersion)
 }

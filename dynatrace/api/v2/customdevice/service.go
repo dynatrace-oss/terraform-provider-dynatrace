@@ -35,12 +35,12 @@ import (
 
 var mutex sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*customdevice.CustomDevice] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*customdevice.CustomDevice] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 const DT_CUSTOM_DEVICE_APPLY_TIMEOUT = "DT_CUSTOM_DEVICE_APPLY_TIMEOUT"
@@ -53,7 +53,7 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 	stateConfig, stateConfigFound := cfg.(*customdevice.CustomDevice)
 
 	var err error
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := rest.HybridClient(me.credentials)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 
@@ -136,7 +136,7 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 
 func (me *service) CheckGet(ctx context.Context, id string, v *customdevice.CustomDevice) error {
 	var err error
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := rest.HybridClient(me.credentials)
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties", url.QueryEscape(entitySelector))).Expect(200)
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
@@ -183,7 +183,7 @@ type lresponse struct {
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := rest.HybridClient(me.credentials)
 	entitySelector := `type("CUSTOM_DEVICE")`
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/entities?from=now-3y&entitySelector=%s&fields=properties,fromRelationships&pageSize=500", url.QueryEscape(entitySelector))).Expect(200)
 	listResponse := lresponse{}
@@ -231,7 +231,7 @@ func (me *service) Create(ctx context.Context, v *customdevice.CustomDevice) (*a
 	if v.CustomDeviceID == "" {
 		v.CustomDeviceID = uuid.NewString()
 	}
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := rest.HybridClient(me.credentials)
 	uiBasedQuery := ""
 	if v.UIBased != nil && *v.UIBased {
 		uiBasedQuery = "?uiBased=true"
@@ -269,7 +269,7 @@ func (me *service) Update(ctx context.Context, id string, v *customdevice.Custom
 	var err error
 	v.CustomDeviceID = id
 	v.EntityId = ""
-	client := rest.DefaultClient(me.credentials.URL, me.credentials.Token)
+	client := rest.HybridClient(me.credentials)
 	if err = client.Post(ctx, "/api/v2/entities/custom", v, 201, 204).Finish(); err != nil {
 		return err
 	}

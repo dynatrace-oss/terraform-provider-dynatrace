@@ -122,7 +122,7 @@ func DataSource() *schema.Resource {
 var staticID = uuid.NewString()
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValAutomation)
+	creds, err := config.Credentials(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -130,11 +130,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	httplog.InstallRoundTripper()
 
 	clientsFactory := clients.Factory().
-		WithPlatformURL(creds.Automation.EnvironmentURL).
+		WithPlatformURL(creds.OAuth.EnvironmentURL).
 		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     creds.Automation.ClientID,
-			ClientSecret: creds.Automation.ClientSecret,
-			TokenURL:     creds.Automation.TokenURL,
+			ClientID:     creds.OAuth.ClientID,
+			ClientSecret: creds.OAuth.ClientSecret,
+			TokenURL:     creds.OAuth.TokenURL,
 		}).
 		WithUserAgent("Dynatrace Terraform Provider")
 

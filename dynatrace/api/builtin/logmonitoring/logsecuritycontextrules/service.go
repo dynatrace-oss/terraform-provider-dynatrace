@@ -19,6 +19,7 @@ package logsecuritycontextrules
 
 import (
 	logsecuritycontextrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsecuritycontextrules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:logmonitoring.log-security-context-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logsecuritycontextrules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*logsecuritycontextrules.Settings] {
 	return settings20.Service[*logsecuritycontextrules.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,6 +19,7 @@ package services
 
 import (
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/services/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.17"
 const SchemaID = "builtin:anomaly-detection.services"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*services.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*services.Settings] {
 	return settings20.Service[*services.Settings](credentials, SchemaID, SchemaVersion)
 }

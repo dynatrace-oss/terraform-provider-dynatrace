@@ -19,6 +19,7 @@ package databases
 
 import (
 	databases "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/databases/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.16"
 const SchemaID = "builtin:anomaly-detection.databases"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*databases.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*databases.Settings] {
 	return settings20.Service[*databases.Settings](credentials, SchemaID, SchemaVersion)
 }

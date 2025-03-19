@@ -35,12 +35,12 @@ import (
 const SchemaID = "v1:config:anomaly-detection:process-groups"
 const BasePath = "/api/config/v1/anomalyDetection/processGroups"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*processgroups.AnomalyDetection] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token), credentials: credentials}
+func Service(credentials *rest.Credentials) settings.CRUDService[*processgroups.AnomalyDetection] {
+	return &service{client: rest.APITokenClient(credentials), credentials: credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 

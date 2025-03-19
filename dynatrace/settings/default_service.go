@@ -26,18 +26,18 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
 var ExportRunning = false
 
-func NewCRUDService[T Settings](credentials *Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{
-		schemaID: schemaID,
-		client:   httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
-		options:  options,
-	}
+func NewAPITokenService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(credentials), options: options}
+}
+
+func NewHybridService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(credentials), options: options}
 }
 
 type defaultService[T Settings] struct {

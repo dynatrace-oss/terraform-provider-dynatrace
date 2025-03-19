@@ -26,7 +26,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	customservices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices/settings"
 )
@@ -37,8 +36,8 @@ type service struct {
 	client rest.Client
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*customservices.CustomService] {
-	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
+func Service(credentials *rest.Credentials) settings.CRUDService[*customservices.CustomService] {
+	return &service{client: rest.APITokenClient(credentials)}
 }
 
 func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService) error {

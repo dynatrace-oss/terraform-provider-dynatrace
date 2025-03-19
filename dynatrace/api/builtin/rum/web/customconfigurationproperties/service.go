@@ -19,6 +19,7 @@ package customconfigurationproperties
 
 import (
 	customconfigurationproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:rum.web.custom-configuration-properties"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*customconfigurationproperties.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*customconfigurationproperties.Settings] {
 	return settings20.Service[*customconfigurationproperties.Settings](credentials, SchemaID, SchemaVersion)
 }

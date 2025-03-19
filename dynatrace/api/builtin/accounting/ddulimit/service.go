@@ -19,6 +19,7 @@ package ddulimit
 
 import (
 	ddulimit "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/accounting/ddulimit/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "3.4.1"
 const SchemaID = "builtin:accounting.ddu.limit"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*ddulimit.DDUPool] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*ddulimit.DDUPool] {
 	return settings20.Service[*ddulimit.DDUPool](credentials, SchemaID, SchemaVersion)
 }

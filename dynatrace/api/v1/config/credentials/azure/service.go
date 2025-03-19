@@ -26,7 +26,6 @@ import (
 	azure "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
@@ -35,13 +34,13 @@ const BasePath = "/api/config/v1/azure/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*azure.AzureCredentials] {
-	return &service{service: settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*azure.AzureCredentials] {
+	return &service{service: settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath).
 			WithMutex(mu.Lock, mu.Unlock),
-	), client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
+	), client: rest.APITokenClient(credentials)}
 }
 
 type service struct {

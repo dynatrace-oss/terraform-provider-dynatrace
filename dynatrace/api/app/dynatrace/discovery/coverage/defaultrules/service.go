@@ -19,6 +19,7 @@ package defaultrules
 
 import (
 	defaultrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.7"
 const SchemaID = "app:dynatrace.discovery.coverage:discovery.findings.default.rules.schema"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*defaultrules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*defaultrules.Settings] {
 	return settings20.Service[*defaultrules.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -37,7 +37,7 @@ import (
 const SchemaID = "builtin:settings.subscriptions.service"
 const SchemaVersion = "0.1.8"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*keyrequests.KeyRequest] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.KeyRequest] {
 	var topologyService settings.RService[*entity.Entity]
 	if settings.ExportRunning {
 		topologyService = cache.Read(toposervices.DataSourceService(credentials))
@@ -55,13 +55,13 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*keyrequest
 			},
 		}),
 		credentials: credentials,
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      rest.HybridClient(credentials),
 	}
 }
 
 type service struct {
 	service     settings.CRUDService[*keyrequests.KeyRequest]
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 

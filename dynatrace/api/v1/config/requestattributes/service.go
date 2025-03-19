@@ -20,6 +20,7 @@ package requestattributes
 import (
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	requestattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestattributes/settings"
@@ -30,8 +31,8 @@ const BasePath = "/api/config/v1/service/requestAttributes"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*requestattributes.RequestAttribute] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*requestattributes.RequestAttribute] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		&settings.ServiceOptions[*requestattributes.RequestAttribute]{

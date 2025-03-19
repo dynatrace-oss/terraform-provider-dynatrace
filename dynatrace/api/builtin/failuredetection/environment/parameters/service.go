@@ -19,6 +19,7 @@ package parameters
 
 import (
 	parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.6"
 const SchemaID = "builtin:failure-detection.environment.parameters"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*parameters.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*parameters.Settings] {
 	return settings20.Service[*parameters.Settings](credentials, SchemaID, SchemaVersion)
 }

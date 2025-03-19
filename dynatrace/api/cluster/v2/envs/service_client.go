@@ -18,8 +18,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://siz65484.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV2Client(credentials)}
 }
 
 func evalRetry(rerr *rest.Error, environment *Environment) bool {
@@ -67,15 +67,16 @@ func (cs *ServiceClient) Create(ctx context.Context, environment *Environment) (
 			retry = false
 		}
 	}
-	return &stub, nil
+	return &stub, err
 }
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, environment *Environment) error {
+	var err error
 	retry := true
 
 	for retry {
-		if err := cs.client.Put(ctx, fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
+		if err = cs.client.Put(ctx, fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
 			switch rerr := err.(type) {
 			case *rest.Error:
 				retry = evalRetry(rerr, environment)
@@ -88,7 +89,7 @@ func (cs *ServiceClient) Update(ctx context.Context, environment *Environment) e
 			retry = false
 		}
 	}
-	return nil
+	return err
 }
 
 // Delete TODO: documentation
@@ -118,16 +119,13 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 			}
 		}
 	}
-	if err := cs.client.Delete(ctx, fmt.Sprintf("/environments/%s", id), 204).Finish(); err != nil {
-		return err
-	}
-	return nil
+	return cs.client.Delete(ctx, fmt.Sprintf("/environments/%s", id), 204).Finish()
 }
 
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context, id string) (*Environment, error) {
 	if len(id) == 0 {
-		return nil, errors.New("empty ID provided for the Dashboard to fetch")
+		return nil, errors.New("empty ID provided for the environment to fetch")
 	}
 
 	var err error

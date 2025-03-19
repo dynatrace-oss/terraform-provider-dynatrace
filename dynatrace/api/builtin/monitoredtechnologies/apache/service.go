@@ -19,6 +19,7 @@ package apache
 
 import (
 	apache "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/apache/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.1"
 const SchemaID = "builtin:monitored-technologies.apache"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*apache.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*apache.Settings] {
 	return settings20.Service[*apache.Settings](credentials, SchemaID, SchemaVersion)
 }

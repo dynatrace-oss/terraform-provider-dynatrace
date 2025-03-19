@@ -19,9 +19,10 @@ package webhook
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*notifications.Notification] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*notifications.Notification] {
 	return notifications.Service(credentials, notifications.Types.WebHook)
 }

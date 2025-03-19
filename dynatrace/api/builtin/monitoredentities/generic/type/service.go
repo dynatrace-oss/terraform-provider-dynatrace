@@ -19,6 +19,7 @@ package generictype
 
 import (
 	generictype "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/type/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:monitoredentities.generic.type"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*generictype.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*generictype.Settings] {
 	return settings20.Service[*generictype.Settings](credentials, SchemaID, SchemaVersion)
 }

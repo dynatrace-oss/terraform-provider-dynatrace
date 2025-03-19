@@ -22,7 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
 type staticService[T Settings] struct {
@@ -32,10 +31,10 @@ type staticService[T Settings] struct {
 	stub     api.Stub
 }
 
-func StaticService[T Settings](credentials *Credentials, schemaID string, url string, stub api.Stub) Service[T] {
+func APITokenStaticService[T Settings](credentials *rest.Credentials, schemaID string, url string, stub api.Stub) Service[T] {
 	return &staticService[T]{
 		schemaID: schemaID,
-		client:   httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
+		client:   rest.APITokenClient(credentials),
 		url:      url,
 		stub:     stub,
 	}
