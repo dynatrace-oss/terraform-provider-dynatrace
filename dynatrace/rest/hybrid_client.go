@@ -84,11 +84,18 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 	isOAuthPossible := credentials.ContainsOAuthOrPlatformToken()
 
 	if (isAPITokenPossible && !isOAuthPossible) || (isAPITokenPossible && !isOAuthPreferred) {
+		if !credentials.ContainsAPIToken() {
+			return NoAPITokenError
+		}
 		classicRequest := classic_request(*me)
 		if credentials.URL == TestCaseEnvURL {
 			return errors.New("classic")
 		}
 		return classicRequest.Finish(optionalTarget...)
+	}
+
+	if !credentials.ContainsOAuthOrPlatformToken() {
+		return NoOAuthCredentialsError
 	}
 
 	platformRequest := platform_request(*me)
