@@ -1523,6 +1523,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AWSService, ""},
 			{ResourceTypes.AGToken, ""},
 			{ResourceTypes.MobileAppKeyPerformance, ""},
+			{ResourceTypes.HTTPMonitorScript, ""},
 		},
 	},
 	{
