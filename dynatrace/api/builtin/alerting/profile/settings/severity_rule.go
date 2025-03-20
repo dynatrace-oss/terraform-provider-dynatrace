@@ -72,9 +72,9 @@ func (me *SeverityRule) Schema() map[string]*schema.Schema {
 		"tags": {
 			Type:        schema.TypeSet,
 			Description: "Entities which contain any/all of the configured tags will match this alerting profile. It is recommended to use manual tags.",
-			MinItems:    1,
-			Optional:    true,
-			Elem:        &schema.Schema{Type: schema.TypeString},
+			// MinItems:    1, // #652
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 	}
 }
