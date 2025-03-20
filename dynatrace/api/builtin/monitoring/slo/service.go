@@ -89,6 +89,10 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 
 func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error {
 	legacyId := settings.LegacyID(id)
+	if len(legacyId) == 0 && isValidUUID(id) {
+		legacyId = id
+	}
+
 	slo := me.convertToEnvV2(v)
 
 	service := slo_env2_service.Service(me.credentials)
@@ -115,8 +119,16 @@ func (me *service) Validate(ctx context.Context, v *slo.Settings) error {
 	return nil
 }
 
+func isValidUUID(u string) bool {
+	_, err := uuid.Parse(u)
+	return err == nil
+}
+
 func (me *service) Delete(ctx context.Context, id string) error {
 	legacyId := settings.LegacyID(id)
+	if len(legacyId) == 0 && isValidUUID(id) {
+		legacyId = id
+	}
 
 	service := slo_env2_service.Service(me.credentials)
 	err := service.Delete(ctx, legacyId)
