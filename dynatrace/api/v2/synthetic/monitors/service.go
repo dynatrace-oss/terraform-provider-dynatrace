@@ -19,16 +19,15 @@ package monitors
 
 import (
 	monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*monitors.Settings] {
-	return settings.NewCRUDService(
-		credentials,
-		SchemaID,
+func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
+	return settings.NewHybridService(credentials, SchemaID,
 		settings.DefaultServiceOptions[*monitors.Settings](BasePath).WithStubs(&monitors.MonitorsList{}).WithCreateConfirm(20),
 	)
 }

@@ -31,40 +31,40 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-func EventsService(credentials *settings.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+func EventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
 	return &service{credentials: credentials, kind: "events", schemaSuffix: "events"}
 }
 
-func LogsService(credentials *settings.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+func LogsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
 	return &service{credentials: credentials, kind: "logs", schemaSuffix: "logs"}
 }
 
-func BusinessEventsService(credentials *settings.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+func BusinessEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
 	return &service{credentials: credentials, kind: "bizevents", schemaSuffix: "events.business"}
 }
 
-func SecurityEventsService(credentials *settings.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+func SecurityEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
 	return &service{credentials: credentials, kind: "events.security", schemaSuffix: "events.security"}
 }
 
-func SDLCEventsService(credentials *settings.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+func SDLCEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
 	return &service{credentials: credentials, kind: "events.sdlc", schemaSuffix: "events.sdlc"}
 }
 
 type service struct {
 	kind         string
 	schemaSuffix string
-	credentials  *settings.Credentials
+	credentials  *rest.Credentials
 }
 
 func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
-		WithPlatformURL(s.credentials.Automation.EnvironmentURL).
+		WithPlatformURL(s.credentials.OAuth.EnvironmentURL).
 		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     s.credentials.Automation.ClientID,
-			ClientSecret: s.credentials.Automation.ClientSecret,
-			TokenURL:     s.credentials.Automation.TokenURL,
+			ClientID:     s.credentials.OAuth.ClientID,
+			ClientSecret: s.credentials.OAuth.ClientSecret,
+			TokenURL:     s.credentials.OAuth.TokenURL,
 		}).
 		WithHTTPListener(httplog.HTTPListener)
 
@@ -90,7 +90,7 @@ func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configurat
 	}
 
 	if !response.IsSuccess() {
-		return rest.Envelope(response.Data, s.credentials.Automation.EnvironmentURL, "GET")
+		return rest.Envelope(response.Data, s.credentials.OAuth.EnvironmentURL, "GET")
 	}
 
 	if err := json.Unmarshal(response.Data, &v); err != nil {

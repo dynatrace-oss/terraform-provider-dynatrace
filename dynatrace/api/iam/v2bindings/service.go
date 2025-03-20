@@ -9,6 +9,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -44,7 +45,7 @@ func NewPolicyService(clientID string, accountID string, clientSecret string, to
 	return &BindingServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
 	return &BindingServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 

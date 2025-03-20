@@ -19,6 +19,7 @@ package customunit
 
 import (
 	customunit "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/customunit/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.7"
 const SchemaID = "builtin:custom-unit"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*customunit.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*customunit.Settings] {
 	return settings20.Service[*customunit.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,6 +19,7 @@ package allowlist
 
 import (
 	allowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.19"
 const SchemaID = "builtin:attribute-allow-list"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*allowlist.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*allowlist.Settings] {
 	return settings20.Service[*allowlist.Settings](credentials, SchemaID, SchemaVersion)
 }

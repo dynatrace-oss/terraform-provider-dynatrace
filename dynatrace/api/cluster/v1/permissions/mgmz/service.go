@@ -3,6 +3,7 @@ package mgmz
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -13,9 +14,9 @@ import (
 
 const SchemaID = "accounts:groups-mgmz"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*mgmz.Permission] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*mgmz.Permission] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(credentials),
 	}
 }
 
@@ -55,8 +56,8 @@ func (cs *ServiceClient) SchemaID() string {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://#######.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
 }
 
 type service struct {
@@ -159,7 +160,7 @@ func (cs *ServiceClient) Get(ctx context.Context, id string, permission *mgmz.Pe
 			}
 		}
 	}
-	return rest.Error{Code: 404, Method: "GET", URL: "/groups/managementZones", Message: fmt.Sprintf("No permissions found for group %s, management zone %s, environment %s", permission.GroupID, permission.ManagementZoneID, permission.EnvironmentID), ConstraintViolations: []rest.ConstraintViolation{}}
+	return rest.Error{Code: 404, Method: http.MethodGet, URL: "/groups/managementZones", Message: fmt.Sprintf("No permissions found for group %s, management zone %s, environment %s", permission.GroupID, permission.ManagementZoneID, permission.EnvironmentID), ConstraintViolations: []rest.ConstraintViolation{}}
 }
 
 type ListResponse []struct {

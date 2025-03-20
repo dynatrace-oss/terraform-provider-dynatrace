@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	cfg "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/google/uuid"
@@ -67,7 +67,7 @@ func update(ctx context.Context, d *schema.ResourceData, m any, indent string) d
 	return append(allDiags, read(ctx, d, m, indent+"  ")...)
 }
 
-func CommonUpdate(ctx context.Context, d *schema.ResourceData, key export.ResourceType, creds *settings.Credentials, indent string) (diag.Diagnostics, error) {
+func CommonUpdate(ctx context.Context, d *schema.ResourceData, key export.ResourceType, creds *rest.Credentials, indent string) (diag.Diagnostics, error) {
 	mode := "QUIET"
 	utMode := d.Get("mode")
 	if tMode, ok := utMode.(string); ok {

@@ -25,7 +25,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	requestnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/settings"
 )
@@ -33,12 +32,12 @@ import (
 const SchemaID = "v1:config:service:request-naming"
 const BasePath = "/api/config/v1/service/requestNaming"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*requestnaming.RequestNaming] {
-	return &service{service: settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*requestnaming.RequestNaming] {
+	return &service{service: settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*requestnaming.RequestNaming](BasePath),
-	), client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
+	), client: rest.APITokenClient(credentials)}
 }
 
 type service struct {

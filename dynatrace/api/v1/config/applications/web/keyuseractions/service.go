@@ -28,7 +28,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	keyuseractions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/keyuseractions/settings"
@@ -37,9 +36,9 @@ import (
 
 const SchemaID = "v1:config:applications:web:keyuseractions"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*keyuseractions.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*keyuseractions.Settings] {
 	return &service{
-		client:        httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client:        rest.APITokenClient(credentials),
 		webAppService: cache.CRUD(webservice.Service(credentials), true)}
 }
 

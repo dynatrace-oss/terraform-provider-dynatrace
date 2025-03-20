@@ -19,6 +19,7 @@ package rest
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -66,31 +67,6 @@ func Is404(err error) bool {
 	}
 	if restErr, ok := err.(*Error); ok {
 		return restErr.Code == 404
-	}
-	return false
-}
-
-// CorrectPayload investigates a failed request and the
-// error that got returned.
-// If it is an error message originating from Settings 2.0
-// it may contain constraint violations complaining about
-// unknown properties within the payload.
-//
-// If it was possible to modify the payload of the request
-// based on these constraint violations, CorrectPayload will
-// return `true`, signalling that it makes sense to re-send
-// the given request (with corrected payload).
-//
-// Note: The `payload` field of the request won't be the
-// original type after this.
-func CorrectPayload(err error, request *request) bool {
-	if request.payload == nil {
-		return false
-	}
-	if resterr, ok := err.(Error); ok {
-		if violations := resterr.PropertyViolations(); len(violations) > 0 {
-			return violations.Remove(request)
-		}
 	}
 	return false
 }
@@ -310,3 +286,45 @@ func (me Error) ContainsViolation(message string) bool {
 	}
 	return false
 }
+
+var NoAPITokenError = errors.New(`No API Token has been specified.
+
+Specifying an API Token:
+- environment variable 'DYNATRACE_API_TOKEN'
+- provider configuration attribute 'dt_api_token'`)
+
+var NoAPITokenNorOAuthCredentialsError = errors.New(`Neither OAuth Credentials, Platform Token nor API Token have been specified.
+
+Specifying an API Token:
+- environment variable 'DYNATRACE_API_TOKEN'
+- provider configuration attribute 'dt_api_token'
+
+Specifying OAuth credentials:
+- environment variables 'DYNATRACE_CLIENT_ID' and 'DYNATRACE_CLIENT_SECRET'
+- provider configuration attributes 'client_id' and 'client_secret'
+
+Specifying a Platform Token:
+- environment variable 'DYNATRACE_PLATFORM_TOKEN'
+- provider configuration attribute 'platform_token'`)
+
+var NoOAuthCredentialsError = errors.New(`Neither OAuth Credentials nor Platform Token have been specified.
+
+Specifying OAuth credentials:
+- environment variables 'DYNATRACE_CLIENT_ID' and 'DYNATRACE_CLIENT_SECRET'
+- provider configuration attributes 'client_id' and 'client_secret'
+Specifying a Platform Token:
+
+- environment variable 'DYNATRACE_PLATFORM_TOKEN'
+- provider configuration attribute 'platform_token'`)
+
+var NoClusterURLError = errors.New(`No Cluster URL has been specified.
+
+Specifying an Cluster URL:
+- environment variable 'DYNATRACE_CLUSTER_URL'
+- provider configuration attribute 'dt_cluster_url'`)
+
+var NoClusterTokenError = errors.New(`No Cluster Token has been specified.
+
+Specifying an Cluster Token:
+- environment variable 'DYNATRACE_CLUSTER_API_TOKEN'
+- provider configuration attribute 'dt_cluster_api_token'`)

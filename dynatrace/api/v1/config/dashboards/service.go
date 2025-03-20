@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
@@ -30,7 +31,7 @@ import (
 
 const SchemaID = "v1:config:dashboards"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*dashboards.Dashboard] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*dashboards.Dashboard] {
 	return &service{service: cache.CRUD(jsondashboards.Service(credentials), true)}
 }
 

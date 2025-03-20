@@ -19,6 +19,7 @@ package connection
 
 import (
 	connection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/kubernetes/connector/connection/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.1.10"
 const SchemaID = "app:dynatrace.kubernetes.connector:connection"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*connection.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*connection.Settings] {
 	return settings20.Service[*connection.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,6 +19,7 @@ package allowall
 
 import (
 	allowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.1"
 const SchemaID = "builtin:grail.metrics.allow-all"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*allowall.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*allowall.Settings] {
 	return settings20.Service[*allowall.Settings](credentials, SchemaID, SchemaVersion)
 }

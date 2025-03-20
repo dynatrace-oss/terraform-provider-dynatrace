@@ -27,7 +27,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	dataprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/dataprivacy/settings"
@@ -36,10 +35,10 @@ import (
 
 const SchemaID = "v1:config:applications:web:data-privacy"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*dataprivacy.ApplicationDataPrivacy] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*dataprivacy.ApplicationDataPrivacy] {
 	return &service{
 		schemaID:      SchemaID,
-		client:        httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client:        rest.APITokenClient(credentials),
 		webAppService: cache.CRUD(webservice.Service(credentials), true)}
 }
 

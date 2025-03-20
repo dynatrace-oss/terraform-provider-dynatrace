@@ -19,11 +19,11 @@ package bindings
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	bindings_service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -46,7 +46,10 @@ func Resource() *schema.Resource {
 
 func NewService(m any) *bindings_service.BindingServiceClient {
 	conf := m.(*config.ProviderConfiguration)
-	apiService := bindings_service.NewPolicyService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/cluster/v2"), conf.ClusterAPIToken)
+	credentials := &rest.Credentials{}
+	credentials.Cluster.URL = conf.ClusterAPIV2URL
+	credentials.Cluster.Token = conf.ClusterAPIToken
+	apiService := bindings_service.NewPolicyService(credentials)
 	return apiService
 }
 

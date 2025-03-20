@@ -19,6 +19,7 @@ package php
 
 import (
 	php "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/php/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:monitored-technologies.php"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*php.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*php.Settings] {
 	return settings20.Service[*php.Settings](credentials, SchemaID, SchemaVersion)
 }

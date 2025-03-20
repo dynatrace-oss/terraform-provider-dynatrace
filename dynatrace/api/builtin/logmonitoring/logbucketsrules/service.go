@@ -19,6 +19,7 @@ package logbucketsrules
 
 import (
 	logbucketsrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:logmonitoring.log-buckets-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logbucketsrules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*logbucketsrules.Settings] {
 	return settings20.Service[*logbucketsrules.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,6 +19,7 @@ package local
 
 import (
 	local "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:eec.local"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*local.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*local.Settings] {
 	return settings20.Service[*local.Settings](credentials, SchemaID, SchemaVersion)
 }

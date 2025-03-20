@@ -22,7 +22,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
@@ -44,14 +44,14 @@ func TestIAMClientID(t *testing.T) {
 			os.Setenv(envVarName, iam_client_id)
 			defer os.Unsetenv(envVarName)
 
-			credentials := createCredentials(&config.ConfigGetter{provider})
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
 			if !assert.Equal(iam_client_id, credentials.IAM.ClientID, "credentials.IAM.ClientID") {
 				return
 			}
-			if !assert.Equal(iam_client_id, credentials.Automation.ClientID, "credentials.Automation.ClientID") {
+			if !assert.Equal(iam_client_id, credentials.OAuth.ClientID, "credentials.Automation.ClientID") {
 				return
 			}
 		})
@@ -74,14 +74,14 @@ func TestIAMClientSecret(t *testing.T) {
 			os.Setenv(envVarName, iam_client_secret)
 			defer os.Unsetenv(envVarName)
 
-			credentials := createCredentials(&config.ConfigGetter{provider})
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
 			if !assert.Equal(iam_client_secret, credentials.IAM.ClientSecret, "credentials.IAM.ClientSecret") {
 				return
 			}
-			if !assert.Equal(iam_client_secret, credentials.Automation.ClientSecret, "credentials.Automation.ClientSecret") {
+			if !assert.Equal(iam_client_secret, credentials.OAuth.ClientSecret, "credentials.Automation.ClientSecret") {
 				return
 			}
 		})
@@ -108,17 +108,17 @@ func TestSSOTokenURL(t *testing.T) {
 			os.Setenv("DYNATRACE_ENV_URL", envURL)
 			defer os.Unsetenv("DYNATRACE_ENV_URL")
 
-			credentials := createCredentials(&config.ConfigGetter{provider})
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(settings.ProdTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(rest.ProdTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(settings.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(rest.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(settings.ProdTokenURL, credentials.Automation.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.ProdTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -137,17 +137,17 @@ func TestSSOTokenURL(t *testing.T) {
 			os.Setenv("DYNATRACE_ENV_URL", envURL)
 			defer os.Unsetenv("DYNATRACE_ENV_URL")
 
-			credentials := createCredentials(&config.ConfigGetter{provider})
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(settings.SprintTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(rest.SprintTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(settings.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(rest.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(settings.SprintTokenURL, credentials.Automation.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.SprintTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -166,24 +166,24 @@ func TestSSOTokenURL(t *testing.T) {
 			os.Setenv("DYNATRACE_ENV_URL", envURL)
 			defer os.Unsetenv("DYNATRACE_ENV_URL")
 
-			credentials := createCredentials(&config.ConfigGetter{provider})
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(settings.DevTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(rest.DevTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(settings.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(rest.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(settings.DevTokenURL, credentials.Automation.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.DevTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
 	}
 }
 
-func createCredentials(getter config.Getter) *settings.Credentials {
+func createCredentials(getter config.Getter) *rest.Credentials {
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), getter)
 	creds, _ := config.Credentials(configResult, config.CredValNone)
 	return creds

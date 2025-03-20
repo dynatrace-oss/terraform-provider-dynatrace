@@ -19,6 +19,7 @@ package capturingvariants
 
 import (
 	capturingvariants "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/capturingvariants/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:bizevents.http.capturing-variants"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*capturingvariants.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*capturingvariants.Settings] {
 	return settings20.Service[*capturingvariants.Settings](credentials, SchemaID, SchemaVersion)
 }

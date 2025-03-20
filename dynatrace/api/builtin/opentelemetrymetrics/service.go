@@ -30,17 +30,16 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:opentelemetry-metrics"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*opentelemetrymetrics.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*opentelemetrymetrics.Settings] {
 	return &service{
 		service: settings20.Service[*opentelemetrymetrics.Settings](credentials, SchemaID, SchemaVersion),
-		client:  httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client:  rest.HybridClient(credentials),
 	}
 }
 

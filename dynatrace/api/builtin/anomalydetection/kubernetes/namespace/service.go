@@ -19,6 +19,7 @@ package namespace
 
 import (
 	namespace "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/namespace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:anomaly-detection.kubernetes.namespace"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*namespace.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*namespace.Settings] {
 	return settings20.Service[*namespace.Settings](credentials, SchemaID, SchemaVersion)
 }

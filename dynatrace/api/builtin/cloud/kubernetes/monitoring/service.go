@@ -19,6 +19,7 @@ package monitoring
 
 import (
 	monitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/monitoring/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:cloud.kubernetes.monitoring"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*monitoring.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*monitoring.Settings] {
 	return settings20.Service[*monitoring.Settings](credentials, SchemaID, SchemaVersion)
 }

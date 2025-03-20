@@ -19,6 +19,7 @@ package monitoringstate
 
 import (
 	monitoringstate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/processgroups/monitoringstate/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:host.process-groups.monitoring-state"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*monitoringstate.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*monitoringstate.Settings] {
 	return settings20.Service[*monitoringstate.Settings](credentials, SchemaID, SchemaVersion)
 }

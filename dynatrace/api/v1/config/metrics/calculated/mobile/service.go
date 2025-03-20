@@ -28,13 +28,12 @@ import (
 	mysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/mobile/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
 const SchemaID = "v1:config:calculated-metrics-mobile"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*mysettings.CalculatedMobileMetric] {
-	return &service{client: httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID)}
+func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedMobileMetric] {
+	return &service{client: rest.APITokenClient(credentials)}
 }
 
 type service struct {

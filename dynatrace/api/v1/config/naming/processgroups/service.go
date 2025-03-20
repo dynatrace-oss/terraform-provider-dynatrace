@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups/settings"
@@ -30,8 +31,8 @@ import (
 const SchemaID = "v1:config:conditional-naming:process-groups"
 const BasePath = "/api/config/v1/conditionalNaming/processGroup"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*processgroups.NamingRule] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*processgroups.NamingRule] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*processgroups.NamingRule](BasePath).WithDuplicates(Duplicates),

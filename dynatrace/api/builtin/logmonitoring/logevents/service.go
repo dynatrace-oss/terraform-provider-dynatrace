@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	logevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -30,7 +31,7 @@ import (
 const SchemaVersion = "3.2.4"
 const SchemaID = "builtin:logmonitoring.log-events"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logevents.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*logevents.Settings] {
 	return settings20.Service[*logevents.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*logevents.Settings]{Duplicates: Duplicates})
 }
 

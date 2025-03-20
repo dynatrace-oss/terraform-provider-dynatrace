@@ -19,6 +19,7 @@ package userexperiencescore
 
 import (
 	userexperiencescore "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/userexperiencescore/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:rum.user-experience-score"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*userexperiencescore.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*userexperiencescore.Settings] {
 	return settings20.Service[*userexperiencescore.Settings](credentials, SchemaID, SchemaVersion)
 }

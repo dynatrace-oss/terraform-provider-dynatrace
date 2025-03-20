@@ -33,8 +33,8 @@ import (
 
 const SchemaID = "v1:config:json-dashboards"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*dashboards.JSONDashboard] {
-	return &service{settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*dashboards.JSONDashboard] {
+	return &service{settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*dashboards.JSONDashboard]("/api/config/v1/dashboards").WithStubs(&dashboards.DashboardList{}).WithAfterCreate(AfterCreate),

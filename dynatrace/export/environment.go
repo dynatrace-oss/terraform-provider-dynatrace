@@ -37,7 +37,7 @@ import (
 	policysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -58,7 +58,7 @@ const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 type Environment struct {
 	mu                    sync.Mutex
 	OutputFolder          string
-	Credentials           *settings.Credentials
+	Credentials           *rest.Credentials
 	Modules               map[ResourceType]*Module
 	Flags                 Flags
 	ResArgs               map[string][]string

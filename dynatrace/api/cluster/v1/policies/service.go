@@ -15,13 +15,13 @@ type PolicyServiceClient struct {
 	client rest.Client
 }
 
-func NewPolicyService(baseURL string, apiToken string) *PolicyServiceClient {
-	return &PolicyServiceClient{client: rest.DefaultClient(baseURL, apiToken)}
+func NewPolicyService(credentials *rest.Credentials) *PolicyServiceClient {
+	return &PolicyServiceClient{client: rest.ClusterV2Client(credentials)}
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*policies.Policy] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*policies.Policy] {
 	return &service{
-		serviceClient: NewPolicyService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/cluster/v2"), credentials.Cluster.Token),
+		serviceClient: NewPolicyService(credentials),
 	}
 }
 

@@ -58,7 +58,7 @@ func NewGroupService(clientID string, accountID string, clientSecret string, tok
 	return &GroupServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*groups.Group] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*groups.Group] {
 	return &GroupServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }
 

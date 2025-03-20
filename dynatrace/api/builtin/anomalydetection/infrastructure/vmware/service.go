@@ -19,6 +19,7 @@ package vmware
 
 import (
 	vmware "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/vmware/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:anomaly-detection.infrastructure-vmware"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*vmware.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*vmware.Settings] {
 	return settings20.Service[*vmware.Settings](credentials, SchemaID, SchemaVersion)
 }

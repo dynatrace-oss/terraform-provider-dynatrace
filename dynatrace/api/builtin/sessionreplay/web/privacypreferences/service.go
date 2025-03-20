@@ -19,6 +19,7 @@ package privacypreferences
 
 import (
 	privacypreferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:sessionreplay.web.privacy-preferences"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*privacypreferences.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*privacypreferences.Settings] {
 	return settings20.Service[*privacypreferences.Settings](credentials, SchemaID, SchemaVersion)
 }

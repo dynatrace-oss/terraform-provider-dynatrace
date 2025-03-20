@@ -19,6 +19,7 @@ package beacondomainorigins
 
 import (
 	beacondomainorigins "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:rum.web.beacon-domain-origins"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*beacondomainorigins.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*beacondomainorigins.Settings] {
 	return settings20.Service[*beacondomainorigins.Settings](credentials, SchemaID, SchemaVersion)
 }

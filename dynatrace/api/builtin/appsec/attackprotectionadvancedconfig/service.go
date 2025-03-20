@@ -19,6 +19,7 @@ package attackprotectionadvancedconfig
 
 import (
 	attackprotectionadvancedconfig "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionadvancedconfig/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-advanced-config"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*attackprotectionadvancedconfig.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*attackprotectionadvancedconfig.Settings] {
 	return settings20.Service[*attackprotectionadvancedconfig.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,6 +19,7 @@ package hostheaders
 
 import (
 	hostheaders "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:rum.host-headers"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*hostheaders.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*hostheaders.Settings] {
 	return settings20.Service[*hostheaders.Settings](credentials, SchemaID, SchemaVersion)
 }

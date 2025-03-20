@@ -32,7 +32,6 @@ import (
 	slo_env2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/google/uuid"
@@ -41,15 +40,12 @@ import (
 const SchemaVersion = "6.0.14"
 const SchemaID = "builtin:monitoring.slo"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*slo.Settings] {
-	return &service{
-		credentials: credentials,
-		client:      httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
-	}
+func Service(credentials *rest.Credentials) settings.CRUDService[*slo.Settings] {
+	return &service{credentials: credentials, client: rest.HybridClient(credentials)}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 	client      rest.Client
 }
 
@@ -167,8 +163,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 
 	slo := new(sloGet)
 
-	service := slo_env2_service.Service(me.credentials)
-	client := httpcache.DefaultClient(me.credentials.URL, me.credentials.Token, service.SchemaID())
+	client := rest.HybridClient(me.credentials)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
 	if err := req.Finish(slo); err != nil {
 		return err

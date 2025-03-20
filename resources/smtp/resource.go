@@ -19,7 +19,6 @@ package smtp
 
 import (
 	"context"
-	"fmt"
 
 	smtp "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/smtp"
 	smtp_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/smtp/settings"
@@ -44,10 +43,14 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *smtp.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := smtp.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/v1.0/onpremise"), conf.ClusterAPIToken)
-	return apiService
+func NewService(m any) (*smtp.ServiceClient, error) {
+	creds, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return nil, err
+	}
+
+	apiService := smtp.NewService(creds)
+	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
@@ -61,7 +64,12 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Create(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.NewString())
@@ -88,7 +96,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Update(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -101,7 +114,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 
-	config, err := NewService(m).Get(ctx)
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	config, err := service.Get(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}

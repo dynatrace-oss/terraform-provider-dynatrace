@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	dashboardsbase "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboardsbase/settings"
@@ -28,8 +29,8 @@ import (
 
 const SchemaID = "v1:config:json-dashboards-base"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*dashboardsbase.JSONDashboardBase] {
-	return &service{settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*dashboardsbase.JSONDashboardBase] {
+	return &service{settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*dashboardsbase.JSONDashboardBase]("/api/config/v1/dashboards").WithStubs(&dashboardsbase.DashboardList{}),

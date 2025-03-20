@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services/settings"
@@ -30,8 +31,8 @@ import (
 const SchemaID = "v1:config:conditional-naming:services"
 const BasePath = "/api/config/v1/conditionalNaming/service"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*services.NamingRule] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*services.NamingRule] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*services.NamingRule](BasePath).WithDuplicates(Duplicates),

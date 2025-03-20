@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
@@ -31,22 +32,22 @@ import (
 	directshare "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/directshares"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*directshares.DirectShare] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*directshares.DirectShare] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 func (me *service) client(ctx context.Context) *directshare.Client {
 	httplog.InstallRoundTripper()
 	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
-		ClientID:     me.credentials.Automation.ClientID,
-		ClientSecret: me.credentials.Automation.ClientSecret,
-		TokenURL:     me.credentials.Automation.TokenURL,
+		ClientID:     me.credentials.OAuth.ClientID,
+		ClientSecret: me.credentials.OAuth.ClientSecret,
+		TokenURL:     me.credentials.OAuth.TokenURL,
 	})
-	return directshare.NewClient(me.credentials.Automation.EnvironmentURL, httpClient)
+	return directshare.NewClient(me.credentials.OAuth.EnvironmentURL, httpClient)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *directshares.DirectShare) (err error) {

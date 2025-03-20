@@ -14,9 +14,9 @@ import (
 
 const SchemaID = "accounts:users"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*users.UserConfig] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*users.UserConfig] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/v1.0/onpremise"), credentials.Cluster.Token),
+		serviceClient: NewService(credentials),
 	}
 }
 
@@ -56,8 +56,8 @@ func (cs *ServiceClient) SchemaID() string {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://siz65484.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
 }
 
 type service struct {
@@ -83,7 +83,7 @@ func (cs *ServiceClient) Update(ctx context.Context, userConfig *users.UserConfi
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	if len(id) == 0 {
-		return errors.New("empty ID provided for the Dashboard to delete")
+		return errors.New("empty ID provided for the user to delete")
 	}
 	return cs.client.Delete(ctx, fmt.Sprintf("/users/%s", id), 200).Finish()
 }
@@ -91,7 +91,7 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context, id string, v *users.UserConfig) error {
 	if len(id) == 0 {
-		return errors.New("empty ID provided for the Dashboard to fetch")
+		return errors.New("empty ID provided for the user to fetch")
 	}
 
 	var err error

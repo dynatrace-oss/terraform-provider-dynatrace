@@ -19,6 +19,7 @@ package providerbreakdown
 
 import (
 	providerbreakdown "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/providerbreakdown/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:rum.provider-breakdown"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*providerbreakdown.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*providerbreakdown.Settings] {
 	return settings20.Service[*providerbreakdown.Settings](credentials, SchemaID, SchemaVersion)
 }

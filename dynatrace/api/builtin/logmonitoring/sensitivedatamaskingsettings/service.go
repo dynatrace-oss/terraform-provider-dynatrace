@@ -19,6 +19,7 @@ package sensitivedatamasking
 
 import (
 	sensitivedatamasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/sensitivedatamaskingsettings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.14"
 const SchemaID = "builtin:logmonitoring.sensitive-data-masking-settings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*sensitivedatamasking.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*sensitivedatamasking.Settings] {
 	return settings20.Service[*sensitivedatamasking.Settings](credentials, SchemaID, SchemaVersion)
 }

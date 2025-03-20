@@ -24,6 +24,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -367,9 +368,9 @@ import (
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 )
 
-func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
 		},
 		protoType:    newSettings(fn),
@@ -377,9 +378,9 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *settings.Cr
 	}
 }
 
-func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
 		},
 		protoType:    newSettings(fn),
@@ -388,9 +389,9 @@ func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(creden
 	}
 }
 
-func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
+func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *settings.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
 		},
 		protoType:    newSettings(fn),
@@ -399,14 +400,14 @@ func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *settin
 	}
 }
 
-func newSettings[T settings.Settings](sfn func(credentials *settings.Credentials) settings.CRUDService[T]) T {
+func newSettings[T settings.Settings](sfn func(credentials *rest.Credentials) settings.CRUDService[T]) T {
 	var proto T
 	return reflect.New(reflect.TypeOf(proto).Elem()).Interface().(T)
 }
 
 type ResourceDescriptor struct {
 	Dependencies []Dependency
-	Service      func(credentials *settings.Credentials) settings.CRUDService[settings.Settings]
+	Service      func(credentials *rest.Credentials) settings.CRUDService[settings.Settings]
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
@@ -1614,10 +1615,10 @@ func GetExcludeListedResources() []ResourceType {
 
 }
 
-func Service(credentials *settings.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
+func Service(credentials *rest.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
 	return AllResources[resourceType].Service(credentials)
 }
 
-// func DSService(credentials *settings.Credentials, dataSourceType DataSourceType) settings.RService[settings.Settings] {
+// func DSService(credentials *rest.Credentials, dataSourceType DataSourceType) settings.RService[settings.Settings] {
 // 	return AllDataSources[dataSourceType].Service(credentials)
 // }

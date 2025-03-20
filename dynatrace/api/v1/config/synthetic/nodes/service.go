@@ -30,8 +30,8 @@ import (
 
 const SchemaID = "v1:synthetic:nodes:all"
 
-func Service(credentials *settings.Credentials) settings.RService[*nodes.Settings] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(credentials *rest.Credentials) settings.RService[*nodes.Settings] {
+	return &service{client: rest.HybridClient(credentials)}
 }
 
 type service struct {

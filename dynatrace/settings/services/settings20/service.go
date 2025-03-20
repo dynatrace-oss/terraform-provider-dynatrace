@@ -30,7 +30,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 
 	"net/url"
@@ -40,7 +39,7 @@ var DISABLE_ORDERING_SUPPORT = os.Getenv("DYNATRACE_DISABLE_ORDERING_SUPPORT") =
 
 var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
 
-func Service[T settings.Settings](credentials *settings.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
+func Service[T settings.Settings](credentials *rest.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
 	var opts *ServiceOptions[T]
 	if len(options) > 0 {
 		opts = options[0]
@@ -48,7 +47,7 @@ func Service[T settings.Settings](credentials *settings.Credentials, schemaID st
 	return &service[T]{
 		schemaID: schemaID,
 		// schemaVersion: schemaVersion,
-		client:  httpcache.DefaultClient(credentials.URL, credentials.Token, schemaID),
+		client:  rest.HybridClient(credentials),
 		options: opts,
 	}
 }
@@ -308,7 +307,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 
 		if len(sol.Items) > 0 {
 			for _, item := range sol.Items {
-				newItem := settings.NewSettings[T](me)
+				newItem := settings.NewSettings(me)
 				if err = json.Unmarshal(item.Value, &newItem); err != nil {
 					return nil, err
 				}

@@ -21,11 +21,12 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-type ServiceFunc func(*settings.Credentials) BasicService
+type ServiceFunc func(*rest.Credentials) BasicService
 
 type BasicService interface {
 	List(ctx context.Context) (api.Stubs, error)
@@ -36,8 +37,8 @@ type ListIDsService interface {
 	ListIDs(ctx context.Context) (api.Stubs, error)
 }
 
-func Wrap[T settings.Settings](fn func(credentials *settings.Credentials) settings.CRUDService[T]) func(credentials *settings.Credentials) BasicService {
-	return func(credentials *settings.Credentials) BasicService {
+func Wrap[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T]) func(credentials *rest.Credentials) BasicService {
+	return func(credentials *rest.Credentials) BasicService {
 		return &GenericService[T]{Service: fn(credentials)}
 	}
 }

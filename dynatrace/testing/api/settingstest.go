@@ -26,6 +26,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -55,7 +56,7 @@ func load(path string, v any, randomize string) error {
 	// return json.Unmarshal([]byte(strings.ReplaceAll(string(data), "${randomize}", randomize)), v)
 }
 
-func TestService[V settings.Settings](t *testing.T, createService func(*settings.Credentials) settings.CRUDService[V]) {
+func TestService[V settings.Settings](t *testing.T, createService func(*rest.Credentials) settings.CRUDService[V]) {
 	t.Helper()
 	SettingsTest[V]{T: t}.Run(createService)
 }
@@ -64,7 +65,7 @@ type SettingsTest[V settings.Settings] struct {
 	T *testing.T
 }
 
-func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings.CRUDService[V]) {
+func (st SettingsTest[V]) Run(createService func(*rest.Credentials) settings.CRUDService[V]) {
 	st.T.Helper()
 	envURL := os.Getenv("DYNATRACE_ENV_URL")
 	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
@@ -80,7 +81,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 
 			folder := path.Join("testdata", entry.Name())
 
-			service := createService(&settings.Credentials{URL: envURL, Token: apiToken})
+			service := createService(&rest.Credentials{URL: envURL, Token: apiToken})
 
 			randomize := uuid.NewString()
 
@@ -107,7 +108,7 @@ func (st SettingsTest[V]) Run(createService func(*settings.Credentials) settings
 				st.T.Run(entry.Name(), func(t *testing.T) {
 					t.Helper()
 					assert := assert.New(t)
-					service := createService(&settings.Credentials{URL: envURL, Token: apiToken})
+					service := createService(&rest.Credentials{URL: envURL, Token: apiToken})
 
 					var err error
 					var stub *api.Stub

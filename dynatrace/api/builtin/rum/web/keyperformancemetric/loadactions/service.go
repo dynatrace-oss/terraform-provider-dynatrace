@@ -19,6 +19,7 @@ package loadactions
 
 import (
 	loadactions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/keyperformancemetric/loadactions/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:rum.web.key-performance-metric-load-actions"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*loadactions.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*loadactions.Settings] {
 	return settings20.Service[*loadactions.Settings](credentials, SchemaID, SchemaVersion)
 }

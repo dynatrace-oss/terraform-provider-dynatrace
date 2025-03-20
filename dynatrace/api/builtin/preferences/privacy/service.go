@@ -19,6 +19,7 @@ package privacy
 
 import (
 	privacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/privacy/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "4.0.1"
 const SchemaID = "builtin:preferences.privacy"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*privacy.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*privacy.Settings] {
 	return settings20.Service[*privacy.Settings](credentials, SchemaID, SchemaVersion)
 }

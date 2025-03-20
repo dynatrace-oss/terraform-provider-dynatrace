@@ -19,6 +19,7 @@ package diskrules
 
 import (
 	diskrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/diskrules/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:anomaly-detection.disk-rules"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*diskrules.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*diskrules.Settings] {
 	return settings20.Service[*diskrules.Settings](credentials, SchemaID, SchemaVersion)
 }

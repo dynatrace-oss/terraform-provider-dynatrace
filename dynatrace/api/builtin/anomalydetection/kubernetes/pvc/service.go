@@ -19,6 +19,7 @@ package pvc
 
 import (
 	pvc "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/pvc/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:anomaly-detection.kubernetes.pvc"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*pvc.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*pvc.Settings] {
 	return settings20.Service[*pvc.Settings](credentials, SchemaID, SchemaVersion)
 }

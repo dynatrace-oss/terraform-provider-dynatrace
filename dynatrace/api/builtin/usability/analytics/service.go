@@ -19,6 +19,7 @@ package analytics
 
 import (
 	analytics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/usability/analytics/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:usability-analytics"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*analytics.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*analytics.Settings] {
 	return settings20.Service[*analytics.Settings](credentials, SchemaID, SchemaVersion)
 }

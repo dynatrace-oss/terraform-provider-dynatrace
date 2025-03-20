@@ -25,7 +25,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	cfg "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -86,7 +86,7 @@ func Set(d *schema.ResourceData, key string, ids []string) {
 	d.Set(key, ids)
 }
 
-func CommonRead(ctx context.Context, d *schema.ResourceData, creds *settings.Credentials, key export.ResourceType, indent string) error {
+func CommonRead(ctx context.Context, d *schema.ResourceData, creds *rest.Credentials, key export.ResourceType, indent string) error {
 	idMap := map[string]string{}
 
 	service := serviceMap[key](creds)

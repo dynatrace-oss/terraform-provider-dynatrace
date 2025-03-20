@@ -19,6 +19,7 @@ package features
 
 import (
 	features "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/oneagent/features/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.5.9"
 const SchemaID = "builtin:oneagent.features"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*features.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*features.Settings] {
 	return settings20.Service[*features.Settings](credentials, SchemaID, SchemaVersion)
 }

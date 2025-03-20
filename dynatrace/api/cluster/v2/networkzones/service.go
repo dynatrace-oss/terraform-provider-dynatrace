@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones/settings"
@@ -32,9 +31,9 @@ import (
 
 const SchemaID = "cluster:networkzones"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
 	return &service{
-		serviceClient: NewService(fmt.Sprintf("%s%s", strings.TrimSuffix(credentials.Cluster.URL, "/"), "/api/cluster/v2"), credentials.Cluster.Token),
+		serviceClient: NewService(credentials),
 	}
 }
 
@@ -70,8 +69,8 @@ func (cs *ServiceClient) SchemaID() string {
 	return SchemaID
 }
 
-func NewService(baseURL string, token string) *ServiceClient {
-	return &ServiceClient{client: rest.DefaultClient(baseURL, token)}
+func NewService(credentials *rest.Credentials) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV2Client(credentials)}
 }
 
 type service struct {

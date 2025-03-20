@@ -24,7 +24,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -38,13 +38,6 @@ type IAM struct {
 	ClientSecret string
 	TokenURL     string
 	EndpointURL  string
-}
-
-type Automation struct {
-	ClientID       string
-	ClientSecret   string
-	TokenURL       string
-	EnvironmentURL string
 }
 
 const (
@@ -64,9 +57,9 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
 			return fmt.Errorf(" The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
 		}
-		if len(conf.APIToken) == 0 {
-			return fmt.Errorf(" No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that")
-		}
+		// if len(conf.APIToken) == 0 {
+		// 	return fmt.Errorf(" No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that")
+		// }
 	case CredValIAM:
 		if len(conf.IAM.AccountID) == 0 {
 			return fmt.Errorf(" No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that")
@@ -104,16 +97,16 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 	return nil
 }
 
-func Credentials(m any, CredentialValidation int) (*settings.Credentials, error) {
+func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
 	conf := m.(*ProviderConfiguration)
 	if err := validateCredentials(conf, CredentialValidation); err != nil {
 		return nil, err
 	}
-	return &settings.Credentials{
-		Token:      conf.APIToken,
-		URL:        conf.EnvironmentURL,
-		IAM:        conf.IAM,
-		Automation: conf.Automation,
+	return &rest.Credentials{
+		Token: conf.APIToken,
+		URL:   conf.EnvironmentURL,
+		IAM:   conf.IAM,
+		OAuth: conf.Automation,
 		Cluster: struct {
 			URL   string
 			Token string
@@ -134,7 +127,7 @@ type ProviderConfiguration struct {
 	ClusterAPIToken   string
 	APIToken          string
 	IAM               IAM
-	Automation        Automation
+	Automation        rest.OAuthCredentials
 }
 
 type Getter interface {
@@ -179,15 +172,15 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	if len(automation_environment_url) == 0 {
 		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
 			automation_environment_url = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
-			automation_token_url = settings.ProdTokenURL
+			automation_token_url = rest.ProdTokenURL
 		}
 		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
 			automation_environment_url = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
-			automation_token_url = settings.SprintTokenURL
+			automation_token_url = rest.SprintTokenURL
 		}
 		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
 			automation_environment_url = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
-			automation_token_url = settings.DevTokenURL
+			automation_token_url = rest.DevTokenURL
 		}
 	}
 
@@ -195,14 +188,15 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	client_secret := getString(d, "client_secret")
 	account_id := getString(d, "account_id")
 	token_url := getString(d, "token_url")
+	platform_token := getString(d, "automation_platform_token")
 
 	oauth_endpoint_url := "https://api.dynatrace.com"
 	if strings.Contains(dtEnvURL, ".live.dynatrace.com") || strings.Contains(dtEnvURL, ".apps.dynatrace.com") {
-		oauth_endpoint_url = settings.ProdIAMEndpointURL
+		oauth_endpoint_url = rest.ProdIAMEndpointURL
 	} else if strings.Contains(dtEnvURL, ".sprint.dynatracelabs.com") || strings.Contains(dtEnvURL, ".sprint.apps.dynatracelabs.com") {
-		oauth_endpoint_url = settings.SprintIAMEndpointURL
+		oauth_endpoint_url = rest.SprintIAMEndpointURL
 	} else if strings.Contains(dtEnvURL, ".dev.dynatracelabs.com") || strings.Contains(dtEnvURL, ".dev.apps.dynatracelabs.com") {
-		oauth_endpoint_url = settings.DevIAMEndpointURL
+		oauth_endpoint_url = rest.DevIAMEndpointURL
 	}
 
 	iam_client_id := getString(d, "iam_client_id")
@@ -247,7 +241,8 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			TokenURL:     iam_token_url,
 			EndpointURL:  iam_endpoint_url,
 		},
-		Automation: Automation{
+		Automation: rest.OAuthCredentials{
+			PlatformToken:  platform_token,
 			ClientID:       automation_client_id,
 			ClientSecret:   automation_client_secret,
 			TokenURL:       automation_token_url,

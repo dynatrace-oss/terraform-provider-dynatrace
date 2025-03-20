@@ -19,6 +19,7 @@ package workload
 
 import (
 	workload "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/workload/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.10.1"
 const SchemaID = "builtin:anomaly-detection.kubernetes.workload"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*workload.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*workload.Settings] {
 	return settings20.Service[*workload.Settings](credentials, SchemaID, SchemaVersion)
 }

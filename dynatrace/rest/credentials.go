@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package settings
+package rest
 
 const (
 	ProdTokenURL   = "https://sso.dynatrace.com/sso/oauth2/token"
@@ -27,6 +27,16 @@ const (
 	DevIAMEndpointURL    = "https://api-dev.internal.dynatracelabs.com"
 )
 
+const TestCaseEnvURL = "go-test"
+
+type OAuthCredentials struct {
+	ClientID       string
+	ClientSecret   string
+	TokenURL       string
+	EnvironmentURL string
+	PlatformToken  string
+}
+
 type Credentials struct {
 	URL   string
 	Token string
@@ -37,14 +47,33 @@ type Credentials struct {
 		TokenURL     string
 		EndpointURL  string
 	}
-	Automation struct {
-		ClientID       string
-		ClientSecret   string
-		TokenURL       string
-		EnvironmentURL string
-	}
+	OAuth   OAuthCredentials
 	Cluster struct {
 		URL   string
 		Token string
 	}
+}
+
+func (c *Credentials) ContainsOAuth() bool {
+	return len(c.OAuth.ClientID) > 0 && len(c.OAuth.ClientSecret) > 0
+}
+
+func (c *Credentials) ContainsPlatformToken() bool {
+	return len(c.OAuth.PlatformToken) > 0
+}
+
+func (c *Credentials) ContainsAPIToken() bool {
+	return len(c.Token) > 0
+}
+
+func (c *Credentials) ContainsClusterURL() bool {
+	return len(c.Cluster.URL) > 0
+}
+
+func (c *Credentials) ContainsClusterToken() bool {
+	return len(c.Cluster.Token) > 0
+}
+
+func (c *Credentials) ContainsOAuthOrPlatformToken() bool {
+	return c.ContainsOAuth() || c.ContainsPlatformToken()
 }

@@ -19,7 +19,6 @@ package entity
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -35,8 +34,8 @@ import (
 
 const SchemaID = "v2:environment:entity"
 
-func Service(credentials *settings.Credentials) settings.RService[*entity.Entity] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(credentials *rest.Credentials) settings.RService[*entity.Entity] {
+	return &service{client: rest.HybridClient(credentials)}
 }
 
 type service struct {
@@ -44,9 +43,6 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *entity.Entity) error {
-	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
-		return errors.New("entity calls disabled when using Migration Cache")
-	}
 	return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
 }
 
@@ -58,8 +54,8 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 
-func DataSourceService(credentials *settings.Credentials) settings.RService[*entity.Entity] {
-	return &dataSourceService{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func DataSourceService(credentials *rest.Credentials) settings.RService[*entity.Entity] {
+	return &dataSourceService{client: rest.HybridClient(credentials)}
 }
 
 type dataSourceService struct {
@@ -67,10 +63,6 @@ type dataSourceService struct {
 }
 
 func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entity) error {
-	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
-		return errors.New("entity calls disabled when using Migration Cache")
-	}
-
 	entityType := evalEntityType(id)
 	if len(entityType) == 0 {
 		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)

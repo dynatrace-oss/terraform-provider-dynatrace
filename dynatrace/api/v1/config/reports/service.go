@@ -19,14 +19,15 @@ package reports
 
 import (
 	reports "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/reports/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 const SchemaID = "v1:config:reports"
 const BasePath = "/api/config/v1/reports"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*reports.Settings] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*reports.Settings] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*reports.Settings](BasePath).WithStubs(new(reports.ReportStubList)),

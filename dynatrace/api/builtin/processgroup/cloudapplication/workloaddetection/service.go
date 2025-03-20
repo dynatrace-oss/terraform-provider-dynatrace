@@ -19,6 +19,7 @@ package workloaddetection
 
 import (
 	workloaddetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/cloudapplication/workloaddetection/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.5"
 const SchemaID = "builtin:process-group.cloud-application-workload-detection"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*workloaddetection.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*workloaddetection.Settings] {
 	return settings20.Service[*workloaddetection.Settings](credentials, SchemaID, SchemaVersion)
 }

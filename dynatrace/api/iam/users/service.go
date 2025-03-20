@@ -45,7 +45,7 @@ func NewUserService(clientID string, accountID string, clientSecret string, toke
 	return &UserServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
 }
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*users.User] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*users.User] {
 
 	return &UserServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }

@@ -200,6 +200,12 @@ func Provider() *schema.Provider {
 				Description: "The URL of the Dynatrace Environment with Platform capabilities turned on (`https://#####.apps.dynatrace.com)`. This is optional configuration when `dt_env_url` already specifies a SaaS Environment like `https://#####.live.dynatrace.com` or `https://#####.apps.dynatrace.com`",
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"AUTOMATION_ENVIRONMENT_URL", "DT_AUTOMATION_ENVIRONMENT_URL", "DYNATRACE_AUTOMATION_ENVIRONMENT_URL", "DYNATRACE_AUTOMATION_ENV_URL", "DT_AUTOMATION_ENV_URL"}, nil),
 			},
+			"platform_token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "A Dynatrace Platform Token. Specifying such a token allows for easy authentication against Platform resources. In such a case it supersedes `automation_client_id`, `automation_client_secret`, `automation_token_url` and `automation_env_url`",
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
+			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"dynatrace_alerting_profiles":            alerting.DataSource(),

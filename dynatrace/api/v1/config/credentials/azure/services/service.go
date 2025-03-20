@@ -28,7 +28,6 @@ import (
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/azure/services/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/httpcache"
 )
 
 const SchemaID = "v1:config:credentials:azure:services"
@@ -36,9 +35,9 @@ const BasePath = "/api/config/v1/azure/credentials"
 
 var smu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*services.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*services.Settings] {
 	return &service{
-		client:     httpcache.DefaultClient(credentials.URL, credentials.Token, SchemaID),
+		client:     rest.APITokenClient(credentials),
 		supService: NewSupportedServicesService(credentials),
 	}
 }

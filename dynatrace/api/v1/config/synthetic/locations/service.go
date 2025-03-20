@@ -29,8 +29,8 @@ import (
 
 const SchemaID = "v1:synthetic:locations:all"
 
-func Service(credentials *settings.Credentials) settings.RService[*locations.SyntheticLocation] {
-	return &service{client: rest.DefaultClient(credentials.URL, credentials.Token)}
+func Service(credentials *rest.Credentials) settings.RService[*locations.SyntheticLocation] {
+	return &service{client: rest.APITokenClient(credentials)}
 }
 
 type service struct {

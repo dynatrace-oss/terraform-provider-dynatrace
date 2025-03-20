@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	metricevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/metricevents/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -30,7 +31,7 @@ import (
 const SchemaID = "builtin:anomaly-detection.metric-events"
 const SchemaVersion = "1.0.17"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*metricevents.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*metricevents.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 

@@ -20,10 +20,10 @@ package backup
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	backup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/backup"
 	backup_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/backup/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
@@ -48,7 +48,10 @@ func Resource() *schema.Resource {
 
 func NewService(m any) *backup.ServiceClient {
 	conf := m.(*config.ProviderConfiguration)
-	apiService := backup.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/v1.0/onpremise"), conf.ClusterAPIToken)
+	credentials := &rest.Credentials{}
+	credentials.Cluster.URL = conf.ClusterAPIV2URL
+	credentials.Cluster.Token = conf.ClusterAPIToken
+	apiService := backup.NewService(credentials)
 	return apiService
 }
 

@@ -19,6 +19,7 @@ package logcustomattributes
 
 import (
 	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.16"
 const SchemaID = "builtin:logmonitoring.log-custom-attributes"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*logcustomattributes.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*logcustomattributes.Settings] {
 	return settings20.Service[*logcustomattributes.Settings](credentials, SchemaID, SchemaVersion)
 }

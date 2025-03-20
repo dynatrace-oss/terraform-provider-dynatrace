@@ -19,6 +19,7 @@ package rumjavascriptupdates
 
 import (
 	rumjavascriptupdates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptupdates/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1.1"
 const SchemaID = "builtin:rum.web.rum-javascript-updates"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*rumjavascriptupdates.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*rumjavascriptupdates.Settings] {
 	return settings20.Service[*rumjavascriptupdates.Settings](credentials, SchemaID, SchemaVersion)
 }

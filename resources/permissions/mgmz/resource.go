@@ -19,7 +19,6 @@ package mgmz
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz"
 	mgmzsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz/settings"
@@ -44,10 +43,13 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *mgmz.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := mgmz.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/v1.0/onpremise"), conf.ClusterAPIToken)
-	return apiService
+func NewService(m any) (*mgmz.ServiceClient, error) {
+	creds, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return nil, err
+	}
+	apiService := mgmz.NewService(creds)
+	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
@@ -60,7 +62,13 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	stub, err := NewService(m).Create(ctx, config)
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	stub, err := service.Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -78,7 +86,13 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Update(ctx, config); err != nil {
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -91,7 +105,13 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 	config := mgmzsettings.Permission{}
-	if err = NewService(m).Get(ctx, d.Id(), &config); err != nil {
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err = service.Get(ctx, d.Id(), &config); err != nil {
 		if rest.Is404(err) {
 			d.SetId("")
 			return diag.Diagnostics{}
@@ -115,7 +135,13 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Delete(ctx, d.Id()); err != nil {
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}

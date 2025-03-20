@@ -19,6 +19,7 @@ package tokensettings
 
 import (
 	tokensettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tokens/tokensettings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "2.0.2"
 const SchemaID = "builtin:tokens.token-settings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*tokensettings.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*tokensettings.Settings] {
 	return settings20.Service[*tokensettings.Settings](credentials, SchemaID, SchemaVersion)
 }

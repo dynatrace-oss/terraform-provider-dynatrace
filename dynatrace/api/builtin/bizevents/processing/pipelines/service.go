@@ -19,6 +19,7 @@ package pipelines
 
 import (
 	pipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/pipelines/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.6"
 const SchemaID = "builtin:bizevents-processing-pipelines.rule"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*pipelines.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*pipelines.Settings] {
 	return settings20.Service[*pipelines.Settings](credentials, SchemaID, SchemaVersion)
 }

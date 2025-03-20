@@ -15,12 +15,14 @@
 * limitations under the License.
  */
 
-package rest
+package logging
 
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -48,4 +50,39 @@ func (l *RESTLogger) Println(ctx context.Context, v ...any) {
 		tflog.Debug(ctx, fmt.Sprint(append(append([]any{}, "[HTTP]"), v...)...))
 	}
 	l.log.Println(v...)
+}
+
+var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
+var logger = initLogger()
+var Logger = logger
+
+type onDemandWriter struct {
+	logFileName string
+	file        *os.File
+}
+
+func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
+	if odw.file == nil {
+		if odw.file, err = os.OpenFile(odw.logFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, os.ModePerm); err != nil {
+			return 0, err
+		}
+	}
+	return odw.file.Write(p)
+}
+
+func initLogger() *RESTLogger {
+	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
+	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
+		logger := log.New(os.Stderr, "", log.LstdFlags)
+		if restLogFileName != "true" {
+			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
+		}
+		return &RESTLogger{log: logger}
+	}
+	return &RESTLogger{log: log.New(io.Discard, "", log.LstdFlags)}
+}
+
+func SetLogWriter(writer io.Writer) error {
+	logger.log.SetOutput(writer)
+	return nil
 }

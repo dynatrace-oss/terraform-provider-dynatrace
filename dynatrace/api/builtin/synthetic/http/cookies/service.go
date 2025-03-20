@@ -19,6 +19,7 @@ package cookies
 
 import (
 	cookies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/http/cookies/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:synthetic.http.cookies"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*cookies.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*cookies.Settings] {
 	return settings20.Service[*cookies.Settings](credentials, SchemaID, SchemaVersion)
 }

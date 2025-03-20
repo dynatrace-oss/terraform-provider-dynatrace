@@ -19,6 +19,7 @@ package timestampconfiguration
 
 import (
 	timestampconfiguration "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/timestampconfiguration/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.15"
 const SchemaID = "builtin:logmonitoring.timestamp-configuration"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*timestampconfiguration.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*timestampconfiguration.Settings] {
 	return settings20.Service[*timestampconfiguration.Settings](credentials, SchemaID, SchemaVersion)
 }

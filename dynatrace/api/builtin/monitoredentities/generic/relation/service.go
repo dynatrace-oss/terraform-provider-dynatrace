@@ -23,6 +23,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	relation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredentities/generic/relation/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -30,7 +31,7 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:monitoredentities.generic.relation"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*relation.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*relation.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*relation.Settings]{Duplicates: Duplicates})
 }
 

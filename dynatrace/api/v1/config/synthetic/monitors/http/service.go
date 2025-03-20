@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors"
@@ -31,8 +32,8 @@ import (
 const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*http.SyntheticMonitor] {
-	return &service{service: settings.NewCRUDService(credentials, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
+func Service(credentials *rest.Credentials) settings.CRUDService[*http.SyntheticMonitor] {
+	return &service{service: settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=HTTP"),
 		CreateURL:      func(v *http.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },

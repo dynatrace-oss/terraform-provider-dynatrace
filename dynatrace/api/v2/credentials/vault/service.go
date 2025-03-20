@@ -34,8 +34,8 @@ const BasePath = "/api/v2/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*vault.Credentials] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credentials] {
+	return settings.NewHybridService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*vault.Credentials](BasePath).
@@ -44,7 +44,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*vault.Cred
 			NoValidator().
 			WithDeleteRetry(func(ctx context.Context, id string, err error) (bool, error) {
 				if strings.Contains(err.Error(), "as long as there are monitors assigned to it") {
-					client := rest.DefaultClient(credentials.URL, credentials.Token)
+					client := rest.HybridClient(credentials)
 					response := struct {
 						Monitors []struct {
 							EntityID string `json:"entityId"`

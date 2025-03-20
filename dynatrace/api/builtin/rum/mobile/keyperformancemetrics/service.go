@@ -19,6 +19,7 @@ package keyperformancemetrics
 
 import (
 	keyperformancemetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/mobile/keyperformancemetrics/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1.6"
 const SchemaID = "builtin:rum.mobile.key-performance-metrics"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*keyperformancemetrics.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*keyperformancemetrics.Settings] {
 	return settings20.Service[*keyperformancemetrics.Settings](credentials, SchemaID, SchemaVersion)
 }

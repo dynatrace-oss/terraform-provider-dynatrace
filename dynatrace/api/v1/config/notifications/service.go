@@ -19,14 +19,15 @@ package notifications
 
 import (
 	notifications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/notifications/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
 const SchemaID = "v1:config:notifications"
 const BasePath = "/api/config/v1/notifications"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*notifications.NotificationRecord] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*notifications.NotificationRecord] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*notifications.NotificationRecord](BasePath),

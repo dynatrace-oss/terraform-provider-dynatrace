@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
@@ -31,8 +32,8 @@ import (
 const SchemaID = "v1:synthetic:monitors:http:script"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*script.Settings] {
-	return &service{scriptService: settings.NewCRUDService(credentials, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: http.Service(credentials)}
+func Service(credentials *rest.Credentials) settings.CRUDService[*script.Settings] {
+	return &service{scriptService: settings.NewAPITokenService(credentials, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: http.Service(credentials)}
 }
 
 type service struct {

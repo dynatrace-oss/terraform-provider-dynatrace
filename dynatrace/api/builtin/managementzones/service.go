@@ -38,10 +38,10 @@ import (
 const SchemaID = "builtin:management-zones"
 const SchemaVersion = "1.0.12"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*managementzones.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*managementzones.Settings] {
 	return &service{
 		service:     settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode}),
-		client:      rest.DefaultClient(credentials.URL, credentials.Token),
+		client:      rest.HybridClient(credentials),
 		credentials: credentials,
 	}
 }
@@ -49,7 +49,7 @@ func Service(credentials *settings.Credentials) settings.CRUDService[*management
 type service struct {
 	service     settings.ListIDCRUDService[*managementzones.Settings]
 	client      rest.Client
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 const DefaultNumRequiredSuccesses = 5

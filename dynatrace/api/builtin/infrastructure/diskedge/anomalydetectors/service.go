@@ -19,6 +19,7 @@ package anomalydetectors
 
 import (
 	anomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/infrastructure/diskedge/anomalydetectors/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "0.0.18"
 const SchemaID = "builtin:infrastructure.disk.edge.anomaly-detectors"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*anomalydetectors.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*anomalydetectors.Settings] {
 	return settings20.Service[*anomalydetectors.Settings](credentials, SchemaID, SchemaVersion)
 }

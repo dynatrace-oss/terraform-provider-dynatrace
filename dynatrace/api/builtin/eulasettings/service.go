@@ -19,6 +19,7 @@ package eulasettings
 
 import (
 	eulasettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:eula-settings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*eulasettings.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*eulasettings.Settings] {
 	return settings20.Service[*eulasettings.Settings](credentials, SchemaID, SchemaVersion)
 }

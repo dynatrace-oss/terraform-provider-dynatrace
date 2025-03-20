@@ -32,8 +32,8 @@ import (
 const SchemaID = "v1:config:anomaly-detection:metric-events"
 const BasePath = "/api/config/v1/anomalyDetection/metricEvents"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*metricevents.MetricEvent] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*metricevents.MetricEvent] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*metricevents.MetricEvent](BasePath).WithCreateRetry(RetryOnCreate).WithDuplicates(Duplicates),

@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 
@@ -31,7 +32,7 @@ import (
 const SchemaID = "builtin:span-entry-points"
 const SchemaVersion = "0.1.16"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*entrypoints.SpanEntryPoint] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*entrypoints.SpanEntryPoint] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*entrypoints.SpanEntryPoint]{Duplicates: Duplicates})
 }
 

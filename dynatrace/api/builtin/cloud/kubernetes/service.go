@@ -19,6 +19,7 @@ package kubernetes
 
 import (
 	kubernetes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/cloud/kubernetes/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "3.1"
 const SchemaID = "builtin:cloud.kubernetes"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*kubernetes.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*kubernetes.Settings] {
 	return settings20.Service[*kubernetes.Settings](credentials, SchemaID, SchemaVersion)
 }

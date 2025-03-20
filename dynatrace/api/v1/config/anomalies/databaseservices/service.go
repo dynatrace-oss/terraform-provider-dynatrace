@@ -19,6 +19,7 @@ package databaseservices
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	databaseservices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/databaseservices/settings"
@@ -29,8 +30,8 @@ const EndpointURL = "/api/config/v1/anomalyDetection/databaseServices"
 const StaticID = "70276f24-2efe-4203-89f9-4fd3b7d7e5d9"
 const StaticName = "database_anomalies"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*databaseservices.AnomalyDetection] {
-	return settings.StaticService[*databaseservices.AnomalyDetection](
+func Service(credentials *rest.Credentials) settings.CRUDService[*databaseservices.AnomalyDetection] {
+	return settings.APITokenStaticService[*databaseservices.AnomalyDetection](
 		credentials,
 		SchemaID,
 		EndpointURL,

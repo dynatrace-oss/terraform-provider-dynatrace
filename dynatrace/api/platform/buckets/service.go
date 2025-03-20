@@ -38,22 +38,22 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*buckets.Bucket] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*buckets.Bucket] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 func (me *service) client(ctx context.Context) *bucket.Client {
 	factory := clients.Factory().
 		WithUserAgent("Dynatrace Terraform Provider").
-		WithPlatformURL(me.credentials.Automation.EnvironmentURL).
+		WithPlatformURL(me.credentials.OAuth.EnvironmentURL).
 		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     me.credentials.Automation.ClientID,
-			ClientSecret: me.credentials.Automation.ClientSecret,
-			TokenURL:     me.credentials.Automation.TokenURL,
+			ClientID:     me.credentials.OAuth.ClientID,
+			ClientSecret: me.credentials.OAuth.ClientSecret,
+			TokenURL:     me.credentials.OAuth.TokenURL,
 		}).
 		WithHTTPListener(httplog.HTTPListener)
 	bucketClient, _ := factory.BucketClient(ctx)
@@ -87,7 +87,7 @@ func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err e
 		return err
 	}
 	if !result.IsSuccess() {
-		return rest.Envelope(result.Data, me.credentials.Automation.EnvironmentURL, "GET")
+		return rest.Envelope(result.Data, me.credentials.OAuth.EnvironmentURL, "GET")
 	}
 	return json.Unmarshal(result.Data, &v)
 }
@@ -153,7 +153,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 		return nil, err
 	}
 	if !response.IsSuccess() {
-		return nil, rest.Envelope(response.Data, me.credentials.Automation.EnvironmentURL, "POST")
+		return nil, rest.Envelope(response.Data, me.credentials.OAuth.EnvironmentURL, "POST")
 	}
 
 	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
@@ -200,7 +200,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 		return err
 	}
 	if !response.IsSuccess() {
-		return rest.Envelope(response.Data, me.credentials.Automation.EnvironmentURL, "PUT")
+		return rest.Envelope(response.Data, me.credentials.OAuth.EnvironmentURL, "PUT")
 	}
 	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	retries := 0

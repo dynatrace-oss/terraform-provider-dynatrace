@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	cloudfoundry "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -29,8 +30,8 @@ const BasePath = "/api/config/v1/cloudFoundry/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*cloudfoundry.CloudFoundryCredentials] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*cloudfoundry.CloudFoundryCredentials] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*cloudfoundry.CloudFoundryCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),

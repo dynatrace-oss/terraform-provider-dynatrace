@@ -19,6 +19,7 @@ package ipmappings
 
 import (
 	ipmappings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipmappings/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -26,6 +27,6 @@ import (
 const SchemaVersion = "1.1.2"
 const SchemaID = "builtin:rum.ip-mappings"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*ipmappings.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*ipmappings.Settings] {
 	return settings20.Service[*ipmappings.Settings](credentials, SchemaID, SchemaVersion)
 }

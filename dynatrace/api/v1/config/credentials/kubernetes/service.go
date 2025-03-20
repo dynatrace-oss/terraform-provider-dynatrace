@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	kubernetes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/kubernetes/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
@@ -29,8 +30,8 @@ const BasePath = "/api/config/v1/kubernetes/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*kubernetes.KubernetesCredentials] {
-	return settings.NewCRUDService(
+func Service(credentials *rest.Credentials) settings.CRUDService[*kubernetes.KubernetesCredentials] {
+	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*kubernetes.KubernetesCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),

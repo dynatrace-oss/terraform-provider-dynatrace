@@ -20,7 +20,7 @@ package export
 import (
 	"os"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 )
 
 var restLogFile *os.File
@@ -32,7 +32,7 @@ func ConfigureRESTLog() (err error) {
 			return err
 		}
 		CleanUp.Register(func() { restLogFile.Close() })
-		rest.SetLogWriter(restLogFile)
+		logging.SetLogWriter(restLogFile)
 	}
 	return nil
 }

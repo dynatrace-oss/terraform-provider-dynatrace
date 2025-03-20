@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	autotagging "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
@@ -29,7 +30,7 @@ import (
 const SchemaVersion = "1.0.17"
 const SchemaID = "builtin:tags.auto-tagging"
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*autotagging.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*autotagging.Settings] {
 	return &service{settings20.Service[*autotagging.Settings](credentials, SchemaID, SchemaVersion)}
 }
 

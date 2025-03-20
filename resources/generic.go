@@ -155,31 +155,14 @@ func (me *Generic) Resource() *schema.Resource {
 	return resRes
 }
 
-func (me *Generic) createCredentials(m any) *settings.Credentials {
+func (me *Generic) createCredentials(m any) *rest.Credentials {
 	conf := m.(*config.ProviderConfiguration)
-	return &settings.Credentials{
-		Token:      conf.APIToken,
-		URL:        conf.EnvironmentURL,
-		IAM:        conf.IAM,
-		Automation: conf.Automation,
+	return &rest.Credentials{
+		Token: conf.APIToken,
+		URL:   conf.EnvironmentURL,
+		IAM:   conf.IAM,
+		OAuth: conf.Automation,
 	}
-}
-
-func (me *Generic) validateCredentials(m any) diag.Diagnostics {
-	if me.CredentialValidation != CredValDefault {
-		return diag.Diagnostics{}
-	}
-	conf := m.(*config.ProviderConfiguration)
-	if len(conf.EnvironmentURL) == 0 {
-		return diag.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that.")
-	}
-	if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
-		return diag.Errorf("The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
-	}
-	if len(conf.APIToken) == 0 {
-		return diag.Errorf("No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that.")
-	}
-	return diag.Diagnostics{}
 }
 
 func (me *Generic) Settings() settings.Settings {
@@ -191,9 +174,6 @@ func (me *Generic) Service(m any) settings.CRUDService[settings.Settings] {
 }
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if diags := me.validateCredentials(m); len(diags) > 0 {
-		return diags
-	}
 	sttngs := me.Settings()
 	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -248,9 +228,6 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 }
 
 func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if diags := me.validateCredentials(m); len(diags) > 0 {
-		return diags
-	}
 	sttngs := me.Settings()
 	if strings.HasSuffix(d.Id(), "---flawed----") {
 		return me.Create(ctx, d, m)
@@ -301,9 +278,6 @@ type IDGenerator interface {
 }
 
 func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, m any, sttngs settings.Settings) diag.Diagnostics {
-	if diags := me.validateCredentials(m); len(diags) > 0 {
-		return diags
-	}
 	var err error
 	if preparer, ok := sttngs.(MarshalPreparer); ok {
 		preparer.PrepareMarshalHCL(hcl.DecoderFrom(d))
@@ -398,9 +372,6 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 }
 
 func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if diags := me.validateCredentials(m); len(diags) > 0 {
-		return diags
-	}
 	if strings.HasSuffix(d.Id(), "---flawed----") {
 		return diag.Diagnostics{}
 	}
@@ -447,9 +418,6 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 }
 
 func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if diags := me.validateCredentials(m); len(diags) > 0 {
-		return diags
-	}
 	if strings.HasSuffix(d.Id(), "---flawed----") {
 		d.SetId("")
 		return diag.Diagnostics{}

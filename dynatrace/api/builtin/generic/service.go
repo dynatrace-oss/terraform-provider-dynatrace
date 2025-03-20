@@ -41,12 +41,12 @@ import (
 	"net/url"
 )
 
-func Service(credentials *settings.Credentials) settings.CRUDService[*generic.Settings] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*generic.Settings] {
 	return &service{credentials: credentials}
 }
 
 type service struct {
-	credentials *settings.Credentials
+	credentials *rest.Credentials
 }
 
 func (me *service) TokenClient() *crest.Client {
@@ -77,9 +77,9 @@ func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Cli
 		auth.NewOAuthBasedClient(
 			ctx,
 			clientcredentials.Config{
-				ClientID:     me.credentials.Automation.ClientID,
-				ClientSecret: me.credentials.Automation.ClientSecret,
-				TokenURL:     me.credentials.Automation.TokenURL,
+				ClientID:     me.credentials.OAuth.ClientID,
+				ClientSecret: me.credentials.OAuth.ClientSecret,
+				TokenURL:     me.credentials.OAuth.TokenURL,
 				AuthStyle:    oauth2.AuthStyleInParams}),
 		crest.WithHTTPListener(httplog.HTTPListener),
 	)

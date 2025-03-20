@@ -19,10 +19,10 @@ package environments
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/envs"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -43,10 +43,14 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *envs.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	apiService := envs.NewService(fmt.Sprintf("%s%s", conf.ClusterAPIV2URL, "/api/cluster/v2"), conf.ClusterAPIToken)
-	return apiService
+func NewService(m any) (*envs.ServiceClient, error) {
+	creds, err := config.Credentials(m, config.CredValCluster)
+	if err != nil {
+		return nil, err
+	}
+
+	apiService := envs.NewService(creds)
+	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
@@ -59,9 +63,19 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	config.ID = nil
-	objStub, err := NewService(m).Create(ctx, config)
+
+	service, err := NewService(m)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	config.ID = nil
+	objStub, err := service.Create(ctx, config)
+	if err != nil {
+		if is404(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
 	d.SetId(objStub.ID)
@@ -78,8 +92,18 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	config.ID = opt.NewString(d.Id())
-	if err := NewService(m).Update(ctx, config); err != nil {
+	if err := service.Update(ctx, config); err != nil {
+		if is404(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -91,8 +115,18 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	config, err := NewService(m).Get(ctx, d.Id())
+
+	service, err := NewService(m)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	config, err := service.Get(ctx, d.Id())
+	if err != nil {
+		if is404(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
 	marshalled := hcl.Properties{}
@@ -112,8 +146,27 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Delete(ctx, d.Id()); err != nil {
+
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := service.Delete(ctx, d.Id()); err != nil {
+		if is404(err) {
+			return diag.Diagnostics{}
+		}
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}
+}
+
+func is404(err error) bool {
+	switch rerr := err.(type) {
+	case *rest.Error:
+		return rerr.Code == 404
+	case rest.Error:
+		return rerr.Code == 404
+	}
+	return false
 }
