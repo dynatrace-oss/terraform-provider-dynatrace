@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -47,7 +48,11 @@ func createPlatformRestClient(u string, httpClient *http.Client) (*rest.Client, 
 		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
 	}
 
-	opts := []rest.Option{rest.WithHTTPListener(logging.HTTPListener("plat/tok"))}
+	opts := []rest.Option{
+		rest.WithHTTPListener(logging.HTTPListener("plat/tok")),
+		rest.WithRateLimiter(),
+		rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}),
+	}
 
 	restClient := rest.NewClient(parsedURL, httpClient, opts...)
 	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
@@ -55,7 +60,7 @@ func createPlatformRestClient(u string, httpClient *http.Client) (*rest.Client, 
 	return restClient, nil
 }
 
-func platformClient(platformURL string, credentials *Credentials) (*rest.Client, error) {
+func platformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
 	clientID := credentials.OAuth.ClientID
 	clientSecret := credentials.OAuth.ClientSecret
 
@@ -72,11 +77,13 @@ func platformClient(platformURL string, credentials *Credentials) (*rest.Client,
 		client, err = createPlatformRestClient(platformURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken))
 	} else if credentials.ContainsOAuth() {
 		factory := clients.Factory()
+		factory = factory.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests})
+		factory = factory.WithRateLimiter(true)
 		factory = factory.WithUserAgent("Dynatrace Terraform Provider")
 		factory = factory.WithPlatformURL(platformURL)
 		factory = factory.WithHTTPListener(logging.HTTPListener("platform"))
 		factory = factory.WithOAuthCredentials(clientcredentials.Config{ClientID: clientID, ClientSecret: clientSecret, TokenURL: evalTokenURL(platformURL)})
-		client, err = factory.CreatePlatformClient(context.Background())
+		client, err = factory.CreatePlatformClient(ctx)
 	} else {
 		return nil, errors.New("neither oauth credentials nor platform token present")
 	}
@@ -98,7 +105,7 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 
 	platformURL := me.evalPlatformURL()
 
-	client, err := platformClient(platformURL, me.client.Credentials())
+	client, err := platformClient(me.ctx, platformURL, me.client.Credentials())
 	if err != nil {
 		return err
 	}

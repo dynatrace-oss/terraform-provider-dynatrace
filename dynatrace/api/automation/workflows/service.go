@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -53,7 +54,7 @@ func (me *service) client(ctx context.Context) *automation.Client {
 		TokenURL:     me.credentials.OAuth.TokenURL,
 	})
 	u, _ := url.Parse(me.credentials.OAuth.EnvironmentURL)
-	restClient := rest.NewClient(u, httpClient)
+	restClient := rest.NewClient(u, httpClient, rest.WithRateLimiter(), rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}))
 	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
 	return automation.NewClient(restClient)
 }

@@ -20,12 +20,14 @@ package openpipeline
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	caclib "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/openpipeline"
 	"golang.org/x/oauth2/clientcredentials"
@@ -66,7 +68,9 @@ func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
 			ClientSecret: s.credentials.OAuth.ClientSecret,
 			TokenURL:     s.credentials.OAuth.TokenURL,
 		}).
-		WithHTTPListener(httplog.HTTPListener)
+		WithHTTPListener(httplog.HTTPListener).
+		WithRetryOptions(&crest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: crest.RetryIfTooManyRequests}).
+		WithRateLimiter(true)
 
 	return factory.OpenPipelineClient(ctx)
 }

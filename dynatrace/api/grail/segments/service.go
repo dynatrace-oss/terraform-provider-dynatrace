@@ -20,11 +20,13 @@ package segments
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	segmentsapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
+	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 	"golang.org/x/oauth2/clientcredentials"
@@ -51,7 +53,9 @@ func (me *service) client(ctx context.Context) *segmentsclient.Client {
 			ClientSecret: me.credentials.OAuth.ClientSecret,
 			TokenURL:     me.credentials.OAuth.TokenURL,
 		}).
-		WithUserAgent("Dynatrace Terraform Provider")
+		WithUserAgent("Dynatrace Terraform Provider").
+		WithRetryOptions(&crest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: crest.RetryIfTooManyRequests}).
+		WithRateLimiter(true)
 
 	segmentClient, _ := clientsFactory.SegmentsClient(ctx)
 	return segmentClient
