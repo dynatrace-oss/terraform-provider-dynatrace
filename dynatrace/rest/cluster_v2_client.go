@@ -125,7 +125,7 @@ func (me *cluster_v2_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 
-	preRequest()
+	PreRequest()
 
 	clusterV2URL := strings.TrimSuffix(me.client.Credentials().Cluster.URL, "/") + "/api/cluster/v2"
 

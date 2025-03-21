@@ -20,17 +20,12 @@ package openpipeline
 import (
 	"context"
 	"encoding/json"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	caclib "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/openpipeline"
-	"golang.org/x/oauth2/clientcredentials"
 )
 
 func EventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
@@ -60,19 +55,11 @@ type service struct {
 }
 
 func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
-	factory := clients.Factory().
-		WithUserAgent("Dynatrace Terraform Provider").
-		WithPlatformURL(s.credentials.OAuth.EnvironmentURL).
-		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     s.credentials.OAuth.ClientID,
-			ClientSecret: s.credentials.OAuth.ClientSecret,
-			TokenURL:     s.credentials.OAuth.TokenURL,
-		}).
-		WithHTTPListener(httplog.HTTPListener).
-		WithRetryOptions(&crest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: crest.RetryIfTooManyRequests}).
-		WithRateLimiter(true)
-
-	return factory.OpenPipelineClient(ctx)
+	platformClient, err := rest.CreatePlatformClient(ctx, s.credentials.OAuth.EnvironmentURL, s.credentials)
+	if err != nil {
+		return nil, err
+	}
+	return caclib.NewClient(platformClient), nil
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {

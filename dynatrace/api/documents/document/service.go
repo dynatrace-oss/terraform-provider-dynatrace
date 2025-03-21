@@ -25,11 +25,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	docapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
-	"golang.org/x/oauth2/clientcredentials"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 )
 
@@ -41,24 +38,20 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) client(ctx context.Context) *docclient.Client {
-	httplog.InstallRoundTripper()
-
-	clientsFactory := clients.Factory().
-		WithPlatformURL(me.credentials.OAuth.EnvironmentURL).
-		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     me.credentials.OAuth.ClientID,
-			ClientSecret: me.credentials.OAuth.ClientSecret,
-			TokenURL:     me.credentials.OAuth.TokenURL,
-		}).
-		WithUserAgent("Dynatrace Terraform Provider")
-
-	documentClient, _ := clientsFactory.DocumentClient(ctx)
-	return documentClient
+func (me *service) client(ctx context.Context) (*docclient.Client, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	if err != nil {
+		return nil, err
+	}
+	return docclient.NewClient(platformClient), nil
 }
 
 func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
-	result, err := me.client(ctx).Get(ctx, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	result, err := client.Get(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -85,7 +78,11 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	if me == nil {
 		return api.Stubs{}, nil
 	}
-	cl := me.client(ctx)
+	cl, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	if cl == nil {
 		return api.Stubs{}, nil
 	}
@@ -126,7 +123,10 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 }
 
 func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	c := me.client(ctx)
+	c, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
 	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
@@ -146,7 +146,10 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
-	c := me.client(ctx)
+	c, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	response, err := c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
@@ -162,7 +165,11 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.client(ctx).Delete(ctx, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	response, err := client.Delete(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}

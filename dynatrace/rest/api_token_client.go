@@ -121,7 +121,7 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 
-	preRequest()
+	PreRequest()
 
 	classicURL := request(*me).evalClassicURL()
 

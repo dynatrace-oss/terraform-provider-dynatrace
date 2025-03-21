@@ -20,18 +20,13 @@ package segments
 import (
 	"context"
 	"encoding/json"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	segmentsapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
-	"golang.org/x/oauth2/clientcredentials"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
 
@@ -43,26 +38,20 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) client(ctx context.Context) *segmentsclient.Client {
-	httplog.InstallRoundTripper()
-
-	clientsFactory := clients.Factory().
-		WithPlatformURL(me.credentials.OAuth.EnvironmentURL).
-		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     me.credentials.OAuth.ClientID,
-			ClientSecret: me.credentials.OAuth.ClientSecret,
-			TokenURL:     me.credentials.OAuth.TokenURL,
-		}).
-		WithUserAgent("Dynatrace Terraform Provider").
-		WithRetryOptions(&crest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: crest.RetryIfTooManyRequests}).
-		WithRateLimiter(true)
-
-	segmentClient, _ := clientsFactory.SegmentsClient(ctx)
-	return segmentClient
+func (me *service) client(ctx context.Context) (*segmentsclient.Client, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	if err != nil {
+		return nil, err
+	}
+	return segmentsclient.NewClient(platformClient), nil
 }
 
 func (me *service) Get(ctx context.Context, id string, v *segments.Segment) (err error) {
-	response, err := me.client(ctx).Get(ctx, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	response, err := client.Get(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -83,7 +72,11 @@ type SegmentStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	listResponse, err := me.client(ctx).List(ctx)
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
+	listResponse, err := client.List(ctx)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {
 			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -107,11 +100,15 @@ func (me *service) Validate(_ *segments.Segment) error {
 }
 
 func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.Stub, err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	response, err := me.client(ctx).Create(ctx, data)
+	response, err := client.Create(ctx, data)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {
 			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -128,12 +125,16 @@ func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.S
 }
 
 func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
 
-	_, err = me.client(ctx).Update(ctx, id, data)
+	_, err = client.Update(ctx, id, data)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
@@ -145,7 +146,11 @@ func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	_, err := me.client(ctx).Delete(ctx, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(segmentsapi.APIError); ok {
 			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}

@@ -26,16 +26,12 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	buckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
-	"golang.org/x/oauth2/clientcredentials"
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*buckets.Bucket] {
@@ -46,21 +42,12 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) client(ctx context.Context) *bucket.Client {
-	factory := clients.Factory().
-		WithUserAgent("Dynatrace Terraform Provider").
-		WithPlatformURL(me.credentials.OAuth.EnvironmentURL).
-		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     me.credentials.OAuth.ClientID,
-			ClientSecret: me.credentials.OAuth.ClientSecret,
-			TokenURL:     me.credentials.OAuth.TokenURL,
-		}).
-		WithHTTPListener(httplog.HTTPListener).
-		WithRetryOptions(&crest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: crest.RetryIfTooManyRequests}).
-		WithRateLimiter(true)
-
-	bucketClient, _ := factory.BucketClient(ctx)
-	return bucketClient
+func (me *service) client(ctx context.Context) (*bucket.Client, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	if err != nil {
+		return nil, err
+	}
+	return bucket.NewClient(platformClient), nil
 }
 
 var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_BUCKETS_IGNORE_UNEXPECTED_EOF") == "true")
@@ -85,8 +72,12 @@ func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err e
 }
 
 func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	var result bucket.Response
-	if result, err = me.client(ctx).Get(ctx, id); err != nil {
+	if result, err = client.Get(ctx, id); err != nil {
 		return err
 	}
 	if !result.IsSuccess() {
@@ -100,7 +91,11 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	result, err := me.client(ctx).List(ctx)
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result, err := client.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -146,11 +141,14 @@ func getEnv(key string, def int, min int, max int) int {
 }
 
 func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stub, err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	client := me.client(ctx)
 	var response bucket.Response
 	if response, err = client.Create(ctx, v.Name, data); err != nil {
 		return nil, err
@@ -190,6 +188,10 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 }
 
 func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	var oldBucket buckets.Bucket
 	me.Get(ctx, id, &oldBucket)
 	oldVersion := oldBucket.Version
@@ -198,7 +200,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 		return err
 	}
 	var response bucket.Response
-	response, err = me.client(ctx).Update(ctx, id, data)
+	response, err = client.Update(ctx, id, data)
 	if err != nil {
 		return err
 	}
@@ -228,8 +230,11 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client := me.client(ctx)
-	_, err := client.Delete(ctx, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

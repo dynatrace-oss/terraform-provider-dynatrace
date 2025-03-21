@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	"golang.org/x/oauth2/clientcredentials"
 )
 
@@ -42,7 +42,33 @@ var platformClientCache = map[string]*rest.Client{}
 
 var platformClientCacheMutex sync.Mutex
 
-func createPlatformRestClient(u string, httpClient *http.Client) (*rest.Client, error) {
+func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
+	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	return restClient, nil
+}
+
+func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Credentials) (*rest.Client, error) {
+	parsedURL, err := url.Parse(u)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
+	}
+	oauthConfig := clientcredentials.Config{
+		ClientID:     credentials.OAuth.ClientID,
+		ClientSecret: credentials.OAuth.ClientSecret,
+		TokenURL:     evalTokenURL(parsedURL.String()),
+	}
+	httpClient := auth.NewOAuthBasedClient(ctx, oauthConfig)
+
+	opts := []rest.Option{
+		rest.WithHTTPListener(logging.HTTPListener("platform")),
+		rest.WithRateLimiter(),
+		rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}),
+	}
+
+	return configureCommonRestClient(rest.NewClient(parsedURL, httpClient, opts...))
+}
+
+func CreatePlatformTokenClient(u string, credentials *Credentials) (*rest.Client, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
@@ -54,36 +80,24 @@ func createPlatformRestClient(u string, httpClient *http.Client) (*rest.Client, 
 		rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}),
 	}
 
-	restClient := rest.NewClient(parsedURL, httpClient, opts...)
-	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
-
-	return restClient, nil
+	return configureCommonRestClient(rest.NewClient(parsedURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken), opts...))
 }
 
-func platformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
-	clientID := credentials.OAuth.ClientID
-	clientSecret := credentials.OAuth.ClientSecret
-
+func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
 	platformClientCacheMutex.Lock()
 	defer platformClientCacheMutex.Unlock()
 
 	if client, found := platformClientCache[platformURL]; found {
 		return client, nil
 	}
+	PreRequest()
 
 	var client *rest.Client
 	var err error
 	if credentials.ContainsPlatformToken() {
-		client, err = createPlatformRestClient(platformURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken))
+		client, err = CreatePlatformTokenClient(platformURL, credentials)
 	} else if credentials.ContainsOAuth() {
-		factory := clients.Factory()
-		factory = factory.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests})
-		factory = factory.WithRateLimiter(true)
-		factory = factory.WithUserAgent("Dynatrace Terraform Provider")
-		factory = factory.WithPlatformURL(platformURL)
-		factory = factory.WithHTTPListener(logging.HTTPListener("platform"))
-		factory = factory.WithOAuthCredentials(clientcredentials.Config{ClientID: clientID, ClientSecret: clientSecret, TokenURL: evalTokenURL(platformURL)})
-		client, err = factory.CreatePlatformClient(ctx)
+		client, err = CreatePlatformOAuthClient(ctx, platformURL, credentials)
 	} else {
 		return nil, errors.New("neither oauth credentials nor platform token present")
 	}
@@ -101,11 +115,11 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 
-	preRequest()
+	PreRequest()
 
 	platformURL := me.evalPlatformURL()
 
-	client, err := platformClient(me.ctx, platformURL, me.client.Credentials())
+	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
 	if err != nil {
 		return err
 	}

@@ -188,7 +188,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	client_secret := getString(d, "client_secret")
 	account_id := getString(d, "account_id")
 	token_url := getString(d, "token_url")
-	platform_token := getString(d, "automation_platform_token")
+	platform_token := getString(d, "platform_token")
 
 	oauth_endpoint_url := "https://api.dynatrace.com"
 	if strings.Contains(dtEnvURL, ".live.dynatrace.com") || strings.Contains(dtEnvURL, ".apps.dynatrace.com") {

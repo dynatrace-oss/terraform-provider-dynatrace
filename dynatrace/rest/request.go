@@ -50,7 +50,7 @@ func (me request) evalClassicURL() string {
 	return envURL
 }
 
-func preRequest() {
+func PreRequest() {
 	logging.InstallRoundTripper()
 	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {

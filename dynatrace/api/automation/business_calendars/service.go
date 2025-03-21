@@ -20,8 +20,6 @@ package business_calendars
 import (
 	"context"
 	"encoding/json"
-	"net/url"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -29,10 +27,7 @@ import (
 
 	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
 	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
@@ -44,23 +39,21 @@ type service struct {
 	credentials *tfrest.Credentials
 }
 
-func (me *service) client(ctx context.Context) *automation.Client {
-	httplog.InstallRoundTripper()
-	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
-		ClientID:     me.credentials.OAuth.ClientID,
-		ClientSecret: me.credentials.OAuth.ClientSecret,
-		TokenURL:     me.credentials.OAuth.TokenURL,
-	})
-	u, _ := url.Parse(me.credentials.OAuth.EnvironmentURL)
-
-	restClient := rest.NewClient(u, httpClient, rest.WithRateLimiter(), rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}))
-	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
-	return automation.NewClient(restClient)
+func (me *service) client(ctx context.Context) (*automation.Client, error) {
+	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	if err != nil {
+		return nil, err
+	}
+	return automation.NewClient(platformClient), nil
 }
 
 func (me *service) Get(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	var response automation.Response
-	if response, err = me.client(ctx).Get(ctx, apiClient.BusinessCalendars, id); err != nil {
+	if response, err = client.Get(ctx, apiClient.BusinessCalendars, id); err != nil {
 		return err
 	}
 	if response.StatusCode != 200 {
@@ -83,7 +76,11 @@ type BusinessCalendarStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	listResponse, err := me.client(ctx).List(ctx, apiClient.BusinessCalendars)
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
+	listResponse, err := client.List(ctx, apiClient.BusinessCalendars)
 	if err != nil {
 		return nil, err
 	}
@@ -106,12 +103,16 @@ func (me *service) Validate(v *business_calendars.Settings) error {
 }
 
 func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (stub *api.Stub, err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
 	var response automation.Response
-	if response, err = me.client(ctx).Create(ctx, apiClient.BusinessCalendars, data); err != nil {
+	if response, err = client.Create(ctx, apiClient.BusinessCalendars, data); err != nil {
 		return nil, err
 	}
 	if response.StatusCode == 201 {
@@ -129,12 +130,16 @@ func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (
 }
 
 func (me *service) Update(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
 	var response automation.Response
-	if response, err = me.client(ctx).Update(ctx, apiClient.BusinessCalendars, id, data); err != nil {
+	if response, err = client.Update(ctx, apiClient.BusinessCalendars, id, data); err != nil {
 		return err
 	}
 	if response.StatusCode == 200 {
@@ -148,7 +153,11 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.client(ctx).Delete(ctx, apiClient.BusinessCalendars, id)
+	client, err := me.client(ctx)
+	if err != nil {
+		return err
+	}
+	response, err := client.Delete(ctx, apiClient.BusinessCalendars, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil
 	}

@@ -21,12 +21,10 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	"github.com/google/uuid"
-	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -127,18 +125,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	httplog.InstallRoundTripper()
-
-	clientsFactory := clients.Factory().
-		WithPlatformURL(creds.OAuth.EnvironmentURL).
-		WithOAuthCredentials(clientcredentials.Config{
-			ClientID:     creds.OAuth.ClientID,
-			ClientSecret: creds.OAuth.ClientSecret,
-			TokenURL:     creds.OAuth.TokenURL,
-		}).
-		WithUserAgent("Dynatrace Terraform Provider")
-
-	restClient, _ := clientsFactory.CreatePlatformClient(ctx)
+	restClient, _ := rest.CreatePlatformClient(ctx, creds.OAuth.EnvironmentURL, creds)
 
 	client := NewClient(restClient)
 
