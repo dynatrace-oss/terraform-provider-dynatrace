@@ -21,20 +21,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/httplog"
 	anomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/davis/anomalydetectors/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
 )
 
 const SchemaVersion = "1.0.4"
@@ -48,44 +41,9 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) TokenClient() *crest.Client {
-	var parsedURL *url.URL
-	parsedURL, _ = url.Parse(me.credentials.URL)
-
-	tokenClient := crest.NewClient(
-		parsedURL,
-		http.DefaultClient,
-		crest.WithHTTPListener(httplog.HTTPListener),
-	)
-
-	tokenClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
-	tokenClient.SetHeader("Authorization", "Api-Token "+me.credentials.Token)
-	return tokenClient
-}
-
 func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Client {
-	httplog.InstallRoundTripper()
-
-	var parsedURL *url.URL
-	parsedURL, _ = url.Parse(me.credentials.URL)
-
-	tokenClient := me.TokenClient()
-
-	oauthClient := crest.NewClient(
-		parsedURL,
-		auth.NewOAuthBasedClient(
-			ctx,
-			clientcredentials.Config{
-				ClientID:     me.credentials.OAuth.ClientID,
-				ClientSecret: me.credentials.OAuth.ClientSecret,
-				TokenURL:     me.credentials.OAuth.TokenURL,
-				AuthStyle:    oauth2.AuthStyleInParams}),
-		crest.WithHTTPListener(httplog.HTTPListener),
-	)
-
-	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
-	oauthClient.SetHeader("Authorization", "Api-Token "+me.credentials.Token)
-
+	tokenClient, _ := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
+	oauthClient, _ := rest.CreateClassicOAuthBasedClient(ctx, me.credentials)
 	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
 }
 

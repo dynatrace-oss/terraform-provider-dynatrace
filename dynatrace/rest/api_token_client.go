@@ -8,9 +8,13 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	"github.com/google/uuid"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 func APITokenClient(credentials *Credentials) Client {
@@ -94,7 +98,33 @@ var classicClientCache = map[string]*rest.Client{}
 
 var classicClientCacheMutex sync.Mutex
 
-func classicClient(classicURL string, apiToken string) (*rest.Client, error) {
+func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials) (*rest.Client, error) {
+	var parsedURL *url.URL
+	parsedURL, err := url.Parse(credentials.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	logging.InstallRoundTripper()
+
+	oauthClient := rest.NewClient(
+		parsedURL,
+		auth.NewOAuthBasedClient(
+			ctx,
+			clientcredentials.Config{
+				ClientID:     credentials.OAuth.ClientID,
+				ClientSecret: credentials.OAuth.ClientSecret,
+				TokenURL:     credentials.OAuth.TokenURL,
+				AuthStyle:    oauth2.AuthStyleInParams}),
+		crest.WithHTTPListener(logging.HTTPListener("classic ")),
+	)
+
+	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	oauthClient.SetHeader("Authorization", "Api-Token "+credentials.Token)
+	return oauthClient, nil
+}
+
+func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
 	classicClientCacheMutex.Lock()
 	defer classicClientCacheMutex.Unlock()
 
@@ -125,7 +155,7 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 
 	classicURL := request(*me).evalClassicURL()
 
-	client, err := classicClient(classicURL, me.client.Credentials().Token)
+	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
 		return err
 	}
