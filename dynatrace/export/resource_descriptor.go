@@ -328,8 +328,11 @@ import (
 	service_anomalies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/services"
 
 	host_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts"
+	host_naming_order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/hosts/order"
 	processgroup_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups"
+	processgroup_naming_order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/processgroups/order"
 	service_naming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services"
+	service_naming_order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/services/order"
 	networkzone "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/davis/anomalydetectors"
@@ -619,7 +622,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.WebApplication),
 		Dependencies.ID(ResourceTypes.Credentials),
 	),
-	ResourceTypes.HostNaming:   NewResourceDescriptor(host_naming.Service),
+	ResourceTypes.HostNaming: NewResourceDescriptor(host_naming.Service),
+	ResourceTypes.HostNamingOrder: NewResourceDescriptor(
+		host_naming_order.Service,
+		Dependencies.ID(ResourceTypes.HostNaming),
+	),
 	ResourceTypes.IBMMQFilters: NewResourceDescriptor(mqfilters.Service),
 	ResourceTypes.IMSBridge:    NewResourceDescriptor(imsbridges.Service),
 	ResourceTypes.JiraNotification: NewResourceDescriptor(
@@ -666,7 +673,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.Alerting),
 	).Specify(notifications.Types.PagerDuty),
 	ResourceTypes.ProcessGroupNaming: NewResourceDescriptor(processgroup_naming.Service),
-	ResourceTypes.QueueManager:       NewResourceDescriptor(queuemanagers.Service),
+	ResourceTypes.ProcessGroupNamingOrder: NewResourceDescriptor(
+		processgroup_naming_order.Service,
+		Dependencies.ID(ResourceTypes.ProcessGroupNaming),
+	),
+	ResourceTypes.QueueManager: NewResourceDescriptor(queuemanagers.Service),
 	ResourceTypes.RequestAttribute: NewResourceDescriptor(
 		requestattributes.Service,
 		Coalesce(Dependencies.Host),
@@ -688,6 +699,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.HostGroup),
 	),
 	ResourceTypes.ServiceNaming: NewResourceDescriptor(service_naming.Service),
+	ResourceTypes.ServiceNamingOrder: NewResourceDescriptor(
+		service_naming_order.Service,
+		Dependencies.ID(ResourceTypes.ServiceNaming),
+	),
 	ResourceTypes.ServiceNowNotification: NewResourceDescriptor(
 		servicenow.Service,
 		Dependencies.ID(ResourceTypes.Alerting),

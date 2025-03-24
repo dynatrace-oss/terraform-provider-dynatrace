@@ -213,8 +213,11 @@ var ResourceTypes = struct {
 	CalculatedMobileMetric              ResourceType
 	CalculatedSyntheticMetric           ResourceType
 	HostNaming                          ResourceType
+	HostNamingOrder                     ResourceType
 	ProcessGroupNaming                  ResourceType
+	ProcessGroupNamingOrder             ResourceType
 	ServiceNaming                       ResourceType
+	ServiceNamingOrder                  ResourceType
 	NetworkZone                         ResourceType
 	RequestNaming                       ResourceType
 	BrowserMonitor                      ResourceType
@@ -551,8 +554,11 @@ var ResourceTypes = struct {
 	"dynatrace_calculated_mobile_metric",
 	"dynatrace_calculated_synthetic_metric",
 	"dynatrace_host_naming",
+	"dynatrace_host_naming_order",
 	"dynatrace_processgroup_naming",
+	"dynatrace_processgroup_naming_order",
 	"dynatrace_service_naming",
+	"dynatrace_service_naming_order",
 	"dynatrace_network_zone",
 	"dynatrace_request_naming",
 	"dynatrace_browser_monitor",
