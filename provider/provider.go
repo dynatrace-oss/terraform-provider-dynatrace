@@ -261,6 +261,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
+			"dynatrace_custom_service_order":                resources.NewGeneric(export.ResourceTypes.CustomServiceOrder).Resource(),
 			"dynatrace_dashboard":                           resources.NewGeneric(export.ResourceTypes.Dashboard).Resource(),
 			"dynatrace_json_dashboard":                      resources.NewGeneric(export.ResourceTypes.JSONDashboard).Resource(),
 			"dynatrace_json_dashboard_base":                 resources.NewGeneric(export.ResourceTypes.JSONDashboardBase).Resource(),

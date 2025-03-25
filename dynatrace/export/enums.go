@@ -157,6 +157,7 @@ var ResourceTypes = struct {
 	AutoTag                             ResourceType
 	AutoTagV2                           ResourceType
 	CustomService                       ResourceType
+	CustomServiceOrder                  ResourceType
 	RequestAttribute                    ResourceType
 	ApplicationAnomalies                ResourceType
 	DatabaseAnomalies                   ResourceType
@@ -498,6 +499,7 @@ var ResourceTypes = struct {
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
 	"dynatrace_custom_service",
+	"dynatrace_custom_service_order",
 	"dynatrace_request_attribute",
 	"dynatrace_application_anomalies",
 	"dynatrace_database_anomalies",

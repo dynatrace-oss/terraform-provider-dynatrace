@@ -1,0 +1,94 @@
+---
+layout: ""
+page_title: dynatrace_custom_service_order Resource - terraform-provider-dynatrace"
+subcategory: Service Detection"
+description: |-
+  The resource `dynatrace_custom_service_order` covers defining the order of rules defined for custom services
+---
+
+# dynatrace_custom_service_order (Resource)
+
+-> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+
+## Dynatrace Documentation
+
+- Define custom services - https://www.dynatrace.com/support/help/how-to-use-dynatrace/services/custom-services
+
+- Custom services API - https://www.dynatrace.com/support/help/dynatrace-api/configuration-api/service-api/custom-services-api
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_custom_service_order` downloads a resource containing the current order for Custom Services defined in the Dynatrace Environment.
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+The example below contains configuration for two custom services defined for .NET applications and two custom services defined for Java applications.
+The resource `dynatrace_custom_service_order` defines what order these naming rules should get evaluated in - separated by technology (.NET / Java).
+
+Specifically for this example:
+* Custom Services for .NET and Java defined in the Dynatrace Environment that are not managed by Terraform will end up ranked with lower priority than the ones listed within `dynatrace_custom_service_order`
+* The order of Custom Services defined in the Dynatrace Environment for Golang, PHP and NodeJS will remain unaffected
+
+-> Be aware of the fact that the resource `dynatrace_host_naming_order` should be treated as a singleton. Maintaining more than one instances of `dynatrace_host_naming_order` within the same Terraform module is not recommended. It will result in non-empty plans.
+
+```terraform
+resource "dynatrace_custom_service_order" "this" {
+  dotnet = [
+    var.dynatrace_custom_service.dotnet-first.id,
+    var.dynatrace_custom_service.dotnet-second.id,
+  ]
+  java = [
+    var.dynatrace_custom_service.java-first.id,
+    var.dynatrace_custom_service.java-second.id,
+  ]
+}
+
+resource "dynatrace_custom_service" "java-first" {
+        name = "java-first"
+        technology = "java"
+        enabled = true
+        rule {
+        ...
+        }
+        ...
+        queue_entry_point = false
+}
+
+resource "dynatrace_custom_service" "java-second" {
+        name = "java-second"
+        technology = "java"
+        enabled = true
+        rule {
+        ...
+        }
+        ...
+        queue_entry_point = false
+}
+
+resource "dynatrace_custom_service" "dotnet-first" {
+        name = "dotnet-first"
+        technology = "dotNet"
+        enabled = true
+        rule {
+        ...
+        }
+        ...
+        queue_entry_point = false
+}
+
+resource "dynatrace_custom_service" "dotnet-second" {
+        name = "dotnet-second"
+        technology = "dotNet"
+        enabled = true
+        rule {
+        ...
+        }
+        ...
+        queue_entry_point = false
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
+ 

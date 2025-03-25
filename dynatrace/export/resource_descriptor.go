@@ -354,6 +354,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/cloudfoundry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/kubernetes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices"
+	customservices_order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices/order"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/sharing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboards"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboardsbase"
@@ -544,6 +545,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.ApplicationMethod),
 	),
 	ResourceTypes.CustomService: NewResourceDescriptor(customservices.Service),
+	ResourceTypes.CustomServiceOrder: NewResourceDescriptor(
+		customservices_order.Service,
+		Dependencies.ID(ResourceTypes.CustomService),
+	),
 	ResourceTypes.Credentials: NewResourceDescriptor(
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
