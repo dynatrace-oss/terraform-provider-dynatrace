@@ -31,7 +31,7 @@ Specifically for this example:
 * Custom Services for .NET and Java defined in the Dynatrace Environment that are not managed by Terraform will end up ranked with lower priority than the ones listed within `dynatrace_custom_service_order`
 * The order of Custom Services defined in the Dynatrace Environment for Golang, PHP and NodeJS will remain unaffected
 
--> Be aware of the fact that the resource `dynatrace_host_naming_order` should be treated as a singleton. Maintaining more than one instances of `dynatrace_host_naming_order` within the same Terraform module is not recommended. It will result in non-empty plans.
+-> Be aware of the fact that the resource `dynatrace_custom_service_order` should be treated as a singleton. Maintaining more than one instances of `dynatrace_custom_service_order` within the same Terraform module is not recommended. It will result in non-empty plans.
 
 ```terraform
 resource "dynatrace_custom_service_order" "this" {
