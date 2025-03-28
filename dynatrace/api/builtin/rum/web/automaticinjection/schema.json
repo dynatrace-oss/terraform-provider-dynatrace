@@ -140,8 +140,8 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "Specify the source path for placement of your application's custom JavaScript library file. By default, this path is set to the root directory of your web server. A custom source path may be necessary if your server operates behind a firewall.",
-					"displayName": "Specify location for JavaScript library file",
+					"description": "Specify the URL path under which the RUM monitoring code is requested. By default, the path is set to the root or the context root. A custom URL path may be necessary if your server operates behind a firewall.",
+					"displayName": "Specify path for RUM monitoring code",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
@@ -217,5 +217,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }

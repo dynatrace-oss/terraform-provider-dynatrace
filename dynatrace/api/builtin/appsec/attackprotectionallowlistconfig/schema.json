@@ -295,7 +295,7 @@
 			"type": "text"
 		},
 		"rules": {
-			"description": "Provide conditions that must be met by the detection finding you want to allowlist.",
+			"description": "Provide conditions that must be met by the attack you want to allowlist.",
 			"displayName": "Step 2: Define the rule",
 			"documentation": "",
 			"items": {
@@ -573,5 +573,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.0.2"
+	"version": "2.0.3"
 }

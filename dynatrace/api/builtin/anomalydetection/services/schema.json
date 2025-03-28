@@ -328,7 +328,7 @@
 					],
 					"default": 50,
 					"description": "",
-					"displayName": "Threshold",
+					"displayName": "Alert if the observed load is less than this percentage of the expected value",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -397,7 +397,7 @@
 					],
 					"default": 200,
 					"description": "",
-					"displayName": "Threshold",
+					"displayName": "Alert if the observed load is more than this percentage of the expected value",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -846,5 +846,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.17"
+	"version": "0.0.18"
 }

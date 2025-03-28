@@ -254,13 +254,12 @@
 							"type": "LENGTH"
 						}
 					],
-					"default": "",
 					"description": "",
 					"displayName": "Rule query",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
-					"nullable": false,
+					"nullable": true,
 					"type": "text"
 				},
 				"title": {
@@ -317,5 +316,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }

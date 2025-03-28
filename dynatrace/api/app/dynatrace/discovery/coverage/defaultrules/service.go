@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.7"
+const SchemaVersion = "1.0.9"
 const SchemaID = "app:dynatrace.discovery.coverage:discovery.findings.default.rules.schema"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*defaultrules.Settings] {

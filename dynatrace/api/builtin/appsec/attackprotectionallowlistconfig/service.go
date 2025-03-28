@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.4"
+const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-allowlist-config"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*attackprotectionallowlistconfig.Settings] {

@@ -156,7 +156,7 @@
 			"default": true,
 			"description": "",
 			"displayName": "Monitor short lived processes",
-			"documentation": "Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring. Disabling this flag blocks passing data to cluster only, it does not stop data collection and has no effect on performance.",
+			"documentation": "Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring.",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.235"
@@ -218,5 +218,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.11"
+	"version": "0.0.12"
 }
