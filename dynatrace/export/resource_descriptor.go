@@ -1312,6 +1312,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CloudApplication),
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
 	),
 	ResourceTypes.HostMonitoringAdvanced: NewResourceDescriptor(
 		hostmonitoringadvanced.Service,
