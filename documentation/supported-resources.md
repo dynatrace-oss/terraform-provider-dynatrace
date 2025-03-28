@@ -43,6 +43,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_browser_monitor_performance | /api/v2/settings/objects (schema: builtin:synthetic.browser.performance-thresholds) | settings.read, settings.write |
 | dynatrace_builtin_process_monitoring | /api/v2/settings/objects (schema: builtin:process.built-in-process-monitoring-rule) | settings.read, settings.write |
 | dynatrace_business_events_buckets | /api/v2/settings/objects (schema: builtin:bizevents-processing-buckets.rule) | settings.read, settings.write |
+| dynatrace_business_events_capturing_variants | /api/v2/settings/objects (schema: builtin:bizevents.http.capturing-variants) | settings.read, settings.write |
 | dynatrace_business_events_metrics | /api/v2/settings/objects (schema: builtin:bizevents-processing-metrics.rule) | settings.read, settings.write |
 | dynatrace_business_events_oneagent | /api/v2/settings/objects (schema: builtin:bizevents.http.incoming) | settings.read, settings.write |
 | dynatrace_business_events_oneagent_outgoing | /api/v2/settings/objects (schema: builtin:bizevents.http.outgoing) | settings.read, settings.write |
@@ -105,6 +106,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_generic_setting | /api/v2/settings/objects (schema: generic) | settings.read, settings.write |
 | dynatrace_generic_types | /api/v2/settings/objects (schema: builtin:monitoredentities.generic.type) | settings.read, settings.write |
 | dynatrace_geolocation | /api/v2/settings/objects (schema: builtin:geo-settings) | settings.read, settings.write |
+| dynatrace_github_connection | /api/v2/settings/objects (schema: app:dynatrace.github.connector:connection) | settings.read, settings.write |
 | dynatrace_grail_metrics_allowall | /api/v2/settings/objects (schema: builtin:grail.metrics.allow-all) | settings.read, settings.write |
 | dynatrace_grail_metrics_allowlist | /api/v2/settings/objects (schema: builtin:grail.metrics.allow-list) | settings.read, settings.write |
 | dynatrace_grail_security_context | /api/v2/settings/objects (schema: builtin:monitoredentities.grail.security.context) | settings.read, settings.write |
@@ -189,8 +191,10 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_monitored_technologies_nodejs | /api/v2/settings/objects (schema: builtin:monitored-technologies.nodejs) | settings.read, settings.write |
 | dynatrace_monitored_technologies_opentracing | /api/v2/settings/objects (schema: builtin:monitored-technologies.open-tracing-native) | settings.read, settings.write |
 | dynatrace_monitored_technologies_php | /api/v2/settings/objects (schema: builtin:monitored-technologies.php) | settings.read, settings.write |
+| dynatrace_monitored_technologies_python | /api/v2/settings/objects (schema: builtin:monitored-technologies.python) | settings.read, settings.write |
 | dynatrace_monitored_technologies_varnish | /api/v2/settings/objects (schema: builtin:monitored-technologies.varnish) | settings.read, settings.write |
 | dynatrace_monitored_technologies_wsmb | /api/v2/settings/objects (schema: builtin:monitored-technologies.wsmb) | settings.read, settings.write |
+| dynatrace_ms365_email_connection | /api/v2/settings/objects (schema: app:dynatrace.microsoft365.connector:mail.connection) | settings.read, settings.write |
 | dynatrace_msteams_connection | /api/v2/settings/objects (schema: app:dynatrace.msteams:connection) | settings.read, settings.write |
 | dynatrace_muted_requests | /api/v2/settings/objects (schema: builtin:settings.mutedrequests) | settings.read, settings.write |
 | dynatrace_nettracer | /api/v2/settings/objects (schema: builtin:nettracer.traffic) | settings.read, settings.write |
@@ -240,6 +244,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_rum_ip_locations | /api/v2/settings/objects (schema: builtin:rum.ip-mappings) | settings.read, settings.write |
 | dynatrace_rum_overload_prevention | /api/v2/settings/objects (schema: builtin:rum.overload-prevention) | settings.read, settings.write |
 | dynatrace_rum_provider_breakdown | /api/v2/settings/objects (schema: builtin:rum.provider-breakdown) | settings.read, settings.write |
+| dynatrace_security_context | /api/v2/settings/objects (schema: builtin:security-context) | settings.read, settings.write |
 | dynatrace_service_anomalies_v2 | /api/v2/settings/objects (schema: builtin:anomaly-detection.services) | settings.read, settings.write |
 | dynatrace_service_external_web_request | /api/v2/settings/objects (schema: builtin:service-detection.external-web-request) | settings.read, settings.write |
 | dynatrace_service_external_web_service | /api/v2/settings/objects (schema: builtin:service-detection.external-web-service) | settings.read, settings.write |
@@ -284,6 +289,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_vulnerability_settings | /api/v2/settings/objects (schema: builtin:appsec.runtime-vulnerability-detection) | securityProblems.read, securityProblems.write |
 | dynatrace_vulnerability_third_party | /api/v2/settings/objects (schema: builtin:appsec.rule-settings) | securityProblems.read, securityProblems.write |
 | dynatrace_web_app_anomalies | /api/v2/settings/objects (schema: builtin:anomaly-detection.rum-web) | settings.read, settings.write |
+| dynatrace_web_app_auto_injection | /api/v2/settings/objects (schema: builtin:rum.web.automatic-injection) | settings.read, settings.write |
 | dynatrace_web_app_beacon_endpoint | /api/v2/settings/objects (schema: builtin:rum.web.beacon-endpoint) | settings.read, settings.write |
 | dynatrace_web_app_beacon_origins | /api/v2/settings/objects (schema: builtin:rum.web.beacon-domain-origins) | settings.read, settings.write |
 | dynatrace_web_app_custom_config_properties | /api/v2/settings/objects (schema: builtin:rum.web.custom-configuration-properties) | settings.read, settings.write |
@@ -315,6 +321,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_iam_policy | /iam/v1/repo/{levelType}/{levelId}/policies | iam-policies-management, account-env-read |
 | dynatrace_iam_policy_bindings | /iam/v1/repo/{levelType}/{levelId}/bindings/{policyUuid} | iam-policies-management, account-env-read |
 | dynatrace_iam_policy_bindings_v2 | /iam/v1/repo/{levelType}/{levelId}/bindings/{policyUuid}{groupUuid} | iam-policies-management, account-env-read |
+| dynatrace_iam_policy_boundary | /iam/v1/repo/account/{accountId}/boundaries | iam-policies-management, account-env-read |
 | dynatrace_iam_user | /iam/v1/accounts/{accountUuid}/users | account-idm-read, account-idm-write |
 | dynatrace_openpipeline_business_events | /platform/openpipeline/v1/configurations/bizevents | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_openpipeline_events | /platform/openpipeline/v1/configurations/events | openpipeline:configurations:read, openpipeline:configurations:write |
@@ -322,3 +329,4 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_openpipeline_sdlc_events | /platform/openpipeline/v1/configurations/events.sdlc | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_openpipeline_security_events | /platform/openpipeline/v1/configurations/events.security | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_platform_bucket | /platform/storage/management/v1/bucket-definitions | storage:bucket-definitions:read, storage:bucket-definitions:write |
+| dynatrace_segment | /platform/storage/filter-segments/v1/filter-segments | storage:filter-segments:read, storage:filter-segments:write, storage:filter-segments:share, storage:filter-segments:delete, storage:filter-segments:admin |
