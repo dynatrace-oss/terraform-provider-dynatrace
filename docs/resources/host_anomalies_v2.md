@@ -182,7 +182,7 @@ Required:
 
 Optional:
 
-- `on_graceful_shutdowns` (String) Graceful host shutdowns
+- `on_graceful_shutdowns` (String) Graceful host shutdowns. Possible values: `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`, `ALERT_ON_GRACEFUL_SHUTDOWN`
 
 
 <a id="nestedblock--host--high_cpu_saturation_detection"></a>
