@@ -83,6 +83,22 @@
 						"$ref": "#/enums/BlockingStrategy"
 					}
 				},
+				"blockingStrategyGo": {
+					"description": "",
+					"displayName": "Attack control Go",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.EnableCaspClvReportingGo.feature",
+						"maturity": "EARLY_ADOPTER",
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/BlockingStrategy"
+					}
+				},
 				"blockingStrategyJava": {
 					"default": "MONITOR",
 					"description": "",
@@ -105,5 +121,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.3.1"
+	"version": "2.4"
 }
