@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "You can limit the accessibility of public endpoints from functions running in the Dynatrace JavaScript runtime, for example, the backends of apps and functions written in the Dashboards, Notebooks and Automations app.",
+	"description": "You can limit the accessibility of public endpoints from functions running in the Dynatrace JavaScript Runtime, for example, the backends of apps and functions written in the Dashboards, Notebooks and Automations app.",
 	"displayName": "Limit outbound connections",
 	"documentation": "",
 	"dynatrace": "1",
@@ -29,15 +29,15 @@
 	"schemaId": "builtin:dt-javascript-runtime.allowed-outbound-connections",
 	"types": {
 		"AllowedHostsList": {
-			"description": "Specifies allowed hosts and if the allow list should be enforced.",
+			"description": "Specifies allowed hosts and if the allowlist should be enforced.",
 			"displayName": "AllowedHostsList",
 			"documentation": "",
 			"properties": {
 				"enforced": {
 					"default": true,
 					"description": "",
-					"displayName": "Limit outbound connections to endpoints in the allow-list",
-					"documentation": "If enabled, the Dynatrace JavaScript runtime will only be able to connect to the specified hosts.",
+					"displayName": "Limit outbound connections to endpoints in the allowlist",
+					"documentation": "If enabled, the Dynatrace JavaScript Runtime will only be able to connect to the specified hosts.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -45,8 +45,8 @@
 				},
 				"hostList": {
 					"description": "",
-					"displayName": "Allow-list",
-					"documentation": "The Dynatrace JavaScript runtime will only be able to connect to these hosts.",
+					"displayName": "Allowlist",
+					"documentation": "A host that app backends should be able to connect to.",
 					"items": {
 						"constraints": [
 							{
@@ -55,13 +55,14 @@
 								"type": "LENGTH"
 							},
 							{
-								"customValidatorId": "allowed-host-validator",
+								"customValidatorId": "functionproxy.functionproxy.svc.cluster.local/internal/settings-validation/v0.1/validate-property/allowed-hostname",
+								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							}
 						],
-						"description": "A Host that app backends should be able to connect to.",
-						"displayName": "Allowed Host",
-						"documentation": "Either an IP, or a domain name which may contain a wildcard ('*') as the leftmost label. If a '*' is used, it must be followed by at least two labels.",
+						"description": "",
+						"displayName": "Allowed host",
+						"documentation": "",
 						"type": "text"
 					},
 					"maxObjects": 50,
@@ -76,11 +77,11 @@
 					"type": "set"
 				}
 			},
-			"summaryPattern": "Allowlist enforced: {enforced}",
+			"summaryPattern": "",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
