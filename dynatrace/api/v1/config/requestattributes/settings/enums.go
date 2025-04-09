@@ -461,6 +461,7 @@ var ServiceTechnologys = struct {
 	ApacheHTTPServer                     ServiceTechnology
 	ApacheKafka                          ServiceTechnology
 	ApacheLog4j                          ServiceTechnology
+	ApachePekko                          ServiceTechnology
 	ApacheSolr                           ServiceTechnology
 	ApacheStorm                          ServiceTechnology
 	ApacheSynapse                        ServiceTechnology
@@ -571,6 +572,7 @@ var ServiceTechnologys = struct {
 	Joomla                               ServiceTechnology
 	Jruby                                ServiceTechnology
 	Jython                               ServiceTechnology
+	Kotlin                               ServiceTechnology
 	Kubernetes                           ServiceTechnology
 	Laminas                              ServiceTechnology
 	Laravel                              ServiceTechnology
@@ -687,6 +689,7 @@ var ServiceTechnologys = struct {
 	"APACHE_HTTP_SERVER",
 	"APACHE_KAFKA",
 	"APACHE_LOG4J",
+	"APACHE_PEKKO",
 	"APACHE_SOLR",
 	"APACHE_STORM",
 	"APACHE_SYNAPSE",
@@ -797,6 +800,7 @@ var ServiceTechnologys = struct {
 	"JOOMLA",
 	"JRUBY",
 	"JYTHON",
+	"KOTLIN",
 	"KUBERNETES",
 	"LAMINAS",
 	"LARAVEL",
@@ -916,4 +920,62 @@ var Operators = struct {
 	"ENDS_WITH_ANY_OF",
 	"EQUALS",
 	"EQUALS_ANY_OF",
+}
+
+type TransactionCallType string
+
+func (me TransactionCallType) Ref() *TransactionCallType {
+	return &me
+}
+
+var TransactionCallTypes = struct {
+	CTG             TransactionCallType
+	DPL             TransactionCallType
+	ExplicitADK     TransactionCallType
+	HTTP            TransactionCallType
+	IMSConnect      TransactionCallType
+	IMSConnectAPI   TransactionCallType
+	IMSITRA         TransactionCallType
+	IMSMSC          TransactionCallType
+	IMSPGMSwitch    TransactionCallType
+	IMSSharedQueues TransactionCallType
+	IMSTransExec    TransactionCallType
+	MQ              TransactionCallType
+	SOAP            TransactionCallType
+	START           TransactionCallType
+	TTX             TransactionCallType
+	TX              TransactionCallType
+	Unknown         TransactionCallType
+	ZOSConnect      TransactionCallType
+}{
+	"CTG",
+	"DPL",
+	"EXPLICIT_ADK",
+	"HTTP",
+	"IMS_CONNECT",
+	"IMS_CONNECT_API",
+	"IMS_ITRA",
+	"IMS_MSC",
+	"IMS_PGM_SWITCH",
+	"IMS_SHARED_QUEUES",
+	"IMS_TRANS_EXEC",
+	"MQ",
+	"SOAP",
+	"START",
+	"TTX",
+	"TX",
+	"UNKNOWN",
+	"ZOS_CONNECT",
+}
+
+type ServerVariableTechnology string
+
+func (me ServerVariableTechnology) Ref() *ServerVariableTechnology {
+	return &me
+}
+
+var ServerVariableTechnologies = struct {
+	ASPNet ServerVariableTechnology
+}{
+	"ASP_NET",
 }

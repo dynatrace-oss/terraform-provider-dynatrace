@@ -44,6 +44,11 @@ type DataSource struct {
 	Source                      Source                       `json:"source"`                                // The source of the attribute to capture. Works in conjunction with **parameterName** or **methods** and **technology**.
 	IIBLabelMethodNodeCondition *ValueCondition              `json:"iibLabelMethodNodeCondition,omitempty"` // IBM integration bus label node name condition for which the value is captured.
 	IIBNodeType                 *IIBNodeType                 `json:"iibNodeType,omitempty"`                 // The IBM integration bus node type for which the value is captured.  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.  Not applicable in other cases.
+	CICSTransactionCallType     *TransactionCallType         `json:"cicsTransactionCallType,omitempty"`     // CICS transaction call type condition for which the value is captured. Required if the source is: `CICS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.
+	IIBNodeTypeCondition        *ValueCondition              `json:"iibNodeTypeCondition,omitempty"`        // IBM integration bus label node name condition for which the value is captured
+	IMSTransactionCallType      *TransactionCallType         `json:"imsTransactionCallType,omitempty"`      // IMS transaction call type condition for which the value is captured. Required if the source is: `IMS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.
+	ServerVariableTechnology    *ServerVariableTechnology    `json:"serverVariableTechnology,omitempty"`    // The technology of the server variable to capture if the source value is SERVER_VARIABLE. \n\n Not applicable in other cases.
+	SpanAttributeKey            *string                      `json:"spanAttributeKey,omitempty"`            // The key of the span attribute to capture. Required if the source is: `SPAN_ATTRIBUTE`. Not applicable in other cases.
 	Unknowns                    map[string]json.RawMessage   `json:"-"`
 }
 
@@ -138,6 +143,35 @@ func (me *DataSource) Schema() map[string]*schema.Schema {
 			Description: "The IBM integration bus node type for which the value is captured.  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.  Not applicable in other cases",
 			Optional:    true,
 		},
+		"cics_transaction_call_type": {
+			Type:        schema.TypeString,
+			Description: "CICS transaction call type condition for which the value is captured. Required if the source is: `CICS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.",
+			Optional:    true,
+		},
+		"iib_node_type_condition": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			Description: "IBM integration bus label node name condition for which the value is captured",
+			Elem: &schema.Resource{
+				Schema: new(ValueCondition).Schema(),
+			},
+		},
+		"ims_transaction_call_type": {
+			Type:        schema.TypeString,
+			Description: "IMS transaction call type condition for which the value is captured. Required if the source is: `IMS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.",
+			Optional:    true,
+		},
+		"server_variable_technology": {
+			Type:        schema.TypeString,
+			Description: "The technology of the server variable to capture if the source value is SERVER_VARIABLE. \n\n Not applicable in other cases.",
+			Optional:    true,
+		},
+		"span_attribute_key": {
+			Type:        schema.TypeString,
+			Description: "The key of the span attribute to capture. Required if the source is: `SPAN_ATTRIBUTE`. Not applicable in other cases.",
+			Optional:    true,
+		},
 		"unknowns": {
 			Type:        schema.TypeString,
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
@@ -191,6 +225,21 @@ func (me *DataSource) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("iib_node_type", me.IIBNodeType); err != nil {
 		return err
 	}
+	if err := properties.Encode("cics_transaction_call_type", me.IIBNodeType); err != nil {
+		return err
+	}
+	if err := properties.Encode("iib_node_type_condition", me.IIBNodeType); err != nil {
+		return err
+	}
+	if err := properties.Encode("ims_transaction_call_type", me.IIBNodeType); err != nil {
+		return err
+	}
+	if err := properties.Encode("server_variable_technology", me.IIBNodeType); err != nil {
+		return err
+	}
+	if err := properties.Encode("span_attribute_key", me.IIBNodeType); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -215,6 +264,11 @@ func (me *DataSource) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(me.Unknowns, "source")
 		delete(me.Unknowns, "iib_label_method_node_condition")
 		delete(me.Unknowns, "iib_node_type")
+		delete(me.Unknowns, "cics_transaction_call_type")
+		delete(me.Unknowns, "iib_node_type_condition")
+		delete(me.Unknowns, "ims_transaction_call_type")
+		delete(me.Unknowns, "server_variable_technology")
+		delete(me.Unknowns, "span_attribute_key")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -280,6 +334,24 @@ func (me *DataSource) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("iib_node_type"); ok {
 		me.IIBNodeType = IIBNodeType(value.(string)).Ref()
 	}
+	if value, ok := decoder.GetOk("cics_transaction_call_type"); ok {
+		me.CICSTransactionCallType = TransactionCallType(value.(string)).Ref()
+	}
+	if _, ok := decoder.GetOk("iib_node_type_condition.#"); ok {
+		me.IIBNodeTypeCondition = new(ValueCondition)
+		if err := me.IIBNodeTypeCondition.UnmarshalHCL(hcl.NewDecoder(decoder, "iib_node_type_condition", 0)); err != nil {
+			return err
+		}
+	}
+	if value, ok := decoder.GetOk("ims_transaction_call_type"); ok {
+		me.IMSTransactionCallType = TransactionCallType(value.(string)).Ref()
+	}
+	if value, ok := decoder.GetOk("server_variable_technology"); ok {
+		me.ServerVariableTechnology = ServerVariableTechnology(value.(string)).Ref()
+	}
+	if value, ok := decoder.GetOk("span_attribute_key"); ok {
+		me.SpanAttributeKey = opt.NewString(value.(string))
+	}
 	return nil
 }
 
@@ -322,6 +394,21 @@ func (me *DataSource) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	if err := m.Marshal("iibNodeType", me.IIBNodeType); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("cics_transaction_call_type", me.CICSTransactionCallType); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("iib_node_type_condition", me.IIBMethodNodeCondition); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("ims_transaction_call_type", me.IMSTransactionCallType); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("server_variable_technology", me.ServerVariableTechnology); err != nil {
+		return nil, err
+	}
+	if err := m.Marshal("span_attribute_key", me.SpanAttributeKey); err != nil {
 		return nil, err
 	}
 	return json.Marshal(m)
@@ -369,6 +456,21 @@ func (me *DataSource) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if err := m.Unmarshal("iibNodeType", &me.IIBNodeType); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("cics_transaction_call_type", &me.CICSTransactionCallType); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("iib_node_type_condition", &me.IIBMethodNodeCondition); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("ims_transaction_call_type", &me.IMSTransactionCallType); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("server_variable_technology", &me.ServerVariableTechnology); err != nil {
+		return err
+	}
+	if err := m.Unmarshal("span_attribute_key", &me.SpanAttributeKey); err != nil {
 		return err
 	}
 
