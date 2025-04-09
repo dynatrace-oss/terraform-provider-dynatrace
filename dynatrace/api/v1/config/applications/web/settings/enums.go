@@ -46,15 +46,19 @@ var ConversionGoalTypes = struct {
 type InjectionMode string
 
 var InjectionModes = struct {
-	CodeSnippet      InjectionMode
-	CodeSnippetAsync InjectionMode
-	InlineCode       InjectionMode
-	JavaScriptTag    InjectionMode
+	CodeSnippet           InjectionMode
+	CodeSnippetAsync      InjectionMode
+	InlineCode            InjectionMode
+	JavaScriptTag         InjectionMode
+	JavaScriptTagComplete InjectionMode
+	JavaScriptTagSRI      InjectionMode
 }{
 	"CODE_SNIPPET",
 	"CODE_SNIPPET_ASYNC",
 	"INLINE_CODE",
 	"JAVASCRIPT_TAG",
+	"JAVASCRIPT_TAG_COMPLETE",
+	"JAVASCRIPT_TAG_SRI",
 }
 
 type InjectionTarget string

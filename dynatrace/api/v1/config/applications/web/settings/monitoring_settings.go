@@ -34,7 +34,7 @@ type MonitoringSettings struct {
 	ContentCapture                   *ContentCapture                `json:"contentCapture"`                             // Settings for content capture
 	ExcludeXHRRegex                  string                         `json:"excludeXhrRegex"`                            // You can exclude some actions from becoming XHR actions.\n\nPut a regular expression, matching all the required URLs, here.\n\nIf noting specified the feature is disabled
 	CorrelationHeaderInclusionRegex  string                         `json:"correlationHeaderInclusionRegex"`            // To enable RUM for XHR calls to AWS Lambda, define a regular expression matching these calls, Dynatrace can then automatically add a custom header (x-dtc) to each such request to the respective endpoints in AWS.\n\nImportant: These endpoints must accept the x-dtc header, or the requests will fail
-	InjectionMode                    InjectionMode                  `json:"injectionMode"`                              // Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE` and `JAVASCRIPT_TAG`
+	InjectionMode                    InjectionMode                  `json:"injectionMode"`                              // Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE`, `JAVASCRIPT_TAG`, `JAVASCRIPT_TAG_COMPLETE`, `JAVASCRIPT_TAG_SRI`
 	AddCrossOriginAnonymousAttribute *bool                          `json:"addCrossOriginAnonymousAttribute,omitempty"` // Add the cross origin = anonymous attribute to capture JavaScript error messages and W3C resource timings
 	ScriptTagCacheDurationInHours    *int32                         `json:"scriptTagCacheDurationInHours,omitempty"`    // Time duration for the cache settings
 	LibraryFileLocation              *string                        `json:"libraryFileLocation,omitempty"`              // The location of your application’s custom JavaScript library file. \n\n If nothing specified the root directory of your web server is used. \n\n **Required** for auto-injected applications, not supported by agentless applications. Maximum 512 characters.
@@ -52,6 +52,7 @@ type MonitoringSettings struct {
 	InstrumentedWebServer            *bool                          `json:"instrumentedWebServer,omitempty"`            // Instrumented web or app server.
 	SameSiteCookieAttribute          *SameSiteCookieAttribute       `json:"sameSiteCookieAttribute,omitempty"`          // Same site cookie attribute
 	UseCors                          *bool                          `json:"useCors,omitempty"`                          // Send beacon data via CORS.
+	LibraryFileFromCdn               *bool                          `json:"libraryFileFromCdn,omitempty"`               // Get the JavaScript library file from the CDN. Not supported by agentless applications and assumed to be false for auto-injected applications if omitted.
 }
 
 func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
@@ -93,7 +94,7 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 		},
 		"injection_mode": {
 			Type:        schema.TypeString,
-			Description: "Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE` and `JAVASCRIPT_TAG`.",
+			Description: "Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE`, `JAVASCRIPT_TAG`, `JAVASCRIPT_TAG_COMPLETE`, `JAVASCRIPT_TAG_SRI`",
 			Required:    true,
 		},
 		"add_cross_origin_anonymous_attribute": {
@@ -197,6 +198,11 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Description: "Send beacon data via CORS.",
 			Optional:    true,
 		},
+		"library_file_from_cdn": {
+			Type:        schema.TypeBool,
+			Description: "Get the JavaScript library file from the CDN. Not supported by agentless applications and assumed to be false for auto-injected applications if omitted.",
+			Optional:    true,
+		},
 	}
 }
 
@@ -226,6 +232,7 @@ func (me *MonitoringSettings) MarshalHCL(properties hcl.Properties) error {
 		"instrumented_web_server":              me.InstrumentedWebServer,
 		"same_site_cookie_attribute":           me.SameSiteCookieAttribute,
 		"use_cors":                             me.UseCors,
+		"library_file_from_cdn":                me.LibraryFileFromCdn,
 	}); err != nil {
 		return err
 	}
@@ -268,6 +275,7 @@ func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"instrumented_web_server":              &me.InstrumentedWebServer,
 		"same_site_cookie_attribute":           &me.SameSiteCookieAttribute,
 		"use_cors":                             &me.UseCors,
+		"library_file_from_cdn":                &me.LibraryFileFromCdn,
 	})
 
 	if me.JavaScriptFrameworkSupport == nil {
