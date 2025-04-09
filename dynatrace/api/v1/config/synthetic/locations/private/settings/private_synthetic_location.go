@@ -45,6 +45,8 @@ type PrivateSyntheticLocation struct {
 	MinActiveGateCount               *int            `json:"minActiveGateCount"`
 	MaxActiveGateCount               *int            `json:"maxActiveGateCount"`
 	NodeSize                         *string         `json:"nodeSize"`
+	NAMExecutionSupported            *bool           `json:"namExecutionSupported,omitempty"`   // Boolean value describes if icmp monitors will be executed on this location
+	UseNewKubernetesVersion          *bool           `json:"useNewKubernetesVersion,omitempty"` // Boolean value describes which kubernetes version will be used
 }
 
 func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
@@ -132,6 +134,16 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 			Default:     "UNSUPPORTED",
 			Optional:    true,
 		},
+		"nam_execution_supported": {
+			Type:        schema.TypeBool,
+			Description: "Boolean value describes if icmp monitors will be executed on this location",
+			Optional:    true,
+		},
+		"use_new_kubernetes_version": {
+			Type:        schema.TypeBool,
+			Description: "Boolean value describes which kubernetes version will be used",
+			Optional:    true,
+		},
 	}
 }
 
@@ -182,6 +194,12 @@ func (me *PrivateSyntheticLocation) MarshalHCL(properties hcl.Properties) error 
 		return err
 	}
 	if err := properties.Encode("node_size", me.NodeSize); err != nil {
+		return err
+	}
+	if err := properties.Encode("nam_execution_supported", me.NAMExecutionSupported); err != nil {
+		return err
+	}
+	if err := properties.Encode("use_new_kubernetes_version", me.UseNewKubernetesVersion); err != nil {
 		return err
 	}
 
@@ -240,6 +258,12 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("node_size"); ok {
 		me.NodeSize = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("nam_execution_supported"); ok {
+		me.NAMExecutionSupported = opt.NewBool(value.(bool))
+	}
+	if value, ok := decoder.GetOk("use_new_kubernetes_version"); ok {
+		me.UseNewKubernetesVersion = opt.NewBool(value.(bool))
 	}
 	return nil
 }
