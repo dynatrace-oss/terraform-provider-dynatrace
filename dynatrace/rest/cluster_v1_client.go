@@ -100,7 +100,9 @@ func clusterV1Client(baseURL string, apiToken string) (*rest.Client, error) {
 
 	client, err := factory.CreateClassicClient()
 
-	clusterV1ClientCache[baseURL] = client
+	if client != nil && err == nil {
+		clusterV1ClientCache[baseURL] = client
+	}
 
 	return client, err
 }

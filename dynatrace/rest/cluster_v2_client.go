@@ -99,8 +99,9 @@ func clusterV2Client(baseURL string, apiToken string) (*rest.Client, error) {
 	factory = factory.WithHTTPListener(logging.HTTPListener("clustv2 "))
 
 	client, err := factory.CreateClassicClient()
-
-	clusterV2ClientCache[baseURL] = client
+	if client != nil && err == nil {
+		clusterV2ClientCache[baseURL] = client
+	}
 
 	return client, err
 }
