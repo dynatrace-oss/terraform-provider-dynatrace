@@ -41,7 +41,18 @@ func (me TagsWithSourceInfo) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *TagsWithSourceInfo) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("tag", me)
+	if err := decoder.DecodeSlice("tag", me); err != nil {
+		return err
+	}
+	finalEntries := TagsWithSourceInfo{}
+	for _, entry := range *me {
+		if len(entry.Key) == 0 {
+			continue
+		}
+		finalEntries = append(finalEntries, entry)
+	}
+	*me = finalEntries
+	return nil
 }
 
 // Tag with source of a Dynatrace entity
