@@ -58,6 +58,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestnaming"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/objectivetemplates"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/nodes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/tenant"
@@ -258,6 +259,8 @@ func Provider() *schema.Provider {
 			"dynatrace_geo_regions":                  georegions.DataSource(),
 			"dynatrace_geo_cities":                   geocities.DataSource(),
 			"dynatrace_application_detection_rules":  appdetection.DataSource(),
+			"dynatrace_platform_slo_templates":       objectivetemplates.DataSourceMulti(),
+			"dynatrace_platform_slo_template":        objectivetemplates.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                      resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),

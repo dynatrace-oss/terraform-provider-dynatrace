@@ -1,3 +1,7 @@
+data "dynatrace_platform_slo_template" "HostCPU" {
+  name = "Host CPU usage utilization"
+}
+
 resource "dynatrace_platform_slo" "#name#" {
   name        = "#name#"
   description = "Measures the CPU usage of selected hosts over time."
@@ -9,7 +13,7 @@ resource "dynatrace_platform_slo" "#name#" {
     }
   }
   sli_reference {
-    template_id = "e2J1aWx0aW46aW50ZXJuYWwuc2VydmljZS5sZXZlbC5vYmplY3RpdmUudGVtcGxhdGVzLCBpZDogNTJjNzRmMGItNzY1ZS00NWRiLWFmMGQtN2E1MDdjNGY0YjRlfQ=="
+    template_id = data.dynatrace_platform_slo_template.HostCPU.id
     variables {
       sli_reference_variable {
         name  = "hosts"
