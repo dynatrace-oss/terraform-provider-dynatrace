@@ -329,4 +329,5 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_openpipeline_sdlc_events | /platform/openpipeline/v1/configurations/events.sdlc | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_openpipeline_security_events | /platform/openpipeline/v1/configurations/events.security | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_platform_bucket | /platform/storage/management/v1/bucket-definitions | storage:bucket-definitions:read, storage:bucket-definitions:write |
+| dynatrace_platform_slo | /platform/slo/v1/slos | slo:slos:read, slo:slos:write |
 | dynatrace_segment | /platform/storage/filter-segments/v1/filter-segments | storage:filter-segments:read, storage:filter-segments:write, storage:filter-segments:share, storage:filter-segments:delete, storage:filter-segments:admin |
