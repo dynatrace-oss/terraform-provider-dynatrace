@@ -611,6 +611,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_auto_injection":              resources.NewGeneric(export.ResourceTypes.WebAppAutoInjection).Resource(),
 			"dynatrace_security_context":                    resources.NewGeneric(export.ResourceTypes.SecurityContext).Resource(),
 			"dynatrace_segment":                             resources.NewGeneric(export.ResourceTypes.Segments).Resource(),
+			"dynatrace_platform_slo":                        resources.NewGeneric(export.ResourceTypes.PlatformSLO).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
