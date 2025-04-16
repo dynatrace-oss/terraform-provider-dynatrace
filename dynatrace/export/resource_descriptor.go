@@ -340,6 +340,7 @@ import (
 	envrules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/httpparameters"
+	platformslo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/dataprivacy"
@@ -1452,6 +1453,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.SecurityContext: NewResourceDescriptor(securitycontextsettings.Service),
 	ResourceTypes.Segments:        NewResourceDescriptor(segments.Service),
+	ResourceTypes.PlatformSLO:     NewResourceDescriptor(platformslo.Service),
 }
 
 type ResourceExclusion struct {
@@ -1556,6 +1558,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.Documents, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
+			{ResourceTypes.PlatformSLO, ""},
 		},
 	},
 	{

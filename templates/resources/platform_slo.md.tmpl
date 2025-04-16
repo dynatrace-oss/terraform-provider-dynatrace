@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Service-level Objective"
+description: |-
+  The resource `{{ .Name }}` covers configuration for platform service-level objectives
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View SLOs** (`slo:slos:read`) and **Create and edit SLOs** (`slo:slos:write`).
+
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
+
+## Dynatrace Documentation
+
+- Service-Level Objectives overview - hhttps://docs.dynatrace.com/docs/deliver/service-level-objectives
+
+- SLO Service Public API - https://########.apps.dynatrace.com/platform/swagger-ui/index.html?urls.primaryName=Service-Level+Objectives
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/slo/testdata/terraform/example-b.tf" }}
+
+
+{{ .SchemaMarkdown | trimspace }}

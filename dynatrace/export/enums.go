@@ -495,6 +495,7 @@ var ResourceTypes = struct {
 	WebAppAutoInjection                 ResourceType
 	SecurityContext                     ResourceType
 	Segments                            ResourceType
+	PlatformSLO                         ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -837,6 +838,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_auto_injection",
 	"dynatrace_security_context",
 	"dynatrace_segment",
+	"dynatrace_platform_slo",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
