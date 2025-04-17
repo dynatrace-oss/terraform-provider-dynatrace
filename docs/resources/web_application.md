@@ -348,7 +348,7 @@ Required:
 
 - `advanced_javascript_tag_settings` (Block List, Min: 1, Max: 1) Advanced JavaScript tag settings (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings))
 - `content_capture` (Block List, Min: 1, Max: 1) Settings for content capture (see [below for nested schema](#nestedblock--monitoring_settings--content_capture))
-- `injection_mode` (String) Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE` and `JAVASCRIPT_TAG`.
+- `injection_mode` (String) Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE`, `JAVASCRIPT_TAG`, `JAVASCRIPT_TAG_COMPLETE`, `JAVASCRIPT_TAG_SRI`
 
 Optional:
 
@@ -375,6 +375,7 @@ If noting specified the feature is disabled
 - `ip_address_restriction_settings` (Block List, Max: 1) Settings for restricting certain ip addresses and for introducing subnet mask. It also restricts the mode (see [below for nested schema](#nestedblock--monitoring_settings--ip_address_restriction_settings))
 - `javascript_framework_support` (Block List, Max: 1) Support of various JavaScript frameworks (see [below for nested schema](#nestedblock--monitoring_settings--javascript_framework_support))
 - `javascript_injection_rules` (Block List, Max: 1) Java script injection rules (see [below for nested schema](#nestedblock--monitoring_settings--javascript_injection_rules))
+- `library_file_from_cdn` (Boolean) Get the JavaScript library file from the CDN. Not supported by agentless applications and assumed to be false for auto-injected applications if omitted.
 - `library_file_location` (String) The location of your application’s custom JavaScript library file. 
 
  If nothing specified the root directory of your web server is used. 

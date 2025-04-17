@@ -71,6 +71,7 @@ resource "dynatrace_synthetic_location" "#name#" {
  Only applicable when **availability_location_outage** or **availability_node_outage** is set to `true`
 - `max_active_gate_count` (Number) The maximum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`
 - `min_active_gate_count` (Number) The minimum number of Active Gates required for that location. Not required when `deployment_type` is set to `STANDARD`
+- `nam_execution_supported` (Boolean) Boolean value describes if icmp monitors will be executed on this location
 - `node_size` (String) Possible values: `UNSUPPORTED`, `XS`, `S` and `M`. Not required when `deployment_type` is set to `STANDARD`.
 - `nodes` (Set of String) A list of synthetic nodes belonging to the location. 
 
@@ -78,6 +79,7 @@ resource "dynatrace_synthetic_location" "#name#" {
 - `region_code` (String) The region code of the location. 
 
  To fetch the list of available region codes, use the [GET regions of the country](https://dt-url.net/az230x0) request
+- `use_new_kubernetes_version` (Boolean) Boolean value describes which kubernetes version will be used
 
 ### Read-Only
 

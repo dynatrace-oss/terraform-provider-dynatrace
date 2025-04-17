@@ -139,15 +139,22 @@ Optional:
 
 - `capturing_and_storage_location` (String) Specifies the location where the values are captured and stored.  Required if the **source** is one of the following: `GET_PARAMETER`, `URI`, `REQUEST_HEADER`, `RESPONSE_HEADER`.   Not applicable in other cases.   If the **source** value is `REQUEST_HEADER` or `RESPONSE_HEADER`, the `CAPTURE_AND_STORE_ON_BOTH` location is not allowed
 - `cics_sdk_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--cics_sdk_method_node_condition))
+- `cics_transaction_call_type` (String) CICS transaction call type condition for which the value is captured. Required if the source is: `CICS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.
 - `iib_label_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_label_method_node_condition))
 - `iib_method_node_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_method_node_condition))
 - `iib_node_type` (String) The IBM integration bus node type for which the value is captured.  This or `iibMethodNodeCondition` is required if the **source** is: `IIB_NODE`.  Not applicable in other cases
+- `iib_node_type_condition` (Block List, Max: 1) IBM integration bus label node name condition for which the value is captured (see [below for nested schema](#nestedblock--data_sources--iib_node_type_condition))
+- `ims_transaction_call_type` (String) IMS transaction call type condition for which the value is captured. Required if the source is: `IMS_TRANSACTION_CALL_TYPE`. Not applicable in other cases.
 - `methods` (Block List) The method specification if the **source** value is `METHOD_PARAM`.   Not applicable in other cases (see [below for nested schema](#nestedblock--data_sources--methods))
 - `parameter_name` (String) The name of the web request parameter to capture.  Required if the **source** is one of the following: `POST_PARAMETER`, `GET_PARAMETER`, `REQUEST_HEADER`, `RESPONSE_HEADER`, `CUSTOM_ATTRIBUTE`.  Not applicable in other cases
 - `scope` (Block List, Max: 1) Conditions for data capturing (see [below for nested schema](#nestedblock--data_sources--scope))
+- `server_variable_technology` (String) The technology of the server variable to capture if the source value is SERVER_VARIABLE. 
+
+ Not applicable in other cases.
 - `session_attribute_technology` (String) The technology of the session attribute to capture if the **source** value is `SESSION_ATTRIBUTE`. 
 
  Not applicable in other cases
+- `span_attribute_key` (String) The key of the span attribute to capture. Required if the source is: `SPAN_ATTRIBUTE`. Not applicable in other cases.
 - `technology` (String) The technology of the method to capture if the **source** value is `METHOD_PARAM`. 
 
  Not applicable in other cases
@@ -184,6 +191,20 @@ Optional:
 
 <a id="nestedblock--data_sources--iib_method_node_condition"></a>
 ### Nested Schema for `data_sources.iib_method_node_condition`
+
+Required:
+
+- `operator` (String) Operator comparing the extracted value to the comparison value
+- `value` (String) The value to compare to
+
+Optional:
+
+- `negate` (Boolean) Negate the comparison
+- `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+
+
+<a id="nestedblock--data_sources--iib_node_type_condition"></a>
+### Nested Schema for `data_sources.iib_node_type_condition`
 
 Required:
 

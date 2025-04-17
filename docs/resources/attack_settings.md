@@ -57,4 +57,5 @@ Required:
 Optional:
 
 - `blocking_strategy_dot_net` (String) (v1.290) Possible Values: `BLOCK`, `MONITOR`, `OFF`
+- `blocking_strategy_go` (String) Possible Values: `BLOCK`, `MONITOR`, `OFF`
  

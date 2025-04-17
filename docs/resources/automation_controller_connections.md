@@ -27,7 +27,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 ```terraform
 resource "dynatrace_automation_controller_connections" "#name#"{
   name    = "#name#"
-  url     = "www.#name#.com"
+  url     = "https://www.google.com"
   type    = "api-token"
   token   = "#######"
   }
