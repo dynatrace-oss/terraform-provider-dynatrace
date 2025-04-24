@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -79,5 +80,5 @@
 	],
 	"schemaId": "app:dynatrace.slack:connection",
 	"types": {},
-	"version": "0.0.14"
+	"version": "0.1"
 }

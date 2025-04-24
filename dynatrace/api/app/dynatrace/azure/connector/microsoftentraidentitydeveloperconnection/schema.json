@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"applicationId": {
 			"constraints": [
@@ -127,5 +128,5 @@
 	],
 	"schemaId": "app:dynatrace.azure.connector:microsoft-entra-identity-developer-connection",
 	"types": {},
-	"version": "0.1.1"
+	"version": "0.2"
 }

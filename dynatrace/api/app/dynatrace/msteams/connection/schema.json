@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"channelName": {
 			"constraints": [
@@ -103,5 +104,5 @@
 	],
 	"schemaId": "app:dynatrace.msteams:connection",
 	"types": {},
-	"version": "1.0.1"
+	"version": "2"
 }

@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -135,5 +136,5 @@
 			]
 		}
 	},
-	"version": "0.1.10"
+	"version": "0.1.11"
 }

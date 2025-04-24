@@ -37,8 +37,8 @@
 			}
 		},
 		"sessionReplay": {
-			"description": "[Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
-			"displayName": "Session Replay on crashes",
+			"description": "[Session Replay](https://dt-url.net/session-replay) captures all user interactions within your application and replays them in a movie-like experience while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
+			"displayName": "Session Replay",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -102,7 +102,7 @@
 					"maxObjects": 1,
 					"metadata": {
 						"featureFlag": "com.compuware.apm.webuiff.rum-settings-show-enable-monitoring-on-3rd-gen-switch.resemo3g.feature",
-						"maturity": "IN_DEVELOPMENT"
+						"maturity": "PREVIEW"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -126,7 +126,7 @@
 			"properties": {
 				"onCrash": {
 					"default": true,
-					"description": "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
+					"description": "Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
 					"displayName": "Enable Session Replay on crashes",
 					"documentation": "",
 					"maxObjects": 1,
@@ -141,5 +141,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.1.2"
+	"version": "2.1.3"
 }

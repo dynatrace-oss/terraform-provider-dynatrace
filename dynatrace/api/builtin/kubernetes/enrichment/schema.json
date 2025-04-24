@@ -24,6 +24,18 @@
 			],
 			"type": "enum"
 		},
+		"ResourceType": {
+			"description": "",
+			"displayName": "ResourceType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Namespace",
+					"value": "NAMESPACE"
+				}
+			],
+			"type": "enum"
+		},
 		"TargetOption": {
 			"description": "",
 			"displayName": "TargetOption",
@@ -57,7 +69,7 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "## Security context and cost allocation\n\nDynatrace enables you to set the security context for metrics, events, logs, spans, and entities based on a Kubernetes label or annotation.\n\nDynatrace also enables you to set cost allocation attributes for metrics, events, logs, and spans based on Kubernetes labels and/or annotations.\n\nYou might already have existing annotations and labels that you want to use as the source for either security context or cost allocation. You can do so by telling Dynatrace and the Dynatrace Operator which labels/annotations to use as the source. This has the advantage of not having to change any of your existing deployments. Do this by adding rules on this page.\n\nDynatrace Operator version 1.3.0+, ActiveGate 1.305+ and OneAgent 1.305+ are required.\n\nYou can define a maximum of 20 rules.\n\nIt can take up to 45 minutes for the Dynatrace Operator to adopt changes to the rules. Afterwards, pod restarts are required. \n\nTo learn more and explore additional data enrichment options, please refer to the [documentation](https://dt-url.net/pn22sye).",
+			"description": "## Security context and cost allocation\n\nDynatrace enables you to set the security context for metrics, events, logs, spans, and entities based on a Kubernetes label or annotation.\n\nDynatrace also enables you to set cost allocation attributes for metrics, events, logs, and spans based on Kubernetes labels and/or annotations.\n\nYou might already have existing annotations and labels that you want to use as the source for either security context or cost allocation. You can do so by telling Dynatrace and the Dynatrace Operator which labels/annotations to use as the source. This has the advantage of not having to change any of your existing deployments. Do this by adding rules on this page.\n\nYou can define a maximum of 20 rules.\n\nIt can take up to 45 minutes for the Dynatrace Operator to adopt changes to the rules. Afterwards, pod restarts are required. \n\nTo learn more about component requirements, types of enriched data and additional data enrichment options, please refer to the [documentation](https://dt-url.net/pn22sye).",
 			"displayName": "",
 			"documentation": "",
 			"items": {
@@ -120,6 +132,20 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"property": "primaryGrailTag",
+								"type": "NULL"
+							},
+							{
+								"expectedValue": false,
+								"property": "primaryGrailTag",
+								"type": "EQUALS"
+							}
+						],
+						"type": "OR"
+					},
 					"type": {
 						"$ref": "#/enums/TargetOption"
 					}
@@ -143,5 +169,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1.1"
+	"version": "1.2"
 }

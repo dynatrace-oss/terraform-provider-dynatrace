@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.1.1"
+const SchemaVersion = "1.2"
 const SchemaID = "builtin:kubernetes.generic.metadata.enrichment"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*enrichment.Settings] {
