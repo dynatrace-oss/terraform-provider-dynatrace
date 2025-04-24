@@ -34,6 +34,8 @@ type AdvancedJavaScriptTagSettings struct {
 	AdditionalEventHandlers             *AdditionalEventHandlers    `json:"additionalEventHandlers"`             // Additional event handlers and wrappers
 	EventWrapperSettings                EventWrapperSettings        `json:"eventWrapperSettings"`                // In addition to the event handlers, events called using `addEventListener` or `attachEvent` can be captured. Be careful with this option! Event wrappers can conflict with the JavaScript code on a web page
 	GlobalEventCaptureSettings          *GlobalEventCaptureSettings `json:"globalEventCaptureSettings"`          // Global event capture settings
+	ProxyWrapperEnabled                 *bool                       `json:"proxyWrapperEnabled,omitempty"`       // Proxy wrapper enabled/disabled
+	UserActionNameAttribute             *string                     `json:"userActionNameAttribute,omitempty"`   // User action name attribute
 }
 
 func (me *AdvancedJavaScriptTagSettings) Schema() map[string]*schema.Schema {
@@ -90,6 +92,17 @@ func (me *AdvancedJavaScriptTagSettings) Schema() map[string]*schema.Schema {
 			Elem:             &schema.Resource{Schema: new(GlobalEventCaptureSettings).Schema()},
 			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool { return newValue == "0" },
 		},
+		"proxy_wrapper_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Proxy wrapper enabled/disabled",
+			Optional:    true,
+			Default:     true,
+		},
+		"user_action_name_attribute": {
+			Type:        schema.TypeString,
+			Description: "User action name attribute",
+			Optional:    true,
+		},
 	}
 }
 
@@ -104,6 +117,8 @@ func (me *AdvancedJavaScriptTagSettings) MarshalHCL(properties hcl.Properties) e
 		"additional_event_handlers":              me.AdditionalEventHandlers,
 		"event_wrapper_settings":                 &me.EventWrapperSettings,
 		"global_event_capture_settings":          me.GlobalEventCaptureSettings,
+		"proxy_wrapper_enabled":                  me.ProxyWrapperEnabled,
+		"user_action_name_attribute":             me.UserActionNameAttribute,
 	}); err != nil {
 		return err
 	}
@@ -124,6 +139,8 @@ func (me *AdvancedJavaScriptTagSettings) UnmarshalHCL(decoder hcl.Decoder) error
 		"additional_event_handlers":              &me.AdditionalEventHandlers,
 		"event_wrapper_settings":                 &me.EventWrapperSettings,
 		"global_event_capture_settings":          &me.GlobalEventCaptureSettings,
+		"proxy_wrapper_enabled":                  &me.ProxyWrapperEnabled,
+		"user_action_name_attribute":             &me.UserActionNameAttribute,
 	})
 
 	if me.GlobalEventCaptureSettings == nil {
