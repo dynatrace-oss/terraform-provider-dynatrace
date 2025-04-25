@@ -181,14 +181,14 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 			Description:      "Specifies a default task timeout in seconds. 15 * 60 (15min) is used when not set. Minimum 1. Maximum 604800",
 			Optional:         true,
 			ValidateDiagFunc: ValidateRange(1, 604800),
-			Default:          "900",
+			// Default:          "900", // Since the introduction of "SIMPLE" Workflows we cannot assign default values here anymore
 		},
 		"wait_before": {
 			Type:             schema.TypeString,
 			Description:      "Specifies a default task wait before in seconds. 0 is used when not set",
 			Optional:         true,
 			ValidateDiagFunc: ValidateRange(0, 86400),
-			Default:          "0",
+			// Default:          "0", // Since the introduction of "SIMPLE" Workflows we cannot assign default values here anymore
 		},
 	}
 }
