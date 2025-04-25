@@ -37,10 +37,11 @@
 	},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "Jira for Workflows"
+		"appName": "Jira"
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -63,7 +64,7 @@
 		"password": {
 			"constraints": [
 				{
-					"customMessage": "Name has to be between 1 and 50 characters long",
+					"customMessage": "Password has to be between 1 and 50 characters long",
 					"maxLength": 50,
 					"minLength": 1,
 					"type": "LENGTH"
@@ -86,7 +87,7 @@
 		"token": {
 			"constraints": [
 				{
-					"customMessage": "Token has to be between 45 and 1000 characters long",
+					"customMessage": "Token has to be between 20 and 1000 characters long",
 					"maxLength": 1000,
 					"minLength": 20,
 					"type": "LENGTH"
@@ -125,7 +126,7 @@
 		"url": {
 			"constraints": [
 				{
-					"customMessage": "Name has to be between 1 and 50 characters long",
+					"customMessage": "URL has to be between 1 and 100 characters long",
 					"maxLength": 100,
 					"minLength": 1,
 					"type": "LENGTH"
@@ -160,7 +161,7 @@
 		"user": {
 			"constraints": [
 				{
-					"customMessage": "Name has to be between 1 and 50 characters long",
+					"customMessage": "Username or E-Mail address has to be between 1 and 50 characters long",
 					"maxLength": 50,
 					"minLength": 1,
 					"type": "LENGTH"
@@ -196,5 +197,5 @@
 	],
 	"schemaId": "app:dynatrace.jira:connection",
 	"types": {},
-	"version": "0.0.11"
+	"version": "1"
 }
