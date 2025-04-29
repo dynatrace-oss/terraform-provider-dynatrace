@@ -20,34 +20,45 @@ package dql
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"hash/fnv"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
-	"github.com/google/uuid"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-/*
-{
-  "query": "fetch events \n| fields timestamp, davis.title, davis.underMaintenance, davis.status \n| sort timestamp \n| limit 10",
-  "defaultTimeframeStart": "2025-02-13T08:00:00.123Z",
-  "defaultTimeframeEnd": "2025-02-13T11:00:00.123Z",
-  "timezone": "UTC",
-  "locale": "en_US",
-  "maxResultRecords": 1000,
-  "maxResultBytes": 1000000,
-  "fetchTimeoutSeconds": 60,
-  "requestTimeoutMilliseconds": 1000,
-  "enablePreview": true,
-  "defaultSamplingRatio": 1000,
-  "defaultScanLimitGbytes": 100,
-  "queryOptions": null,
-  "filterSegments": null
+const ENV_VAR_POLL_SLEEP_DURATION = "DYNATRACE_DQL_POLL_SLEEP_DURATION"
+const DEFAULT_POLL_SLEEP_DURATION = 5000
+const MIN_POLL_SLEEP_DURATION = 0
+const MAX_POLL_SLEEP_DURATION = 60000
+
+var POLL_SLEEP_DURATION = evalPollSleepDuration()
+
+func evalPollSleepDuration() int {
+	value := os.Getenv(ENV_VAR_POLL_SLEEP_DURATION)
+	if len(value) == 0 {
+		return DEFAULT_POLL_SLEEP_DURATION
+	}
+	iValue, err := strconv.Atoi(value)
+	if err != nil {
+		return DEFAULT_POLL_SLEEP_DURATION
+	}
+	if iValue < 0 {
+		return DEFAULT_POLL_SLEEP_DURATION
+	}
+	if iValue > MAX_POLL_SLEEP_DURATION {
+		return DEFAULT_POLL_SLEEP_DURATION
+	}
+	return iValue
 }
-*/
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
@@ -94,11 +105,6 @@ func DataSource() *schema.Resource {
 				Description: "The query will stop reading data after reaching the fetch-timeout. The query execution will continue, providing a partial result based on the read data",
 				Optional:    true,
 			},
-			"request_timeout_milliseconds": {
-				Type:        schema.TypeInt,
-				Description: "The time a client is willing to wait for the query result. In case the query finishes within the specified timeout, the query result is returned. Otherwise, the requestToken is returned, allowing polling for the result",
-				Optional:    true,
-			},
 			"default_sampling_ratio": {
 				Type:        schema.TypeFloat,
 				Description: "In case not specified in the DQL string, the sampling ratio defined here is applied. Note that this is only applicable to log queries",
@@ -117,7 +123,11 @@ func DataSource() *schema.Resource {
 	}
 }
 
-var staticID = uuid.NewString()
+func processHeredocString(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.ReplaceAll(s, "\n", " ")
+	return s
+}
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := config.Credentials(m, config.CredValDefault)
@@ -131,7 +141,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	dqlRequest := DQLRequest{}
 	if v, ok := d.GetOk("query"); ok {
-		dqlRequest.Query = v.(string)
+		dqlRequest.Query = processHeredocString(v.(string))
 	}
 	if v, ok := d.GetOk("default_timeframe_start"); ok && len(v.(string)) > 0 {
 		dqlRequest.DefaultTimeframeStart = opt.NewString(v.(string))
@@ -154,15 +164,16 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if v, ok := d.GetOk("fetch_timeout_seconds"); ok {
 		dqlRequest.FetchTimeoutSeconds = opt.NewInt(v.(int))
 	}
-	if v, ok := d.GetOk("request_timeout_milliseconds"); ok {
-		dqlRequest.RequestTimeoutMilliseconds = opt.NewInt(v.(int))
-	}
 	if v, ok := d.GetOk("default_sampling_ratio"); ok {
 		dqlRequest.DefaultSamplingRatio = opt.NewInt(v.(int))
 	}
 	if v, ok := d.GetOk("default_scan_limit_gbytes"); ok {
 		dqlRequest.DefaultScanLimitGbytes = opt.NewInt(v.(int))
 	}
+
+	defer func(dqlRequest DQLRequest) {
+		d.SetId(generateHash(dqlRequest))
+	}(dqlRequest)
 
 	data, _ := json.Marshal(dqlRequest)
 
@@ -174,15 +185,48 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err := json.Unmarshal(response.Data, &dqlResponse); err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("records", string(dqlResponse.Result.Records))
-	d.SetId(staticID)
-	return diag.Diagnostics{}
+
+	for {
+		if dqlResponse.State == "SUCCEEDED" {
+			d.Set("records", string(dqlResponse.Result.Records))
+			return diag.Diagnostics{}
+		}
+		switch dqlResponse.State {
+		case "NOT_STARTED", "RUNNING":
+			if len(dqlResponse.RequestToken) == 0 {
+				return diag.FromErr(fmt.Errorf("query is running but no request token for result polling was provided by REST API"))
+			}
+			time.Sleep(time.Duration(POLL_SLEEP_DURATION) * time.Millisecond)
+			response, err := client.Poll(ctx, dqlResponse.RequestToken)
+			if err != nil {
+				return diag.FromErr(err)
+			}
+			dqlResponse = DQLResponse{}
+			if err := json.Unmarshal(response.Data, &dqlResponse); err != nil {
+				return diag.FromErr(err)
+			}
+		case "CANCELLED":
+			return diag.FromErr(fmt.Errorf("query got cancelled unexpectedly"))
+		case "FAILED":
+			return diag.FromErr(fmt.Errorf("query failed"))
+		default:
+		}
+	}
+
+}
+
+func generateHash(dqlRequest DQLRequest) string {
+	data, _ := json.Marshal(dqlRequest)
+	h := fnv.New128()
+	h.Write(data)
+	return fmt.Sprintf("%x", h.Sum([]byte{}))
 }
 
 type DQLResponse struct {
-	State    string `json:"state"`
-	Progress int    `json:"progress"`
-	Result   struct {
+	State        string `json:"state"`
+	RequestToken string `json:"requestToken"`
+	Progress     int    `json:"progress"`
+	Result       struct {
 		Records json.RawMessage `json:"records"`
 	}
 }
@@ -196,29 +240,10 @@ type DQLRequest struct {
 	MaxResultRecords           *int    `json:"maxResultRecords,omitempty"`
 	MaxResultBytes             *int    `json:"maxResultBytes,omitempty"`
 	FetchTimeoutSeconds        *int    `json:"fetchTimeoutSeconds,omitempty"`
-	RequestTimeoutMilliseconds *int    `json:"requestTimeoutMilliseconds,omitempty"`
+	RequestTimeoutMilliseconds int     `json:"requestTimeoutMilliseconds,omitempty"`
 	EnablePreview              bool    `json:"enablePreview"`
 	DefaultSamplingRatio       *int    `json:"defaultSamplingRatio,omitempty"`
 	DefaultScanLimitGbytes     *int    `json:"defaultScanLimitGbytes,omitempty"`
 	QueryOptions               any     `json:"queryOptions"`
 	FilterSegments             any     `json:"filterSegments"`
 }
-
-/*
-{
-  "query": "fetch metric.series",
-  "defaultTimeframeStart": "2025-02-13T08:00:00.123Z",
-  "defaultTimeframeEnd": "2025-02-13T11:00:00.123Z",
-  "timezone": "UTC",
-  "locale": "en_US",
-  "maxResultRecords": 1000,
-  "maxResultBytes": 1000000,
-  "fetchTimeoutSeconds": 60,
-  "requestTimeoutMilliseconds": 1000,
-  "enablePreview": true,
-  "defaultSamplingRatio": 1000,
-  "defaultScanLimitGbytes": 100,
-  "queryOptions": null,
-  "filterSegments": null
-}
-*/

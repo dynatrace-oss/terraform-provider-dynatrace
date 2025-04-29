@@ -28,6 +28,7 @@ import (
 
 type client interface {
 	Fetch(ctx context.Context, data []byte) (*http.Response, error)
+	Poll(ctx context.Context, requestToken string) (*http.Response, error)
 }
 
 // Client is the HTTP client to be used for interacting with the Document API
@@ -49,6 +50,14 @@ type Response struct {
 
 func (c Client) Fetch(ctx context.Context, data []byte) (api.Response, error) {
 	resp, err := processHttpResponse(c.client.Fetch(ctx, data))
+	if err != nil {
+		return resp, err
+	}
+	return resp, nil
+}
+
+func (c Client) Poll(ctx context.Context, requestToken string) (api.Response, error) {
+	resp, err := processHttpResponse(c.client.Poll(ctx, requestToken))
 	if err != nil {
 		return resp, err
 	}

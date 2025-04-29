@@ -21,12 +21,14 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 const (
-	documentResourcePath = "/platform/storage/query/v1/query:execute"
+	queryPath = "/platform/storage/query/v1/query:execute"
+	pollPath  = "/platform/storage/query/v1/query:poll"
 )
 
 type DQLClient struct {
@@ -41,9 +43,20 @@ func NewDQLClient(client *rest.Client) *DQLClient {
 }
 
 func (c *DQLClient) Fetch(ctx context.Context, data []byte) (*http.Response, error) {
-	resp, err := c.client.POST(ctx, documentResourcePath, bytes.NewReader(data), rest.RequestOptions{ContentType: "application/json"})
+	resp, err := c.client.POST(ctx, queryPath, bytes.NewReader(data), rest.RequestOptions{ContentType: "application/json"})
 	if err != nil {
-		return nil, fmt.Errorf("unable to update object: %w", err)
+		return nil, fmt.Errorf("unable to fetch query result: %w", err)
+	}
+	return resp, err
+}
+
+func (c *DQLClient) Poll(ctx context.Context, requestToken string) (*http.Response, error) {
+	query := url.Values{}
+	query.Add("request-token", requestToken)
+
+	resp, err := c.client.GET(ctx, pollPath, rest.RequestOptions{QueryParams: query})
+	if err != nil {
+		return nil, fmt.Errorf("unable to poll for query result: %w", err)
 	}
 	return resp, err
 }
