@@ -9,6 +9,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	boundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/clean"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -162,6 +163,17 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 		204,
 		false,
 	); err != nil {
+		if strings.Contains(err.Error(), "Policy boundary is in use") {
+			clean.CleanUp.Register(func() {
+				client.DELETE(
+					ctx,
+					fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
+					204,
+					false,
+				)
+			})
+			return nil
+		}
 		return err
 	}
 

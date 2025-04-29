@@ -15,10 +15,24 @@
 * limitations under the License.
  */
 
-package export
+package clean
 
-import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/clean"
-)
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
-var CleanUp = clean.CleanUp
+type cleanUp struct {
+	finalizers []func()
+}
+
+var CleanUp = &cleanUp{finalizers: []func(){
+	cache.Cleanup,
+}}
+
+func (me *cleanUp) Finish() {
+	for _, finalizer := range me.finalizers {
+		finalizer()
+	}
+}
+
+func (me *cleanUp) Register(fn func()) {
+	me.finalizers = append(me.finalizers, fn)
+}
