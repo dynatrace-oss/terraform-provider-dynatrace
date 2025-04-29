@@ -29,10 +29,11 @@
 	},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "GitHub for Workflows"
+		"appName": "GitHub"
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -107,5 +108,5 @@
 	],
 	"schemaId": "app:dynatrace.github.connector:connection",
 	"types": {},
-	"version": "0.1.1"
+	"version": "1"
 }

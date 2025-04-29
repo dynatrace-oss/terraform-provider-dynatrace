@@ -30,10 +30,11 @@
 	},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "Microsoft 365 for Workflows"
+		"appName": "Microsoft 365"
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"client_id": {
 			"constraints": [
@@ -182,5 +183,5 @@
 	],
 	"schemaId": "app:dynatrace.microsoft365.connector:mail.connection",
 	"types": {},
-	"version": "0.0.5"
+	"version": "1"
 }
