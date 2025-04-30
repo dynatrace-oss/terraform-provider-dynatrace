@@ -7,6 +7,9 @@ description: |-
 
 # dynatrace_dql (Data Source)
 
+The `dynatrace_dql` data source requires authentication via OAuth Client (`DT_CLIENT` and `DT_CLIENT_SECRET`).
+It depends on the query you want to execute what permissions are required in details. For more information look into [https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/data-model/assign-permissions-in-grail#grail-permissions-table](Permissions in Grail — Dynatrace Docs).
+
 The only required attribute is the `query` attribute - holding the DQL query.
 You may or may not utilize the additional attributes in order to narrow down the results. But most of that can also get achieved with in the DQL query itself.
 
