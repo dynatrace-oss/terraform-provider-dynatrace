@@ -34,7 +34,7 @@ type AdvancedJavaScriptTagSettings struct {
 	AdditionalEventHandlers             *AdditionalEventHandlers    `json:"additionalEventHandlers"`             // Additional event handlers and wrappers
 	EventWrapperSettings                EventWrapperSettings        `json:"eventWrapperSettings"`                // In addition to the event handlers, events called using `addEventListener` or `attachEvent` can be captured. Be careful with this option! Event wrappers can conflict with the JavaScript code on a web page
 	GlobalEventCaptureSettings          *GlobalEventCaptureSettings `json:"globalEventCaptureSettings"`          // Global event capture settings
-	ProxyWrapperEnabled                 *bool                       `json:"proxyWrapperEnabled,omitempty"`       // Proxy wrapper enabled/disabled
+	ProxyWrapperEnabled                 bool                        `json:"proxyWrapperEnabled"`                 // Proxy wrapper enabled/disabled
 	UserActionNameAttribute             *string                     `json:"userActionNameAttribute,omitempty"`   // User action name attribute
 }
 
