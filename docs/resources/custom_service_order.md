@@ -1,7 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_custom_service_order Resource - terraform-provider-dynatrace"
-subcategory: Service Detection"
+subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_custom_service_order` covers defining the order of rules defined for custom services
 ---

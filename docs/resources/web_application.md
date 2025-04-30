@@ -407,9 +407,11 @@ Optional:
 - `event_wrapper_settings` (Block List, Max: 1) In addition to the event handlers, events called using `addEventListener` or `attachEvent` can be captured. Be careful with this option! Event wrappers can conflict with the JavaScript code on a web page (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--event_wrapper_settings))
 - `global_event_capture_settings` (Block List, Max: 1) Global event capture settings (see [below for nested schema](#nestedblock--monitoring_settings--advanced_javascript_tag_settings--global_event_capture_settings))
 - `instrument_unsupported_ajax_frameworks` (Boolean) Instrumentation of unsupported Ajax frameworks enabled/disabled
+- `proxy_wrapper_enabled` (Boolean) Proxy wrapper enabled/disabled
 - `special_characters_to_escape` (String) Additional special characters that are to be escaped using non-alphanumeric characters in HTML escape format. Maximum length 30 character. Allowed characters are `^`, `\`, `<` and `>`.
 - `sync_beacon_firefox` (Boolean) Send the beacon signal as a synchronous XMLHttpRequest using Firefox enabled/disabled
 - `sync_beacon_internet_explorer` (Boolean) Send the beacon signal as a synchronous XMLHttpRequest using Internet Explorer enabled/disabled
+- `user_action_name_attribute` (String) User action name attribute
 
 <a id="nestedblock--monitoring_settings--advanced_javascript_tag_settings--additional_event_handlers"></a>
 ### Nested Schema for `monitoring_settings.advanced_javascript_tag_settings.additional_event_handlers`
