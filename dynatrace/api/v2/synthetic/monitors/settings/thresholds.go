@@ -48,7 +48,7 @@ type Threshold struct {
 	DealertingSamples *int32       `json:"dealertingSamples,omitempty"` // Number of most recent non-violating request executions that closes the problem
 	Samples           *int32       `json:"samples,omitempty"`           // Number of request executions in analyzed sliding window (sliding window size)
 	StepIndex         *int32       `json:"stepIndex,omitempty"`         // Specify the step's index to which a threshold applies
-	Threshold         *int32       `json:"threshold,omitempty"`         // Notify if monitor request takes longer than X milliseconds to execute
+	Threshold         *float64     `json:"threshold,omitempty"`         // Notify if monitor request takes longer than X milliseconds to execute
 	ViolatingSamples  *int32       `json:"violatingSamples,omitempty"`  // Number of violating request executions in analyzed sliding window
 }
 
