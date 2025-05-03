@@ -75,7 +75,7 @@ func (me *Threshold) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"threshold": {
-			Type:        schema.TypeInt,
+			Type:        schema.TypeFloat,
 			Description: "Notify if monitor request takes longer than X milliseconds to execute",
 			Optional:    true,
 		},
