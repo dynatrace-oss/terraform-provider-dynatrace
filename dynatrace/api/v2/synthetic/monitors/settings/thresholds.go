@@ -47,7 +47,7 @@ type Threshold struct {
 	Aggregation       *Aggregation `json:"aggregation,omitempty"`       // Aggregation type, possible values: `AVG`, `MAX`, `MIN`
 	DealertingSamples *int32       `json:"dealertingSamples,omitempty"` // Number of most recent non-violating request executions that closes the problem
 	Samples           *int32       `json:"samples,omitempty"`           // Number of request executions in analyzed sliding window (sliding window size)
-	StepIndex         *int32       `json:"stepIndex,omitempty"`         // Specify the step's index to which a threshold applies
+	StepIndex         int32        `json:"stepIndex"`                   // Specify the step's index to which a threshold applies
 	Threshold         *float64     `json:"threshold,omitempty"`         // Notify if monitor request takes longer than X milliseconds to execute
 	ViolatingSamples  *int32       `json:"violatingSamples,omitempty"`  // Number of violating request executions in analyzed sliding window
 }
