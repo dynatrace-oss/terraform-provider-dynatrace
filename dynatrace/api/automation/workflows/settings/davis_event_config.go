@@ -28,6 +28,7 @@ type DavisEventConfig struct {
 	EntityTags      map[string][]string `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Omit this attribute if all entities should match
 	OnProblemClose  bool                `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
 	Types           []string            `json:"types" flags:"uniqueitems"`      // The types of davis events to trigger an execution
+	Names           DavisEventNames     `json:"names"`
 }
 
 func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
@@ -57,6 +58,14 @@ func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
+		"names": {
+			Type:        schema.TypeList,
+			Description: "The Davis Events to match on",
+			MinItems:    1,
+			MaxItems:    1,
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(DavisEventNames).Schema("names")},
+		},
 	}
 }
 
@@ -68,6 +77,7 @@ func (me *DavisEventConfig) MarshalHCL(properties hcl.Properties) error {
 		"entity_tags_match": me.EntityTagsMatch,
 		"on_problem_close":  me.OnProblemClose,
 		"types":             me.Types,
+		"names":             me.Names,
 	})
 }
 
@@ -79,6 +89,7 @@ func (me *DavisEventConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		"entity_tags_match": &me.EntityTagsMatch,
 		"on_problem_close":  &me.OnProblemClose,
 		"types":             &me.Types,
+		"names":             &me.Names,
 	})
 }
 
