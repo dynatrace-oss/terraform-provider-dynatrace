@@ -102,7 +102,6 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 
 	switch me.method {
 	case http.MethodGet:
-		fmt.Println("client.GET", uPath)
 		response, err = client.GET(ctx, uPath, rest.RequestOptions{QueryParams: u.Query()})
 	case http.MethodDelete:
 		response, err = client.DELETE(ctx, uPath, rest.RequestOptions{QueryParams: u.Query()})
