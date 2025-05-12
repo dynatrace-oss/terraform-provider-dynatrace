@@ -33,6 +33,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -174,5 +175,5 @@
 	],
 	"schemaId": "app:dynatrace.servicenow:connection",
 	"types": {},
-	"version": "1.0.1"
+	"version": "2"
 }

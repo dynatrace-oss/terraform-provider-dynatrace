@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -129,5 +130,5 @@
 	],
 	"schemaId": "app:dynatrace.jenkins.connector:connection",
 	"types": {},
-	"version": "0.0.5"
+	"version": "1"
 }

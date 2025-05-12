@@ -20,6 +20,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -108,5 +109,5 @@
 	],
 	"schemaId": "app:dynatrace.pagerduty:connection",
 	"types": {},
-	"version": "0.0.7"
+	"version": "1"
 }

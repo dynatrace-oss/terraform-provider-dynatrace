@@ -9,14 +9,14 @@
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Authentication settings for Microsoft Entra Identity Developer.",
-	"displayName": "Microsoft Entra Identity Developer Connection",
+	"description": "Authentication settings for Microsoft Entra ID.",
+	"displayName": "Microsoft Entra ID",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
 	"maxObjects": 100,
 	"metadata": {
-		"appName": "Azure"
+		"appName": "Microsoft Entra ID"
 	},
 	"multiObject": true,
 	"ordered": false,
@@ -91,7 +91,7 @@
 				}
 			],
 			"default": "",
-			"description": "Directory (tenant) ID of Microsoft Entra Identity Developer",
+			"description": "Directory (tenant) ID of Microsoft Entra ID",
 			"displayName": "Directory (tenant) ID",
 			"documentation": "",
 			"maxObjects": 1,
@@ -107,8 +107,8 @@
 					"type": "LENGTH"
 				}
 			],
-			"default": "Microsoft Entra Identity Developer Connection",
-			"description": "The name of the Microsoft Entra Identity Developer connection",
+			"default": "Microsoft Entra ID Connection",
+			"description": "The name of the Microsoft Entra ID connection",
 			"displayName": "Connection name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -128,5 +128,5 @@
 	],
 	"schemaId": "app:dynatrace.azure.connector:microsoft-entra-identity-developer-connection",
 	"types": {},
-	"version": "0.2"
+	"version": "0.2.1"
 }

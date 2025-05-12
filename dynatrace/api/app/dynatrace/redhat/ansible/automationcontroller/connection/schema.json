@@ -33,6 +33,7 @@
 	},
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -135,5 +136,5 @@
 	],
 	"schemaId": "app:dynatrace.redhat.ansible:automation-controller.connection",
 	"types": {},
-	"version": "1.0.2"
+	"version": "2"
 }

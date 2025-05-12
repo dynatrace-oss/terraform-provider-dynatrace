@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.17"
+const SchemaVersion = "1.0.18"
 const SchemaID = "builtin:logmonitoring.log-storage-settings"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*logstoragesettings.Settings] {
