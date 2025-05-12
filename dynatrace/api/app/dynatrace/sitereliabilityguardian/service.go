@@ -30,7 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.3.2"
+const SchemaVersion = "1.6"
 const SchemaID = "app:dynatrace.site.reliability.guardian:guardians"
 
 // func Service(credentials *rest.Credentials) settings.CRUDService[*sitereliabilityguardian.Settings] {

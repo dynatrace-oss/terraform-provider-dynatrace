@@ -396,6 +396,24 @@
 					},
 					"type": "text"
 				},
+				"segments": {
+					"description": "",
+					"displayName": "Segments",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/Segment"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
 				"target": {
 					"description": "",
 					"displayName": "Target",
@@ -413,6 +431,103 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"type": "float"
+				}
+			},
+			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Segment": {
+			"description": "",
+			"displayName": "Segment",
+			"documentation": "",
+			"properties": {
+				"id": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 10,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Segment ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"variables": {
+					"description": "",
+					"displayName": "Segment Variables",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SegmentVariable"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "{id}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SegmentVariable": {
+			"description": "",
+			"displayName": "Segment Variable",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Variable Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"values": {
+					"description": "",
+					"displayName": "Variable Values",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
 				}
 			},
 			"summaryPattern": "{name}",
@@ -470,5 +585,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.5"
+	"version": "1.6"
 }

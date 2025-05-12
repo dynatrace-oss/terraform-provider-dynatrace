@@ -56,6 +56,7 @@ type Objective struct {
 	Name                         string             `json:"name"`                   // Objective name
 	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Possible Values: `DQL`, `REFERENCE_SLO`
 	ReferenceSlo                 *string            `json:"referenceSlo,omitempty"` // Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
+	Segments                     Segments           `json:"segments,omitempty"`
 	Target                       *float64           `json:"target,omitempty"`
 	Warning                      *float64           `json:"warning,omitempty"`
 }
@@ -105,6 +106,14 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 			Description: "Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'",
 			Optional:    true, // precondition
 		},
+		"segments": {
+			Type:        schema.TypeList,
+			Description: "no documentation available",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(Segments).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"target": {
 			Type:        schema.TypeFloat,
 			Description: "no documentation available",
@@ -128,6 +137,7 @@ func (me *Objective) MarshalHCL(properties hcl.Properties) error {
 		"name":                            me.Name,
 		"objective_type":                  me.ObjectiveType,
 		"reference_slo":                   me.ReferenceSlo,
+		"segments":                        me.Segments,
 		"target":                          me.Target,
 		"warning":                         me.Warning,
 	})
@@ -156,6 +166,7 @@ func (me *Objective) UnmarshalHCL(decoder hcl.Decoder) error {
 		"name":                            &me.Name,
 		"objective_type":                  &me.ObjectiveType,
 		"reference_slo":                   &me.ReferenceSlo,
+		"segments":                        &me.Segments,
 		"target":                          &me.Target,
 		"warning":                         &me.Warning,
 	})
