@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccBuiltinProcessMonitoring(t *testing.T) {
-	// Temporarily disabled - new required field (enable with v309)
+	// Temporarily disabled - new required field (enable with v315)
 	// api.TestAcc(t)
 	t.Skip()
 }

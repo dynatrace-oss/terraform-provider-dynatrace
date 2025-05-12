@@ -671,10 +671,120 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"-73": {
+			"default": true,
+			"description": "Rule id: 73",
+			"displayName": "Do not monitor processes if EXE name equals 'pip'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-74": {
+			"default": true,
+			"description": "Rule id: 74",
+			"displayName": "Do not monitor processes if EXE name equals 'hatch'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-75": {
+			"default": true,
+			"description": "Rule id: 75",
+			"displayName": "Do not monitor processes if EXE name equals 'wheel'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-76": {
+			"default": true,
+			"description": "Rule id: 76",
+			"displayName": "Do not monitor processes if EXE name equals 'yum'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-77": {
+			"default": true,
+			"description": "Rule id: 77",
+			"displayName": "Do not monitor processes if EXE name equals 'jupyter'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-78": {
+			"default": true,
+			"description": "Rule id: 78",
+			"displayName": "Do not monitor processes if EXE name equals 'conda'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-79": {
+			"default": true,
+			"description": "Rule id: 79",
+			"displayName": "Do not monitor processes if EXE name equals 'ansible'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-8": {
 			"default": true,
 			"description": "Rule id: 8",
 			"displayName": "Do monitor processes if EXE name equals 'auctioneer'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-80": {
+			"default": true,
+			"description": "Rule id: 80",
+			"displayName": "Do not monitor processes if EXE name equals 'openstack'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-81": {
+			"default": true,
+			"description": "Rule id: 81",
+			"displayName": "Do not monitor processes if EXE name equals 'aws'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-82": {
+			"default": true,
+			"description": "Rule id: 82",
+			"displayName": "Do not monitor processes if EXE name equals 'az'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"-83": {
+			"default": true,
+			"description": "Rule id: 83",
+			"displayName": "Do not monitor processes if EXE name equals 'gcloud'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -698,5 +808,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.4"
+	"version": "0.4.5"
 }
