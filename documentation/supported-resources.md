@@ -288,14 +288,18 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_vulnerability_code | /api/v2/settings/objects (schema: builtin:appsec.code-level-vulnerability-rule-settings) | securityProblems.read, securityProblems.write |
 | dynatrace_vulnerability_settings | /api/v2/settings/objects (schema: builtin:appsec.runtime-vulnerability-detection) | securityProblems.read, securityProblems.write |
 | dynatrace_vulnerability_third_party | /api/v2/settings/objects (schema: builtin:appsec.rule-settings) | securityProblems.read, securityProblems.write |
+| dynatrace_vulnerability_third_party_attr | /api/v2/settings/objects (schema: builtin:appsec.third-party-vulnerability-rule-settings) | securityProblems.read, securityProblems.write |
+| dynatrace_vulnerability_third_party_k8s | /api/v2/settings/objects (schema: builtin:appsec.third-party-vulnerability-kubernetes-label-rule-settings) | securityProblems.read, securityProblems.write |
 | dynatrace_web_app_anomalies | /api/v2/settings/objects (schema: builtin:anomaly-detection.rum-web) | settings.read, settings.write |
 | dynatrace_web_app_auto_injection | /api/v2/settings/objects (schema: builtin:rum.web.automatic-injection) | settings.read, settings.write |
 | dynatrace_web_app_beacon_endpoint | /api/v2/settings/objects (schema: builtin:rum.web.beacon-endpoint) | settings.read, settings.write |
 | dynatrace_web_app_beacon_origins | /api/v2/settings/objects (schema: builtin:rum.web.beacon-domain-origins) | settings.read, settings.write |
 | dynatrace_web_app_custom_config_properties | /api/v2/settings/objects (schema: builtin:rum.web.custom-configuration-properties) | settings.read, settings.write |
+| dynatrace_web_app_custom_prop_restrictions | /api/v2/settings/objects (schema: builtin:rum.web.capture-custom-properties) | settings.read, settings.write |
 | dynatrace_web_app_custom_injection | /api/v2/settings/objects (schema: builtin:rum.web.custom-injection-rules) | settings.read, settings.write |
 | dynatrace_web_app_enablement | /api/v2/settings/objects (schema: builtin:rum.web.enablement) | settings.read, settings.write |
 | dynatrace_web_app_injection_cookie | /api/v2/settings/objects (schema: builtin:rum.web.injection.cookie) | settings.read, settings.write |
+| dynatrace_web_app_javascript_filename| /api/v2/settings/objects (schema: builtin:rum.web.rum-javascript-file-name) | settings.read, settings.write |
 | dynatrace_web_app_javascript_updates | /api/v2/settings/objects (schema: builtin:rum.web.rum-javascript-updates) | settings.read, settings.write |
 | dynatrace_web_app_javascript_version | /api/v2/settings/objects (schema: builtin:rum.web.custom-rum-javascript-version) | settings.read, settings.write |
 | dynatrace_web_app_key_performance_custom | /api/v2/settings/objects (schema: builtin:rum.web.key-performance-metric-custom-actions) | settings.read, settings.write |
