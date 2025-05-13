@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.1.12"
+const SchemaVersion = "0.1.13"
 const SchemaID = "app:dynatrace.kubernetes.connector:connection"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*connection.Settings] {
