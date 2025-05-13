@@ -618,6 +618,7 @@ func Provider() *schema.Provider {
 			"dynatrace_vulnerability_third_party_k8s":       resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdPartyK8s).Resource(),
 			"dynatrace_vulnerability_third_party_attr":      resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdPartyAttr).Resource(),
 			"dynatrace_web_app_custom_prop_restrictions":    resources.NewGeneric(export.ResourceTypes.WebAppCustomProperties).Resource(),
+			"dynatrace_web_app_javascript_filename":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptFilename).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -253,6 +253,7 @@ import (
 	webapprequesterrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/requesterrors"
 	webappresourcecleanup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcecleanuprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/resourcetypes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptfilename"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptupdates"
 	securitycontextsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/securitycontext"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest"
@@ -1463,6 +1464,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		capturecustomproperties.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.WebAppJavascriptFilename: NewResourceDescriptor(rumjavascriptfilename.Service),
 }
 
 type ResourceExclusion struct {

@@ -1,0 +1,48 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Define a custom filename prefix that should be used instead of the default prefix in the RUM monitoring code filename, which is ruxitagentjs or ruxitagent, see [Configure the Real User Monitoring code source](https://dt-url.net/wc03z4k) for details.\n\n **Note:** Be aware that you may experience a temporary reduction in collected RUM data after changing the RUM monitoring code filename prefix. Therefore, this setting should not be changed frequently.",
+	"displayName": "RUM monitoring code filename",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"filename": {
+			"constraints": [
+				{
+					"maxLength": 50,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "A filename prefix can include only lowercase alphanumeric characters from the Latin alphabet, without any diacritical marks like umlauts (e.g., 'ö').",
+					"pattern": "^[0-9a-z]*$",
+					"type": "PATTERN"
+				},
+				{
+					"customMessage": "Filename prefix must not contain `ruxitagent`.",
+					"customValidatorId": "rumJavascriptFilenameValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Custom filename prefix",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaGroups": [
+		"group:web-and-mobile-monitoring.web-applications",
+		"group:web-and-mobile-monitoring"
+	],
+	"schemaId": "builtin:rum.web.rum-javascript-file-name",
+	"types": {},
+	"version": "1.1.5"
+}
