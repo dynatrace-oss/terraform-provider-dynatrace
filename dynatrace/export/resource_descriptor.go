@@ -86,6 +86,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/runtimevulnerabilitydetection"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/thirdpartyvulnerabilitykuberneteslabelrulesettings"
 	kubernetesapp "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/apptransition/kubernetes"
 	attributeallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	attributeblocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist"
@@ -1451,9 +1452,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		webappautoinjection.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.SecurityContext: NewResourceDescriptor(securitycontextsettings.Service),
-	ResourceTypes.Segments:        NewResourceDescriptor(segments.Service),
-	ResourceTypes.PlatformSLO:     NewResourceDescriptor(platformslo.Service),
+	ResourceTypes.SecurityContext:                  NewResourceDescriptor(securitycontextsettings.Service),
+	ResourceTypes.Segments:                         NewResourceDescriptor(segments.Service),
+	ResourceTypes.PlatformSLO:                      NewResourceDescriptor(platformslo.Service),
+	ResourceTypes.AppSecVulnerabilityThirdPartyK8s: NewResourceDescriptor(thirdpartyvulnerabilitykuberneteslabelrulesettings.Service),
 }
 
 type ResourceExclusion struct {
@@ -1580,6 +1582,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AppSecAttackSettings, ""},
 			{ResourceTypes.AppSecAttackRules, ""},
 			{ResourceTypes.AppSecAttackAllowlist, ""},
+			{ResourceTypes.AppSecVulnerabilityThirdPartyK8s, ""},
 		},
 	},
 	{

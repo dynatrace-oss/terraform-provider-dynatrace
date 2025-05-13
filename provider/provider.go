@@ -615,6 +615,7 @@ func Provider() *schema.Provider {
 			"dynatrace_security_context":                    resources.NewGeneric(export.ResourceTypes.SecurityContext).Resource(),
 			"dynatrace_segment":                             resources.NewGeneric(export.ResourceTypes.Segments).Resource(),
 			"dynatrace_platform_slo":                        resources.NewGeneric(export.ResourceTypes.PlatformSLO).Resource(),
+			"dynatrace_vulnerability_third_party_k8s":       resources.NewGeneric(export.ResourceTypes.AppSecVulnerabilityThirdPartyK8s).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
