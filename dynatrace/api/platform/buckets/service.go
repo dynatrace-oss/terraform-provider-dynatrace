@@ -20,6 +20,7 @@ package buckets
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
@@ -78,11 +79,13 @@ func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err e
 	}
 	var result bucket.Response
 	if result, err = client.Get(ctx, id); err != nil {
+		apiErr := coreapi.APIError{}
+		if errors.As(err, &apiErr) {
+			return rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "GET")
+		}
 		return err
 	}
-	if !result.IsSuccess() {
-		return rest.Envelope(result.Data, me.credentials.OAuth.EnvironmentURL, "GET")
-	}
+
 	return json.Unmarshal(result.Data, &v)
 }
 
@@ -149,12 +152,13 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response bucket.Response
-	if response, err = client.Create(ctx, v.Name, data); err != nil {
+
+	if _, err = client.Create(ctx, v.Name, data); err != nil {
+		apiErr := coreapi.APIError{}
+		if errors.As(err, &apiErr) {
+			return nil, rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "POST")
+		}
 		return nil, err
-	}
-	if !response.IsSuccess() {
-		return nil, rest.Envelope(response.Data, me.credentials.OAuth.EnvironmentURL, "POST")
 	}
 
 	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
@@ -199,14 +203,16 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response bucket.Response
-	response, err = client.Update(ctx, id, data)
+
+	_, err = client.Update(ctx, id, data)
 	if err != nil {
+		apiErr := coreapi.APIError{}
+		if errors.As(err, &apiErr) {
+			return rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "PUT")
+		}
 		return err
 	}
-	if !response.IsSuccess() {
-		return rest.Envelope(response.Data, me.credentials.OAuth.EnvironmentURL, "PUT")
-	}
+
 	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	retries := 0
 	for {

@@ -155,15 +155,16 @@ func (me *service) createPrivate(ctx context.Context, v *documents.Document) (st
 	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
-			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+			return nil, rest.Error{Code: apiError.StatusCode, Message: string(apiError.Body)}
 		}
 		return nil, err
 	}
-	if response.IsSuccess() {
-		json.Unmarshal(response.Data, &stub)
-		return stub, nil
+
+	if err := json.Unmarshal(response.Data, &stub); err != nil {
+		return nil, err
 	}
-	return nil, rest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	return stub, nil
+
 }
 
 func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
@@ -175,18 +176,15 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 	if err != nil {
 		return err
 	}
-	response, err := c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
+	_, err = c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
-			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+			return rest.Error{Code: apiError.StatusCode, Message: string(apiError.Body)}
 		}
 		return err
 	}
-	if response.IsSuccess() {
-		return nil
-	}
 
-	return rest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
@@ -194,18 +192,15 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	response, err := client.Delete(ctx, id)
+	_, err = client.Delete(ctx, id)
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
-			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
+			return rest.Error{Code: apiError.StatusCode, Message: string(apiError.Body)}
 		}
 		return err
 	}
-	if response.IsSuccess() {
-		return nil
-	}
 
-	return rest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	return nil
 }
 
 func (me *service) New() *documents.Document {

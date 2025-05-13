@@ -20,11 +20,13 @@ package openpipeline
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	caclib "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/openpipeline"
 )
 
@@ -77,11 +79,11 @@ func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configurat
 
 	response, err := client.Get(ctx, s.kind)
 	if err != nil {
+		apiErr := cacapi.APIError{}
+		if errors.As(err, &apiErr) {
+			return rest.Envelope(apiErr.Body, s.credentials.OAuth.EnvironmentURL, "GET")
+		}
 		return err
-	}
-
-	if !response.IsSuccess() {
-		return rest.Envelope(response.Data, s.credentials.OAuth.EnvironmentURL, "GET")
 	}
 
 	if err := json.Unmarshal(response.Data, &v); err != nil {
