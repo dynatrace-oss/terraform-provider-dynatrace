@@ -1,0 +1,134 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"constraints": [
+		{
+			"customMessage": "Only a combined amount of 20 custom event and session properties can be defined.",
+			"customValidatorId": "rumAppCaptureCustomPropertiesValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Define specific properties to restrict event/session capturing, with options to allow by property name or allow all properties.",
+	"displayName": "Custom Properties Capture Restrictions",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"FieldDataType": {
+			"description": "",
+			"displayName": "Datatype",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "String",
+					"value": "STRING"
+				},
+				{
+					"displayName": "Number",
+					"value": "NUMBER"
+				},
+				{
+					"displayName": "Boolean",
+					"value": "BOOLEAN"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"customEventPropertiesAllowList": {
+			"description": "",
+			"displayName": "List of allowed custom event properties",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/CustomProperty"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Allow new event property"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"customSessionPropertiesAllowList": {
+			"description": "",
+			"displayName": "List of allowed custom session properties",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/CustomProperty"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Allow new session property"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaId": "builtin:rum.web.capture-custom-properties",
+	"types": {
+		"CustomProperty": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"fieldDataType": {
+					"default": "STRING",
+					"description": "",
+					"displayName": "Datatype",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/FieldDataType"
+					}
+				},
+				"fieldName": {
+					"constraints": [
+						{
+							"customMessage": "Please choose a valid field name.",
+							"pattern": "^[a-zA-Z0-9._-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{fieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.3"
+}

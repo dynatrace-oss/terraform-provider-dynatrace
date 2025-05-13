@@ -240,6 +240,7 @@ import (
 	webappautoinjection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/automaticinjection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beacondomainorigins"
 	webappbeaconendpoint "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/beaconendpoint"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/capturecustomproperties"
 	webappcustomconfigproperties "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customconfigurationproperties"
 	webappcustomerrors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/customerrors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/custominjectionrules"
@@ -1458,6 +1459,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.PlatformSLO:                       NewResourceDescriptor(platformslo.Service),
 	ResourceTypes.AppSecVulnerabilityThirdPartyK8s:  NewResourceDescriptor(thirdpartyvulnerabilitykuberneteslabelrulesettings.Service),
 	ResourceTypes.AppSecVulnerabilityThirdPartyAttr: NewResourceDescriptor(thirdpartyvulnerabilityrulesettings.Service),
+	ResourceTypes.WebAppCustomProperties: NewResourceDescriptor(
+		capturecustomproperties.Service,
+		Dependencies.ID(ResourceTypes.WebApplication),
+	),
 }
 
 type ResourceExclusion struct {

@@ -498,6 +498,7 @@ var ResourceTypes = struct {
 	PlatformSLO                         ResourceType
 	AppSecVulnerabilityThirdPartyK8s    ResourceType
 	AppSecVulnerabilityThirdPartyAttr   ResourceType
+	WebAppCustomProperties              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -843,6 +844,7 @@ var ResourceTypes = struct {
 	"dynatrace_platform_slo",
 	"dynatrace_vulnerability_third_party_k8s",
 	"dynatrace_vulnerability_third_party_attr",
+	"dynatrace_web_app_custom_prop_restrictions",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
