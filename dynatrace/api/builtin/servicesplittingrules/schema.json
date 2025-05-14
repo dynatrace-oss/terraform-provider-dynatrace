@@ -1,0 +1,199 @@
+{
+	"allowedScopes": [
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Define rules to split services based on resource attributes defined in the [Semantic Dictionary](https://docs.dynatrace.com/docs/discover-dynatrace/references/semantic-dictionary/fields) and custom attributes. Rules are evaluated in order and the first matching rule applies.",
+	"displayName": "Service splitting",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"itemDisplayName": "New rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "If enabled, the rule will be evaluated.",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Rule"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Rule name must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"rule.ruleName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:service-splitting-rules",
+	"types": {
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"maxLength": 50000,
+							"minLength": 2,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "dql-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "only-resource-and-custom-attributes-dql-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-syntax-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.",
+					"displayName": "Matching condition",
+					"documentation": " A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "matchesValue(k8s.cluster.name, \"com-sales-*\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "code/dql",
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 5000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"serviceSplittingAttributes": {
+					"description": "Define the entire set of resource attributes that should split your services in the matching scope.",
+					"displayName": "Split services by resource attributes",
+					"documentation": "Each attribute that exists will contribute to the final service ID.",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/splitBy"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "{ruleName}",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"splitBy": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "only-resource-and-custom-attributes-single-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Attribute key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{key}",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				}
+			]
+		}
+	},
+	"version": "0.0.7"
+}

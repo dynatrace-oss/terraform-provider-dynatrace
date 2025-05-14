@@ -500,6 +500,7 @@ var ResourceTypes = struct {
 	AppSecVulnerabilityThirdPartyAttr   ResourceType
 	WebAppCustomProperties              ResourceType
 	WebAppJavascriptFilename            ResourceType
+	ServiceSplittingRules               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -847,6 +848,7 @@ var ResourceTypes = struct {
 	"dynatrace_vulnerability_third_party_attr",
 	"dynatrace_web_app_custom_prop_restrictions",
 	"dynatrace_web_app_javascript_filename",
+	"dynatrace_service_splitting",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

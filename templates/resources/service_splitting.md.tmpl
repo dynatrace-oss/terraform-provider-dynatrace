@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Service Monitoring"
+description: |-
+  The resource `{{ .Name }}` covers configuration for service splitting
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Services - https://docs.dynatrace.com/docs/observe/applications-and-microservices/services
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:service-splitting-rules`)
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/servicesplittingrules/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
