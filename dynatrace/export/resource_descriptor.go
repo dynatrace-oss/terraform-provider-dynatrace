@@ -260,6 +260,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebservice"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/fullwebrequest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/fullwebservice"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetectionrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicesplittingrules"
 	sessionreplaywebprivacy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/privacypreferences"
 	sessionreplayresourcecapture "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/sessionreplay/web/resourcecapturing"
@@ -1468,6 +1469,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppJavascriptFilename: NewResourceDescriptor(rumjavascriptfilename.Service),
 	ResourceTypes.ServiceSplittingRules: NewResourceDescriptor(
 		servicesplittingrules.Service,
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
+	),
+	ResourceTypes.ServiceDetectionRules: NewResourceDescriptor(
+		servicedetectionrules.Service,
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
 		Coalesce(Dependencies.HostGroup),

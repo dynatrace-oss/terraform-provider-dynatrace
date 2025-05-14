@@ -501,6 +501,7 @@ var ResourceTypes = struct {
 	WebAppCustomProperties              ResourceType
 	WebAppJavascriptFilename            ResourceType
 	ServiceSplittingRules               ResourceType
+	ServiceDetectionRules               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -849,6 +850,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_custom_prop_restrictions",
 	"dynatrace_web_app_javascript_filename",
 	"dynatrace_service_splitting",
+	"dynatrace_service_detection_rules",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

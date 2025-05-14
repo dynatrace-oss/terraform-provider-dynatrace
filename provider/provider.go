@@ -620,6 +620,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_custom_prop_restrictions":    resources.NewGeneric(export.ResourceTypes.WebAppCustomProperties).Resource(),
 			"dynatrace_web_app_javascript_filename":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptFilename).Resource(),
 			"dynatrace_service_splitting":                   resources.NewGeneric(export.ResourceTypes.ServiceSplittingRules).Resource(),
+			"dynatrace_service_detection_rules":             resources.NewGeneric(export.ResourceTypes.ServiceDetectionRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

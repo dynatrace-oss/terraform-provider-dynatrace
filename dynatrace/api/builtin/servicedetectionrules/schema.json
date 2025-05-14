@@ -1,0 +1,234 @@
+{
+	"allowedScopes": [
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "at-least-one-contributor-is-present-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Define rules to detect and name services based on resource attributes defined in the [Semantic Dictionary](https://docs.dynatrace.com/docs/discover-dynatrace/references/semantic-dictionary/fields) and custom attributes. Rules are evaluated in order and the first matching rule applies.",
+	"displayName": "Service detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"itemDisplayName": "New rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "If enabled, the rule will be evaluated.",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Rule"
+			},
+			"uiCustomization": {
+				"expandable": {
+					"sections": [
+						{
+							"displayName": "Advanced service detection",
+							"expanded": false,
+							"properties": [
+								"additionalRequiredAttributes"
+							]
+						}
+					]
+				}
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Rule name must be unique.",
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"rule.ruleName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:service-detection-rules",
+	"types": {
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"additionalRequiredAttributes": {
+					"description": "Define resource attributes that should not be part of the name but are required to detect the service, e.g. service.namespace or k8s.workload.kind.",
+					"displayName": "Additional service detection attributes",
+					"documentation": "Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll attribute values contribute to the final service ID.",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 500,
+								"minLength": 1,
+								"type": "LENGTH"
+							},
+							{
+								"customValidatorId": "only-resource-and-custom-attributes-single-attribute-validator",
+								"skipAsyncValidation": false,
+								"type": "CUSTOM_VALIDATOR_REF"
+							}
+						],
+						"description": "",
+						"displayName": "Resource attribute key",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"condition": {
+					"constraints": [
+						{
+							"customValidatorId": "dql-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "only-resource-and-custom-attributes-dql-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-syntax-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.",
+					"displayName": "Matching condition",
+					"documentation": "A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "matchesValue(k8s.cluster.name, \"com-sales-*\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "code/dql",
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"serviceNameTemplate": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "service-name-template-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "only-resource-and-custom-attributes-service-name-template-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.",
+					"displayName": "Service name template",
+					"documentation": "All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll resolved attribute values contribute to the final service ID.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "{k8s.workload.name}"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{ruleName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"displayName": "Service name template",
+					"id": "serviceNameTemp",
+					"propertyRef": "./rule/serviceNameTemplate"
+				}
+			]
+		}
+	},
+	"version": "0.0.1"
+}
