@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -49,10 +48,13 @@ func TestSyntheticLocations(t *testing.T) {
 	foundPublic := false
 	foundPrivate := false
 	for _, stub := range stubs {
-		if strings.HasPrefix(stub.ID, "GEOLOCATION-") {
-			foundPublic = true
-		} else if strings.HasPrefix(stub.ID, "SYNTHETIC_LOCATION-") {
-			foundPrivate = true
+		if stub.Value != nil {
+			loc := stub.Value.(*locsettings.SyntheticLocation)
+			if loc.Type == locsettings.LocationTypes.Public {
+				foundPublic = true
+			} else if loc.Type == locsettings.LocationTypes.Private {
+				foundPrivate = true
+			}
 		}
 		if stub.Value == nil {
 			t.Error("Stubs were expected to contain values, but didn't")
