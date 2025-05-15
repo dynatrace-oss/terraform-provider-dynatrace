@@ -270,6 +270,20 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	if me.Type == export.ResourceTypes.IAMGroup || me.Type == export.ResourceTypes.IAMPermission || me.Type == export.ResourceTypes.IAMPolicy || me.Type == export.ResourceTypes.IAMPolicyBindings || me.Type == export.ResourceTypes.IAMPolicyBindingsV2 || me.Type == export.ResourceTypes.IAMUser {
 		return diag.Diagnostics{}
 	}
+	// dynatrace_hub_extension_config may contain credentials
+	// That service matches against a regex (***457***) for them
+	// and replaces the values with what's currently in the state
+	// ==>
+	// if we execute a Read right now, it uses the "old" state
+	// Like with other resources we need to trust that the contents
+	// we just applied are correct.
+	//
+	// to be discussed: should we go that route for all resources
+	//                  executing a Read right after an update
+	//                  is not common practice anyways
+	if me.Type == export.ResourceTypes.HubExtensionConfig {
+		return diag.Diagnostics{}
+	}
 	return me.Read(ctx, d, m)
 }
 

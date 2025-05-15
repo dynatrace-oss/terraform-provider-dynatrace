@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 
@@ -29,6 +30,7 @@ import (
 	extension_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/config/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*extension_config.Settings] {
@@ -39,15 +41,82 @@ type service struct {
 	credentials *rest.Credentials
 }
 
+var pattern = regexp.MustCompile(`^\*{3}\d{3}\*{3}$`)
+
+func replaceCredPlaceholders(a, b any) any {
+	switch aVal := a.(type) {
+	case map[string]any:
+		bMap, ok := b.(map[string]any)
+		if !ok {
+			return b
+		}
+		for key, bVal := range bMap {
+			if aInnerVal, exists := aVal[key]; exists {
+				bMap[key] = replaceCredPlaceholders(aInnerVal, bVal)
+			}
+		}
+	case []any:
+		bSlice, ok := b.([]any)
+		if !ok || len(aVal) != len(bSlice) {
+			return b
+		}
+		for i := range bSlice {
+			bSlice[i] = replaceCredPlaceholders(aVal[i], bSlice[i])
+		}
+	case string:
+		bStr, ok := b.(string)
+		if ok && pattern.MatchString(bStr) {
+			return aVal
+		}
+	}
+	return b
+}
+
 func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings) error {
+	cfg := ctx.Value(settings.ContextKeyStateConfig)
+	stateConfig, _ := cfg.(*extension_config.Settings)
+
 	name, configurationID := splitID(id)
+
 	var response GetMonitoringConfigurationResponse
 	client := rest.HybridClient(me.credentials)
-	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configurationID)), 200).Finish(&response); err != nil {
+
+	urlPath := fmt.Sprintf(
+		"/api/v2/extensions/%s/monitoringConfigurations/%s",
+		url.PathEscape(name),
+		url.PathEscape(configurationID),
+	)
+
+	if err := client.Get(ctx, urlPath, 200).Finish(&response); err != nil {
 		return err
 	}
+
 	injectScope(response.Scope, v)
 	v.Name = name
+
+	// Try to replace placeholders only if stateConfig and response.Value are valid
+	if stateConfig != nil && response.Value != nil {
+		var (
+			receivedValue map[string]any
+			stateValue    map[string]any
+		)
+
+		if err := json.Unmarshal(response.Value, &receivedValue); err != nil {
+			logging.File.Printf("Error unmarshalling received value: %v\n", err)
+		} else if err := json.Unmarshal([]byte(stateConfig.Value), &stateValue); err != nil {
+			logging.File.Printf("Error unmarshalling state config: %v\n", err)
+		} else {
+			merged := replaceCredPlaceholders(stateValue, receivedValue)
+			if marshalled, err := json.MarshalIndent(merged, "", "  "); err != nil {
+				logging.File.Printf("Error marshalling merged config: %v\n", err)
+			} else {
+				v.Value = string(marshalled)
+				return nil
+			}
+		}
+	}
+
+	// Fallback: use response value directly
 	v.Value = string(response.Value)
 	return nil
 }
