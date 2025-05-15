@@ -20,6 +20,7 @@ package scheduling_rules
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -27,6 +28,7 @@ import (
 
 	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	scheduling_rules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules/settings"
+	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
@@ -82,10 +84,12 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	listResponse, err := client.List(ctx, apiClient.SchedulingRules)
 	if err != nil {
+		apiErr := cacapi.APIError{}
+		if errors.As(err, &apiErr) {
+			return nil, tfrest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
+		}
+
 		return nil, err
-	}
-	if apiErr, ok := listResponse.AsAPIError(); ok {
-		return nil, tfrest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
 	}
 	var stubs api.Stubs
 	for _, r := range listResponse.All() {
