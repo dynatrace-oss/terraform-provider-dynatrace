@@ -100,6 +100,7 @@ Optional:
 - `display_unit` (Block List, Max: 1) Display Unit (see [below for nested schema](#nestedblock--objectives--objective--display_unit))
 - `dql_query` (String) DQL query
 - `reference_slo` (String) Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
+- `segments` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--objectives--objective--segments))
 - `target` (Number) no documentation available
 - `warning` (Number) no documentation available
 
@@ -111,6 +112,46 @@ Required:
 - `base` (String) Base Unit
 - `decimals` (Number) Decimals
 - `display` (String) display as unit
+
+
+<a id="nestedblock--objectives--objective--segments"></a>
+### Nested Schema for `objectives.objective.segments`
+
+Required:
+
+- `segment` (Block List, Min: 1) (see [below for nested schema](#nestedblock--objectives--objective--segments--segment))
+
+<a id="nestedblock--objectives--objective--segments--segment"></a>
+### Nested Schema for `objectives.objective.segments.segment`
+
+Required:
+
+- `id` (String) Segment ID
+
+Optional:
+
+- `variables` (Block List, Max: 1) Segment Variables (see [below for nested schema](#nestedblock--objectives--objective--segments--segment--variables))
+
+<a id="nestedblock--objectives--objective--segments--segment--variables"></a>
+### Nested Schema for `objectives.objective.segments.segment.variables`
+
+Required:
+
+- `variable` (Block List, Min: 1) (see [below for nested schema](#nestedblock--objectives--objective--segments--segment--variables--variable))
+
+<a id="nestedblock--objectives--objective--segments--segment--variables--variable"></a>
+### Nested Schema for `objectives.objective.segments.segment.variables.variable`
+
+Required:
+
+- `name` (String) Variable Name
+
+Optional:
+
+- `values` (List of String) Variable Values
+
+
+
 
 
 
