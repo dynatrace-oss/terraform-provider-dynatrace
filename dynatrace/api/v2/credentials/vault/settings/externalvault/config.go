@@ -156,9 +156,11 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("token_secret_name", me.TokenSecretName); err != nil {
 		return err
 	}
-	if err := properties.Encode("credentials_used_for_external_synchronization", me.CredentialsUsedForExternalSynchronization); err != nil {
-		return err
-	}
+	// removed because this seems to get automatically assumed by the REST API
+	//
+	// if err := properties.Encode("credentials_used_for_external_synchronization", me.CredentialsUsedForExternalSynchronization); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
@@ -200,12 +202,14 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("token_secret_name"); ok {
 		me.TokenSecretName = opt.NewString(value.(string))
 	}
-	if value, ok := decoder.GetOk("credentials_used_for_external_synchronization"); ok {
-		me.CredentialsUsedForExternalSynchronization = []string{}
-		for _, elem := range value.(*schema.Set).List() {
-			me.CredentialsUsedForExternalSynchronization = append(me.CredentialsUsedForExternalSynchronization, elem.(string))
-		}
-	}
+	// removed because this seems to get automatically assumed by the REST API
+	//
+	// if value, ok := decoder.GetOk("credentials_used_for_external_synchronization"); ok {
+	// 	me.CredentialsUsedForExternalSynchronization = []string{}
+	// 	for _, elem := range value.(*schema.Set).List() {
+	// 		me.CredentialsUsedForExternalSynchronization = append(me.CredentialsUsedForExternalSynchronization, elem.(string))
+	// 	}
+	// }
 	if me.ClientID != nil || me.ClientSecret != nil || me.TenantID != nil {
 		me.SourceAuthMethod = SourceAuthMethods.AzureKeyVaultClientSecret
 	} else if me.RoleID != nil {

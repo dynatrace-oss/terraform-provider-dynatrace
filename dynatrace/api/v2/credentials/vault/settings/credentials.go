@@ -301,6 +301,7 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("format"); ok {
 		me.CertificateFormat = CertificateFormat(value.(string)).Ref()
 	}
+
 	if me.Username != nil {
 		me.Type = CredentialsTypes.UsernamePassword
 	} else if me.Token != nil {
@@ -313,6 +314,12 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Type = CredentialsTypes.PublicCertificate
 		} else {
 			me.Type = CredentialsTypes.Certificate
+		}
+	} else if me.ExternalVault != nil {
+		if me.ExternalVault.TokenSecretName != nil {
+			me.Type = CredentialsTypes.Token
+		} else {
+			me.Type = CredentialsTypes.UsernamePassword
 		}
 	}
 	if value, ok := decoder.GetOk("allow_contextless_requests"); ok {
