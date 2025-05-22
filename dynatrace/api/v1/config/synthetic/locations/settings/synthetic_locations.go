@@ -54,6 +54,7 @@ type SyntheticLocation struct {
 	CloudPlatform *CloudPlatform `json:"cloudPlatform"` // The cloud provider where the location is hosted. \n\n Only applicable to `PUBLIC` locations
 	IPs           []string       `json:"ips"`           // The list of IP addresses assigned to the location. \n\n Only applicable to `PUBLIC` locations
 	Stage         *Stage         `json:"stage"`         // The release stage of the location
+	GeoLocationID *string        `json:"geoLocationId"` // The Dynatrace GeoLocation ID of the location
 }
 
 func (me *SyntheticLocation) Schema() map[string]*schema.Schema {
@@ -91,6 +92,12 @@ func (me *SyntheticLocation) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Computed:    true,
 		},
+		"geo_location_id": {
+			Type:        schema.TypeString,
+			Description: "The Dynatrace GeoLocation ID of the location",
+			Optional:    true,
+			Computed:    true,
+		},
 		"ips": {
 			Type:        schema.TypeList,
 			Description: "The list of IP addresses assigned to the location. \n\n Only applicable to `PUBLIC` locations",
@@ -115,6 +122,9 @@ func (me *SyntheticLocation) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if err := properties.Encode("status", me.Status); err != nil {
+		return err
+	}
+	if err := properties.Encode("geo_location_id", me.GeoLocationID); err != nil {
 		return err
 	}
 	if err := properties.Encode("cloud_platform", me.CloudPlatform); err != nil {
