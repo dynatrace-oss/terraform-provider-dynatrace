@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -62,10 +63,13 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 
 func (me *service) Get(ctx context.Context, id string, v *web.Application) error {
 	var stateKeyUserActions web.KeyUserActions
+	var ignoreIPAddressRestrictionSettings bool
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if appConfig, ok := cfg.(*web.Application); ok {
 		stateKeyUserActions = appConfig.KeyUserActions
+		ignoreIPAddressRestrictionSettings = appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings
 	}
+
 	if err := me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
@@ -75,6 +79,12 @@ func (me *service) Get(ctx context.Context, id string, v *web.Application) error
 	if err = req.Finish(&kual); err != nil {
 		return err
 	}
+
+	if ignoreIPAddressRestrictionSettings {
+		v.MonitoringSettings.IPAddressRestrictionSettings = nil
+		v.MonitoringSettings.IgnoreIPAddressRestrictionSettings = opt.NewBool(true)
+	}
+
 	actions := web.KeyUserActions{}
 	if len(stateKeyUserActions) > 0 {
 		for _, stateKeyUserAction := range stateKeyUserActions {
@@ -122,6 +132,19 @@ func (me *service) Update(ctx context.Context, id string, v *web.Application) er
 	if appConfig, ok := cfg.(*web.Application); ok {
 		stateKeyUserActions = appConfig.KeyUserActions
 	}
+
+	if v.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *v.MonitoringSettings.IgnoreIPAddressRestrictionSettings {
+		remoteConfig := &web.Application{}
+		if err := me.service.Get(ctx, id, remoteConfig); err != nil {
+			return err
+		}
+		if remoteConfig.MonitoringSettings.IPAddressRestrictionSettings != nil {
+			v.MonitoringSettings.IPAddressRestrictionSettings = remoteConfig.MonitoringSettings.IPAddressRestrictionSettings
+		} else {
+			v.MonitoringSettings.IPAddressRestrictionSettings = nil
+		}
+	}
+
 	if err := me.service.Update(ctx, id, v); err != nil {
 		return err
 	}
