@@ -1,0 +1,131 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"constraints": [
+		{
+			"customMessage": "IP address list must have at least one entry.",
+			"customValidatorId": "RumIpAddressExclusionSchemaValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "The number of IP address exclusions across all applications exceeds the tenant-wide limit.",
+			"customValidatorId": "RumIpAddressExclusionTenantWideLimitsValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Enable the switch below if the IP addresses are to be included. Disable the switch if they are to be excluded.",
+	"displayName": "Exclude IP addresses from monitoring",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"ipAddressExclusionInclude": {
+			"default": false,
+			"description": "",
+			"displayName": "These are the only IP addresses that should be monitored",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ipExclusionList": {
+			"description": "",
+			"displayName": "IP addresses exclusion list",
+			"documentation": "**Examples:**\n\n   - 84.112.10.5\n   - fe80::10a1:c6b2:5f68:785d",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/IpAddressExclusionRule"
+				}
+			},
+			"maxObjects": 2000,
+			"metadata": {
+				"addItemButton": "Add an IP address to exclude"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaGroups": [
+		"group:capturing",
+		"group:capturing.exclusions"
+	],
+	"schemaId": "builtin:rum.web.ipaddress-exclusion",
+	"types": {
+		"IpAddressExclusionRule": {
+			"constraints": [
+				{
+					"customMessage": "IP range end must be \u003e IP range start address",
+					"customValidatorId": "ipRangeValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"ip": {
+					"constraints": [
+						{
+							"customMessage": "Invalid IP address",
+							"customValidatorId": "ipValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Single IP or IP range start address",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"ipTo": {
+					"constraints": [
+						{
+							"customMessage": "Invalid IP address",
+							"customValidatorId": "ipValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "IP range end",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{ip} - {ipTo}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "6.0.3"
+}

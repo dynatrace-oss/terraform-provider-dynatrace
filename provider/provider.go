@@ -621,6 +621,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_javascript_filename":         resources.NewGeneric(export.ResourceTypes.WebAppJavascriptFilename).Resource(),
 			"dynatrace_service_splitting":                   resources.NewGeneric(export.ResourceTypes.ServiceSplittingRules).Resource(),
 			"dynatrace_service_detection_rules":             resources.NewGeneric(export.ResourceTypes.ServiceDetectionRules).Resource(),
+			"dynatrace_web_app_ip_address_exclusion":        resources.NewGeneric(export.ResourceTypes.WebAppIPAddressExclusion).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

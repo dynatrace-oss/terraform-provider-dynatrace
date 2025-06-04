@@ -1,0 +1,25 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Web Applications"
+description: |-
+  The resource `{{ .Name }}` covers configuration for web application IP address exclusions
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> Configuration overlaps with [dynatrace_web_application](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/web_application).
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Exclude IP addresses, browsers, bots, and spiders from monitoring for web applications - https://docs.dynatrace.com/docs/shortlink/rum-exclude-bots
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.web.ipaddress-exclusion`)
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/web/ipaddressexclusion/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
