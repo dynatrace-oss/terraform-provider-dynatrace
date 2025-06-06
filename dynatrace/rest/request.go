@@ -128,7 +128,6 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 	if err != nil {
 		return err
 	}
-	response = nil
 	defer func() {
 		if response != nil && response.Body != nil {
 			response.Body.Close()
