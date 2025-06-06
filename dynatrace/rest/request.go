@@ -72,6 +72,9 @@ func readerFromPayload(payload any) (io.Reader, error) {
 }
 
 func UnmarshalError(method string, url string, data []byte, response *http.Response) (err error) {
+	if response == nil {
+		return nil
+	}
 	if response.StatusCode >= 200 && response.StatusCode < 300 {
 		return nil
 	}
@@ -125,14 +128,21 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
-	if me.onResponse != nil {
+	response = nil
+	defer func() {
+		if response != nil && response.Body != nil {
+			response.Body.Close()
+		}
+	}()
+	if me.onResponse != nil && response != nil {
 		me.onResponse(response)
 	}
 
 	var data []byte
-	if data, err = io.ReadAll(response.Body); err != nil {
-		return err
+	if response != nil && response.Body != nil {
+		if data, err = io.ReadAll(response.Body); err != nil {
+			return err
+		}
 	}
 
 	if err = UnmarshalError(me.method, u.String(), data, response); err != nil {
