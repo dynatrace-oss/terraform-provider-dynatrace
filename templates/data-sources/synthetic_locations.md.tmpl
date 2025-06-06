@@ -10,6 +10,9 @@ description: |-
 
 The synthetic locations data source allows the location IDs to be retrieved based off of provided parameters.
 
+-> For Provider versions earlier than v1.80.0: This data source requires the API token scope **Read synthetic monitors, locations, and nodes** (`ReadSyntheticData`)
+-> For Provider versions v1.80.0 and newer: This data source requires the API token scope **Read synthetic locations** (`syntheticLocations.read`)
+
 ## Example Usage
 
 ```terraform
