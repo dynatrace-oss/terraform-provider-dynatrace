@@ -57,9 +57,8 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
 			return fmt.Errorf(" The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
 		}
-		// if len(conf.APIToken) == 0 {
-		// 	return fmt.Errorf(" No API Token has been specified. Use either the environment variable `DYNATRACE_API_TOKEN` or the configuration attribute `dt_api_token` of the provider for that")
-		// }
+		// We cannot check for the existence of an API Token
+		// OAuth and Platform Tokens are quite possible
 	case CredValIAM:
 		if len(conf.IAM.AccountID) == 0 {
 			return fmt.Errorf(" No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that")

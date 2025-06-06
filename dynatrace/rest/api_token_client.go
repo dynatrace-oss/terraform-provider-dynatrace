@@ -3,6 +3,7 @@ package rest
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"sync"
@@ -154,6 +155,10 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	PreRequest()
 
 	classicURL := request(*me).evalClassicURL()
+	if len(classicURL) == 0 {
+		// sanity check - this should not be empty anymore at this point
+		return fmt.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
+	}
 
 	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
@@ -164,5 +169,6 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	if err != nil {
 		return err
 	}
+
 	return request(*me).HandleResponse(client, fullURL, target)
 }

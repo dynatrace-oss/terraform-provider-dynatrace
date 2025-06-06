@@ -155,22 +155,29 @@ func (me *Generic) Resource() *schema.Resource {
 	return resRes
 }
 
-func (me *Generic) createCredentials(m any) *rest.Credentials {
+func (me *Generic) createCredentials(m any) (*rest.Credentials, error) {
 	conf := m.(*config.ProviderConfiguration)
+	if _, err := config.Credentials(m, config.CredValDefault); err != nil {
+		return nil, err
+	}
 	return &rest.Credentials{
 		Token: conf.APIToken,
 		URL:   conf.EnvironmentURL,
 		IAM:   conf.IAM,
 		OAuth: conf.Automation,
-	}
+	}, nil
 }
 
 func (me *Generic) Settings() settings.Settings {
 	return me.Descriptor.NewSettings()
 }
 
-func (me *Generic) Service(m any) settings.CRUDService[settings.Settings] {
-	return me.Descriptor.Service(me.createCredentials(m))
+func (me *Generic) Service(m any) (settings.CRUDService[settings.Settings], error) {
+	creds, err := me.createCredentials(m)
+	if err != nil {
+		return nil, err
+	}
+	return me.Descriptor.Service(creds), nil
 }
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -178,9 +185,12 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	service := me.Service(m)
+	service, err := me.Service(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	var stub *api.Stub
-	var err error
+
 	stub, err = service.Create(ctx, sttngs)
 	if err != nil {
 		if restWarning, ok := err.(rest.Warning); ok {
@@ -235,8 +245,11 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	if err := hcl.UnmarshalHCL(sttngs, hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	service := me.Service(m)
-	var err error
+	service, err := me.Service(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	if ctx.Value(settings.ContextKeyStateConfig) == nil {
 		stateConfig := me.Settings()
 		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
@@ -390,9 +403,11 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 		return diag.Diagnostics{}
 	}
 	sttngs := me.Settings()
-	service := me.Service(m)
+	service, err := me.Service(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	var err error
 	if ctx.Value(settings.ContextKeyStateConfig) == nil {
 		stateConfig := me.Settings()
 		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
@@ -447,15 +462,22 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(restore), sttngs); err != nil {
 				return diag.FromErr(err)
 			}
-			if err := me.Service(m).Update(ctx, d.Id(), sttngs); err != nil {
+			srv, err := me.Service(m)
+			if err != nil {
+				return diag.FromErr(err)
+			}
+			if err = srv.Update(ctx, d.Id(), sttngs); err != nil {
 				return diag.FromErr(err)
 			}
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
 	}
-	service := me.Service(m)
-	var err error
+	service, err := me.Service(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	if ctx.Value(settings.ContextKeyStateConfig) == nil {
 		stateConfig := me.Settings()
 		if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err == nil {
