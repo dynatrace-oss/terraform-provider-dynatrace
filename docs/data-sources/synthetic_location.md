@@ -10,6 +10,9 @@ description: |-
 
 The synthetic location data source allows the location ID to be retrieved based off of provided parameters.
 
+-> For Provider versions earlier than v1.80.0: This data source requires the API token scope **Read synthetic monitors, locations, and nodes** (`ReadSyntheticData`)
+-> For Provider versions v1.80.0 and newer: This data source requires the API token scope **Read synthetic locations** (`syntheticLocations.read`)
+
 ## Example Usage
 
 ```terraform
@@ -65,6 +68,7 @@ resource "dynatrace_http_monitor" "#name#" {
 
  Only applicable to `PUBLIC` locations
 - `entity_id` (String) The unique ID of the location
+- `geo_location_id` (String) The Dynatrace GeoLocation ID of the location
 - `ips` (List of String) The list of IP addresses assigned to the location. 
 
  Only applicable to `PUBLIC` locations

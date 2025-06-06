@@ -480,7 +480,7 @@ Required:
 - `enabled` (Boolean) Indicates if the object is active
 - `id` (String) Identifier of the processor. Must be unique within a stage.
 - `matcher` (String) Matching condition to apply on incoming records
-- `technology_id` (String) Identifier of the processor. Must be unique within a stage.
+- `technology_id` (String) The reference identifier to a specific technology. This technology is applied on the record.
 
 Optional:
 

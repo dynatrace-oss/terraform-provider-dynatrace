@@ -94,6 +94,41 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
  * **View and manage policies** (`iam-policies-management`)
  * **View environments** (`account-env-read`)
 
+
+### Authenticating with OAuth Credentials
+
+The Terraform Provider supports using OAuth credentials for authentication with endpoints that allow both API Token and OAuth-based access.
+
+> **Note:** Not all resources currently support OAuth. For example, the `dynatrace_json_dashboard` resource can only be configured using API Tokens.
+
+To enable OAuth-based authentication, set the environment variable:
+
+```
+DYNATRACE_HTTP_OAUTH_PREFERENCE=true
+```
+
+When this variable is set and OAuth credentials (e.g., `DT_CLIENT_ID` and `DT_CLIENT_SECRET`) are provided, the provider will prioritize using REST endpoints that support OAuth.
+
+If `DYNATRACE_HTTP_OAUTH_PREFERENCE` is not set or is not `true`, the provider will default to using an API Token for authentication.
+
+---
+
+### Authenticating with Platform Tokens
+
+You can authenticate using a Platform Token by setting the environment variable:
+
+```
+DYNATRACE_PLATFORM_TOKEN
+```
+
+Alternatively, you can use the `platform_token` attribute in the provider configuration.
+
+If `DYNATRACE_PLATFORM_TOKEN` is not defined, the provider will use the configured OAuth credentials (`DT_CLIENT_ID` and `DT_CLIENT_SECRET`) to obtain a Bearer token.
+
+Platform Token authentication follows the same selection rules as OAuth credentials:  
+When the environment variable `DYNATRACE_HTTP_OAUTH_PREFERENCE` is set to `true`, the provider will favor Platform or OAuth tokens over API Tokens.
+
+
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.
 
