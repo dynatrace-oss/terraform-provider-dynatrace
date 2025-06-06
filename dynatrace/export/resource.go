@@ -413,6 +413,7 @@ func (me *Resource) Download() error {
 		me.SetStatus(ResourceStati.Downloaded)
 	}
 	SetOptimizedRegexResource(me)
+	format(me.GetFile(), false)
 	return nil
 }
 
