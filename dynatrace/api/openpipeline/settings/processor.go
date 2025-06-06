@@ -527,7 +527,7 @@ func (p *TechnologyProcessor) Schema() map[string]*schema.Schema {
 	s := p.Processor.Schema()
 	s["technology_id"] = &schema.Schema{
 		Type:        schema.TypeString,
-		Description: "Identifier of the processor. Must be unique within a stage.",
+		Description: "The reference identifier to a specific technology. This technology is applied on the record.",
 		Required:    true,
 	}
 
