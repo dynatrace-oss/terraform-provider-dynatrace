@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.24"
+const SchemaVersion = "1.0.25"
 const SchemaID = "builtin:logmonitoring.log-dpp-rules"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*logdpprules.Settings] {

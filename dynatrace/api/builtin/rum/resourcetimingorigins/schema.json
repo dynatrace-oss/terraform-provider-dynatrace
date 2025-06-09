@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "OneAgent uses the `Server-Timing` response header to communicate RUM correlation data to the Real User Monitoring JavaScript. In case of cross-origin requests, the RUM JavaScript can only access the value of the `Server-Timing` header if the `Timing-Allow-Origin` header allows its origin to do so.\n\nAdd rules to restrict resource-timing information access to only defined origins. If not already set by your application, OneAgent will automatically add the `Timing-Allow-Origin` header to the response of your web application, thereby granting all origins access to resource timing details.",
+	"description": "OneAgent uses the `Server-Timing` response header to communicate RUM correlation data to the RUM JavaScript. For cross-origin requests, the RUM JavaScript can only access the `Server-Timing` header value if the `Timing-Allow-Origin` header permits the origin of the request. Therefore, OneAgent automatically adds the `Timing-Allow-Origin` header to your web application's response if it is not already set by your application. The `Timing-Allow-Origin` header controls access not only to the `Server-Timing` header value, but also to detailed resource timing data.\n\nBy default, access is granted to all origins. Add rules to restrict access to specified origins.",
 	"displayName": "Advanced correlation",
 	"documentation": "",
 	"dynatrace": "1",
@@ -72,5 +72,5 @@
 	],
 	"schemaId": "builtin:rum.resource-timing-origins",
 	"types": {},
-	"version": "0.0.4"
+	"version": "0.0.5"
 }

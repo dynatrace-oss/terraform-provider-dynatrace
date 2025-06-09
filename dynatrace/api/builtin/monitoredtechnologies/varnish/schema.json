@@ -3,7 +3,7 @@
 		"HOST",
 		"environment"
 	],
-	"description": "By default, Varnish Cache monitoring is enabled on all hosts. If you want to disable Varnish Cache monitoring on selected hosts, disable it on these hosts via their settings.\n\nIf you want to enable Varnish Cache monitoring only on selected hosts, disable global Varnish Cache monitoring and enable it on these hosts via their settings.",
+	"description": "By default, Varnish Cache monitoring is disabled on all hosts. If you want to enable Varnish Cache monitoring on selected hosts, enable it on these hosts via their settings.\n\nIf you want to disable Varnish Cache monitoring only on selected hosts, enable global Varnish Cache monitoring and disable it on these hosts via their settings.",
 	"displayName": "Varnish Cache",
 	"documentation": "",
 	"dynatrace": "1",
@@ -24,5 +24,5 @@
 	},
 	"schemaId": "builtin:monitored-technologies.varnish",
 	"types": {},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }

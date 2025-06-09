@@ -132,8 +132,8 @@
 					"type": "LENGTH"
 				},
 				{
-					"customMessage": "The Jira URL must be secure (https://) and must not contain a trailing slash.",
-					"pattern": "^https://.*[^/]$",
+					"customMessage": "The Jira URL must be secure (https://) and must not contain a trailing slash (/) or question mark (?).",
+					"pattern": "^https://.*[^/?]$",
 					"type": "PATTERN"
 				},
 				{
@@ -197,5 +197,5 @@
 	],
 	"schemaId": "app:dynatrace.jira:connection",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

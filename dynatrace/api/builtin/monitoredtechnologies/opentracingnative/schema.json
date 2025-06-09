@@ -3,7 +3,7 @@
 		"HOST",
 		"environment"
 	],
-	"description": "By default, Envoy monitoring is enabled on all hosts. If you want to disable Envoy monitoring on selected hosts, disable it on these hosts via their settings.\n\nIf you want to enable Envoy monitoring only on selected hosts, disable global Envoy monitoring and enable it on these hosts via their settings.",
+	"description": "By default, Envoy monitoring is disabled on all hosts. If you want to enable Envoy monitoring on selected hosts, enable it on these hosts via their settings.\n\nIf you want to disable Envoy monitoring only on selected hosts, enable global Envoy monitoring and disable it on these hosts via their settings.",
 	"displayName": "Envoy",
 	"documentation": "",
 	"dynatrace": "1",
@@ -27,5 +27,5 @@
 	},
 	"schemaId": "builtin:monitored-technologies.open-tracing-native",
 	"types": {},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }

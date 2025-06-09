@@ -21,8 +21,8 @@
 		}
 	],
 	"description": "This setting allows you to configure how OneAgent treats specific HTTP requests when sampling is needed. More precisely, you can advise OneAgent on the importance of specific HTTP requests in relation to other HTTP requests. HTTP requests with the URL with higher importance will be treated to be captured more often and vice versa. Additionally, you can turn off tracing for specific HTTP requests completely. Full-Stack Monitoring includes a defined amount of trace data volume. Every contributing GiB of host or application memory adds a certain amount of trace volume ingest rate to your environment. Depending on that transaction volume, OneAgent captures end-to-end traces every minute up to a peak trace volume. Adaptive Traffic management automatically adjusts the sampling rate of trace data collection so that the collected trace data doesn't exceed the included trace volume. You can learn more about this [here](https://dt-url.net/2y23wt3) \n\nHint: Use [this Multi-dimensional analysis](/ui/diagnostictools/mda?mdaId=atm) to get an overview over the current sample rates per URL. Additionally use the context-menu of the URLs to up- or downscale certain URLs in a convenient way.",
-	"displayName": "Distributed trace sampling for HTTP requests",
-	"documentation": "\n\nThis configuration represents an ordered list of rules. Each rule has conditions, based on request method, the URL path and query parameters. The first rule where all conditions are met will be applied. All string comparisons of the conditions are case sensitive. Use the Enabled switch to turn a rule on or off.",
+	"displayName": "Trace sampling for HTTP requests",
+	"documentation": "\n\nThis configuration represents an ordered list of rules. Each rule has conditions, based on request method, the URL path and query parameters. The first rule where all conditions are met will be applied. Each non-matching rule adds an overhead of a microsecond to the monitored process. All string comparisons of the conditions are case sensitive. Use the Enabled switch to turn a rule on or off.",
 	"dynatrace": "1",
 	"enums": {
 		"HttpMethod": {
@@ -174,7 +174,7 @@
 			"type": "enum"
 		}
 	},
-	"maxObjects": 25,
+	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add URL",
 		"itemDisplayName": "URL",
@@ -197,7 +197,7 @@
 			"default": "6",
 			"description": "",
 			"displayName": "Importance of the specific URL",
-			"documentation": "Select the scaling factor for the current sampling rate of the system.",
+			"documentation": "Select the scaling factor for the current sampling rate of the system. Note, that the importance is only considered when sampling is needed.",
 			"maxObjects": 1,
 			"metadata": {
 				"sortItems": "disabled"
@@ -291,13 +291,6 @@
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"precondition": {
-				"precondition": {
-					"property": "path",
-					"type": "NULL"
-				},
-				"type": "NOT"
-			},
 			"type": {
 				"$ref": "#/enums/PathComparisonType"
 			}
@@ -392,5 +385,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }

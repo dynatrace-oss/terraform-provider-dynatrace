@@ -10,7 +10,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customMessage": "RUM JavaScript version not supported for Real User Monitoring powered by Grail",
+			"customMessage": "RUM JavaScript version not supported for the New Real User Monitoring Experience",
 			"customValidatorId": "rumCustomJavaScriptVersionRumOnGrailValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -61,5 +61,5 @@
 	],
 	"schemaId": "builtin:rum.web.custom-rum-javascript-version",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.1"
 }

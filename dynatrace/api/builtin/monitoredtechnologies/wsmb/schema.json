@@ -27,5 +27,5 @@
 	},
 	"schemaId": "builtin:monitored-technologies.wsmb",
 	"types": {},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }

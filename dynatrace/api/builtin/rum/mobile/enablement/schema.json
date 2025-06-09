@@ -11,7 +11,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customMessage": "Real User Monitoring is required to enable Session Replay.",
+			"customMessage": "Real User Monitoring Classic is required to enable Session Replay Classic.",
 			"customValidatorId": "mobile-session-replay-validator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -81,7 +81,7 @@
 				"enabled": {
 					"default": true,
 					"description": "",
-					"displayName": "Enable Real User Monitoring",
+					"displayName": "Enable Real User Monitoring Classic",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -96,8 +96,8 @@
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
-					"description": "Please be aware that only mobile agents with version **8.303 or higher** can ingest Grail events",
-					"displayName": "Enable Real User Monitoring powered by Grail",
+					"description": "Please be aware that only mobile agents with version **8.309 or higher** can ingest Grail events",
+					"displayName": "Enable New Real User Monitoring Experience",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
@@ -127,7 +127,7 @@
 				"onCrash": {
 					"default": true,
 					"description": "Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
-					"displayName": "Enable Session Replay on crashes",
+					"displayName": "Enable Session Replay Classic on crashes",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -141,5 +141,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.1.3"
+	"version": "2.3"
 }

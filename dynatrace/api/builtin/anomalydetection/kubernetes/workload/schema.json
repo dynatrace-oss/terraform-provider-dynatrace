@@ -4,7 +4,7 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes workload. Changing thresholds resets the observation period.",
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes workload. Changing thresholds resets the observation period. Additional information can be found on our [documentation page](https://dt-url.net/wq02okj#workload).",
 	"displayName": "Kubernetes workload anomaly detection",
 	"documentation": "",
 	"dynatrace": "1",
@@ -435,7 +435,7 @@
 					"default": false,
 					"description": "",
 					"displayName": "Detect high CPU throttling",
-					"documentation": "The CPU throttling to usage ratio exceeds the specified threshold. Important: This alert uses throttled seconds / used seconds (in millicores) in contrast to Prometheus and Grafana, which use throttled periods / total periods for the throttling ratio.",
+					"documentation": "The CPU throttling to limits ratio exceeds the specified threshold. Important: This alert uses throttled seconds / limits (in millicores) in contrast to Prometheus and Grafana, which use throttled periods / total periods for the throttling ratio.",
 					"maxObjects": 1,
 					"metadata": {
 						"minActiveGateVersion": "1.261"
@@ -1330,5 +1330,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.10.1"
+	"version": "1.10.2"
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.18"
+const SchemaVersion = "0.0.19"
 const SchemaID = "builtin:anomaly-detection.services"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*services.Settings] {

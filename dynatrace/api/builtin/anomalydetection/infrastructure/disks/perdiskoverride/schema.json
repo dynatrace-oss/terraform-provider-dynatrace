@@ -5,6 +5,7 @@
 	"constraints": [
 		{
 			"customValidatorId": "anomaly-detection-infrastructure-disk-override-threshold-limit",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -400,5 +401,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.0.1"
 }

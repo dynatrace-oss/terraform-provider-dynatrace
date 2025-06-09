@@ -182,7 +182,7 @@
 			"default": false,
 			"description": "",
 			"displayName": "Group Oracle listener processes by name",
-			"documentation": "Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name.",
+			"documentation": "Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name. On Windows, this option supports listeners launched manually or running on a Windows virtual account.",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.243"
@@ -218,5 +218,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.12"
+	"version": "0.0.13"
 }

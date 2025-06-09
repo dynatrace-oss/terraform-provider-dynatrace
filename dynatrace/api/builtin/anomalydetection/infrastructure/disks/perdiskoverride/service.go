@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1"
+const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.infrastructure-disks.per-disk-override"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*perdiskoverride.Settings] {

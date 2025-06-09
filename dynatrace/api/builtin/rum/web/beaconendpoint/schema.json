@@ -55,6 +55,7 @@
 				{
 					"customMessage": "The beacon endpoint URL must be either absolute, root-relative or relative and must not contain a query string or a fragment",
 					"customValidatorId": "rumBeaconEndpointSettingsUrlValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -96,5 +97,5 @@
 	],
 	"schemaId": "builtin:rum.web.beacon-endpoint",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

@@ -113,6 +113,12 @@
 				"ruleName": {
 					"constraints": [
 						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -159,6 +165,12 @@
 				"key": {
 					"constraints": [
 						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -195,5 +207,5 @@
 			]
 		}
 	},
-	"version": "0.0.7"
+	"version": "0.0.9"
 }

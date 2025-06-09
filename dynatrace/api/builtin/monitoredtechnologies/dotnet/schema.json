@@ -13,7 +13,7 @@
 	"properties": {
 		"enabled": {
 			"default": true,
-			"description": "Requires Dynatrace OneAgent version 1.75 or later on Windows",
+			"description": "",
 			"displayName": "Monitor .NET",
 			"documentation": "",
 			"maxObjects": 1,
@@ -23,7 +23,7 @@
 		},
 		"enabledDotNetCore": {
 			"default": true,
-			"description": "Requires Dynatrace OneAgent version 1.117 or later on Windows and version 1.127 or later on Linux and .NET monitoring enabled",
+			"description": "",
 			"displayName": "Enable .NET Core",
 			"documentation": "",
 			"maxObjects": 1,
@@ -39,5 +39,5 @@
 	},
 	"schemaId": "builtin:monitored-technologies.dotnet",
 	"types": {},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }

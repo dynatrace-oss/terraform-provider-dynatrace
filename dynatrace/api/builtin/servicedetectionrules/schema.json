@@ -80,11 +80,17 @@
 			"documentation": "",
 			"properties": {
 				"additionalRequiredAttributes": {
-					"description": "Define resource attributes that should not be part of the name but are required to detect the service, e.g. service.namespace or k8s.workload.kind.",
+					"description": "Add resource attribute keys (e.g. service.namespace or k8s.workload.kind) that also detect unique services but are not included in the displayed service name.",
 					"displayName": "Additional service detection attributes",
 					"documentation": "Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll attribute values contribute to the final service ID.",
 					"items": {
 						"constraints": [
+							{
+								"type": "NOT_EMPTY"
+							},
+							{
+								"type": "TRIMMED"
+							},
 							{
 								"maxLength": 500,
 								"minLength": 1,
@@ -161,6 +167,12 @@
 				"ruleName": {
 					"constraints": [
 						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -179,6 +191,9 @@
 					"constraints": [
 						{
 							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
 						},
 						{
 							"maxLength": 500,
@@ -230,5 +245,5 @@
 			]
 		}
 	},
-	"version": "0.0.1"
+	"version": "0.0.3"
 }
