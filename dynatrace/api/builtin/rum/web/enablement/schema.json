@@ -5,15 +5,21 @@
 	],
 	"constraints": [
 		{
-			"customMessage": "Real User Monitoring is required to enable Session Replay.",
+			"customMessage": "Real User Monitoring Classic is required to enable Session Replay Classic.",
 			"customValidatorId": "sessionReplayRumEnabledValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "New Real User Monitoring Experience and Session Replay Classic are required to enable Experience Analytics.",
+			"customValidatorId": "experienceAnalyticsEnablementValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"deletionConstraints": [
 		{
-			"customMessage": "Real User Monitoring powered by Grail can't be enabled because this application uses Code Snippet in the Automatic Injection settings.",
+			"customMessage": "New Real User Monitoring Experience can't be enabled because this application uses Code Snippet in the Automatic Injection settings.",
 			"customValidatorId": "rumOnGrailAutomaticInjectionValidator"
 		}
 	],
@@ -25,6 +31,21 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"experienceAnalytics": {
+			"description": "",
+			"displayName": "Experience Analytics",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"featureFlag": "com.compuware.apm.webuiff.rum-settings-web-show-experience-analytics.reeaw.feature",
+				"maturity": "PREVIEW"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/experienceAnalytics"
+			}
+		},
 		"rum": {
 			"description": "Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
 			"displayName": "Real User Monitoring",
@@ -55,6 +76,30 @@
 	],
 	"schemaId": "builtin:rum.web.enablement",
 	"types": {
+		"experienceAnalytics": {
+			"description": "",
+			"displayName": "experienceAnalytics",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "As part of the new RUM experience preview, Experience Analytics captures all interactions within your application. Check our documentation for more details: https://docs.dynatrace.com/docs/whats-new/preview-releases",
+					"displayName": "Enable Experience Analytics",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"maturity": "PREVIEW"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"rum": {
 			"description": "",
 			"displayName": "rum",
@@ -82,7 +127,7 @@
 				"enabled": {
 					"default": true,
 					"description": "",
-					"displayName": "Enable Real User Monitoring",
+					"displayName": "Enable Real User Monitoring Classic",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -98,7 +143,7 @@
 						}
 					],
 					"description": "",
-					"displayName": "Enable Real User Monitoring powered by Grail",
+					"displayName": "Enable New Real User Monitoring Experience",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
@@ -135,7 +180,7 @@
 						}
 					],
 					"default": 100,
-					"description": "[Percentage of user sessions recorded with Session Replay](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.",
+					"description": "[Percentage of user sessions recorded with Session Replay Classic](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay Classic, it results in 25% of sessions recorded with Session Replay Classic.",
 					"displayName": "Cost and traffic control",
 					"documentation": "",
 					"maxObjects": 1,
@@ -147,19 +192,19 @@
 				"enabled": {
 					"constraints": [
 						{
-							"customMessage": "Session Replay can't be activated currently, either due to the status of your licensing agreement or because you've exhausted your quota of DEM units. Please contact Dynatrace Sales to update your license.",
+							"customMessage": "Session Replay Classic can't be activated currently, either due to the status of your licensing agreement or because you've exhausted your quota of DEM units. Please contact Dynatrace Sales to update your license.",
 							"customValidatorId": "sessionReplayLicenseValidator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
-							"customMessage": "For emergency reasons session replay has been disabled on this application and cannot be re-enabled. Please contact your Dynatrace support.",
+							"customMessage": "For emergency reasons Session Replay Classic has been disabled on this application and cannot be re-enabled. Please contact your Dynatrace support.",
 							"customValidatorId": "sessionReplayDisabledByEmergencyValidator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
-							"customMessage": "Session Replay can't be enabled for your application because the secondary storage for Session Replay data hasn't been configured correctly. Please contact support or your Dynatrace administrator",
+							"customMessage": "Session Replay Classic can't be enabled for your application because the secondary storage for Session Replay Classic data hasn't been configured correctly. Please contact support or your Dynatrace administrator",
 							"customValidatorId": "replayStorageReadinessValidator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
@@ -171,8 +216,8 @@
 						}
 					],
 					"default": false,
-					"description": "Before enabling, Dynatrace checks your system against the prerequisites for [Session Replay](https://dt-url.net/ma3m0psf).",
-					"displayName": "Enable Session Replay",
+					"description": "Before enabling, Dynatrace checks your system against the prerequisites for [Session Replay Classic](https://dt-url.net/ma3m0psf).",
+					"displayName": "Enable Session Replay Classic",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -186,5 +231,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1.3"
+	"version": "1.4.1"
 }
