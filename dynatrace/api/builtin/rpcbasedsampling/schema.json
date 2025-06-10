@@ -1,0 +1,415 @@
+{
+	"allowedScopes": [
+		"PROCESS_GROUP_INSTANCE",
+		"PROCESS_GROUP",
+		"CLOUD_APPLICATION",
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "at-least-one-parameter-is-mandatory-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "This setting allows you to configure how OneAgent treats specific Remote Procedure Calls (RPCs) when sampling is needed. More precisely, you can advise OneAgent on the importance of specific RPCs in relation to other RPCs. RPCs with higher importance will be treated to be captured more often and vice versa. Additionally, you can turn off tracing for specific RPCs completely. Full-Stack Monitoring includes a defined amount of trace data volume. Every contributing GiB of host or application memory adds a certain amount of trace volume ingest rate to your environment. Depending on that transaction volume, OneAgent captures end-to-end traces every minute up to a peak trace volume. Adaptive Traffic management automatically adjusts the sampling rate of trace data collection so that the collected trace data doesn't exceed the included trace volume. You can learn more about this [here](https://dt-url.net/na03wq0)",
+	"displayName": "Trace sampling for RPC requests",
+	"documentation": "\n\nThis configuration represents an ordered list of rules. Each rule has conditions, based on protocol, remote operation name, remote service name or endpoint name of the RPC. The first rule where all conditions are met will be applied. Each non-matching rule adds an overhead of a microsecond to the monitored process. All string comparisons of the conditions are case sensitive. Use the switch in the \"Enabled\" column to turn a rule on or off.",
+	"dynatrace": "1",
+	"enums": {
+		"ComparisonType": {
+			"description": "",
+			"displayName": "ComparisonType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Equals",
+					"value": "EQUALS"
+				},
+				{
+					"displayName": "Does not equal",
+					"value": "DOES_NOT_EQUAL"
+				},
+				{
+					"displayName": "Contains",
+					"value": "CONTAINS"
+				},
+				{
+					"displayName": "Does not contain",
+					"value": "DOES_NOT_CONTAIN"
+				},
+				{
+					"displayName": "Starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"displayName": "Does not start with",
+					"value": "DOES_NOT_START_WITH"
+				},
+				{
+					"displayName": "Ends with",
+					"value": "ENDS_WITH"
+				},
+				{
+					"displayName": "Does not end with",
+					"value": "DOES_NOT_END_WITH"
+				}
+			],
+			"type": "enum"
+		},
+		"SamplingScaleFactor": {
+			"description": "",
+			"displayName": "SamplingScaleFactor",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Increase capturing 128 times",
+					"value": "0"
+				},
+				{
+					"displayName": "Increase capturing 64 times",
+					"value": "1"
+				},
+				{
+					"displayName": "Increase capturing 32 times",
+					"value": "2"
+				},
+				{
+					"displayName": "Increase capturing 16 times",
+					"value": "3"
+				},
+				{
+					"displayName": "Increase capturing 8 times",
+					"value": "4"
+				},
+				{
+					"displayName": "Increase capturing 4 times",
+					"value": "5"
+				},
+				{
+					"displayName": "Increase capturing 2 times",
+					"value": "6"
+				},
+				{
+					"displayName": "Reduce capturing by factor 2",
+					"value": "8"
+				},
+				{
+					"displayName": "Reduce capturing by factor 4",
+					"value": "9"
+				},
+				{
+					"displayName": "Reduce capturing by factor 8",
+					"value": "10"
+				},
+				{
+					"displayName": "Reduce capturing by factor 16",
+					"value": "11"
+				},
+				{
+					"displayName": "Reduce capturing by factor 32",
+					"value": "12"
+				},
+				{
+					"displayName": "Reduce capturing by factor 64",
+					"value": "13"
+				},
+				{
+					"displayName": "Reduce capturing by factor 128",
+					"value": "14"
+				}
+			],
+			"type": "enum"
+		},
+		"WireProtocolType": {
+			"description": "",
+			"displayName": "WireProtocolType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "ADK",
+					"value": "1"
+				},
+				{
+					"displayName": "DOTNET_REMOTING",
+					"value": "2"
+				},
+				{
+					"displayName": "DOTNET_REMOTING_TCP",
+					"value": "3"
+				},
+				{
+					"displayName": "DOTNET_REMOTING_HTTP",
+					"value": "4"
+				},
+				{
+					"displayName": "DOTNET_REMOTING_XMLRPC",
+					"value": "5"
+				},
+				{
+					"displayName": "GRPC",
+					"value": "6"
+				},
+				{
+					"displayName": "GRPC_BIDI",
+					"value": "7"
+				},
+				{
+					"displayName": "GRPC_UNARY",
+					"value": "8"
+				},
+				{
+					"displayName": "GRPC_SERVERSTREAM",
+					"value": "9"
+				},
+				{
+					"displayName": "GRPC_CLIENTSTREAM",
+					"value": "10"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"metadata": {
+		"addItemButton": "Add RPC",
+		"itemDisplayName": "RPC",
+		"minAgentVersion": "1.317"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"endpointName": {
+			"constraints": [
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Endpoint name",
+			"documentation": "Specify the RPC endpoint name. If the endpoint name is empty, either remote operation name or remote service name must be specified that can be used for RPC matching.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"endpointNameComparisonType": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Endpoint name comparison condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ComparisonType"
+			}
+		},
+		"factor": {
+			"default": "6",
+			"description": "",
+			"displayName": "Importance of the RPC",
+			"documentation": "Select the scaling factor for the current sampling rate of the system. Note, that the importance is only considered when sampling is needed.",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": false,
+				"property": "ignore",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/enums/SamplingScaleFactor"
+			}
+		},
+		"ignore": {
+			"default": false,
+			"description": "",
+			"displayName": "Disable tracing for matching RPC requests",
+			"documentation": "No Traces will be captured for matching RPC requests. This applies always, even if Adaptive Traffic Management is inactive.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"remoteOperationName": {
+			"constraints": [
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Remote operation name",
+			"documentation": "Specify the RPC operation name. If the remote operation name is empty, either remote service name or endpoint name must be specified that can be used for RPC matching.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"remoteOperationNameComparisonType": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Remote operation name comparison condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ComparisonType"
+			}
+		},
+		"remoteServiceName": {
+			"constraints": [
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 200,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Remote service name",
+			"documentation": "Specify the RPC remote service name. If the remote service name is empty, either remote operation name or endpoint name must be specified that can be used for RPC matching.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"remoteServiceNameComparisonType": {
+			"default": "EQUALS",
+			"description": "",
+			"displayName": "Remote service name comparison condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/ComparisonType"
+			}
+		},
+		"wireProtocolType": {
+			"default": "1",
+			"description": "",
+			"displayName": "Protocol",
+			"documentation": "Specify the RPC protocol that can be used for RPC matching.",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/WireProtocolType"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:service-monitoring",
+		"group:preferences"
+	],
+	"schemaId": "builtin:rpc-based-sampling",
+	"types": {
+		"QueryParameter": {
+			"description": "",
+			"displayName": "QueryParameter",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Query parameter name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Query parameter value",
+					"documentation": "The value must be equal for a match.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"valueIsUndefined": {
+					"default": false,
+					"description": "",
+					"displayName": "Query parameter value is undefined",
+					"documentation": "If enabled, the value is treated as undefined",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"property": "value",
+						"type": "NULL"
+					},
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "{name}{value|valueSet, select, true {={value}} other {}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.3"
+}

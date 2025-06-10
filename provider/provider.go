@@ -622,6 +622,7 @@ func Provider() *schema.Provider {
 			"dynatrace_service_splitting":                   resources.NewGeneric(export.ResourceTypes.ServiceSplittingRules).Resource(),
 			"dynatrace_service_detection_rules":             resources.NewGeneric(export.ResourceTypes.ServiceDetectionRules).Resource(),
 			"dynatrace_web_app_ip_address_exclusion":        resources.NewGeneric(export.ResourceTypes.WebAppIPAddressExclusion).Resource(),
+			"dynatrace_rpc_based_sampling":                  resources.NewGeneric(export.ResourceTypes.RPCBasedSampling).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -503,6 +503,7 @@ var ResourceTypes = struct {
 	ServiceSplittingRules               ResourceType
 	ServiceDetectionRules               ResourceType
 	WebAppIPAddressExclusion            ResourceType
+	RPCBasedSampling                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -853,6 +854,7 @@ var ResourceTypes = struct {
 	"dynatrace_service_splitting",
 	"dynatrace_service_detection_rules",
 	"dynatrace_web_app_ip_address_exclusion",
+	"dynatrace_rpc_based_sampling",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

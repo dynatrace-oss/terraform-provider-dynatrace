@@ -224,6 +224,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processvisibility"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/remote/environment"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/resourceattribute"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rpcbasedsampling"
 	rumcustomenablement "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/custom/enablement"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/ipdetermination"
@@ -1486,6 +1487,15 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppIPAddressExclusion: NewResourceDescriptor(
 		ipaddressexclusion.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
+	),
+	ResourceTypes.RPCBasedSampling: NewResourceDescriptor(
+		rpcbasedsampling.Service,
+		Coalesce(Dependencies.ProcessGroupInstance),
+		Coalesce(Dependencies.ProcessGroup),
+		Coalesce(Dependencies.CloudApplication),
+		Coalesce(Dependencies.CloudApplicationNamespace),
+		Coalesce(Dependencies.K8sCluster),
+		Coalesce(Dependencies.HostGroup),
 	),
 }
 
