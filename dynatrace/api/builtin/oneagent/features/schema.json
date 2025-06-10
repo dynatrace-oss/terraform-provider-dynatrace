@@ -2,17 +2,22 @@
 	"allowedScopes": [
 		"PROCESS_GROUP_INSTANCE",
 		"PROCESS_GROUP",
+		"CLOUD_APPLICATION",
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
 		"environment"
 	],
 	"constraints": [
 		{
 			"customMessage": "Tenant's minimum OneAgent or ActiveGate version(s) don't satisfy feature requirements",
 			"customValidatorId": "oafs-min-tenant-agents-versions",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "Inconsistent State: In case instrumentation is turned off also the feature needs to be turned off.",
 			"customValidatorId": "oafs-consistency-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -130,5 +135,5 @@
 			]
 		}
 	},
-	"version": "1.5.9"
+	"version": "1.5.10"
 }

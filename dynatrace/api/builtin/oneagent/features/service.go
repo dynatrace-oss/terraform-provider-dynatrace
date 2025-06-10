@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.5.9"
+const SchemaVersion = "1.5.10"
 const SchemaID = "builtin:oneagent.features"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*features.Settings] {
