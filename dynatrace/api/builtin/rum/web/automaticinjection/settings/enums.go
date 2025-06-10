@@ -26,3 +26,15 @@ var CodeSnippetTypes = struct {
 	"DEFERRED",
 	"SYNCHRONOUSLY",
 }
+
+type ScriptExecutionAttribute string
+
+var ScriptExecutionAttributes = struct {
+	Async ScriptExecutionAttribute
+	Defer ScriptExecutionAttribute
+	None  ScriptExecutionAttribute
+}{
+	"async",
+	"defer",
+	"none",
+}
