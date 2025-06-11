@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: dynatrace_security_context Resource - terraform-provider-dynatrace"
-subcategory: "Platform"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_security_context` covers configuration for security context settings
 ---
 
 # dynatrace_security_context (Resource)
+
+!> This resource API endpoint has been deprecated, please use [dynatrace_management_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/management_zone_v2) instead.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
