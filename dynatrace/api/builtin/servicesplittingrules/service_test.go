@@ -22,7 +22,7 @@ import (
 )
 
 func TestAccServiceSplittingRules(t *testing.T) {
-	// Temporarily disabled - not available on test tenant (enable with v315)
+	// Temporarily disabled - not available on test tenant (enable with v317)
 	// api.TestAcc(t)
 	t.Skip()
 }
