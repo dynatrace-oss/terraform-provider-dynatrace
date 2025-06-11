@@ -36,6 +36,7 @@ type Settings struct {
 	RemoteServiceNameComparisonType   ComparisonType       `json:"remoteServiceNameComparisonType"`   // Possible Values: `CONTAINS`, `DOES_NOT_CONTAIN`, `DOES_NOT_END_WITH`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `EQUALS`, `STARTS_WITH`
 	Scope                             *string              `json:"-" scope:"scope"`                   // The scope of this setting (PROCESS_GROUP_INSTANCE, PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	WireProtocolType                  WireProtocolType     `json:"wireProtocolType"`                  // Possible Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10` \n\n  - `1`: ADK\n\n  - `2`: DOTNET_REMOTING\n\n  - `3`: DOTNET_REMOTING_TCP\n\n  - `4`: DOTNET_REMOTING_HTTP\n\n  - `5`: DOTNET_REMOTING_XMLRPC\n\n  - `6`: GRPC\n\n  - `7`: GRPC_BIDI\n\n  - `8`: GRPC_UNARY\n\n  - `9`: GRPC_SERVERSTREAM\n\n  - `10`: GRPC_CLIENTSTREAM
+	InsertAfter                       string               `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -100,6 +101,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Possible Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10` \n\n  - `1`: ADK\n\n  - `2`: DOTNET_REMOTING\n\n  - `3`: DOTNET_REMOTING_TCP\n\n  - `4`: DOTNET_REMOTING_HTTP\n\n  - `5`: DOTNET_REMOTING_XMLRPC\n\n  - `6`: GRPC\n\n  - `7`: GRPC_BIDI\n\n  - `8`: GRPC_UNARY\n\n  - `9`: GRPC_SERVERSTREAM\n\n  - `10`: GRPC_CLIENTSTREAM",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Optional:    true,
+			Computed:    true,
+		},
 	}
 }
 
@@ -116,6 +123,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"remote_service_name_comparison_type":   me.RemoteServiceNameComparisonType,
 		"scope":                                 me.Scope,
 		"wire_protocol_type":                    me.WireProtocolType,
+		"insert_after":                          me.InsertAfter,
 	})
 }
 
@@ -142,5 +150,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"remote_service_name_comparison_type":   &me.RemoteServiceNameComparisonType,
 		"scope":                                 &me.Scope,
 		"wire_protocol_type":                    &me.WireProtocolType,
+		"insert_after":                          &me.InsertAfter,
 	})
 }
