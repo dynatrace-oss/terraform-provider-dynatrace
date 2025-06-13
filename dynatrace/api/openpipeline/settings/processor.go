@@ -306,12 +306,12 @@ func (ep *FieldExtraction) Schema() map[string]*schema.Schema {
 		"fields": {
 			Type:        schema.TypeList,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "",
-			Required:    true,
+			Description: "Unique fields to include/exclude in the extracted record",
+			Optional:    true,
 		},
 		"semantic": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Defines how the fields of the source record should be extracted",
 			Required:    true,
 		},
 	}
@@ -366,7 +366,7 @@ func (ep *BizEventExtractionProcessor) Schema() map[string]*schema.Schema {
 		MinItems:    1,
 		MaxItems:    1,
 		Elem:        &schema.Resource{Schema: new(FieldExtraction).Schema()},
-		Description: "",
+		Description: "Definition of the field extraction",
 		Optional:    true,
 	}
 
