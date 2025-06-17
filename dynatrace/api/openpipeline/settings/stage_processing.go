@@ -39,6 +39,7 @@ type ProcessingStageProcessor struct {
 	fieldsRemoveProcessor *FieldsRemoveProcessor
 	fieldsRenameProcessor *FieldsRenameProcessor
 	technologyProcessor   *TechnologyProcessor
+	dropProcessor         *DropProcessor
 }
 
 func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
@@ -83,6 +84,14 @@ func (ep *ProcessingStageProcessor) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(TechnologyProcessor).Schema()},
 			Optional:    true,
 		},
+		"drop_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to drop the record either during the processing stage or at the endpoint",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(DropProcessor).Schema()},
+			Optional:    true,
+		},
 	}
 }
 
@@ -93,6 +102,7 @@ func (ep *ProcessingStageProcessor) MarshalHCL(properties hcl.Properties) error 
 		"fields_remove_processor": ep.fieldsRemoveProcessor,
 		"fields_rename_processor": ep.fieldsRenameProcessor,
 		"technology_processor":    ep.technologyProcessor,
+		"drop_processor":          ep.dropProcessor,
 	})
 }
 
@@ -103,6 +113,7 @@ func (ep *ProcessingStageProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"fields_remove_processor": &ep.fieldsRemoveProcessor,
 		"fields_rename_processor": &ep.fieldsRenameProcessor,
 		"technology_processor":    &ep.technologyProcessor,
+		"drop_processor":          &ep.dropProcessor,
 	})
 }
 
@@ -121,6 +132,9 @@ func (ep ProcessingStageProcessor) MarshalJSON() ([]byte, error) {
 	}
 	if ep.technologyProcessor != nil {
 		return json.Marshal(ep.technologyProcessor)
+	}
+	if ep.dropProcessor != nil {
+		return json.Marshal(ep.dropProcessor)
 	}
 
 	return nil, errors.New("missing ProcessingStageProcessor value")
@@ -165,6 +179,13 @@ func (ep *ProcessingStageProcessor) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ep.technologyProcessor = &technologyProcessor
+
+	case DropProcessorType:
+		dropProcessor := DropProcessor{}
+		if err := json.Unmarshal(b, &dropProcessor); err != nil {
+			return err
+		}
+		ep.dropProcessor = &dropProcessor
 
 	default:
 		return fmt.Errorf("unknown ProcessingStageProcessor type: %s", ttype)
