@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"os"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -31,6 +32,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/list"
 	customtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
 )
+
+var ErrZeroMatched = os.Getenv("DYNATRACE_TAGS_ERR_ZERO_MATCHED") == "true"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*customtags.Settings] {
 	return &service{credentials: credentials}
@@ -91,6 +94,10 @@ func (me *service) Update(ctx context.Context, id string, v *customtags.Settings
 	if err = client.Post(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
 		return err
 	}
+	if ErrZeroMatched && settingsObj.MatchedEntities == 0 {
+		return rest.Error{Message: fmt.Sprintf("No entities matching the selector '%s' were found within the past three years.", v.EntitySelector)}
+	}
+
 	v.MatchedEntities = settingsObj.MatchedEntities
 
 	return nil
