@@ -69,6 +69,7 @@ type EndpointProcessor struct {
 	fieldsAddProcessor    *FieldsAddProcessor
 	fieldsRemoveProcessor *FieldsRemoveProcessor
 	fieldsRenameProcessor *FieldsRenameProcessor
+	dropProcessor         *DropProcessor
 }
 
 func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
@@ -105,6 +106,14 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},
 			Optional:    true,
 		},
+		"drop_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to drop the record either during the processing stage or at the endpoint",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(DropProcessor).Schema()},
+			Optional:    true,
+		},
 	}
 }
 
@@ -114,6 +123,7 @@ func (ep *EndpointProcessor) MarshalHCL(properties hcl.Properties) error {
 		"fields_add_processor":    ep.fieldsAddProcessor,
 		"fields_remove_processor": ep.fieldsRemoveProcessor,
 		"fields_rename_processor": ep.fieldsRenameProcessor,
+		"drop_processor":          ep.dropProcessor,
 	})
 }
 
@@ -123,6 +133,7 @@ func (ep *EndpointProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"fields_add_processor":    &ep.fieldsAddProcessor,
 		"fields_remove_processor": &ep.fieldsRemoveProcessor,
 		"fields_rename_processor": &ep.fieldsRenameProcessor,
+		"drop_processor":          &ep.dropProcessor,
 	})
 }
 
@@ -138,6 +149,9 @@ func (ep EndpointProcessor) MarshalJSON() ([]byte, error) {
 	}
 	if ep.fieldsRenameProcessor != nil {
 		return json.Marshal(ep.fieldsRenameProcessor)
+	}
+	if ep.dropProcessor != nil {
+		return json.Marshal(ep.dropProcessor)
 	}
 
 	return nil, errors.New("missing EndpointProcessor value")
@@ -177,6 +191,13 @@ func (ep *EndpointProcessor) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ep.fieldsRenameProcessor = &fieldsRenameProcessor
+
+	case DropProcessorType:
+		dropProcessor := DropProcessor{}
+		if err := json.Unmarshal(b, &dropProcessor); err != nil {
+			return err
+		}
+		ep.dropProcessor = &dropProcessor
 
 	default:
 		return fmt.Errorf("unknown EndpointProcessor type: %s", ttype)

@@ -10,6 +10,7 @@ const (
 	FieldsAddProcessorType    = "fieldsAdd"
 	FieldsRemoveProcessorType = "fieldsRemove"
 	FieldsRenameProcessorType = "fieldsRename"
+	DropProcessorType         = "drop"
 
 	CounterMetricProcessorType = "counterMetric"
 	ValueMetricProcessorType   = "valueMetric"
@@ -294,6 +295,27 @@ func (f *FieldsRenameItem) UnmarshalHCL(decoder hcl.Decoder) error {
 		"from_name": &f.FromName,
 		"to_name":   &f.ToName,
 	})
+}
+
+type DropProcessor struct {
+	Processor
+}
+
+func (p *DropProcessor) Schema() map[string]*schema.Schema {
+	return p.Processor.Schema()
+}
+
+func (p *DropProcessor) MarshalHCL(properties hcl.Properties) error {
+	return p.Processor.MarshalHCL(properties)
+}
+
+func (p *DropProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
+	return p.Processor.UnmarshalHCL(decoder)
+}
+
+func (ep DropProcessor) MarshalJSON() ([]byte, error) {
+	type dropProcessor DropProcessor
+	return MarshalAsJSONWithType((dropProcessor)(ep), DropProcessorType)
 }
 
 type FieldExtraction struct {
