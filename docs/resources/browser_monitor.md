@@ -905,6 +905,11 @@ Required:
 - `creds` (String) A reference to the entry within the credential vault
 - `type` (String) The type of authentication
 
+Optional:
+
+- `auth_server_allowlist` (String) List of allowed servers, optional with Kerberos authentication
+- `domain` (String) User's domain name, required with Kerberos authentication
+
 
 <a id="nestedblock--script--events--event--navigate--target"></a>
 ### Nested Schema for `script.events.event.navigate.target`

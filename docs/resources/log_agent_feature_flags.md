@@ -41,7 +41,7 @@ This setting enables:
 * Detection and collection of logs from short-lived containers and processes in Kubernetes.
 * Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.
 * Log events decoration according to semantic dictionary.
- **Note:** The matcher "Deployment name" in the log sources configuration will be ignored and needs to be replaced with "Workload name", requires **Dynatrace Operator 1.4.1+**.
+ **Note:** The matcher "Deployment name" in the log sources configuration will be ignored and needs to be replaced with "Workload name", requires **Dynatrace Operator 1.4.2+**.
 
  For more details, check our [documentation](https://dt-url.net/jn02ey0).
 
@@ -51,6 +51,7 @@ This setting enables:
 This setting enables:
 * Detection and to have logs ingested matching ingest rule is required.
 - `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `user_and_event_data` (Boolean) Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
 
 ### Read-Only
 

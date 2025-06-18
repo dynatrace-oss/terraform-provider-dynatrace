@@ -108,6 +108,7 @@ Applicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcesso
 Optional:
 
 - `dql_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--dql_processor))
+- `drop_processor` (Block List, Max: 1) Processor to drop the record either during the processing stage or at the endpoint (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--drop_processor))
 - `fields_add_processor` (Block List, Max: 1) Processor to add fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_add_processor))
 - `fields_remove_processor` (Block List, Max: 1) Processor to remove fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_remove_processor))
 - `fields_rename_processor` (Block List, Max: 1) Processor to rename fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor))
@@ -119,6 +120,21 @@ Required:
 
 - `description` (String) Name or description of the processor
 - `dql_script` (String) The DQL script to apply on the record
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--endpoints--endpoint--processors--processor--drop_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.drop_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
 - `enabled` (Boolean) Indicates if the object is active
 - `id` (String) Identifier of the processor. Must be unique within a stage.
 - `matcher` (String) Matching condition to apply on incoming records
@@ -252,7 +268,7 @@ Required:
 
 Optional:
 
-- `field_extraction` (Block List, Max: 1) (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction))
+- `field_extraction` (Block List, Max: 1) Definition of the field extraction (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction))
 - `sample_data` (String) Sample data related to the processor for documentation or testing
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_provider"></a>
@@ -286,8 +302,11 @@ Optional:
 
 Required:
 
-- `fields` (List of String)
-- `semantic` (String)
+- `semantic` (String) Defines how the fields of the source record should be extracted
+
+Optional:
+
+- `fields` (List of String) Unique fields to include/exclude in the extracted record
 
 
 
@@ -384,6 +403,7 @@ Applicable processors are DqlProcessor, FieldsAddProcessor, FieldsRemoveProcesso
 Optional:
 
 - `dql_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--dql_processor))
+- `drop_processor` (Block List, Max: 1) Processor to drop the record either during the processing stage or at the endpoint (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--drop_processor))
 - `fields_add_processor` (Block List, Max: 1) Processor to add fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_add_processor))
 - `fields_remove_processor` (Block List, Max: 1) Processor to remove fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_remove_processor))
 - `fields_rename_processor` (Block List, Max: 1) Processor to rename fields (see [below for nested schema](#nestedblock--pipelines--pipeline--processing--processor--fields_rename_processor))
@@ -396,6 +416,21 @@ Required:
 
 - `description` (String) Name or description of the processor
 - `dql_script` (String) The DQL script to apply on the record
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--processing--processor--drop_processor"></a>
+### Nested Schema for `pipelines.pipeline.processing.processor.drop_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
 - `enabled` (Boolean) Indicates if the object is active
 - `id` (String) Identifier of the processor. Must be unique within a stage.
 - `matcher` (String) Matching condition to apply on incoming records
