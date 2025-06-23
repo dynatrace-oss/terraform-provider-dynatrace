@@ -87,7 +87,7 @@ func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) 
 	var stubs api.Stubs
 	myService := srv.Service(creds)
 	if spService, ok := myService.(SpecificLister); ok {
-		stubs, err = spService.ListSpecific(query)
+		stubs, err = spService.ListSpecific(ctx, query)
 	}
 	if err != nil {
 		return diag.FromErr(err)
@@ -112,5 +112,5 @@ func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) 
 }
 
 type SpecificLister interface {
-	ListSpecific(query srv.QueryParams) (api.Stubs, error)
+	ListSpecific(ctx context.Context, query srv.QueryParams) (api.Stubs, error)
 }

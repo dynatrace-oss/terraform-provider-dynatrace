@@ -86,7 +86,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	var stubs api.Stubs
 	myService := srv.Service(creds)
 	if spService, ok := myService.(SpecificLister); ok {
-		stubs, err = spService.ListSpecific(query)
+		stubs, err = spService.ListSpecific(ctx, query)
 	}
 	if err != nil {
 		return diag.FromErr(err)
