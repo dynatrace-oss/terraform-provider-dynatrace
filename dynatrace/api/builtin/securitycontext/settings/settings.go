@@ -22,10 +22,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func (me *Settings) Deprecated() string {
-	return "This resource API endpoint has been deprecated, please use the management zones resource (dynatrace_management_zone_v2) instead."
-}
-
 type Settings struct {
 	Enabled bool `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
 }
