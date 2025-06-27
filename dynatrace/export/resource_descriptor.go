@@ -573,7 +573,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		directshares.Service,
 	),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
-		openpipeline.LogsService),
+		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
 		openpipeline.EventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineSecurityEvents: NewResourceDescriptor(
