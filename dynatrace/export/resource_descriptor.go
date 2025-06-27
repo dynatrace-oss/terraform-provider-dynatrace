@@ -582,6 +582,20 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipeline.BusinessEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineSDLCEvents: NewResourceDescriptor(
 		openpipeline.SDLCEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineMetrics: NewResourceDescriptor(
+		openpipeline.MetricsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineUserSessions: NewResourceDescriptor(
+		openpipeline.UserSessionsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineDavisProblems: NewResourceDescriptor(
+		openpipeline.DavisProblemsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineDavisEvents: NewResourceDescriptor(
+		openpipeline.DavisEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineSystemEvents: NewResourceDescriptor(
+		openpipeline.SystemEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineUserEvents: NewResourceDescriptor(
+		openpipeline.UserEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
+	ResourceTypes.OpenPipelineSpans: NewResourceDescriptor(
+		openpipeline.SpansService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
 		ResourceTypes.JSONDashboardBase,

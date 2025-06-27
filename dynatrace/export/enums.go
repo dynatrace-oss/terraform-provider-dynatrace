@@ -475,6 +475,13 @@ var ResourceTypes = struct {
 	OpenPipelineSecurityEvents          ResourceType
 	OpenPipelineBusinessEvents          ResourceType
 	OpenPipelineSDLCEvents              ResourceType
+	OpenPipelineMetrics                 ResourceType
+	OpenPipelineUserSessions            ResourceType
+	OpenPipelineDavisProblems           ResourceType
+	OpenPipelineDavisEvents             ResourceType
+	OpenPipelineSystemEvents            ResourceType
+	OpenPipelineUserEvents              ResourceType
+	OpenPipelineSpans                   ResourceType
 	CloudDevelopmentEnvironments        ResourceType
 	KubernetesSPM                       ResourceType
 	LogAgentFeatureFlags                ResourceType
@@ -826,6 +833,13 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_security_events",
 	"dynatrace_openpipeline_business_events",
 	"dynatrace_openpipeline_sdlc_events",
+	"dynatrace_openpipeline_metrics",
+	"dynatrace_openpipeline_user_sessions",
+	"dynatrace_openpipeline_davis_problems",
+	"dynatrace_openpipeline_davis_events",
+	"dynatrace_openpipeline_system_events",
+	"dynatrace_openpipeline_user_events",
+	"dynatrace_openpipeline_spans",
 	"dynatrace_cloud_development_environments",
 	"dynatrace_kubernetes_spm",
 	"dynatrace_log_agent_feature_flags",

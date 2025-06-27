@@ -50,6 +50,34 @@ func SDLCEventsService(credentials *rest.Credentials) settings.CRUDService[*open
 	return &service{credentials: credentials, kind: "events.sdlc", schemaSuffix: "events.sdlc"}
 }
 
+func MetricsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "metrics", schemaSuffix: "metrics"}
+}
+
+func UserSessionsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "usersessions", schemaSuffix: "user.sessions"}
+}
+
+func DavisProblemsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "davis.problems", schemaSuffix: "davis.problems"}
+}
+
+func DavisEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "davis.events", schemaSuffix: "davis.events"}
+}
+
+func SystemEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "system.events", schemaSuffix: "system.events"}
+}
+
+func UserEventsService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "user.events", schemaSuffix: "user.events"}
+}
+
+func SpansService(credentials *rest.Credentials) settings.CRUDService[*openpipeline.Configuration] {
+	return &service{credentials: credentials, kind: "spans", schemaSuffix: "spans"}
+}
+
 type service struct {
 	kind         string
 	schemaSuffix string

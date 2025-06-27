@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_davis_problems Resource - terraform-provider-dynatrace"
+subcategory: "OpenPipeline"
+description: |-
+  The resource `dynatrace_openpipeline_davis_problems` covers configuration of OpenPipeline for Davis problems
+---
+
+# dynatrace_openpipeline_davis_problems (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View OpenPipeline configurations** (`openpipeline:configurations:read`), and **Edit OpenPipeline configurations** (`openpipeline:configurations:write`).
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_davis_problems` downloads all existing OpenPipeline definitions for Davis problems
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/openpipeline/testdata/terraform/example-davis-problems.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
