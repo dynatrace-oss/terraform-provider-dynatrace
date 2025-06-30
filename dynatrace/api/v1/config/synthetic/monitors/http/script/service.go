@@ -33,7 +33,7 @@ const SchemaID = "v1:synthetic:monitors:http:script"
 const BasePath = "/api/v1/synthetic/monitors"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*script.Settings] {
-	return &service{scriptService: settings.NewAPITokenService(credentials, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: http.Service(credentials)}
+	return &service{scriptService: settings.NewHybridService(credentials, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: http.Service(credentials)}
 }
 
 type service struct {
