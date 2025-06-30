@@ -147,7 +147,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 			configList := new(MonitoringConfigurationList)
 			query := "?pageSize=100"
 			if len(nextPageKey) > 0 && nextPageKey != "first" {
-				query = query + "&nextPageKey=" + url.QueryEscape(nextPageKey)
+				query = "?nextPageKey=" + url.QueryEscape(nextPageKey)
 			}
 			if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations%s", url.PathEscape(extension.Name), query), 200).Finish(&configList); err != nil {
 				return stubs, err
