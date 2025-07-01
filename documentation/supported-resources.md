@@ -332,6 +332,13 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_openpipeline_logs | /platform/openpipeline/v1/configurations/logs | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_openpipeline_sdlc_events | /platform/openpipeline/v1/configurations/events.sdlc | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_openpipeline_security_events | /platform/openpipeline/v1/configurations/events.security | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_metrics | /platform/openpipeline/v1/configurations/metrics | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_user_sessions | /platform/openpipeline/v1/configurations/usersessions | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_davis_problems | /platform/openpipeline/v1/configurations/davis.problems | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_davis_events | /platform/openpipeline/v1/configurations/davis.events | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_system_events | /platform/openpipeline/v1/configurations/system.events | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_user_events | /platform/openpipeline/v1/configurations/user.events | openpipeline:configurations:read, openpipeline:configurations:write |
+| dynatrace_openpipeline_spans | /platform/openpipeline/v1/configurations/spans | openpipeline:configurations:read, openpipeline:configurations:write |
 | dynatrace_platform_bucket | /platform/storage/management/v1/bucket-definitions | storage:bucket-definitions:read, storage:bucket-definitions:write |
 | dynatrace_platform_slo | /platform/slo/v1/slos | slo:slos:read, slo:slos:write |
 | dynatrace_segment | /platform/storage/filter-segments/v1/filter-segments | storage:filter-segments:read, storage:filter-segments:write, storage:filter-segments:share, storage:filter-segments:delete, storage:filter-segments:admin |
