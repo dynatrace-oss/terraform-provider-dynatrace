@@ -145,7 +145,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_CLIENT_SECRET", "DT_CLIENT_SECRET"}, nil),
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DT_CLIENT_SECRET", "DYNATRACE_CLIENT_SECRET"}, nil),
 			},
 			"iam_client_id": {
 				Type:        schema.TypeString,
