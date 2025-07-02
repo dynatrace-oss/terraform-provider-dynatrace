@@ -31,7 +31,7 @@ import (
 // AWSCredentialsConfig Configuration of an AWS credentials.
 type AWSCredentialsConfig struct {
 	Label                            string                     `json:"label"`                            // The name of the credentials.
-	TaggedOnly                       *bool                      `json:"taggedOnly"`                       // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
+	TaggedOnly                       bool                       `json:"taggedOnly"`                       // Monitor only resources which have specified AWS tags (`true`) or all resources (`false`).
 	AuthenticationData               *AWSAuthenticationData     `json:"authenticationData"`               // A credentials for the AWS authentication.
 	PartitionType                    PartitionType              `json:"partitionType"`                    // The type of the AWS partition.
 	TagsToMonitor                    []*AWSConfigTag            `json:"tagsToMonitor"`                    // A list of AWS tags to be monitored.  You can specify up to 10 tags.  Only applicable when the **taggedOnly** parameter is set to `true`.
@@ -142,7 +142,7 @@ func (awscc *AWSCredentialsConfig) MarshalJSON() ([]byte, error) {
 		rawMessage, _ := json.Marshal([]string{})
 		m["supportingServicesToMonitor"] = rawMessage
 	}
-	if rawMessage, err := json.Marshal(opt.Bool(awscc.TaggedOnly)); err == nil {
+	if rawMessage, err := json.Marshal(awscc.TaggedOnly); err == nil {
 		m["taggedOnly"] = rawMessage
 	} else {
 		return nil, err
@@ -202,7 +202,7 @@ func (awscc *AWSCredentialsConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	} else {
-		awscc.TaggedOnly = opt.NewBool(false)
+		awscc.TaggedOnly = false
 	}
 	if v, found := m["authenticationData"]; found {
 		if err := json.Unmarshal(v, &awscc.AuthenticationData); err != nil {
@@ -278,7 +278,7 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("label", awscc.Label); err != nil {
 		return err
 	}
-	if err := properties.Encode("tagged_only", opt.Bool(awscc.TaggedOnly)); err != nil {
+	if err := properties.Encode("tagged_only", awscc.TaggedOnly); err != nil {
 		return err
 	}
 
@@ -294,6 +294,12 @@ func (awscc *AWSCredentialsConfig) MarshalHCL(properties hcl.Properties) error {
 	}
 	if err := properties.Encode("partition_type", awscc.PartitionType); err != nil {
 		return err
+	}
+	if len(awscc.TagsToMonitor) == 1 {
+		ttm := awscc.TagsToMonitor[0]
+		if len(ttm.Name) == 0 && len(ttm.Value) == 0 {
+			awscc.TagsToMonitor = []*AWSConfigTag{}
+		}
 	}
 	if err := properties.Encode("tags_to_monitor", awscc.TagsToMonitor); err != nil {
 		return err
@@ -330,7 +336,7 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		awscc.Label = value.(string)
 	}
 	if value, ok := decoder.GetOk("tagged_only"); ok {
-		awscc.TaggedOnly = opt.NewBool(value.(bool))
+		awscc.TaggedOnly = value.(bool)
 	}
 	if value, ok := decoder.GetOk("credentials_enabled"); ok {
 		awscc.CredentialsEnabled = value.(bool)
@@ -353,12 +359,21 @@ func (awscc *AWSCredentialsConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("remove_defaults"); ok {
 		awscc.RemoveDefaults = value.(bool)
 	}
-	if awscc.TaggedOnly != nil && *awscc.TaggedOnly && awscc.TagsToMonitor == nil {
+	if awscc.TagsToMonitor == nil {
 		awscc.TagsToMonitor = []*AWSConfigTag{}
 	}
-	if awscc.TaggedOnly == nil || !(*awscc.TaggedOnly) {
-		awscc.TagsToMonitor = nil
+	if len(awscc.TagsToMonitor) == 1 {
+		ttm := awscc.TagsToMonitor[0]
+		if len(ttm.Name) == 0 && len(ttm.Value) == 0 {
+			awscc.TagsToMonitor = []*AWSConfigTag{}
+		}
 	}
+	// if awscc.TaggedOnly && awscc.TagsToMonitor == nil {
+	// 	awscc.TagsToMonitor = []*AWSConfigTag{}
+	// }
+	// if !awscc.TaggedOnly {
+	// 	awscc.TagsToMonitor = nil
+	// }
 	return nil
 }
 

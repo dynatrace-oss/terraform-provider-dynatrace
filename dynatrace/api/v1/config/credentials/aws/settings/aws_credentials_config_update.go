@@ -19,7 +19,7 @@ package aws
 
 type AWSCredentialsConfigUpdate struct {
 	Label                       string                        `json:"label"`
-	TaggedOnly                  *bool                         `json:"taggedOnly"`
+	TaggedOnly                  bool                          `json:"taggedOnly"`
 	AuthenticationData          *AWSAuthenticationData        `json:"authenticationData"`
 	PartitionType               PartitionType                 `json:"partitionType"`
 	TagsToMonitor               []*AWSConfigTag               `json:"tagsToMonitor"`
