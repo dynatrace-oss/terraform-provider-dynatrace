@@ -19,10 +19,10 @@ package featureflags_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDiscoveryFeatureFlags(t *testing.T) {
-	api.TestAcc(t)
+	// Temporarily disabled - schema no longer exists
+	t.Skip()
+	// api.TestAcc(t)
 }
