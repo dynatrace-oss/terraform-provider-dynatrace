@@ -57,7 +57,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.SLO) error {
 	var err error
 
 	client := rest.HybridClient(me.credentials)
-	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)), 200)
 	if err = req.Finish(v); err != nil {
 		return err
 	}
@@ -168,7 +168,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 		retry = true
 		numRequiredSuccesses := 20
 		for retry {
-			req = client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 200)
+			req = client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)), 200)
 			if err = req.Finish(v); err != nil {
 				if !strings.Contains(err.Error(), "not found") {
 					return &api.Stub{ID: id, Name: v.Name}, err
