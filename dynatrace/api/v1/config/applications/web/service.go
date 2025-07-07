@@ -67,7 +67,7 @@ func (me *service) Get(ctx context.Context, id string, v *web.Application) error
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if appConfig, ok := cfg.(*web.Application); ok {
 		stateKeyUserActions = appConfig.KeyUserActions
-		ignoreIPAddressRestrictionSettings = appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings
+		ignoreIPAddressRestrictionSettings = appConfig.MonitoringSettings != nil && appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings
 	}
 
 	if err := me.service.Get(ctx, id, v); err != nil {
