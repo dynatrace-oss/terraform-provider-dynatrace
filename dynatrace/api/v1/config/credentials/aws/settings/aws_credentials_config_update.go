@@ -18,12 +18,11 @@
 package aws
 
 type AWSCredentialsConfigUpdate struct {
-	Label                            string                        `json:"label"`
-	TaggedOnly                       bool                          `json:"taggedOnly"`
-	AuthenticationData               *AWSAuthenticationData        `json:"authenticationData"`
-	PartitionType                    PartitionType                 `json:"partitionType"`
-	TagsToMonitor                    []*AWSConfigTag               `json:"tagsToMonitor"`
-	SupportingServicesToMonitor      []*AWSSupportingServiceConfig `json:"supportingServicesToMonitor"`
-	CredentialsEnabled               bool                          `json:"credentialsEnabled"`               // Enable monitoring of specified AWS credentials
-	RunningOnDynatraceInfrastructure bool                          `json:"runningOnDynatraceInfrastructure"` // Run credentials on Dynatrace infrastructure
+	Label                            string                 `json:"label"`
+	TaggedOnly                       bool                   `json:"taggedOnly"`
+	AuthenticationData               *AWSAuthenticationData `json:"authenticationData"`
+	PartitionType                    PartitionType          `json:"partitionType"`
+	TagsToMonitor                    []*AWSConfigTag        `json:"tagsToMonitor"`
+	CredentialsEnabled               bool                   `json:"credentialsEnabled"`               // Enable monitoring of specified AWS credentials
+	RunningOnDynatraceInfrastructure bool                   `json:"runningOnDynatraceInfrastructure"` // Run credentials on Dynatrace infrastructure
 }
