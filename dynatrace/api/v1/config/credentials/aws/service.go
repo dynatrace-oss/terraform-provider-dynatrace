@@ -154,6 +154,8 @@ func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsC
 	updv.PartitionType = v.PartitionType
 	updv.TaggedOnly = v.TaggedOnly
 	updv.TagsToMonitor = v.TagsToMonitor
+	updv.CredentialsEnabled = v.CredentialsEnabled
+	updv.RunningOnDynatraceInfrastructure = v.RunningOnDynatraceInfrastructure
 	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
