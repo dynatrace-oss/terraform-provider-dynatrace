@@ -33,8 +33,8 @@ import (
 
 const SchemaID = "v1:config:applications:web"
 
-var DefaultCreateConfirmTimeout = 60
-var createConfirmTimeout = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION", DefaultCreateConfirmTimeout, 20, 300)
+var DefaultCreateConfirmTimeout = 280
+var createConfirmTimeout = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION", DefaultCreateConfirmTimeout, 20, 500)
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*web.Application] {
 	return &service{
