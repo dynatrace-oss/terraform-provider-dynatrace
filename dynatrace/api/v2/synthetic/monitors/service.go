@@ -32,7 +32,7 @@ import (
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-var defaultCreateConfirm = 5
+var defaultCreateConfirm = 8
 var createConfirm = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2", defaultCreateConfirm, 1, 50)
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
