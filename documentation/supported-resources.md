@@ -76,7 +76,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_dashboards_presets | /api/v2/settings/objects (schema: builtin:dashboards.presets) | settings.read, settings.write |
 | dynatrace_data_privacy | /api/v2/settings/objects (schema: builtin:preferences.privacy) | settings.read, settings.write |
 | dynatrace_database_anomalies_v2 | /api/v2/settings/objects (schema: builtin:anomaly-detection.databases) | settings.read, settings.write |
-| dynatrace_davis_anomaly_detectors | /api/v2/settings/objects (schema: builtin:davis.anomaly-detectors) | settings:objects:read, settings:objects:write |
+| dynatrace_davis_anomaly_detectors | /api/v2/settings/objects (schema: builtin:davis.anomaly-detectors) | settings:objects:read, settings:objects:write, storage:bizevents:read |
 | dynatrace_davis_copilot | /api/v2/settings/objects (schema: service:davis.copilot.datamining-blocklist) | settings.read, settings.write |
 | dynatrace_db_app_feature_flags | /api/v2/settings/objects (schema: app:dynatrace.database.overview:feature-flags) | settings.read, settings.write |
 | dynatrace_declarative_grouping | /api/v2/settings/objects (schema: builtin:declarativegrouping) | settings.read, settings.write |
