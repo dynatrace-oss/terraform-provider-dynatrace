@@ -25,6 +25,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 type Settings struct {
 	BooleanValue *bool        `json:"booleanValue,omitempty"` // State of boolean feature flag
 	Name         string       `json:"name"`                   // Name of the feature
