@@ -44,7 +44,7 @@
 				},
 				{
 					"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-					"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
+					"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])*?)\\)$",
 					"type": "PATTERN"
 				}
 			],
@@ -176,6 +176,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "An entry with the same values is already on the list!",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"ipaddress"
@@ -187,5 +188,5 @@
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

@@ -136,6 +136,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Unit names have to be unique (case-insensitive) and must be different from unit symbols of predefined units.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"newUnitName"
@@ -143,6 +144,7 @@
 		},
 		{
 			"customMessage": "Unit symbols have to be unique and must be different from unit symbols of predefined units.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"newUnitSymbol"
@@ -166,5 +168,5 @@
 	],
 	"schemaId": "builtin:custom-unit",
 	"types": {},
-	"version": "0.7"
+	"version": "0.7.1"
 }

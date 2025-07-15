@@ -6,6 +6,7 @@
 		{
 			"customMessage": "Setting and changing meta information is only supported for non-builtin metrics.",
 			"customValidatorId": "is-custom-metric-key",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -134,6 +135,7 @@
 				},
 				{
 					"customValidatorId": "source-entity-type-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -150,6 +152,7 @@
 				{
 					"customMessage": "Each tag must be unique (case insensitive)",
 					"customValidatorId": "unique-tag-list-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -169,6 +172,7 @@
 					{
 						"customMessage": "The provided tag is invalid",
 						"customValidatorId": "metric-tag-validator",
+						"skipAsyncValidation": false,
 						"type": "CUSTOM_VALIDATOR_REF"
 					}
 				],
@@ -273,6 +277,7 @@
 						{
 							"customMessage": "The provided dimension key is invalid",
 							"customValidatorId": "dimension-key-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -390,5 +395,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "4.28"
+	"version": "4.29"
 }

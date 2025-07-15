@@ -28,7 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.26"
+const SchemaVersion = "1.1.28"
 const SchemaID = "builtin:declarativegrouping"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*declarativegrouping.Settings] {

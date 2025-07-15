@@ -101,7 +101,7 @@
 				}
 			],
 			"default": "",
-			"description": "",
+			"description": "Note: Reported only in full-stack, infrastructure and discovery modes.",
 			"displayName": "Monitored technology name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -128,7 +128,7 @@
 					"constraints": [
 						{
 							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-							"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
+							"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])*?)\\)$",
 							"type": "PATTERN"
 						},
 						{
@@ -256,5 +256,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.26"
+	"version": "1.1.28"
 }

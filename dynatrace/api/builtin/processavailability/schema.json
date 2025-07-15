@@ -199,6 +199,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "This name already exists. Please provide a different name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -220,7 +221,7 @@
 					"constraints": [
 						{
 							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-							"pattern": "^\\$eq\\([^\\$,]+\\)$|^\\$prefix\\([^\\$,]+\\)$|^\\$suffix\\([^\\$,]+\\)$|^\\$contains\\([^\\$,]+\\)$",
+							"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])*?)\\)$",
 							"type": "PATTERN"
 						},
 						{
@@ -351,7 +352,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format.\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+					"documentation": "This string has to match a required format.\n\n- `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"metadata": {
 						"placeholder": "Required"
@@ -463,5 +464,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.10"
+	"version": "1.0.11"
 }

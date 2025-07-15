@@ -4,7 +4,7 @@
 	],
 	"description": "Within container environments, OneAgent automatically injects code modules into containerized processes to provide out of the box full-stack visibility into applications running within containers. Dynatrace provides complete control over automatic injection of code modules into the container technologies.",
 	"displayName": "Container monitoring rules",
-	"documentation": "",
+	"documentation": "\n\nIn Kubernetes, container monitoring rules are evaluated only in case of `classicFullStack` injection mode. The rules are ignored in case of `cloudNativeFullStack` or `applicationMonitoring`.\n\nPlease use the annotation-based configuration option as described [here](https://dt-url.net/k8sdtoconfig).",
 	"dynatrace": "1",
 	"enums": {
 		"ConditionOperator": {
@@ -291,5 +291,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.1"
+	"version": "0.0.2"
 }

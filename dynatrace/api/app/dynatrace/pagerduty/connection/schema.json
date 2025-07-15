@@ -101,6 +101,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -109,5 +110,5 @@
 	],
 	"schemaId": "app:dynatrace.pagerduty:connection",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

@@ -30,6 +30,7 @@
 	"maxObjects": 100,
 	"multiObject": true,
 	"ordered": false,
+	"ownerBasedAccessControl": true,
 	"properties": {
 		"name": {
 			"constraints": [
@@ -86,6 +87,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "There is another set of credentials defined under this name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -157,5 +159,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }

@@ -25,7 +25,7 @@ import (
 )
 
 const SchemaID = "builtin:hyperscaler-authentication.aws.connection"
-const SchemaVersion = "0.0.2"
+const SchemaVersion = "0.0.3"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*awsconnection.Settings] {
 	return settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)

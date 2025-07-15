@@ -28,7 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.5"
+const SchemaVersion = "0.0.6"
 const SchemaID = "builtin:process-group.advanced-detection-rule"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*advanceddetectionrule.Settings] {

@@ -63,6 +63,21 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"enableDocumentSuggestion": {
+			"default": false,
+			"description": "You can enable document suggestions to allow Davis CoPilot to find similarities between Davis Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Davis CoPilot document suggestions\").",
+			"displayName": "Enable document suggestions based on vector similarity",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "enableCopilot",
+				"type": "EQUALS"
+			},
+			"type": "boolean"
+		},
 		"enableTenantAwareDataMining": {
 			"default": false,
 			"description": "You can enrich Davis CoPilot with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Davis CoPilot periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Davis CoPilot environment aware queries\").",
@@ -128,5 +143,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.1"
+	"version": "0.2"
 }

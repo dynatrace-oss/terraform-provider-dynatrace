@@ -22,7 +22,7 @@
 	"ordered": false,
 	"properties": {
 		"analyzer": {
-			"description": "",
+			"description": "Analyzer input to initialize the analyzer",
 			"displayName": "Analyzer input",
 			"documentation": "",
 			"maxObjects": 1,
@@ -53,7 +53,7 @@
 		},
 		"enabled": {
 			"default": true,
-			"description": "",
+			"description": "When enabled, the anomaly detector will be active and running.",
 			"displayName": "Enabled",
 			"documentation": "",
 			"maxObjects": 1,
@@ -62,7 +62,7 @@
 			"type": "boolean"
 		},
 		"eventTemplate": {
-			"description": "",
+			"description": "Defines additional fields on the davis events triggered by the anomaly detector",
 			"displayName": "Event template",
 			"documentation": "",
 			"maxObjects": 1,
@@ -73,7 +73,7 @@
 			}
 		},
 		"executionSettings": {
-			"description": "",
+			"description": "Defines the configuration parameters that influence how and under what context a query or evaluation is executed.",
 			"displayName": "Execution settings",
 			"documentation": "",
 			"maxObjects": 1,
@@ -92,7 +92,7 @@
 				}
 			],
 			"default": "Rest API",
-			"description": "",
+			"description": "The source which created the anomaly detector",
 			"displayName": "Source",
 			"documentation": "",
 			"maxObjects": 1,
@@ -187,7 +187,7 @@
 			},
 			"summaryPattern": "{name}",
 			"type": "object",
-			"version": "0.0.2",
+			"version": "0.0.3",
 			"versionInfo": ""
 		},
 		"AnalyzerInputField": {
@@ -211,7 +211,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Analyzer input field key",
 					"displayName": "Key",
 					"documentation": "",
 					"maxObjects": 1,
@@ -231,7 +231,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Analyzer input field value",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -285,7 +285,7 @@
 			},
 			"summaryPattern": "",
 			"type": "object",
-			"version": "1.1",
+			"version": "1.1.1",
 			"versionInfo": ""
 		},
 		"EventProperty": {
@@ -310,7 +310,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Property key",
 					"displayName": "Key",
 					"documentation": "",
 					"maxObjects": 1,
@@ -333,7 +333,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Property value. Supports substitution of placeholders placed in curly braces {}.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -407,5 +407,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }

@@ -72,6 +72,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "A connection with the same name already exists. Please provide a different name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -80,5 +81,5 @@
 	],
 	"schemaId": "app:dynatrace.slack:connection",
 	"types": {},
-	"version": "0.1"
+	"version": "0.1.1"
 }

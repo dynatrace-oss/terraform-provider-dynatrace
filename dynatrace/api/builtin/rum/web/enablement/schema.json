@@ -11,7 +11,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customMessage": "New Real User Monitoring Experience and Session Replay Classic are required to enable Experience Analytics.",
+			"customMessage": "New Real User Monitoring Experience is required to enable Experience Analytics.",
 			"customValidatorId": "experienceAnalyticsEnablementValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -20,7 +20,8 @@
 	"deletionConstraints": [
 		{
 			"customMessage": "New Real User Monitoring Experience can't be enabled because this application uses Code Snippet in the Automatic Injection settings.",
-			"customValidatorId": "rumOnGrailAutomaticInjectionValidator"
+			"customValidatorId": "rumOnGrailAutomaticInjectionValidator",
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
@@ -231,5 +232,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4.1"
+	"version": "1.4.2"
 }

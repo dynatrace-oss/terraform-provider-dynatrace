@@ -101,6 +101,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Rule with the specified name already exists.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"ruleName"
@@ -187,5 +188,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.25"
+	"version": "1.0.26"
 }

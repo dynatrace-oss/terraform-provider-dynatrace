@@ -133,11 +133,24 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "A rule with these parameters and type already exists.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ruleType",
+				"groupIdentifier",
+				"instanceIdentifier",
+				"processType"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:processes-and-containers.processes",
 		"group:processes-and-containers"
 	],
 	"schemaId": "builtin:process-group.simple-detection-rule",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }

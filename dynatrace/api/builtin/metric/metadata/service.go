@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "4.28"
+const SchemaVersion = "4.29"
 const SchemaID = "builtin:metric.metadata"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*metadata.Settings] {

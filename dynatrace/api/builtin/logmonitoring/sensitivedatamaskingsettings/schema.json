@@ -201,6 +201,7 @@
 	},
 	"schemaConstraints": [
 		{
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"config-item-title"
@@ -401,5 +402,5 @@
 			}
 		}
 	},
-	"version": "1.0.15"
+	"version": "1.0.16"
 }

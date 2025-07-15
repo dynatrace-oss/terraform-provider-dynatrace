@@ -30,7 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.1"
+const SchemaVersion = "0.1.1"
 const SchemaID = "app:dynatrace.slack:connection"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*slackconnection.Settings] {

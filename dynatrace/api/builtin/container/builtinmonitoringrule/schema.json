@@ -60,5 +60,5 @@
 	],
 	"schemaId": "builtin:container.built-in-monitoring-rule",
 	"types": {},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }
