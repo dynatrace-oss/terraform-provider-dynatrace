@@ -62,12 +62,14 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Description:      "The user context the executions of the workflow will happen with",
 			Optional:         true,
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" },
 			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(36)),
 		},
 		"owner": {
 			Type:             schema.TypeString,
 			Description:      "The ID of the owner of this workflow",
 			Optional:         true,
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" },
 			ValidateDiagFunc: ValidateUUID,
 		},
 		"private": {
