@@ -342,6 +342,14 @@
 					"value": "IBM_CICS_IMS_JOBNAME"
 				},
 				{
+					"displayName": "IBM application ID",
+					"value": "IBM_APPLID"
+				},
+				{
+					"displayName": "IBM job name",
+					"value": "IBM_JOBNAME"
+				},
+				{
 					"displayName": "IBM IMS SOAP Gateway name",
 					"value": "IBM_IMS_SOAP_GW_NAME"
 				},
@@ -623,5 +631,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.8"
+	"version": "0.4.9"
 }

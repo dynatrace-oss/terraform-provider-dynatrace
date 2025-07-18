@@ -61,6 +61,7 @@ var AgentItemNames = struct {
 	HybrisBinDir                       AgentItemName
 	HybrisConfigDir                    AgentItemName
 	HybrisDataDir                      AgentItemName
+	IbmApplid                          AgentItemName
 	IbmCicsImsApplid                   AgentItemName
 	IbmCicsImsJobname                  AgentItemName
 	IbmCicsRegion                      AgentItemName
@@ -69,6 +70,7 @@ var AgentItemNames = struct {
 	IbmImsControl                      AgentItemName
 	IbmImsMpr                          AgentItemName
 	IbmImsSoapGwName                   AgentItemName
+	IbmJobname                         AgentItemName
 	IibBrokerName                      AgentItemName
 	IibExecutionGroupName              AgentItemName
 	IisAppPool                         AgentItemName
@@ -163,6 +165,7 @@ var AgentItemNames = struct {
 	"HYBRIS_BIN_DIR",
 	"HYBRIS_CONFIG_DIR",
 	"HYBRIS_DATA_DIR",
+	"IBM_APPLID",
 	"IBM_CICS_IMS_APPLID",
 	"IBM_CICS_IMS_JOBNAME",
 	"IBM_CICS_REGION",
@@ -171,6 +174,7 @@ var AgentItemNames = struct {
 	"IBM_IMS_CONTROL",
 	"IBM_IMS_MPR",
 	"IBM_IMS_SOAP_GW_NAME",
+	"IBM_JOBNAME",
 	"IIB_BROKER_NAME",
 	"IIB_EXECUTION_GROUP_NAME",
 	"IIS_APP_POOL",
