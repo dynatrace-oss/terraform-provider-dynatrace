@@ -40,6 +40,7 @@ type Settings struct {
 	UseCatalinaBase                        bool    `json:"useCatalinaBase"`                        // By default, Tomcat clusters are identified and named based on the CATALINA_HOME directory name. This setting results in the use of the CATALINA_BASE directory name to identify multiple Tomcat nodes within each Tomcat cluster. If this setting is not enabled, each CATALINA_HOME+CATALINA_BASE combination will be considered a separate Tomcat cluster. In other words, Tomcat clusters can't have multiple nodes on a single host.
 	UseDockerContainerName                 bool    `json:"useDockerContainerName"`                 // By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. Use this flag with caution!
 	SecuritySoftwareDetectionEnabled       bool    `json:"securitySoftwareDetectionEnabled"`       // This flag enables the detection of security software such as anti-malware protection.
+	SplitDb2GroupingByInstances            bool    `json:"splitDb2GroupingByInstances,omitempty"`  // Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.
 }
 
 func (me *Settings) Name() string {
@@ -135,6 +136,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "This flag enables the detection of security software such as anti-malware protection.",
 			Optional:    true,
 		},
+		"split_db_2_grouping_by_instances": {
+			Type:        schema.TypeBool,
+			Description: "Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.",
+			Optional:    true,
+		},
 	}
 }
 
@@ -157,6 +163,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"use_catalina_base":                           me.UseCatalinaBase,
 		"use_docker_container_name":                   me.UseDockerContainerName,
 		"security_software_detection_enabled":         me.SecuritySoftwareDetectionEnabled,
+		"split_db_2_grouping_by_instances":            me.SplitDb2GroupingByInstances,
 	})
 }
 
@@ -179,5 +186,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"use_catalina_base":                           &me.UseCatalinaBase,
 		"use_docker_container_name":                   &me.UseDockerContainerName,
 		"security_software_detection_enabled":         &me.SecuritySoftwareDetectionEnabled,
+		"split_db_2_grouping_by_instances":            &me.SplitDb2GroupingByInstances,
 	})
 }

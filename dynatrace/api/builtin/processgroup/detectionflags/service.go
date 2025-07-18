@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.13"
+const SchemaVersion = "0.0.15"
 const SchemaID = "builtin:process-group.detection-flags"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*detectionflags.Settings] {

@@ -165,6 +165,19 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"splitDb2GroupingByInstances": {
+			"default": false,
+			"description": "",
+			"displayName": "Group DB2 database processes by DB2 Instances",
+			"documentation": "Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.321"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"splitOracleDatabasePG": {
 			"default": false,
 			"description": "",
@@ -218,5 +231,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.13"
+	"version": "0.0.15"
 }
