@@ -153,9 +153,17 @@ func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsC
 	updv.Label = v.Label
 	updv.PartitionType = v.PartitionType
 	updv.TaggedOnly = v.TaggedOnly
-	updv.TagsToMonitor = v.TagsToMonitor
 	updv.CredentialsEnabled = v.CredentialsEnabled
 	updv.RunningOnDynatraceInfrastructure = v.RunningOnDynatraceInfrastructure
+
+	validTags := []*aws.AWSConfigTag{}
+	for _, tag := range v.TagsToMonitor {
+		if len(tag.Name) != 0 {
+			validTags = append(validTags, tag)
+		}
+	}
+	updv.TagsToMonitor = validTags
+
 	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
