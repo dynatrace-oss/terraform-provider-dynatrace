@@ -204,6 +204,29 @@
 						"$ref": "#/enums/CodeSnippetType"
 					}
 				},
+				"scriptExecutionAttribute": {
+					"description": "",
+					"displayName": "Script execution attribute",
+					"documentation": "Add the `async` attribute to download the monitoring code in parallel with parsing the page, and execute it immediately upon availability.\n\nAdd the `defer` attribute to execute the monitoring code after the page has finished parsing.",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
+						"maturity": "EARLY_ADOPTER"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValues": [
+							"OneAgent JavaScript Tag",
+							"OneAgent JavaScript Tag with SRI"
+						],
+						"property": "snippetFormat",
+						"type": "IN"
+					},
+					"type": {
+						"$ref": "#/enums/ScriptExecutionAttribute"
+					}
+				},
 				"snippetFormat": {
 					"constraints": [
 						{
@@ -237,5 +260,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.1"
+	"version": "1.2.2"
 }
