@@ -27,14 +27,20 @@ import (
 )
 
 type Settings struct {
-	Name  string  `json:"name"`            // A unique and clearly identifiable connection name.
-	Token *string `json:"token,omitempty"` // API access token for the Event-Driven Ansible Controller. Please note that this token is not refreshed and can expire.
-	Type  Type    `json:"type"`            // Possible Values: `Api_token`
-	Url   string  `json:"url"`             // URL of the Event-Driven Ansible source plugin webhook. For example, https://eda.yourdomain.com:5010
+	EventStreamEnabled *bool   `json:"eventStreamEnabled,omitempty"` // Flag if Red Hat Event Stream is use for Event-Driven Ansible
+	Name               string  `json:"name"`                         // A unique and clearly identifiable connection name.
+	Token              *string `json:"token,omitempty"`              // API access token for the Event-Driven Ansible Controller. Please note that this token is not refreshed and can expire.
+	Type               Type    `json:"type"`                         // Possible Values: `Api_token`
+	Url                string  `json:"url"`                          // URL of the Event-Driven Ansible source plugin webhook. For example, https://eda.yourdomain.com:5010
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"event_stream_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Flag if Red Hat Event Stream is use for Event-Driven Ansible",
+			Optional:    true, // nullable
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "A unique and clearly identifiable connection name.",
@@ -61,10 +67,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":  me.Name,
-		"token": "${state.secret_value}",
-		"type":  me.Type,
-		"url":   me.Url,
+		"event_stream_enabled": me.EventStreamEnabled,
+		"name":                 me.Name,
+		"token":                "${state.secret_value}",
+		"type":                 me.Type,
+		"url":                  me.Url,
 	})
 }
 
@@ -77,10 +84,11 @@ func (me *Settings) HandlePreconditions() error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":  &me.Name,
-		"token": &me.Token,
-		"type":  &me.Type,
-		"url":   &me.Url,
+		"event_stream_enabled": &me.EventStreamEnabled,
+		"name":                 &me.Name,
+		"token":                &me.Token,
+		"type":                 &me.Type,
+		"url":                  &me.Url,
 	})
 }
 

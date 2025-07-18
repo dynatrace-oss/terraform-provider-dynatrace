@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2"
+const SchemaVersion = "2.1"
 const SchemaID = "app:dynatrace.redhat.ansible:eda-webhook.connection"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*connection.Settings] {
