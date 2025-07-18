@@ -8,6 +8,12 @@
 			"customValidatorId": "rumAppCaptureCustomPropertiesValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Duplicate field names of case-insensitive properties are not allowed.",
+			"customValidatorId": "rumAppCaptureCustomPropertiesCaseInsensitiveValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Define specific properties to restrict event/session capturing, with options to allow by property name or allow all properties.",
@@ -89,6 +95,16 @@
 			"displayName": "",
 			"documentation": "",
 			"properties": {
+				"caseInsensitiveNamingEnabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Field name validation should be case-insensitive",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
 				"fieldDataType": {
 					"default": "STRING",
 					"description": "",
@@ -105,7 +121,7 @@
 					"constraints": [
 						{
 							"customMessage": "Please choose a valid field name.",
-							"pattern": "^[a-zA-Z0-9._-]+$",
+							"pattern": "^[a-zA-Z0-9._]+$",
 							"type": "PATTERN"
 						},
 						{
@@ -126,9 +142,9 @@
 			},
 			"summaryPattern": "{fieldName}",
 			"type": "object",
-			"version": "0",
+			"version": "0.1",
 			"versionInfo": ""
 		}
 	},
-	"version": "0.1"
+	"version": "0.2"
 }

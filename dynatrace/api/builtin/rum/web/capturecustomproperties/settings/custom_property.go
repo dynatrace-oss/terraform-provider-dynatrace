@@ -45,12 +45,18 @@ func (me *CustomProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type CustomProperty struct {
-	FieldDataType FieldDataType `json:"fieldDataType"` // Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
-	FieldName     string        `json:"fieldName"`     // Field name
+	CaseInsensitiveNamingEnabled bool          `json:"caseInsensitiveNamingEnabled,omitempty"` // Field name validation should be case-insensitive
+	FieldDataType                FieldDataType `json:"fieldDataType"`                          // Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
+	FieldName                    string        `json:"fieldName"`                              // Field name
 }
 
 func (me *CustomProperty) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"case_insensitive_naming_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Field name validation should be case-insensitive",
+			Optional:    true,
+		},
 		"field_data_type": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `BOOLEAN`, `NUMBER`, `STRING`",
@@ -66,14 +72,16 @@ func (me *CustomProperty) Schema() map[string]*schema.Schema {
 
 func (me *CustomProperty) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"field_data_type": me.FieldDataType,
-		"field_name":      me.FieldName,
+		"case_insensitive_naming_enabled": me.CaseInsensitiveNamingEnabled,
+		"field_data_type":                 me.FieldDataType,
+		"field_name":                      me.FieldName,
 	})
 }
 
 func (me *CustomProperty) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"field_data_type": &me.FieldDataType,
-		"field_name":      &me.FieldName,
+		"case_insensitive_naming_enabled": &me.CaseInsensitiveNamingEnabled,
+		"field_data_type":                 &me.FieldDataType,
+		"field_name":                      &me.FieldName,
 	})
 }
