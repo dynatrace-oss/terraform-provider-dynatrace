@@ -73,6 +73,7 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
  * **View documents** (`document:documents:read`)
  * **Create and edit documents** (`document:documents:write`)
  * **Delete documents** (`document:documents:delete`)
+ * **Delete documents from trash** (`document:trash.documents:delete`)
  * **Read direct-shares** (`document:direct-shares:read`)
  * **Write direct-shares** (`document:direct-shares:write`)
  * **Delete direct-shares** (`document:direct-shares:delete`)

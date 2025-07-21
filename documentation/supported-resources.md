@@ -319,7 +319,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_automation_scheduling_rule | /platform/automation/v1/scheduling-rules | automation:rules:read, automation:rules:write |
 | dynatrace_automation_workflow | /platform/automation/v1/workflows | automation:workflows:read, automation:workflows:write |
 | dynatrace_direct_shares | /platform/document/v1/direct-shares | document:direct-shares:read, document:direct-shares:write, document:direct-shares:delete |
-| dynatrace_document | /platform/document/v1/documents | document:documents:read, document:documents:write, document:documents:delete |
+| dynatrace_document | /platform/document/v1/documents | document:documents:read, document:documents:write, document:documents:delete, document:trash.documents:delete |
 | dynatrace_iam_group | /iam/v1/accounts/{accountUuid}/groups | account-idm-read, account-idm-write |
 | dynatrace_iam_permission | /iam/v1/accounts/{accountUuid}/groups/{groupUuid}/permissions | account-idm-read, account-idm-write |
 | dynatrace_iam_policy | /iam/v1/repo/{levelType}/{levelId}/policies | iam-policies-management, account-env-read |
