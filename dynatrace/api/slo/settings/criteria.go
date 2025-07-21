@@ -47,8 +47,8 @@ func (me *Criteria) UnmarshalHCL(decoder hcl.Decoder) error {
 type CriteriaDetail struct {
 	TimeframeFrom string   `json:"timeframeFrom" minlength:"3" maxlength:"30"`
 	TimeframeTo   *string  `json:"timeframeTo,omitempty" minlength:"3" maxlength:"30"`
-	Target        float32  `json:"target"`
-	Warning       *float32 `json:"warning,omitempty"`
+	Target        float64  `json:"target"`
+	Warning       *float64 `json:"warning,omitempty"`
 }
 
 func (me *CriteriaDetail) Schema() map[string]*schema.Schema {
