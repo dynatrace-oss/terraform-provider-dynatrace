@@ -4,7 +4,7 @@ import "strings"
 
 func DefaultMetrics(metric string) []*AzureMonitoredMetric {
 	for _, service := range DefaultServices {
-		if strings.ToLower(service.Name) == strings.ToLower(metric) {
+		if strings.ToLower(service.ServiceName) == strings.ToLower(metric) {
 			return service.MonitoredMetrics
 		}
 	}
@@ -13,7 +13,7 @@ func DefaultMetrics(metric string) []*AzureMonitoredMetric {
 
 var DefaultServices = []*Settings{
 	{
-		Name: "cloud:azure:storage:storageaccounts:table",
+		ServiceName: "cloud:azure:storage:storageaccounts:table",
 		MonitoredMetrics: []*AzureMonitoredMetric{
 			{
 				Name:       "TableCapacity",
@@ -26,7 +26,7 @@ var DefaultServices = []*Settings{
 		},
 	},
 	{
-		Name: "cloud:azure:storage:storageaccounts",
+		ServiceName: "cloud:azure:storage:storageaccounts",
 		MonitoredMetrics: []*AzureMonitoredMetric{
 			{
 				Name:       "Transactions",
@@ -39,7 +39,7 @@ var DefaultServices = []*Settings{
 		},
 	},
 	{
-		Name: "cloud:azure:storage:storageaccounts:file",
+		ServiceName: "cloud:azure:storage:storageaccounts:file",
 		MonitoredMetrics: []*AzureMonitoredMetric{
 			{
 				Name:       "FileCapacity",
@@ -52,7 +52,7 @@ var DefaultServices = []*Settings{
 		},
 	},
 	{
-		Name: "cloud:azure:storage:storageaccounts:blob",
+		ServiceName: "cloud:azure:storage:storageaccounts:blob",
 		MonitoredMetrics: []*AzureMonitoredMetric{
 			{
 				Name:       "BlobCapacity",
@@ -65,7 +65,7 @@ var DefaultServices = []*Settings{
 		},
 	},
 	{
-		Name: "cloud:azure:storage:storageaccounts:queue",
+		ServiceName: "cloud:azure:storage:storageaccounts:queue",
 		MonitoredMetrics: []*AzureMonitoredMetric{
 			{
 				Name:       "QueueCapacity",
@@ -78,47 +78,47 @@ var DefaultServices = []*Settings{
 		},
 	},
 	{
-		Name:             "azure_service_bus_namespace",
+		ServiceName:      "azure_service_bus_namespace",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_vm",
+		ServiceName:      "azure_vm",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_redis_cache",
+		ServiceName:      "azure_redis_cache",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_load_balancer",
+		ServiceName:      "azure_load_balancer",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_sql",
+		ServiceName:      "azure_sql",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_event_hub_namespace",
+		ServiceName:      "azure_event_hub_namespace",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_web_app",
+		ServiceName:      "azure_web_app",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_iot_hub",
+		ServiceName:      "azure_iot_hub",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_application_gateway",
+		ServiceName:      "azure_application_gateway",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_cosmos_db",
+		ServiceName:      "azure_cosmos_db",
 		MonitoredMetrics: nil,
 	},
 	{
-		Name:             "azure_api_management_service",
+		ServiceName:      "azure_api_management_service",
 		MonitoredMetrics: nil,
 	},
 }

@@ -25,11 +25,15 @@ import (
 
 type Settings struct {
 	CredentialsID         string                  `json:"-"`
-	Name                  string                  `json:"name"`                       // The name of the supporting service.
+	ServiceName           string                  `json:"name"`                       // The name of the supporting service.
 	MonitoredMetrics      []*AzureMonitoredMetric `json:"monitoredMetrics,omitempty"` // A list of metrics to be monitored for this service. It must include all the recommended metrics.
 	BuiltIn               bool                    `json:"-"`
 	RequiredMetrics       string                  `json:"-"`
 	UseRecommendedMetrics bool                    `json:"-"`
+}
+
+func (me *Settings) Name() string {
+	return me.CredentialsID + "_" + me.ServiceName
 }
 
 func (me *Settings) IsComputer() bool {
@@ -83,7 +87,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("credentials_id", me.CredentialsID); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
+	if err := properties.Encode("name", me.ServiceName); err != nil {
 		return err
 	}
 	if err := properties.Encode("built_in", me.BuiltIn); err != nil {
@@ -107,7 +111,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("credentials_id", &me.CredentialsID); err != nil {
 		return err
 	}
-	if err := decoder.Decode("name", &me.Name); err != nil {
+	if err := decoder.Decode("name", &me.ServiceName); err != nil {
 		return err
 	}
 	if err := decoder.Decode("built_in", &me.BuiltIn); err != nil {

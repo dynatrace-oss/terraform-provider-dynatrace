@@ -79,7 +79,7 @@ func cloneMetrics(m []*services.AzureMonitoredMetric) []*services.AzureMonitored
 func cloneService(s *services.Settings) *services.Settings {
 	return &services.Settings{
 		CredentialsID:    s.CredentialsID,
-		Name:             s.Name,
+		ServiceName:      s.ServiceName,
 		MonitoredMetrics: cloneMetrics(s.MonitoredMetrics),
 		BuiltIn:          s.BuiltIn,
 		RequiredMetrics:  s.RequiredMetrics,
@@ -94,14 +94,18 @@ func (me servicesResponse) clone() servicesResponse {
 	return cl
 }
 
+type listResponse struct {
+	Values api.Stubs `json:"values"`
+}
+
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
-	var credentialStubs api.Stubs
+	var credentialStubs listResponse
 	var err error
 	if err = me.client.Get(ctx, "/api/config/v1/azure/credentials").Expect(200).Finish(&credentialStubs); err != nil {
 		return nil, err
 	}
-	for _, credentialStub := range credentialStubs {
+	for _, credentialStub := range credentialStubs.Values {
 		var servicesStubs srvStubs
 		if err = me.client.Get(ctx, fmt.Sprintf("/api/config/v1/azure/credentials/%s/services", credentialStub.ID)).Expect(200).Finish(&servicesStubs); err != nil {
 			return nil, err
@@ -125,11 +129,11 @@ func (me *service) Get(ctx context.Context, id string, v *services.Settings) err
 		return err
 	}
 	for _, service := range response.Services {
-		if strings.ToLower(service.Name) == strings.ToLower(serviceName) {
+		if strings.ToLower(service.ServiceName) == strings.ToLower(serviceName) {
 			v.CredentialsID = credentialsID
 			v.MonitoredMetrics = service.MonitoredMetrics
-			v.Name = serviceName
-			v.BuiltIn, _ = me.supService.IsBuiltIn(ctx, v.Name)
+			v.ServiceName = serviceName
+			v.BuiltIn, _ = me.supService.IsBuiltIn(ctx, v.ServiceName)
 			return nil
 		}
 	}
@@ -153,13 +157,13 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 		v.MonitoredMetrics = nil
 	}
 
-	isBuiltIn, e := me.supService.IsBuiltIn(ctx, strings.ToLower(v.Name))
+	isBuiltIn, e := me.supService.IsBuiltIn(ctx, strings.ToLower(v.ServiceName))
 	if e != nil {
 		return nil, e
 	}
 	var service *services.Settings
 	for _, s := range response.Services {
-		if strings.ToLower(s.Name) == strings.ToLower(v.Name) {
+		if strings.ToLower(s.ServiceName) == strings.ToLower(v.ServiceName) {
 			service = s
 			break
 		}
@@ -185,7 +189,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 			if m := r.FindStringSubmatch(err.Error()); m != nil {
 				var service *services.Settings
 				for _, service = range response.Services {
-					if strings.ToLower(service.Name) == strings.ToLower(v.Name) {
+					if strings.ToLower(service.ServiceName) == strings.ToLower(v.ServiceName) {
 						break
 					}
 				}
@@ -202,7 +206,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 			} else if m := r2.FindStringSubmatch(err.Error()); m != nil {
 				var service *services.Settings
 				for _, service = range response.Services {
-					if strings.ToLower(service.Name) == strings.ToLower(v.Name) {
+					if strings.ToLower(service.ServiceName) == strings.ToLower(v.ServiceName) {
 						break
 					}
 				}
@@ -236,7 +240,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 		}
 	}
 
-	return &api.Stub{ID: credentialsID + "#" + v.Name, Name: credentialsID + "_" + v.Name}, nil
+	return &api.Stub{ID: credentialsID + "#" + v.ServiceName, Name: credentialsID + "_" + v.ServiceName}, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *services.Settings) error {
@@ -258,7 +262,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	var reducedServices servicesResponse
 	found := false
 	for _, service := range response.Services {
-		if strings.ToLower(service.Name) == strings.ToLower(serviceName) {
+		if strings.ToLower(service.ServiceName) == strings.ToLower(serviceName) {
 			found = true
 		} else {
 			reducedServices.Services = append(reducedServices.Services, service)
