@@ -286,5 +286,69 @@ func (me ConfigGetter) Get(key string) any {
 	if result == nil {
 		return ""
 	}
+	srcEnvVars := []string{}
+	switch key {
+	case "dt_env_url", "automation_env_url":
+		srcEnvVars = sourceEnvURLEnvVars
+	case "dt_api_token":
+		srcEnvVars = sourceAPITokenEnvVars
+	case "client_id", "automation_client_id":
+		srcEnvVars = sourceClientIDEnvVars
+	case "account_id":
+		srcEnvVars = sourceAccountIDEnvVars
+	case "client_secret", "automation_client_secret":
+		srcEnvVars = sourceClientSecretEnvVars
+	case "platform_token":
+		srcEnvVars = sourcePlatformTokenEnvVars
+	}
+	if len(srcEnvVars) > 0 {
+		sourceValue := evalSourceEnv(sourceEnvURLEnvVars)
+		if len(sourceValue) > 0 {
+			return sourceValue
+		}
+	}
+
 	return result
+}
+
+var sourceEnvURLEnvVars = []string{
+	"DYNATRACE_SOURCE_ENV_URL",
+	"DT_SOURCE_ENV_URL",
+	"DYNATRACE_SOURCE_ENVIRONMENT_URL",
+	"DT_SOURCE_ENVIRONMENT_URL",
+}
+
+var sourceAPITokenEnvVars = []string{
+	"DYNATRACE_SOURCE_API_TOKEN",
+	"DT_SOURCE_API_TOKEN",
+}
+
+var sourceClientIDEnvVars = []string{
+	"DT_SOURCE_CLIENT_ID",
+	"DYNATRACE_SOURCE_CLIENT_ID",
+}
+
+var sourceAccountIDEnvVars = []string{
+	"DT_SOURCE_ACCOUNT_ID",
+	"DYNATRACE_SOURCE_ACCOUNT_ID",
+}
+
+var sourceClientSecretEnvVars = []string{
+	"DT_SOURCE_CLIENT_SECRET",
+	"DYNATRACE_SOURCE_CLIENT_SECRET",
+}
+
+var sourcePlatformTokenEnvVars = []string{
+	"DYNATRACE_SOURCE_PLATFORM_TOKEN",
+	"DT_SOURCE_PLATFORM_TOKEN",
+}
+
+func evalSourceEnv(envVars []string) string {
+	for _, envVar := range envVars {
+		value := os.Getenv(envVar)
+		if len(value) > 0 {
+			return value
+		}
+	}
+	return ""
 }
