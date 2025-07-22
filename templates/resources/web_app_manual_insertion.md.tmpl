@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Web Applications"
+description: |-
+  The resource `{{ .Name }}` covers configuration for web application manual insertion
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Select a snippet format - https://docs.dynatrace.com/docs/shortlink/snippet-formats
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:rum.web.manual-insertion`)
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/rum/web/manualinsertion/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

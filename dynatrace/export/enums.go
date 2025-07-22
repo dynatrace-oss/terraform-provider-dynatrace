@@ -511,6 +511,7 @@ var ResourceTypes = struct {
 	ServiceDetectionRules               ResourceType
 	WebAppIPAddressExclusion            ResourceType
 	RPCBasedSampling                    ResourceType
+	WebAppManualInsertion               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -869,6 +870,7 @@ var ResourceTypes = struct {
 	"dynatrace_service_detection_rules",
 	"dynatrace_web_app_ip_address_exclusion",
 	"dynatrace_rpc_based_sampling",
+	"dynatrace_web_app_manual_insertion",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

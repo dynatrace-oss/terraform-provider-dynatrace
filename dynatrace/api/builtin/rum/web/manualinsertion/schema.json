@@ -1,0 +1,264 @@
+{
+	"allowedScopes": [
+		"APPLICATION"
+	],
+	"description": "Manually insert one of the snippet formats below into the pages of your application. Learn more about the different [snippet formats](https://dt-url.net/vx5g0ptn). All formats are also available via the [API](https://dt-url.net/oz43wab), allowing you to automate their insertion as part of your build process.",
+	"displayName": "Manual insertion",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"CacheDurationType": {
+			"description": "",
+			"displayName": "CacheDurationType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "1h",
+					"value": "1"
+				},
+				{
+					"displayName": "3h",
+					"value": "3"
+				},
+				{
+					"displayName": "6h",
+					"value": "6"
+				},
+				{
+					"displayName": "12h",
+					"value": "12"
+				},
+				{
+					"displayName": "1d",
+					"value": "24"
+				},
+				{
+					"displayName": "3d",
+					"value": "72"
+				},
+				{
+					"displayName": "6d",
+					"value": "144"
+				}
+			],
+			"type": "enum"
+		},
+		"CodeSnippetType": {
+			"description": "",
+			"displayName": "CodeSnippetType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "synchronously",
+					"value": "SYNCHRONOUSLY"
+				},
+				{
+					"displayName": "deferred",
+					"value": "DEFERRED"
+				}
+			],
+			"type": "enum"
+		},
+		"ScriptExecutionAttribute": {
+			"description": "",
+			"displayName": "ScriptExecutionAttribute",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "async",
+					"value": "async"
+				},
+				{
+					"displayName": "defer",
+					"value": "defer"
+				},
+				{
+					"displayName": "No attribute",
+					"value": "none"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"codeSnippet": {
+			"description": "Code snippet is a piece of inline code that implements basic functionality and loads the full functionality either synchronously or deferred. Even though it implements an update mechanism, regular updates are still required to guarantee compatibility.",
+			"displayName": "Code Snippet",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/codeSnippet"
+			}
+		},
+		"javascriptTag": {
+			"description": "JavaScript tag references an external file containing monitoring code and configuration. Due to its dynamic update mechanism, it is recommended for most use cases.",
+			"displayName": "Javascript tag",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/javascriptTag"
+			}
+		},
+		"oneagentJavascriptTag": {
+			"description": "OneAgent JavaScript tag includes configuration and a reference to an external file containing the monitoring code. It needs to be updated after configuration changes and monitoring code updates.",
+			"displayName": "OneAgent JavaScript Tag",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/oneagentJavascriptTag"
+			}
+		},
+		"oneagentJavascriptTagSRI": {
+			"description": "OneAgent JavaScript tag with SRI includes configuration, a reference to an external file containing the monitoring code, and a hash that allows the browser to verify the integrity of the monitoring code before executing it. It needs to be updated after configuration changes and monitoring code updates.",
+			"displayName": "OneAgent JavaScript Tag with SRI",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/oneagentJavascriptTagSRI"
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:rum-injection"
+	],
+	"schemaId": "builtin:rum.web.manual-insertion",
+	"types": {
+		"codeSnippet": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"codeSnippetType": {
+					"default": "SYNCHRONOUSLY",
+					"description": "",
+					"displayName": "Load the monitoring code",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/CodeSnippetType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"javascriptTag": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"cacheDuration": {
+					"default": "1",
+					"description": "",
+					"displayName": "Cache monitoring code and configuration for",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"sortItems": "disabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/CacheDurationType"
+					}
+				},
+				"crossoriginAnonymous": {
+					"default": true,
+					"description": "Add the `crossorigin=anonymous` attribute to capture JavaScript error messages and W3C resource timings",
+					"displayName": "Add crossorigin=anonymous attribute",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"scriptExecutionAttribute": {
+					"description": "",
+					"displayName": "Script execution attribute",
+					"documentation": "Add the `async` attribute to download the monitoring code in parallel with parsing the page, and execute it immediately upon availability.\n\nAdd the `defer` attribute to execute the monitoring code after the page has finished parsing.",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
+						"maturity": "IN_DEVELOPMENT"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/ScriptExecutionAttribute"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.2",
+			"versionInfo": ""
+		},
+		"oneagentJavascriptTag": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"scriptExecutionAttribute": {
+					"description": "",
+					"displayName": "Script execution attribute",
+					"documentation": "Add the `async` attribute to download the monitoring code in parallel with parsing the page, and execute it immediately upon availability\n\nAdd the `defer` attribute to execute the monitoring code after the page has finished parsing",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
+						"maturity": "IN_DEVELOPMENT"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/ScriptExecutionAttribute"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		},
+		"oneagentJavascriptTagSRI": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"scriptExecutionAttribute": {
+					"description": "",
+					"displayName": "Script execution attribute",
+					"documentation": "Add the `async` attribute to download the monitoring code in parallel with parsing the page, and execute it immediately upon availability\n\nAdd the `defer` attribute to execute the monitoring code after the page has finished parsing",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
+						"maturity": "IN_DEVELOPMENT"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/ScriptExecutionAttribute"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0.0.1",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.1.3"
+}
