@@ -1,6 +1,7 @@
 
 # IDEs
 .idea/*
+*.iml
 
 apply.cmd
 main.tf
