@@ -23,13 +23,12 @@ import (
 	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
+	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
-	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
@@ -54,8 +53,8 @@ func (me *service) Get(ctx context.Context, id string, v *business_calendars.Set
 	if err != nil {
 		return err
 	}
-	var response automation.Response
-	if response, err = client.Get(ctx, apiClient.BusinessCalendars, id); err != nil {
+	var response cacapi.Response
+	if response, err = client.Get(ctx, automation.BusinessCalendars, id); err != nil {
 		return err
 	}
 	if response.StatusCode != 200 {
@@ -82,7 +81,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	if err != nil {
 		return nil, err
 	}
-	listResponse, err := client.List(ctx, apiClient.BusinessCalendars)
+	listResponse, err := client.List(ctx, automation.BusinessCalendars)
 	if err != nil {
 		apiErr := cacapi.APIError{}
 		if errors.As(err, &apiErr) {
@@ -116,8 +115,8 @@ func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response automation.Response
-	if response, err = client.Create(ctx, apiClient.BusinessCalendars, data); err != nil {
+	var response cacapi.Response
+	if response, err = client.Create(ctx, automation.BusinessCalendars, data); err != nil {
 		return nil, err
 	}
 	if response.StatusCode == 201 {
@@ -143,8 +142,8 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response automation.Response
-	if response, err = client.Update(ctx, apiClient.BusinessCalendars, id, data); err != nil {
+	var response cacapi.Response
+	if response, err = client.Update(ctx, automation.BusinessCalendars, id, data); err != nil {
 		return err
 	}
 	if response.StatusCode == 200 {
@@ -162,7 +161,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	response, err := client.Delete(ctx, apiClient.BusinessCalendars, id)
+	response, err := client.Delete(ctx, automation.BusinessCalendars, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil
 	}

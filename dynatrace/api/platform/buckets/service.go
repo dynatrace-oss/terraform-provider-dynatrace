@@ -31,6 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 )
@@ -77,7 +78,7 @@ func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err e
 	if err != nil {
 		return err
 	}
-	var result bucket.Response
+	var result coreapi.Response
 	if result, err = client.Get(ctx, id); err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {

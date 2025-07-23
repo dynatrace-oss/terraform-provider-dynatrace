@@ -6,8 +6,8 @@ toolchain go1.24.1
 
 require (
 	github.com/dlclark/regexp2 v1.11.4
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.8.1-0.20250514143234-94fb2ef0c525
-	github.com/go-logr/logr v1.4.2
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20250723103928-4514849be7dd
+	github.com/go-logr/logr v1.4.3
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/go-hclog v1.6.3
@@ -83,7 +83,7 @@ require (
 	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	golang.org/x/time v0.11.0 // indirect
+	golang.org/x/time v0.12.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241216192217-9240e9c98484 // indirect
