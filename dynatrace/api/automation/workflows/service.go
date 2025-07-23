@@ -23,14 +23,14 @@ import (
 	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
+	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
-	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
+	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
 func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
@@ -40,8 +40,6 @@ func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Wo
 type service struct {
 	credentials *tfrest.Credentials
 }
-
-var R automation.Response
 
 func (me *service) client(ctx context.Context) (*automation.Client, error) {
 	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
@@ -56,7 +54,7 @@ func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) er
 	if err != nil {
 		return err
 	}
-	var response automation.Response
+	var response cacapi.Response
 	if response, err = client.Get(ctx, apiClient.Workflows, id); err != nil {
 		return err
 	}
@@ -118,7 +116,7 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response automation.Response
+	var response cacapi.Response
 	if response, err = client.Create(ctx, apiClient.Workflows, data); err != nil {
 		return nil, err
 	}
@@ -145,7 +143,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response automation.Response
+	var response cacapi.Response
 	if response, err = client.Update(ctx, apiClient.Workflows, id, data); err != nil {
 		return err
 	}

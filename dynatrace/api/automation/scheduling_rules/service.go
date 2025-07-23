@@ -23,13 +23,12 @@ import (
 	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
+	scheduling_rules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
-	scheduling_rules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/scheduling_rules/settings"
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/api/clients/automation"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
@@ -54,8 +53,8 @@ func (me *service) Get(ctx context.Context, id string, v *scheduling_rules.Setti
 	if err != nil {
 		return err
 	}
-	var response automation.Response
-	if response, err = client.Get(ctx, apiClient.SchedulingRules, id); err != nil {
+	var response cacapi.Response
+	if response, err = client.Get(ctx, automation.SchedulingRules, id); err != nil {
 		return err
 	}
 	if response.StatusCode != 200 {
@@ -82,7 +81,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	if err != nil {
 		return nil, err
 	}
-	listResponse, err := client.List(ctx, apiClient.SchedulingRules)
+	listResponse, err := client.List(ctx, automation.SchedulingRules)
 	if err != nil {
 		apiErr := cacapi.APIError{}
 		if errors.As(err, &apiErr) {
@@ -115,8 +114,8 @@ func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings) (st
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response automation.Response
-	if response, err = client.Create(ctx, apiClient.SchedulingRules, data); err != nil {
+	var response cacapi.Response
+	if response, err = client.Create(ctx, automation.SchedulingRules, data); err != nil {
 		return nil, err
 	}
 	if response.StatusCode == 201 {
@@ -142,8 +141,8 @@ func (me *service) Update(ctx context.Context, id string, v *scheduling_rules.Se
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response automation.Response
-	if response, err = client.Update(ctx, apiClient.SchedulingRules, id, data); err != nil {
+	var response cacapi.Response
+	if response, err = client.Update(ctx, automation.SchedulingRules, id, data); err != nil {
 		return err
 	}
 	if response.StatusCode == 200 {
@@ -161,7 +160,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	response, err := client.Delete(ctx, apiClient.SchedulingRules, id)
+	response, err := client.Delete(ctx, automation.SchedulingRules, id)
 	if response.StatusCode == 204 || response.StatusCode == 404 {
 		return nil
 	}

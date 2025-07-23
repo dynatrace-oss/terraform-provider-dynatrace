@@ -9,13 +9,14 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/google/uuid"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
+
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
-	"github.com/google/uuid"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
 )
 
 func APITokenClient(credentials *Credentials) Client {
@@ -110,9 +111,9 @@ func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials
 
 	oauthClient := rest.NewClient(
 		parsedURL,
-		auth.NewOAuthBasedClient(
+		auth.NewOAuthClient(
 			ctx,
-			clientcredentials.Config{
+			&clientcredentials.Config{
 				ClientID:     credentials.OAuth.ClientID,
 				ClientSecret: credentials.OAuth.ClientSecret,
 				TokenURL:     credentials.OAuth.TokenURL,

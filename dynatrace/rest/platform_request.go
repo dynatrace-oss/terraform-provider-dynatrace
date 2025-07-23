@@ -12,9 +12,10 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"golang.org/x/oauth2/clientcredentials"
+
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-	"golang.org/x/oauth2/clientcredentials"
 )
 
 var eligiblePlatformRequests = map[string]string{
@@ -57,7 +58,7 @@ func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Crede
 		ClientSecret: credentials.OAuth.ClientSecret,
 		TokenURL:     evalTokenURL(parsedURL.String()),
 	}
-	httpClient := auth.NewOAuthBasedClient(ctx, oauthConfig)
+	httpClient := auth.NewOAuthClient(ctx, &oauthConfig)
 
 	opts := []rest.Option{
 		rest.WithHTTPListener(logging.HTTPListener("platform")),
