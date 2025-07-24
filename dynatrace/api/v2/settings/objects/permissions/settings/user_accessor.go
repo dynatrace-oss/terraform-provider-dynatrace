@@ -31,7 +31,7 @@ func (_ *Users) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Required:    true,
 			MinItems:    1,
-			Description: "",
+			Description: "User that is to be granted read or write permissions",
 			Elem:        &schema.Resource{Schema: new(UserAccessor).Schema()},
 		},
 	}
