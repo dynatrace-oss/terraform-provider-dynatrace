@@ -44,11 +44,13 @@ func (_ *SettingPermissions) Schema() map[string]*schema.Schema {
 		"users": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 1,
 			Elem:     &schema.Resource{Schema: new(Users).Schema()},
 		},
 		"groups": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 1,
 			Elem:     &schema.Resource{Schema: new(Groups).Schema()},
 		},
 	}
