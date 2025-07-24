@@ -1,9 +1,9 @@
 data "dynatrace_iam_user" "user_a" {
-  email = "a@home.com"
+  email = "a@example.com"
 }
 
 data "dynatrace_iam_user" "user_b" {
-  email = "b@home.com"
+  email = "b@example.com"
 }
 
 data "dynatrace_iam_group" "example_group" {

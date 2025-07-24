@@ -41,11 +41,11 @@ resource "dynatrace_user_group" "terraform" {
 }
 
 resource "dynatrace_user" "terraform" {
-  email      = "me@home.com"
+  email      = "me@example.com"
   first_name = "John"
   groups     = [dynatrace_user_group.terraform.id]
   last_name  = "Doe"
-  user_name  = "me@home.com"
+  user_name  = "me@example.com"
 }
 
 resource "dynatrace_policy" "terraform_cluster" {

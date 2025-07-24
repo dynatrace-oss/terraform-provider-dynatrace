@@ -21,7 +21,7 @@ resource "dynatrace_json_dashboard" "dashboard-a" {
   contents = jsonencode({
       "dashboardMetadata": {
         "name": "dashboard-a",
-        "owner": "me@home.com"
+        "owner": "me@example.com"
       },
       "tiles": [
         {
@@ -44,7 +44,7 @@ resource "dynatrace_json_dashboard" "dashboard-b" {
   contents = jsonencode({
       "dashboardMetadata": {
         "name": "dashboard-b",
-        "owner": "me@home.com"
+        "owner": "me@example.com"
       },
       "tiles": [
         {
@@ -113,7 +113,7 @@ resource "dynatrace_json_dashboard" "dashboard-a" {
   contents = jsonencode({
       "dashboardMetadata": {
         "name": "dashboard-a",
-        "owner": "me@home.com"
+        "owner": "me@example.com"
       },
       "tiles": [
         {
@@ -140,7 +140,7 @@ resource "dynatrace_json_dashboard" "dashboard-b" {
   contents = jsonencode({
       "dashboardMetadata": {
         "name": "dashboard-b",
-        "owner": "me@home.com"
+        "owner": "me@example.com"
       },
       "tiles": [
         {
