@@ -91,4 +91,5 @@ Required:
 Optional:
 
 - `code_snippet_type` (String) Possible Values: `DEFERRED`, `SYNCHRONOUSLY`
+- `script_execution_attribute` (String) Possible Values: `async`, `defer`, `none`
  

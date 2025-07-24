@@ -70,6 +70,7 @@ resource "dynatrace_process_group_detection_flags" "#name#" {
 
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 - `security_software_detection_enabled` (Boolean) This flag enables the detection of security software such as anti-malware protection.
+- `split_db_2_grouping_by_instances` (Boolean) Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.
 
 ### Read-Only
 

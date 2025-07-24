@@ -75,6 +75,10 @@ Required:
 - `field_data_type` (String) Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
 - `field_name` (String) Field name
 
+Optional:
+
+- `case_insensitive_naming_enabled` (Boolean) Field name validation should be case-insensitive
+
 
 
 <a id="nestedblock--custom_session_properties_allow_list"></a>
@@ -91,3 +95,7 @@ Required:
 
 - `field_data_type` (String) Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
 - `field_name` (String) Field name
+
+Optional:
+
+- `case_insensitive_naming_enabled` (Boolean) Field name validation should be case-insensitive

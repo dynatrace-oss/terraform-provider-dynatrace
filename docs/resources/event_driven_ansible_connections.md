@@ -26,6 +26,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_event_driven_ansible_connections" "#name#"{
+  event_stream_enabled = true
   name    = "#name#"
   url     = "https://www.google.com"
   type    = "api-token"
@@ -44,6 +45,7 @@ resource "dynatrace_event_driven_ansible_connections" "#name#"{
 
 ### Optional
 
+- `event_stream_enabled` (Boolean) Flag if Red Hat Event Stream is use for Event-Driven Ansible
 - `token` (String, Sensitive) API access token for the Event-Driven Ansible Controller. Please note that this token is not refreshed and can expire.
 
 ### Read-Only

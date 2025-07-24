@@ -238,6 +238,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_request_naming | /api/config/v1/service/requestNaming | ReadConfig, WriteConfig |
 | dynatrace_request_namings | /api/config/v1/service/requestNaming/order | ReadConfig, WriteConfig |
 | dynatrace_resource_attributes | /api/v2/settings/objects (schema: builtin:resource-attribute) | settings.read, settings.write |
+| dynatrace_rpc_based_sampling | /api/v2/settings/objects (schema: builtin:rpc-based-sampling) | settings.read, settings.write |
 | dynatrace_rum_advanced_correlation | /api/v2/settings/objects (schema: builtin:rum.resource-timing-origins) | settings.read, settings.write |
 | dynatrace_rum_host_headers | /api/v2/settings/objects (schema: builtin:rum.host-headers) | settings.read, settings.write |
 | dynatrace_rum_ip_determination | /api/v2/settings/objects (schema: builtin:rum.ip-determination) | settings.read, settings.write |
@@ -246,6 +247,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_rum_provider_breakdown | /api/v2/settings/objects (schema: builtin:rum.provider-breakdown) | settings.read, settings.write |
 | dynatrace_security_context | /api/v2/settings/objects (schema: builtin:security-context) | settings.read, settings.write |
 | dynatrace_service_anomalies_v2 | /api/v2/settings/objects (schema: builtin:anomaly-detection.services) | settings.read, settings.write |
+| dynatrace_service_detection_rules | /api/v2/settings/objects (schema: builtin:service-detection-rules) | settings.read, settings.write |
 | dynatrace_service_external_web_request | /api/v2/settings/objects (schema: builtin:service-detection.external-web-request) | settings.read, settings.write |
 | dynatrace_service_external_web_service | /api/v2/settings/objects (schema: builtin:service-detection.external-web-service) | settings.read, settings.write |
 | dynatrace_service_failure | /api/v2/settings/objects (schema: builtin:failure-detection.service.general-parameters) | settings.read, settings.write |
@@ -254,6 +256,7 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_service_http_failure | /api/v2/settings/objects (schema: builtin:failure-detection.service.http-parameters) | settings.read, settings.write |
 | dynatrace_service_naming | /api/config/v1/conditionalNaming/service | ReadConfig, WriteConfig |
 | dynatrace_service_now_notification | /api/v2/settings/objects (schema: builtin:problem.notifications) | settings.read, settings.write |
+| dynatrace_service_splitting | /api/v2/settings/objects (schema: builtin:service-splitting-rules) | settings.read, settings.write |
 | dynatrace_servicenow_connection | /api/v2/settings/objects (schema: app:dynatrace.servicenow:connection) | settings.read, settings.write |
 | dynatrace_session_replay_resource_capture | /api/v2/settings/objects (schema: builtin:sessionreplay.web.resource-capturing) | settings.read, settings.write |
 | dynatrace_session_replay_web_privacy | /api/v2/settings/objects (schema: builtin:sessionreplay.web.privacy-preferences) | settings.read, settings.write |
@@ -299,12 +302,14 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_web_app_custom_injection | /api/v2/settings/objects (schema: builtin:rum.web.custom-injection-rules) | settings.read, settings.write |
 | dynatrace_web_app_enablement | /api/v2/settings/objects (schema: builtin:rum.web.enablement) | settings.read, settings.write |
 | dynatrace_web_app_injection_cookie | /api/v2/settings/objects (schema: builtin:rum.web.injection.cookie) | settings.read, settings.write |
+| dynatrace_web_app_ip_address_exclusion | /api/v2/settings/objects (schema: builtin:rum.web.ipaddress-exclusion) | settings.read, settings.write |
 | dynatrace_web_app_javascript_filename| /api/v2/settings/objects (schema: builtin:rum.web.rum-javascript-file-name) | settings.read, settings.write |
 | dynatrace_web_app_javascript_updates | /api/v2/settings/objects (schema: builtin:rum.web.rum-javascript-updates) | settings.read, settings.write |
 | dynatrace_web_app_javascript_version | /api/v2/settings/objects (schema: builtin:rum.web.custom-rum-javascript-version) | settings.read, settings.write |
 | dynatrace_web_app_key_performance_custom | /api/v2/settings/objects (schema: builtin:rum.web.key-performance-metric-custom-actions) | settings.read, settings.write |
 | dynatrace_web_app_key_performance_load | /api/v2/settings/objects (schema: builtin:rum.web.key-performance-metric-load-actions) | settings.read, settings.write |
 | dynatrace_web_app_key_performance_xhr | /api/v2/settings/objects (schema: builtin:rum.web.key-performance-metric-xhr-actions) | settings.read, settings.write |
+| dynatrace_web_app_manual_insertion | /api/v2/settings/objects (schema: builtin:rum.web.manual-insertion) | settings.read, settings.write |
 | dynatrace_web_app_resource_cleanup | /api/v2/settings/objects (schema: builtin:rum.web.resource-cleanup-rules) | settings.read, settings.write |
 | dynatrace_web_app_resource_types | /api/v2/settings/objects (schema: builtin:rum.web.resource-types) | settings.read, settings.write |
 | dynatrace_web_application | /api/config/v1/applications/web | ReadConfig, WriteConfig |

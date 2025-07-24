@@ -42,7 +42,9 @@ resource "dynatrace_infraops_app_settings" "#name#" {
 
 ### Optional
 
-- `interface_saturation_threshold` (Number) (Required v305+) The threshold at which a network device interface is deemed to be saturated.
+- `interface_saturation_threshold` (Number) The threshold at which a network device interface is deemed to be saturated.
+- `invex_dql_query_limit` (Number) Limit the number of results returned from Grail for Data center, Host, and Network device entities.
+- `invex_dql_sort_limit` (Number) Limit for server-side sorting in Data center, Host, and Network device inventories. Sorting is disabled when the row count exceeds the configured threshold.
 
 ### Read-Only
 
