@@ -28,7 +28,7 @@ type Users []*UserAccessor
 func (_ *Users) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"user": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Required:    true,
 			MinItems:    1,
 			Description: "User that is to be granted read or write permissions",

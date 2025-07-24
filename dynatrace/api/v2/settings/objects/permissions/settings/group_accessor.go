@@ -28,7 +28,7 @@ type Groups []*GroupAccessor
 func (_ *Groups) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"group": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Required:    true,
 			MinItems:    1,
 			Description: "Group that is to be granted read or write permissions",
