@@ -21,10 +21,10 @@ resource "dynatrace_notification" "#name#" {
     name             = "#name#"
     active           = true
     alerting_profile = data.dynatrace_alerting_profiles.Test[0].id
-    bcc_receivers    = ["they@home.com", "me@home.com", "you@home.com", "we@home.com", "us@home.com"]
+    bcc_receivers    = ["they@example.com", "me@example.com", "you@example.com", "we@example.com", "us@example.com"]
     body             = "{ProblemDetailsHTML}"
-    cc_receivers     = ["they@home.com", "you@home.com", "me@home.com", "we@home.com"]
-    receivers        = ["they@home.com", "you@home.com", "me@home.com", "we@home.com"]
+    cc_receivers     = ["they@example.com", "you@example.com", "me@example.com", "we@example.com"]
+    receivers        = ["they@example.com", "you@example.com", "me@example.com", "we@example.com"]
     subject          = "{State} Problem {ProblemID}: {ImpactedEntity}"
   }
 }

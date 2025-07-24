@@ -18,7 +18,7 @@ This data source allows you to specify the email address of the user and produce
 
 ```terraform
 data "dynatrace_iam_user" "user_a" {
-  email = "me@home.com"
+  email = "me@example.com"
 }
 
 output "groups" {
