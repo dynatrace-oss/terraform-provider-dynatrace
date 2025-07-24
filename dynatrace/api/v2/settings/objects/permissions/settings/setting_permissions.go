@@ -33,11 +33,13 @@ type SettingPermissions struct {
 func (_ *SettingPermissions) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"settings_object_id": {
-			Type:     schema.TypeString,
-			Required: true,
+			Type:        schema.TypeString,
+			Description: "The ID of the settings object for which access is to be granted. Here, you can use the `id` attribute of the respective settings object resource",
+			Required:    true,
 		},
 		"all_users": {
 			Type:         schema.TypeString,
+			Description:  "Defines the default access level granted to all users in this environment. Allowed values are `read`, `write`, or `none`",
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"read", "write", "none"}, false),
 		},
