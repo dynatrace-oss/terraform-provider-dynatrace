@@ -417,8 +417,14 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 						enumSliceType := reflect.SliceOf(enumType)
 						vEnumSlicePtr := reflect.New(enumSliceType)
 						vEnumSlice := vEnumSlicePtr.Elem()
-						for _, iString := range result.(*schema.Set).List() {
-							vEnumSlice = reflect.Append(vEnumSlice, reflect.ValueOf(iString).Convert(enumType))
+						if resultSet, ok := result.(*schema.Set); ok {
+							for _, iString := range resultSet.List() {
+								vEnumSlice = reflect.Append(vEnumSlice, reflect.ValueOf(iString).Convert(enumType))
+							}
+						} else {
+							for _, iString := range result.([]any) {
+								vEnumSlice = reflect.Append(vEnumSlice, reflect.ValueOf(iString).Convert(enumType))
+							}
 						}
 						vTarget.Elem().Set(reflect.ValueOf(vEnumSlice.Interface()))
 						return true, nil
