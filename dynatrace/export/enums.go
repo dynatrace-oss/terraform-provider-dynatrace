@@ -467,51 +467,53 @@ var ResourceTypes = struct {
 	KubernetesEnrichment                ResourceType
 	DevObsGitOnPrem                     ResourceType
 	AWSAutomationConnections            ResourceType
-	DevObsAgentOptin                    ResourceType
-	DevObsDataMasking                   ResourceType
-	DavisCoPilot                        ResourceType
-	OpenPipelineLogs                    ResourceType
-	OpenPipelineEvents                  ResourceType
-	OpenPipelineSecurityEvents          ResourceType
-	OpenPipelineBusinessEvents          ResourceType
-	OpenPipelineSDLCEvents              ResourceType
-	OpenPipelineMetrics                 ResourceType
-	OpenPipelineUserSessions            ResourceType
-	OpenPipelineDavisProblems           ResourceType
-	OpenPipelineDavisEvents             ResourceType
-	OpenPipelineSystemEvents            ResourceType
-	OpenPipelineUserEvents              ResourceType
-	OpenPipelineSpans                   ResourceType
-	CloudDevelopmentEnvironments        ResourceType
-	KubernetesSPM                       ResourceType
-	LogAgentFeatureFlags                ResourceType
-	ProblemRecordPropagationRules       ResourceType
-	ProblemFields                       ResourceType
-	AutomationControllerConnections     ResourceType
-	EventDrivenAnsibleConnections       ResourceType
-	ServiceNowConnection                ResourceType
-	PagerDutyConnection                 ResourceType
-	MSTeamsConnection                   ResourceType
-	DefaultLaunchpad                    ResourceType
-	JenkinsConnection                   ResourceType
-	GitLabConnection                    ResourceType
-	MSEntraIDConnection                 ResourceType
-	GitHubConnection                    ResourceType
-	Microsoft365EmailConnection         ResourceType
-	BusinessEventsCapturingVariants     ResourceType
-	WebAppAutoInjection                 ResourceType
-	SecurityContext                     ResourceType
-	Segments                            ResourceType
-	PlatformSLO                         ResourceType
-	AppSecVulnerabilityThirdPartyK8s    ResourceType
-	AppSecVulnerabilityThirdPartyAttr   ResourceType
-	WebAppCustomProperties              ResourceType
-	WebAppJavascriptFilename            ResourceType
-	ServiceSplittingRules               ResourceType
-	ServiceDetectionRules               ResourceType
-	WebAppIPAddressExclusion            ResourceType
-	RPCBasedSampling                    ResourceType
-	WebAppManualInsertion               ResourceType
+	// AWSConnection                       ResourceType
+	// AWSConnectionRoleARN                ResourceType
+	DevObsAgentOptin                  ResourceType
+	DevObsDataMasking                 ResourceType
+	DavisCoPilot                      ResourceType
+	OpenPipelineLogs                  ResourceType
+	OpenPipelineEvents                ResourceType
+	OpenPipelineSecurityEvents        ResourceType
+	OpenPipelineBusinessEvents        ResourceType
+	OpenPipelineSDLCEvents            ResourceType
+	OpenPipelineMetrics               ResourceType
+	OpenPipelineUserSessions          ResourceType
+	OpenPipelineDavisProblems         ResourceType
+	OpenPipelineDavisEvents           ResourceType
+	OpenPipelineSystemEvents          ResourceType
+	OpenPipelineUserEvents            ResourceType
+	OpenPipelineSpans                 ResourceType
+	CloudDevelopmentEnvironments      ResourceType
+	KubernetesSPM                     ResourceType
+	LogAgentFeatureFlags              ResourceType
+	ProblemRecordPropagationRules     ResourceType
+	ProblemFields                     ResourceType
+	AutomationControllerConnections   ResourceType
+	EventDrivenAnsibleConnections     ResourceType
+	ServiceNowConnection              ResourceType
+	PagerDutyConnection               ResourceType
+	MSTeamsConnection                 ResourceType
+	DefaultLaunchpad                  ResourceType
+	JenkinsConnection                 ResourceType
+	GitLabConnection                  ResourceType
+	MSEntraIDConnection               ResourceType
+	GitHubConnection                  ResourceType
+	Microsoft365EmailConnection       ResourceType
+	BusinessEventsCapturingVariants   ResourceType
+	WebAppAutoInjection               ResourceType
+	SecurityContext                   ResourceType
+	Segments                          ResourceType
+	PlatformSLO                       ResourceType
+	AppSecVulnerabilityThirdPartyK8s  ResourceType
+	AppSecVulnerabilityThirdPartyAttr ResourceType
+	WebAppCustomProperties            ResourceType
+	WebAppJavascriptFilename          ResourceType
+	ServiceSplittingRules             ResourceType
+	ServiceDetectionRules             ResourceType
+	WebAppIPAddressExclusion          ResourceType
+	RPCBasedSampling                  ResourceType
+	WebAppManualInsertion             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -826,6 +828,8 @@ var ResourceTypes = struct {
 	"dynatrace_kubernetes_enrichment",
 	"dynatrace_devobs_git_onprem",
 	"dynatrace_automation_workflow_aws_connections",
+	// "dynatrace_aws_connection",
+	// "dynatrace_aws_connection_role_arn",
 	"dynatrace_devobs_agent_optin",
 	"dynatrace_devobs_data_masking",
 	"dynatrace_davis_copilot",

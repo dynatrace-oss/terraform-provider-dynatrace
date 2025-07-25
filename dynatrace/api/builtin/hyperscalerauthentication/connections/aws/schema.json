@@ -1,0 +1,327 @@
+{
+    "dynatrace": "1",
+    "schemaId": "builtin:hyperscaler-authentication.connections.aws",
+    "displayName": "Connections to AWS environments",
+    "description": "Connections to AWS for Dynatrace integrations",
+    "documentation": "",
+    "version": "0.0.15",
+    "multiObject": true,
+    "ordered": false,
+    "maxObjects": 3000,
+    "allowedScopes": [
+        "environment"
+    ],
+    "enums": {
+        "ConsumersOfAwsRoleBasedAuthentication": {
+            "displayName": "Consumers",
+            "description": "Dynatrace integrations that can use this connection",
+            "documentation": "",
+            "items": [
+                {
+                    "value": "DA",
+                    "displayName": "(Deprecated) Data Acquisition"
+                },
+                {
+                    "value": "SVC:com.dynatrace.da",
+                    "displayName": "Data Acquisition"
+                },
+                {
+                    "value": "APP:dynatrace.biz.carbon",
+                    "displayName": "Cost & Carbon Optimization"
+                },
+                {
+                    "value": "NONE",
+                    "displayName": "None"
+                }
+            ],
+            "type": "enum"
+        },
+        "ConsumersOfAwsWebIdentity": {
+            "displayName": "Consumers",
+            "description": "Dynatrace integrations that can use this connection",
+            "documentation": "",
+            "items": [
+                {
+                    "value": "APP:dynatrace.aws.connector",
+                    "displayName": "AWS Connector"
+                },
+                {
+                    "value": "APP:dynatrace.biz.carbon",
+                    "displayName": "Cost & Carbon Optimization"
+                }
+            ],
+            "type": "enum"
+        },
+        "Type": {
+            "displayName": "Type",
+            "description": "",
+            "documentation": "",
+            "items": [
+                {
+                    "value": "awsRoleBasedAuthentication",
+                    "displayName": "AWS IAM Cross-account Role-based authentication"
+                },
+                {
+                    "value": "awsWebIdentity",
+                    "displayName": "AWS Web Identity"
+                }
+            ],
+            "type": "enum"
+        }
+    },
+    "types": {
+        "AwsRoleBasedAuthenticationConfig": {
+            "version": "0",
+            "versionInfo": "",
+            "displayName": "",
+            "summaryPattern": "",
+            "searchPattern": "",
+            "description": "",
+            "documentation": "",
+            "properties": {
+                "roleArn": {
+                    "displayName": "AWS IAM Role ARN",
+                    "description": "The ARN of the AWS role that should be assumed",
+                    "documentation": "",
+                    "type": "text",
+                    "nullable": false,
+                    "constraints": [
+                        {
+                            "type": "LENGTH",
+                            "maxLength": 2048
+                        },
+                        {
+                            "type": "PATTERN",
+                            "customMessage": "Invalid AWS IAM Role ARN, it does not adhere to pattern ^$|arn:aws:iam::(?:aws|\\\\d+?):role\\\\/.*$",
+                            "pattern": "^$|arn:aws:iam::(?:aws|\\d+?):role\\/.*$"
+                        }
+                    ],
+                    "maxObjects": 1,
+                    "modificationPolicy": "DEFAULT",
+                    "default": ""
+                },
+                "consumers": {
+                    "displayName": "Consumers",
+                    "description": "Dynatrace integrations that can use this connection",
+                    "documentation": "",
+                    "type": "list",
+                    "items": {
+                        "displayName": "",
+                        "description": "",
+                        "documentation": "",
+                        "type": {
+                            "$ref": "#/enums/ConsumersOfAwsRoleBasedAuthentication"
+                        }
+                    },
+                    "nullable": false,
+                    "minObjects": 0,
+                    "maxObjects": 1,
+                    "modificationPolicy": "DEFAULT",
+                    "default": [
+                        "SVC:com.dynatrace.da"
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "AwsWebIdentity": {
+            "version": "0",
+            "versionInfo": "",
+            "displayName": "",
+            "summaryPattern": "",
+            "searchPattern": "",
+            "description": "",
+            "documentation": "",
+            "properties": {
+                "roleArn": {
+                    "displayName": "AWS IAM Role ARN",
+                    "description": "The ARN of the AWS role that should be assumed",
+                    "documentation": "",
+                    "type": "text",
+                    "nullable": false,
+                    "constraints": [
+                        {
+                            "type": "LENGTH",
+                            "maxLength": 2048
+                        },
+                        {
+                            "type": "PATTERN",
+                            "customMessage": "Role must be valid with given pattern ^$|arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):role\\/.*$",
+                            "pattern": "^$|arn:(?:aws|aws-cn|aws-us-gov):iam::(?:aws|\\d+?):role\\/.*$"
+                        }
+                    ],
+                    "maxObjects": 1,
+                    "modificationPolicy": "DEFAULT",
+                    "default": ""
+                },
+                "consumers": {
+                    "displayName": "Consumers",
+                    "description": "Dynatrace integrations that can use this connection",
+                    "documentation": "",
+                    "type": "list",
+                    "items": {
+                        "displayName": "",
+                        "description": "",
+                        "documentation": "",
+                        "type": {
+                            "$ref": "#/enums/ConsumersOfAwsWebIdentity"
+                        }
+                    },
+                    "nullable": false,
+                    "minObjects": 0,
+                    "maxObjects": 1,
+                    "modificationPolicy": "DEFAULT",
+                    "default": [
+                        "APP:dynatrace.aws.connector"
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "MetaData": {
+            "version": "0",
+            "versionInfo": "",
+            "displayName": "",
+            "summaryPattern": "",
+            "searchPattern": "",
+            "description": "",
+            "documentation": "",
+            "properties": {
+                "type": {
+                    "displayName": "Type",
+                    "description": "Type",
+                    "documentation": "",
+                    "type": "text",
+                    "nullable": false,
+                    "constraints": [
+                        {
+                            "type": "LENGTH",
+                            "maxLength": 500,
+                            "minLength": 1
+                        }
+                    ],
+                    "maxObjects": 1,
+                    "modificationPolicy": "NEVER",
+                    "default": "connections"
+                },
+                "subType": {
+                    "displayName": "Type",
+                    "description": "Type",
+                    "documentation": "",
+                    "type": "list",
+                    "items": {
+                        "displayName": "",
+                        "description": "",
+                        "documentation": "",
+                        "type": "text",
+                        "constraints": [
+                            {
+                                "type": "LENGTH",
+                                "maxLength": 500,
+                                "minLength": 1
+                            }
+                        ]
+                    },
+                    "nullable": false,
+                    "minObjects": 0,
+                    "maxObjects": 100,
+                    "modificationPolicy": "NEVER",
+                    "default": [
+                        "ingest",
+                        "automation"
+                    ]
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "name": {
+            "displayName": "Name",
+            "description": "The name of the connection",
+            "documentation": "",
+            "type": "text",
+            "nullable": false,
+            "constraints": [
+                {
+                    "type": "LENGTH",
+                    "maxLength": 100,
+                    "minLength": 3
+                },
+                {
+                    "type": "PATTERN",
+                    "customMessage": "The symbol : is not allowed the name",
+                    "pattern": "^[^:]+$"
+                }
+            ],
+            "maxObjects": 1,
+            "modificationPolicy": "NEVER",
+            "default": ""
+        },
+        "type": {
+            "displayName": "Connection Type",
+            "description": "AWS Authentication mechanism to be used by the connection",
+            "documentation": "",
+            "type": {
+                "$ref": "#/enums/Type"
+            },
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "NEVER",
+            "default": "awsRoleBasedAuthentication"
+        },
+        "awsRoleBasedAuthentication": {
+            "displayName": "",
+            "description": "",
+            "documentation": "",
+            "type": {
+                "$ref": "#/types/AwsRoleBasedAuthenticationConfig"
+            },
+            "nullable": false,
+            "precondition": {
+                "type": "EQUALS",
+                "property": "type",
+                "expectedValue": "awsRoleBasedAuthentication"
+            },
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+        },
+        "awsWebIdentity": {
+            "displayName": "",
+            "description": "",
+            "documentation": "",
+            "type": {
+                "$ref": "#/types/AwsWebIdentity"
+            },
+            "nullable": false,
+            "precondition": {
+                "type": "EQUALS",
+                "property": "type",
+                "expectedValue": "awsWebIdentity"
+            },
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+        }
+    },
+    "constraints": [
+        {
+            "type": "CUSTOM_VALIDATOR_REF",
+            "customValidatorId": "hyperscaler-authentication.hyperscaler-authentication:8080/internal/settings-validation/v0.1/validate-container/awsConfiguration",
+            "skipAsyncValidation": true
+        }
+    ],
+    "schemaConstraints": [
+        {
+            "type": "UNIQUE",
+            "customMessage": "There is another connection defined under this name.",
+            "uniqueProperties": [
+                "name"
+            ],
+            "flattenCollections": false
+        }
+    ],
+    "metadata": {
+        "$ref": "#/types/Metadata"
+    },
+    "ownerBasedAccessControl": true
+}
