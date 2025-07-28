@@ -46,13 +46,13 @@ func (g *Groups) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type GroupAccessor struct {
-	GroupID string
-	Access  string
+	ID     string
+	Access string
 }
 
 func (_ *GroupAccessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"group_id": {
+		"id": {
 			Type:        schema.TypeString,
 			Description: "The UUID of the group, conveniently retrieved via the `id` attribute provided by the data source `dynatrace_iam_group",
 			Required:    true,
@@ -68,14 +68,14 @@ func (_ *GroupAccessor) Schema() map[string]*schema.Schema {
 
 func (ga *GroupAccessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"group_id": ga.GroupID,
-		"access":   ga.Access,
+		"id":     ga.ID,
+		"access": ga.Access,
 	})
 }
 
 func (ga *GroupAccessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"group_id": &ga.GroupID,
-		"access":   &ga.Access,
+		"id":     &ga.ID,
+		"access": &ga.Access,
 	})
 }

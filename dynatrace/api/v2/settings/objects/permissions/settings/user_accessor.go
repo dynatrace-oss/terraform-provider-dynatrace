@@ -46,13 +46,13 @@ func (u *Users) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type UserAccessor struct {
-	UserID string
+	UID    string
 	Access string
 }
 
 func (_ *UserAccessor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"user_id": {
+		"uid": {
 			Type:        schema.TypeString,
 			Description: "The UUID of the user, conveniently retrieved via the `uid` attribute provided by the data source `dynatrace_iam_user`",
 			Required:    true,
@@ -68,14 +68,14 @@ func (_ *UserAccessor) Schema() map[string]*schema.Schema {
 
 func (ua *UserAccessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"user_id": ua.UserID,
-		"access":  ua.Access,
+		"uid":    ua.UID,
+		"access": ua.Access,
 	})
 }
 
 func (ua *UserAccessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"user_id": &ua.UserID,
-		"access":  &ua.Access,
+		"uid":    &ua.UID,
+		"access": &ua.Access,
 	})
 }
