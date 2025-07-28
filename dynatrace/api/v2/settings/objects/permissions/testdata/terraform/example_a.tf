@@ -15,17 +15,17 @@ resource "dynatrace_setting_permissions" "github_connection_access" {
   all_users = "none"
   users {
     user {
-        user_id = data.dynatrace_iam_user.user_a.uid
+        uid = data.dynatrace_iam_user.user_a.uid
         access = "write"
     }
     user {
-        user_id = data.dynatrace_iam_user.user_b.uid
+        uid = data.dynatrace_iam_user.user_b.uid
         access = "read"
     }
   }
   groups {
     group {
-        group_id = data.dynatrace_iam_group.example_group.id
+        id = data.dynatrace_iam_group.example_group.id
         access = "write"
     }
   }
