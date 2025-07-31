@@ -393,7 +393,12 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 		return diag.FromErr(err)
 	}
 	for k, v := range marshalled {
-		d.Set(k, v)
+		err := d.Set(k, v)
+		// currently behind an env variable, because it could potentially break existing resources
+		// TODO: Remove this once we have proper integration tests
+		if err != nil && os.Getenv("DYNATRACE_DEBUG") == "true" {
+			return diag.FromErr(err)
+		}
 	}
 	return diag.Diagnostics{}
 }
