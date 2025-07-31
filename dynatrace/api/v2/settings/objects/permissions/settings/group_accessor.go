@@ -18,6 +18,8 @@
 package settings
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -59,9 +61,9 @@ func (_ *GroupAccessor) Schema() map[string]*schema.Schema {
 		},
 		"access": {
 			Type:         schema.TypeString,
-			Description:  "Valid values: read, write",
+			Description:  fmt.Sprintf("Valid values: `%s`, `%s`", HCLAccessorRead, HCLAccessorWrite),
 			Required:     true,
-			ValidateFunc: validation.StringInSlice([]string{"read", "write"}, false),
+			ValidateFunc: validation.StringInSlice([]string{HCLAccessorRead, HCLAccessorWrite}, false),
 		},
 	}
 }
