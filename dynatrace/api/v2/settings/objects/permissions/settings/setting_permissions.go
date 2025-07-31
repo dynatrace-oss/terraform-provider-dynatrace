@@ -69,7 +69,7 @@ func (_ *SettingPermissions) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (sp *SettingPermissions) MarshalHCL(properties hcl.Properties) error {
+func (sp SettingPermissions) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"settings_object_id": sp.SettingsObjectID,
 		"all_users":          sp.AllUsers,

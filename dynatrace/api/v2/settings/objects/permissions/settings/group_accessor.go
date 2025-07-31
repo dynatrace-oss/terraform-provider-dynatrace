@@ -39,7 +39,7 @@ func (_ *Groups) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (g *Groups) MarshalHCL(properties hcl.Properties) error {
+func (g Groups) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeSlice("group", g)
 }
 
@@ -68,7 +68,7 @@ func (_ *GroupAccessor) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (ga *GroupAccessor) MarshalHCL(properties hcl.Properties) error {
+func (ga GroupAccessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"id":     ga.ID,
 		"access": ga.Access,

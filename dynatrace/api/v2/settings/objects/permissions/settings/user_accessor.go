@@ -39,7 +39,7 @@ func (_ *Users) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (u *Users) MarshalHCL(properties hcl.Properties) error {
+func (u Users) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeSlice("user", u)
 }
 
