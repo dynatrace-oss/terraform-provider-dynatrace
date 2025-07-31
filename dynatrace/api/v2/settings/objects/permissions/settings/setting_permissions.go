@@ -18,6 +18,8 @@
 package settings
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -30,6 +32,14 @@ type SettingPermissions struct {
 	Groups           Groups
 }
 
+type HCLAccessor = string
+
+const (
+	HCLAccessorRead  HCLAccessor = "read"
+	HCLAccessorWrite HCLAccessor = "write"
+	HCLAccessorNone  HCLAccessor = "none"
+)
+
 func (_ *SettingPermissions) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"settings_object_id": {
@@ -39,9 +49,10 @@ func (_ *SettingPermissions) Schema() map[string]*schema.Schema {
 		},
 		"all_users": {
 			Type:         schema.TypeString,
-			Description:  "Defines the default access level granted to all users in this environment. Allowed values are `read`, `write`, or `none`",
+			Description:  fmt.Sprintf("Defines the default access level granted to all users in this environment. Allowed values are `%s`, `%s`, or `%s`", HCLAccessorRead, HCLAccessorWrite, HCLAccessorNone),
 			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"read", "write", "none"}, false),
+			Default:      "none",
+			ValidateFunc: validation.StringInSlice([]string{HCLAccessorRead, HCLAccessorWrite, HCLAccessorNone}, false),
 		},
 		"users": {
 			Type:     schema.TypeList,
