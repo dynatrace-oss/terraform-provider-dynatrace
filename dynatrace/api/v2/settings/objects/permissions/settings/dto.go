@@ -1,5 +1,11 @@
 package settings
 
+import (
+	"context"
+
+	coreApi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
+)
+
 type TypePermissions = string
 
 const (
@@ -41,4 +47,26 @@ type PermissionObjects struct {
 // PermissionObjectUpdate represents the updated permissions for a settings object to an accessor.
 type PermissionObjectUpdate struct {
 	Permissions []TypePermissions `json:"permissions"`
+}
+
+type AccessorClient interface {
+	Create(ctx context.Context, objectID string, adminAccess bool, body []byte) (coreApi.Response, error)
+	UpdateAccessor(ctx context.Context, objectID string, accessorType TypeAccessor, accessorID string, adminAccess bool, body []byte) (coreApi.Response, error)
+	DeleteAccessor(ctx context.Context, objectID string, accessorType TypeAccessor, accessorID string, adminAccess bool) (coreApi.Response, error)
+}
+
+type AllUsersClient interface {
+	Create(ctx context.Context, objectID string, adminAccess bool, body []byte) (coreApi.Response, error)
+	UpdateAllUsersAccessor(ctx context.Context, objectID string, adminAccess bool, body []byte) (coreApi.Response, error)
+	DeleteAllUsersAccessor(ctx context.Context, objectID string, adminAccess bool) (coreApi.Response, error)
+}
+
+type PermissionUpdateClient interface {
+	AccessorClient
+	AllUsersClient
+}
+
+type PermissionClient interface {
+	PermissionUpdateClient
+	GetAllAccessors(ctx context.Context, objectID string, adminAccess bool) (coreApi.Response, error)
 }

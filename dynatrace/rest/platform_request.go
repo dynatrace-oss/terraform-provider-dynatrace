@@ -42,6 +42,7 @@ type platform_request request
 var platformClientCache = map[string]*rest.Client{}
 
 var platformClientCacheMutex sync.Mutex
+var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
 func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
 	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
@@ -100,7 +101,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	} else if credentials.ContainsOAuth() {
 		client, err = CreatePlatformOAuthClient(ctx, platformURL, credentials)
 	} else {
-		return nil, errors.New("neither oauth credentials nor platform token present")
+		return nil, NoPlatformCredentialsErr
 	}
 	if err != nil {
 		return nil, err
