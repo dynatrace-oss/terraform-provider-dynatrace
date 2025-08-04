@@ -8,24 +8,27 @@ import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 )
 
-func compareAndUpdateAllUsers(ctx context.Context, client permissions.AllUsersClient, objectID string, currentAllUsers, desiredAllUsers string) error {
+func getAllUserUpsert(ctx context.Context, client permissions.AllUsersClient, objectID string, currentAllUsers, desiredAllUsers string) (func(adminAccess bool) error, error) {
 	if currentAllUsers == desiredAllUsers {
-		return nil
+		// No update needed, current and desired are the same
+		return nil, nil
 	}
 
 	if desiredAllUsers == permissions.HCLAccessorNone {
-		_, err := client.DeleteAllUsersAccessor(ctx, objectID, false)
-		return err
+		return func(adminAccess bool) error {
+			_, err := client.DeleteAllUsersAccessor(ctx, objectID, adminAccess)
+			return err
+		}, nil
 	}
 
 	if currentAllUsers == permissions.HCLAccessorNone {
-		return createAllUsers(ctx, client, objectID, desiredAllUsers)
+		return getAllUserCreate(ctx, client, objectID, desiredAllUsers)
 	}
 
-	return updateAllUsers(ctx, client, objectID, desiredAllUsers)
+	return getAllUserUpdate(ctx, client, objectID, desiredAllUsers)
 }
 
-func createAllUsers(ctx context.Context, client permissions.AllUsersClient, objectID string, desiredAllUsers string) error {
+func getAllUserCreate(ctx context.Context, client permissions.AllUsersClient, objectID string, desiredAllUsers string) (func(adminAccess bool) error, error) {
 	body, err := json.Marshal(permissions.PermissionObject{
 		Accessor: permissions.Accessor{
 			Type: permissions.AllUsers,
@@ -33,21 +36,25 @@ func createAllUsers(ctx context.Context, client permissions.AllUsersClient, obje
 		Permissions: convert.HCLToDTOPermission(desiredAllUsers),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = client.Create(ctx, objectID, false, body)
-	return err
+	return func(adminAccess bool) error {
+		_, err = client.Create(ctx, objectID, adminAccess, body)
+		return err
+	}, nil
 }
 
-func updateAllUsers(ctx context.Context, client permissions.AllUsersClient, objectID string, desiredAllUsers string) error {
+func getAllUserUpdate(ctx context.Context, client permissions.AllUsersClient, objectID string, desiredAllUsers string) (func(adminAccess bool) error, error) {
 	body, err := json.Marshal(permissions.PermissionObjectUpdate{
 		Permissions: convert.HCLToDTOPermission(desiredAllUsers),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = client.UpdateAllUsersAccessor(ctx, objectID, false, body)
-	return err
+	return func(adminAccess bool) error {
+		_, err = client.UpdateAllUsersAccessor(ctx, objectID, adminAccess, body)
+		return err
+	}, nil
 }
