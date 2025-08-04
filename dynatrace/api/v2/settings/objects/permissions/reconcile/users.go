@@ -9,34 +9,46 @@ import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 )
 
-func compareAndUpdateUsers(ctx context.Context, client permissions.AccessorClient, objectID string, currentUsers, desiredUsers permissions.Users) error {
+func getUserUpserts(ctx context.Context, client permissions.AccessorClient, objectID string, currentUsers, desiredUsers permissions.Users) ([]func(adminAccess bool) error, error) {
 	errs := make([]error, 0)
+	updates := make([]func(adminAccess bool) error, 0)
 	// update and create users
 	for _, user := range desiredUsers {
 		var err error
+		var fn func(adminAccess bool) error
 		if exists, isEqual := containsUser(currentUsers, user); !exists {
-			err = createUser(ctx, client, objectID, user)
+			fn, err = getUserCreate(ctx, client, objectID, user)
 		} else if !isEqual {
-			err = updateUser(ctx, client, objectID, user)
+			fn, err = getUserUpdate(ctx, client, objectID, user)
+		} else {
+			// user already exists and is equal, no action needed
+			continue
 		}
+
 		if err != nil {
 			errs = append(errs, err)
+			continue
 		}
+		updates = append(updates, fn)
 	}
 
 	// delete users that are not in desiredUsers (HCL)
 	for _, user := range currentUsers {
 		if exists, _ := containsUser(desiredUsers, user); !exists {
-			_, err := client.DeleteAccessor(ctx, objectID, permissions.User, user.UID, false)
-			if err != nil {
-				errs = append(errs, err)
-			}
+			updates = append(updates, func(adminAccess bool) error {
+				_, err := client.DeleteAccessor(ctx, objectID, permissions.User, user.UID, adminAccess)
+				return err
+			})
 		}
 	}
-	return errors.Join(errs...)
+	joinErr := errors.Join(errs...)
+	if joinErr != nil {
+		return nil, joinErr
+	}
+	return updates, nil
 }
 
-func createUser(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) error {
+func getUserCreate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (func(adminAccess bool) error, error) {
 	body, err := json.Marshal(permissions.PermissionObject{
 		Accessor: permissions.Accessor{
 			Type: permissions.User,
@@ -46,23 +58,27 @@ func createUser(ctx context.Context, client permissions.AccessorClient, objectID
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = client.Create(ctx, objectID, false, body)
-	return err
+	return func(adminAccess bool) error {
+		_, err = client.Create(ctx, objectID, adminAccess, body)
+		return err
+	}, nil
 }
 
-func updateUser(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) error {
+func getUserUpdate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (func(adminAccess bool) error, error) {
 	body, err := json.Marshal(permissions.PermissionObjectUpdate{
 		Permissions: convert.HCLToDTOPermission(user.Access),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = client.UpdateAccessor(ctx, objectID, permissions.User, user.UID, false, body)
-	return err
+	return func(adminAccess bool) error {
+		_, err = client.UpdateAccessor(ctx, objectID, permissions.User, user.UID, adminAccess, body)
+		return err
+	}, nil
 }
 
 func containsUser(users permissions.Users, user *permissions.UserAccessor) (exists, equals bool) {
