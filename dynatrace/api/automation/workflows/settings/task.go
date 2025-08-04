@@ -120,7 +120,7 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"action": {
 			Type:        schema.TypeString,
-			Description: "Currently known and supported values are `dynatrace.automations:http-function`, `dynatrace.automations:run-javascript` and `dynatrace.automations:execute-dql-query`",
+			Description: "Specifies the action type for the task. Examples include `dynatrace.automations:http-function`, `dynatrace.automations:run-javascript`, and `dynatrace.automations:execute-dql-query`. Additional action types are also supported.",
 			Required:    true,
 		},
 		"description": {
