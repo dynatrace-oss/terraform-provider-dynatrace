@@ -10,6 +10,9 @@ description: |-
 
 -> This resource requires the API token scopes **Read credential vault entries** (`credentialVault.read`) and **Write credential vault entries** (`credentialVault.write`)
 
+~> **Note:** A credential vault entry can't be deleted if a synthetic monitor uses it. Therefore, the synthetic monitors are also deleted when the credential vault entry is deleted.
+If you want to keep the synthetic monitors, remove the credential vault entry reference from them first.
+
 ## Dynatrace Documentation
 
 - Credential vault for synthetic monitors - https://www.dynatrace.com/support/help/platform-modules/digital-experience/synthetic-monitoring/general-information/credential-vault-for-synthetic-monitors
