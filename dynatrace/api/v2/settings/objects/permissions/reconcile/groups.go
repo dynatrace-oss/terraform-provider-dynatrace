@@ -7,15 +7,18 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/convert"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
 
-func getGroupUpserts(ctx context.Context, client permissions.AccessorClient, objectID string, currentGroups, desiredGroups permissions.Groups) ([]func(adminAccess bool) error, error) {
+func getGroupUpserts(ctx context.Context, client permissions.AccessorClient, objectID string, currentGroups, desiredGroups permissions.Groups) ([]rest.AdminAccessRequestFn, error) {
 	errs := make([]error, 0)
-	updates := make([]func(adminAccess bool) error, 0)
+	updates := make([]rest.AdminAccessRequestFn, 0)
 	// update and create groups
 	for _, group := range desiredGroups {
 		var err error
-		var fn func(adminAccess bool) error
+		var fn rest.AdminAccessRequestFn
 		if exists, isEqual := containsGroups(currentGroups, group); !exists {
 			fn, err = getGroupCreate(ctx, client, objectID, group)
 		} else if !isEqual {
@@ -35,9 +38,8 @@ func getGroupUpserts(ctx context.Context, client permissions.AccessorClient, obj
 	// delete groups that are not in desiredGroups (HCL)
 	for _, group := range currentGroups {
 		if exists, _ := containsGroups(desiredGroups, group); !exists {
-			updates = append(updates, func(adminAccess bool) error {
-				_, err := client.DeleteAccessor(ctx, objectID, permissions.Group, group.ID, adminAccess)
-				return err
+			updates = append(updates, func(adminAccess bool) (api.Response, error) {
+				return client.DeleteAccessor(ctx, objectID, permissions.Group, group.ID, adminAccess)
 			})
 		}
 	}
@@ -48,7 +50,7 @@ func getGroupUpserts(ctx context.Context, client permissions.AccessorClient, obj
 	return updates, nil
 }
 
-func getGroupCreate(ctx context.Context, client permissions.AccessorClient, objectID string, group *permissions.GroupAccessor) (func(adminAccess bool) error, error) {
+func getGroupCreate(ctx context.Context, client permissions.AccessorClient, objectID string, group *permissions.GroupAccessor) (rest.AdminAccessRequestFn, error) {
 	body, err := json.Marshal(permissions.PermissionObject{
 		Accessor: permissions.Accessor{
 			Type: permissions.Group,
@@ -61,13 +63,12 @@ func getGroupCreate(ctx context.Context, client permissions.AccessorClient, obje
 		return nil, err
 	}
 
-	return func(adminAccess bool) error {
-		_, err = client.Create(ctx, objectID, adminAccess, body)
-		return err
+	return func(adminAccess bool) (api.Response, error) {
+		return client.Create(ctx, objectID, adminAccess, body)
 	}, nil
 }
 
-func getGroupUpdate(ctx context.Context, client permissions.AccessorClient, objectID string, group *permissions.GroupAccessor) (func(adminAccess bool) error, error) {
+func getGroupUpdate(ctx context.Context, client permissions.AccessorClient, objectID string, group *permissions.GroupAccessor) (rest.AdminAccessRequestFn, error) {
 	body, err := json.Marshal(permissions.PermissionObjectUpdate{
 		Permissions: convert.HCLToDTOPermission(group.Access),
 	})
@@ -75,9 +76,8 @@ func getGroupUpdate(ctx context.Context, client permissions.AccessorClient, obje
 		return nil, err
 	}
 
-	return func(adminAccess bool) error {
-		_, err = client.UpdateAccessor(ctx, objectID, permissions.Group, group.ID, adminAccess, body)
-		return err
+	return func(adminAccess bool) (api.Response, error) {
+		return client.UpdateAccessor(ctx, objectID, permissions.Group, group.ID, adminAccess, body)
 	}, nil
 }
 
