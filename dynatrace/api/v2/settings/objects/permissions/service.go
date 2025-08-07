@@ -1,3 +1,19 @@
+/*
+ * @license
+ * Copyright 2025 Dynatrace LLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package permissions
 
 import (
@@ -21,8 +37,9 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Se
 }
 
 type ServiceImpl struct {
-	Credentials *rest.Credentials
-	Client      permissions.PermissionClient
+	Credentials    *rest.Credentials
+	Client         permissions.PermissionClient
+	SettingsClient PlatformSettingsClient
 }
 
 func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionClient, error) {
@@ -36,6 +53,19 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 
 	me.Client = permissions2.NewClient(restClient)
 	return me.Client, nil
+}
+
+func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsClient, error) {
+	if me.SettingsClient != nil {
+		return me.SettingsClient, nil
+	}
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.OAuth.EnvironmentURL, me.Credentials)
+	if err != nil {
+		return nil, err
+	}
+
+	me.SettingsClient = NewPlatformSettingsClient(restClient)
+	return me.SettingsClient, nil
 }
 
 func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions) error {
@@ -75,7 +105,30 @@ func (me *ServiceImpl) SchemaID() string {
 }
 
 func (me *ServiceImpl) List(ctx context.Context) (api.Stubs, error) {
-	return api.Stubs{}, nil
+	client, err := me.getSettingsClient(ctx)
+	if err != nil {
+		return nil, err
+	}
+	schemaIds, err := client.GetSchemaIDsWithOwnerBasedAccessControl(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	stubs := api.Stubs{}
+	for _, schemaID := range schemaIds {
+		objectIDs, err := client.ListObjectsIDsOfSchema(ctx, schemaID)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, id := range objectIDs {
+			stubs = append(stubs, &api.Stub{
+				ID:   id,
+				Name: id,
+			})
+		}
+	}
+	return stubs, nil
 }
 
 func (me *ServiceImpl) Upsert(ctx context.Context, v *permissions.SettingPermissions) (*api.Stub, error) {
