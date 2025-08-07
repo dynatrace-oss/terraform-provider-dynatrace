@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	permissionService "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -45,6 +46,19 @@ func (c *clientStub) UpdateAllUsersAccessor(ctx context.Context, objectID string
 
 func (c *clientStub) DeleteAllUsersAccessor(ctx context.Context, objectID string, adminAccess bool) (coreApi.Response, error) {
 	return c.deleteAllUsersAccessor(ctx, objectID, adminAccess)
+}
+
+type settingsClientStub struct {
+	getSchemaIDsWithOwnerBasedAccessControl func(ctx context.Context) ([]string, error)
+	listObjectsIDsOfSchema                  func(ctx context.Context, schemaID string) ([]string, error)
+}
+
+// Implement exporter.SettingsClient interface
+func (c *settingsClientStub) GetSchemaIDsWithOwnerBasedAccessControl(ctx context.Context) ([]string, error) {
+	return c.getSchemaIDsWithOwnerBasedAccessControl(ctx)
+}
+func (c *settingsClientStub) ListObjectsIDsOfSchema(ctx context.Context, schemaID string) ([]string, error) {
+	return c.listObjectsIDsOfSchema(ctx, schemaID)
 }
 
 func TestService(t *testing.T) {
@@ -129,6 +143,68 @@ func TestService(t *testing.T) {
 			}
 			err := service.Get(t.Context(), "objectID", &permissions.SettingPermissions{})
 			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
+		})
+	})
+
+	t.Run("List", func(t *testing.T) {
+		t.Run("Returns stubs for all object IDs", func(t *testing.T) {
+			settingsClient := &settingsClientStub{
+				getSchemaIDsWithOwnerBasedAccessControl: func(ctx context.Context) ([]string, error) {
+					return []string{"schemaID1", "schemaID2"}, nil
+				},
+				listObjectsIDsOfSchema: func(ctx context.Context, schemaID string) ([]string, error) {
+					if schemaID == "schemaID1" {
+						return []string{"objectID1", "objectID2"}, nil
+					}
+					if schemaID == "schemaID2" {
+						return []string{"objectID3"}, nil
+					}
+					return nil, nil
+				},
+			}
+			service := permissionService.ServiceImpl{SettingsClient: settingsClient}
+			stubs, err := service.List(t.Context())
+			require.NoError(t, err)
+			assert.Len(t, stubs, 3)
+			assert.Equal(t, &api.Stub{ID: "objectID1", Name: "objectID1"}, stubs[0])
+			assert.Equal(t, &api.Stub{ID: "objectID2", Name: "objectID2"}, stubs[1])
+			assert.Equal(t, &api.Stub{ID: "objectID3", Name: "objectID3"}, stubs[2])
+		})
+
+		t.Run("Returns error if GetSchemaIDsWithOwnerBasedAccessControl fails", func(t *testing.T) {
+			settingsClient := &settingsClientStub{
+				getSchemaIDsWithOwnerBasedAccessControl: func(ctx context.Context) ([]string, error) {
+					return nil, assert.AnError
+				},
+			}
+			service := permissionService.ServiceImpl{SettingsClient: settingsClient}
+			stubs, err := service.List(t.Context())
+			assert.Error(t, err)
+			assert.Nil(t, stubs)
+		})
+
+		t.Run("Returns error if ListObjectsIDsOfSchema fails", func(t *testing.T) {
+			settingsClient := &settingsClientStub{
+				getSchemaIDsWithOwnerBasedAccessControl: func(ctx context.Context) ([]string, error) {
+					return []string{"schemaID1"}, nil
+				},
+				listObjectsIDsOfSchema: func(ctx context.Context, schemaID string) ([]string, error) {
+					return nil, assert.AnError
+				},
+			}
+			service := permissionService.ServiceImpl{SettingsClient: settingsClient}
+			stubs, err := service.List(t.Context())
+			assert.Error(t, err)
+			assert.Nil(t, stubs)
+		})
+
+		t.Run("Returns error if getSettingsClient fails", func(t *testing.T) {
+			service := permissionService.ServiceImpl{
+				Credentials: &rest.Credentials{},
+			}
+			stubs, err := service.List(t.Context())
+			assert.Error(t, err)
+			assert.Nil(t, stubs)
 		})
 	})
 
