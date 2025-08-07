@@ -7,15 +7,18 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/convert"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
 
-func getUserUpserts(ctx context.Context, client permissions.AccessorClient, objectID string, currentUsers, desiredUsers permissions.Users) ([]func(adminAccess bool) error, error) {
+func getUserUpserts(ctx context.Context, client permissions.AccessorClient, objectID string, currentUsers, desiredUsers permissions.Users) ([]rest.AdminAccessRequestFn, error) {
 	errs := make([]error, 0)
-	updates := make([]func(adminAccess bool) error, 0)
+	updates := make([]rest.AdminAccessRequestFn, 0)
 	// update and create users
 	for _, user := range desiredUsers {
 		var err error
-		var fn func(adminAccess bool) error
+		var fn rest.AdminAccessRequestFn
 		if exists, isEqual := containsUser(currentUsers, user); !exists {
 			fn, err = getUserCreate(ctx, client, objectID, user)
 		} else if !isEqual {
@@ -35,9 +38,8 @@ func getUserUpserts(ctx context.Context, client permissions.AccessorClient, obje
 	// delete users that are not in desiredUsers (HCL)
 	for _, user := range currentUsers {
 		if exists, _ := containsUser(desiredUsers, user); !exists {
-			updates = append(updates, func(adminAccess bool) error {
-				_, err := client.DeleteAccessor(ctx, objectID, permissions.User, user.UID, adminAccess)
-				return err
+			updates = append(updates, func(adminAccess bool) (api.Response, error) {
+				return client.DeleteAccessor(ctx, objectID, permissions.User, user.UID, adminAccess)
 			})
 		}
 	}
@@ -48,7 +50,7 @@ func getUserUpserts(ctx context.Context, client permissions.AccessorClient, obje
 	return updates, nil
 }
 
-func getUserCreate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (func(adminAccess bool) error, error) {
+func getUserCreate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (rest.AdminAccessRequestFn, error) {
 	body, err := json.Marshal(permissions.PermissionObject{
 		Accessor: permissions.Accessor{
 			Type: permissions.User,
@@ -61,13 +63,12 @@ func getUserCreate(ctx context.Context, client permissions.AccessorClient, objec
 		return nil, err
 	}
 
-	return func(adminAccess bool) error {
-		_, err = client.Create(ctx, objectID, adminAccess, body)
-		return err
+	return func(adminAccess bool) (api.Response, error) {
+		return client.Create(ctx, objectID, adminAccess, body)
 	}, nil
 }
 
-func getUserUpdate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (func(adminAccess bool) error, error) {
+func getUserUpdate(ctx context.Context, client permissions.AccessorClient, objectID string, user *permissions.UserAccessor) (rest.AdminAccessRequestFn, error) {
 	body, err := json.Marshal(permissions.PermissionObjectUpdate{
 		Permissions: convert.HCLToDTOPermission(user.Access),
 	})
@@ -75,9 +76,8 @@ func getUserUpdate(ctx context.Context, client permissions.AccessorClient, objec
 		return nil, err
 	}
 
-	return func(adminAccess bool) error {
-		_, err = client.UpdateAccessor(ctx, objectID, permissions.User, user.UID, adminAccess, body)
-		return err
+	return func(adminAccess bool) (api.Response, error) {
+		return client.UpdateAccessor(ctx, objectID, permissions.User, user.UID, adminAccess, body)
 	}, nil
 }
 

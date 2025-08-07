@@ -12,6 +12,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
+	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	permissions2 "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/settings/permissions"
 )
 
@@ -38,7 +39,7 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 }
 
 func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions) error {
-	currentPermissions, err := me.get(ctx, objectID)
+	currentPermissions, _, err := me.get(ctx, objectID)
 	if err != nil {
 		return err
 	}
@@ -50,21 +51,23 @@ func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.
 	return nil
 }
 
-func (me *ServiceImpl) get(ctx context.Context, objectID string) (*permissions.SettingPermissions, error) {
+func (me *ServiceImpl) get(ctx context.Context, objectID string) (data *permissions.SettingPermissions, adminAccess bool, err error) {
 	client, err := me.getClient(ctx)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	req, err := client.GetAllAccessors(ctx, objectID, false)
+	req, err, adminAccess := rest.DoWithAdminAccessRetry(func(adminAccess bool) (cacapi.Response, error) {
+		return client.GetAllAccessors(ctx, objectID, adminAccess)
+	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	var permissionObjects permissions.PermissionObjects
 	err = json.Unmarshal(req.Data, &permissionObjects)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal permissions response: %w", err)
+		return nil, false, fmt.Errorf("failed to unmarshal permissions response: %w", err)
 	}
-	return convert.DTOToHCL(permissionObjects, objectID), nil
+	return convert.DTOToHCL(permissionObjects, objectID), adminAccess, nil
 }
 
 func (me *ServiceImpl) SchemaID() string {
@@ -80,12 +83,12 @@ func (me *ServiceImpl) Upsert(ctx context.Context, v *permissions.SettingPermiss
 	if err != nil {
 		return nil, err
 	}
-	data, err := me.get(ctx, v.SettingsObjectID)
+	data, adminAccess, err := me.get(ctx, v.SettingsObjectID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = reconcile.CompareAndUpdate(ctx, client, data, v)
+	err = reconcile.CompareAndUpdate(ctx, client, data, v, adminAccess)
 	if err != nil {
 		return nil, err
 	}
