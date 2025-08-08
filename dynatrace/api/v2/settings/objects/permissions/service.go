@@ -20,8 +20,9 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Se
 }
 
 type ServiceImpl struct {
-	Credentials *rest.Credentials
-	Client      permissions.PermissionClient
+	Credentials    *rest.Credentials
+	Client         permissions.PermissionClient
+	SettingsClient SettingsClient
 }
 
 func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionClient, error) {
@@ -35,6 +36,19 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 
 	me.Client = permissions2.NewClient(restClient)
 	return me.Client, nil
+}
+
+func (me *ServiceImpl) getSettingsClient(ctx context.Context) (SettingsClient, error) {
+	if me.SettingsClient != nil {
+		return me.SettingsClient, nil
+	}
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.OAuth.EnvironmentURL, me.Credentials)
+	if err != nil {
+		return nil, err
+	}
+
+	me.SettingsClient = NewSettingsClient(restClient)
+	return me.SettingsClient, nil
 }
 
 func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions) error {
@@ -72,7 +86,30 @@ func (me *ServiceImpl) SchemaID() string {
 }
 
 func (me *ServiceImpl) List(ctx context.Context) (api.Stubs, error) {
-	return api.Stubs{}, nil
+	client, err := me.getSettingsClient(ctx)
+	if err != nil {
+		return nil, err
+	}
+	schemaIds, err := client.GetSchemaIDsWithOwnerBasedAccessControl(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	stubs := api.Stubs{}
+	for _, schemaID := range schemaIds {
+		objectIDs, err := client.ListObjectsIDsOfSchema(ctx, schemaID)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, id := range objectIDs {
+			stubs = append(stubs, &api.Stub{
+				ID:   id,
+				Name: id,
+			})
+		}
+	}
+	return stubs, nil
 }
 
 func (me *ServiceImpl) Upsert(ctx context.Context, v *permissions.SettingPermissions) (*api.Stub, error) {
