@@ -7,6 +7,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/reconcile"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
@@ -59,7 +60,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.UserAccessor{UID: "user1", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, createCalls, "Expected one user to be created")
 		})
@@ -84,7 +85,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.UserAccessor{UID: "user1", Access: permissions.HCLAccessorRead},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, updateCalls, "Expected one user to be updated")
 		})
@@ -105,7 +106,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				Users: permissions.Users{},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, deleteCalls, "Expected one user to be deleted")
 		})
@@ -127,7 +128,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.UserAccessor{UID: "user1", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 		})
 	})
@@ -149,7 +150,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.GroupAccessor{ID: "group1", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, createCalls, "Expected one group to be created")
 		})
@@ -172,7 +173,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.GroupAccessor{ID: "group1", Access: permissions.HCLAccessorRead},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, updateCalls, "Expected one group to be updated")
 		})
@@ -193,7 +194,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				Groups: permissions.Groups{},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, deleteCalls, "Expected one group to be deleted")
 		})
@@ -215,7 +216,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.GroupAccessor{ID: "group1", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 		})
 	})
@@ -235,7 +236,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				AllUsers: permissions.HCLAccessorWrite,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, createCalls, "Expected allUser to be created")
 		})
@@ -254,7 +255,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				AllUsers: permissions.HCLAccessorWrite,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, updateCalls, "Expected allUser to be updated")
 		})
@@ -273,7 +274,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				AllUsers: permissions.HCLAccessorNone,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 			assert.Equal(t, 1, deleteCalls, "Expected allUser to be deleted")
 		})
@@ -291,7 +292,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				AllUsers: permissions.HCLAccessorWrite,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.NoError(t, err)
 		})
 	})
@@ -317,7 +318,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.UserAccessor{UID: "user2", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.Error(t, err)
 			assert.Equal(t, 2, createCalls, "Should attempt both users")
 		})
@@ -342,7 +343,7 @@ func TestCompareAndUpdate(t *testing.T) {
 					&permissions.GroupAccessor{ID: "group2", Access: permissions.HCLAccessorWrite},
 				},
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.Error(t, err)
 			assert.Equal(t, 2, createCalls, "Should attempt both groups")
 		})
@@ -361,7 +362,7 @@ func TestCompareAndUpdate(t *testing.T) {
 			desired := &permissions.SettingPermissions{
 				AllUsers: permissions.HCLAccessorWrite,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.Error(t, err)
 			assert.Equal(t, 1, calls, "Should attempt allUser")
 		})
@@ -402,8 +403,118 @@ func TestCompareAndUpdate(t *testing.T) {
 				},
 				AllUsers: permissions.HCLAccessorWrite,
 			}
-			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired)
+			err := reconcile.CompareAndUpdate(t.Context(), client, current, desired, false)
 			assert.Error(t, err)
+		})
+	})
+
+	t.Run("Handles admin access correctly for accessors", func(t *testing.T) {
+		client := clientStub{
+			create: func(ctx context.Context, objectID string, adminAccess bool, body []byte) (api.Response, error) {
+				require.True(t, adminAccess, "Expected admin access to be true")
+				return api.Response{StatusCode: 201, Data: []byte("{}")}, nil
+			},
+			updateAccessor: func(ctx context.Context, objectID string, accessorType string, accessorID string, adminAccess bool, body []byte) (api.Response, error) {
+				require.True(t, adminAccess, "Expected admin access to be true")
+				return api.Response{StatusCode: 200, Data: []byte("{}")}, nil
+			},
+			deleteAccessor: func(ctx context.Context, objectID string, accessorType string, accessorID string, adminAccess bool) (api.Response, error) {
+				require.True(t, adminAccess, "Expected admin access to be true")
+				return api.Response{StatusCode: 204, Data: []byte("{}")}, nil
+			},
+		}
+
+		current := &permissions.SettingPermissions{
+			Users: permissions.Users{
+				&permissions.UserAccessor{UID: "user1", Access: permissions.HCLAccessorRead},
+				&permissions.UserAccessor{UID: "user2", Access: permissions.HCLAccessorRead},
+			},
+			Groups: permissions.Groups{
+				&permissions.GroupAccessor{ID: "group1", Access: permissions.HCLAccessorRead},
+				&permissions.GroupAccessor{ID: "group2", Access: permissions.HCLAccessorRead},
+			},
+		}
+		desired := &permissions.SettingPermissions{
+			Users: permissions.Users{
+				// update
+				&permissions.UserAccessor{UID: "user1", Access: permissions.HCLAccessorWrite},
+				// delete user2
+				// create
+				&permissions.UserAccessor{UID: "user3", Access: permissions.HCLAccessorWrite},
+			},
+			Groups: permissions.Groups{
+				// update
+				&permissions.GroupAccessor{ID: "group1", Access: permissions.HCLAccessorWrite},
+				// delete group2
+				// create
+				&permissions.GroupAccessor{ID: "group3", Access: permissions.HCLAccessorWrite},
+			},
+		}
+		err := reconcile.CompareAndUpdate(context.Background(), client, current, desired, true)
+		assert.NoError(t, err, "Expected no error during admin access operations")
+	})
+
+	t.Run("Handle adminAccess correctly for allUsers", func(t *testing.T) {
+		t.Run("Updates allUsers with admin access", func(t *testing.T) {
+			client := clientStub{
+				create: func(ctx context.Context, objectID string, adminAccess bool, body []byte) (api.Response, error) {
+					require.True(t, adminAccess, "Expected admin access to be true")
+					return api.Response{StatusCode: 201, Data: []byte("{}")}, nil
+				},
+				updateAllUsersAccessor: func(ctx context.Context, objectID string, adminAccess bool, body []byte) (api.Response, error) {
+					require.True(t, adminAccess, "Expected admin access to be true")
+					return api.Response{StatusCode: 200, Data: []byte("{}")}, nil
+				},
+				deleteAllUsersAccessor: func(ctx context.Context, objectID string, adminAccess bool) (api.Response, error) {
+					require.True(t, adminAccess, "Expected admin access to be true")
+					return api.Response{StatusCode: 204, Data: []byte("{}")}, nil
+				},
+			}
+
+			current := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorNone,
+			}
+			desired := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorWrite,
+			}
+			err := reconcile.CompareAndUpdate(context.Background(), client, current, desired, true)
+			assert.NoError(t, err, "Expected no error during admin access operations")
+		})
+
+		t.Run("Deletes allUsers with admin access", func(t *testing.T) {
+			client := clientStub{
+				deleteAllUsersAccessor: func(ctx context.Context, objectID string, adminAccess bool) (api.Response, error) {
+					require.True(t, adminAccess, "Expected admin access to be true")
+					return api.Response{StatusCode: 204, Data: []byte("{}")}, nil
+				},
+			}
+
+			current := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorWrite,
+			}
+			desired := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorNone,
+			}
+			err := reconcile.CompareAndUpdate(context.Background(), client, current, desired, true)
+			assert.NoError(t, err, "Expected no error during admin access operations")
+		})
+
+		t.Run("Creates allUsers with admin access", func(t *testing.T) {
+			client := clientStub{
+				create: func(ctx context.Context, objectID string, adminAccess bool, body []byte) (api.Response, error) {
+					require.True(t, adminAccess, "Expected admin access to be true")
+					return api.Response{StatusCode: 201, Data: []byte("{}")}, nil
+				},
+			}
+
+			current := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorNone,
+			}
+			desired := &permissions.SettingPermissions{
+				AllUsers: permissions.HCLAccessorWrite,
+			}
+			err := reconcile.CompareAndUpdate(context.Background(), client, current, desired, true)
+			assert.NoError(t, err, "Expected no error during admin access operations")
 		})
 	})
 }
