@@ -86,3 +86,7 @@ func (sp *SettingPermissions) UnmarshalHCL(decoder hcl.Decoder) error {
 		"groups":             &sp.Groups,
 	})
 }
+
+func (sp *SettingPermissions) Name() string {
+	return "permissions"
+}
