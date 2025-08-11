@@ -217,10 +217,6 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 		return
 	}
 
-	if v := os.Getenv("DYNATRACE_API_TOKEN"); v == "" {
-		t.Skip("DYNATRACE_API_TOKEN must be set for acceptance tests")
-		return
-	}
 	entries, _ := os.ReadDir("testdata")
 	for _, entry := range entries {
 		if entry.IsDir() {

@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -31,9 +32,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
-
-	"net/url"
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*generic.Settings] {
@@ -85,17 +83,11 @@ type schemataResponse struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
-	if err != nil {
-		return nil, err
-	}
-	response, err := client.GET(ctx, "api/v2/settings/schemas", crest.RequestOptions{})
-	if err != nil {
-		return nil, err
-	}
+	client := rest.HybridClient(me.credentials)
 	var schemata schemataResponse
-	if response.Body != nil {
-		json.NewDecoder(response.Body).Decode(&schemata)
+	err := client.Get(ctx, "/api/v2/settings/schemas", 200).Finish(&schemata)
+	if err != nil {
+		return nil, err
 	}
 	if len(schemata.Items) == 0 {
 		return api.Stubs{}, nil
@@ -224,19 +216,16 @@ type QueryParams struct {
 }
 
 func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stubs, error) {
-	client, err := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
-	if err != nil {
-		return nil, err
-	}
+	client := rest.HybridClient(me.credentials)
 
 	stubs := api.Stubs{}
 	nextPage := true
 	var nextPageKey *string
 	for nextPage {
 		var sol settings20.SettingsObjectList
-		var options crest.RequestOptions
+		var queryValues url.Values
 		if nextPageKey == nil {
-			options.QueryParams = url.Values{
+			queryValues = url.Values{
 				"fields":    []string{"objectId,scope,value,schemaId"},
 				"pageSize":  []string{"100"},
 				"schemaIds": []string{query.Schema},
@@ -244,19 +233,20 @@ func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stu
 				"filter":    []string{query.Filter},
 			}
 		} else {
-			options.QueryParams = url.Values{
+			queryValues = url.Values{
 				"nextPageKey": []string{*nextPageKey},
 			}
 		}
+		u := url.URL{
+			Path:     "/api/v2/settings/objects",
+			RawQuery: queryValues.Encode(),
+		}
 
-		response, err := client.GET(ctx, "api/v2/settings/objects", options)
+		err := client.Get(ctx, u.String()).Finish(&sol)
 		if err != nil {
 			return nil, err
 		}
 
-		if response.Body != nil {
-			json.NewDecoder(response.Body).Decode(&sol)
-		}
 		if len(sol.Items) == 0 {
 			return api.Stubs{}, nil
 		}
