@@ -3,6 +3,7 @@ package permissions_test
 import (
 	"context"
 	"encoding/json"
+	"sync/atomic"
 	"testing"
 
 	permissionService "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
@@ -228,8 +229,7 @@ func TestService(t *testing.T) {
 	})
 
 	t.Run("Delete deletes every permission", func(t *testing.T) {
-		deleteAllUserCalled := 0
-		deleteAccessorCalled := 0
+		var deleteAllUserCalled, deleteAccessorCalled atomic.Int32
 		client := &clientStub{
 			getAllAccessor: func(ctx context.Context, objectID string, adminAccess bool) (coreApi.Response, error) {
 				response := permissions.PermissionObjects{
@@ -265,13 +265,13 @@ func TestService(t *testing.T) {
 				}, nil
 			},
 			deleteAllUsersAccessor: func(ctx context.Context, objectID string, adminAccess bool) (coreApi.Response, error) {
-				deleteAllUserCalled++
+				deleteAllUserCalled.Add(1)
 				return coreApi.Response{
 					StatusCode: 204,
 				}, nil
 			},
 			deleteAccessor: func(ctx context.Context, objectID string, accessorType string, accessorID string, adminAccess bool) (coreApi.Response, error) {
-				deleteAccessorCalled++
+				deleteAccessorCalled.Add(1)
 				return coreApi.Response{
 					StatusCode: 204,
 				}, nil
@@ -280,8 +280,8 @@ func TestService(t *testing.T) {
 		service := permissionService.ServiceImpl{Client: client}
 		err := service.Delete(t.Context(), "objectID")
 		assert.NoError(t, err)
-		assert.Equal(t, 1, deleteAllUserCalled)
-		assert.Equal(t, 2, deleteAccessorCalled)
+		assert.Equal(t, int32(1), deleteAllUserCalled.Load())
+		assert.Equal(t, int32(2), deleteAccessorCalled.Load())
 	})
 
 	t.Run("Service returns a new instance", func(t *testing.T) {
