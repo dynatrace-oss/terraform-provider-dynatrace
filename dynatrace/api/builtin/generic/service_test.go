@@ -26,3 +26,8 @@ import (
 func TestAccGenericSettings(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccGenericSettingsOAuth(t *testing.T) {
+	t.Setenv("DYNATRACE_API_TOKEN", "")
+	api.TestAcc(t)
+}
