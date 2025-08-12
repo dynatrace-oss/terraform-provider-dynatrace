@@ -1,0 +1,25 @@
+version: v1.5.0
+
+ignore:
+  'snyk:lic:golang:github.com:hashicorp:errwrap:MPL-2.0': &ignore-mpl-2-0-license
+    - '*':
+      reason: 'MPL-2.0 is an acceptable license for our use case.'
+  'snyk:lic:golang:github.com:hashicorp:go-checkpoint:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-cleanhttp:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-multierror:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-plugin:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-retryablehttp:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-uuid:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:go-version:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:hc-install:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:hcl:v2:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:logutils:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-exec:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-json:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-plugin-go:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-plugin-log:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-plugin-sdk:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-plugin-sdk:v2:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-registry-address:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:terraform-svchost:MPL-2.0': *ignore-mpl-2-0-license
+  'snyk:lic:golang:github.com:hashicorp:yamux:MPL-2.0': *ignore-mpl-2-0-license
