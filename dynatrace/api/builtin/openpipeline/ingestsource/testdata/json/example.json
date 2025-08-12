@@ -1,0 +1,87 @@
+{
+  "defaultBucket": "bucket",
+  "displayName": "displayName",
+  "pathSegment": "some.path.segment",
+  "enabled": false,
+  "staticRouting": {
+    "pipelineId": "pipelineId",
+    "pipelineType": "custom"
+  },
+  "processing": {
+    "processors": [
+      {
+        "id": "proc-1",
+        "type": "drop",
+        "matcher": "not true",
+        "description": "my-proc-1",
+        "sampleData": "sampleData",
+        "enabled": true
+      },
+      {
+        "id": "proc-2",
+        "type": "dql",
+        "matcher": "not true",
+        "description": "my-proc-2",
+        "sampleData": "sampleData",
+        "enabled": true,
+        "dql": {
+          "script": "fieldsAdd true"
+        }
+      },
+      {
+        "id": "proc-3",
+        "type": "fieldsAdd",
+        "matcher": "not true",
+        "description": "my-proc-3",
+        "sampleData": "sampleData",
+        "enabled": true,
+        "fieldsAdd": {
+          "fields": [
+            {
+              "name": "some-name",
+              "value": "some-value"
+            },
+            {
+              "name": "some-other-name",
+              "value": "some-other-value"
+            }
+          ]
+        }
+      },
+      {
+        "id": "proc-4",
+        "type": "fieldsRename",
+        "matcher": "not true",
+        "description": "my-proc-4",
+        "sampleData": "sampleData",
+        "enabled": true,
+        "fieldsRename": {
+          "fields": [
+            {
+              "fromName": "from-name",
+              "toName": "to-name"
+            },
+            {
+              "fromName": "from-other-name",
+              "toName": "to-other-name"
+            }
+          ]
+        }
+      },
+      {
+        "id": "proc-5",
+        "type": "fieldsRemove",
+        "matcher": "not true",
+        "description": "my-proc-5",
+        "sampleData": "sampleData",
+        "enabled": true,
+        "fieldsRemove": {
+          "fields": [
+            "to-remove-1",
+            "to-remove-2"
+          ]
+        }
+      }
+    ]
+  }
+}
