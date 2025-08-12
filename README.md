@@ -1,4 +1,7 @@
 # Dynatrace Terraform Provider
+
+The Dynatrace Terraform Provider is officially supported by Dynatrace.
+
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) 0.13.x+
