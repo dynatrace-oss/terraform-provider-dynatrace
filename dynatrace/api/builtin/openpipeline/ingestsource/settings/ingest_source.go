@@ -58,6 +58,7 @@ func (is *IngestSource) Schema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Required:     true,
 			Description:  "Indicates OpenPipeline data source",
+			ForceNew:     true,
 			ValidateFunc: validation.StringInSlice(AllowedKinds, true),
 		},
 		"enabled": {
