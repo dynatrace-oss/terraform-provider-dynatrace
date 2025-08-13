@@ -1,38 +1,37 @@
-data "dynatrace_iam_user" "user_a" {
-  email = "a@example.com"
+resource "dynatrace_iam_group" "group" {
+  name = "#name#"
 }
 
-data "dynatrace_iam_user" "user_b" {
-  email = "b@example.com"
+// for each group create a user
+resource "dynatrace_iam_user" "user" {
+  email = "#name#@example.com"
+  groups = [dynatrace_iam_group.group.id]
 }
 
-data "dynatrace_iam_group" "example_group" {
-  name = "Terraform Example"
+// because the UID is not returned for the resource, we need data
+data "dynatrace_iam_user" "user" {
+  email = dynatrace_iam_user.user.id
 }
 
-resource "dynatrace_github_connection" "example_connection"{
-  name    = "GitHub connection"
+resource "dynatrace_github_connection" "connection" {
+  name    = "#name#"
   type     = "pat"
   token   = "azAZ09"
 }
 
-resource "dynatrace_setting_permissions" "github_connection_access" {
-  settings_object_id = dynatrace_github_connection.example_connection.id
+resource "dynatrace_settings_permissions" "permission" {
+  settings_object_id = dynatrace_github_connection.connection.id
   all_users = "none"
   users {
     user {
-        uid = data.dynatrace_iam_user.user_a.uid
-        access = "write"
-    }
-    user {
-        uid = data.dynatrace_iam_user.user_b.uid
-        access = "read"
+      uid = data.dynatrace_iam_user.user.uid
+      access = "write"
     }
   }
   groups {
     group {
-        id = data.dynatrace_iam_group.example_group.id
-        access = "write"
+      id = dynatrace_iam_group.group.id
+      access = "read"
     }
   }
 }
