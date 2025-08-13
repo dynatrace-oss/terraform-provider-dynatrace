@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,4 +17,24 @@
 
 package version
 
-const Current = "1.83.0"
+import "fmt"
+
+// The following variables should be set during the build, for example by GoReleaser.
+// This can be accomplished using `ldflags`, for example `-X github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version.Version=1.2.3`.
+var (
+	// Version is a string representing the current version of the Dynatrace Terraform provider.
+	// This should be in `major.minor.patch` format, with prereleases having an optional suffix introduced by a dash, for example, `1.2.0-beta`.
+	Version = "(unknown-version)"
+
+	// OperatingSystem is a string representing the operating system the provider was built for.
+	OperatingSystem = "(unknown-os)"
+
+	// CPUArchitecture is a string representing the CPU archictecture the provider was built for.
+	CPUArchitecture = "(unknown-architecture)"
+)
+
+// UserAgent returns a string identifying the current version of the Dynatrace Terraform provider.
+// This is intended for use in HTTP requests.
+func UserAgent() string {
+	return fmt.Sprintf("Dynatrace Terraform Provider/%s %s %s", Version, OperatingSystem, CPUArchitecture)
+}
