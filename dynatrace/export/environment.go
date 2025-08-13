@@ -859,7 +859,7 @@ func (me *Environment) WriteMainProviderFile() error {
 		format(outputFile.Name(), true)
 	}()
 	providerSource := "dynatrace-oss/dynatrace"
-	providerVersion := version.Current
+	providerVersion := version.Version
 	if value := os.Getenv(DYNATRACE_PROVIDER_SOURCE); len(value) != 0 {
 		providerSource = value
 	}
