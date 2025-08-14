@@ -23,7 +23,9 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
-	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
+	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
@@ -158,7 +160,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentfeatureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logbucketsrules"
-	logcustomattributes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logcustomattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdebugsettings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logdpprules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logevents"
@@ -218,9 +220,9 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
-	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/advanceddetectionrule"
-	workloaddetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/cloudapplication/workloaddetection"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/cloudapplication/workloaddetection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/detectionflags"
 	processgroupmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/monitoring/state"
 	processgroupsimpledetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/simpledetectionrule"
@@ -302,12 +304,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/service/daviscopilot/dataminingblocklist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/reports"
 
-	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
@@ -1524,6 +1525,27 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		manualinsertion.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
+	ResourceTypes.SettingsPermissions: NewResourceDescriptor(
+		settingsPermissions.Service,
+
+		// OwnerBasedAccessControl enabled resources
+		Dependencies.ID(ResourceTypes.PagerDutyConnection),
+		Dependencies.ID(ResourceTypes.Microsoft365EmailConnection),
+		Dependencies.ID(ResourceTypes.MSEntraIDConnection),
+		Dependencies.ID(ResourceTypes.JiraForWorkflows),
+		Dependencies.ID(ResourceTypes.JenkinsConnection),
+		Dependencies.ID(ResourceTypes.ServiceNowConnection),
+		Dependencies.ID(ResourceTypes.AutomationControllerConnections),
+		Dependencies.ID(ResourceTypes.EventDrivenAnsibleConnections),
+		Dependencies.ID(ResourceTypes.K8sAutomationConnections),
+		Dependencies.ID(ResourceTypes.SlackForWorkflows),
+		Dependencies.ID(ResourceTypes.GitHubConnection),
+		Dependencies.ID(ResourceTypes.GitLabConnection),
+		Dependencies.ID(ResourceTypes.MSTeamsConnection),
+		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
+
+		Dependencies.ID(ResourceTypes.GenericSetting),
+	),
 }
 
 type ResourceExclusion struct {
@@ -1629,6 +1651,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},
+			{ResourceTypes.SettingsPermissions, ""},
 		},
 	},
 	{

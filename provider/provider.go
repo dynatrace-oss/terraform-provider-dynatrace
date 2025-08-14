@@ -633,6 +633,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_ip_address_exclusion":       resources.NewGeneric(export.ResourceTypes.WebAppIPAddressExclusion).Resource(),
 			"dynatrace_rpc_based_sampling":                 resources.NewGeneric(export.ResourceTypes.RPCBasedSampling).Resource(),
 			"dynatrace_web_app_manual_insertion":           resources.NewGeneric(export.ResourceTypes.WebAppManualInsertion).Resource(),
+			"dynatrace_settings_permissions":               resources.NewGeneric(export.ResourceTypes.SettingsPermissions).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
