@@ -26,6 +26,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 	"github.com/google/uuid"
@@ -93,7 +94,7 @@ func clusterV2Client(baseURL string, apiToken string) (*rest.Client, error) {
 	}
 
 	factory := clients.Factory()
-	factory = factory.WithUserAgent("Dynatrace Terraform Provider")
+	factory = factory.WithUserAgent(version.UserAgent())
 	factory = factory.WithClassicURL(baseURL)
 	factory = factory.WithAccessToken(apiToken)
 	factory = factory.WithHTTPListener(logging.HTTPListener("clustv2 "))

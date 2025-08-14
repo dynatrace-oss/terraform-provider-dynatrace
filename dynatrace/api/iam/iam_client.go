@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
 )
 
@@ -191,6 +192,8 @@ func (me *iamClient) _request(ctx context.Context, url string, method string, ex
 		for k, v := range headers {
 			httpRequest.Header.Add(k, v)
 		}
+
+		httpRequest.Header.Set("User-Agent", version.UserAgent())
 
 		if httpResponse, err = http.DefaultClient.Do(httpRequest); err != nil {
 			return nil, err
