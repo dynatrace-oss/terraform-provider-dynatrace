@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
@@ -121,7 +122,7 @@ func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials
 		crest.WithHTTPListener(logging.HTTPListener("classic ")),
 	)
 
-	oauthClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	oauthClient.SetHeader("User-Agent", version.UserAgent())
 	oauthClient.SetHeader("Authorization", "Api-Token "+credentials.Token)
 	return oauthClient, nil
 }
@@ -135,7 +136,7 @@ func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, erro
 	}
 
 	factory := clients.Factory()
-	factory = factory.WithUserAgent("Dynatrace Terraform Provider")
+	factory = factory.WithUserAgent(version.UserAgent())
 	factory = factory.WithClassicURL(classicURL)
 	factory = factory.WithAccessToken(apiToken)
 	factory = factory.WithHTTPListener(logging.HTTPListener("classic "))

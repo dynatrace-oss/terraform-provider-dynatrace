@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 )
 
 const MinWaitDuration = 1 * time.Second
@@ -152,7 +153,7 @@ func requestWithBody(ctx context.Context, method string, url string, body io.Rea
 
 func executeRequest(ctx context.Context, client *http.Client, request *http.Request) (Response, error) {
 
-	request.Header.Set("User-Agent", "Dynatrace Terraform Provider")
+	request.Header.Set("User-Agent", version.UserAgent())
 
 	response, err := executeWithRateLimiter(func() (Response, error) {
 		resp, err := client.Do(request)

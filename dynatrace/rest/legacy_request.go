@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -61,7 +62,7 @@ type legacy_request request
 
 func (me *legacy_request) authenticate(req *http.Request) {
 	req.Header.Add("Authorization", "Api-Token "+me.client.Credentials().Token)
-	req.Header.Set("User-Agent", "Dynatrace Terraform Provider")
+	req.Header.Set("User-Agent", version.UserAgent())
 }
 
 func (me *legacy_request) Finish(vs ...any) error {

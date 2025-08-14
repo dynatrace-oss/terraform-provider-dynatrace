@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
@@ -45,7 +46,7 @@ var platformClientCacheMutex sync.Mutex
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
 func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
-	restClient.SetHeader("User-Agent", "Dynatrace Terraform Provider")
+	restClient.SetHeader("User-Agent", version.UserAgent())
 	return restClient, nil
 }
 
