@@ -19,11 +19,10 @@ package vault
 
 import (
 	"context"
-	"fmt"
-	"net/url"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -35,34 +34,50 @@ const BasePath = "/api/v2/credentials"
 var mu sync.Mutex
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credentials] {
-	return settings.NewHybridService(
-		credentials,
-		SchemaID,
-		settings.DefaultServiceOptions[*vault.Credentials](BasePath).
-			WithMutex(mu.Lock, mu.Unlock).
-			WithStubs(&vault.CredentialsList{}).
-			NoValidator().
-			WithDeleteRetry(func(ctx context.Context, id string, err error) (bool, error) {
-				if strings.Contains(err.Error(), "as long as there are monitors assigned to it") {
-					client := rest.HybridClient(credentials)
-					response := struct {
-						Monitors []struct {
-							EntityID string `json:"entityId"`
-						} `json:"monitors"`
-					}{}
-					if err := client.Get(ctx, fmt.Sprintf("/api/v1/synthetic/monitors?credentialId=%s", url.QueryEscape(id)), 200).Finish(&response); err != nil {
-						return false, err
-					}
-					if len(response.Monitors) > 0 {
-						for _, monitor := range response.Monitors {
-							if err := client.Delete(ctx, fmt.Sprintf("/api/v1/synthetic/monitors/%s", url.PathEscape(monitor.EntityID)), 204).Finish(); err != nil {
-								return false, err
-							}
-						}
-					}
-					return true, nil
-				}
-				return false, nil
-			}),
-	)
+	return &service{
+		service: settings.NewHybridService(
+			credentials,
+			SchemaID,
+			settings.DefaultServiceOptions[*vault.Credentials](BasePath).
+				WithMutex(mu.Lock, mu.Unlock).
+				WithStubs(&vault.CredentialsList{}).
+				NoValidator(),
+		),
+	}
+}
+
+type service struct {
+	service settings.CRUDService[*vault.Credentials]
+}
+
+func (me *service) SchemaID() string {
+	return me.service.SchemaID()
+}
+
+func (me *service) Create(ctx context.Context, v *vault.Credentials) (*api.Stub, error) {
+	return me.service.Create(ctx, v)
+}
+
+func (me *service) Update(ctx context.Context, id string, v *vault.Credentials) error {
+	return me.service.Update(ctx, id, v)
+}
+
+func (me *service) Get(ctx context.Context, id string, v *vault.Credentials) error {
+	return me.service.Get(ctx, id, v)
+}
+
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
+}
+
+func (me *service) Delete(ctx context.Context, id string) error {
+	err := me.service.Delete(ctx, id)
+
+	// Credentials cannot be deleted while they are still associated with existing synthetic monitors.
+	// To prevent a failed destroy operation, the deletion will proceed but the credential will remain.
+	// Action Required: Remove the credential from all associated monitors, then manually delete the credential.
+	if err != nil && !strings.Contains(err.Error(), "as long as there are monitors assigned to it") {
+		return err
+	}
+	return nil
 }
