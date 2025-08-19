@@ -1,125 +1,120 @@
 {
-	"allowedScopes": [
-		"environment"
-	],
-	"description": "[Runtime Application Protection](https://dt-url.net/0w6327u) allows you to control how Dynatrace handles incoming attacks to your applications on a global scale. To set up specific rules or exceptions, go to the [Monitoring rules](/ui/settings/builtin:appsec.attack-protection-advanced-config) settings page.",
-	"displayName": "Application Protection: General settings",
-	"documentation": "",
-	"dynatrace": "1",
-	"enums": {
-		"BlockingStrategy": {
-			"description": "",
-			"displayName": "Off | Monitor | Block",
-			"documentation": "",
-			"items": [
-				{
-					"description": "Attacks will be ignored.",
-					"displayName": "Off; incoming attacks NOT detected or blocked.",
-					"value": "OFF"
-				},
-				{
-					"description": "Attacks will be recorded.",
-					"displayName": "Monitor; incoming attacks detected only.",
-					"value": "MONITOR"
-				},
-				{
-					"description": "Attacks will be blocked.",
-					"displayName": "Block; incoming attacks detected and blocked.",
-					"value": "BLOCK"
-				}
-			],
-			"type": "enum"
-		}
-	},
-	"maxObjects": 1,
-	"multiObject": false,
-	"properties": {
-		"defaultAttackHandling": {
-			"description": "",
-			"displayName": "Define global incoming attack control",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": {
-				"$ref": "#/types/AttackHandling"
-			}
-		},
-		"enabled": {
-			"default": false,
-			"description": "Note: This functionality consumes Application Security units. For details, see the [Application Security Monitoring documentation](https://dt-url.net/wq031ql).",
-			"displayName": "Enable Runtime Application Protection ",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "boolean"
-		}
-	},
-	"schemaGroups": [
-		"group:appsec",
-		"group:appsec.attack-protection"
-	],
-	"schemaId": "builtin:appsec.attack-protection-settings",
-	"types": {
-		"AttackHandling": {
-			"description": "Default settings for handling attacks.",
-			"displayName": "Default attack handling",
-			"documentation": "",
-			"properties": {
-				"blockingStrategyDotNet": {
-					"default": "OFF",
-					"description": "",
-					"displayName": "Attack control .NET",
-					"documentation": "",
-					"maxObjects": 1,
-					"metadata": {
-						"maturity": "EARLY_ADOPTER",
-						"sortItems": "disabled"
-					},
-					"modificationPolicy": "DEFAULT",
-					"nullable": false,
-					"type": {
-						"$ref": "#/enums/BlockingStrategy"
-					}
-				},
-				"blockingStrategyGo": {
-					"description": "",
-					"displayName": "Attack control Go",
-					"documentation": "",
-					"maxObjects": 1,
-					"metadata": {
-						"featureFlag": "com.compuware.EnableCaspClvReportingGo.feature",
-						"maturity": "EARLY_ADOPTER",
-						"sortItems": "disabled"
-					},
-					"modificationPolicy": "DEFAULT",
-					"nullable": true,
-					"type": {
-						"$ref": "#/enums/BlockingStrategy"
-					}
-				},
-				"blockingStrategyJava": {
-					"default": "MONITOR",
-					"description": "",
-					"displayName": "Attack control Java",
-					"documentation": "",
-					"maxObjects": 1,
-					"metadata": {
-						"sortItems": "disabled"
-					},
-					"modificationPolicy": "DEFAULT",
-					"nullable": false,
-					"type": {
-						"$ref": "#/enums/BlockingStrategy"
-					}
-				}
-			},
-			"summaryPattern": "",
-			"type": "object",
-			"version": "0",
-			"versionInfo": ""
-		}
-	},
-	"version": "2.4"
+  "dynatrace": "1",
+  "schemaId": "builtin:appsec.attack-protection-settings",
+  "displayName": "Application Protection: General settings",
+  "description": "[Runtime Application Protection](https://dt-url.net/0w6327u) allows you to control how Dynatrace handles incoming attacks to your applications on a global scale. To set up specific rules or exceptions, go to the [Monitoring rules](/ui/settings/builtin:appsec.attack-protection-advanced-config) settings page.",
+  "documentation": "",
+  "schemaGroups": [
+    "group:appsec",
+    "group:appsec.attack-protection"
+  ],
+  "version": "2.6",
+  "multiObject": false,
+  "maxObjects": 1,
+  "allowedScopes": [
+    "environment"
+  ],
+  "enums": {
+    "BlockingStrategy": {
+      "displayName": "Off | Monitor | Block",
+      "description": "",
+      "documentation": "",
+      "items": [
+        {
+          "value": "OFF",
+          "displayName": "Off; incoming attacks NOT detected or blocked.",
+          "description": "Attacks will be ignored."
+        },
+        {
+          "value": "MONITOR",
+          "displayName": "Monitor; incoming attacks detected only.",
+          "description": "Attacks will be recorded."
+        },
+        {
+          "value": "BLOCK",
+          "displayName": "Block; incoming attacks detected and blocked.",
+          "description": "Attacks will be blocked."
+        }
+      ],
+      "type": "enum"
+    }
+  },
+  "types": {
+    "AttackHandling": {
+      "version": "0",
+      "versionInfo": "",
+      "displayName": "Default attack handling",
+      "summaryPattern": "",
+      "description": "Default settings for handling attacks.",
+      "documentation": "",
+      "properties": {
+        "blockingStrategyJava": {
+          "displayName": "Attack control Java",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/enums/BlockingStrategy"
+          },
+          "nullable": false,
+          "metadata": {
+            "sortItems": "disabled"
+          },
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": "MONITOR"
+        },
+        "blockingStrategyDotNet": {
+          "displayName": "Attack control .NET",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/enums/BlockingStrategy"
+          },
+          "nullable": false,
+          "metadata": {
+            "sortItems": "disabled"
+          },
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": "OFF"
+        },
+        "blockingStrategyGo": {
+          "displayName": "Attack control Go",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/enums/BlockingStrategy"
+          },
+          "nullable": false,
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": "OFF"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "enabled": {
+      "displayName": "Enable Runtime Application Protection ",
+      "description": "Note: This functionality consumes Application Security units. For details, see the [Application Security Monitoring documentation](https://dt-url.net/wq031ql).",
+      "documentation": "",
+      "type": "boolean",
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT",
+      "default": false
+    },
+    "defaultAttackHandling": {
+      "displayName": "Define global incoming attack control",
+      "description": "",
+      "documentation": "",
+      "type": {
+        "$ref": "#/types/AttackHandling"
+      },
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT"
+    }
+  }
 }

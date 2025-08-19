@@ -41,6 +41,7 @@ func (me *AttackHandling) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `BLOCK`, `MONITOR`, `OFF`",
 			Optional:    true, // nullable
+			Default:     "OFF",
 		},
 		"blocking_strategy_java": {
 			Type:        schema.TypeString,
