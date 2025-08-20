@@ -234,6 +234,14 @@
 			"documentation": "",
 			"properties": {
 				"attribute": {
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "attribute_source",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
 					"default": "SERVICE_NAME",
 					"description": "The attribute to be checked.",
 					"displayName": "Attribute",
@@ -241,6 +249,7 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"subType": "datasource",
 					"type": {
 						"$ref": "#/enums/attributes"
 					}
@@ -408,6 +417,7 @@
 						"constraints": [
 							{
 								"customValidatorId": "universal-tag-validator",
+								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							},
 							{
@@ -479,5 +489,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }

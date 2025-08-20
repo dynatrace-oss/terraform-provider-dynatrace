@@ -15,6 +15,12 @@
 			"customValidatorId": "mobile-session-replay-validator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "New Real User Monitoring Experience is required to enable Experience Analytics.",
+			"customValidatorId": "mrum-experience-analytics",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
@@ -54,6 +60,30 @@
 	],
 	"schemaId": "builtin:rum.mobile.enablement",
 	"types": {
+		"experienceAnalytics": {
+			"description": "",
+			"displayName": "experienceAnalytics",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "As part of the new RUM experience preview, Experience Analytics captures all interactions within your application. Check our documentation for more details: https://docs.dynatrace.com/docs/whats-new/preview-releases",
+					"displayName": "Enable Experience Analytics",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"maturity": "PREVIEW"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"rum": {
 			"description": "",
 			"displayName": "rum",
@@ -92,6 +122,11 @@
 					"constraints": [
 						{
 							"customValidatorId": "grail-can-be-enabled",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "saasDeploymentValidator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
@@ -141,5 +176,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.3"
+	"version": "2.4.3"
 }

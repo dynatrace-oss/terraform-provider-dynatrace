@@ -32,7 +32,7 @@
 	"multiObject": false,
 	"properties": {
 		"enabled": {
-			"default": false,
+			"default": true,
 			"description": "",
 			"displayName": "Enable Extension Execution Controller",
 			"documentation": "",
@@ -78,7 +78,7 @@
 			}
 		},
 		"statsdActive": {
-			"default": true,
+			"default": false,
 			"description": "This is applicable only to non-containerized Linux and Windows hosts",
 			"displayName": "Enable Dynatrace StatsD",
 			"documentation": "",
@@ -98,5 +98,5 @@
 	],
 	"schemaId": "builtin:eec.local",
 	"types": {},
-	"version": "0.0.4"
+	"version": "0.0.5"
 }

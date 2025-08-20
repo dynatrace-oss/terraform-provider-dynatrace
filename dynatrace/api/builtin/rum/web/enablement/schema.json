@@ -141,6 +141,11 @@
 							"customValidatorId": "rumOnGrailEnablementValidator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "saasDeploymentValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"description": "",
@@ -232,5 +237,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4.2"
+	"version": "1.4.3"
 }

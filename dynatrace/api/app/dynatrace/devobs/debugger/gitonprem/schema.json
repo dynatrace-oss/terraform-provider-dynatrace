@@ -32,7 +32,7 @@
 			"type": "enum"
 		}
 	},
-	"maxObjects": 100,
+	"maxObjects": 10,
 	"metadata": {
 		"appName": "Live Debugger"
 	},
@@ -91,5 +91,5 @@
 	},
 	"schemaId": "app:dynatrace.devobs.debugger:git.on.prem",
 	"types": {},
-	"version": "0.2"
+	"version": "0.3"
 }

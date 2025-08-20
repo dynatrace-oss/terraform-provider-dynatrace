@@ -103,6 +103,14 @@
 			}
 		},
 		"property": {
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "propertyDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
 			"default": "PROCESS_TAG",
 			"description": "",
 			"displayName": "Property",
@@ -110,6 +118,7 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"subType": "datasource",
 			"type": {
 				"$ref": "#/enums/Property"
 			}
@@ -135,6 +144,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Rule with the same values already exists!",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"mode",
@@ -172,5 +182,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }
