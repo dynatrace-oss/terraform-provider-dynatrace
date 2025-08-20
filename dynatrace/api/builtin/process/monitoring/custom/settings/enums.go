@@ -31,6 +31,8 @@ var AgentItemNames = struct {
 	AwsEcsRevision                     AgentItemName
 	AwsLambdaFunctionName              AgentItemName
 	AwsRegion                          AgentItemName
+	AzureContainerAppEnvDnsSuffix      AgentItemName
+	AzureContainerAppName              AgentItemName
 	CatalinaBase                       AgentItemName
 	CatalinaHome                       AgentItemName
 	CloudFoundryAppName                AgentItemName
@@ -94,6 +96,9 @@ var AgentItemNames = struct {
 	PgIdCalcInputKeyLinkage            AgentItemName
 	PhpCliScriptPath                   AgentItemName
 	PhpCliWorkingDir                   AgentItemName
+	PythonModule                       AgentItemName
+	PythonScript                       AgentItemName
+	PythonScriptPath                   AgentItemName
 	Rke2Type                           AgentItemName
 	RuxitClusterId                     AgentItemName
 	RuxitNodeId                        AgentItemName
@@ -135,6 +140,8 @@ var AgentItemNames = struct {
 	"AWS_ECS_REVISION",
 	"AWS_LAMBDA_FUNCTION_NAME",
 	"AWS_REGION",
+	"AZURE_CONTAINER_APP_ENV_DNS_SUFFIX",
+	"AZURE_CONTAINER_APP_NAME",
 	"CATALINA_BASE",
 	"CATALINA_HOME",
 	"CLOUD_FOUNDRY_APP_NAME",
@@ -198,6 +205,9 @@ var AgentItemNames = struct {
 	"PG_ID_CALC_INPUT_KEY_LINKAGE",
 	"PHP_CLI_SCRIPT_PATH",
 	"PHP_CLI_WORKING_DIR",
+	"PYTHON_MODULE",
+	"PYTHON_SCRIPT",
+	"PYTHON_SCRIPT_PATH",
 	"RKE2_TYPE",
 	"RUXIT_CLUSTER_ID",
 	"RUXIT_NODE_ID",

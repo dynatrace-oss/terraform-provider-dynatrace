@@ -424,6 +424,26 @@
 				{
 					"displayName": "Go Binary Linkage",
 					"value": "PG_ID_CALC_INPUT_KEY_LINKAGE"
+				},
+				{
+					"displayName": "Azure Container App name",
+					"value": "AZURE_CONTAINER_APP_NAME"
+				},
+				{
+					"displayName": "Azure Container App environment DNS suffix",
+					"value": "AZURE_CONTAINER_APP_ENV_DNS_SUFFIX"
+				},
+				{
+					"displayName": "Python script",
+					"value": "PYTHON_SCRIPT"
+				},
+				{
+					"displayName": "Python module",
+					"value": "PYTHON_MODULE"
+				},
+				{
+					"displayName": "Python script path",
+					"value": "PYTHON_SCRIPT_PATH"
 				}
 			],
 			"type": "enum"
@@ -631,5 +651,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.9"
+	"version": "0.4.12"
 }
