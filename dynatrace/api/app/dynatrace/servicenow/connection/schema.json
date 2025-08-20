@@ -22,6 +22,10 @@
 				{
 					"displayName": "Basic Authentication",
 					"value": "basic"
+				},
+				{
+					"displayName": "OAuth Client Credentials",
+					"value": "client-credentials"
 				}
 			],
 			"type": "enum"
@@ -35,6 +39,60 @@
 	"ordered": false,
 	"ownerBasedAccessControl": true,
 	"properties": {
+		"clientId": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Client ID of the ServiceNow OAuth server",
+			"displayName": "Client ID",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"client-credentials"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "text"
+		},
+		"clientSecret": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Client secret of the ServiceNow OAuth server",
+			"displayName": "Client Secret",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValues": [
+					"client-credentials"
+				],
+				"property": "type",
+				"type": "IN"
+			},
+			"type": "secret"
+		},
 		"name": {
 			"constraints": [
 				{
@@ -176,5 +234,5 @@
 	],
 	"schemaId": "app:dynatrace.servicenow:connection",
 	"types": {},
-	"version": "2.0.1"
+	"version": "2.1"
 }
