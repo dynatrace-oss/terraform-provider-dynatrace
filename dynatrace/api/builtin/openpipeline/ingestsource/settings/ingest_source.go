@@ -35,7 +35,7 @@ var AllowedKinds = []string{
 }
 
 type IngestSource struct {
-	Kind          string             `json:"-"`
+	Kind          string             `json:"-"` // "kind" is excluded from the JSON payload. The API does not expect it.
 	DefaultBucket *string            `json:"defaultBucket,omitempty"`
 	DisplayName   string             `json:"displayName"`
 	Enabled       bool               `json:"enabled"`

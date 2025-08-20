@@ -515,6 +515,7 @@ var ResourceTypes = struct {
 	RPCBasedSampling                  ResourceType
 	WebAppManualInsertion             ResourceType
 	SettingsPermissions               ResourceType
+	OpenPipelineV2IngestSource        ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -877,6 +878,7 @@ var ResourceTypes = struct {
 	"dynatrace_rpc_based_sampling",
 	"dynatrace_web_app_manual_insertion",
 	"dynatrace_settings_permissions",
+	"dynatrace_openpipeline_v2_ingest_source",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

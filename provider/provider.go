@@ -634,6 +634,7 @@ func Provider() *schema.Provider {
 			"dynatrace_rpc_based_sampling":                 resources.NewGeneric(export.ResourceTypes.RPCBasedSampling).Resource(),
 			"dynatrace_web_app_manual_insertion":           resources.NewGeneric(export.ResourceTypes.WebAppManualInsertion).Resource(),
 			"dynatrace_settings_permissions":               resources.NewGeneric(export.ResourceTypes.SettingsPermissions).Resource(),
+			"dynatrace_openpipeline_v2_ingest_source":      resources.NewGeneric(export.ResourceTypes.OpenPipelineV2IngestSource).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

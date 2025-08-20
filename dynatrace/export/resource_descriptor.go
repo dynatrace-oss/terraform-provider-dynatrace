@@ -384,6 +384,8 @@ import (
 	calculated_service_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
 	calculated_synthetic_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
+
+	openpipelinev2_ingestsource "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/ingestsource"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -1546,6 +1548,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
+	ResourceTypes.OpenPipelineV2IngestSource: NewResourceDescriptor(
+		openpipelinev2_ingestsource.Service),
 }
 
 type ResourceExclusion struct {
