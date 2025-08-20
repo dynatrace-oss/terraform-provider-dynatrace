@@ -46,6 +46,7 @@ const (
 	CredValCluster
 	CredValAutomation
 	CredValNone
+	CredValExport
 )
 
 func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
@@ -95,6 +96,15 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if len(conf.Automation.EnvironmentURL) == 0 {
 			return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
 		}
+	case CredValExport:
+		if len(conf.EnvironmentURL) == 0 {
+			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
+		}
+
+		if len(conf.APIToken) == 0 && len(conf.Automation.PlatformToken) == 0 && validateCredentials(conf, CredValAutomation) != nil {
+			return fmt.Errorf(" No API Token, Platform Token, or OAuth client has been specified. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+		}
+
 	}
 	return nil
 }

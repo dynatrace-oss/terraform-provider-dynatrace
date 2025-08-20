@@ -176,9 +176,8 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 	}
 
 	var credentials *rest.Credentials
-
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
-	if credentials, err = config.Credentials(configResult, config.CredValNone); err != nil {
+	if credentials, err = config.Credentials(configResult, config.CredValExport); err != nil {
 		return nil, err
 	}
 
