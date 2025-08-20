@@ -791,6 +791,16 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"-84": {
+			"default": true,
+			"description": "Rule id: 84",
+			"displayName": "Do not monitor processes if command line arguments contain 'forever/bin/monitor'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-9": {
 			"default": true,
 			"description": "Rule id: 9",
@@ -808,5 +818,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.5"
+	"version": "0.4.6"
 }

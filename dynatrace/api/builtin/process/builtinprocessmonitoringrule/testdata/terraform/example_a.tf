@@ -10,4 +10,5 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
   exe_silkdaemon                        = false
   go_static                             = false
   node_nodegyp                          = false
+  cmd_foreverbinmonitor                 = false
 }

@@ -103,6 +103,7 @@ type Settings struct {
 	RuleID81    bool    `json:"-81"`                   // Rule id: 81 - Do not monitor processes if EXE name equals 'aws'
 	RuleID82    bool    `json:"-82"`                   // Rule id: 82 - Do not monitor processes if EXE name equals 'az'
 	RuleID83    bool    `json:"-83"`                   // Rule id: 83 - Do not monitor processes if EXE name equals 'gcloud'
+	RuleID84    bool    `json:"-84"`                   // Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'
 }
 
 func (me *Settings) Name() string {
@@ -592,6 +593,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     true,
 		},
+		"cmd_foreverbinmonitor": {
+			Type:        schema.TypeBool,
+			Description: "Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'",
+			Optional:    true,
+			Default:     true,
+		},
 	}
 }
 
@@ -677,6 +684,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"exe_aws":                               me.RuleID81,
 		"exe_az":                                me.RuleID82,
 		"exe_gcloud":                            me.RuleID83,
+		"cmd_foreverbinmonitor":                 me.RuleID84,
 	})
 }
 
@@ -762,5 +770,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"exe_aws":                               &me.RuleID81,
 		"exe_az":                                &me.RuleID82,
 		"exe_gcloud":                            &me.RuleID83,
+		"cmd_foreverbinmonitor":                 &me.RuleID84,
 	})
 }
