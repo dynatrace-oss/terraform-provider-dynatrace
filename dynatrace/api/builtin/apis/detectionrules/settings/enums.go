@@ -47,10 +47,12 @@ var Technologies = struct {
 	Java   Technology
 	Nodejs Technology
 	Php    Technology
+	Python Technology
 }{
 	"dotNet",
 	"Go",
 	"Java",
 	"Nodejs",
 	"PHP",
+	"Python",
 }
