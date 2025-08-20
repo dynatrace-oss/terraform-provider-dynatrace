@@ -4,7 +4,7 @@
 		"environment"
 	],
 	"description": "Generic metadata enrichment for Kubernetes.",
-	"displayName": "Telemetry enrichment, cost control and security context",
+	"displayName": "Kubernetes Telemetry Enrichment",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -20,18 +20,6 @@
 				{
 					"displayName": "Label",
 					"value": "LABEL"
-				}
-			],
-			"type": "enum"
-		},
-		"ResourceType": {
-			"description": "",
-			"displayName": "ResourceType",
-			"documentation": "",
-			"items": [
-				{
-					"displayName": "Namespace",
-					"value": "NAMESPACE"
 				}
 			],
 			"type": "enum"
@@ -69,7 +57,7 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "## Security context and cost allocation\n\nDynatrace enables you to set the security context for metrics, events, logs, spans, and entities based on a Kubernetes label or annotation.\n\nDynatrace also enables you to set cost allocation attributes for metrics, events, logs, and spans based on Kubernetes labels and/or annotations.\n\nYou might already have existing annotations and labels that you want to use as the source for either security context or cost allocation. You can do so by telling Dynatrace and the Dynatrace Operator which labels/annotations to use as the source. This has the advantage of not having to change any of your existing deployments. Do this by adding rules on this page.\n\nYou can define a maximum of 20 rules.\n\nIt can take up to 45 minutes for the Dynatrace Operator to adopt changes to the rules. Afterwards, pod restarts are required. \n\nTo learn more about component requirements, types of enriched data and additional data enrichment options, please refer to the [documentation](https://dt-url.net/pn22sye).",
+			"description": "Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.\n\nEnrichment Options:\n\n- **Primary Grail Tags:** Tag your telemetry data with existing Kubernetes labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.\n\n- **Security Context and Cost Allocation:** Leverage existing Kubernetes labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.\n\nAdditional Information:\n\n- You can define up to 20 enrichment rules.\n\n- New rules may take up to 45 minutes to become effective.\n\n- After the rules are applied, pod restarts are required to ensure the changes take effect.\n\nTo learn more, please refer to our [documentation](https://dt-url.net/pn22sye).",
 			"displayName": "",
 			"documentation": "",
 			"items": {
@@ -100,6 +88,15 @@
 			"displayName": "Rule",
 			"documentation": "",
 			"properties": {
+				"primaryGrailTag": {
+					"description": "",
+					"displayName": "Use as Primary Grail Tag",
+					"documentation": "Uses the key of the annotation or label as field name",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"source": {
 					"constraints": [
 						{
@@ -169,5 +166,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2"
+	"version": "1.4"
 }
