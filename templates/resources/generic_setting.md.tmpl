@@ -13,6 +13,23 @@ description: |-
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 -> In case the Platform App configured by such a settings explicitly validates them, authentication via API Token may not be enough. In such a case the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` are required. That OAuth Client will require the permissions `app-engine:apps:run` and `settings:objects:write`. In any case, Terraform will primarily attempt to create or modify the settings using the API Token and if that fails will utilize the OAuth Client for authentication.
 
+## Limitations
+~> **Warning** If a resource is created using an API token or without setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` (when both are used), the settings object's owner will remain empty.
+
+An empty owner implies:
+- The settings object becomes public, allowing other users with settings permissions to read and modify it.
+- Changing the settings object's permissions will have no effect, meaning the `dynatrace_settings_permissions` resource can't alter its access.
+
+When a settings object is created using platform credentials:
+- The owner is set to the owner of the OAuth client or platform token.
+
+If the provided schema permits modifications to access modifiers, indicated by `ownerBasedAccessControl` being set to `true`, the following statements hold true:
+- By default, the settings object is private; only the owner can read and modify it.
+- Access modifiers can be managed using the `dynatrace_settings_permissions` resource.
+
+We recommend using platform credentials to ensure a correct setup.
+In case an API token is needed, we recommend setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true`.
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_generic_setting` downloads all existing settings related to Platform Apps.
