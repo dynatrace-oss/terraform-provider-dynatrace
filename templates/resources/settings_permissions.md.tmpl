@@ -1,0 +1,53 @@
+---
+layout: ""
+page_title: dynatrace_settings_permissions Resource - terraform-provider-dynatrace"
+subcategory: "Platform"
+description: |-
+  The resource `dynatrace_settings_permissions` covers access configurations for Settings 2.0 objects
+---
+
+# dynatrace_settings_permissions (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> This resource requires the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`)
+
+-> This resource can alter Settings 2.0 objects of different owners if the OAuth scope `settings:objects:admin` is provided
+
+## Limitations
+-> Access modifiers can only be altered if the provided Settings 2.0 object allows such modifications, as indicated by its schema having `ownerBasedAccessControl` set to `true`
+
+The following resources allow for altering access modifiers (please note that this list may be incomplete):
+- `dynatrace_automation_controller_connections`
+- `dynatrace_automation_workflow_aws_connections`
+- `dynatrace_automation_workflow_jira`
+- `dynatrace_automation_workflow_k8s_connections`
+- `dynatrace_automation_workflow_slack`
+- `dynatrace_event_driven_ansible_connections`
+- `dynatrace_github_connection`
+- `dynatrace_gitlab_connection`
+- `dynatrace_jenkins_connection`
+- `dynatrace_ms365_email_connection`
+- `dynatrace_msentraid_connection`
+- `dynatrace_msteams_connection`
+- `dynatrace_pagerduty_connection`
+- `dynatrace_servicenow_connection`
+- `dynatrace_generic_setting` if the provided schema supports it
+
+## Documentation
+
+- Access Control for Connectors - https://docs.dynatrace.com/docs/shortlink/access-control-for-connectors
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_settings_permissions` downloads all existing settings permissions.
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/v2/settings/objects/permissions/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
