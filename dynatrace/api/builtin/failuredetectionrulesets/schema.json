@@ -1,0 +1,839 @@
+{
+	"allowedScopes": [
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Define rulesets to detect failures based on span attributes defined in the [Semantic Dictionary](https://docs.dynatrace.com/docs/discover-dynatrace/references/semantic-dictionary/model/trace) and custom attributes. Rulesets are evaluated in order and the first matching one defines the failure detection result.",
+	"displayName": "Failure detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add ruleset"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "If enabled, the ruleset will be evaluated.",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"ruleset": {
+			"description": "",
+			"displayName": "Ruleset",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Ruleset"
+			},
+			"uiCustomization": {
+				"expandable": {
+					"sections": [
+						{
+							"displayName": "Override failure detection with success forcing rules",
+							"expanded": false,
+							"properties": [
+								"overrides"
+							]
+						}
+					]
+				}
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Ruleset name must be unique.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"ruleset.rulesetName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:failure-detection-rulesets",
+	"types": {
+		"Ruleset": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"customValidatorId": "dql-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-condition-confidential-request-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-syntax-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Limits the scope of the failure detection ruleset using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.",
+					"displayName": "Matching condition",
+					"documentation": "A ruleset is applied only if the condition matches, otherwise the evaluation continues.\n\nIf empty, the condition will always match.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "matchesValue(k8s.cluster.name, \"com-sales-*\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "code/dql",
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"failOnCustomRules": {
+					"constraints": [
+						{
+							"customMessage": "Rule name must be unique.",
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"ruleName"
+							]
+						}
+					],
+					"description": "Define failure reasons based on span and request attributes.",
+					"displayName": "Custom failure rules",
+					"documentation": "Failure detection result: `reason=\"custom_rule\"`, `verdict=\"failure\"`, `custom_rule_name`",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/customRule"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add custom rule"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set",
+					"uiCustomization": {
+						"table": {
+							"columns": [
+								{
+									"builtinColumnRef": "summary",
+									"displayName": "Rule name"
+								},
+								{
+									"displayName": "DQL condition",
+									"id": "failRuleDqlCnd",
+									"propertyRef": "./dqlCondition"
+								}
+							]
+						}
+					}
+				},
+				"failOnExceptions": {
+					"description": "",
+					"displayName": "Exceptions",
+					"documentation": "Evaluated expression: `iAny(`span.events`[][`span_event.name`] == \"exception\" and `span.events`[][`exception.escaped`] != false)`\n\nFailure detection result: `reason=\"exception\"`, `verdict=\"failure\"`, `exception_ids`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/failOnExceptions"
+					}
+				},
+				"failOnGrpcStatusCodes": {
+					"description": "",
+					"displayName": "gRPC status codes",
+					"documentation": "Evaluated attribute: `rpc.grpc.status_code`\n\nFailure detection result: `reason=\"grpc_code\"`, `verdict=\"failure\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/failOnGrpcStatusCodes"
+					}
+				},
+				"failOnHttpResponseStatusCodes": {
+					"description": "",
+					"displayName": "HTTP status codes",
+					"documentation": "Evaluated attribute: `http.response.status_code`\n\nFailure detection result: `reason=\"http_code\"`, `verdict=\"failure\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/failOnHttpResponseStatusCodes"
+					}
+				},
+				"failOnSpanStatusError": {
+					"description": "",
+					"displayName": "Span status code",
+					"documentation": "Evaluated attribute: `span.status_code`\n\nFailure detection result: `reason=\"span_status\"`, `verdict=\"failure\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/failOnSpanStatusError"
+					}
+				},
+				"overrides": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/overrides"
+					}
+				},
+				"rulesetName": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Ruleset name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{rulesetName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"customRule": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"dqlCondition": {
+					"constraints": [
+						{
+							"customValidatorId": "dql-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-condition-confidential-request-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-syntax-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Custom rule based on span attributes using [DQL matcher](https://dt-url.net/l603wby).",
+					"displayName": "DQL condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "matchesValue(attribute.key, \"value\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "code/dql",
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{ruleName}",
+			"type": "object",
+			"version": "1",
+			"versionInfo": ""
+		},
+		"failOnExceptions": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Fail on exceptions",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ignoredExceptions": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/singleException"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add ignored exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failOnGrpcStatusCodes": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"statusCodes": {
+					"constraints": [
+						{
+							"customValidatorId": "server-side-codes-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						}
+					],
+					"default": "2,4,12,13,14,15",
+					"description": "",
+					"displayName": "Status codes which indicate a failure on the server side",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "none"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failOnHttpResponseStatusCodes": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"statusCodes": {
+					"constraints": [
+						{
+							"customValidatorId": "server-side-codes-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						}
+					],
+					"default": "500-599",
+					"description": "",
+					"displayName": "Status codes which indicate a failure on the server side",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "none"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"failOnSpanStatusError": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Fail on span status \"error\"",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"forceSuccessOnExceptions": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"exceptions": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/singleException"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add success forcing exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"forceSuccessOnGrpcResponseStatusCodes": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"statusCodes": {
+					"constraints": [
+						{
+							"customValidatorId": "server-side-codes-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Status codes which force success on the server side",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "none"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"forceSuccessOnHttpResponseStatusCodes": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"statusCodes": {
+					"constraints": [
+						{
+							"customValidatorId": "server-side-codes-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Status codes which force success on the server side",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "none"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"forceSuccessOnSpanStatusOk": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": false,
+					"description": "",
+					"displayName": "Force success on span status \"ok\"",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"forceSuccessWithCustomRules": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"rules": {
+					"constraints": [
+						{
+							"customMessage": "Rule name must be unique.",
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"ruleName"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/customRule"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add custom rule"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set",
+					"uiCustomization": {
+						"table": {
+							"columns": [
+								{
+									"builtinColumnRef": "summary",
+									"displayName": "Rule name"
+								},
+								{
+									"displayName": "DQL condition",
+									"id": "succRuleDqlCnd",
+									"propertyRef": "./dqlCondition"
+								}
+							]
+						}
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"overrides": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"forceSuccessOnExceptions": {
+					"description": "Define escaped exceptions that should force success.",
+					"displayName": "Force success on specific exceptions",
+					"documentation": "Evaluated expression: `iAny(`span.events`[][`span_event.name`] == \"exception\" and `span.events`[][`exception.escaped`] != false)`\n\nFailure detection result: `reason=\"exception\"`, `verdict=\"success\"`, `exception_ids`",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/singleException"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add success forcing exception"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"forceSuccessOnGrpcResponseStatusCodes": {
+					"description": "",
+					"displayName": "gRPC status codes",
+					"documentation": "Evaluated attribute: `rpc.grpc.status_code`\n\nFailure detection result: `reason=\"grpc_code\"`, `verdict=\"success\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/forceSuccessOnGrpcResponseStatusCodes"
+					}
+				},
+				"forceSuccessOnHttpResponseStatusCodes": {
+					"description": "",
+					"displayName": "HTTP status codes",
+					"documentation": "Evaluated attribute: `http.response.status_code`\n\nFailure detection result: `reason=\"http_code\"`, `verdict=\"success\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/forceSuccessOnHttpResponseStatusCodes"
+					}
+				},
+				"forceSuccessOnSpanStatusOk": {
+					"description": "",
+					"displayName": "Span status code",
+					"documentation": "Evaluated attribute: `span.status_code`\n\nFailure detection result: `reason=\"span_status\"`, `verdict=\"success\"`",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/forceSuccessOnSpanStatusOk"
+					}
+				},
+				"forceSuccessWithCustomRules": {
+					"constraints": [
+						{
+							"customMessage": "Rule name must be unique.",
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"ruleName"
+							]
+						}
+					],
+					"description": "Override failures based on span and request attribute conditions.",
+					"displayName": "Custom success forcing rules",
+					"documentation": "Failure detection result: `reason=\"custom_rule\"`, `verdict=\"success\"`, `custom_rule_name`",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/customRule"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add custom rule"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set",
+					"uiCustomization": {
+						"table": {
+							"columns": [
+								{
+									"builtinColumnRef": "summary",
+									"displayName": "Rule name"
+								},
+								{
+									"displayName": "DQL condition",
+									"id": "succRuleDqlCnd",
+									"propertyRef": "./dqlCondition"
+								}
+							]
+						}
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"singleException": {
+			"constraints": [
+				{
+					"customMessage": "At least one of 'Exception type contains' or 'Exception message contains' must be defined.",
+					"minimumPropertyCount": 1,
+					"properties": [
+						"type",
+						"message"
+					],
+					"type": "PROPERTY_COUNT_RANGE"
+				}
+			],
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"message": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Exception message contains",
+					"documentation": "Evaluated attribute: `span.events[][exception.message]`",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": ""
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"type": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Exception type contains",
+					"documentation": "Evaluated attribute: `span.events[][exception.type]`",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": ""
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{type|valueSet, select, true {{message|valueSet, select, true {**{type}** where message contains \"**{message}**\"} other {**{type}** with any message}}} other {{message|valueSet, select, true {Any exception where message contains \"**{message}**\"} other {}}}}",
+			"type": "object",
+			"version": "1",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Ruleset name"
+				}
+			]
+		}
+	},
+	"version": "0.0.6"
+}
