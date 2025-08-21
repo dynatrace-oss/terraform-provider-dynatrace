@@ -151,7 +151,7 @@ func (p *Processing) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"processor": {
 			Type:        schema.TypeList,
-			Description: "One processor",
+			Description: "Groups all processors applicable for processing in the ingest-source.\nApplicable processors types are dql, fieldsAdd, fieldsRemove, fieldsRename, and drop",
 			Elem:        &schema.Resource{Schema: new(processors.Processor).Schema()},
 			Required:    true,
 		},
