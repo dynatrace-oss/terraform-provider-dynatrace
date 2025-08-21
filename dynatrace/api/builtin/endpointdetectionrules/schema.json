@@ -1,0 +1,225 @@
+{
+	"allowedScopes": [
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Define rules to detect requests on endpoints based on span attributes defined in the [Semantic Dictionary](https://docs.dynatrace.com/docs/discover-dynatrace/references/semantic-dictionary/fields) and custom attributes. Rules are evaluated in order and the first matching rule applies.",
+	"displayName": "Endpoint detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ActionToPerform": {
+			"description": "",
+			"displayName": "ActionToPerform",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Detect request on endpoint",
+					"value": "DETECT_REQUEST_ON_ENDPOINT"
+				},
+				{
+					"displayName": "Suppress request",
+					"value": "SUPPRESS_REQUEST"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1000,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"itemDisplayName": "New rule"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "If enabled, the rule will be evaluated.",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/Rule"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "Rule name must be unique.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"rule.ruleName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:endpoint-detection-rules",
+	"types": {
+		"Rule": {
+			"description": "",
+			"displayName": "Rule",
+			"documentation": "",
+			"properties": {
+				"condition": {
+					"constraints": [
+						{
+							"customValidatorId": "dql-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-condition-confidential-request-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "dql-syntax-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.",
+					"displayName": "Matching condition",
+					"documentation": "A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "matchesValue(k8s.cluster.name, \"com-sales-*\")"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "code/dql",
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"endpointNameTemplate": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "endpoint-name-template-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.",
+					"displayName": "Endpoint name template",
+					"documentation": "Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nIf the resolved endpoint name on a given span is empty, the request will be ignored.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "{http.request.method} {http.route}"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "DETECT_REQUEST_ON_ENDPOINT",
+						"property": "ifConditionMatches",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"ifConditionMatches": {
+					"default": "DETECT_REQUEST_ON_ENDPOINT",
+					"description": "",
+					"displayName": "If condition matches",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ActionToPerform"
+					}
+				},
+				"ruleName": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Rule name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{ruleName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"uiCustomization": {
+		"table": {
+			"columns": [
+				{
+					"builtinColumnRef": "summary",
+					"displayName": "Rule name"
+				},
+				{
+					"displayName": "Endpoint name template",
+					"id": "endpointNameTemp",
+					"propertyRef": "./rule/endpointNameTemplate"
+				}
+			]
+		}
+	},
+	"version": "0.0.5"
+}
