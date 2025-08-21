@@ -1,0 +1,30 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Enable [SDv2 endpoint detection rules](builtin:endpoint-detection-rules) instead of the hard-coded ones. See [Service Detection v2 documentation](https://dt-url.net/lu030qq) and [community post](https://dt-url.net/r2230n9) for details.",
+	"displayName": "Enable endpoint detection",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"enabled": {
+			"default": false,
+			"description": "",
+			"displayName": "Enable Endpoint detection rules",
+			"documentation": "If enabled, the new endpoint detection rules will be active.",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaGroups": [
+		"group:service-detection"
+	],
+	"schemaId": "builtin:endpoint-detection-rules-opt-in",
+	"types": {},
+	"version": "0.0.1"
+}

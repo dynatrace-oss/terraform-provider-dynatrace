@@ -132,6 +132,7 @@ import (
 	ebpf "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ebpf/service/discovery"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/local"
 	eecremote "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote"
+	endpointdetectionrulesoptin "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/endpointdetectionrules/optin"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eulasettings"
 	networktraffic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/exclude/network/traffic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetectionrulesets"
@@ -1553,6 +1554,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.K8sCluster),
 		Coalesce(Dependencies.HostGroup),
 	),
+	ResourceTypes.EndpointDetectionRulesOptIn: NewResourceDescriptor(endpointdetectionrulesoptin.Service),
 }
 
 type ResourceExclusion struct {
