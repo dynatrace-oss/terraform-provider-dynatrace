@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/processors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -107,31 +108,18 @@ func (is *IngestSource) Schema() map[string]*schema.Schema {
 }
 
 func (is *IngestSource) MarshalHCL(properties hcl.Properties) error {
-	if err := properties.EncodeAll(map[string]any{
-		"kind":         is.Kind,
-		"enabled":      is.Enabled,
-		"display_name": is.DisplayName,
-		"path_segment": is.PathSegment,
-	}); err != nil {
-		return err
-	}
-	if is.DefaultBucket != nil {
-		if err := properties.Encode("default_bucket", is.DefaultBucket); err != nil {
-			return err
-		}
-	}
-	if is.StaticRouting != nil {
-		if err := properties.Encode("static_routing", is.StaticRouting); err != nil {
-			return err
-		}
-	}
-	if is.Processing != nil && len(is.Processing.Processors) > 0 {
-		if err := properties.Encode("processing", is.Processing); err != nil {
-			return err
-		}
-	}
+	err := properties.EncodeAll(map[string]any{
+		"kind":           is.Kind,
+		"enabled":        is.Enabled,
+		"display_name":   is.DisplayName,
+		"path_segment":   is.PathSegment,
+		"default_bucket": is.DefaultBucket,
+		"static_routing": is.StaticRouting,
+		"processing":     is.Processing,
+	})
+	openpipeline.RemoveNils(properties)
 
-	return nil
+	return err
 }
 
 func (is *IngestSource) UnmarshalHCL(decoder hcl.Decoder) error {
