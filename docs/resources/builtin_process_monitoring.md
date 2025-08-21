@@ -37,6 +37,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
   exe_silkdaemon                        = false
   go_static                             = false
   node_nodegyp                          = false
+  cmd_foreverbinmonitor                 = false
 }
 ```
 
@@ -50,6 +51,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
 - `aspnetcore_agentworker` (Boolean) Rule id: 62 - Do not monitor processes if ASP.NET Core application DLL contains 'Agent.Worker'
 - `cf` (Boolean) Rule id: 37 - Do monitor processes if Cloud Foundry application exists
 - `cf_appsmanagerjs` (Boolean) Do not monitor processes if Cloud Foundry application begins with 'apps-manager-js'
+- `cmd_foreverbinmonitor` (Boolean) Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'
 - `container` (Boolean) Rule id: 41 - Do monitor processes if container name exists
 - `docker_pauseamd64` (Boolean) Rule id: 39 - Do not monitor processes if Docker stripped image contains 'pause-amd64'
 - `exe_adapter` (Boolean) Rule id: 7 - Do monitor processes if EXE name equals 'adapter'

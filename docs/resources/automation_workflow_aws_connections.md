@@ -1,7 +1,7 @@
 ---
 layout: ""
 page_title: dynatrace_automation_workflow_aws_connections Resource - terraform-provider-dynatrace"
-subcategory: "Automation"
+subcategory: "Connections"
 description: |-
   The resource `dynatrace_automation_workflow_aws_connections` covers configuration for AWS connections for Workflows app
 ---
@@ -9,6 +9,23 @@ description: |-
 # dynatrace_automation_workflow_aws_connections (Resource)
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+-> This resource requires the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`)
+
+## Limitations
+~> **Warning** If a resource is created using an API token or without setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` (when both are used), the settings object's owner will remain empty.
+
+An empty owner implies:
+- The settings object becomes public, allowing other users with settings permissions to read and modify it.
+- Changing the settings object's permissions will have no effect, meaning the `dynatrace_settings_permissions` resource can't alter its access.
+
+When a settings object is created using platform credentials:
+- The owner is set to the owner of the OAuth client or platform token.
+- By default, the settings object is private; only the owner can read and modify it.
+- Access modifiers can be managed using the `dynatrace_settings_permissions` resource.
+
+We recommend using platform credentials to ensure a correct setup.
+In case an API token is needed, we recommend setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true`.
 
 ## Dynatrace Documentation
 
@@ -60,4 +77,3 @@ Required:
 Optional:
 
 - `policy_arns` (List of String, Sensitive) An optional list of policies that can be used to restrict the AWS role
- 

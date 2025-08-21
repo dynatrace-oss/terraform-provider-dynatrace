@@ -26,7 +26,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_kubernetes_enrichment" "#name#" {
-    scope = "environment"
+  scope = "environment"
   rules {
     rule {
       type    = "LABEL"
@@ -34,9 +34,31 @@ resource "dynatrace_kubernetes_enrichment" "#name#" {
       target  = "dt.cost.product"
     }
     rule {
+      type    = "LABEL"
+      source  = "#name#"
+      primary_grail_tag = true
+    }
+    rule {
+      type    = "LABEL"
+      source  = "#name#"
+      target  = "dt.cost.product"
+      primary_grail_tag = false
+    }
+    rule {
       type    = "ANNOTATION"
       source  = "#name#"
       target  = "dt.security_context"
+    }
+    rule {
+      type    = "ANNOTATION"
+      source  = "#name#"
+      primary_grail_tag = true
+    }
+    rule {
+      type    = "ANNOTATION"
+      source  = "#name#"
+      target  = "dt.security_context"
+      primary_grail_tag = false
     }
   }
 }
@@ -112,10 +134,11 @@ Required:
 `name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`
 
 Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
-- `target` (String) Possible Values: `Dt_cost_costcenter`, `Dt_cost_product`, `Dt_security_context`
 - `type` (String) Possible Values: `ANNOTATION`, `LABEL`
 
 Optional:
 
 - `enabled` (Boolean, Deprecated) This setting is enabled (`true`) or disabled (`false`)
+- `primary_grail_tag` (Boolean) Uses the key of the annotation or label as field name
+- `target` (String) Required when `primary_grail_tag` is omitted or `false`. Possible Values: `dt.cost.costcenter``, `dt.cost.product``, `dt.security_context
  
