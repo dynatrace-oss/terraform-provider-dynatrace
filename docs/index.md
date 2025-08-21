@@ -11,6 +11,8 @@ The Dynatrace Terraform Provider is used to interact with the resources supporte
 
 Use the navigation to the left to learn about the available resources and data sources. For additional information, refer to the official Dynatrace documentation on Terraform available [here](https://dt-url.net/3s63qyj).
 
+The Dynatrace Terraform Provider is officially supported by Dynatrace.
+
 ## Example
 
 # Terraform 0.13+ uses the Terraform Registry:
@@ -63,6 +65,7 @@ Configure an [OAuth client](https://dt-url.net/fj43qif) with all of the permissi
 Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the created OAuth client.
  * **View settings objects for schema** (`settings:objects:read`)
  * **Create settings objects for schema** (`settings:objects:write`)
+ * **Admin permission to manage all setting objects** (`settings:objects:admin`)
  * **View workflows** (`automation:workflows:read`)
  * **Create and edit workflows** (`automation:workflows:write`)
  * **View calendars** (`automation:calendars:read`)

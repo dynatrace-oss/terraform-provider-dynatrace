@@ -10,7 +10,7 @@ description: |-
 
 -> **Dynatrace SaaS only**
 
--> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View workflows** (`automation:workflows:read`) and **Create and edit workflows** (`automation:workflows:write`).
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View workflows** (`automation:workflows:read`) and **Create and edit workflows** (`automation:workflows:write`) To manage all workflows, please also include **Access all Automation Workflows** (`automation:workflows:admin`).
 
 -> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
@@ -150,7 +150,7 @@ Optional:
 
 Required:
 
-- `action` (String) Currently known and supported values are `dynatrace.automations:http-function`, `dynatrace.automations:run-javascript` and `dynatrace.automations:execute-dql-query`
+- `action` (String) Specifies the action type for the task. Examples include `dynatrace.automations:http-function`, `dynatrace.automations:run-javascript`, and `dynatrace.automations:execute-dql-query`. Additional action types are also supported.
 - `name` (String) The name of the task
 
 Optional:
