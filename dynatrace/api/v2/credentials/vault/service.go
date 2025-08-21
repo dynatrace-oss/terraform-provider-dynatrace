@@ -19,6 +19,7 @@ package vault
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
 
@@ -41,7 +42,17 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credenti
 			settings.DefaultServiceOptions[*vault.Credentials](BasePath).
 				WithMutex(mu.Lock, mu.Unlock).
 				WithStubs(&vault.CredentialsList{}).
-				NoValidator(),
+				NoValidator().
+				WithDeleteRetry(func(ctx context.Context, id string, err error) (bool, error) {
+					if strings.Contains(err.Error(), "as long as there are monitors assigned to it") {
+						cfg := ctx.Value(settings.ContextKeyStateConfig)
+						if logConfig, ok := cfg.(*vault.Credentials); ok && logConfig != nil {
+							return false, rest.Warning{Message: fmt.Sprintf("Credentials '%s' (ID='%s') could not get deleted because a monitor is still using them. You must remove those associations and delete the credential manually", logConfig.Name, id)}
+						}
+						return false, rest.Warning{Message: fmt.Sprintf("Credentials '%s' could not get deleted because a monitor is still using them. You must remove those associations and delete the credential manually", id)}
+					}
+					return false, nil
+				}),
 		),
 	}
 }
