@@ -2,7 +2,6 @@ resource "dynatrace_iam_group" "group" {
   name = "#name#"
 }
 
-// for each group create a user
 resource "dynatrace_iam_user" "user" {
   email = "#name#@example.com"
   groups = [dynatrace_iam_group.group.id]
