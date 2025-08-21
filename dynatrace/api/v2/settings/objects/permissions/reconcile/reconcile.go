@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"slices"
-	"sync"
 
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -29,22 +28,11 @@ func CompareAndUpdate(ctx context.Context, cl permissions.PermissionUpdateClient
 }
 
 func executeUpserts(upserts []rest.AdminAccessRequestFn, adminAccess bool) error {
-	errChan := make(chan error, len(upserts))
+	errs := make([]error, 0, len(upserts))
 
-	var wg sync.WaitGroup
-	wg.Add(len(upserts))
+	// the update must be in sync because of potential conflict errors (e.g., deleting two user permissions at the same may lead to a 409)
 	for _, upsert := range upserts {
-		go func() {
-			defer wg.Done()
-			_, err := upsert(adminAccess)
-			errChan <- err
-		}()
-	}
-	wg.Wait()
-	close(errChan)
-
-	errs := make([]error, len(upserts))
-	for err := range errChan {
+		_, err := upsert(adminAccess)
 		errs = append(errs, err)
 	}
 	return errors.Join(errs...)
