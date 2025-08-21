@@ -635,6 +635,7 @@ func Provider() *schema.Provider {
 			"dynatrace_web_app_manual_insertion":           resources.NewGeneric(export.ResourceTypes.WebAppManualInsertion).Resource(),
 			"dynatrace_settings_permissions":               resources.NewGeneric(export.ResourceTypes.SettingsPermissions).Resource(),
 			"dynatrace_failure_detection_rule_sets":        resources.NewGeneric(export.ResourceTypes.FailureDetectionRuleSets).Resource(),
+			"dynatrace_endpoint_detection_rules_optin":     resources.NewGeneric(export.ResourceTypes.EndpointDetectionRulesOptIn).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

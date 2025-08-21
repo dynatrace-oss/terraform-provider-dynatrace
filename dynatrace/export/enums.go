@@ -516,6 +516,7 @@ var ResourceTypes = struct {
 	WebAppManualInsertion             ResourceType
 	SettingsPermissions               ResourceType
 	FailureDetectionRuleSets          ResourceType
+	EndpointDetectionRulesOptIn       ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -879,6 +880,7 @@ var ResourceTypes = struct {
 	"dynatrace_web_app_manual_insertion",
 	"dynatrace_settings_permissions",
 	"dynatrace_failure_detection_rule_sets",
+	"dynatrace_endpoint_detection_rules_optin",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

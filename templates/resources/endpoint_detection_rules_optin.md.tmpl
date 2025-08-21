@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Service Detection"
+description: |-
+  The resource `{{ .Name }}` covers configuration for endpoint detection rules opt-in
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Customize endpoint detection in Service Detection v2 - https://docs.dynatrace.com/docs/observe/applications-and-microservices/services/service-detection-v2/endpoint-detection-v2
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:endpoint-detection-rules-opt-in`)
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/endpointdetectionrules/optin/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
