@@ -636,6 +636,7 @@ func Provider() *schema.Provider {
 			"dynatrace_settings_permissions":               resources.NewGeneric(export.ResourceTypes.SettingsPermissions).Resource(),
 			"dynatrace_failure_detection_rule_sets":        resources.NewGeneric(export.ResourceTypes.FailureDetectionRuleSets).Resource(),
 			"dynatrace_endpoint_detection_rules_optin":     resources.NewGeneric(export.ResourceTypes.EndpointDetectionRulesOptIn).Resource(),
+			"dynatrace_endpoint_detection_rules":           resources.NewGeneric(export.ResourceTypes.EndpointDetectionRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

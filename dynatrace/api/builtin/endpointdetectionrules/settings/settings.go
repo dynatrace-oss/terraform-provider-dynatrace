@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package failuredetectionrulesets
+package endpointdetectionrules
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -23,17 +23,17 @@ import (
 )
 
 type Settings struct {
-	Enabled     bool     `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Ruleset     *Ruleset `json:"ruleset"`         // Ruleset
-	Scope       *string  `json:"-" scope:"scope"` // The scope of this setting (CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	InsertAfter string   `json:"-"`
+	Enabled     bool    `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
+	Rule        *Rule   `json:"rule"`            // Rule
+	Scope       *string `json:"-" scope:"scope"` // The scope of this setting (CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	InsertAfter string  `json:"-"`
 }
 
 func (me *Settings) Name() string {
 	if me.Scope == nil {
-		return "environment_" + me.Ruleset.RulesetName
+		return "environment_" + me.Rule.RuleName
 	}
-	return *me.Scope + "_" + me.Ruleset.RulesetName
+	return *me.Scope + "_" + me.Rule.RuleName
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -43,11 +43,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
-		"ruleset": {
+		"rule": {
 			Type:        schema.TypeList,
-			Description: "Ruleset",
+			Description: "Rule",
 			Required:    true,
-			Elem:        &schema.Resource{Schema: new(Ruleset).Schema()},
+			Elem:        &schema.Resource{Schema: new(Rule).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -69,7 +69,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"enabled":      me.Enabled,
-		"ruleset":      me.Ruleset,
+		"rule":         me.Rule,
 		"scope":        me.Scope,
 		"insert_after": me.InsertAfter,
 	})
@@ -78,7 +78,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":      &me.Enabled,
-		"ruleset":      &me.Ruleset,
+		"rule":         &me.Rule,
 		"scope":        &me.Scope,
 		"insert_after": &me.InsertAfter,
 	})
