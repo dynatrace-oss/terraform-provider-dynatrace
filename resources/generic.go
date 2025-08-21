@@ -492,6 +492,9 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 	err = service.Delete(ctx, d.Id())
 
 	if err != nil {
+		if restWarning, ok := err.(rest.Warning); ok {
+			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
+		}
 		if restError, ok := err.(rest.Error); ok {
 			if restError.Code == 404 {
 				d.SetId("")
