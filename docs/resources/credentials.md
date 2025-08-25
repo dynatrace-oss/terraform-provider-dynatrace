@@ -8,10 +8,11 @@ description: |-
 
 # dynatrace_credentials (Resource)
 
--> This resource requires the API token scopes **Read credential vault entries** (`credentialVault.read`) and **Write credential vault entries** (`credentialVault.write`)
+~> **Destroy Warning** Credentials **cannot be deleted** if they are still associated with active synthetic monitors.
+Terraform will proceed with the destroy operation, but the credential will **not** be removed if any associations remain. **Action Required:** Before destroying this resource, ensure the credential is removed from all associated monitors.
+If any monitors remain associated after destroy, you must manually remove those associations and delete the credential manually.
 
-~> **Note:** A credential vault entry can't be deleted if a synthetic monitor uses it. Therefore, the synthetic monitors are also deleted when the credential vault entry is deleted.
-If you want to keep the synthetic monitors, remove the credential vault entry reference from them first.
+-> This resource requires the API token scopes **Read credential vault entries** (`credentialVault.read`) and **Write credential vault entries** (`credentialVault.write`)
 
 ## Dynatrace Documentation
 
