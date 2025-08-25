@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/ingestsource2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
@@ -1550,6 +1551,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenPipelineV2IngestSource: NewResourceDescriptor(
 		openpipelinev2_ingestsource.Service),
+	ResourceTypes.OpenPipelineV2IngestSource2: NewResourceDescriptor(
+		ingestsource2.Service),
 }
 
 type ResourceExclusion struct {
