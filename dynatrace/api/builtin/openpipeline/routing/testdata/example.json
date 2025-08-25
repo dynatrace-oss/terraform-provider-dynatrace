@@ -1,0 +1,21 @@
+{
+  "routingEntries": [ {
+    "enabled" : true,
+    "pipelineType" : "custom",
+    "pipelineId" : "pipelineId",
+    "matcher" : "true",
+    "description" : "test1"
+  }, {
+    "enabled" : false,
+    "pipelineType" : "custom",
+    "pipelineId" : "pipelineId",
+    "matcher" : "false",
+    "description" : "test2"
+  }, {
+    "enabled" : false,
+    "pipelineType" : "builtin",
+    "builtinPipelineId" : "builtin_pipelineId",
+    "matcher" : "true",
+    "description" : "test3"
+  } ]
+}
