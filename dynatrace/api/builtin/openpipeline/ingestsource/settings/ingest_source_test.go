@@ -120,6 +120,24 @@ func TestIngestSource_MarshalHCL(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "empty-processors are not encoded",
+			input: settings.IngestSource{
+				Kind:        "events",
+				DisplayName: "displayName",
+				PathSegment: "my.path.segment",
+				Enabled:     true,
+				Processing: &settings.Processing{
+					Processors: []*processors.Processor{},
+				},
+			},
+			expected: hcl.Properties{
+				"kind":         "events",
+				"display_name": "displayName",
+				"enabled":      true,
+				"path_segment": "my.path.segment",
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

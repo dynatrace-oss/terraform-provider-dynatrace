@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -166,54 +167,20 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 
 func (p *Processor) MarshalHCL(properties hcl.Properties) error {
 	err := properties.EncodeAll(map[string]any{
-		"enabled":     p.Enabled,
-		"id":          p.Id,
-		"type":        p.Type,
-		"description": p.Description,
+		"enabled":       p.Enabled,
+		"id":            p.Id,
+		"type":          p.Type,
+		"description":   p.Description,
+		"sample_data":   p.SampleData,
+		"matcher":       p.Matcher,
+		"dql":           p.Dql,
+		"fields_add":    p.FieldsAdd,
+		"fields_rename": p.FieldsRename,
+		"fields_remove": p.FieldsRemove,
 	})
+	openpipeline.RemoveNils(properties)
 
-	if err != nil {
-		return err
-	}
-
-	if p.SampleData != nil {
-		err = properties.Encode("sample_data", p.SampleData)
-		if err != nil {
-			return err
-		}
-	}
-	if p.Matcher != nil {
-		err = properties.Encode("matcher", p.Matcher)
-		if err != nil {
-			return err
-		}
-	}
-	if p.Dql != nil {
-		err = properties.Encode("dql", p.Dql)
-		if err != nil {
-			return err
-		}
-	}
-	if p.FieldsAdd != nil {
-		err = properties.Encode("fields_add", p.FieldsAdd)
-		if err != nil {
-			return err
-		}
-	}
-	if p.FieldsRename != nil {
-		err = properties.Encode("fields_rename", p.FieldsRename)
-		if err != nil {
-			return err
-		}
-	}
-	if p.FieldsRemove != nil {
-		err = properties.Encode("fields_remove", p.FieldsRemove)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return err
 }
 
 func (p *Processor) UnmarshalHCL(decoder hcl.Decoder) error {

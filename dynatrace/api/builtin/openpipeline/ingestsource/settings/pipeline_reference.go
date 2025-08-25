@@ -18,6 +18,7 @@
 package settings
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -56,25 +57,14 @@ func (pr *PipelineReference) Schema(prefix string) map[string]*schema.Schema {
 }
 
 func (pr *PipelineReference) MarshalHCL(properties hcl.Properties) error {
-	err := properties.Encode("pipeline_type", pr.PipelineType)
-	if err != nil {
-		return err
-	}
+	err := properties.EncodeAll(map[string]any{
+		"pipeline_type":       pr.PipelineType,
+		"pipeline_id":         pr.PipelineID,
+		"builtin_pipeline_id": pr.BuiltinPipelineID,
+	})
+	openpipeline.RemoveNils(properties)
 
-	if pr.PipelineID != nil {
-		err = properties.Encode("pipeline_id", pr.PipelineID)
-		if err != nil {
-			return err
-		}
-	}
-
-	if pr.BuiltinPipelineID != nil {
-		err = properties.Encode("builtin_pipeline_id", pr.BuiltinPipelineID)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	return err
 }
 
 func (pr *PipelineReference) UnmarshalHCL(decoder hcl.Decoder) error {
