@@ -469,54 +469,60 @@ var ResourceTypes = struct {
 	AWSAutomationConnections            ResourceType
 	// AWSConnection                       ResourceType
 	// AWSConnectionRoleARN                ResourceType
-	DevObsAgentOptin                  ResourceType
-	DevObsDataMasking                 ResourceType
-	DavisCoPilot                      ResourceType
-	OpenPipelineLogs                  ResourceType
-	OpenPipelineEvents                ResourceType
-	OpenPipelineSecurityEvents        ResourceType
-	OpenPipelineBusinessEvents        ResourceType
-	OpenPipelineSDLCEvents            ResourceType
-	OpenPipelineMetrics               ResourceType
-	OpenPipelineUserSessions          ResourceType
-	OpenPipelineDavisProblems         ResourceType
-	OpenPipelineDavisEvents           ResourceType
-	OpenPipelineSystemEvents          ResourceType
-	OpenPipelineUserEvents            ResourceType
-	OpenPipelineSpans                 ResourceType
-	CloudDevelopmentEnvironments      ResourceType
-	KubernetesSPM                     ResourceType
-	LogAgentFeatureFlags              ResourceType
-	ProblemRecordPropagationRules     ResourceType
-	ProblemFields                     ResourceType
-	AutomationControllerConnections   ResourceType
-	EventDrivenAnsibleConnections     ResourceType
-	ServiceNowConnection              ResourceType
-	PagerDutyConnection               ResourceType
-	MSTeamsConnection                 ResourceType
-	DefaultLaunchpad                  ResourceType
-	JenkinsConnection                 ResourceType
-	GitLabConnection                  ResourceType
-	MSEntraIDConnection               ResourceType
-	GitHubConnection                  ResourceType
-	Microsoft365EmailConnection       ResourceType
-	BusinessEventsCapturingVariants   ResourceType
-	WebAppAutoInjection               ResourceType
-	SecurityContext                   ResourceType
-	Segments                          ResourceType
-	PlatformSLO                       ResourceType
-	AppSecVulnerabilityThirdPartyK8s  ResourceType
-	AppSecVulnerabilityThirdPartyAttr ResourceType
-	WebAppCustomProperties            ResourceType
-	WebAppJavascriptFilename          ResourceType
-	ServiceSplittingRules             ResourceType
-	ServiceDetectionRules             ResourceType
-	WebAppIPAddressExclusion          ResourceType
-	RPCBasedSampling                  ResourceType
-	WebAppManualInsertion             ResourceType
-	SettingsPermissions               ResourceType
-	OpenPipelineV2IngestSource        ResourceType
-	OpenPipelineV2IngestSource2       ResourceType
+	DevObsAgentOptin                              ResourceType
+	DevObsDataMasking                             ResourceType
+	DavisCoPilot                                  ResourceType
+	OpenPipelineLogs                              ResourceType
+	OpenPipelineEvents                            ResourceType
+	OpenPipelineSecurityEvents                    ResourceType
+	OpenPipelineBusinessEvents                    ResourceType
+	OpenPipelineSDLCEvents                        ResourceType
+	OpenPipelineMetrics                           ResourceType
+	OpenPipelineUserSessions                      ResourceType
+	OpenPipelineDavisProblems                     ResourceType
+	OpenPipelineDavisEvents                       ResourceType
+	OpenPipelineSystemEvents                      ResourceType
+	OpenPipelineUserEvents                        ResourceType
+	OpenPipelineSpans                             ResourceType
+	CloudDevelopmentEnvironments                  ResourceType
+	KubernetesSPM                                 ResourceType
+	LogAgentFeatureFlags                          ResourceType
+	ProblemRecordPropagationRules                 ResourceType
+	ProblemFields                                 ResourceType
+	AutomationControllerConnections               ResourceType
+	EventDrivenAnsibleConnections                 ResourceType
+	ServiceNowConnection                          ResourceType
+	PagerDutyConnection                           ResourceType
+	MSTeamsConnection                             ResourceType
+	DefaultLaunchpad                              ResourceType
+	JenkinsConnection                             ResourceType
+	GitLabConnection                              ResourceType
+	MSEntraIDConnection                           ResourceType
+	GitHubConnection                              ResourceType
+	Microsoft365EmailConnection                   ResourceType
+	BusinessEventsCapturingVariants               ResourceType
+	WebAppAutoInjection                           ResourceType
+	SecurityContext                               ResourceType
+	Segments                                      ResourceType
+	PlatformSLO                                   ResourceType
+	AppSecVulnerabilityThirdPartyK8s              ResourceType
+	AppSecVulnerabilityThirdPartyAttr             ResourceType
+	WebAppCustomProperties                        ResourceType
+	WebAppJavascriptFilename                      ResourceType
+	ServiceSplittingRules                         ResourceType
+	ServiceDetectionRules                         ResourceType
+	WebAppIPAddressExclusion                      ResourceType
+	RPCBasedSampling                              ResourceType
+	WebAppManualInsertion                         ResourceType
+	SettingsPermissions                           ResourceType
+	OpenPipelineV2IngestSource                    ResourceType
+	OpenPipelineV2IngestSource2                   ResourceType
+	OpenPipelineV3AzureLogForwardingIngestSources ResourceType
+	OpenPipelineV3AzureLogForwardingPipelines     ResourceType
+	OpenPipelineV3AzureLogForwardingRouting       ResourceType
+	OpenPipelineV3BizeventsIngestSources          ResourceType
+	OpenPipelineV3BizeventsPipelines              ResourceType
+	OpenPipelineV3BizeventsRouting                ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -881,6 +887,12 @@ var ResourceTypes = struct {
 	"dynatrace_settings_permissions",
 	"dynatrace_openpipeline_v2_ingest_source",
 	"dynatrace_openpipeline_v2_ingest_source2",
+	"dynatrace_openpipeline_v3_azuge_log_forwarding_ingest_source",
+	"dynatrace_openpipeline_v3_azuge_log_forwarding_pipelines",
+	"dynatrace_openpipeline_v3_azuge_log_forwarding_routing",
+	"dynatrace_openpipeline_v3_bizevent_ingest_source",
+	"dynatrace_openpipeline_v3_bizevent_pipelines",
+	"dynatrace_openpipeline_v3_bizevent_routing",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

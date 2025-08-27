@@ -1,0 +1,182 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "ppx-management-service.ppx-management-service:8080/internal/settings-validation/v0.1/validate-container/routing-container-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Contains configuration of routing",
+	"displayName": "Ingest routing configuration",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"PipelineType": {
+			"description": "",
+			"displayName": "Pipeline Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Custom pipeline type",
+					"value": "custom"
+				},
+				{
+					"displayName": "Builtin pipeline type",
+					"value": "builtin"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"routingEntries": {
+			"constraints": [
+				{
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"description"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Routing for pipelines",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/RoutingEntry"
+				}
+			},
+			"maxObjects": 3000,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaId": "builtin:openpipeline.user.events.routing",
+	"types": {
+		"RoutingEntry": {
+			"description": "",
+			"displayName": "RoutingEntry",
+			"documentation": "",
+			"properties": {
+				"builtinPipelineId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "00000000-0000-0000-0000-000000000000",
+					"description": "",
+					"displayName": "Builtin Pipeline ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "builtin",
+						"property": "pipelineType",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"description": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 512,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?i)(?!dt\\.|dynatrace\\.).*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"matcher": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 1500,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Query which determines whether the record should be routed to the target pipeline of this rule.",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"pipelineId": {
+					"default": "00000000-0000-0000-0000-000000000000",
+					"description": "",
+					"displayName": "Pipeline ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "pipelineType",
+						"type": "EQUALS"
+					},
+					"referencedType": "builtin:openpipeline.user.events.pipelines",
+					"type": "setting"
+				},
+				"pipelineType": {
+					"default": "custom",
+					"description": "",
+					"displayName": "Pipeline Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/PipelineType"
+					}
+				}
+			},
+			"summaryPattern": "{description}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.6"
+}

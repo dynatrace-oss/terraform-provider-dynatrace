@@ -22,6 +22,12 @@ import (
 	"reflect"
 	"strings"
 
+	azureIngestSources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/ingestsources"
+	azurePipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/pipelines"
+	azureRouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/routing"
+	bizeventIngestSources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
+	bizeventPipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
+	bizeventRouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/routing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/ingestsource2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -1553,6 +1559,18 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinev2_ingestsource.Service),
 	ResourceTypes.OpenPipelineV2IngestSource2: NewResourceDescriptor(
 		ingestsource2.Service),
+	ResourceTypes.OpenPipelineV3AzureLogForwardingIngestSources: NewResourceDescriptor(
+		azureIngestSources.Service),
+	ResourceTypes.OpenPipelineV3AzureLogForwardingPipelines: NewResourceDescriptor(
+		azurePipelines.Service),
+	ResourceTypes.OpenPipelineV3AzureLogForwardingRouting: NewResourceDescriptor(
+		azureRouting.Service),
+	ResourceTypes.OpenPipelineV3BizeventsIngestSources: NewResourceDescriptor(
+		bizeventIngestSources.Service),
+	ResourceTypes.OpenPipelineV3BizeventsPipelines: NewResourceDescriptor(
+		bizeventPipelines.Service),
+	ResourceTypes.OpenPipelineV3BizeventsRouting: NewResourceDescriptor(
+		bizeventRouting.Service),
 }
 
 type ResourceExclusion struct {
