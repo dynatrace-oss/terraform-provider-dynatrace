@@ -33,8 +33,7 @@ func (da *FieldsRenameProcessor) Schema() map[string]*schema.Schema {
 	scm := new(ProcessorBasic).Schema()
 	scm["fields_rename"] = &schema.Schema{
 		Type:     schema.TypeList,
-		MaxItems: 1,
-		MinItems: 0,
+		Required: true,
 		Elem:     &schema.Resource{Schema: new(processors.FieldsRenameAttributes).Schema()},
 	}
 	return scm

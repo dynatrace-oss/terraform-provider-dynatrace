@@ -33,8 +33,7 @@ func (da *DqlProcessor) Schema() map[string]*schema.Schema {
 	scm := new(ProcessorBasic).Schema()
 	scm["dql"] = &schema.Schema{
 		Type:     schema.TypeList,
-		MaxItems: 1,
-		MinItems: 0,
+		Required: true,
 		Elem:     &schema.Resource{Schema: new(processors.DqlAttributes).Schema()},
 	}
 	return scm

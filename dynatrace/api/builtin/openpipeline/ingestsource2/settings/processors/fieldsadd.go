@@ -33,8 +33,7 @@ func (da *FieldsAddProcessor) Schema() map[string]*schema.Schema {
 	scm := new(ProcessorBasic).Schema()
 	scm["fields_add"] = &schema.Schema{
 		Type:     schema.TypeList,
-		MaxItems: 1,
-		MinItems: 0,
+		Required: true,
 		Elem:     &schema.Resource{Schema: new(processors.FieldsAddAttributes).Schema()},
 	}
 	return scm

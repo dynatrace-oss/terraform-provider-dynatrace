@@ -5,6 +5,8 @@
 
 apply.cmd
 main.tf
+.terraform/
+.terraform.lock.hcl
 terraform-provider-dynatrace
 terraform-provider-dynatrace.exe
 terraform-provider-dynatrace.log

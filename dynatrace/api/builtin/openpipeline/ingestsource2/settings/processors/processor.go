@@ -83,6 +83,7 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    0,
 			Elem:        &schema.Resource{Schema: new(FieldsAddProcessor).Schema()},
 			Description: "fields_add processor",
+			Optional:    true,
 		},
 		"fields_rename_processor": {
 			Type:        schema.TypeList,
@@ -90,6 +91,7 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    0,
 			Elem:        &schema.Resource{Schema: new(FieldsRenameProcessor).Schema()},
 			Description: "fields_rename processor",
+			Optional:    true,
 		},
 		"fields_remove_processor": {
 			Type:        schema.TypeList,
@@ -97,12 +99,14 @@ func (p *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    0,
 			Elem:        &schema.Resource{Schema: new(FieldsRemoveProcessor).Schema()},
 			Description: "fields_remove processor",
+			Optional:    true,
 		},
 		"drop_processor": {
 			Type:     schema.TypeList,
 			MaxItems: 1,
 			MinItems: 0,
 			Elem:     &schema.Resource{Schema: new(DropProcessor).Schema()},
+			Optional: true,
 		},
 	}
 }

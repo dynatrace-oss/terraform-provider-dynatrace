@@ -33,8 +33,7 @@ func (da *FieldsRemoveProcessor) Schema() map[string]*schema.Schema {
 	scm := new(ProcessorBasic).Schema()
 	scm["fields_remove"] = &schema.Schema{
 		Type:     schema.TypeList,
-		MaxItems: 1,
-		MinItems: 0,
+		Required: true,
 		Elem:     &schema.Resource{Schema: new(processors.FieldsRemoveAttributes).Schema()},
 	}
 	return scm

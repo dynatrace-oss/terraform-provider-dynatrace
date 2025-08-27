@@ -9,42 +9,32 @@ resource "dynatrace_openpipeline_v3_azuge_log_forwarding_ingest_source" "ingests
   }
   processing {
     processors {
-      type        = "drop"
-      enabled     = true
-      id          = "proc-1"
-      description = "my-proc-1"
-      sample_data = "my sample data"
-      matcher     = "not true"
-    }
-    processors {
-      type        = "dql"
-      enabled     = true
-      id          = "proc-2"
-      description = "my-proc-2"
-      sample_data = "my sample data"
-      matcher     = "not true"
       processor {
-        description = ""
-        enabled     = false
-        id          = ""
+        type        = "drop"
+        enabled     = true
+        id          = "proc-1"
+        description = "my-proc-1"
+        sample_data = "my sample data"
+        matcher     = "not true"
+      }
+      processor {
         type        = "dql"
+        enabled     = true
+        id          = "proc-2"
+        description = "my-proc-2"
+        sample_data = "my sample data"
+        matcher     = "not true"
         dql {
           script = "fieldsAdd true"
         }
       }
-    }
-    processors {
-      type        = "fieldsAdd"
-      enabled     = true
-      id          = "proc-3"
-      description = "my-proc-3"
-      sample_data = "my sample data"
-      matcher     = "not true"
       processor {
-        description = ""
-        enabled     = false
-        id          = ""
         type        = "fieldsAdd"
+        enabled     = true
+        id          = "proc-3"
+        description = "my-proc-3"
+        sample_data = "my sample data"
+        matcher     = "not true"
         fields_add {
           fields {
             field {
@@ -58,19 +48,13 @@ resource "dynatrace_openpipeline_v3_azuge_log_forwarding_ingest_source" "ingests
           }
         }
       }
-    }
-    processors {
-      type        = "fieldsRename"
-      enabled     = true
-      id          = "proc-4"
-      description = "my-proc-4"
-      sample_data = "my sample data"
-      matcher     = "not true"
       processor {
-        description = ""
-        enabled     = false
-        id          = ""
         type        = "fieldsRename"
+        enabled     = true
+        id          = "proc-4"
+        description = "my-proc-4"
+        sample_data = "my sample data"
+        matcher     = "not true"
         fields_rename {
           fields {
             field {
@@ -84,20 +68,13 @@ resource "dynatrace_openpipeline_v3_azuge_log_forwarding_ingest_source" "ingests
           }
         }
       }
-    }
-
-    processors {
-      type        = "fieldsRemove"
-      enabled     = true
-      id          = "proc-5"
-      description = "my-proc-5"
-      sample_data = "my sample data"
-      matcher     = "not true"
       processor {
-        description = ""
-        enabled     = false
-        id          = ""
         type        = "fieldsRemove"
+        enabled     = true
+        id          = "proc-5"
+        description = "my-proc-5"
+        sample_data = "my sample data"
+        matcher     = "not true"
         fields_remove {
           fields = ["to-remove-1", "to-remove-2"]
         }

@@ -15,7 +15,6 @@ resource "dynatrace_openpipeline_v2_ingest_source2" "ingestsource" {
         id          = "proc-1"
         description = "my-proc-1"
         sample_data = "my sample data"
-        matcher     = "not true"
       }
     }
     processor {
@@ -24,7 +23,6 @@ resource "dynatrace_openpipeline_v2_ingest_source2" "ingestsource" {
         id          = "proc-2"
         description = "my-proc-2"
         sample_data = "my sample data"
-        matcher     = "not true"
         dql {
           script = "fieldsAdd true"
         }
@@ -32,12 +30,10 @@ resource "dynatrace_openpipeline_v2_ingest_source2" "ingestsource" {
     }
     processor {
       fields_add_processor {
-        type        = "fieldsAdd"
         enabled     = true
         id          = "proc-3"
         description = "my-proc-3"
         sample_data = "my sample data"
-        matcher     = "not true"
         fields_add {
           field {
             name = "some-name"
@@ -52,12 +48,10 @@ resource "dynatrace_openpipeline_v2_ingest_source2" "ingestsource" {
     }
     processor {
       fields_rename_processor {
-        type        = "fieldsRename"
         enabled     = true
         id          = "proc-4"
         description = "my-proc-4"
         sample_data = "my sample data"
-        matcher     = "not true"
         fields_rename {
           field {
             from_name = "from-name"
@@ -73,12 +67,10 @@ resource "dynatrace_openpipeline_v2_ingest_source2" "ingestsource" {
 
     processor {
       fields_remove_processor {
-        type        = "fieldsRemove"
         enabled     = true
         id          = "proc-5"
         description = "my-proc-5"
         sample_data = "my sample data"
-        matcher     = "not true"
         fields_remove {
           fields = ["to-remove-1", "to-remove-2"]
         }
