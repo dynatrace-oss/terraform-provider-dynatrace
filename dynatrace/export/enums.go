@@ -523,6 +523,9 @@ var ResourceTypes = struct {
 	OpenPipelineV3BizeventsIngestSources          ResourceType
 	OpenPipelineV3BizeventsPipelines              ResourceType
 	OpenPipelineV3BizeventsRouting                ResourceType
+	OpenPipelineV3DavisEventsIngestSources        ResourceType
+	OpenPipelineV3DavisEventsPipelines            ResourceType
+	OpenPipelineV3DavisEventsRouting              ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -893,6 +896,9 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v3_bizevent_ingest_source",
 	"dynatrace_openpipeline_v3_bizevent_pipelines",
 	"dynatrace_openpipeline_v3_bizevent_routing",
+	"dynatrace_openpipeline_v3_davis_events_ingest_source",
+	"dynatrace_openpipeline_v3_davis_events_pipelines",
+	"dynatrace_openpipeline_v3_davis_events_routing",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

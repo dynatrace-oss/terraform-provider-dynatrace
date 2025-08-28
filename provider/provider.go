@@ -642,6 +642,9 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v3_bizevent_ingest_source":             resources.NewGeneric(export.ResourceTypes.OpenPipelineV3BizeventsIngestSources).Resource(),
 			"dynatrace_openpipeline_v3_bizevent_pipelines":                 resources.NewGeneric(export.ResourceTypes.OpenPipelineV3BizeventsPipelines).Resource(),
 			"dynatrace_openpipeline_v3_bizevent_routing":                   resources.NewGeneric(export.ResourceTypes.OpenPipelineV3BizeventsRouting).Resource(),
+			"dynatrace_openpipeline_v3_davis_events_ingest_source":         resources.NewGeneric(export.ResourceTypes.OpenPipelineV3DavisEventsIngestSources).Resource(),
+			"dynatrace_openpipeline_v3_davis_events_pipelines":             resources.NewGeneric(export.ResourceTypes.OpenPipelineV3DavisEventsPipelines).Resource(),
+			"dynatrace_openpipeline_v3_davis_events_routing":               resources.NewGeneric(export.ResourceTypes.OpenPipelineV3DavisEventsRouting).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

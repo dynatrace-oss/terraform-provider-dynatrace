@@ -29,6 +29,9 @@ import (
 	bizeventIngestSources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/bizevents/ingestsources"
 	bizeventPipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/bizevents/pipelines"
 	bizeventRouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/bizevents/routing"
+	davisEventIngestSources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/davis/events/ingestsources"
+	davisEventPipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/davis/events/pipelines"
+	davisEventRouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipelinev3/davis/events/routing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
@@ -1565,12 +1568,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		azurePipelines.Service),
 	ResourceTypes.OpenPipelineV3AzureLogForwardingRouting: NewResourceDescriptor(
 		azureRouting.Service),
-	ResourceTypes.OpenPipelineV3BizeventsIngestSources: NewResourceDescriptor(
-		bizeventIngestSources.Service),
-	ResourceTypes.OpenPipelineV3BizeventsPipelines: NewResourceDescriptor(
-		bizeventPipelines.Service),
-	ResourceTypes.OpenPipelineV3BizeventsRouting: NewResourceDescriptor(
-		bizeventRouting.Service),
+	ResourceTypes.OpenPipelineV3BizeventsIngestSources:   NewResourceDescriptor(bizeventIngestSources.Service),
+	ResourceTypes.OpenPipelineV3BizeventsPipelines:       NewResourceDescriptor(bizeventPipelines.Service),
+	ResourceTypes.OpenPipelineV3BizeventsRouting:         NewResourceDescriptor(bizeventRouting.Service),
+	ResourceTypes.OpenPipelineV3DavisEventsIngestSources: NewResourceDescriptor(davisEventIngestSources.Service),
+	ResourceTypes.OpenPipelineV3DavisEventsPipelines:     NewResourceDescriptor(davisEventPipelines.Service),
+	ResourceTypes.OpenPipelineV3DavisEventsRouting:       NewResourceDescriptor(davisEventRouting.Service),
 }
 
 type ResourceExclusion struct {
