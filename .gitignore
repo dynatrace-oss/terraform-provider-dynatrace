@@ -8,10 +8,12 @@ main.tf
 terraform-provider-dynatrace
 terraform-provider-dynatrace.exe
 terraform-provider-dynatrace.log
+.terraform/
+.terraform.lock.hcl
+__providers__.tf
 download.cmd
 build/*
 playground/*
-build/*
 configuration/*
 configuration_playground/*
 export.cmd
