@@ -387,6 +387,49 @@ import (
 	calculated_service_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/service"
 	calculated_synthetic_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
+
+	openpipelineazurelogsforwardingingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/ingestsources"
+	openpipelineazurelogsforwardingpipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/pipelines"
+	openpipelineazurelogsforwardingrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/routing"
+	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
+	openpipelinebizeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
+	openpipelinebizeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/routing"
+	openpipelinedaviseventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/ingestsources"
+	openpipelinedaviseventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelines"
+	openpipelinedaviseventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/routing"
+	openpipelinedavisproblemsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/ingestsources"
+	openpipelinedavisproblemspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelines"
+	openpipelinedavisproblemsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/routing"
+	openpipelineeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/ingestsources"
+	openpipelineeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelines"
+	openpipelineeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/routing"
+	openpipelineeventssdlcingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/ingestsources"
+	openpipelineeventssdlcpipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelines"
+	openpipelineeventssdlcrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/routing"
+	openpipelineeventssecurityingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/ingestsources"
+	openpipelineeventssecuritypipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelines"
+	openpipelineeventssecurityrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/routing"
+	openpipelinelogsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/ingestsources"
+	openpipelinelogspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelines"
+	openpipelinelogsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/routing"
+	openpipelinemetricsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/ingestsources"
+	openpipelinemetricspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelines"
+	openpipelinemetricsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/routing"
+	openpipelinesecurityeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/ingestsources"
+	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
+	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
+	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
+	openpipelinespanspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelines"
+	openpipelinespansrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/routing"
+	openpipelinesystemeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/ingestsources"
+	openpipelinesystemeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelines"
+	openpipelinesystemeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/routing"
+	openpipelineusereventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/ingestsources"
+	openpipelineusereventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelines"
+	openpipelineusereventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/routing"
+	openpipelineusersessionsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/ingestsources"
+	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
+	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -1609,6 +1652,133 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.CloudApplicationNamespace),
 		Coalesce(Dependencies.K8sCluster),
 		Coalesce(Dependencies.HostGroup),
+	),
+
+	ResourceTypes.OpenpipelineAzureLogsForwardingIngestsources: NewResourceDescriptor(
+		openpipelineazurelogsforwardingingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineAzureLogsForwardingPipelines),
+	),
+	ResourceTypes.OpenpipelineAzureLogsForwardingPipelines: NewResourceDescriptor(openpipelineazurelogsforwardingpipelines.Service),
+	ResourceTypes.OpenpipelineAzureLogsForwardingRouting: NewResourceDescriptor(
+		openpipelineazurelogsforwardingrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineAzureLogsForwardingPipelines),
+	),
+	ResourceTypes.OpenpipelineBizeventsIngestsources: NewResourceDescriptor(
+		openpipelinebizeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
+	),
+	ResourceTypes.OpenpipelineBizeventsPipelines: NewResourceDescriptor(openpipelinebizeventspipelines.Service),
+	ResourceTypes.OpenpipelineBizeventsRouting: NewResourceDescriptor(
+		openpipelinebizeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
+	),
+	ResourceTypes.OpenpipelineDavisEventsIngestsources: NewResourceDescriptor(
+		openpipelinedaviseventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineDavisEventsPipelines: NewResourceDescriptor(openpipelinedaviseventspipelines.Service),
+	ResourceTypes.OpenpipelineDavisEventsRouting: NewResourceDescriptor(
+		openpipelinedaviseventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineDavisProblemsIngestsources: NewResourceDescriptor(
+		openpipelinedavisproblemsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelines),
+	),
+	ResourceTypes.OpenpipelineDavisProblemsPipelines: NewResourceDescriptor(openpipelinedavisproblemspipelines.Service),
+	ResourceTypes.OpenpipelineDavisProblemsRouting: NewResourceDescriptor(
+		openpipelinedavisproblemsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsIngestsources: NewResourceDescriptor(
+		openpipelineeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsPipelines: NewResourceDescriptor(openpipelineeventspipelines.Service),
+	ResourceTypes.OpenpipelineEventsRouting: NewResourceDescriptor(
+		openpipelineeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsSdlcIngestsources: NewResourceDescriptor(
+		openpipelineeventssdlcingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsSdlcPipelines: NewResourceDescriptor(openpipelineeventssdlcpipelines.Service),
+	ResourceTypes.OpenpipelineEventsSdlcRouting: NewResourceDescriptor(
+		openpipelineeventssdlcrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsSecurityIngestsources: NewResourceDescriptor(
+		openpipelineeventssecurityingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsSecurityPipelines: NewResourceDescriptor(openpipelineeventssecuritypipelines.Service),
+	ResourceTypes.OpenpipelineEventsSecurityRouting: NewResourceDescriptor(
+		openpipelineeventssecurityrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelines),
+	),
+	ResourceTypes.OpenpipelineLogsIngestsources: NewResourceDescriptor(
+		openpipelinelogsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelines),
+	),
+	ResourceTypes.OpenpipelineLogsPipelines: NewResourceDescriptor(openpipelinelogspipelines.Service),
+	ResourceTypes.OpenpipelineLogsRouting: NewResourceDescriptor(
+		openpipelinelogsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelines),
+	),
+	ResourceTypes.OpenpipelineMetricsIngestsources: NewResourceDescriptor(
+		openpipelinemetricsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
+	),
+	ResourceTypes.OpenpipelineMetricsPipelines: NewResourceDescriptor(openpipelinemetricspipelines.Service),
+	ResourceTypes.OpenpipelineMetricsRouting: NewResourceDescriptor(
+		openpipelinemetricsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
+	),
+	ResourceTypes.OpenpipelineSecurityEventsIngestsources: NewResourceDescriptor(
+		openpipelinesecurityeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSecurityEventsPipelines: NewResourceDescriptor(openpipelinesecurityeventspipelines.Service),
+	ResourceTypes.OpenpipelineSecurityEventsRouting: NewResourceDescriptor(
+		openpipelinesecurityeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSpansIngestsources: NewResourceDescriptor(
+		openpipelinespansingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
+	),
+	ResourceTypes.OpenpipelineSpansPipelines: NewResourceDescriptor(openpipelinespanspipelines.Service),
+	ResourceTypes.OpenpipelineSpansRouting: NewResourceDescriptor(
+		openpipelinespansrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
+	),
+	ResourceTypes.OpenpipelineSystemEventsIngestsources: NewResourceDescriptor(
+		openpipelinesystemeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSystemEventsPipelines: NewResourceDescriptor(openpipelinesystemeventspipelines.Service),
+	ResourceTypes.OpenpipelineSystemEventsRouting: NewResourceDescriptor(
+		openpipelinesystemeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineUserEventsIngestsources: NewResourceDescriptor(
+		openpipelineusereventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineUserEventsPipelines: NewResourceDescriptor(openpipelineusereventspipelines.Service),
+	ResourceTypes.OpenpipelineUserEventsRouting: NewResourceDescriptor(
+		openpipelineusereventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineUsersessionsIngestsources: NewResourceDescriptor(
+		openpipelineusersessionsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
+	),
+	ResourceTypes.OpenpipelineUsersessionsPipelines: NewResourceDescriptor(openpipelineusersessionspipelines.Service),
+	ResourceTypes.OpenpipelineUsersessionsRouting: NewResourceDescriptor(
+		openpipelineusersessionsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 }
 
