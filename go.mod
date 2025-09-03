@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/dlclark/regexp2 v1.11.4
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20250723103928-4514849be7dd
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20250905103528-c99bf3fc94c4
 	github.com/go-logr/logr v1.4.3
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
@@ -17,7 +17,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.35.0
 	github.com/spf13/afero v1.11.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/zclconf/go-cty v1.15.1
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67
 	golang.org/x/oauth2 v0.30.0
