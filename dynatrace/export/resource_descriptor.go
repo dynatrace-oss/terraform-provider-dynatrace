@@ -455,6 +455,50 @@ func (me ResourceDescriptor) NewSettings() settings.Settings {
 	return res
 }
 
+func (me ResourceDescriptor) HasWeakIDDependencyTo(resType ResourceType) bool {
+	for _, dependency := range me.Dependencies {
+		if iddependency, ok := dependency.(*iddep); ok {
+			if iddependency.resourceType != resType {
+				continue
+			}
+			if !iddependency.onlyNonPostProcessed {
+				continue
+			}
+			return true
+		}
+	}
+	return false
+}
+
+func IsSettings20Schema(schemaID string) bool {
+	return strings.HasPrefix(schemaID, "builtin:") || strings.HasPrefix(schemaID, "app:")
+}
+
+func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) bool {
+	return IsSettings20Schema(schemaID) && settings.HasInsertAfter(protoType)
+}
+
+// AddInsertAfterWeakIDDependencies completes the configured
+// Resource Descriptors for every resource that is orderable
+// using the mechanism Settings 2.0.
+// The `insert_after` attribute allows for ordering settings.
+// The export functionality needs to know that these kinds of
+// settings are allowed to contain IDs to the same resource type
+// in order to replace hardcoded IDs in there.
+// `Dependencies.WeakID` takes care of that.
+func AddInsertAfterWeakIDDependencies() {
+	for resType, descriptor := range AllResources {
+		schemaID := descriptor.Service(&rest.Credentials{}).SchemaID()
+		if !ContainsInsertAfterAttribute(descriptor.protoType, schemaID) {
+			continue
+		}
+		if descriptor.HasWeakIDDependencyTo(resType) {
+			continue
+		}
+		descriptor.Dependencies = append(descriptor.Dependencies, Dependencies.WeakID(resType))
+	}
+}
+
 var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Alerting: NewResourceDescriptor(
 		alerting.Service,
@@ -1190,6 +1234,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.LogStorage: NewResourceDescriptor(
 		logstoragesettings.Service,
+		Dependencies.ID(ResourceTypes.LogStorage),
 		Coalesce(Dependencies.Host),
 		Coalesce(Dependencies.K8sCluster),
 		Coalesce(Dependencies.HostGroup),
@@ -1431,8 +1476,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		networkoutagehandling.Service,
 		Dependencies.ID(ResourceTypes.NetworkMonitor),
 	),
-	ResourceTypes.HubPermissions:             NewResourceDescriptor(hubpermissions.Service),
-	ResourceTypes.K8sAutomationConnections:   NewResourceDescriptor(k8sautomationconnections.Service),
+	ResourceTypes.HubPermissions: NewResourceDescriptor(hubpermissions.Service),
+	ResourceTypes.K8sAutomationConnections: NewResourceDescriptor(
+		k8sautomationconnections.Service,
+		Dependencies.WeakID(ResourceTypes.K8sAutomationConnections),
+	),
 	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
 	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
 	ResourceTypes.DiscoveryFeatureFlags:      NewResourceDescriptor(featureflags.Service),
