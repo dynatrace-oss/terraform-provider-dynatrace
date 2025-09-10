@@ -26,7 +26,7 @@ type DavisEventProperties []*DavisEventProperty
 
 func (me *DavisEventProperties) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"propertie": {
+		"property": {
 			Type:        schema.TypeList,
 			Required:    true,
 			MinItems:    1,
@@ -37,11 +37,11 @@ func (me *DavisEventProperties) Schema() map[string]*schema.Schema {
 }
 
 func (me DavisEventProperties) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeSlice("propertie", me)
+	return properties.EncodeSlice("property", me)
 }
 
 func (me *DavisEventProperties) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("propertie", me)
+	return decoder.DecodeSlice("property", me)
 }
 
 type DavisEventProperty struct {
