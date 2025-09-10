@@ -29,7 +29,7 @@ type RoutingEntries []*RoutingEntry
 
 func (me *RoutingEntries) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"routing_entrie": {
+		"routing_entry": {
 			Type:        schema.TypeList,
 			Required:    true,
 			MinItems:    1,
@@ -40,11 +40,11 @@ func (me *RoutingEntries) Schema() map[string]*schema.Schema {
 }
 
 func (me RoutingEntries) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeSlice("routing_entrie", me)
+	return properties.EncodeSlice("routing_entry", me)
 }
 
 func (me *RoutingEntries) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("routing_entrie", me)
+	return decoder.DecodeSlice("routing_entry", me)
 }
 
 type RoutingEntry struct {
