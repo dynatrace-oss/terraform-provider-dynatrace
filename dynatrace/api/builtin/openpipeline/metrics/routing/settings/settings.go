@@ -50,3 +50,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"routing_entries": &me.RoutingEntries,
 	})
 }
+
+func (me *Settings) Name() string {
+	return "openpipeline_v2_metrics_routing"
+}
