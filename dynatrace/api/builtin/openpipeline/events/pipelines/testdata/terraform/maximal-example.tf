@@ -182,68 +182,10 @@ resource "dynatrace_openpipeline_v2_events_pipelines" "max-pipeline" {
     }
   }
   cost_allocation {
-    processors {
-      processor {
-        type        = "costAllocation"
-        id          = "processor_Assign_dt.cost.costcenter__if_set_3502"
-        description = "Assign dt.cost.costcenter, if set"
-        matcher     = "isNotNull(dt.cost.costcenter)"
-        cost_allocation {
-          value {
-            type = "field"
-            field {
-              source_field_name = "dt.cost.costcenter"
-            }
-          }
-        }
-        enabled = true
-      }
-      processor {
-        type        = "costAllocation"
-        id          = "processor_Assign_ACME_cost_center__if_not_set_4546"
-        description = "Assign ACME cost center, if not set"
-        matcher     = "isNull(dt.cost.costcenter)"
-        cost_allocation {
-          value {
-            type = "constant"
-            constant = "ACME"
-          }
-        }
-        enabled = true
-      }
-    }
+
   }
   product_allocation {
-    processors {
-      processor {
-        type        = "productAllocation"
-        id          = "processor_Assign_dt.cost.product_if_set_3161"
-        description = "Assign dt.cost.product if set"
-        matcher     = "isNotNull(dt.cost.product)"
-        product_allocation {
-          value {
-            type = "field"
-            field {
-              source_field_name = "dt.cost.product"
-            }
-          }
-        }
-        enabled = true
-      }
-      processor {
-        type        = "productAllocation"
-        id          = "processor_Assign_generic_product__if_not_set_8961"
-        description = "Assign generic product, if not set"
-        matcher     = "isNull(dt.cost.product)"
-        product_allocation {
-          value {
-            type = "constant"
-            constant = "generic"
-          }
-        }
-        enabled = true
-      }
-    }
+
   }
   storage {
     processors {
