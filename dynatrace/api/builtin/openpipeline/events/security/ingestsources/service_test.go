@@ -24,5 +24,7 @@ import (
 )
 
 func TestOpenPipelineEventsSecurityIngestSources(t *testing.T) {
+	t.Skip("Feature not enabled")
+
 	api.TestAcc(t)
 }
