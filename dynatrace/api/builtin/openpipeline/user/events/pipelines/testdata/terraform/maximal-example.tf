@@ -2,96 +2,98 @@ resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
   custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
   processing {
-    processors {
-      processor {
-        type        = "drop"
-        id          = "processor_Drop_unnecessary_records_3802"
-        description = "Drop unnecessary records"
-        matcher     = "not matchesPhrase(record.name, \"Warning\")"
-        enabled     = true
-      }
-      processor {
-        type        = "fieldsAdd"
-        id          = "processor_Add_warning_flag_5434"
-        description = "Add warning flag"
-        matcher     = "matchesPhrase(record.name, \"Warning\")"
-        sample_data = "{\n  \"record.name\": \"Warning record\" \n}"
-        fields_add {
-          fields {
-            field {
-              name  = "is_warning"
-              value = "true"
-            }
-          }
-        }
-        enabled = true
-      }
-      processor {
-        type        = "fieldsRemove"
-        id          = "processor_Remove_details_field_8539"
-        description = "Remove details field"
-        sample_data = "{\n  \"record.name\": \"Warning\",\n  \"record.details\": \"some record details\"\n}"
-        matcher     = "isNotNull(record.details)"
-        fields_remove {
-          fields = ["record.details"]
-        }
-        enabled     = true
-      }
-      processor {
-        type        = "fieldsRename"
-        id          = "processor_Rename_name_to_title_8530"
-        description = "Rename name to title"
-        sample_data = "{\n  \"record.name\": \"Warning\"\n}"
-        matcher     = "true"
-        fields_rename {
-          fields {
-            field {
-              from_name = "record.name"
-              to_name   = "record.title"
-            }
-          }
-        }
-        enabled     = true
-      }
-      processor {
-        type        = "dql"
-        id          = "processor_Combine_title_and_summary_to_name_8808"
-        description = "Combine title and summary to name"
-        sample_data = "{\n  \"record.title\": \"Warning\",\n  \"record.summary\": \"Request failed\"\n}"
-        matcher     = "true"
-        dql {
-          script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
-        }
-        enabled     = true
-      }
-    }
+    # processing is not available for system_events pipelines
+    # processors {
+    #   processor {
+    #     type        = "drop"
+    #     id          = "processor_Drop_unnecessary_records_3802"
+    #     description = "Drop unnecessary records"
+    #     matcher     = "not matchesPhrase(record.name, \"Warning\")"
+    #     enabled     = true
+    #   }
+    #   processor {
+    #     type        = "fieldsAdd"
+    #     id          = "processor_Add_warning_flag_5434"
+    #     description = "Add warning flag"
+    #     matcher     = "matchesPhrase(record.name, \"Warning\")"
+    #     sample_data = "{\n  \"record.name\": \"Warning record\" \n}"
+    #     fields_add {
+    #       fields {
+    #         field {
+    #           name  = "is_warning"
+    #           value = "true"
+    #         }
+    #       }
+    #     }
+    #     enabled = true
+    #   }
+    #   processor {
+    #     type        = "fieldsRemove"
+    #     id          = "processor_Remove_details_field_8539"
+    #     description = "Remove details field"
+    #     sample_data = "{\n  \"record.name\": \"Warning\",\n  \"record.details\": \"some record details\"\n}"
+    #     matcher     = "isNotNull(record.details)"
+    #     fields_remove {
+    #       fields = ["record.details"]
+    #     }
+    #     enabled     = true
+    #   }
+    #   processor {
+    #     type        = "fieldsRename"
+    #     id          = "processor_Rename_name_to_title_8530"
+    #     description = "Rename name to title"
+    #     sample_data = "{\n  \"record.name\": \"Warning\"\n}"
+    #     matcher     = "true"
+    #     fields_rename {
+    #       fields {
+    #         field {
+    #           from_name = "record.name"
+    #           to_name   = "record.title"
+    #         }
+    #       }
+    #     }
+    #     enabled     = true
+    #   }
+    #   processor {
+    #     type        = "dql"
+    #     id          = "processor_Combine_title_and_summary_to_name_8808"
+    #     description = "Combine title and summary to name"
+    #     sample_data = "{\n  \"record.title\": \"Warning\",\n  \"record.summary\": \"Request failed\"\n}"
+    #     matcher     = "true"
+    #     dql {
+    #       script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
+    #     }
+    #     enabled     = true
+    #   }
+    # }
   }
   davis {
-    processors {
-      processor {
-        type        = "davis"
-        id          = "processor_Create_warning_event_8226"
-        description = "Create warning event"
-        matcher     = "true"
-        davis {
-          properties {
-            property {
-              key = "event.type"
-              value = "CUSTOM_ALERT"
-            }
-            property {
-              key = "event.name"
-              value = "Warning detected"
-            }
-            property {
-              key = "event.description"
-              value = "Warning: {dims:record.summary}"
-            }
-          }
-        }
-        enabled = true
-      }
-    }
+    # davis is not available for user_events pipelines
+    # processors {
+    #   processor {
+    #     type        = "davis"
+    #     id          = "processor_Create_warning_event_8226"
+    #     description = "Create warning event"
+    #     matcher     = "true"
+    #     davis {
+    #       properties {
+    #         property {
+    #           key = "event.type"
+    #           value = "CUSTOM_ALERT"
+    #         }
+    #         property {
+    #           key = "event.name"
+    #           value = "Warning detected"
+    #         }
+    #         property {
+    #           key = "event.description"
+    #           value = "Warning: {dims:record.summary}"
+    #         }
+    #       }
+    #     }
+    #     enabled = true
+    #   }
+    # }
   }
   metric_extraction {
     processors {
@@ -188,18 +190,19 @@ resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
 
   }
   storage {
-    processors {
-      processor {
-        type        = "bucketAssignment"
-        id          = "processor_Add_to_default_bucket_5010"
-        description = "Add to default bucket"
-        matcher     = "true"
-        bucket_assignment {
-          bucket_name = "default_events"
-        }
-        enabled = true
-      }
-    }
+    # storage is not available for user_events pipelines
+    # processors {
+    #   processor {
+    #     type        = "bucketAssignment"
+    #     id          = "processor_Add_to_default_bucket_5010"
+    #     description = "Add to default bucket"
+    #     matcher     = "true"
+    #     bucket_assignment {
+    #       bucket_name = "default_events"
+    #     }
+    #     enabled = true
+    #   }
+    # }
   }
   data_extraction {}
 }
