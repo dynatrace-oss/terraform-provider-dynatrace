@@ -24,5 +24,7 @@ import (
 )
 
 func TestOpenPipelineAzureLogsForwardingRouting(t *testing.T) {
+	t.Skip("Feature not enabled")
+
 	api.TestAcc(t)
 }
