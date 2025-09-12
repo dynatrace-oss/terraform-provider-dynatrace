@@ -24,5 +24,7 @@ import (
 )
 
 func TestOpenPipelineDavisEventsIngestSources(t *testing.T) {
+	t.Skip("Custom ingest sources not allowed")
+
 	api.TestAcc(t)
 }
