@@ -18,6 +18,10 @@ type Configuration struct {
 	Routing        *RoutingTable `json:"routing"`
 }
 
+func (me *Configuration) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please migrate your openpipeline configurations and use `dynatrace_openpipeline_v2_*` instead."
+}
+
 func (d *Configuration) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"endpoints": {
