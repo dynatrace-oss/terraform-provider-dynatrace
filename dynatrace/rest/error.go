@@ -243,7 +243,7 @@ func (me Error) Error() string {
 	return msg
 }
 
-func (me Error) ViolationMessage() string {
+func (me Error) ViolationMessage(alwaysIncludePath bool) string {
 	if len(me.ConstraintViolations) == 0 {
 		return ""
 	}
@@ -252,13 +252,21 @@ func (me Error) ViolationMessage() string {
 		if len(result) > 0 {
 			result = result + "\n"
 		}
-		if strings.Contains(violation.Message, "must not be null") || strings.Contains(violation.Message, "Element may not be null on creation") {
-			result = result + violation.Path + " " + violation.Message
+		if alwaysIncludePath || strings.Contains(violation.Message, "must not be null") || strings.Contains(violation.Message, "Element may not be null on creation") {
+			result = result + removeSchemaAndObjectIndexFromConstraintViolationPath(violation.Path) + ": " + violation.Message
 		} else {
 			result = result + violation.Message
 		}
 	}
 	return result
+}
+
+func removeSchemaAndObjectIndexFromConstraintViolationPath(path string) string {
+	pathSubstrings := strings.SplitN(path, "/", 3)
+	if len(pathSubstrings) < 3 {
+		return path
+	}
+	return strings.Join(pathSubstrings[2:], "/")
 }
 
 type ConstraintViolation struct {
