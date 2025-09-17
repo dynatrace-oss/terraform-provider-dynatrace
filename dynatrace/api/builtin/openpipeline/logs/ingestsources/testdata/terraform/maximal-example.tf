@@ -73,4 +73,3 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
     }
   }
 }
-
