@@ -24,5 +24,7 @@ import (
 )
 
 func TestAccExtensionExecutionControllerRemote(t *testing.T) {
+	t.Skip("Skipped, as a valid environment ActiveGate scope is required. Can be enabled again, if/when we setup said ActiveGate for the e2e test tenant.")
+
 	api.TestAcc(t)
 }
