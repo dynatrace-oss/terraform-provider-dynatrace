@@ -73,4 +73,3 @@ resource "dynatrace_openpipeline_v2_azure_logs_forwarding_ingestsources" "maxima
     }
   }
 }
-

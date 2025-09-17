@@ -73,4 +73,3 @@ resource "dynatrace_openpipeline_v2_davis_problems_ingestsources" "maximal-sourc
     }
   }
 }
-
