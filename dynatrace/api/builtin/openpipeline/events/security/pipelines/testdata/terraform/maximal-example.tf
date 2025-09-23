@@ -1,4 +1,4 @@
-resource "dynatrace_openpipeline_v2_events_pipelines" "max-pipeline" {
+resource "dynatrace_openpipeline_v2_events_security_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
   custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
   processing {

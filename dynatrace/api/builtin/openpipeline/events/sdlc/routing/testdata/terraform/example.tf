@@ -1,4 +1,4 @@
-resource "dynatrace_openpipeline_v2_events_routing" "routing" {
+resource "dynatrace_openpipeline_v2_events_sdlc_routing" "routing" {
   routing_entries {
     routing_entry {
       enabled             = true
