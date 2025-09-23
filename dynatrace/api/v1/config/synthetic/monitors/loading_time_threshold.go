@@ -28,7 +28,7 @@ type LoadingTimeThresholds []*LoadingTimeThreshold
 func (me *LoadingTimeThresholds) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"threshold": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Description: "The list of performance threshold rules",
 			Required:    true,
 			MinItems:    1,
