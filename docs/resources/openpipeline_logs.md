@@ -287,6 +287,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_type"></a>
@@ -300,6 +301,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction"></a>
@@ -570,6 +572,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 

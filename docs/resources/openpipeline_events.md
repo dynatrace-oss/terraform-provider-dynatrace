@@ -173,6 +173,18 @@ resource "dynatrace_openpipeline_events" "events" {
             }
           }
         }
+        processor {
+          security_context_processor {
+            description = "Custom security context 3"
+            enabled     = true
+            id          = "processor_Custom_security_context_2_9053"
+            matcher     = "true"
+            value {
+              type  = "multiValueConstant"
+              multi_value_constant = ["multi", "value"]
+            }
+          }
+        }
       }
       storage {
         catch_all_bucket_name = "default_events"
@@ -442,6 +454,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_type"></a>
@@ -455,6 +468,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction"></a>
@@ -725,6 +739,7 @@ Optional:
 
 - `constant` (String) Strategy to assign a value
 - `field` (String) Strategy to assign a value
+- `multi_value_constant` (List of String) Strategy to assign a value
 
 
 

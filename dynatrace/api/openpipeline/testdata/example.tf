@@ -116,6 +116,18 @@ resource "dynatrace_openpipeline" "this" {
               }
             }
           }
+          processor {
+            security_context_processor {
+              description = "Custom security context 3"
+              enabled     = true
+              id          = "processor_Custom_security_context_2_9053"
+              matcher     = "true"
+              value {
+                type  = "multiValueConstant"
+                multi_value_constant = ["multi", "value"]
+              }
+            }
+          }
         }
         storage {
           editable              = true

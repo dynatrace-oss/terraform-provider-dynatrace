@@ -497,9 +497,10 @@ func (ep *DavisEventProperty) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type ValueAssignment struct {
 	// Type Defines the actual set of fields depending on the value. See one of the following objects:
-	Type     string  `json:"type"`
-	Field    *string `json:"field"`
-	Constant *string `json:"constant,omitempty"`
+	Type               string   `json:"type"`
+	Field              *string  `json:"field"`
+	Constant           *string  `json:"constant,omitempty"`
+	MultiValueConstant []string `json:"multiValueConstant,omitempty"`
 }
 
 func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
@@ -519,24 +520,32 @@ func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
 			Description: "Strategy to assign a value",
 			Optional:    true,
 		},
+		"multi_value_constant": {
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Strategy to assign a value",
+			Optional:    true, // precondition
+		},
 	}
 
 }
 
 func (ep *ValueAssignment) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"type":     ep.Type,
-		"field":    ep.Field,
-		"constant": ep.Constant,
+		"type":                 ep.Type,
+		"field":                ep.Field,
+		"constant":             ep.Constant,
+		"multi_value_constant": ep.MultiValueConstant,
 	})
 }
 
 func (ep *ValueAssignment) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	return decoder.DecodeAll(map[string]any{
-		"type":     &ep.Type,
-		"field":    &ep.Field,
-		"constant": &ep.Constant,
+		"type":                 &ep.Type,
+		"field":                &ep.Field,
+		"constant":             &ep.Constant,
+		"multi_value_constant": &ep.MultiValueConstant,
 	})
 }
 
