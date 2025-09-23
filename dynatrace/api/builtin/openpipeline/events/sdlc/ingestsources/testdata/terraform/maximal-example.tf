@@ -1,4 +1,4 @@
-resource "dynatrace_openpipeline_v2_events_ingestsources" "maximal-source" {
+resource "dynatrace_openpipeline_v2_events_sdlc_ingestsources" "maximal-source" {
   enabled = true
   display_name = "max-ingestsource"
   path_segment = "processor.ingestsource.path.max.tf.#name#"
