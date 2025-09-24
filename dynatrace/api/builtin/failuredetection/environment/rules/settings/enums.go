@@ -38,7 +38,6 @@ var Attributess = struct {
 type ServiceTypes string
 
 var ServiceTypess = struct {
-	Amp                  ServiceTypes
 	Cics                 ServiceTypes
 	Cicsinteraction      ServiceTypes
 	Customapplication    ServiceTypes
@@ -61,7 +60,6 @@ var ServiceTypess = struct {
 	Website              ServiceTypes
 	Zosconnect           ServiceTypes
 }{
-	"AMP",
 	"CICS",
 	"CICSInteraction",
 	"CustomApplication",
