@@ -4,7 +4,7 @@
 	],
 	"constraints": [
 		{
-			"customMessage": "Measure cannot be changed, please create a new metric instead.",
+			"customMessage": "Please create a new metric with a different name to change the measure type.",
 			"customValidatorId": "measure-not-changed-validator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -68,6 +68,11 @@
 					{
 						"customMessage": "trace_id cannot be a dimension",
 						"pattern": "^(?!trace_id$).+$",
+						"type": "PATTERN"
+					},
+					{
+						"customMessage": "Selected attribute cannot be a dimension",
+						"pattern": "^(?!(?:content|value|metric\\.key|metric\\.type|timestamp|smartscape_type)$).*$",
 						"type": "PATTERN"
 					}
 				],
@@ -250,6 +255,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Metric with the specified key already exists.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"key"
@@ -262,5 +268,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.schemaless-log-metric",
 	"types": {},
-	"version": "8.0.51"
+	"version": "8.0.52"
 }

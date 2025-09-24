@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.3.7"
+const SchemaVersion = "1.3.12"
 const SchemaID = "builtin:os-services-monitoring"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*osservicesmonitoring.Settings] {

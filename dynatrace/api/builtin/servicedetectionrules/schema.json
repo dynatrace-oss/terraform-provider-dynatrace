@@ -63,6 +63,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Rule name must be unique.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"rule.ruleName"
@@ -126,11 +127,6 @@
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
-							"customValidatorId": "dql-syntax-validator",
-							"skipAsyncValidation": false,
-							"type": "CUSTOM_VALIDATOR_REF"
-						},
-						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -145,7 +141,7 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
-					"subType": "code/dql",
+					"subType": "code",
 					"type": "text"
 				},
 				"description": {
@@ -245,5 +241,5 @@
 			]
 		}
 	},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }

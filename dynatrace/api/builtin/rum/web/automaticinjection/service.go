@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.2.2"
+const SchemaVersion = "1.2.3"
 const SchemaID = "builtin:rum.web.automatic-injection"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*automaticinjection.Settings] {

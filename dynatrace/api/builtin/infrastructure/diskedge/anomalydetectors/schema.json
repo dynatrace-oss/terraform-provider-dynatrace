@@ -172,12 +172,12 @@
 			"type": "set"
 		},
 		"hostMetadataConditions": {
-			"description": "The policy will be enabled if **all** conditions are met",
-			"displayName": "Host custom metadata conditions",
-			"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+			"description": "",
+			"displayName": "Host resource attributes conditions",
+			"documentation": "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 			"items": {
 				"description": "",
-				"displayName": "Custom metadata",
+				"displayName": "Resource attribute",
 				"documentation": "",
 				"type": {
 					"$ref": "#/types/HostMetadataConditionType"
@@ -232,6 +232,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Policy name already exists. Please provide a different one.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"policyName"
@@ -466,7 +467,7 @@
 					"default": true,
 					"description": "",
 					"displayName": "Key must exist",
-					"documentation": "When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
+					"documentation": "When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.297"
@@ -492,7 +493,7 @@
 					"default": "",
 					"description": "",
 					"displayName": "Condition",
-					"documentation": "This string has to match a required format.\n\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+					"documentation": "This string has to match a required format.\n\n- `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.\n- `$eq(production)` – Matches if `production` matches the host metadata value exactly.\n- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.\n- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.\n\nAvailable logic operations:\n- `$not($eq(production))` – Matches if the host metadata value is different from `production`.\n- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.\n- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 					"maxObjects": 1,
 					"metadata": {
 						"placeholder": "Required"
@@ -528,10 +529,10 @@
 					"type": "text"
 				}
 			},
-			"summaryPattern": "Custom metadata ",
+			"summaryPattern": "Resource attribute ",
 			"type": "object",
-			"version": "1",
-			"versionInfo": "Added Key must exist boolean value."
+			"version": "2",
+			"versionInfo": "Moved from custom metadata to resource attributes"
 		},
 		"HostMetadataConditionType": {
 			"description": "",
@@ -798,5 +799,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.18"
+	"version": "0.0.19"
 }

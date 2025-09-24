@@ -4,6 +4,14 @@
 		"HOST_GROUP",
 		"environment"
 	],
+	"constraints": [
+		{
+			"customMessage": "At least one non-host scope detection rule must be defined",
+			"customValidatorId": "requireOneNonHostScopedRule",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "This feature allows you to monitor if a minimum number of processes matching the specified monitoring rule are running on your host. If there aren't enough processes matching the rule, you receive an alert. If you also enable **Process instance snapshots**, you receive a detailed report on the activity of the most resource-consuming processes, as well as on the latest activity of the processes matching the rule.",
 	"displayName": "Process availability",
 	"documentation": "\n\nIn order to monitor the availability of a certain group of processes, you must first define a monitoring rule. Give your monitoring rule a unique name and add its detection rules to which Dynatrace will match the processes on your host.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37)",
@@ -256,8 +264,8 @@
 				},
 				"hostMetadataCondition": {
 					"description": "",
-					"displayName": "Custom metadata",
-					"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+					"displayName": "Resource attribute",
+					"documentation": "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.287"
@@ -326,7 +334,7 @@
 					"default": true,
 					"description": "",
 					"displayName": "Key must exist",
-					"documentation": "When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
+					"documentation": "When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.297"
@@ -388,10 +396,10 @@
 					"type": "text"
 				}
 			},
-			"summaryPattern": "Custom metadata ",
+			"summaryPattern": "Resource attribute ",
 			"type": "object",
-			"version": "1",
-			"versionInfo": "Added Key must exist boolean value."
+			"version": "2",
+			"versionInfo": "Moved from custom metadata to resource attributes"
 		},
 		"MetadataItem": {
 			"description": "",
@@ -464,5 +472,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.11"
+	"version": "1.0.15"
 }

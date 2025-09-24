@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "8.0.51"
+const SchemaVersion = "8.0.52"
 const SchemaID = "builtin:logmonitoring.schemaless-log-metric"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*schemalesslogmetric.Settings] {
