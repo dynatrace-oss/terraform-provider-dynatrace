@@ -1,6 +1,7 @@
 resource "dynatrace_site_reliability_guardian" "#name#" {
   name = "Test"
   tags = [ "stage:staging" ]
+  event_kind = "BIZ_EVENT"
   objectives {
     objective {
       name                = "Error rate"

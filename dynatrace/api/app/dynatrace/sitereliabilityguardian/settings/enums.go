@@ -27,6 +27,16 @@ var ComparisonOperators = struct {
 	"LESS_THAN_OR_EQUAL",
 }
 
+type EventKind string
+
+var EventKinds = struct {
+	BizEvent  EventKind
+	SdlcEvent EventKind
+}{
+	"BIZ_EVENT",
+	"SDLC_EVENT",
+}
+
 type ObjectiveType string
 
 var ObjectiveTypes = struct {
