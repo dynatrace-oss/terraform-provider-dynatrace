@@ -95,7 +95,7 @@
 						"identifier": "groupIdDataSource",
 						"resetValue": "NEVER",
 						"useApiSearch": false,
-						"validate": true
+						"validate": false
 					},
 					"default": "",
 					"description": "User group to show selected dashboard preset to",
@@ -117,5 +117,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.9.13"
+	"version": "0.9.14"
 }

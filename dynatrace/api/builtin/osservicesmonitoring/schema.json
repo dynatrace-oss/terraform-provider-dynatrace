@@ -4,6 +4,14 @@
 		"HOST_GROUP",
 		"environment"
 	],
+	"constraints": [
+		{
+			"customMessage": "At least one non-host scope detection rule must be defined",
+			"customValidatorId": "requireOneNonHostScopedRule",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Set up alerts for OS services in undesirable states both for Windows and Linux systemd.\n Note: If monitoring is turned on for full availability metric, custom metric consumption takes place. Refer to [documentation](https://dt-url.net/vl03xzk) for more details.\n\nPlease provide feedback to us about this feature on [Dynatrace Community](https://dt-url.net/nl02tbm).",
 	"displayName": "OS services monitoring",
 	"documentation": "\n\nIn order to set up the alert for a certain group of OS services, you must first define a new policy. Specify which service's states you would like to be alerted about and then add detection rules in order to tell Dynatrace which exact OS services you are interested in. You may specify multiple detection rules.\n\nNote that policies are specified for each of supported operating systems individually and that some of the parameters and properties vary between them.",
@@ -232,7 +240,7 @@
 			"default": false,
 			"description": "",
 			"displayName": "Monitor",
-			"documentation": "Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.",
+			"documentation": "Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.\n\n**The feature can't be configured on hosts in Discovery mode**",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.243"
@@ -376,6 +384,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Specified name already exists. Please provide a different name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -396,7 +405,7 @@
 					"default": true,
 					"description": "",
 					"displayName": "Key must exist",
-					"documentation": "When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
+					"documentation": "When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.297"
@@ -458,10 +467,10 @@
 					"type": "text"
 				}
 			},
-			"summaryPattern": "Custom metadata ",
+			"summaryPattern": "Resource attribute ",
 			"type": "object",
-			"version": "1",
-			"versionInfo": "Added Key must exist boolean value."
+			"version": "2",
+			"versionInfo": "Moved from custom metadata to resource attributes"
 		},
 		"MetadataItem": {
 			"description": "",
@@ -570,8 +579,8 @@
 				},
 				"hostMetadataCondition": {
 					"description": "",
-					"displayName": "Custom metadata",
-					"documentation": "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+					"displayName": "Resource attribute",
+					"documentation": "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 					"maxObjects": 1,
 					"metadata": {
 						"minAgentVersion": "1.277"
@@ -704,7 +713,7 @@
 				},
 				"hostMetadataCondition": {
 					"description": "",
-					"displayName": "Custom metadata",
+					"displayName": "Resource attribute",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -817,5 +826,5 @@
 			]
 		}
 	},
-	"version": "1.3.7"
+	"version": "1.3.12"
 }

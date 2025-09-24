@@ -18,7 +18,7 @@
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
-				"minActiveGateVersion": "1.303"
+				"minActiveGateVersion": "1.321"
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -31,5 +31,5 @@
 	],
 	"schemaId": "builtin:kubernetes.security-posture-management",
 	"types": {},
-	"version": "0.0.5"
+	"version": "1"
 }

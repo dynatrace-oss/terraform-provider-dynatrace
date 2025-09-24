@@ -15,6 +15,7 @@
 				{
 					"customMessage": "There can only be one rule per user group.",
 					"customValidatorId": "unique-user-group-list-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -102,7 +103,7 @@
 						"identifier": "groupIdDataSource",
 						"resetValue": "NEVER",
 						"useApiSearch": false,
-						"validate": true
+						"validate": false
 					},
 					"default": "",
 					"description": "Show selected dashboard by default for this user group",
@@ -124,5 +125,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.17"
+	"version": "1.0.18"
 }

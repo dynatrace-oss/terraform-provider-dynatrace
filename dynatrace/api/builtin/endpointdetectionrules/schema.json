@@ -90,11 +90,6 @@
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
-							"customValidatorId": "dql-syntax-validator",
-							"skipAsyncValidation": false,
-							"type": "CUSTOM_VALIDATOR_REF"
-						},
-						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -109,7 +104,7 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
-					"subType": "code/dql",
+					"subType": "code",
 					"type": "text"
 				},
 				"description": {
@@ -221,5 +216,5 @@
 			]
 		}
 	},
-	"version": "0.0.5"
+	"version": "1.0.1"
 }

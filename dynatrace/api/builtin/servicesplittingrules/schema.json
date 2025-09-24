@@ -43,6 +43,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Rule name must be unique.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"rule.ruleName"
@@ -75,11 +76,6 @@
 							"customValidatorId": "only-resource-and-custom-attributes-dql-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
-						},
-						{
-							"customValidatorId": "dql-syntax-validator",
-							"skipAsyncValidation": false,
-							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"description": "Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.",
@@ -91,7 +87,7 @@
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
-					"subType": "code/dql",
+					"subType": "code",
 					"type": "text"
 				},
 				"description": {
@@ -207,5 +203,5 @@
 			]
 		}
 	},
-	"version": "0.0.9"
+	"version": "0.0.10"
 }

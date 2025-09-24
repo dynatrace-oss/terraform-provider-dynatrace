@@ -80,7 +80,7 @@
 		"snippetFormat": {
 			"description": "",
 			"displayName": "Snippet format",
-			"documentation": "*Code Snippet:* OneAgent injects an inline script that initializes Dynatrace and dynamically downloads the monitoring code into your application. Use when you want to inject the monitoring code in deferred mode.\n\n *Inline Code:* OneAgent injects the configuration and the monitoring code inline into your application. Use this injection type when you need to keep the number of web requests at a minimum.\n\n *OneAgent JavaScript Tag:* OneAgent injects a JavaScript tag into your application, containing the configuration and a link to the monitoring code. This is our default injection type, since it's most versatile.\n\nCompare the different [injection formats](https://dt-url.net/vx5g0ptn).",
+			"documentation": "*Code Snippet:* OneAgent injects an inline script that initializes Dynatrace and dynamically downloads the monitoring code into your application. Use when you want to inject the monitoring code in deferred mode.\n\n *Inline Code:* OneAgent injects the configuration and the monitoring code inline into your application. Use this injection type when you need to keep the number of web requests at a minimum.\n\n *OneAgent JavaScript Tag:* OneAgent injects a JavaScript tag into your application, containing the configuration and a link to the monitoring code. This is our default injection type, since it's most versatile.\n\n*OneAgent JavaScript tag with SRI:* OneAgent injects the configuration, a reference to an external file containing the monitoring code, and a hash that allows the browser to verify the integrity of the monitoring code before executing it.\n\nCompare the different [injection formats](https://dt-url.net/vx5g0ptn).",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -260,5 +260,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.2"
+	"version": "1.2.3"
 }

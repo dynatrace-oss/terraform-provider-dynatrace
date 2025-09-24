@@ -67,7 +67,7 @@
 				"identifier": "rumJavaScriptVersion",
 				"resetValue": "NEVER",
 				"useApiSearch": false,
-				"validate": false
+				"validate": true
 			},
 			"default": "LATEST_STABLE",
 			"description": "",
@@ -89,5 +89,5 @@
 	],
 	"schemaId": "builtin:rum.web.rum-javascript-updates",
 	"types": {},
-	"version": "1.2"
+	"version": "1.2.1"
 }
