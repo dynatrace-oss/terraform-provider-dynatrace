@@ -101,10 +101,6 @@
 					"value": "SaasVendor"
 				},
 				{
-					"displayName": "AMP service",
-					"value": "AMP"
-				},
-				{
 					"displayName": "Custom application service",
 					"value": "CustomApplication"
 				},
@@ -489,5 +485,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }
