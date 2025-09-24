@@ -30,6 +30,22 @@
 			],
 			"type": "enum"
 		},
+		"EventKind": {
+			"description": "",
+			"displayName": "Event kind",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Biz events",
+					"value": "BIZ_EVENT"
+				},
+				{
+					"displayName": "SDLC events",
+					"value": "SDLC_EVENT"
+				}
+			],
+			"type": "enum"
+		},
 		"ObjectiveType": {
 			"description": "",
 			"displayName": "Objective type",
@@ -70,6 +86,17 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
 			"type": "text"
+		},
+		"eventKind": {
+			"description": "If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events ",
+			"displayName": "Event kind",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/enums/EventKind"
+			}
 		},
 		"name": {
 			"constraints": [
@@ -189,6 +216,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "There is another guardian with an identical name defined. Please make your guardian name unique to save your changes.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -585,5 +613,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6"
+	"version": "1.8"
 }

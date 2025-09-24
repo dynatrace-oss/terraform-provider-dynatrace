@@ -24,6 +24,7 @@ import (
 
 type Settings struct {
 	Description *string    `json:"description,omitempty"` // Description
+	EventKind   *EventKind `json:"eventKind,omitempty"`   // If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events
 	Name        string     `json:"name"`                  // Name
 	Objectives  Objectives `json:"objectives"`            // Objectives
 	Tags        []string   `json:"tags,omitempty"`        // Define key/value pairs that further describe this guardian.
@@ -35,6 +36,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"description": {
 			Type:        schema.TypeString,
 			Description: "Description",
+			Optional:    true, // nullable
+		},
+		"event_kind": {
+			Type:        schema.TypeString,
+			Description: "If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events",
 			Optional:    true, // nullable
 		},
 		"name": {
@@ -70,6 +76,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"description": me.Description,
+		"event_kind":  me.EventKind,
 		"name":        me.Name,
 		"objectives":  me.Objectives,
 		"tags":        me.Tags,
@@ -80,6 +87,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"description": &me.Description,
+		"event_kind":  &me.EventKind,
 		"name":        &me.Name,
 		"objectives":  &me.Objectives,
 		"tags":        &me.Tags,
