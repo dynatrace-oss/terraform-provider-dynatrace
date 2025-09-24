@@ -25,7 +25,7 @@ import (
 
 type ModelProperties struct {
 	AlertCondition    AlertCondition `json:"alertCondition"`              // Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`
-	AlertOnNoData     bool           `json:"alertOnNoData"`               // The ability to set an alert on missing data in a metric. When enabled, missing data samples will contribute as violating samples defined in advanced model properties. We recommend to not alert on missing data for sparse timeseries as this leads to alert spam.
+	AlertOnNoData     bool           `json:"alertOnNoData"`               // The ability to set an alert on missing data in a metric. When enabled, missing data samples will be treated as violating samples defined in the advanced model properties. When disabled, missing data is not treated as a violation but will still contribute to dealerting. We recommend disabling alerting on missing data for sparse timeseries to avoid false alerts. To learn more, visit [anomaly detection configuration](https://dt-url.net/lz02mwi).
 	DealertingSamples int            `json:"dealertingSamples"`           // The number of one-minute samples within the evaluation window that must go back to normal to close the event.
 	Samples           int            `json:"samples"`                     // The number of one-minute samples that form the sliding evaluation window.
 	SignalFluctuation *float64       `json:"signalFluctuation,omitempty"` // Controls how many times the signal fluctuation is added to the baseline to produce the actual threshold for alerting
@@ -44,7 +44,7 @@ func (me *ModelProperties) Schema() map[string]*schema.Schema {
 		},
 		"alert_on_no_data": {
 			Type:        schema.TypeBool,
-			Description: "The ability to set an alert on missing data in a metric. When enabled, missing data samples will contribute as violating samples defined in advanced model properties. We recommend to not alert on missing data for sparse timeseries as this leads to alert spam.",
+			Description: "The ability to set an alert on missing data in a metric. When enabled, missing data samples will be treated as violating samples defined in the advanced model properties. When disabled, missing data is not treated as a violation but will still contribute to dealerting. We recommend disabling alerting on missing data for sparse timeseries to avoid false alerts. To learn more, visit [anomaly detection configuration](https://dt-url.net/lz02mwi).",
 			Required:    true,
 		},
 		"dealerting_samples": {
