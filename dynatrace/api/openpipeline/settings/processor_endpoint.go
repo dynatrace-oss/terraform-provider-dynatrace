@@ -69,6 +69,7 @@ type EndpointProcessor struct {
 	fieldsAddProcessor    *FieldsAddProcessor
 	fieldsRemoveProcessor *FieldsRemoveProcessor
 	fieldsRenameProcessor *FieldsRenameProcessor
+	technologyProcessor   *TechnologyProcessor
 	dropProcessor         *DropProcessor
 }
 
@@ -114,6 +115,14 @@ func (ep *EndpointProcessor) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(DropProcessor).Schema()},
 			Optional:    true,
 		},
+		"technology_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to apply a technology processors.",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(TechnologyProcessor).Schema()},
+			Optional:    true,
+		},
 	}
 }
 
@@ -124,6 +133,7 @@ func (ep *EndpointProcessor) MarshalHCL(properties hcl.Properties) error {
 		"fields_remove_processor": ep.fieldsRemoveProcessor,
 		"fields_rename_processor": ep.fieldsRenameProcessor,
 		"drop_processor":          ep.dropProcessor,
+		"technology_processor":    ep.technologyProcessor,
 	})
 }
 
@@ -134,6 +144,7 @@ func (ep *EndpointProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"fields_remove_processor": &ep.fieldsRemoveProcessor,
 		"fields_rename_processor": &ep.fieldsRenameProcessor,
 		"drop_processor":          &ep.dropProcessor,
+		"technology_processor":    &ep.technologyProcessor,
 	})
 }
 
@@ -152,6 +163,9 @@ func (ep EndpointProcessor) MarshalJSON() ([]byte, error) {
 	}
 	if ep.dropProcessor != nil {
 		return json.Marshal(ep.dropProcessor)
+	}
+	if ep.technologyProcessor != nil {
+		return json.Marshal(ep.technologyProcessor)
 	}
 
 	return nil, errors.New("missing EndpointProcessor value")
@@ -198,6 +212,13 @@ func (ep *EndpointProcessor) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ep.dropProcessor = &dropProcessor
+
+	case TechnologyProcessorType:
+		technologyProcessor := TechnologyProcessor{}
+		if err := json.Unmarshal(b, &technologyProcessor); err != nil {
+			return err
+		}
+		ep.technologyProcessor = &technologyProcessor
 
 	default:
 		return fmt.Errorf("unknown EndpointProcessor type: %s", ttype)

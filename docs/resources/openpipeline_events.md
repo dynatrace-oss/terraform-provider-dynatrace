@@ -38,19 +38,72 @@ resource "dynatrace_openpipeline_events" "events" {
         type        = "static"
         pipeline_id = "default"
       }
+      processors {
+        processor {
+          fields_add_processor {
+            description = "Custom add field"
+            enabled     = true
+            id          = "processor_Add_a_field_1_#name#"
+            matcher     = "true"
+            field {
+              name  = "field"
+              value = "value"
+            }
+          }
+        }
+        processor {
+          fields_rename_processor {
+            description = "Custom rename field"
+            enabled     = true
+            id          = "processor_Custom_rename_field_1_#name#"
+            matcher     = "true"
+            field {
+              from_name = "new"
+              to_name   = "old"
+            }
+          }
+        }
+        processor {
+          fields_remove_processor {
+            description = "Custom remove field"
+            enabled     = true
+            fields      = [ "field" ]
+            id          = "processor_Custom_remove_field_1_#name#"
+            matcher     = "true"
+          }
+        }
+        processor {
+          dql_processor {
+            description = "Custom DQL"
+            enabled     = true
+            dql_script  = "fieldsAdd (\"test\")"
+            id          = "processor_Custom_DQL_1_#name#"
+            matcher     = "true"
+          }
+        }
+        processor {
+          drop_processor {
+            description = "Custom drop processor"
+            enabled     = true
+            id          = "processor_custom_drop_1_#name#"
+            matcher     = "true"
+            sample_data = "{}"
+          }
+        }
+      }
     }
   }
   pipelines {
     pipeline {
       enabled      = true
       display_name = "Custom pipeline 1"
-      id           = "pipeline_Pipeline_8075"
+      id           = "pipeline_Pipeline_1_#name#"
       processing {
         processor {
           fields_add_processor {
             description = "Add a field 1"
             enabled     = true
-            id          = "processor_Add_a_field_6856"
+            id          = "processor_Add_a_field_2_#name#"
             matcher     = "true"
             field {
               name  = "field"
@@ -63,13 +116,43 @@ resource "dynatrace_openpipeline_events" "events" {
     pipeline {
       enabled      = true
       display_name = "Custom pipeline 2"
-      id           = "pipeline_Pipeline_8076"
+      id           = "pipeline_Pipeline_2_#name#"
+      cost_allocation {
+        processor {
+          cost_allocation_processor {
+            description = "Custom cost allocation 1"
+            enabled     = true
+            id          = "processor_custom_cost_allocation_1_#name#"
+            matcher     = "true"
+            sample_data = "{}"
+            value {
+              type     = "constant"
+              constant = "string"
+            }
+          }
+        }
+      }
+      product_allocation {
+        processor {
+          product_allocation_processor {
+            description = "Custom product allocation 1"
+            enabled     = true
+            id          = "processor_custom_product_allocation_1_#name#"
+            matcher     = "true"
+            sample_data = "{}"
+            value {
+              type     = "constant"
+              constant = "string"
+            }
+          }
+        }
+      }
       data_extraction {
         processor {
           davis_event_extraction_processor {
             description = "Custom event"
             enabled     = true
-            id          = "processor_Custom_event_3193"
+            id          = "processor_Custom_event_1_#name#"
             matcher     = "true"
             properties {
               key   = "event.type"
@@ -89,7 +172,7 @@ resource "dynatrace_openpipeline_events" "events" {
             enabled     = true
             dimensions  = [ "availability" ]
             field       = "field1"
-            id          = "processor_Custom_metric_extraction_7786"
+            id          = "processor_Custom_metric_extraction_1_#name#"
             matcher     = "true"
             metric_key  = "events.custom"
           }
@@ -98,18 +181,19 @@ resource "dynatrace_openpipeline_events" "events" {
           counter_metric_extraction_processor {
             description = "Custom counter metric extraction"
             enabled     = true
-            id          = "processor_Custom_counter_metric_extraction_2885"
+            id          = "processor_Custom_counter_metric_extraction_1_#name#"
             matcher     = "true"
             metric_key  = "events.counter"
           }
         }
       }
+
       processing {
         processor {
           fields_add_processor {
             description = "Custom add field"
             enabled     = true
-            id          = "processor_Add_a_field_6856"
+            id          = "processor_Add_a_field_3_#name#"
             matcher     = "true"
             field {
               name  = "field"
@@ -121,7 +205,7 @@ resource "dynatrace_openpipeline_events" "events" {
           fields_rename_processor {
             description = "Custom rename field"
             enabled     = true
-            id          = "processor_Custom_rename_field_7712"
+            id          = "processor_Custom_rename_field_2_#name#"
             matcher     = "true"
             field {
               from_name = "new"
@@ -134,7 +218,7 @@ resource "dynatrace_openpipeline_events" "events" {
             description = "Custom remove field"
             enabled     = true
             fields      = [ "field" ]
-            id          = "processor_Custom_remove_field_7320"
+            id          = "processor_Custom_remove_field_2_#name#"
             matcher     = "true"
           }
         }
@@ -143,18 +227,28 @@ resource "dynatrace_openpipeline_events" "events" {
             description = "Custom DQL"
             enabled     = true
             dql_script  = "fieldsAdd (\"test\")"
-            id          = "processor_Custom_DQL_1783"
+            id          = "processor_Custom_DQL_2_#name#"
             matcher     = "true"
+          }
+        }
+        processor {
+          drop_processor {
+            description = "Custom drop processor"
+            enabled     = true
+            id          = "processor_custom_drop_2_#name#"
+            matcher     = "true"
+            sample_data = "{}"
           }
         }
       }
       security_context {
         processor {
           security_context_processor {
-            description = "Custom security contet"
+            description = "Custom security context 1"
             enabled     = true
-            id          = "processor_Custom_security_contet_4309"
+            id          = "processor_Custom_security_context_1_#name#"
             matcher     = "true"
+            sample_data = "{}"
             value {
               type     = "constant"
               constant = "string"
@@ -165,8 +259,9 @@ resource "dynatrace_openpipeline_events" "events" {
           security_context_processor {
             description = "Custom security context 2"
             enabled     = true
-            id          = "processor_Custom_security_context_2_9052"
+            id          = "processor_Custom_security_context_2_#name#"
             matcher     = "true"
+            sample_data = "{}"
             value {
               type  = "field"
               field = "fieldname"
@@ -177,8 +272,9 @@ resource "dynatrace_openpipeline_events" "events" {
           security_context_processor {
             description = "Custom security context 3"
             enabled     = true
-            id          = "processor_Custom_security_context_2_9053"
+            id          = "processor_Custom_security_context_3_#name#"
             matcher     = "true"
+            sample_data = "{}"
             value {
               type  = "multiValueConstant"
               multi_value_constant = ["multi", "value"]
@@ -193,16 +289,18 @@ resource "dynatrace_openpipeline_events" "events" {
             description = "Custom bucket assignment"
             enabled     = true
             bucket_name = "default_events"
-            id          = "processor_Custom_bucket_assignment_5664"
+            id          = "processor_Custom_bucket_assignment_1_#name#"
             matcher     = "true"
+            sample_data = "{}"
           }
         }
         processor {
           no_storage_processor {
             description = "Custom no storage assignment"
             enabled     = true
-            id          = "processor_Custom_no_storage_assignment_2070"
+            id          = "processor_Custom_no_storage_assignment_1_#name#"
             matcher     = "true"
+            sample_data = "{}"
           }
         }
       }
@@ -211,9 +309,9 @@ resource "dynatrace_openpipeline_events" "events" {
   routing {
     entry {
       enabled     = true
-      matcher     = "true "
+      matcher     = "true"
       note        = "Custom route"
-      pipeline_id = "pipeline_Pipeline_8075"
+      pipeline_id = "pipeline_Pipeline_1_#name#"
     }
   }
 }
@@ -284,6 +382,7 @@ Optional:
 - `fields_add_processor` (Block List, Max: 1) Processor to add fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_add_processor))
 - `fields_remove_processor` (Block List, Max: 1) Processor to remove fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_remove_processor))
 - `fields_rename_processor` (Block List, Max: 1) Processor to rename fields (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--fields_rename_processor))
+- `technology_processor` (Block List, Max: 1) Processor to apply a technology processors. (see [below for nested schema](#nestedblock--endpoints--endpoint--processors--processor--technology_processor))
 
 <a id="nestedblock--endpoints--endpoint--processors--processor--dql_processor"></a>
 ### Nested Schema for `endpoints.endpoint.processors.processor.dql_processor`
@@ -382,6 +481,21 @@ Required:
 
 
 
+<a id="nestedblock--endpoints--endpoint--processors--processor--technology_processor"></a>
+### Nested Schema for `endpoints.endpoint.processors.processor.technology_processor`
+
+Required:
+
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `technology_id` (String) The reference identifier to a specific technology. This technology is applied on the record.
+
+Optional:
+
+- `custom_matcher` (String) Optional customer-defined matching condition, that is used in place of the main technology matcher.
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
 
 
 
@@ -404,11 +518,59 @@ Required:
 
 Optional:
 
+- `cost_allocation` (Block List, Max: 1) Cost Allocation stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--cost_allocation))
 - `data_extraction` (Block List, Max: 1) Data extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction))
 - `metric_extraction` (Block List, Max: 1) Metric extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction))
 - `processing` (Block List, Max: 1) Processing stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--processing))
+- `product_allocation` (Block List, Max: 1) Product Allocation stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--product_allocation))
 - `security_context` (Block List, Max: 1) Security context stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--security_context))
 - `storage` (Block List, Max: 1) Data extraction stage configuration of the pipeline (see [below for nested schema](#nestedblock--pipelines--pipeline--storage))
+
+<a id="nestedblock--pipelines--pipeline--cost_allocation"></a>
+### Nested Schema for `pipelines.pipeline.cost_allocation`
+
+Optional:
+
+- `processor` (Block List) Cost allocation processor to use (see [below for nested schema](#nestedblock--pipelines--pipeline--cost_allocation--processor))
+
+<a id="nestedblock--pipelines--pipeline--cost_allocation--processor"></a>
+### Nested Schema for `pipelines.pipeline.cost_allocation.processor`
+
+Optional:
+
+- `cost_allocation_processor` (Block List, Max: 1) Processor to write the occurrences as a cost allocation (see [below for nested schema](#nestedblock--pipelines--pipeline--cost_allocation--processor--cost_allocation_processor))
+
+<a id="nestedblock--pipelines--pipeline--cost_allocation--processor--cost_allocation_processor"></a>
+### Nested Schema for `pipelines.pipeline.cost_allocation.processor.cost_allocation_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `value` (Block List, Min: 1, Max: 1) Strategy to assign a value (see [below for nested schema](#nestedblock--pipelines--pipeline--cost_allocation--processor--cost_allocation_processor--value))
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--cost_allocation--processor--cost_allocation_processor--value"></a>
+### Nested Schema for `pipelines.pipeline.cost_allocation.processor.cost_allocation_processor.value`
+
+Required:
+
+- `type` (String) Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'
+
+Optional:
+
+- `constant` (String) Assign a constant value. Can only be used if 'type' is set to 'constant'
+- `field` (String) Assign a value extracted from a field. Can only be used if 'type' is set to 'field'
+- `multi_value_constant` (List of String) The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'
+
+
+
+
 
 <a id="nestedblock--pipelines--pipeline--data_extraction"></a>
 ### Nested Schema for `pipelines.pipeline.data_extraction`
@@ -423,8 +585,41 @@ Applicable processors are DavisEventExtractionProcessor and BizeventExtractionPr
 
 Optional:
 
-- `bizevent_extraction_processor` (Block List, Max: 1) (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor))
+- `azure_log_forwarding_processor` (Block List, Max: 1) Processor to extract a Azure log. (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--azure_log_forwarding_processor))
+- `bizevent_extraction_processor` (Block List, Max: 1) Processor to extract a bizevent.
+Fields event.type and event.provider can only be assigned to a constant or field value.
+A multi-value constant is not supported for those fields. (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor))
 - `davis_event_extraction_processor` (Block List, Max: 1) Processor to apply a DQL script (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--davis_event_extraction_processor))
+- `security_event_extraction_processor` (Block List, Max: 1) Processor to extract a security event. (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--security_event_extraction_processor))
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--azure_log_forwarding_processor"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.azure_log_forwarding_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `forwarder_config_id` (String)
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `field_extraction` (Block List, Max: 1) Definition of the field extraction (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--azure_log_forwarding_processor--field_extraction))
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--azure_log_forwarding_processor--field_extraction"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.azure_log_forwarding_processor.field_extraction`
+
+Required:
+
+- `semantic` (String) Defines how the fields of the source record should be extracted
+
+Optional:
+
+- `fields` (List of String) Unique fields to include/exclude in the extracted record
+
+
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor"></a>
 ### Nested Schema for `pipelines.pipeline.data_extraction.processor.bizevent_extraction_processor`
@@ -448,13 +643,13 @@ Optional:
 
 Required:
 
-- `type` (String) Strategy to assign a value
+- `type` (String) Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'
 
 Optional:
 
-- `constant` (String) Strategy to assign a value
-- `field` (String) Strategy to assign a value
-- `multi_value_constant` (List of String) Strategy to assign a value
+- `constant` (String) Assign a constant value. Can only be used if 'type' is set to 'constant'
+- `field` (String) Assign a value extracted from a field. Can only be used if 'type' is set to 'field'
+- `multi_value_constant` (List of String) The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--event_type"></a>
@@ -462,13 +657,13 @@ Optional:
 
 Required:
 
-- `type` (String) Strategy to assign a value
+- `type` (String) Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'
 
 Optional:
 
-- `constant` (String) Strategy to assign a value
-- `field` (String) Strategy to assign a value
-- `multi_value_constant` (List of String) Strategy to assign a value
+- `constant` (String) Assign a constant value. Can only be used if 'type' is set to 'constant'
+- `field` (String) Assign a value extracted from a field. Can only be used if 'type' is set to 'field'
+- `multi_value_constant` (List of String) The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'
 
 
 <a id="nestedblock--pipelines--pipeline--data_extraction--processor--bizevent_extraction_processor--field_extraction"></a>
@@ -509,6 +704,34 @@ Required:
 
 
 
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--security_event_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.security_event_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+
+Optional:
+
+- `field_extraction` (Block List, Max: 1) Definition of the field extraction (see [below for nested schema](#nestedblock--pipelines--pipeline--data_extraction--processor--security_event_extraction_processor--field_extraction))
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--data_extraction--processor--security_event_extraction_processor--field_extraction"></a>
+### Nested Schema for `pipelines.pipeline.data_extraction.processor.security_event_extraction_processor.field_extraction`
+
+Required:
+
+- `semantic` (String) Defines how the fields of the source record should be extracted
+
+Optional:
+
+- `fields` (List of String) Unique fields to include/exclude in the extracted record
+
+
+
 
 
 <a id="nestedblock--pipelines--pipeline--metric_extraction"></a>
@@ -524,6 +747,8 @@ Optional:
 Optional:
 
 - `counter_metric_extraction_processor` (Block List, Max: 1) Processor to write the occurrences as a metric (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--counter_metric_extraction_processor))
+- `sampling_aware_counter_metric_extraction_processor` (Block List, Max: 1) Processor to write the occurrences as a metric (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--sampling_aware_counter_metric_extraction_processor))
+- `sampling_aware_value_metric_extraction_processor` (Block List, Max: 1) Processor to extract a value from a field as a metric. (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--sampling_aware_value_metric_extraction_processor))
 - `value_metric_extraction_processor` (Block List, Max: 1) Processor to extract a value from a field as a metric (see [below for nested schema](#nestedblock--pipelines--pipeline--metric_extraction--processor--value_metric_extraction_processor))
 
 <a id="nestedblock--pipelines--pipeline--metric_extraction--processor--counter_metric_extraction_processor"></a>
@@ -541,6 +766,53 @@ Optional:
 
 - `dimensions` (List of String) List of dimensions to add to the metric
 - `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction--processor--sampling_aware_counter_metric_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction.processor.sampling_aware_counter_metric_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `metric_key` (String) The key of the metric to write
+
+Optional:
+
+- `aggregation` (String) Indicates whether aggregation is considered for metric extraction
+- `dimensions` (List of String) List of unique dimensions to add to the metric.
+Dimensions are represented in the format '({dimensionName}=)?{sourceField}'.
+'{dimensionName}' is optional if {sourceField} represents a valid metric dimension name.
+'{sourceField}' has to represent a valid DQL field accessor and it can access a nested field (for example, 'field[field2][0]')
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+- `sampling` (String) Indicates whether sampling is considered for metric extraction. Possible values: 'DISABLED', 'ENABLED'
+
+
+<a id="nestedblock--pipelines--pipeline--metric_extraction--processor--sampling_aware_value_metric_extraction_processor"></a>
+### Nested Schema for `pipelines.pipeline.metric_extraction.processor.sampling_aware_value_metric_extraction_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `measurement` (String) Indicates whether the metric value should be the specified field or duration. Possible values: 'DURATION', 'FIELD'
+- `metric_key` (String) The key of the metric to write
+
+Optional:
+
+- `aggregation` (String) Indicates whether aggregation is considered for metric extraction. Possible values: 'DISABLED', 'ENABLED'
+- `default_value` (String) The default value to use if the given field value could not be extracted. String value must be a number
+- `dimensions` (List of String) List of unique dimensions to add to the metric.
+Dimensions are represented in the format '({dimensionName}=)?{sourceField}'.
+'{dimensionName}' is optional if {sourceField} represents a valid metric dimension name.
+'{sourceField}' has to represent a valid DQL field accessor and it can access a nested field (for example, 'field[field2][0]')
+- `field` (String) The field from which to extract the value for the metric, or 'null' for a duration measurement
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+- `sampling` (String) Indicates whether sampling is considered for metric extraction. Possible values: 'DISABLED', 'ENABLED'
 
 
 <a id="nestedblock--pipelines--pipeline--metric_extraction--processor--value_metric_extraction_processor"></a>
@@ -685,15 +957,60 @@ Required:
 
 Required:
 
-- `description` (String) Name or description of the processor
 - `enabled` (Boolean) Indicates if the object is active
 - `id` (String) Identifier of the processor. Must be unique within a stage.
-- `matcher` (String) Matching condition to apply on incoming records
 - `technology_id` (String) The reference identifier to a specific technology. This technology is applied on the record.
 
 Optional:
 
+- `custom_matcher` (String) Optional customer-defined matching condition, that is used in place of the main technology matcher.
 - `sample_data` (String) Sample data related to the processor for documentation or testing
+
+
+
+
+<a id="nestedblock--pipelines--pipeline--product_allocation"></a>
+### Nested Schema for `pipelines.pipeline.product_allocation`
+
+Optional:
+
+- `processor` (Block List) Product allocation processor to use (see [below for nested schema](#nestedblock--pipelines--pipeline--product_allocation--processor))
+
+<a id="nestedblock--pipelines--pipeline--product_allocation--processor"></a>
+### Nested Schema for `pipelines.pipeline.product_allocation.processor`
+
+Optional:
+
+- `product_allocation_processor` (Block List, Max: 1) Processor to write the occurrences as a product allocation (see [below for nested schema](#nestedblock--pipelines--pipeline--product_allocation--processor--product_allocation_processor))
+
+<a id="nestedblock--pipelines--pipeline--product_allocation--processor--product_allocation_processor"></a>
+### Nested Schema for `pipelines.pipeline.product_allocation.processor.product_allocation_processor`
+
+Required:
+
+- `description` (String) Name or description of the processor
+- `enabled` (Boolean) Indicates if the object is active
+- `id` (String) Identifier of the processor. Must be unique within a stage.
+- `matcher` (String) Matching condition to apply on incoming records
+- `value` (Block List, Min: 1, Max: 1) Strategy to assign a value (see [below for nested schema](#nestedblock--pipelines--pipeline--product_allocation--processor--product_allocation_processor--value))
+
+Optional:
+
+- `sample_data` (String) Sample data related to the processor for documentation or testing
+
+<a id="nestedblock--pipelines--pipeline--product_allocation--processor--product_allocation_processor--value"></a>
+### Nested Schema for `pipelines.pipeline.product_allocation.processor.product_allocation_processor.value`
+
+Required:
+
+- `type` (String) Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'
+
+Optional:
+
+- `constant` (String) Assign a constant value. Can only be used if 'type' is set to 'constant'
+- `field` (String) Assign a value extracted from a field. Can only be used if 'type' is set to 'field'
+- `multi_value_constant` (List of String) The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'
+
 
 
 
@@ -733,13 +1050,13 @@ Optional:
 
 Required:
 
-- `type` (String) Strategy to assign a value
+- `type` (String) Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'
 
 Optional:
 
-- `constant` (String) Strategy to assign a value
-- `field` (String) Strategy to assign a value
-- `multi_value_constant` (List of String) Strategy to assign a value
+- `constant` (String) Assign a constant value. Can only be used if 'type' is set to 'constant'
+- `field` (String) Assign a value extracted from a field. Can only be used if 'type' is set to 'field'
+- `multi_value_constant` (List of String) The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'
 
 
 

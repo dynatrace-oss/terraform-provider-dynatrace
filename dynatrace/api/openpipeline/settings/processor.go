@@ -14,13 +14,19 @@ const (
 	FieldsRenameProcessorType = "fieldsRename"
 	DropProcessorType         = "drop"
 
-	CounterMetricProcessorType = "counterMetric"
-	ValueMetricProcessorType   = "valueMetric"
+	CounterMetricProcessorType                        = "counterMetric"
+	ValueMetricProcessorType                          = "valueMetric"
+	SamplingAwareCounterMetricExtractionProcessorType = "samplingAwareCounterMetric"
+	SamplingAwareValueMetricExtractionProcessorType   = "samplingAwareValueMetric"
 
-	DavisEventExtractionProcessorType = "davis"
-	BizEventExtractionProcessorType   = "bizevent"
+	DavisEventExtractionProcessorType    = "davis"
+	BizEventExtractionProcessorType      = "bizevent"
+	SecurityEventExtractionProcessorType = "securityEvent"
+	AzureLogForwardingProcessorType      = "azureLogForwarding"
 
-	SecurityContextProcessorType = "securityContext"
+	SecurityContextProcessorType   = "securityContext"
+	CostAllocationProcessorType    = "costAllocation"
+	ProductAllocationProcessorType = "productAllocation"
 
 	NoStorageStageProcessorType        = "noStorage"
 	BucketAssignmentStageProcessorType = "bucketAssignment"
@@ -30,61 +36,45 @@ const (
 )
 
 type Processor struct {
-	Description string  `json:"description"`
-	Editable    *bool   `json:"editable,omitempty"`
-	Enabled     bool    `json:"enabled"`
-	Id          string  `json:"id"`
-	Matcher     string  `json:"matcher"`
-	SampleData  *string `json:"sampleData,omitempty"`
+	MinimalProcessor
+	Description string `json:"description"`
+	Matcher     string `json:"matcher"`
 }
 
 func (p *Processor) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"description": {
-			Type:        schema.TypeString,
-			Description: "Name or description of the processor",
-			Required:    true,
-		},
-		"enabled": {
-			Type:        schema.TypeBool,
-			Description: "Indicates if the object is active",
-			Required:    true,
-		},
-		"id": {
-			Type:        schema.TypeString,
-			Description: "Identifier of the processor. Must be unique within a stage.",
-			Required:    true,
-		},
-		"matcher": {
-			Type:        schema.TypeString,
-			Description: "Matching condition to apply on incoming records",
-			Required:    true,
-		},
-		"sample_data": {
-			Type:        schema.TypeString,
-			Description: "Sample data related to the processor for documentation or testing",
-			Optional:    true,
-		},
+	s := p.MinimalProcessor.Schema()
+	s["description"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Name or description of the processor",
+		Required:    true,
 	}
+	s["matcher"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Matching condition to apply on incoming records",
+		Required:    true,
+	}
+	return s
 }
 
 func (p *Processor) MarshalHCL(properties hcl.Properties) error {
+	if err := p.MinimalProcessor.MarshalHCL(properties); err != nil {
+		return err
+	}
+
 	return properties.EncodeAll(map[string]any{
-		"description": p.Description,
-		"enabled":     p.Enabled,
-		"id":          p.Id,
 		"matcher":     p.Matcher,
-		"sample_data": p.SampleData,
+		"description": p.Description,
 	})
 }
 
 func (p *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := p.MinimalProcessor.UnmarshalHCL(decoder); err != nil {
+		return err
+	}
+
 	return decoder.DecodeAll(map[string]any{
-		"description": &p.Description,
-		"enabled":     &p.Enabled,
-		"id":          &p.Id,
 		"matcher":     &p.Matcher,
-		"sample_data": &p.SampleData,
+		"description": &p.Description,
 	})
 }
 
@@ -567,33 +557,47 @@ func (ep *ValueAssignment) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type TechnologyProcessor struct {
-	Processor
-	TechnologyId string `json:"technologyId"`
+	MinimalProcessor
+	CustomMatcher string `json:"customMatcher,omitempty"`
+	TechnologyId  string `json:"technologyId"`
 }
 
 func (p *TechnologyProcessor) Schema() map[string]*schema.Schema {
-	s := p.Processor.Schema()
+	s := p.MinimalProcessor.Schema()
+
 	s["technology_id"] = &schema.Schema{
 		Type:        schema.TypeString,
 		Description: "The reference identifier to a specific technology. This technology is applied on the record.",
 		Required:    true,
 	}
 
+	s["custom_matcher"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Optional customer-defined matching condition, that is used in place of the main technology matcher.",
+		Optional:    true,
+	}
+
 	return s
 }
 
 func (p *TechnologyProcessor) MarshalHCL(properties hcl.Properties) error {
-	if err := p.Processor.MarshalHCL(properties); err != nil {
+	if err := p.MinimalProcessor.MarshalHCL(properties); err != nil {
 		return err
 	}
-	return properties.Encode("technology_id", p.TechnologyId)
+	return properties.EncodeAll(map[string]any{
+		"technology_id":  p.TechnologyId,
+		"custom_matcher": p.CustomMatcher,
+	})
 }
 
 func (p *TechnologyProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := p.Processor.UnmarshalHCL(decoder); err != nil {
+	if err := p.MinimalProcessor.UnmarshalHCL(decoder); err != nil {
 		return err
 	}
-	return decoder.Decode("technology_id", &p.TechnologyId)
+	return decoder.DecodeAll(map[string]any{
+		"technology_id":  &p.TechnologyId,
+		"custom_matcher": &p.CustomMatcher,
+	})
 }
 
 func (ep TechnologyProcessor) MarshalJSON() ([]byte, error) {

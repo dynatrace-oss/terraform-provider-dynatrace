@@ -10,9 +10,8 @@ import (
 )
 
 type SecurityContextStage struct {
-	Editable           *bool                  `json:"editable"`
-	CatchAllBucketName *string                `json:"catchAllBucketName,omitempty"`
-	Processors         []*SecContextProcessor `json:"processors"`
+	Editable   *bool                  `json:"editable"`
+	Processors []*SecContextProcessor `json:"processors"`
 }
 
 func (f *SecurityContextStage) Schema() map[string]*schema.Schema {

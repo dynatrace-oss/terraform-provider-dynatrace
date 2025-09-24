@@ -34,8 +34,10 @@ func (f *DataExtractionStage) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type DataExtractionProcessor struct {
-	davisEventExtractionProcessor *DavisEventExtractionProcessor
-	bizEventExtractionProcessor   *BizEventExtractionProcessor
+	davisEventExtractionProcessor    *DavisEventExtractionProcessor
+	bizEventExtractionProcessor      *BizEventExtractionProcessor
+	azureLogForwardingProcessor      *AzureLogForwardingProcessor
+	securityEventExtractionProcessor *SecurityEventExtractionProcessor
 }
 
 func (ep *DataExtractionProcessor) Schema() map[string]*schema.Schema {
@@ -50,10 +52,26 @@ func (ep *DataExtractionProcessor) Schema() map[string]*schema.Schema {
 		},
 		"bizevent_extraction_processor": {
 			Type:        schema.TypeList,
-			Description: "",
+			Description: "Processor to extract a bizevent.\nFields event.type and event.provider can only be assigned to a constant or field value.\nA multi-value constant is not supported for those fields.",
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(BizEventExtractionProcessor).Schema()},
+			Optional:    true,
+		},
+		"azure_log_forwarding_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to extract a Azure log.",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(AzureLogForwardingProcessor).Schema()},
+			Optional:    true,
+		},
+		"security_event_extraction_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to extract a security event.",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(SecurityEventExtractionProcessor).Schema()},
 			Optional:    true,
 		},
 	}
@@ -61,15 +79,19 @@ func (ep *DataExtractionProcessor) Schema() map[string]*schema.Schema {
 
 func (ep *DataExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"davis_event_extraction_processor": ep.davisEventExtractionProcessor,
-		"bizevent_extraction_processor":    ep.bizEventExtractionProcessor,
+		"davis_event_extraction_processor":    ep.davisEventExtractionProcessor,
+		"bizevent_extraction_processor":       ep.bizEventExtractionProcessor,
+		"azure_log_forwarding_processor":      ep.azureLogForwardingProcessor,
+		"security_event_extraction_processor": ep.securityEventExtractionProcessor,
 	})
 }
 
 func (ep *DataExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"davis_event_extraction_processor": &ep.davisEventExtractionProcessor,
-		"bizevent_extraction_processor":    &ep.bizEventExtractionProcessor,
+		"davis_event_extraction_processor":    &ep.davisEventExtractionProcessor,
+		"bizevent_extraction_processor":       &ep.bizEventExtractionProcessor,
+		"azure_log_forwarding_processor":      &ep.azureLogForwardingProcessor,
+		"security_event_extraction_processor": &ep.securityEventExtractionProcessor,
 	})
 }
 
@@ -80,8 +102,14 @@ func (ep DataExtractionProcessor) MarshalJSON() ([]byte, error) {
 	if ep.davisEventExtractionProcessor != nil {
 		return json.Marshal(ep.davisEventExtractionProcessor)
 	}
+	if ep.azureLogForwardingProcessor != nil {
+		return json.Marshal(ep.azureLogForwardingProcessor)
+	}
+	if ep.securityEventExtractionProcessor != nil {
+		return json.Marshal(ep.securityEventExtractionProcessor)
+	}
 
-	return nil, errors.New("missing MetricExtractionProcessor value")
+	return nil, errors.New("missing DataExtractionProcessor value")
 }
 
 func (ep *DataExtractionProcessor) UnmarshalJSON(b []byte) error {
@@ -104,6 +132,20 @@ func (ep *DataExtractionProcessor) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ep.bizEventExtractionProcessor = &bizEventExtractionProcessor
+
+	case AzureLogForwardingProcessorType:
+		azureLogForwardingProcessor := AzureLogForwardingProcessor{}
+		if err := json.Unmarshal(b, &azureLogForwardingProcessor); err != nil {
+			return err
+		}
+		ep.azureLogForwardingProcessor = &azureLogForwardingProcessor
+
+	case SecurityEventExtractionProcessorType:
+		securityEventExtractionProcessor := SecurityEventExtractionProcessor{}
+		if err := json.Unmarshal(b, &securityEventExtractionProcessor); err != nil {
+			return err
+		}
+		ep.securityEventExtractionProcessor = &securityEventExtractionProcessor
 
 	default:
 		return fmt.Errorf("unknown DataExtractionProcessor type: %s", ttype)

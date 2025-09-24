@@ -130,20 +130,30 @@ func (ep *Pipeline) IsFixed() bool {
 }
 
 type BasePipeline struct {
-	Builtin          *bool                  `json:"builtin,omitempty"`
-	DataExtraction   *DataExtractionStage   `json:"dataExtraction"`
-	DisplayName      *string                `json:"displayName,omitempty"`
-	Editable         *bool                  `json:"editable,omitempty"`
-	Enabled          bool                   `json:"enabled"`
-	Id               string                 `json:"id"`
-	MetricExtraction *MetricExtractionStage `json:"metricExtraction,omitempty"`
-	SecurityContext  *SecurityContextStage  `json:"securityContext"`
-	Storage          *StorageStage          `json:"storage,omitempty"`
-	Type             string                 `json:"type"`
+	Builtin           *bool                   `json:"builtin,omitempty"`
+	CostAllocation    *CostAllocationStage    `json:"costAllocation,omitempty"`
+	DataExtraction    *DataExtractionStage    `json:"dataExtraction"`
+	DisplayName       *string                 `json:"displayName,omitempty"`
+	Editable          *bool                   `json:"editable,omitempty"`
+	Enabled           bool                    `json:"enabled"`
+	Id                string                  `json:"id"`
+	MetricExtraction  *MetricExtractionStage  `json:"metricExtraction,omitempty"`
+	ProductAllocation *ProductAllocationStage `json:"productAllocation,omitempty"`
+	SecurityContext   *SecurityContextStage   `json:"securityContext"`
+	Storage           *StorageStage           `json:"storage,omitempty"`
+	Type              string                  `json:"type"`
 }
 
 func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"cost_allocation": {
+			Type:        schema.TypeList,
+			Description: "Cost Allocation stage configuration of the pipeline",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(CostAllocationStage).Schema()},
+			Optional:    true,
+		},
 		"data_extraction": {
 			Type:        schema.TypeList,
 			Description: "Data extraction stage configuration of the pipeline",
@@ -158,6 +168,14 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(MetricExtractionStage).Schema()},
+			Optional:    true,
+		},
+		"product_allocation": {
+			Type:        schema.TypeList,
+			Description: "Product Allocation stage configuration of the pipeline",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(ProductAllocationStage).Schema()},
 			Optional:    true,
 		},
 		"security_context": {
@@ -195,6 +213,12 @@ func (ep *BasePipeline) Schema() map[string]*schema.Schema {
 }
 
 func (ep *BasePipeline) MarshalHCL(properties hcl.Properties) error {
+	if ep.CostAllocation != nil && len(ep.CostAllocation.Processors) > 0 {
+		if err := properties.Encode("cost_allocation", ep.CostAllocation); err != nil {
+			return err
+		}
+	}
+
 	if ep.DataExtraction != nil && len(ep.DataExtraction.Processors) > 0 {
 		if err := properties.Encode("data_extraction", ep.DataExtraction); err != nil {
 			return err
@@ -203,6 +227,12 @@ func (ep *BasePipeline) MarshalHCL(properties hcl.Properties) error {
 
 	if ep.MetricExtraction != nil && len(ep.MetricExtraction.Processors) > 0 {
 		if err := properties.Encode("metric_extraction", ep.MetricExtraction); err != nil {
+			return err
+		}
+	}
+
+	if ep.ProductAllocation != nil && len(ep.ProductAllocation.Processors) > 0 {
+		if err := properties.Encode("product_allocation", ep.ProductAllocation); err != nil {
 			return err
 		}
 	}
@@ -228,15 +258,21 @@ func (ep *BasePipeline) MarshalHCL(properties hcl.Properties) error {
 
 func (ep *BasePipeline) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeAll(map[string]any{
-		"data_extraction":   &ep.DataExtraction,
-		"metric_extraction": &ep.MetricExtraction,
-		"security_context":  &ep.SecurityContext,
-		"storage":           &ep.Storage,
-		"display_name":      &ep.DisplayName,
-		"enabled":           &ep.Enabled,
-		"id":                &ep.Id,
+		"cost_allocation":    &ep.CostAllocation,
+		"data_extraction":    &ep.DataExtraction,
+		"metric_extraction":  &ep.MetricExtraction,
+		"product_allocation": &ep.ProductAllocation,
+		"security_context":   &ep.SecurityContext,
+		"storage":            &ep.Storage,
+		"display_name":       &ep.DisplayName,
+		"enabled":            &ep.Enabled,
+		"id":                 &ep.Id,
 	}); err != nil {
 		return err
+	}
+
+	if ep.CostAllocation == nil {
+		ep.CostAllocation = &CostAllocationStage{}
 	}
 
 	if ep.DataExtraction == nil {
@@ -245,6 +281,10 @@ func (ep *BasePipeline) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	if ep.MetricExtraction == nil {
 		ep.MetricExtraction = &MetricExtractionStage{}
+	}
+
+	if ep.ProductAllocation == nil {
+		ep.ProductAllocation = &ProductAllocationStage{}
 	}
 
 	if ep.SecurityContext == nil {
