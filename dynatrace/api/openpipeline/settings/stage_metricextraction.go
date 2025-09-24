@@ -34,8 +34,10 @@ func (f *MetricExtractionStage) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type MetricExtractionProcessor struct {
-	counterMetricExtractionProcessor *CounterMetricExtractionProcessor
-	valueMetricExtractionProcessor   *ValueMetricExtractionProcessor
+	counterMetricExtractionProcessor              *CounterMetricExtractionProcessor
+	valueMetricExtractionProcessor                *ValueMetricExtractionProcessor
+	samplingAwareCounterMetricExtractionProcessor *SamplingAwareCounterMetricExtractionProcessor
+	samplingAwareValueMetricExtractionProcessor   *SamplingAwareValueMetricExtractionProcessor
 }
 
 func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
@@ -56,20 +58,40 @@ func (ep *MetricExtractionProcessor) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(ValueMetricExtractionProcessor).Schema()},
 			Optional:    true,
 		},
+		"sampling_aware_counter_metric_extraction_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to write the occurrences as a metric",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(SamplingAwareCounterMetricExtractionProcessor).Schema()},
+			Optional:    true,
+		},
+		"sampling_aware_value_metric_extraction_processor": {
+			Type:        schema.TypeList,
+			Description: "Processor to extract a value from a field as a metric.",
+			MinItems:    1,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(SamplingAwareValueMetricExtractionProcessor).Schema()},
+			Optional:    true,
+		},
 	}
 }
 
 func (ep *MetricExtractionProcessor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"counter_metric_extraction_processor": ep.counterMetricExtractionProcessor,
-		"value_metric_extraction_processor":   ep.valueMetricExtractionProcessor,
+		"counter_metric_extraction_processor":                ep.counterMetricExtractionProcessor,
+		"value_metric_extraction_processor":                  ep.valueMetricExtractionProcessor,
+		"sampling_aware_counter_metric_extraction_processor": ep.samplingAwareCounterMetricExtractionProcessor,
+		"sampling_aware_value_metric_extraction_processor":   ep.samplingAwareValueMetricExtractionProcessor,
 	})
 }
 
 func (ep *MetricExtractionProcessor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"counter_metric_extraction_processor": &ep.counterMetricExtractionProcessor,
-		"value_metric_extraction_processor":   &ep.valueMetricExtractionProcessor,
+		"counter_metric_extraction_processor":                &ep.counterMetricExtractionProcessor,
+		"value_metric_extraction_processor":                  &ep.valueMetricExtractionProcessor,
+		"sampling_aware_counter_metric_extraction_processor": &ep.samplingAwareCounterMetricExtractionProcessor,
+		"sampling_aware_value_metric_extraction_processor":   &ep.samplingAwareValueMetricExtractionProcessor,
 	})
 }
 
@@ -79,6 +101,12 @@ func (ep MetricExtractionProcessor) MarshalJSON() ([]byte, error) {
 	}
 	if ep.valueMetricExtractionProcessor != nil {
 		return json.Marshal(ep.valueMetricExtractionProcessor)
+	}
+	if ep.samplingAwareCounterMetricExtractionProcessor != nil {
+		return json.Marshal(ep.samplingAwareCounterMetricExtractionProcessor)
+	}
+	if ep.samplingAwareValueMetricExtractionProcessor != nil {
+		return json.Marshal(ep.samplingAwareValueMetricExtractionProcessor)
 	}
 
 	return nil, errors.New("missing MetricExtractionProcessor value")
@@ -104,6 +132,20 @@ func (ep *MetricExtractionProcessor) UnmarshalJSON(b []byte) error {
 			return err
 		}
 		ep.valueMetricExtractionProcessor = &valueMetricExtractionProcessor
+
+	case SamplingAwareCounterMetricExtractionProcessorType:
+		samplingAwareCounterMetricExtractionProcessor := SamplingAwareCounterMetricExtractionProcessor{}
+		if err := json.Unmarshal(b, &samplingAwareCounterMetricExtractionProcessor); err != nil {
+			return err
+		}
+		ep.samplingAwareCounterMetricExtractionProcessor = &samplingAwareCounterMetricExtractionProcessor
+
+	case SamplingAwareValueMetricExtractionProcessorType:
+		samplingAwareValueMetricExtractionProcessor := SamplingAwareValueMetricExtractionProcessor{}
+		if err := json.Unmarshal(b, &samplingAwareValueMetricExtractionProcessor); err != nil {
+			return err
+		}
+		ep.samplingAwareValueMetricExtractionProcessor = &samplingAwareValueMetricExtractionProcessor
 
 	default:
 		return fmt.Errorf("unknown MetricExtractionProcessor type: %s", ttype)

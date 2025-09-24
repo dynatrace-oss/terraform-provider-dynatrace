@@ -7,21 +7,54 @@ resource "dynatrace_openpipeline_spans" "spans" {
       data_extraction {
         processor {
           bizevent_extraction_processor {
-            description = "#name#"
+            description = "Custom bizevent extraction"
             enabled     = true
-            id          = "processor_Business_event_processor_#name#"
+            id          = "processor_custom_bizevent_1_#name#"
             matcher     = "true"
+            sample_data = "{}"
+            field_extraction {
+              semantic = "INCLUDE"
+              fields = ["my.field"]
+            }
             event_provider {
-              type  = "field"
-              field = "Provider"
+              type = "constant"
+              constant = "my-constant"
             }
             event_type {
-              type  = "field"
-              field = "Something"
+              type = "constant"
+              constant = "my-constant"
             }
-            field_extraction {
-              semantic = "INCLUDE_ALL"
-            }
+          }
+        }
+      }
+      metric_extraction {
+        processor {
+          sampling_aware_counter_metric_extraction_processor {
+            description = "Custom sampling counter extraction"
+            enabled     = true
+            id          = "processor_custom_sampling_counter_1_#name#"
+            matcher     = "true"
+            metric_key  = "events.counter"
+            aggregation = "ENABLED"
+            sample_data = "{}"
+            sampling = "ENABLED"
+            dimensions = ["ab=xy"]
+          }
+        }
+        processor {
+          sampling_aware_value_metric_extraction_processor {
+            description = "Custom sampling value extraction"
+            enabled     = true
+            id          = "processor_custom_sampling_value_1_#name#"
+            matcher     = "true"
+            measurement = "FIELD"
+            metric_key  = "events.value"
+            aggregation = "DISABLED"
+            sampling = "DISABLED"
+            default_value = "10"
+            field = "my.field"
+            sample_data = "{}"
+            dimensions = ["xyz=abc"]
           }
         }
       }

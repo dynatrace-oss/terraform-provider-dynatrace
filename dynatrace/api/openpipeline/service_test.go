@@ -24,6 +24,7 @@ import (
 )
 
 func TestAccOpenPipeline(t *testing.T) {
-	t.Skip("Tests skipped until REST API doesn't respond back with version conflicts any more")
+	// Notes:
+	// - Seems like no kind currently supports the "azure_log_forwarding_processor" and "security_event_extraction_processor"
 	api.TestAcc(t)
 }
