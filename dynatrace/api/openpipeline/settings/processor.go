@@ -1,6 +1,8 @@
 package openpipeline
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -507,27 +509,42 @@ func (ep *ValueAssignment) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value",
+			Description: "Strategy to assign a value. Possible values: 'constant', 'field', 'multiValueConstant'",
 			Required:    true,
 		},
 		"field": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value",
+			Description: "Assign a value extracted from a field. Can only be used if 'type' is set to 'field'",
 			Optional:    true,
 		},
 		"constant": {
 			Type:        schema.TypeString,
-			Description: "Strategy to assign a value",
+			Description: "Assign a constant value. Can only be used if 'type' is set to 'constant'",
 			Optional:    true,
 		},
 		"multi_value_constant": {
 			Type:        schema.TypeList,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "Strategy to assign a value",
+			Description: "The constant multi value to assign. Can only be used if 'type' is set to 'multiValueConstant'",
 			Optional:    true, // precondition
 		},
 	}
+}
 
+func (ep *ValueAssignment) HandlePreconditions() error {
+	if (ep.Field == nil) && (string(ep.Type) == "field") {
+		return fmt.Errorf("'field' must be specified if 'type' is set to '%v'", ep.Type)
+	}
+
+	if (ep.Constant == nil) && (string(ep.Type) == "constant") {
+		return fmt.Errorf("'constant' must be specified if 'type' is set to '%v'", ep.Type)
+	}
+
+	if (ep.MultiValueConstant == nil) && (string(ep.Type) == "multiValueConstant") {
+		return fmt.Errorf("'multi_value_constant' must be specified if 'type' is set to '%v'", ep.Type)
+	}
+
+	return nil
 }
 
 func (ep *ValueAssignment) MarshalHCL(properties hcl.Properties) error {
