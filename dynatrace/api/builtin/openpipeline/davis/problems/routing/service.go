@@ -28,5 +28,8 @@ const SchemaVersion = "1.6"
 const SchemaID = "builtin:openpipeline.davis.problems.routing"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+	defaultValue := new(service.Settings)
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*service.Settings]{
+		UpdateOnDelete: &defaultValue,
+	})
 }

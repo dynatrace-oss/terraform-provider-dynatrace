@@ -550,6 +550,9 @@ func (me *service[T]) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service[T]) delete(ctx context.Context, id string, numRetries int) error {
+	if me.options != nil && me.options.UpdateOnDelete != nil {
+		return me.Update(ctx, id, *me.options.UpdateOnDelete)
+	}
 	err := me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
 	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
 		return nil

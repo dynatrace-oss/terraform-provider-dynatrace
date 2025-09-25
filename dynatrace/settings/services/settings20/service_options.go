@@ -28,6 +28,8 @@ type ServiceOptions[T settings.Settings] struct {
 	LegacyID       func(id string) string
 	Name           func(ctx context.Context, id string, v T) (string, error)
 	HijackOnCreate func(err error, service settings.RService[T], v T) (*api.Stub, error)
+	// instead of calling the delete, it's calling update with the given value. This is useful for single configuration objects (multiObject: false)
+	UpdateOnDelete *T
 	CreateRetry    func(v T, err error) T
 	UpdateRetry    func(v T, err error) T
 	Duplicates     func(ctx context.Context, service settings.RService[T], v T) (*api.Stub, error)
