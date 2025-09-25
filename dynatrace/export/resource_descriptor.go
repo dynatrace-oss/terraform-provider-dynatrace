@@ -388,9 +388,6 @@ import (
 	calculated_synthetic_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 
-	openpipelineazurelogsforwardingingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/ingestsources"
-	openpipelineazurelogsforwardingpipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/pipelines"
-	openpipelineazurelogsforwardingrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/azure/logs/forwarding/routing"
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
 	openpipelinebizeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
 	openpipelinebizeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/routing"
@@ -1654,15 +1651,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.HostGroup),
 	),
 
-	ResourceTypes.OpenpipelineAzureLogsForwardingIngestsources: NewResourceDescriptor(
-		openpipelineazurelogsforwardingingestsources.Service,
-		Dependencies.ID(ResourceTypes.OpenpipelineAzureLogsForwardingPipelines),
-	),
-	ResourceTypes.OpenpipelineAzureLogsForwardingPipelines: NewResourceDescriptor(openpipelineazurelogsforwardingpipelines.Service),
-	ResourceTypes.OpenpipelineAzureLogsForwardingRouting: NewResourceDescriptor(
-		openpipelineazurelogsforwardingrouting.Service,
-		Dependencies.ID(ResourceTypes.OpenpipelineAzureLogsForwardingPipelines),
-	),
 	ResourceTypes.OpenpipelineBizeventsIngestsources: NewResourceDescriptor(
 		openpipelinebizeventsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
