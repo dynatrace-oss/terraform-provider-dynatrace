@@ -23,13 +23,16 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"golang.org/x/oauth2"
 
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
+
 	"github.com/go-logr/logr"
+
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 const endpointPath = "api/v2/settings/objects"
@@ -266,7 +269,7 @@ func (c client) create(ctx context.Context, data []byte) (*http.Response, error)
 }
 
 func IsSkipRepairSchemaID(schemaID string) bool {
-	return false
+	return strings.HasPrefix(schemaID, "builtin:openpipeline.")
 }
 
 func (c client) setRepairInput(options *rest.RequestOptions) {
