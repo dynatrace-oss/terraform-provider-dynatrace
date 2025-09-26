@@ -30,6 +30,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 resource "dynatrace_site_reliability_guardian" "#name#" {
   name = "Test"
   tags = [ "stage:staging" ]
+  event_kind = "BIZ_EVENT"
   objectives {
     objective {
       name                = "Error rate"
@@ -70,6 +71,7 @@ resource "dynatrace_site_reliability_guardian" "#name#" {
 ### Optional
 
 - `description` (String) Description
+- `event_kind` (String) If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events
 - `tags` (Set of String) Define key/value pairs that further describe this guardian.
 - `variables` (Block List, Max: 1) Define variables for dynamically defining DQL queries (see [below for nested schema](#nestedblock--variables))
 

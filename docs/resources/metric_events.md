@@ -141,7 +141,7 @@ Required:
 Required:
 
 - `alert_condition` (String) Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`
-- `alert_on_no_data` (Boolean) The ability to set an alert on missing data in a metric. When enabled, missing data samples will contribute as violating samples defined in advanced model properties. We recommend to not alert on missing data for sparse timeseries as this leads to alert spam.
+- `alert_on_no_data` (Boolean) The ability to set an alert on missing data in a metric. When enabled, missing data samples will be treated as violating samples defined in the advanced model properties. When disabled, missing data is not treated as a violation but will still contribute to dealerting. We recommend disabling alerting on missing data for sparse timeseries to avoid false alerts. To learn more, visit [anomaly detection configuration](https://dt-url.net/lz02mwi).
 - `dealerting_samples` (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event.
 - `samples` (Number) The number of one-minute samples that form the sliding evaluation window.
 - `type` (String) Possible Values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`

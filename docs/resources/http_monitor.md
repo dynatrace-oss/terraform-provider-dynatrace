@@ -499,7 +499,7 @@ Optional:
 
 Required:
 
-- `threshold` (Block List, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
+- `threshold` (Block Set, Min: 1) The list of performance threshold rules (see [below for nested schema](#nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold))
 
 <a id="nestedblock--anomaly_detection--loading_time_thresholds--thresholds--threshold"></a>
 ### Nested Schema for `anomaly_detection.loading_time_thresholds.thresholds.threshold`
