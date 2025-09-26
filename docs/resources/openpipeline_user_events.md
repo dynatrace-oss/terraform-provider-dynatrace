@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_openpipeline_user_events Resource - terraform-provider-dynatrace"
-subcategory: "OpenPipeline"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_openpipeline_user_events` covers configuration of OpenPipeline for user events
 ---
 
 # dynatrace_openpipeline_user_events (Resource)
+
+!> This resource API endpoint has been deprecated, please migrate your openpipeline configurations and use `dynatrace_openpipeline_v2_user_events_*` instead.
 
 !> Deploying an OpenPipeline configuration will overwrite the existing one of the same kind, causing any manual changes made in the web UI or other configurations managed by Terraform or Monaco to be lost. Ensure all configurations are defined within a single Terraform or Monaco configuration to prevent data loss.
 
