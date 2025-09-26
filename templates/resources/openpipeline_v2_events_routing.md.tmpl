@@ -8,6 +8,8 @@ description: |-
 
 # dynatrace_openpipeline_v2_events_routing (Resource)
 
+!> Deploying an OpenPipeline routing configuration will overwrite the existing one of the same kind, causing any manual changes made in the web UI or other routing configurations managed by Terraform or Monaco to be lost. Ensure all routing configurations of the same kind are defined within a single Terraform or Monaco configuration to prevent data loss.
+
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
 -> This resource requires the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`)
