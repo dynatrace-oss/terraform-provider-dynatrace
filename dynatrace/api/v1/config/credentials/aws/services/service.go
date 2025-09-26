@@ -70,7 +70,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 			return nil, err
 		}
 		for _, servicesStub := range servicesStubs.Services {
-			stubs = append(stubs, &api.Stub{ID: credentialStub.ID + "#" + servicesStub.Name, Name: credentialStub.ID + "_" + servicesStub.Name})
+			stubs = append(stubs, &api.Stub{ID: credentialStub.ID + "#" + servicesStub.Name, Name: credentialStub.ID + "_" + servicesStub.Name, Prefix: credentialStub.ID})
 		}
 	}
 	return stubs, nil

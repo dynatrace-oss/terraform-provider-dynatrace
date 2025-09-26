@@ -58,6 +58,8 @@ type Resource struct {
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
 	ResourceMutex                   *sync.Mutex
 	StatusMutex                     sync.Mutex
+	// Prefix is used for prefixing the resource name and file name.
+	Prefix string
 }
 
 func (me *Resource) GetStatus() ResourceStatus {
@@ -316,6 +318,9 @@ func (me *Resource) Download() error {
 		return err
 	}
 	name := settings.Name(settngs, me.ID)
+	if me.Prefix != "" {
+		name = fmt.Sprintf("%s_%s", me.Prefix, name)
+	}
 	me.SetName(name)
 
 	legacyID := settings.GetLegacyID(settngs)

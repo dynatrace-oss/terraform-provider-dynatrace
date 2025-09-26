@@ -28,7 +28,9 @@ type Stub struct {
 	Value    any     `json:"-"`
 	LegacyID *string `json:"legacyID,omitempty"`
 	ParentID *string `json:"parentID,omitempty"`
-	Extra    map[string]any
+	// Prefix is used for prefixing the resource name and file name.
+	Prefix string
+	Extra  map[string]any
 }
 
 type Stubs []*Stub

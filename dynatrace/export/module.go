@@ -279,7 +279,7 @@ func (me *Module) GetResourceReferences() []*Resource {
 	return result
 }
 
-func (me *Module) Resource(id string) *Resource {
+func (me *Module) Resource(id string, parentName string) *Resource {
 	me.ModuleMutex.Lock()
 	defer me.ModuleMutex.Unlock()
 	if stored, found := me.Resources[id]; found {
@@ -292,6 +292,7 @@ func (me *Module) Resource(id string) *Resource {
 		PrivateStatus:                   ResourceStati.Discovered,
 		ExtractedIdsPerDependencyModule: map[string]map[string]bool{},
 		ResourceMutex:                   new(sync.Mutex),
+		Prefix:                          parentName,
 	}
 	me.Resources[id] = res
 	return res
@@ -1346,7 +1347,7 @@ func (me *Module) Discover() error {
 			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
 			continue
 		}
-		res := me.Resource(stub.ID).SetName(stub.Name)
+		res := me.Resource(stub.ID, stub.Prefix).SetName(stub.Name)
 		if stub.LegacyID != nil {
 			res.LegacyID = *stub.LegacyID
 		}
