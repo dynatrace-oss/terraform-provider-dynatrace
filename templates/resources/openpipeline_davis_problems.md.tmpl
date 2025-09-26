@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_openpipeline_davis_problems Resource - terraform-provider-dynatrace"
-subcategory: "OpenPipeline"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_openpipeline_davis_problems` covers configuration of OpenPipeline for Davis problems
 ---
 
 # dynatrace_openpipeline_davis_problems (Resource)
+
+!> This resource API endpoint has been deprecated, please migrate your openpipeline configurations and use `dynatrace_openpipeline_v2_davis_problems_*` instead.
 
 !> Deploying an OpenPipeline configuration will overwrite the existing one of the same kind, causing any manual changes made in the web UI or other configurations managed by Terraform or Monaco to be lost. Ensure all configurations are defined within a single Terraform or Monaco configuration to prevent data loss.
 
