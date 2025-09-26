@@ -230,7 +230,7 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 				return
 			}
 			for _, entry := range entries {
-				if !strings.HasSuffix(entry.Name(), ".tf") {
+				if !strings.HasSuffix(entry.Name(), ".tf") || strings.HasSuffix(entry.Name(), "__providers__.tf") {
 					continue
 				}
 				allFiles = append(allFiles, path.Join(folder, entry.Name()))
