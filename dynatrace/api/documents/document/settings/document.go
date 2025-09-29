@@ -24,8 +24,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const SchemaVersion = 3
-
 type Document struct {
 	Name          string `json:"name" maxlength:"200"`
 	Content       string `json:"content,omitempty"`
@@ -98,22 +96,20 @@ func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 
 func (me *Document) MarshalJSON() ([]byte, error) {
 	d := struct {
-		Name          string `json:"name"`
-		Content       string `json:"content,omitempty"`
-		Private       bool   `json:"isPrivate,omitempty"`
-		Type          string `json:"type"`
-		Actor         string `json:"actor,omitempty"`
-		Owner         string `json:"owner,omitempty"`
-		Version       int    `json:"version,omitempty"`
-		SchemaVersion int    `json:"schemaVersion,omitempty"`
+		Name    string `json:"name"`
+		Content string `json:"content,omitempty"`
+		Private bool   `json:"isPrivate,omitempty"`
+		Type    string `json:"type"`
+		Actor   string `json:"actor,omitempty"`
+		Owner   string `json:"owner,omitempty"`
+		Version int    `json:"version,omitempty"`
 	}{
-		SchemaVersion: SchemaVersion,
-		Name:          me.Name,
-		Private:       me.IsPrivate,
-		Content:       me.Content,
-		Type:          me.Type,
-		Owner:         me.Owner,
-		Version:       me.Version,
+		Name:    me.Name,
+		Private: me.IsPrivate,
+		Content: me.Content,
+		Type:    me.Type,
+		Owner:   me.Owner,
+		Version: me.Version,
 	}
 	return json.Marshal(d)
 }

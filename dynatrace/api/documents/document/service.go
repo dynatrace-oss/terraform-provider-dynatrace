@@ -62,7 +62,6 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 				v.Type = stateDocument.Type
 				v.Owner = stateDocument.Owner
 				v.Version = stateDocument.Version
-				v.SchemaVersion = stateDocument.SchemaVersion
 				return nil
 			}
 		}
