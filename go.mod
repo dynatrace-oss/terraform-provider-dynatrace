@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/dlclark/regexp2 v1.11.4
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20250909143246-7fb4c95b93f2
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20250929124837-64123fbe037b
 	github.com/go-logr/logr v1.4.3
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
