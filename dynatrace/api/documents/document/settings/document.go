@@ -57,11 +57,9 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook", "launchpad"}),
 		},
 		"owner": {
-			Type:             schema.TypeString,
-			Description:      "The ID of the owner of this document",
-			Optional:         true,
-			Computed:         true,
-			ValidateDiagFunc: ValidateUUIDOrEmpty,
+			Type:        schema.TypeString,
+			Description: "The ID of the owner of this document",
+			Computed:    true,
 		},
 		"content": {
 			Type:        schema.TypeString,
