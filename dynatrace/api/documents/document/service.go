@@ -60,7 +60,6 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 				v.Content = stateDocument.Content
 				v.IsPrivate = stateDocument.IsPrivate
 				v.Type = stateDocument.Type
-				v.Actor = stateDocument.Actor
 				v.Owner = stateDocument.Owner
 				v.Version = stateDocument.Version
 				v.SchemaVersion = stateDocument.SchemaVersion
@@ -84,7 +83,6 @@ func (me *service) get(ctx context.Context, id string, v *documents.Document) (e
 		return err
 	}
 
-	v.Actor = result.Actor
 	v.Content = string(result.Data)
 	v.IsPrivate = result.IsPrivate
 	v.Name = result.Name

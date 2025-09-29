@@ -31,7 +31,6 @@ type Document struct {
 	Content       string `json:"content,omitempty"`
 	IsPrivate     bool   `json:"isPrivate,omitempty"`
 	Type          string `json:"type"`
-	Actor         string `json:"actor,omitempty" maxlength:"36" format:"uuid"`
 	Owner         string `json:"owner,omitempty" format:"uuid"`
 	Version       int    `json:"version,omitempty"`
 	SchemaVersion int    `json:"schemaVersion,omitempty"`
@@ -56,13 +55,6 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Description:      "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
 			Required:         true,
 			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook", "launchpad"}),
-		},
-		"actor": {
-			Type:             schema.TypeString,
-			Description:      "The user context the executions of the document will happen with",
-			Optional:         true,
-			Computed:         true,
-			ValidateDiagFunc: Validate(ValidateUUIDOrEmpty, ValidateMaxLength(36)),
 		},
 		"owner": {
 			Type:             schema.TypeString,
@@ -90,7 +82,6 @@ func (me *Document) MarshalHCL(properties hcl.Properties) error {
 		"content": me.Content,
 		"private": me.IsPrivate,
 		"type":    me.Type,
-		"actor":   me.Actor,
 		"owner":   me.Owner,
 		"version": me.Version,
 	})
@@ -102,7 +93,6 @@ func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 		"content": &me.Content,
 		"private": &me.IsPrivate,
 		"type":    &me.Type,
-		"actor":   &me.Actor,
 		"owner":   &me.Owner,
 		"version": &me.Version,
 	})
@@ -124,7 +114,6 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 		Private:       me.IsPrivate,
 		Content:       me.Content,
 		Type:          me.Type,
-		Actor:         me.Actor,
 		Owner:         me.Owner,
 		Version:       me.Version,
 	}
