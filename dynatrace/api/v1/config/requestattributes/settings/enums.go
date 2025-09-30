@@ -573,6 +573,7 @@ var ServiceTechnologys = struct {
 	Jruby                                ServiceTechnology
 	Jython                               ServiceTechnology
 	Kotlin                               ServiceTechnology
+	KotlinCoroutines                     ServiceTechnology
 	Kubernetes                           ServiceTechnology
 	Laminas                              ServiceTechnology
 	Laravel                              ServiceTechnology
@@ -801,6 +802,7 @@ var ServiceTechnologys = struct {
 	"JRUBY",
 	"JYTHON",
 	"KOTLIN",
+	"KOTLIN_COROUTINES",
 	"KUBERNETES",
 	"LAMINAS",
 	"LARAVEL",
@@ -912,6 +914,7 @@ var Operators = struct {
 	EndsWithAnyOf   Operator
 	Equals          Operator
 	EqualsAnyOf     Operator
+	NotEmpty        Operator
 }{
 	"BEGINS_WITH",
 	"BEGINS_WITH_ANY_OF",
@@ -920,6 +923,7 @@ var Operators = struct {
 	"ENDS_WITH_ANY_OF",
 	"EQUALS",
 	"EQUALS_ANY_OF",
+	"NOT_EMPTY",
 }
 
 type TransactionCallType string
