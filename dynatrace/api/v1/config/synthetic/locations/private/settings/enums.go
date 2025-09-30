@@ -90,3 +90,19 @@ var Statuses = struct {
 	Status("ENABLED"),
 	Status("HIDDEN"),
 }
+
+type FipsMode string
+
+var FipsModes = struct {
+	Disabled                  FipsMode
+	Enabled                   FipsMode
+	EnabledWithCorporateProxy FipsMode
+}{
+	FipsMode("DISABLED"),
+	FipsMode("ENABLED"),
+	FipsMode("ENABLED_WITH_CORPORATE_PROXY"),
+}
+
+func (me FipsMode) Ref() *FipsMode {
+	return &me
+}

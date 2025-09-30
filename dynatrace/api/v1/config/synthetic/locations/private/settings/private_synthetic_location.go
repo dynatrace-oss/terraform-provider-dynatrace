@@ -47,6 +47,7 @@ type PrivateSyntheticLocation struct {
 	NodeSize                         *string         `json:"nodeSize"`
 	NAMExecutionSupported            *bool           `json:"namExecutionSupported,omitempty"`   // Boolean value describes if icmp monitors will be executed on this location
 	UseNewKubernetesVersion          *bool           `json:"useNewKubernetesVersion,omitempty"` // Boolean value describes which kubernetes version will be used
+	FipsMode                         *FipsMode       `json:"fipsMode,omitempty"`                // Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`
 }
 
 func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
@@ -144,6 +145,12 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 			Description: "Boolean value describes which kubernetes version will be used",
 			Optional:    true,
 		},
+		"fips_mode": {
+			Type:        schema.TypeString,
+			Description: "Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`",
+			Optional:    true,
+			Default:     "DISABLED",
+		},
 	}
 }
 
@@ -200,6 +207,9 @@ func (me *PrivateSyntheticLocation) MarshalHCL(properties hcl.Properties) error 
 		return err
 	}
 	if err := properties.Encode("use_new_kubernetes_version", me.UseNewKubernetesVersion); err != nil {
+		return err
+	}
+	if err := properties.Encode("fips_mode", me.FipsMode); err != nil {
 		return err
 	}
 
@@ -264,6 +274,9 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("use_new_kubernetes_version"); ok {
 		me.UseNewKubernetesVersion = opt.NewBool(value.(bool))
+	}
+	if value, ok := decoder.GetOk("fips_mode"); ok {
+		me.FipsMode = FipsMode(value.(string)).Ref()
 	}
 	return nil
 }
