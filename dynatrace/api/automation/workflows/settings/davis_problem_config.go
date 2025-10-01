@@ -18,6 +18,8 @@
 package workflows
 
 import (
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -25,7 +27,7 @@ import (
 
 type DavisProblemConfig struct {
 	EntityTagsMatch *EntityTagsMatch        `json:"entityTagsMatch"`                // Possible values: `all` and `any`
-	EntityTags      map[string]string       `json:"entityTags"`                     //
+	EntityTags      map[string]StringArray  `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 	OnProblemClose  bool                    `json:"onProblemClose" default:"false"` //
 	Categories      *DavisProblemCategories `json:"categories"`                     //
 	CustomFilter    string                  `json:"customFilter,omitempty"`         //
@@ -42,7 +44,7 @@ func (me *DavisProblemConfig) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"entity_tags": {
 			Type:         schema.TypeMap,
-			Description:  "key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Omit this attribute if all entities should match",
+			Description:  "key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match",
 			Optional:     true,
 			Elem:         &schema.Schema{Type: schema.TypeString},
 			RequiredWith: []string{prefix + ".0.entity_tags_match"},
@@ -69,9 +71,11 @@ func (me *DavisProblemConfig) Schema(prefix string) map[string]*schema.Schema {
 }
 
 func (me *DavisProblemConfig) MarshalHCL(properties hcl.Properties) error {
+	if err := me.MarshalEntityTagsHCL(properties); err != nil {
+		return err
+	}
 	return properties.EncodeAll(map[string]any{
 		"entity_tags_match": me.EntityTagsMatch,
-		"entity_tags":       me.EntityTags,
 		"on_problem_close":  me.OnProblemClose,
 		"categories":        me.Categories,
 		"custom_filter":     me.CustomFilter,
@@ -79,11 +83,58 @@ func (me *DavisProblemConfig) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DavisProblemConfig) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := me.UnmarshalEntityTagsHCL(decoder); err != nil {
+		return err
+	}
 	return decoder.DecodeAll(map[string]any{
 		"entity_tags_match": &me.EntityTagsMatch,
-		"entity_tags":       &me.EntityTags,
 		"on_problem_close":  &me.OnProblemClose,
 		"categories":        &me.Categories,
 		"custom_filter":     &me.CustomFilter,
 	})
+}
+
+func (me *DavisProblemConfig) MarshalEntityTagsHCL(properties hcl.Properties) error {
+	entityTagsMap := map[string]string{}
+	for k, v := range me.EntityTags {
+		if len(k) == 0 {
+			continue
+		}
+		if len(v) == 0 {
+			continue
+		}
+		entityTagsMap[k] = strings.Join([]string(v), " ")
+	}
+	if len(entityTagsMap) > 0 {
+		if err := properties.Encode("entity_tags", entityTagsMap); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (me *DavisProblemConfig) UnmarshalEntityTagsHCL(decoder hcl.Decoder) error {
+	entityTagsMap := map[string]string{}
+	if err := decoder.Decode("entity_tags", &entityTagsMap); err != nil {
+		return err
+	}
+	for k, v := range entityTagsMap {
+		if len(k) == 0 {
+			continue
+		}
+		if me.EntityTags == nil {
+			me.EntityTags = map[string]StringArray{}
+		}
+		parts := strings.Split(v, " ")
+		var sa StringArray
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p == "" {
+				continue
+			}
+			sa = append(sa, p)
+		}
+		me.EntityTags[k] = sa
+	}
+	return nil
 }
