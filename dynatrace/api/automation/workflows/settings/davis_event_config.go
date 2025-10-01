@@ -18,17 +18,19 @@
 package workflows
 
 import (
+	"strings"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type DavisEventConfig struct {
-	EntityTagsMatch EntityTagsMatch     `json:"entityTagsMatch"`                // Possible values: `all` and `any`
-	EntityTags      map[string][]string `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Omit this attribute if all entities should match
-	OnProblemClose  bool                `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
-	Types           []string            `json:"types" flags:"uniqueitems"`      // The types of davis events to trigger an execution
-	Names           DavisEventNames     `json:"names"`
+	EntityTagsMatch EntityTagsMatch        `json:"entityTagsMatch"`                // Possible values: `all` and `any`
+	EntityTags      map[string]StringArray `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match
+	OnProblemClose  bool                   `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
+	Types           []string               `json:"types" flags:"uniqueitems"`      // The types of davis events to trigger an execution
+	Names           DavisEventNames        `json:"names"`
 }
 
 func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
@@ -41,7 +43,7 @@ func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"entity_tags": {
 			Type:        schema.TypeMap,
-			Description: "key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Omit this attribute if all entities should match",
+			Description: "key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
@@ -102,15 +104,7 @@ func (me *DavisEventConfig) MarshalEntityTagsHCL(properties hcl.Properties) erro
 		if len(v) == 0 {
 			continue
 		}
-		var val string
-		for _, velem := range v {
-			if len(velem) == 0 {
-				continue
-			}
-			val = velem
-			break
-		}
-		entityTagsMap[k] = val
+		entityTagsMap[k] = strings.Join([]string(v), " ")
 	}
 	if len(entityTagsMap) > 0 {
 		if err := properties.Encode("entity_tags", entityTagsMap); err != nil {
@@ -130,9 +124,18 @@ func (me *DavisEventConfig) UnmarshalEntityTagsHCL(decoder hcl.Decoder) error {
 			continue
 		}
 		if me.EntityTags == nil {
-			me.EntityTags = map[string][]string{}
+			me.EntityTags = map[string]StringArray{}
 		}
-		me.EntityTags[k] = []string{v}
+		parts := strings.Split(v, " ")
+		var sa StringArray
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p == "" {
+				continue
+			}
+			sa = append(sa, p)
+		}
+		me.EntityTags[k] = sa
 	}
 	return nil
 }
