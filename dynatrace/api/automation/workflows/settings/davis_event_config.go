@@ -130,9 +130,6 @@ func (me *DavisEventConfig) UnmarshalEntityTagsHCL(decoder hcl.Decoder) error {
 		var sa StringArray
 		for _, p := range parts {
 			p = strings.TrimSpace(p)
-			if p == "" {
-				continue
-			}
 			sa = append(sa, p)
 		}
 		me.EntityTags[k] = sa
