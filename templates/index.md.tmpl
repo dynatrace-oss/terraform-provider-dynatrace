@@ -122,7 +122,7 @@ If `DYNATRACE_HTTP_OAUTH_PREFERENCE` is not set or is not `true`, the provider w
 You can authenticate using a Platform Token by setting the environment variable:
 
 ```
-DYNATRACE_PLATFORM_TOKEN
+DYNATRACE_PLATFORM_TOKEN=<<PLATFORM_TOKEN>>
 ```
 
 Alternatively, you can use the `platform_token` attribute in the provider configuration.
