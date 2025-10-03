@@ -1,0 +1,27 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "The configuration of AutomationEngine approval task processing.",
+	"displayName": "Automation workflow approval",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"workflowAppAccessApprovalEnabled": {
+			"default": true,
+			"description": "Allow on tenant level anyone with access to the app can respond to requests via an approval link.",
+			"displayName": "Enable approval response for users with workflow app access",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		}
+	},
+	"schemaId": "builtin:automation.approval",
+	"types": {},
+	"version": "0.2"
+}

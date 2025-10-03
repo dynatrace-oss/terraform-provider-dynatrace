@@ -96,6 +96,7 @@ import (
 	attributemasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
 	attributespreferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/preferences"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/auditlog"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/automation/approval"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/availability/processgroupalerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/capturingvariants"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/http/incoming"
@@ -1768,6 +1769,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusersessionsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
+	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
 }
 
 type ResourceExclusion struct {
