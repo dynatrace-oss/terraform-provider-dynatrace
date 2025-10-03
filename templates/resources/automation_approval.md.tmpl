@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title:  {{.Type}} - {{.ProviderName}}"
+subcategory: "Automation"
+description: |-
+  The resource `{{ .Name }}` covers configuration for automation workflow approval
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Dynatrace Workflows - https://www.dynatrace.com/support/help/platform-modules/cloud-automation/workflows
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:automation.approval)
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/automation/approval/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
