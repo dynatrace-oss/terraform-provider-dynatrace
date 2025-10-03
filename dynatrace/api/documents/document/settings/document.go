@@ -26,6 +26,7 @@ import (
 )
 
 type Document struct {
+	ID            string `json:"id,omitempty"`
 	Name          string `json:"name" maxlength:"200"`
 	Content       string `json:"content,omitempty"`
 	IsPrivate     bool   `json:"isPrivate,omitempty"`
@@ -37,11 +38,19 @@ type Document struct {
 
 func (me *Document) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"custom_id": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			ForceNew:         true, // An ID can't be updated, that's why it needs to be re-created
+			Computed:         true, // ForceNew will not trigger if the property is removed
+			Description:      "If provided, this will be the id of the document. If not provided, a system-generated id is used.",
+			ValidateDiagFunc: validation.AllDiag(validation.ToDiagFunc(validation.StringLenBetween(0, 100)), ValidateNotUUID),
+		},
 		"name": {
-			Type:         schema.TypeString,
-			Description:  "The name/name of the document",
-			Required:     true,
-			ValidateFunc: validation.StringLenBetween(1, 200),
+			Type:             schema.TypeString,
+			Description:      "The name/name of the document",
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringLenBetween(1, 200)),
 		},
 		"private": {
 			Type:        schema.TypeBool,
@@ -50,10 +59,10 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Default:     false,
 		},
 		"type": {
-			Type:         schema.TypeString,
-			Description:  "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
-			Required:     true,
-			ValidateFunc: validation.StringInSlice([]string{"dashboard", "notebook", "launchpad"}, false),
+			Type:             schema.TypeString,
+			Description:      "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"dashboard", "notebook", "launchpad"}, false)),
 		},
 		"owner": {
 			Type:        schema.TypeString,
@@ -74,6 +83,12 @@ func (me *Document) Schema() map[string]*schema.Schema {
 }
 
 func (me *Document) MarshalHCL(properties hcl.Properties) error {
+	// the custom ID in the document should only be set if it's not a UUID. Else it will be set for export
+	if !ValidateIsUUID(me.ID) {
+		if err := properties.Encode("custom_id", me.ID); err != nil {
+			return err
+		}
+	}
 	return properties.EncodeAll(map[string]any{
 		"name":    me.Name,
 		"content": me.Content,
@@ -86,17 +101,19 @@ func (me *Document) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":    &me.Name,
-		"content": &me.Content,
-		"private": &me.IsPrivate,
-		"type":    &me.Type,
-		"owner":   &me.Owner,
-		"version": &me.Version,
+		"custom_id": &me.ID,
+		"name":      &me.Name,
+		"content":   &me.Content,
+		"private":   &me.IsPrivate,
+		"type":      &me.Type,
+		"owner":     &me.Owner,
+		"version":   &me.Version,
 	})
 }
 
 func (me *Document) MarshalJSON() ([]byte, error) {
 	d := struct {
+		ID      string `json:"id,omitempty"`
 		Name    string `json:"name"`
 		Content string `json:"content,omitempty"`
 		Private bool   `json:"isPrivate,omitempty"`
@@ -105,6 +122,7 @@ func (me *Document) MarshalJSON() ([]byte, error) {
 		Owner   string `json:"owner,omitempty"`
 		Version int    `json:"version,omitempty"`
 	}{
+		ID:      me.ID,
 		Name:    me.Name,
 		Private: me.IsPrivate,
 		Content: me.Content,

@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+
 	docapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
 
@@ -56,6 +57,7 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 		if strings.Contains(err.Error(), "unexpected EOF") {
 			cfg := ctx.Value(settings.ContextKeyStateConfig)
 			if stateDocument, ok := cfg.(*documents.Document); ok {
+				v.ID = stateDocument.ID
 				v.Name = stateDocument.Name
 				v.Content = stateDocument.Content
 				v.IsPrivate = stateDocument.IsPrivate
@@ -82,6 +84,7 @@ func (me *service) get(ctx context.Context, id string, v *documents.Document) (e
 		return err
 	}
 
+	v.ID = result.ID
 	v.Content = string(result.Data)
 	v.IsPrivate = result.IsPrivate
 	v.Name = result.Name
@@ -149,7 +152,7 @@ func (me *service) createPrivate(ctx context.Context, v *documents.Document) (st
 	if err != nil {
 		return nil, err
 	}
-	response, err := c.Create(ctx, v.Name, v.IsPrivate, "", []byte(v.Content), docclient.DocumentType(v.Type))
+	response, err := c.Create(ctx, v.Name, v.IsPrivate, v.ID, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		if apiError, ok := err.(docapi.APIError); ok {
 			return nil, rest.Error{Code: apiError.StatusCode, Message: string(apiError.Body)}
