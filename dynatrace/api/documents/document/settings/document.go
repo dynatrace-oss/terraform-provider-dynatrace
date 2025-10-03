@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type Document struct {
@@ -37,10 +38,10 @@ type Document struct {
 func (me *Document) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
-			Type:             schema.TypeString,
-			Description:      "The name/name of the document",
-			Required:         true,
-			ValidateDiagFunc: ValidateMaxLength(200),
+			Type:         schema.TypeString,
+			Description:  "The name/name of the document",
+			Required:     true,
+			ValidateFunc: validation.StringLenBetween(1, 200),
 		},
 		"private": {
 			Type:        schema.TypeBool,
@@ -49,10 +50,10 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Default:     false,
 		},
 		"type": {
-			Type:             schema.TypeString,
-			Description:      "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
-			Required:         true,
-			ValidateDiagFunc: ValidateTypePossibleValues([]string{"dashboard", "notebook", "launchpad"}),
+			Type:         schema.TypeString,
+			Description:  "Type of the document. Possible Values are `dashboard`, `launchpad` and `notebook`",
+			Required:     true,
+			ValidateFunc: validation.StringInSlice([]string{"dashboard", "notebook", "launchpad"}, false),
 		},
 		"owner": {
 			Type:        schema.TypeString,
