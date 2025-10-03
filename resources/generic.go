@@ -166,8 +166,17 @@ func (me *Generic) Resource() *schema.Resource {
 }
 
 func (me *Generic) createCredentials(m any) (*rest.Credentials, error) {
+	// By default credential validation follows the default route
+	// (EnvURL, APIToken)
+	cv := config.CredValDefault
+	// Unless `me.CredentialValidation` vetoes it
+	// Example `dynatrace_iam_*` resources don't require environment URL
+	// But instead need OAuth Credentials
+	if me.CredentialValidation != cv {
+		cv = me.CredentialValidation
+	}
 	conf := m.(*config.ProviderConfiguration)
-	if _, err := config.Credentials(m, config.CredValDefault); err != nil {
+	if _, err := config.Credentials(m, cv); err != nil {
 		return nil, err
 	}
 	return &rest.Credentials{

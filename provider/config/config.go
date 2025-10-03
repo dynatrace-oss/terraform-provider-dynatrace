@@ -69,9 +69,12 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if len(conf.IAM.ClientSecret) == 0 {
 			return fmt.Errorf(" No OAuth Client Secret has been specified. Use either the environment variable `DT_CLIENT_SECRET` or the configuration attribute `iam_client_secret` of the provider for that")
 		}
-		if len(conf.IAM.TokenURL) == 0 {
-			return fmt.Errorf(" No OAuth TokenURL has been specified. Use either the environment variable `DT_TOKEN_URL` or the configuration attribute `iam_token_url` of the provider for that")
-		}
+		// We don't complain about a missing Token URL anymore
+		// It is either getting deducted from the Environment URL or assumed to be the default for a SaaS Production Tenant
+		//
+		// if len(conf.IAM.TokenURL) == 0 {
+		// 	return fmt.Errorf(" No OAuth TokenURL has been specified. Use either the environment variable `DT_TOKEN_URL` or the configuration attribute `iam_token_url` of the provider for that")
+		// }
 	case CredValCluster:
 		if len(conf.ClusterAPIToken) == 0 {
 			return fmt.Errorf(" No Cluster API Token has been specified. Use either the environment variable `DT_CLUSTER_API_TOKEN` or the configuration attribute `dt_cluster_api_token` of the provider for that")
@@ -215,13 +218,13 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 
 	automation_client_id = streamlineOAuthCreds(automation_client_id, client_id, iam_client_id)
 	automation_client_secret = streamlineOAuthCreds(automation_client_secret, client_secret, iam_client_secret)
-	automation_token_url = streamlineOAuthCreds(automation_token_url, token_url, iam_token_url)
+	automation_token_url = streamlineOAuthCreds(automation_token_url, token_url, iam_token_url, rest.ProdTokenURL)
 
 	iam_client_id = streamlineOAuthCreds(iam_client_id, client_id, automation_client_id)
 	iam_client_secret = streamlineOAuthCreds(iam_client_secret, client_secret, automation_client_secret)
-	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, automation_token_url)
+	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, automation_token_url, rest.ProdTokenURL)
 	iam_account_id = streamlineOAuthCreds(iam_account_id, account_id)
-	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url)
+	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url, rest.ProdIAMEndpointURL)
 
 	var diags diag.Diagnostics
 
