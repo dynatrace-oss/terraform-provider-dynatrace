@@ -196,6 +196,9 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
+	if strings.HasPrefix(name, "custom:") {
+		return nil
+	}
 	client := rest.HybridClient(me.credentials)
 	response := struct {
 		Name    string `json:"extensionName"`
