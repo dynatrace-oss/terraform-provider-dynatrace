@@ -23,7 +23,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -269,7 +268,7 @@ func (c client) create(ctx context.Context, data []byte) (*http.Response, error)
 }
 
 func IsSkipRepairSchemaID(schemaID string) bool {
-	return strings.HasPrefix(schemaID, "builtin:openpipeline.")
+	return false
 }
 
 func (c client) setRepairInput(options *rest.RequestOptions) {
