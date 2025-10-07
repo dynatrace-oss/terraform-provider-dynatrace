@@ -45,7 +45,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"credentials_id": {
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "the ID of the azure credentials this supported service belongs to",
+			Description: "the ID of the Azure credentials this supported service belongs to",
 			ForceNew:    true,
 		},
 		"name": {
