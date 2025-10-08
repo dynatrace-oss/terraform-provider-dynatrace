@@ -116,3 +116,10 @@ func (me *hybrid_request) OnResponse(onResponse func(resp *http.Response)) Reque
 	me.onResponse = onResponse
 	return me
 }
+
+func (me *hybrid_request) SetHeader(name string, value string) {
+	if me.headers == nil {
+		me.headers = map[string]string{}
+	}
+	me.headers[name] = value
+}

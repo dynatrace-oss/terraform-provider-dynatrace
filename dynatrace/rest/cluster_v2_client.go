@@ -153,3 +153,10 @@ func (me *cluster_v2_request) OnResponse(onResponse func(resp *http.Response)) R
 	me.onResponse = onResponse
 	return me
 }
+
+func (me *cluster_v2_request) SetHeader(name string, value string) {
+	if me.headers == nil {
+		me.headers = map[string]string{}
+	}
+	me.headers[name] = value
+}

@@ -95,6 +95,13 @@ func (me *api_token_request) OnResponse(onResponse func(resp *http.Response)) Re
 	return me
 }
 
+func (me *api_token_request) SetHeader(name string, value string) {
+	if me.headers == nil {
+		me.headers = map[string]string{}
+	}
+	me.headers[name] = value
+}
+
 type classic_request request
 
 var classicClientCache = map[string]*rest.Client{}
@@ -165,6 +172,9 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
 		return err
+	}
+	for headername, headervalue := range me.headers {
+		client.SetHeader(headername, headervalue)
 	}
 
 	fullURL, err := url.Parse(classicURL + me.url)

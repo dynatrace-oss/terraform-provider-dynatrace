@@ -145,6 +145,10 @@ func (request *Request) OnResponse(onresponse func(resp *http.Response)) rest.Re
 	panic("unsupported operation")
 }
 
+func (me *Request) SetHeader(name string, value string) {
+	panic("unsupported operation")
+}
+
 func TestCustomTagExport(t *testing.T) {
 	client := NewTestClient(time.Millisecond * 2)
 	_, err := List(t.Context(), client)

@@ -144,3 +144,10 @@ func (me *cluster_request) evalClassicURL() string {
 	envURL = strings.ReplaceAll(envURL, ".apps.dynatrace.", ".live.dynatrace.")
 	return envURL
 }
+
+func (me *cluster_request) SetHeader(name string, value string) {
+	if me.headers == nil {
+		me.headers = map[string]string{}
+	}
+	me.headers[name] = value
+}
