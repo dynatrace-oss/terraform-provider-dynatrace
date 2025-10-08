@@ -196,10 +196,14 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
-	if strings.HasPrefix(name, "custom:") {
-		return nil
-	}
 	client := rest.HybridClient(me.credentials)
+	if strings.HasPrefix(name, "custom:") {
+		request := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200)
+		request.SetHeader("Accept", "application/json; charset=utf-8")
+		if err := request.Finish(); err != nil {
+			return err
+		}
+	}
 	response := struct {
 		Name    string `json:"extensionName"`
 		Version string `json:"extensionVersion"`
