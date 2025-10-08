@@ -3517,6 +3517,20 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
         run: go test -v ./dynatrace/api/v1/config/credentials/azure
+      - name: TestAzureService
+        if: success() || failure()
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: true
+          DYNATRACE_DEBUG: true
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: true
+          DT_NO_REPAIR_INPUT: false
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+        run: go test -v ./dynatrace/api/v1/config/credentials/azure/services
       - name: TestCloudFoundryCredentials
         if: success() || failure()
         env:
