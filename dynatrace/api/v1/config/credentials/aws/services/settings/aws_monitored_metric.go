@@ -46,7 +46,8 @@ func (amm *AWSMonitoredMetric) Schema() map[string]*schema.Schema {
 		"dimensions": {
 			Type:        schema.TypeList,
 			Description: "a list of metric's dimensions names",
-			Optional:    true,
+			MinItems:    1,
+			Required:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}
