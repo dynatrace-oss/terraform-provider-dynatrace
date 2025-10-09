@@ -26,6 +26,7 @@ import (
 	openpipeline "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	caclib "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/openpipeline"
 )
@@ -93,7 +94,14 @@ func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {
-	//create exactly one stub for this ID
+	client, err := s.createClient(ctx)
+	if err != nil {
+		return nil, err
+	}
+	// after migration the resource isn't available anymore (404)
+	if _, err = client.Get(ctx, s.kind); err != nil {
+		return nil, err
+	}
 
 	stub := api.Stub{ID: s.kind, Name: s.kind}
 	return api.Stubs{&stub}, nil
