@@ -30,5 +30,5 @@ test.log
 *.sh
 .vscode/*
 .DS_Store
-.env
+*.env
 __debug_bin*
