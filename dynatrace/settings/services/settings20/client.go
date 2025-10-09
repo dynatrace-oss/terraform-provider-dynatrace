@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
@@ -28,8 +29,6 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-
-	"github.com/go-logr/logr"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
@@ -204,14 +203,12 @@ func (c client) Update(ctx context.Context, id string, data []byte) (Response, e
 		return Response{api.Response{StatusCode: 0, Data: nil, Request: RequestInfo(nil)}, "", nil}, e
 	}
 
-	logger := logr.FromContextOrDiscard(ctx)
-
 	var resp *http.Response
 	var err error
 	var responseBody []byte
 
 	for i := 0; i < c.retrySettings.maxRetries; i++ {
-		logger.V(1).Info(fmt.Sprintf("Trying to update setting with id %q (%d/%d retries)", id, i+1, c.retrySettings.maxRetries))
+		slog.DebugContext(ctx, "Trying to update setting", slog.String("objectId", id), slog.Int("retryCount", i+1), slog.Int("maxRetryCount", c.retrySettings.maxRetries))
 
 		resp, err = c.update(ctx, id, dsou)
 		if err != nil {
@@ -227,7 +224,7 @@ func (c client) Update(ctx context.Context, id string, data []byte) (Response, e
 		}
 
 		if IsSuccess(resp) {
-			logger.Info(fmt.Sprintf("Updated setting with id %q", id))
+			slog.DebugContext(ctx, "Updated setting", slog.String("objectId", id))
 
 			return Response{api.Response{StatusCode: resp.StatusCode, Data: responseBody, Request: RequestInfo(resp.Request)}, id, nil}, err
 		}
