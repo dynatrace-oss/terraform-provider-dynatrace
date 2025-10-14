@@ -29,7 +29,7 @@ type GenericValueAssignment struct {
 	Constant           *string                        `json:"constant,omitempty"`           // Constant value
 	Field              *ValueAssignmentFromFieldEntry `json:"field,omitempty"`              // Value from field
 	MultiValueConstant []string                       `json:"multiValueConstant,omitempty"` // Constant multi value
-	Type               AssignmentType                 `json:"type"`                         // Possible Values: `Constant`, `Field`, `MultiValueConstant`
+	Type               AssignmentType                 `json:"type"`                         // Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
 }
 
 func (me *GenericValueAssignment) Schema() map[string]*schema.Schema {
@@ -55,7 +55,7 @@ func (me *GenericValueAssignment) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Constant`, `Field`, `MultiValueConstant`",
+			Description: "Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.",
 			Required:    true,
 		},
 	}

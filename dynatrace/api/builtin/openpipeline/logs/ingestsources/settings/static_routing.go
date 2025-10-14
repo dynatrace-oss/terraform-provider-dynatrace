@@ -28,7 +28,7 @@ import (
 type StaticRouting struct {
 	BuiltinPipelineID *string      `json:"builtinPipelineId,omitempty"` // Builtin Pipeline ID
 	PipelineID        *string      `json:"pipelineId,omitempty"`        // Pipeline ID
-	PipelineType      PipelineType `json:"pipelineType"`                // Possible Values: `Builtin`, `Custom`
+	PipelineType      PipelineType `json:"pipelineType"`                // Pipeline Type. Possible Values: `builtin`, `custom`.
 }
 
 func (me *StaticRouting) Schema() map[string]*schema.Schema {
@@ -45,7 +45,7 @@ func (me *StaticRouting) Schema() map[string]*schema.Schema {
 		},
 		"pipeline_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Builtin`, `Custom`",
+			Description: "Pipeline Type. Possible Values: `builtin`, `custom`.",
 			Required:    true,
 		},
 	}
