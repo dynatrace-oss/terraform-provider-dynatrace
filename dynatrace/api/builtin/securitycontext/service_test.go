@@ -19,10 +19,9 @@ package securitycontext_test
 
 import (
 	"testing"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccSecurityContext(t *testing.T) {
-	api.TestAcc(t)
+	t.Skip() // deprecated schema
+	// api.TestAcc(t)
 }

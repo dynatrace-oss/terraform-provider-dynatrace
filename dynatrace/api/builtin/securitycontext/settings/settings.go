@@ -26,6 +26,10 @@ type Settings struct {
 	Enabled bool `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 func (me *Settings) Name() string {
 	return "environment"
 }
