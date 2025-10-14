@@ -71,7 +71,7 @@ type Processor struct {
 	SecurityContext            *SecurityContextAttributes            `json:"securityContext,omitempty"`            // Security context processor attributes
 	SecurityEvent              *SecurityEventAttributes              `json:"securityEvent,omitempty"`              // Security event extraction processor attributes
 	Technology                 *TechnologyAttributes                 `json:"technology,omitempty"`                 // Technology processor attributes
-	Type                       ProcessorType                         `json:"type"`                                 // Possible Values: `AzureLogForwarding`, `Bizevent`, `BucketAssignment`, `CostAllocation`, `CounterMetric`, `Davis`, `Dql`, `Drop`, `FieldsAdd`, `FieldsRemove`, `FieldsRename`, `HistogramMetric`, `NoStorage`, `ProductAllocation`, `SamplingAwareCounterMetric`, `SamplingAwareValueMetric`, `SecurityContext`, `SecurityEvent`, `Technology`, `ValueMetric`
+	Type                       ProcessorType                         `json:"type"`                                 // Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareValueMetric`, `securityContext`, `securityEvent`, `technology`, `valueMetric`.
 	ValueMetric                *ValueMetricAttributes                `json:"valueMetric,omitempty"`                // Value metric processor attributes
 }
 
@@ -240,7 +240,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AzureLogForwarding`, `Bizevent`, `BucketAssignment`, `CostAllocation`, `CounterMetric`, `Davis`, `Dql`, `Drop`, `FieldsAdd`, `FieldsRemove`, `FieldsRename`, `HistogramMetric`, `NoStorage`, `ProductAllocation`, `SamplingAwareCounterMetric`, `SamplingAwareValueMetric`, `SecurityContext`, `SecurityEvent`, `Technology`, `ValueMetric`",
+			Description: "Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareValueMetric`, `securityContext`, `securityEvent`, `technology`, `valueMetric`.",
 			Required:    true,
 		},
 		"value_metric": {

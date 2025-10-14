@@ -25,7 +25,7 @@ import (
 type FieldExtraction struct {
 	Exclude []string               `json:"exclude,omitempty"` // Fields
 	Include FieldExtractionEntries `json:"include,omitempty"` // Fields
-	Type    FieldExtractionType    `json:"type"`              // Possible Values: `Exclude`, `Include`, `IncludeAll`
+	Type    FieldExtractionType    `json:"type"`              // Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`.
 }
 
 func (me *FieldExtraction) Schema() map[string]*schema.Schema {
@@ -46,7 +46,7 @@ func (me *FieldExtraction) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Exclude`, `Include`, `IncludeAll`",
+			Description: "Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`.",
 			Required:    true,
 		},
 	}

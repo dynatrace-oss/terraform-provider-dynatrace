@@ -23,20 +23,20 @@ import (
 )
 
 type SamplingAwareValueMetricAttributes struct {
-	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible Values: `Disabled`, `Enabled`
+	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible Values: `disabled`, `enabled`.
 	DefaultValue *string                `json:"defaultValue,omitempty"` // Default value with metric value
 	Dimensions   FieldExtractionEntries `json:"dimensions,omitempty"`   // List of dimensions
 	Field        *string                `json:"field,omitempty"`        // Field with metric value
-	Measurement  Measurement            `json:"measurement"`            // Possible Values: `Duration`, `Field`
+	Measurement  Measurement            `json:"measurement"`            // Possible Values: `duration`, `field`.
 	MetricKey    string                 `json:"metricKey"`              // Metric key
-	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible Values: `Disabled`, `Enabled`
+	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible Values: `disabled`, `enabled`.
 }
 
 func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aggregation": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Disabled`, `Enabled`",
+			Description: "Possible Values: `disabled`, `enabled`.",
 			Optional:    true, // nullable
 		},
 		"default_value": {
@@ -59,7 +59,7 @@ func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema
 		},
 		"measurement": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Duration`, `Field`",
+			Description: "Possible Values: `duration`, `field`.",
 			Required:    true,
 		},
 		"metric_key": {
@@ -69,7 +69,7 @@ func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema
 		},
 		"sampling": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Disabled`, `Enabled`",
+			Description: "Possible Values: `disabled`, `enabled`.",
 			Optional:    true, // nullable
 		},
 	}
