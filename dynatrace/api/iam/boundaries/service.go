@@ -126,11 +126,10 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
 	var err error
-	var responseBytes []byte
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.PUT_MULTI_RESPONSE(
+	if _, err = client.PUT_MULTI_RESPONSE(
 		ctx,
 		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
 		v,
@@ -138,15 +137,7 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 		false,
 	); err != nil {
 		return err
-	}
 
-	response := struct {
-		UUID string `json:"uuid"`
-		Name string `json:"name"`
-	}{}
-
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
-		return err
 	}
 
 	return nil
