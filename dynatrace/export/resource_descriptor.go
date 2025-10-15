@@ -151,8 +151,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hub/subscriptions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/awsconnection"
 
-	// connections_aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws"
-	// connections_aws_role_arn "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/role_arn"
+	connections_aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws"
+	connections_aws_role_arn "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/role_arn"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/imsbridges"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuesharinggroup"
@@ -1532,11 +1532,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.DevObsGitOnPrem:          NewResourceDescriptor(gitonprem.Service),
 	ResourceTypes.AWSAutomationConnections: NewResourceDescriptor(awsconnection.Service),
-	// ResourceTypes.AWSConnection:            NewResourceDescriptor(connections_aws.Service),
-	// ResourceTypes.AWSConnectionRoleARN: NewResourceDescriptor(
-	// 	connections_aws_role_arn.Service,
-	// 	Dependencies.ID(ResourceTypes.AWSConnection),
-	// ),
+	ResourceTypes.AWSConnection:            NewResourceDescriptor(connections_aws.Service),
+	ResourceTypes.AWSConnectionRoleARN: NewResourceDescriptor(
+		connections_aws_role_arn.Service,
+		Dependencies.ID(ResourceTypes.AWSConnection),
+	),
 	ResourceTypes.DevObsAgentOptin: NewResourceDescriptor(
 		agentoptin.Service,
 		Coalesce(Dependencies.ProcessGroup),
@@ -1909,12 +1909,12 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.SlackForWorkflows, ""},
 		},
 	},
-	// {
-	// 	Reason: "Would lead to circular dependencies",
-	// 	Exclusions: []ResourceExclusion{
-	// 		{ResourceTypes.AWSConnection, "Please export `dynatrace_aws_connection_role_arn` with `-ref` instead"},
-	// 	},
-	// },
+	{
+		Reason: "Would lead to circular dependencies",
+		Exclusions: []ResourceExclusion{
+			{ResourceTypes.AWSConnection, "Please export `dynatrace_aws_connection_role_arn` with `-ref` instead"},
+		},
+	},
 	{
 		Reason: "Generic resource against any Setting 2.0 schema",
 		Exclusions: []ResourceExclusion{

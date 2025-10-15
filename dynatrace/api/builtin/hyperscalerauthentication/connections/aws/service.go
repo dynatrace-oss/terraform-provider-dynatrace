@@ -18,9 +18,6 @@
 package aws
 
 import (
-	"context"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -30,54 +27,8 @@ import (
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 const SchemaVersion = "0.0.15"
 
+// An update should only happen when the role ARN is added. Otherwise, all attributes and subresources
+// are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
 func Service(credentials *rest.Credentials) settings.CRUDService[*awsconnection.Settings] {
-	return &service{settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)}
-}
-
-type service struct {
-	service settings.CRUDService[*awsconnection.Settings]
-}
-
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
-}
-
-func (me *service) Get(ctx context.Context, id string, v *awsconnection.Settings) error {
-	if err := me.service.Get(ctx, id, v); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (me *service) SchemaID() string {
-	return me.service.SchemaID()
-}
-
-func (me *service) Create(ctx context.Context, v *awsconnection.Settings) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
-}
-
-func (me *service) Update(ctx context.Context, id string, v *awsconnection.Settings) error {
-	return nil
-
-	///
-	/// An update "should" never happen. All attributes and subresources
-	/// are flagged as "forceNew"
-	///
-	// remoteValue := awsconnection.Settings{}
-	// if err := me.Get(ctx, id, &remoteValue); err != nil {
-	// 	return err
-	// }
-	// if remoteValue.AWSRoleBasedAuthentication != nil && v.AWSRoleBasedAuthentication != nil {
-	// 	v.AWSRoleBasedAuthentication.RoleARN = remoteValue.AWSRoleBasedAuthentication.RoleARN
-	// } else if remoteValue.AWSWebIdentity != nil && v.AWSWebIdentity != nil {
-	// 	v.AWSWebIdentity.RoleARN = remoteValue.AWSWebIdentity.RoleARN
-	// } else {
-	// 	return nil
-	// }
-	// return me.service.Update(ctx, id, v)
-}
-
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+	return settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)
 }
