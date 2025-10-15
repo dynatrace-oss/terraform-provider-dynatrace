@@ -19,6 +19,7 @@ package role_arn
 
 import (
 	"context"
+	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws"
@@ -68,33 +69,27 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub, error) {
-	if err := me.Update(ctx, v.AWSConnectionID, v); err != nil {
-		return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
-		// return nil, err
-	}
-	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
-}
-
-func (me *service) Update(ctx context.Context, id string, v *role_arn.Settings) error {
-	// we're not allowed to update with an empty roleARN
-	// But we want to avoid errors to get thrown back
-	if v.RoleARN == "" {
-		return nil
-	}
-
 	connValue := awsconnection_settings.Settings{}
 	if err := me.connService.Get(ctx, v.AWSConnectionID, &connValue); err != nil {
-		return err
+		return nil, err
 	}
 	if connValue.AWSRoleBasedAuthentication != nil {
 		connValue.AWSRoleBasedAuthentication.RoleARN = v.RoleARN
 	} else if connValue.AWSWebIdentity != nil {
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
-	return me.connService.Update(ctx, id, &connValue)
+	if err := me.connService.Update(ctx, v.AWSConnectionID, &connValue); err != nil {
+		return nil, err
+	}
+
+	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings) error {
+	return errors.New("update not supported: This resource is immutable after creation. Changes require replacement")
+}
+
+func (me *service) Delete(_ context.Context, _ string) error {
 	return nil
 	// Doesn't work right now - even updating to an empty roleARN errors out
 	// return me.Update(ctx, id, &role_arn.Settings{AWSConnectionID: id, RoleARN: ""})
