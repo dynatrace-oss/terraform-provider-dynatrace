@@ -20,6 +20,7 @@ package role_arn
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type Settings struct {
@@ -31,16 +32,18 @@ type Settings struct {
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aws_connection_id": {
-			Type:        schema.TypeString,
-			Description: "The ID of a `dynatrace_aws_connection` resource instance for which to define the AWS Role ARN",
-			Required:    true,
-			ForceNew:    true,
+			Type:             schema.TypeString,
+			Description:      "The ID of a `dynatrace_aws_connection` resource instance for which to define the AWS Role ARN",
+			Required:         true,
+			ForceNew:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 		},
 		"role_arn": {
-			Type:        schema.TypeString,
-			Description: "The ARN of the AWS role that should be assumed.",
-			ForceNew:    true,
-			Required:    true,
+			Type:             schema.TypeString,
+			Description:      "The ARN of the AWS role that should be assumed.",
+			ForceNew:         true,
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 		},
 	}
 }
