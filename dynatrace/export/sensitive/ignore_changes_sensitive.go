@@ -20,14 +20,25 @@ package sensitive
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// getBoolEnv reads a boolean environment variable with a default value
+func getBoolEnv(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if parsed, err := strconv.ParseBool(value); err == nil {
+			return parsed
+		}
+	}
+	return defaultValue
+}
+
 // Avoid overwriting password that the user has changed manually with known bad data
-var IGNORE_CHANGES_REQUIRES_ATTENTION = os.Getenv("DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION") == "true"
+var IGNORE_CHANGES_REQUIRES_ATTENTION = getBoolEnv("DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION", false)
 
 const SecretValueExact = "${state.secret_value.exact}"
 const SecretValue = "${state.secret_value}"

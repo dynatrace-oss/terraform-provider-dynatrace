@@ -171,7 +171,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"
 	}
-	if os.Getenv("DYNATRACE_CLEAN_TARGET_FOLDER") == "true" {
+	if getBoolEnv("DYNATRACE_CLEAN_TARGET_FOLDER", false) {
 		os.RemoveAll(targetFolder)
 	}
 

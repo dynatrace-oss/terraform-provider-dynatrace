@@ -28,6 +28,7 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -46,11 +47,21 @@ import (
 	"github.com/spf13/afero"
 )
 
-var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
-var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
-var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
+// getBoolEnv reads a boolean environment variable with a default value
+func getBoolEnv(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if parsed, err := strconv.ParseBool(value); err == nil {
+			return parsed
+		}
+	}
+	return defaultValue
+}
 
-// var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
+var NO_REFRESH_ON_IMPORT = getBoolEnv("DYNATRACE_NO_REFRESH_ON_IMPORT", false)
+var QUICK_INIT = getBoolEnv("DYNATRACE_QUICK_INIT", false)
+var ULTRA_PARALLEL = getBoolEnv("DYNATRACE_ULTRA_PARALLEL", false)
+
+// var JSON_DASHBOARD_BASE_PLUS = getBoolEnv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS", false)
 var JSON_DASHBOARD_BASE_PLUS = true
 
 const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
@@ -246,7 +257,7 @@ func (me *Environment) ProcessPrevState() error {
 }
 
 func (me *Environment) InitialDownload() error {
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
@@ -330,7 +341,7 @@ func (me *Environment) InitialDownload() error {
 
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resources := me.GetNonPostProcessedResources()
 
@@ -721,7 +732,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 
 		return nil
 	}
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -753,7 +764,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 		return nil
 	}
 	fmt.Println("Writing ___resources___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -820,7 +831,7 @@ func (me *Environment) WriteProviderFiles() (err error) {
 	}
 
 	fmt.Println("Writing modules ___providers___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -887,7 +898,7 @@ func (me *Environment) WriteMainProviderFile() error {
 
 func (me *Environment) WriteVariablesFiles() (err error) {
 	fmt.Println("Writing ___variables___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
 	if parallel {
 		var wg sync.WaitGroup
 

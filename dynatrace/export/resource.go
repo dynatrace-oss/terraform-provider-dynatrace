@@ -36,7 +36,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
-var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
+var SHORTER_NAMES = getBoolEnv("DYNATRACE_SHORTER_NAMES", false)
 
 type Resource struct {
 	ID                              string

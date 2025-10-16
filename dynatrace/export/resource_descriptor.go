@@ -18,7 +18,6 @@
 package export
 
 import (
-	"os"
 	"reflect"
 	"strings"
 
@@ -1933,7 +1932,7 @@ func genExcludeListedResourceGroups() []ResourceType {
 	return result
 }
 
-var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
+var ENABLE_EXPORT_DASHBOARD = getBoolEnv("DYNATRACE_ENABLE_EXPORT_DASHBOARD", false)
 
 func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 	if ENABLE_EXPORT_DASHBOARD {
