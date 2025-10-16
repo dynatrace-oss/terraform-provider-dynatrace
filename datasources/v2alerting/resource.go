@@ -38,7 +38,7 @@ var ResourceType = export.ResourceTypes.Alerting
 // Resource produces terraform resource definition for Management Zones
 func XResource() *schema.Resource {
 	return &schema.Resource{
-		Schema:        export.AllResources[ResourceType].NewSettings().Schema(),
+		Schema:        export.AllResources()[ResourceType].NewSettings().Schema(),
 		CreateContext: logging.Enable(Create),
 		UpdateContext: logging.Enable(Update),
 		ReadContext:   logging.Enable(Read),
@@ -56,11 +56,11 @@ func createCredentials(m any) *rest.Credentials {
 }
 
 func Settings() settings.Settings {
-	return export.AllResources[ResourceType].NewSettings()
+	return export.AllResources()[ResourceType].NewSettings()
 }
 
 func Service(m any) settings.CRUDService[settings.Settings] {
-	return export.AllResources[ResourceType].Service(createCredentials(m))
+	return export.AllResources()[ResourceType].Service(createCredentials(m))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
