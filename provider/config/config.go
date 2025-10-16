@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"regexp"
 	"strings"
 
@@ -30,7 +31,7 @@ import (
 )
 
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
-var HTTPVerbose = (strings.TrimSpace(os.Getenv("DYNATRACE_DEBUG")) == "true")
+var HTTPVerbose = envutil.GetBoolEnv(envutil.EnvDebug, false)
 
 type IAM struct {
 	ClientID     string

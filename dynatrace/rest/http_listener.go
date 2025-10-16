@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
 	"sync"
 
@@ -23,7 +23,7 @@ func logResponse(ctx context.Context, id string, response *http.Response) {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvHTTPResponse, false) {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}
@@ -119,13 +119,13 @@ func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 		Logger.Printf(ctx, "[%s]%s [ERROR] %s", id, category, err.Error())
 	}
 	if resp != nil {
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		if envutil.GetBoolEnv(envutil.EnvHTTPResponse, false) {
 			if resp.Body != nil {
 				buf := new(bytes.Buffer)
 				io.Copy(buf, resp.Body)
 				data := buf.Bytes()
 				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" || category != " [OAUTH]" {
+				if envutil.GetBoolEnv(envutil.EnvDebugIAMBearer, false) || category != " [OAUTH]" {
 					Logger.Printf(ctx, "[%s]%s [RESPONSE] %v %v", id, category, resp.Status, string(data))
 				}
 			} else {

@@ -21,11 +21,11 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -70,7 +70,7 @@ func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entit
 
 	var result *entity.Entity
 
-	if os.Getenv("DYNATRACE_DISABLE_ENTITY_CACHE") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvDisableEntityCache, false) {
 		result = getEntityByID(ctx, me.client, id)
 	} else {
 		result = getEntity(ctx, id, me.client, getEntitiesRecord(entityType))

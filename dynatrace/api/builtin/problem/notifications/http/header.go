@@ -18,7 +18,7 @@
 package http
 
 import (
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -27,7 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var ForceNewOnHeaders = os.Getenv("DYNATRACE_FORCE_NEW_ON_HEADERS") == "true"
+var ForceNewOnHeaders = envutil.GetBoolEnv(envutil.EnvForceNewOnHeaders, false)
 
 type Headers []*Header
 

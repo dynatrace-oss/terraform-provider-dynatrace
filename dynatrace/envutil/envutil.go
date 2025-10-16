@@ -38,6 +38,45 @@ EnvShorterNames                   = "DYNATRACE_SHORTER_NAMES"
 EnvEnableExportDashboard          = "DYNATRACE_ENABLE_EXPORT_DASHBOARD"
 EnvPrevStateOn                    = "DYNATRACE_PREV_STATE_ON"
 EnvIgnoreChangesRequiresAttention = "DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION"
+
+// API package environment variables
+EnvDocumentsIgnoreUnexpectedEOF = "DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF"
+EnvBucketsIgnoreUnexpectedEOF   = "DT_BUCKETS_IGNORE_UNEXPECTED_EOF"
+EnvDebugIAMBearer               = "DT_DEBUG_IAM_BEARER"
+EnvDisableIAMRateLimiter        = "DYNATRACE_DISABLE_IAM_RATE_LIMITER"
+EnvWorkflowTasksUseTypeList     = "DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST"
+EnvTagsErrZeroMatched           = "DYNATRACE_TAGS_ERR_ZERO_MATCHED"
+EnvDisableEntityCache           = "DYNATRACE_DISABLE_ENTITY_CACHE"
+EnvForceNewOnHeaders            = "DYNATRACE_FORCE_NEW_ON_HEADERS"
+EnvHostMonitoringWarnings       = "DYNATRACE_HOST_MONITORING_WARNINGS"
+EnvHostMonitoringOffline        = "DYNATRACE_HOST_MONITORING_OFFLINE"
+EnvBackwardsCompatibility       = "DT_BACKWARDS_COMPATIBILITY"
+
+// Address package environment variables
+EnvBuildAddressFiles = "DYNATRACE_BUILD_ADDRESS_FILES"
+
+// REST package environment variables
+EnvHTTPLegacy          = "DYNATRACE_HTTP_LEGACY"
+EnvHTTPOAuthPreference = "DYNATRACE_HTTP_OAUTH_PREFERENCE"
+EnvHTTPInsecure        = "DYNATRACE_HTTP_INSECURE"
+EnvHTTPResponse        = "DYNATRACE_HTTP_RESPONSE"
+EnvHTTPOAuth           = "DYNATRACE_HTTP_OAUTH"
+
+// Settings services cache environment variables
+EnvInMemoryTarFolders = "DYNATRACE_IN_MEMORY_TAR_FOLDERS"
+
+// Settings20 service environment variables
+EnvDisableOrderingSupport = "DYNATRACE_DISABLE_ORDERING_SUPPORT"
+EnvNoRepairInput          = "DT_NO_REPAIR_INPUT"
+
+// Terraform/Resources environment variables
+EnvHeredoc            = "DYNATRACE_HEREDOC"
+EnvDebugGetOk         = "DT_DEBUG_GET_OK"
+EnvGoldenStateEnabled = "DYNATRACE_GOLDEN_STATE_ENABLED"
+EnvTerraformImport    = "DT_TERRAFORM_IMPORT"
+
+// Provider/Logging environment variables
+EnvDebug = "DYNATRACE_DEBUG"
 )
 
 // GetBoolEnv reads a boolean environment variable with a default value.
