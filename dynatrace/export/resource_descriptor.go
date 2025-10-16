@@ -1635,6 +1635,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.GitLabConnection),
 		Dependencies.ID(ResourceTypes.MSTeamsConnection),
 		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
+		Dependencies.ID(ResourceTypes.AWSConnection),
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
