@@ -19,7 +19,7 @@ package workflows
 
 import (
 	"encoding/json"
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
@@ -60,7 +60,7 @@ func (me *Tasks) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var useTypeList = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST") == "true"
+var useTypeList = envutil.GetBoolEnv(envutil.EnvWorkflowTasksUseTypeList, false)
 
 func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
 	if useTypeList {

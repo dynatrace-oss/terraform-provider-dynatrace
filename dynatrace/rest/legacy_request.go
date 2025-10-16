@@ -28,8 +28,8 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -139,7 +139,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		Jar:       jar,
 		Transport: http.DefaultTransport,
 	}
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutil.GetBoolEnv(envutil.EnvHTTPInsecure, false) {
 		httpClient.Transport = &http.Transport{
 			ForceAttemptHTTP2:     http.DefaultTransport.(*http.Transport).ForceAttemptHTTP2,
 			Proxy:                 http.DefaultTransport.(*http.Transport).Proxy,
@@ -171,7 +171,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvHTTPResponse, false) {
 		if data != nil {
 			Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
 		} else {

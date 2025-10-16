@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
 	"sync"
 
@@ -54,7 +54,7 @@ func (me *cluster_request) Finish(vs ...any) error {
 	ctx := context.Background()
 
 	InstallRoundTripper()
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutil.GetBoolEnv(envutil.EnvHTTPInsecure, false) {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -16,7 +17,7 @@ const bootstrapentry = "__bootstrap__"
 const bootstrapoffset = 512
 const indexentry = "__index__"
 
-var IN_MEMORY_TAR_FOLDERS = os.Getenv("DYNATRACE_IN_MEMORY_TAR_FOLDERS") == "true"
+var IN_MEMORY_TAR_FOLDERS = envutil.GetBoolEnv(envutil.EnvInMemoryTarFolders, false)
 
 var folderCache = FolderCache{
 	mu:      sync.Mutex{},

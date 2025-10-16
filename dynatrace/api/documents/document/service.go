@@ -20,10 +20,10 @@ package documents
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -37,7 +37,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Docu
 	return &service{credentials}
 }
 
-var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF") == "true")
+var IGNORE_UNEXPECTED_EOF = envutil.GetBoolEnv(envutil.EnvDocumentsIgnoreUnexpectedEOF, false)
 
 type service struct {
 	credentials *rest.Credentials

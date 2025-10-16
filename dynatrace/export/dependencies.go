@@ -23,10 +23,12 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 )
 
 // To allow -target to work with dependencies at an atomic level
-var ATOMIC_DEPENDENCIES = os.Getenv("DYNATRACE_ATOMIC_DEPENDENCIES") == "true"
+var ATOMIC_DEPENDENCIES = envutil.GetBoolEnv(envutil.EnvAtomicDependencies, false)
 
 type Dependency interface {
 	Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any)

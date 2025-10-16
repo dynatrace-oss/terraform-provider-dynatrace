@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
 	"sync"
 
@@ -14,7 +15,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var DYNATRACE_HTTP_OAUTH = (os.Getenv("DYNATRACE_HTTP_OAUTH") == "true")
+var DYNATRACE_HTTP_OAUTH = envutil.GetBoolEnv(envutil.EnvHTTPOAuth, false)
 
 func logResponse(ctx context.Context, id string, response *http.Response) {
 	if response == nil {
@@ -25,7 +26,7 @@ func logResponse(ctx context.Context, id string, response *http.Response) {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvHTTPResponse, false) {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}

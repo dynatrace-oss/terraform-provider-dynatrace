@@ -8,10 +8,10 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/google/uuid"
 )
@@ -102,7 +102,7 @@ func getBearer(ctx context.Context, auth Authenticator, forceNew bool) (string, 
 	id := uuid.NewString()
 	rest.Logger.Printf(ctx, "[%s] [OAUTH] POST %s", id, tokenURL)
 	rest.Logger.Printf(ctx, "[%s] [OAUTH] [PAYLOAD] %s", id, debugPayloadStr)
-	if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvDebugIAMBearer, false) {
 		rest.Logger.Printf(ctx, "[%s] -> %s", id, string(body))
 	}
 	if httpRes.StatusCode == 400 {

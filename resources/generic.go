@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -328,7 +329,7 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 	if preparer, ok := sttngs.(MarshalPreparer); ok {
 		preparer.PrepareMarshalHCL(hcl.DecoderFrom(d))
 	}
-	if os.Getenv("DT_TERRAFORM_IMPORT") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvTerraformImport, false) {
 		if demoSettings, ok := sttngs.(settings.DemoSettings); ok {
 			demoSettings.FillDemoValues()
 		}
@@ -415,7 +416,7 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 		err := d.Set(k, v)
 		// currently behind an env variable, because it could potentially break existing resources
 		// TODO: Remove this once we have proper integration tests
-		if err != nil && os.Getenv("DYNATRACE_DEBUG") == "true" {
+		if err != nil && envutil.GetBoolEnv(envutil.EnvDebug, false) {
 			return diag.FromErr(err)
 		}
 	}

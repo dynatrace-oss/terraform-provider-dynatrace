@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"regexp"
 	"strings"
 
@@ -18,8 +18,8 @@ import (
 	"github.com/google/uuid"
 )
 
-var DYNATRACE_HTTP_LEGACY = (os.Getenv("DYNATRACE_HTTP_LEGACY") == "true")
-var DYNATRACE_HTTP_OAUTH_PREFERENCE = (os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE") == "true")
+var DYNATRACE_HTTP_LEGACY = envutil.GetBoolEnv(envutil.EnvHTTPLegacy, false)
+var DYNATRACE_HTTP_OAUTH_PREFERENCE = envutil.GetBoolEnv(envutil.EnvHTTPOAuthPreference, false)
 
 type Request interface {
 	Finish(v ...any) error
@@ -54,7 +54,7 @@ func (me request) evalClassicURL() string {
 
 func PreRequest() {
 	logging.InstallRoundTripper()
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutil.GetBoolEnv(envutil.EnvHTTPInsecure, false) {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}
