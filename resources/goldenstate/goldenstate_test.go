@@ -29,6 +29,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -187,7 +188,7 @@ func findGoldenResources() ([]GoldenResource, error) {
 }
 
 func TestGolden(t *testing.T) {
-	if os.Getenv("DYNATRACE_GOLDEN_STATE_ENABLED") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvGoldenStateEnabled, false) {
 		t.Skip("The Golden State feature isn't enabled. Skipping this test")
 	}
 
@@ -324,7 +325,7 @@ func genTestCaseConfigFull(t *testing.T, goldenResource GoldenResource) string {
 		additionalConfigStr = string(additionalConfigData)
 	}
 	result := fmt.Sprintf("%s\n%s\n%s", goldenConfigStr, garbageConfigStr, additionalConfigStr)
-	if os.Getenv("DYNATRACE_VERBOSE_TEST_LOGGING") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvVerboseTestLogging, false) {
 		t.Log("----------------------------------------------------------")
 		t.Log(result)
 	}
@@ -350,7 +351,7 @@ func genTestCaseConfigReduced(t *testing.T, goldenResource GoldenResource) strin
 		additionalConfigStr = string(additionalConfigData)
 	}
 	result := fmt.Sprintf("%s\n%s\n%s", goldenConfigStr, garbageConfigStr, additionalConfigStr)
-	if os.Getenv("DYNATRACE_VERBOSE_TEST_LOGGING") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvVerboseTestLogging, false) {
 		t.Log("----------------------------------------------------------")
 		t.Log(result)
 	}
@@ -380,7 +381,7 @@ resource "dynatrace_golden_state" "golden_state" {
 		additionalConfigStr = string(additionalConfigData)
 	}
 	result := fmt.Sprintf("%s\n%s\n%s", goldenConfigStr, goldenStateConfigStr, additionalConfigStr)
-	if os.Getenv("DYNATRACE_VERBOSE_TEST_LOGGING") == "true" {
+	if envutil.GetBoolEnv(envutil.EnvVerboseTestLogging, false) {
 		t.Log("----------------------------------------------------------")
 		t.Log(result)
 	}

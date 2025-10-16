@@ -25,6 +25,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
+
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -56,7 +58,7 @@ func createDebugLogger(name string) *log.Logger {
 
 	name = fmt.Sprintf("%s.%s", prefix, name)
 
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return log.New(&void{}, "", log.LstdFlags)
 	}
 	if len(name) == 0 {
@@ -106,7 +108,7 @@ func (odl *onDemandLogger) Write(p []byte) (int, error) {
 
 // Enable redirects logging into a an output file
 func Enable(fn func(context.Context, *schema.ResourceData, any) diag.Diagnostics) func(context.Context, *schema.ResourceData, any) diag.Diagnostics {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -116,7 +118,7 @@ func Enable(fn func(context.Context, *schema.ResourceData, any) diag.Diagnostics
 }
 
 func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.ResourceData, any) error {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(d *schema.ResourceData, m any) error {
@@ -126,7 +128,7 @@ func EnableDS(fn func(d *schema.ResourceData, m any) error) func(*schema.Resourc
 }
 
 func EnableDSCtx(fn func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics) func(context.Context, *schema.ResourceData, any) diag.Diagnostics {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -136,7 +138,7 @@ func EnableDSCtx(fn func(ctx context.Context, d *schema.ResourceData, m any) dia
 }
 
 func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(v any) int {
@@ -147,7 +149,7 @@ func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
 
 // Enable redirects logging into a an output file
 func SetOutput() {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return
 	}
 	log.SetOutput(odl)
@@ -155,7 +157,7 @@ func SetOutput() {
 
 // EnableSchemaDiff redirects logging into a an output file
 func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) func(k, old, new string, d *schema.ResourceData) bool {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(k, old, new string, d *schema.ResourceData) bool {
@@ -166,7 +168,7 @@ func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) 
 
 // EnableCustomizeDiff redirects logging into a an output file
 func EnableCustomizeDiff(fn func(context.Context, *schema.ResourceDiff, any) error) func(context.Context, *schema.ResourceDiff, any) error {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvDebug, false) {
 		return fn
 	}
 	return func(ctx context.Context, d *schema.ResourceDiff, meta any) error {

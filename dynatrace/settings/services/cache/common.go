@@ -20,6 +20,7 @@ package cache
 import (
 	"encoding/json"
 	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"path"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -49,7 +50,7 @@ func Offline() {
 }
 
 func Cleanup() {
-	if os.Getenv(ENV_VAR_NO_CACHE_CLEANUP) == "true" {
+	if envutil.GetBoolEnv(ENV_VAR_NO_CACHE_CLEANUP, false) {
 		return
 	}
 	os.RemoveAll(cache_root_folder)
@@ -75,7 +76,7 @@ func getCacheRootFolder() string {
 	if len(deleteCache) != 0 && deleteCache != "false" {
 		os.RemoveAll(folder)
 	}
-	if os.Getenv(ENV_VAR_CACHE_OFFLINE_MODE) == "true" {
+	if envutil.GetBoolEnv(ENV_VAR_CACHE_OFFLINE_MODE, false) {
 		Offline()
 	}
 	return folder

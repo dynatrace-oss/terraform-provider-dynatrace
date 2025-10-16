@@ -32,6 +32,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -123,7 +124,7 @@ func NewRateLimiter() *RateLimiter {
 	return &RateLimiter{}
 }
 
-var DISABLE_RATE_LIMITER = (os.Getenv("DYNATRACE_DISABLE_IAM_RATE_LIMITER") == "true")
+var DISABLE_RATE_LIMITER = envutil.GetBoolEnv(envutil.EnvDisableIAMRateLimiter, false)
 
 const MAX_RATE_LIMITER_RATE = int64(5000)
 const DEFAULT_RATE_LIMITER_RATE = int64(1000)

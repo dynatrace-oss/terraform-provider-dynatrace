@@ -27,6 +27,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 )
@@ -164,7 +165,7 @@ func executeRequest(ctx context.Context, client *http.Client, request *http.Requ
 			err = resp.Body.Close()
 		}()
 		body, err := io.ReadAll(resp.Body)
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		if envutil.GetBoolEnv(envutil.EnvHTTPResponse, false) {
 			if body != nil {
 				rest.Logger.Println(ctx, resp.Status, string(body))
 			} else {
