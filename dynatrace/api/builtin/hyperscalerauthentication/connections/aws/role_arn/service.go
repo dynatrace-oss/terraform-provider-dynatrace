@@ -20,6 +20,7 @@ package role_arn
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws"
@@ -78,11 +79,17 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 	} else if connValue.AWSWebIdentity != nil {
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
-	if err := me.connService.Update(ctx, v.AWSConnectionID, &connValue); err != nil {
-		return nil, err
-	}
 
-	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
+	var err error
+	var retry = 10
+	for i := 0; i < retry; i++ {
+		if err = me.connService.Update(ctx, v.AWSConnectionID, &connValue); err == nil {
+			return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
+		}
+
+		time.Sleep(time.Second * 2)
+	}
+	return nil, err
 }
 
 func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings) error {
