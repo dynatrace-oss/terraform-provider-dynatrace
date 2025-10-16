@@ -18,7 +18,6 @@
 package export
 
 import (
-	"os"
 	"testing"
 )
 
@@ -43,13 +42,9 @@ func TestGetBoolEnv(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Clean up any previous value
-			os.Unsetenv(tt.key)
-			
-			// Set the value if provided
+			// Set the value if provided (t.Setenv automatically handles cleanup)
 			if tt.value != "" {
-				os.Setenv(tt.key, tt.value)
-				defer os.Unsetenv(tt.key)
+				t.Setenv(tt.key, tt.value)
 			}
 
 			result := getBoolEnv(tt.key, tt.defaultValue)
