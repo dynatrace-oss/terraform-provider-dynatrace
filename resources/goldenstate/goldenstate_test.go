@@ -429,7 +429,7 @@ func (me *ServiceCache) GetService(resourceType export.ResourceType) settings.CR
 	if service, found := me.services[resourceType]; found {
 		return service
 	}
-	resourceDescriptor, found := export.AllResources[resourceType]
+	resourceDescriptor, found := export.AllResources()[resourceType]
 	if !found {
 		return nil
 	}
@@ -446,7 +446,7 @@ func (me *ServiceCache) NewSettings(resourceType export.ResourceType) settings.S
 	me.mu.Lock()
 	defer me.mu.Unlock()
 
-	resourceDescriptor, found := export.AllResources[resourceType]
+	resourceDescriptor, found := export.AllResources()[resourceType]
 	if !found {
 		return nil
 	}

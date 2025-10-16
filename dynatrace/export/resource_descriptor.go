@@ -528,7 +528,7 @@ func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) 
 // in order to replace hardcoded IDs in there.
 // `Dependencies.WeakID` takes care of that.
 func AddInsertAfterWeakIDDependencies() {
-	for resType, descriptor := range AllResources {
+	for resType, descriptor := range AllResources() {
 		schemaID := descriptor.Service(&rest.Credentials{}).SchemaID()
 		if !ContainsInsertAfterAttribute(descriptor.protoType, schemaID) {
 			continue
@@ -540,7 +540,7 @@ func AddInsertAfterWeakIDDependencies() {
 	}
 }
 
-var AllResources = map[ResourceType]ResourceDescriptor{
+var defaultResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Alerting: NewResourceDescriptor(
 		alerting.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
@@ -1772,6 +1772,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
 }
 
+func AllResources() map[ResourceType]ResourceDescriptor {
+	res := make(map[ResourceType]ResourceDescriptor)
+	for k, v := range defaultResources {
+		res[k] = v
+	}
+	return res
+}
+
 type ResourceExclusion struct {
 	ResourceType ResourceType
 	Reason       string
@@ -1966,7 +1974,7 @@ func GetExcludeListedResources() []ResourceType {
 }
 
 func Service(credentials *rest.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
-	return AllResources[resourceType].Service(credentials)
+	return AllResources()[resourceType].Service(credentials)
 }
 
 // func DSService(credentials *rest.Credentials, dataSourceType DataSourceType) settings.RService[settings.Settings] {

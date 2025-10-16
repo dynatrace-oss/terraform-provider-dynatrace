@@ -39,7 +39,7 @@ import (
 )
 
 func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
-	descriptor := export.AllResources[resourceType]
+	descriptor := export.AllResources()[resourceType]
 	cv := CredValDefault
 	if len(credVal) > 0 {
 		cv = credVal[0]
@@ -48,7 +48,7 @@ func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
 }
 
 func NewGenericWithAlwaysPrintingViolationPath(resourceType export.ResourceType, credVal ...int) *Generic {
-	descriptor := export.AllResources[resourceType]
+	descriptor := export.AllResources()[resourceType]
 	cv := CredValDefault
 	if len(credVal) > 0 {
 		cv = credVal[0]

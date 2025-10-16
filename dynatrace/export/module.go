@@ -89,7 +89,7 @@ func (me *Module) GetDescriptor() *ResourceDescriptor {
 	me.DescriptorLock.Lock()
 	defer me.DescriptorLock.Unlock()
 	if me.PrivDescriptor == nil {
-		if descriptor, found := AllResources[me.Type]; found {
+		if descriptor, found := AllResources()[me.Type]; found {
 			me.PrivDescriptor = &descriptor
 		} else {
 			panic(fmt.Sprintf("Tried to resolve a Resource Descriptor for resource type `%s` - that key doesn't exist in AllResource. Please contact Dynatrace.", me.Type))
@@ -1252,7 +1252,7 @@ func (me *Module) getResourcesPerBundle(resourcesCount int, maxThreads int) bund
 }
 
 func (me *Module) IsBundleImpossible() bool {
-	resourceDefinition := AllResources[me.Type]
+	resourceDefinition := AllResources()[me.Type]
 
 	if ULTRA_PARALLEL {
 		// pass
