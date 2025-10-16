@@ -28,7 +28,6 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -38,6 +37,7 @@ import (
 	policysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -47,19 +47,9 @@ import (
 	"github.com/spf13/afero"
 )
 
-// getBoolEnv reads a boolean environment variable with a default value
-func getBoolEnv(key string, defaultValue bool) bool {
-	if value := os.Getenv(key); value != "" {
-		if parsed, err := strconv.ParseBool(value); err == nil {
-			return parsed
-		}
-	}
-	return defaultValue
-}
-
-var NO_REFRESH_ON_IMPORT = getBoolEnv("DYNATRACE_NO_REFRESH_ON_IMPORT", false)
-var QUICK_INIT = getBoolEnv("DYNATRACE_QUICK_INIT", false)
-var ULTRA_PARALLEL = getBoolEnv("DYNATRACE_ULTRA_PARALLEL", false)
+var NO_REFRESH_ON_IMPORT = envutil.GetBoolEnv(envutil.EnvNoRefreshOnImport, false)
+var QUICK_INIT = envutil.GetBoolEnv(envutil.EnvQuickInit, false)
+var ULTRA_PARALLEL = envutil.GetBoolEnv(envutil.EnvUltraParallel, false)
 
 // var JSON_DASHBOARD_BASE_PLUS = getBoolEnv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS", false)
 var JSON_DASHBOARD_BASE_PLUS = true
@@ -257,7 +247,7 @@ func (me *Environment) ProcessPrevState() error {
 }
 
 func (me *Environment) InitialDownload() error {
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
@@ -341,7 +331,7 @@ func (me *Environment) InitialDownload() error {
 
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resources := me.GetNonPostProcessedResources()
 
@@ -732,7 +722,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 
 		return nil
 	}
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -764,7 +754,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 		return nil
 	}
 	fmt.Println("Writing ___resources___.tf")
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -831,7 +821,7 @@ func (me *Environment) WriteProviderFiles() (err error) {
 	}
 
 	fmt.Println("Writing modules ___providers___.tf")
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -898,7 +888,7 @@ func (me *Environment) WriteMainProviderFile() error {
 
 func (me *Environment) WriteVariablesFiles() (err error) {
 	fmt.Println("Writing ___variables___.tf")
-	parallel := getBoolEnv("DYNATRACE_PARALLEL", true)
+	parallel := envutil.GetBoolEnv(envutil.EnvParallel, true)
 	if parallel {
 		var wg sync.WaitGroup
 

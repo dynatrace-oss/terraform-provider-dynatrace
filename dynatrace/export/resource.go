@@ -27,6 +27,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -36,7 +37,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
-var SHORTER_NAMES = getBoolEnv("DYNATRACE_SHORTER_NAMES", false)
+var SHORTER_NAMES = envutil.GetBoolEnv(envutil.EnvShorterNames, false)
 
 type Resource struct {
 	ID                              string

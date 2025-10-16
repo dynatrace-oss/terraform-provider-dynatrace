@@ -24,10 +24,11 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/spf13/afero"
 )
 
-var PREV_STATE_ON = getBoolEnv("DYNATRACE_PREV_STATE_ON", false)
+var PREV_STATE_ON = envutil.GetBoolEnv(envutil.EnvPrevStateOn, false)
 var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
 var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
 var IMPORT_STATE_PATH = os.Getenv("DYNATRACE_IMPORT_STATE_PATH")
