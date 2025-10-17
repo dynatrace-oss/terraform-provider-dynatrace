@@ -469,94 +469,107 @@ var ResourceTypes = struct {
 	AWSAutomationConnections            ResourceType
 	// AWSConnection                       ResourceType
 	// AWSConnectionRoleARN                ResourceType
-	DevObsAgentOptin                        ResourceType
-	DevObsDataMasking                       ResourceType
-	DavisCoPilot                            ResourceType
-	OpenPipelineLogs                        ResourceType
-	OpenPipelineEvents                      ResourceType
-	OpenPipelineSecurityEvents              ResourceType
-	OpenPipelineBusinessEvents              ResourceType
-	OpenPipelineSDLCEvents                  ResourceType
-	OpenPipelineMetrics                     ResourceType
-	OpenPipelineUserSessions                ResourceType
-	OpenPipelineDavisProblems               ResourceType
-	OpenPipelineDavisEvents                 ResourceType
-	OpenPipelineSystemEvents                ResourceType
-	OpenPipelineUserEvents                  ResourceType
-	OpenPipelineSpans                       ResourceType
-	CloudDevelopmentEnvironments            ResourceType
-	KubernetesSPM                           ResourceType
-	LogAgentFeatureFlags                    ResourceType
-	ProblemRecordPropagationRules           ResourceType
-	ProblemFields                           ResourceType
-	AutomationControllerConnections         ResourceType
-	EventDrivenAnsibleConnections           ResourceType
-	ServiceNowConnection                    ResourceType
-	PagerDutyConnection                     ResourceType
-	MSTeamsConnection                       ResourceType
-	DefaultLaunchpad                        ResourceType
-	JenkinsConnection                       ResourceType
-	GitLabConnection                        ResourceType
-	MSEntraIDConnection                     ResourceType
-	GitHubConnection                        ResourceType
-	Microsoft365EmailConnection             ResourceType
-	BusinessEventsCapturingVariants         ResourceType
-	WebAppAutoInjection                     ResourceType
-	SecurityContext                         ResourceType
-	Segments                                ResourceType
-	PlatformSLO                             ResourceType
-	AppSecVulnerabilityThirdPartyK8s        ResourceType
-	AppSecVulnerabilityThirdPartyAttr       ResourceType
-	WebAppCustomProperties                  ResourceType
-	WebAppJavascriptFilename                ResourceType
-	ServiceSplittingRules                   ResourceType
-	ServiceDetectionRules                   ResourceType
-	WebAppIPAddressExclusion                ResourceType
-	RPCBasedSampling                        ResourceType
-	WebAppManualInsertion                   ResourceType
-	SettingsPermissions                     ResourceType
-	FailureDetectionRuleSets                ResourceType
-	EndpointDetectionRulesOptIn             ResourceType
-	EndpointDetectionRules                  ResourceType
-	OpenpipelineBizeventsIngestsources      ResourceType
-	OpenpipelineBizeventsPipelines          ResourceType
-	OpenpipelineBizeventsRouting            ResourceType
-	OpenpipelineDavisEventsIngestsources    ResourceType
-	OpenpipelineDavisEventsPipelines        ResourceType
-	OpenpipelineDavisEventsRouting          ResourceType
-	OpenpipelineDavisProblemsIngestsources  ResourceType
-	OpenpipelineDavisProblemsPipelines      ResourceType
-	OpenpipelineDavisProblemsRouting        ResourceType
-	OpenpipelineEventsIngestsources         ResourceType
-	OpenpipelineEventsPipelines             ResourceType
-	OpenpipelineEventsRouting               ResourceType
-	OpenpipelineEventsSdlcIngestsources     ResourceType
-	OpenpipelineEventsSdlcPipelines         ResourceType
-	OpenpipelineEventsSdlcRouting           ResourceType
-	OpenpipelineEventsSecurityIngestsources ResourceType
-	OpenpipelineEventsSecurityPipelines     ResourceType
-	OpenpipelineEventsSecurityRouting       ResourceType
-	OpenpipelineLogsIngestsources           ResourceType
-	OpenpipelineLogsPipelines               ResourceType
-	OpenpipelineLogsRouting                 ResourceType
-	OpenpipelineMetricsIngestsources        ResourceType
-	OpenpipelineMetricsPipelines            ResourceType
-	OpenpipelineMetricsRouting              ResourceType
-	OpenpipelineSecurityEventsIngestsources ResourceType
-	OpenpipelineSecurityEventsPipelines     ResourceType
-	OpenpipelineSecurityEventsRouting       ResourceType
-	OpenpipelineSpansIngestsources          ResourceType
-	OpenpipelineSpansPipelines              ResourceType
-	OpenpipelineSpansRouting                ResourceType
-	OpenpipelineSystemEventsIngestsources   ResourceType
-	OpenpipelineSystemEventsPipelines       ResourceType
-	OpenpipelineSystemEventsRouting         ResourceType
-	OpenpipelineUserEventsIngestsources     ResourceType
-	OpenpipelineUserEventsPipelines         ResourceType
-	OpenpipelineUserEventsRouting           ResourceType
-	OpenpipelineUsersessionsIngestsources   ResourceType
-	OpenpipelineUsersessionsPipelines       ResourceType
-	OpenpipelineUsersessionsRouting         ResourceType
+	DevObsAgentOptin                         ResourceType
+	DevObsDataMasking                        ResourceType
+	DavisCoPilot                             ResourceType
+	OpenPipelineLogs                         ResourceType
+	OpenPipelineEvents                       ResourceType
+	OpenPipelineSecurityEvents               ResourceType
+	OpenPipelineBusinessEvents               ResourceType
+	OpenPipelineSDLCEvents                   ResourceType
+	OpenPipelineMetrics                      ResourceType
+	OpenPipelineUserSessions                 ResourceType
+	OpenPipelineDavisProblems                ResourceType
+	OpenPipelineDavisEvents                  ResourceType
+	OpenPipelineSystemEvents                 ResourceType
+	OpenPipelineUserEvents                   ResourceType
+	OpenPipelineSpans                        ResourceType
+	CloudDevelopmentEnvironments             ResourceType
+	KubernetesSPM                            ResourceType
+	LogAgentFeatureFlags                     ResourceType
+	ProblemRecordPropagationRules            ResourceType
+	ProblemFields                            ResourceType
+	AutomationControllerConnections          ResourceType
+	EventDrivenAnsibleConnections            ResourceType
+	ServiceNowConnection                     ResourceType
+	PagerDutyConnection                      ResourceType
+	MSTeamsConnection                        ResourceType
+	DefaultLaunchpad                         ResourceType
+	JenkinsConnection                        ResourceType
+	GitLabConnection                         ResourceType
+	MSEntraIDConnection                      ResourceType
+	GitHubConnection                         ResourceType
+	Microsoft365EmailConnection              ResourceType
+	BusinessEventsCapturingVariants          ResourceType
+	WebAppAutoInjection                      ResourceType
+	SecurityContext                          ResourceType
+	Segments                                 ResourceType
+	PlatformSLO                              ResourceType
+	AppSecVulnerabilityThirdPartyK8s         ResourceType
+	AppSecVulnerabilityThirdPartyAttr        ResourceType
+	WebAppCustomProperties                   ResourceType
+	WebAppJavascriptFilename                 ResourceType
+	ServiceSplittingRules                    ResourceType
+	ServiceDetectionRules                    ResourceType
+	WebAppIPAddressExclusion                 ResourceType
+	RPCBasedSampling                         ResourceType
+	WebAppManualInsertion                    ResourceType
+	SettingsPermissions                      ResourceType
+	FailureDetectionRuleSets                 ResourceType
+	EndpointDetectionRulesOptIn              ResourceType
+	EndpointDetectionRules                   ResourceType
+	OpenpipelineBizeventsIngestsources       ResourceType
+	OpenpipelineBizeventsPipelinegroups      ResourceType
+	OpenpipelineBizeventsPipelines           ResourceType
+	OpenpipelineBizeventsRouting             ResourceType
+	OpenpipelineDavisEventsIngestsources     ResourceType
+	OpenpipelineDavisEventsPipelinegroups    ResourceType
+	OpenpipelineDavisEventsPipelines         ResourceType
+	OpenpipelineDavisEventsRouting           ResourceType
+	OpenpipelineDavisProblemsIngestsources   ResourceType
+	OpenpipelineDavisProblemsPipelinegroups  ResourceType
+	OpenpipelineDavisProblemsPipelines       ResourceType
+	OpenpipelineDavisProblemsRouting         ResourceType
+	OpenpipelineEventsIngestsources          ResourceType
+	OpenpipelineEventsPipelinegroups         ResourceType
+	OpenpipelineEventsPipelines              ResourceType
+	OpenpipelineEventsRouting                ResourceType
+	OpenpipelineEventsSdlcIngestsources      ResourceType
+	OpenpipelineEventsSdlcPipelinegroups     ResourceType
+	OpenpipelineEventsSdlcPipelines          ResourceType
+	OpenpipelineEventsSdlcRouting            ResourceType
+	OpenpipelineEventsSecurityIngestsources  ResourceType
+	OpenpipelineEventsSecurityPipelinegroups ResourceType
+	OpenpipelineEventsSecurityPipelines      ResourceType
+	OpenpipelineEventsSecurityRouting        ResourceType
+	OpenpipelineLogsIngestsources            ResourceType
+	OpenpipelineLogsPipelinegroups           ResourceType
+	OpenpipelineLogsPipelines                ResourceType
+	OpenpipelineLogsRouting                  ResourceType
+	OpenpipelineMetricsIngestsources         ResourceType
+	OpenpipelineMetricsPipelinegroups        ResourceType
+	OpenpipelineMetricsPipelines             ResourceType
+	OpenpipelineMetricsRouting               ResourceType
+	OpenpipelineSecurityEventsIngestsources  ResourceType
+	OpenpipelineSecurityEventsPipelinegroups ResourceType
+	OpenpipelineSecurityEventsPipelines      ResourceType
+	OpenpipelineSecurityEventsRouting        ResourceType
+	OpenpipelineSpansIngestsources           ResourceType
+	OpenpipelineSpansPipelinegroups          ResourceType
+	OpenpipelineSpansPipelines               ResourceType
+	OpenpipelineSpansRouting                 ResourceType
+	OpenpipelineSystemEventsIngestsources    ResourceType
+	OpenpipelineSystemEventsPipelinegroups   ResourceType
+	OpenpipelineSystemEventsPipelines        ResourceType
+	OpenpipelineSystemEventsRouting          ResourceType
+	OpenpipelineUserEventsIngestsources      ResourceType
+	OpenpipelineUserEventsPipelinegroups     ResourceType
+	OpenpipelineUserEventsPipelines          ResourceType
+	OpenpipelineUserEventsRouting            ResourceType
+	OpenpipelineUsersessionsIngestsources    ResourceType
+	OpenpipelineUsersessionsPipelinegroups   ResourceType
+	OpenpipelineUsersessionsPipelines        ResourceType
+	OpenpipelineUsersessionsRouting          ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -923,42 +936,55 @@ var ResourceTypes = struct {
 	"dynatrace_endpoint_detection_rules_optin",
 	"dynatrace_endpoint_detection_rules",
 	"dynatrace_openpipeline_v2_bizevents_ingestsources",
+	"dynatrace_openpipeline_v2_bizevents_pipelinegroups",
 	"dynatrace_openpipeline_v2_bizevents_pipelines",
 	"dynatrace_openpipeline_v2_bizevents_routing",
 	"dynatrace_openpipeline_v2_davis_events_ingestsources",
+	"dynatrace_openpipeline_v2_davis_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_davis_events_pipelines",
 	"dynatrace_openpipeline_v2_davis_events_routing",
 	"dynatrace_openpipeline_v2_davis_problems_ingestsources",
+	"dynatrace_openpipeline_v2_davis_problems_pipelinegroups",
 	"dynatrace_openpipeline_v2_davis_problems_pipelines",
 	"dynatrace_openpipeline_v2_davis_problems_routing",
 	"dynatrace_openpipeline_v2_events_ingestsources",
+	"dynatrace_openpipeline_v2_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_events_pipelines",
 	"dynatrace_openpipeline_v2_events_routing",
 	"dynatrace_openpipeline_v2_events_sdlc_ingestsources",
+	"dynatrace_openpipeline_v2_events_sdlc_pipelinegroups",
 	"dynatrace_openpipeline_v2_events_sdlc_pipelines",
 	"dynatrace_openpipeline_v2_events_sdlc_routing",
 	"dynatrace_openpipeline_v2_events_security_ingestsources",
+	"dynatrace_openpipeline_v2_events_security_pipelinegroups",
 	"dynatrace_openpipeline_v2_events_security_pipelines",
 	"dynatrace_openpipeline_v2_events_security_routing",
 	"dynatrace_openpipeline_v2_logs_ingestsources",
+	"dynatrace_openpipeline_v2_logs_pipelinegroups",
 	"dynatrace_openpipeline_v2_logs_pipelines",
 	"dynatrace_openpipeline_v2_logs_routing",
 	"dynatrace_openpipeline_v2_metrics_ingestsources",
+	"dynatrace_openpipeline_v2_metrics_pipelinegroups",
 	"dynatrace_openpipeline_v2_metrics_pipelines",
 	"dynatrace_openpipeline_v2_metrics_routing",
 	"dynatrace_openpipeline_v2_security_events_ingestsources",
+	"dynatrace_openpipeline_v2_security_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_security_events_pipelines",
 	"dynatrace_openpipeline_v2_security_events_routing",
 	"dynatrace_openpipeline_v2_spans_ingestsources",
+	"dynatrace_openpipeline_v2_spans_pipelinegroups",
 	"dynatrace_openpipeline_v2_spans_pipelines",
 	"dynatrace_openpipeline_v2_spans_routing",
 	"dynatrace_openpipeline_v2_system_events_ingestsources",
+	"dynatrace_openpipeline_v2_system_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_system_events_pipelines",
 	"dynatrace_openpipeline_v2_system_events_routing",
 	"dynatrace_openpipeline_v2_user_events_ingestsources",
+	"dynatrace_openpipeline_v2_user_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_user_events_pipelines",
 	"dynatrace_openpipeline_v2_user_events_routing",
 	"dynatrace_openpipeline_v2_usersessions_ingestsources",
+	"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 	"dynatrace_openpipeline_v2_usersessions_pipelines",
 	"dynatrace_openpipeline_v2_usersessions_routing",
 }

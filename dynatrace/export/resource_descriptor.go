@@ -27,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	featureflags2 "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -389,42 +390,55 @@ import (
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
+	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
 	openpipelinebizeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
 	openpipelinebizeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/routing"
 	openpipelinedaviseventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/ingestsources"
+	openpipelinedaviseventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelinegroups"
 	openpipelinedaviseventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelines"
 	openpipelinedaviseventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/routing"
 	openpipelinedavisproblemsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/ingestsources"
+	openpipelinedavisproblemspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelinegroups"
 	openpipelinedavisproblemspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelines"
 	openpipelinedavisproblemsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/routing"
 	openpipelineeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/ingestsources"
+	openpipelineeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelinegroups"
 	openpipelineeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelines"
 	openpipelineeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/routing"
 	openpipelineeventssdlcingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/ingestsources"
+	openpipelineeventssdlcpipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelinegroups"
 	openpipelineeventssdlcpipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelines"
 	openpipelineeventssdlcrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/routing"
 	openpipelineeventssecurityingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/ingestsources"
+	openpipelineeventssecuritypipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelinegroups"
 	openpipelineeventssecuritypipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelines"
 	openpipelineeventssecurityrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/routing"
 	openpipelinelogsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/ingestsources"
+	openpipelinelogspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelinegroups"
 	openpipelinelogspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelines"
 	openpipelinelogsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/routing"
 	openpipelinemetricsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/ingestsources"
+	openpipelinemetricspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelinegroups"
 	openpipelinemetricspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelines"
 	openpipelinemetricsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/routing"
 	openpipelinesecurityeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/ingestsources"
+	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
 	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
 	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
+	openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
 	openpipelinespanspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelines"
 	openpipelinespansrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/routing"
 	openpipelinesystemeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/ingestsources"
+	openpipelinesystemeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelinegroups"
 	openpipelinesystemeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelines"
 	openpipelinesystemeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/routing"
 	openpipelineusereventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/ingestsources"
+	openpipelineusereventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelinegroups"
 	openpipelineusereventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelines"
 	openpipelineusereventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/routing"
 	openpipelineusersessionsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/ingestsources"
+	openpipelineusersessionspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelinegroups"
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
 )
@@ -1770,10 +1784,31 @@ var defaultResources = map[ResourceType]ResourceDescriptor{
 	),
 }
 
+var pipelineGroupsResources = map[ResourceType]ResourceDescriptor{
+	ResourceTypes.OpenpipelineBizeventsPipelinegroups:      NewResourceDescriptor(openpipelinebizeventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineDavisEventsPipelinegroups:    NewResourceDescriptor(openpipelinedaviseventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineDavisProblemsPipelinegroups:  NewResourceDescriptor(openpipelinedavisproblemspipelinegroups.Service),
+	ResourceTypes.OpenpipelineEventsPipelinegroups:         NewResourceDescriptor(openpipelineeventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineEventsSdlcPipelinegroups:     NewResourceDescriptor(openpipelineeventssdlcpipelinegroups.Service),
+	ResourceTypes.OpenpipelineEventsSecurityPipelinegroups: NewResourceDescriptor(openpipelineeventssecuritypipelinegroups.Service),
+	ResourceTypes.OpenpipelineLogsPipelinegroups:           NewResourceDescriptor(openpipelinelogspipelinegroups.Service),
+	ResourceTypes.OpenpipelineMetricsPipelinegroups:        NewResourceDescriptor(openpipelinemetricspipelinegroups.Service),
+	ResourceTypes.OpenpipelineSecurityEventsPipelinegroups: NewResourceDescriptor(openpipelinesecurityeventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineSpansPipelinegroups:          NewResourceDescriptor(openpipelinespanspipelinegroups.Service),
+	ResourceTypes.OpenpipelineSystemEventsPipelinegroups:   NewResourceDescriptor(openpipelinesystemeventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineUserEventsPipelinegroups:     NewResourceDescriptor(openpipelineusereventspipelinegroups.Service),
+	ResourceTypes.OpenpipelineUsersessionsPipelinegroups:   NewResourceDescriptor(openpipelineusersessionspipelinegroups.Service),
+}
+
 func AllResources() map[ResourceType]ResourceDescriptor {
 	res := make(map[ResourceType]ResourceDescriptor)
 	for k, v := range defaultResources {
 		res[k] = v
+	}
+	if featureflags2.OpenPipelinePipelineGroups.Enabled() {
+		for k, v := range pipelineGroupsResources {
+			res[k] = v
+		}
 	}
 	return res
 }

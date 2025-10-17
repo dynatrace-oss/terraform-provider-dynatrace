@@ -19,12 +19,15 @@ package provider_test
 
 import (
 	"context"
+	"maps"
 	"os"
+	"slices"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -149,6 +152,22 @@ func TestSSOTokenURL(t *testing.T) {
 			assert.Equal(t, rest.DevTokenURL, credentials.OAuth.TokenURL)
 		})
 	}
+}
+
+func TestFeatureFlags(t *testing.T) {
+	t.Run("adds pipeline groups resource when feature flag is enabled", func(t *testing.T) {
+		t.Setenv(featureflags.OpenPipelinePipelineGroups.EnvName(), "true")
+		keys := slices.Collect(maps.Keys(provider.Provider().ResourcesMap))
+
+		assert.Contains(t, keys, "dynatrace_openpipeline_v2_usersessions_pipelinegroups")
+	})
+
+	t.Run("does not add pipeline groups resource when feature flag is disabled", func(t *testing.T) {
+		t.Setenv(featureflags.OpenPipelinePipelineGroups.EnvName(), "false")
+
+		keys := slices.Collect(maps.Keys(provider.Provider().ResourcesMap))
+		assert.NotContains(t, keys, "dynatrace_openpipeline_v2_usersessions_pipelinegroups")
+	})
 }
 
 func createCredentials(getter config.Getter) *rest.Credentials {
