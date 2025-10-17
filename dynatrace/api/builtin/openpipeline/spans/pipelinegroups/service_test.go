@@ -7,7 +7,7 @@ import (
 	featureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 )
 
-func TestOpenPipelineUserSessionPipelineGroups(t *testing.T) {
+func TestOpenPipelineSpansPipelineGroups(t *testing.T) {
 	if !featureflags.OpenPipelinePipelineGroups.Enabled() {
 		t.Skip("Pipeline groups are disabled")
 	}
