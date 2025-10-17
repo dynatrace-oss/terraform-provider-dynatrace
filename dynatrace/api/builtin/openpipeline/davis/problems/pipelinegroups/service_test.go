@@ -7,5 +7,6 @@ import (
 )
 
 func TestOpenPipelineDavisProblemsPipelineGroups(t *testing.T) {
+	t.Skip("Pipeline groups are disabled")
 	api.TestAcc(t)
 }
