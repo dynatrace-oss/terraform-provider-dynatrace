@@ -3,7 +3,6 @@ package rest
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"sync"
@@ -19,6 +18,8 @@ import (
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 )
+
+var NoClassicURLDefinedErr = errors.New("no Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 
 func APITokenClient(credentials *Credentials) Client {
 	return &api_token_client{credentials: credentials}
@@ -166,7 +167,7 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	classicURL := request(*me).evalClassicURL()
 	if len(classicURL) == 0 {
 		// sanity check - this should not be empty anymore at this point
-		return fmt.Errorf("No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
+		return NoClassicURLDefinedErr
 	}
 
 	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
@@ -177,10 +178,10 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 		client.SetHeader(headername, headervalue)
 	}
 
-	fullURL, err := url.Parse(classicURL + me.url)
+	pathURL, err := url.Parse(me.url)
 	if err != nil {
 		return err
 	}
 
-	return request(*me).HandleResponse(client, fullURL, target)
+	return request(*me).HandleResponse(client, pathURL, target)
 }
