@@ -429,7 +429,7 @@ import (
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
 
-	hyperscalerauthenticationconnectionsazure "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
+	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -1803,7 +1803,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
-	ResourceTypes.AzureConnection:    NewResourceDescriptor(hyperscalerauthenticationconnectionsazure.Service),
+	ResourceTypes.AzureConnection:    NewResourceDescriptor(azureconnection.Service),
 }
 
 type ResourceExclusion struct {
