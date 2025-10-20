@@ -1,37 +1,43 @@
+/*
+ * @license
+ * Copyright 2025 Dynatrace LLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package featureflags
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-const (
-	OpenPipelinePipelineGroups FeatureFlag = "FEAT_OPENPIPELINE_PIPELINE_GROUP"
+var (
+	OpenPipelinePipelineGroups = FeatureFlag{"FEAT_OPENPIPELINE_PIPELINE_GROUP", false}
 )
 
-var defaultValues = map[FeatureFlag]defaultValue{
-	OpenPipelinePipelineGroups: false,
+// FeatureFlag represents a command line switch to turn certain features
+// ON or OFF. Values are read from environment variables defined by
+// the feature flag. The feature flag can have default value which is used
+// when the resp. environment variable does not exist
+
+type FeatureFlag struct {
+	Name         string
+	DefaultValue bool
 }
-
-type (
-	// FeatureFlag represents a command line switch to turn certain features
-	// ON or OFF. Values are read from environment variables defined by
-	// the feature flag. The feature flag can have default value which is used
-	// when the resp. environment variable does not exist
-	FeatureFlag string
-
-	defaultValue = bool
-)
 
 func (ff FeatureFlag) String() string {
-	return ff.EnvName()
-}
-
-// EnvName gives back the environment variable name for the feature flag
-func (ff FeatureFlag) EnvName() string {
-	return string(ff)
+	return ff.Name
 }
 
 // Enabled look up between known temporary and permanent flags and evaluates it.
@@ -40,26 +46,12 @@ func (ff FeatureFlag) EnvName() string {
 // Feature flags are considered to be "disabled" if their resp. environment variable
 // is set to 0, f, F, FALSE, false or False.
 func (ff FeatureFlag) Enabled() bool {
-	v, exists := defaultValues[ff]
-	if exists {
-		return enabled(ff, v)
-	}
-
-	panic(fmt.Sprintf("unknown feature flag %s", ff))
-}
-
-// enabled evaluates the feature flag.
-// Feature flags are considered to be "enabled" if their resp. environment variable
-// is set to 1, t, T, TRUE, true or True.
-// Feature flags are considered to be "disabled" if their resp. environment variable
-// is set to 0, f, F, FALSE, false or False.
-func enabled(ff FeatureFlag, d defaultValue) bool {
-	if val, ok := os.LookupEnv(ff.EnvName()); ok {
+	if val, ok := os.LookupEnv(ff.Name); ok {
 		value, err := strconv.ParseBool(strings.ToLower(val))
 		if err != nil {
-			return d
+			return ff.DefaultValue
 		}
 		return value
 	}
-	return d
+	return ff.DefaultValue
 }
