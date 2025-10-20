@@ -1,6 +1,6 @@
 /*
  * @license
- * Copyright 2023 Dynatrace LLC
+ * Copyright 2025 Dynatrace LLC
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,47 +17,49 @@
 package featureflags_test
 
 import (
-	"strconv"
+	"fmt"
 	"testing"
 
 	featureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFeatureFlag(t *testing.T) {
-	ff := featureflags.OpenPipelinePipelineGroups // here can be any FF with false as default
+func TestFeatureFlagEnabledOnTrueValues(t *testing.T) {
+	ff := featureflags.FeatureFlag{Name: "env", DefaultValue: false}
 
-	for _, fv := range []string{"0", "f", "F", "FALSE", "false", "False", "fAlSe", "", "othervalue"} {
-		t.Setenv(ff.EnvName(), fv)
-		assert.False(t, ff.Enabled())
-	}
-
-	for _, tv := range []string{"1", "t", "T", "TRUE", "true", "tRuE", "True"} {
-		t.Setenv(ff.EnvName(), tv)
-		assert.True(t, ff.Enabled())
+	for _, v := range []string{"1", "t", "T", "TRUE", "true", "tRuE", "True"} {
+		t.Run(fmt.Sprintf("'%s' should be true", v), func(t *testing.T) {
+			t.Setenv(ff.Name, v)
+			assert.True(t, ff.Enabled())
+		})
 	}
 }
 
-func TestFeatureFlagIDEnabled(t *testing.T) {
-	t.Run("works for defined environment variables", func(t *testing.T) {
-		ff := featureflags.OpenPipelinePipelineGroups // any FF
+func TestFeatureFlagDisabledOnFalseValues(t *testing.T) {
+	ff := featureflags.FeatureFlag{Name: "env", DefaultValue: true}
 
-		assert.NotPanics(t, func() {
-			ff.Enabled()
+	for _, v := range []string{"0", "f", "F", "FALSE", "false", "False", "fAlSe"} {
+		t.Run(fmt.Sprintf("'%s' should be false", v), func(t *testing.T) {
+			t.Setenv(ff.Name, v)
+			assert.False(t, ff.Enabled())
 		})
+	}
+}
 
-		t.Setenv(ff.String(), strconv.FormatBool(true))
-		assert.True(t, ff.Enabled(), "feature flag must be enabled")
+func TestFeatureFlagDefaultValues(t *testing.T) {
+	ff := featureflags.FeatureFlag{Name: "env", DefaultValue: true}
 
-		t.Setenv(ff.String(), strconv.FormatBool(false))
-		assert.False(t, ff.Enabled(), "feature flag must be disabled")
+	t.Run("Uses the default value if the env is not set", func(t *testing.T) {
+		assert.True(t, ff.Enabled())
 	})
 
-	t.Run("string is not FeatureFlag", func(t *testing.T) {
-		assert.Panics(t, func() {
-			ff := featureflags.OpenPipelinePipelineGroups
-			ff = "THIS_IS_UNTYPED_CONST"
-			ff.Enabled()
-		})
+	t.Run("Uses the default value if the env is not boolean", func(t *testing.T) {
+		t.Setenv(ff.Name, "invalidBool")
+		assert.True(t, ff.Enabled())
 	})
+}
+
+func TestFeatureFlagString(t *testing.T) {
+	ff := featureflags.FeatureFlag{Name: "env", DefaultValue: true}
+	assert.Equal(t, "env", ff.String())
 }
