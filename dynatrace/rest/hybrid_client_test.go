@@ -3,8 +3,15 @@ package rest
 import (
 	"context"
 	"errors"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const mockToken = "########"
@@ -139,6 +146,76 @@ func TestHybridClient(t *testing.T) {
 			expect(t, testcase.Expected, HybridClient(testcase.Credentials()).Get(ctx, "").Finish())
 		})
 	}
+}
+
+func TestApiTokenClient(t *testing.T) {
+	const (
+		endpoint          = "/api/v2/settings/objects"
+		activeGatePostfix = "/e/my-env-id"
+	)
+
+	t.Run("Correctly transforms an Active Gate URL", func(t *testing.T) {
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			expectedURL, err := url.JoinPath(activeGatePostfix, endpoint)
+			require.NoError(t, err)
+			require.Equal(t, expectedURL, r.URL.Path)
+			require.Equal(t, expectedURL, r.URL.Path)
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte("{}"))
+		}))
+		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
+		require.NoError(t, err)
+
+		cred := Credentials{URL: activeGateURL, Token: mockToken}
+		client := HybridClient(&cred)
+
+		req := client.Get(t.Context(), endpoint)
+		err = req.Finish()
+		assert.NoError(t, err)
+	})
+
+	t.Run("Errors on empty env URL", func(t *testing.T) {
+		cred := Credentials{URL: "", Token: mockToken}
+		client := HybridClient(&cred)
+
+		req := client.Get(t.Context(), endpoint)
+		err := req.Finish()
+		assert.ErrorIs(t, err, NoClassicURLDefinedErr)
+	})
+
+	t.Run("Errors on invalid path", func(t *testing.T) {
+		cred := Credentials{URL: "my-url", Token: mockToken}
+		client := HybridClient(&cred)
+
+		req := client.Get(t.Context(), ":/invalid-url")
+		err := req.Finish()
+		expectedErr := &url.Error{}
+		assert.ErrorAs(t, err, &expectedErr)
+	})
+
+	t.Run("Sets correct headers", func(t *testing.T) {
+		customHeaderName := "my-header"
+		customHeaderValue := "my-value"
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			expectedURL, err := url.JoinPath(activeGatePostfix, endpoint)
+			require.NoError(t, err)
+			require.Equal(t, expectedURL, r.URL.Path)
+			require.Equal(t, fmt.Sprintf("Api-Token %s", mockToken), r.Header.Get("Authorization"))
+			require.Equal(t, customHeaderValue, r.Header.Get(customHeaderName))
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte("{}"))
+		}))
+		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
+		require.NoError(t, err)
+
+		cred := Credentials{URL: activeGateURL, Token: mockToken}
+		client := HybridClient(&cred)
+
+		req := client.Get(t.Context(), endpoint)
+		req.SetHeader(customHeaderName, customHeaderValue)
+		err = req.Finish()
+		assert.NoError(t, err)
+	})
 }
 
 func expect(t *testing.T, expected error, actual error) {

@@ -10,12 +10,12 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/google/uuid"
+
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 var DYNATRACE_HTTP_LEGACY = (os.Getenv("DYNATRACE_HTTP_LEGACY") == "true")
@@ -95,20 +95,16 @@ func UnmarshalError(method string, url string, data []byte, response *http.Respo
 	return Error{Code: response.StatusCode, Method: method, URL: url, Message: response.Status}
 }
 
-var reManaged = regexp.MustCompile(`^/e/[0-9a-fA-F\-]{36}/`)
-
 func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (err error) {
 	var response *http.Response
 
 	ctx := context.WithValue(me.ctx, "request.id", uuid.NewString())
 
-	uPath := reManaged.ReplaceAllString(u.Path, "/")
-
 	switch me.method {
 	case http.MethodGet:
-		response, err = client.GET(ctx, uPath, rest.RequestOptions{QueryParams: u.Query()})
+		response, err = client.GET(ctx, u.Path, rest.RequestOptions{QueryParams: u.Query()})
 	case http.MethodDelete:
-		response, err = client.DELETE(ctx, uPath, rest.RequestOptions{QueryParams: u.Query()})
+		response, err = client.DELETE(ctx, u.Path, rest.RequestOptions{QueryParams: u.Query()})
 	case http.MethodPost, http.MethodPatch, http.MethodPut:
 		body, err := readerFromPayload(me.payload)
 		if err != nil {
@@ -116,11 +112,11 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 		}
 		switch me.method {
 		case http.MethodPost:
-			response, err = client.POST(ctx, uPath, body, rest.RequestOptions{QueryParams: u.Query()})
+			response, err = client.POST(ctx, u.Path, body, rest.RequestOptions{QueryParams: u.Query()})
 		case http.MethodPut:
-			response, err = client.PUT(ctx, uPath, body, rest.RequestOptions{QueryParams: u.Query()})
+			response, err = client.PUT(ctx, u.Path, body, rest.RequestOptions{QueryParams: u.Query()})
 		case http.MethodPatch:
-			response, err = client.PATCH(ctx, uPath, body, rest.RequestOptions{QueryParams: u.Query()})
+			response, err = client.PATCH(ctx, u.Path, body, rest.RequestOptions{QueryParams: u.Query()})
 		}
 	default:
 		return fmt.Errorf("unsupported method %s", me.method)
