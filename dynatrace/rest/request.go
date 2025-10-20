@@ -106,7 +106,8 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 	case http.MethodDelete:
 		response, err = client.DELETE(ctx, u.Path, rest.RequestOptions{QueryParams: u.Query()})
 	case http.MethodPost, http.MethodPatch, http.MethodPut:
-		body, err := readerFromPayload(me.payload)
+		var body io.Reader
+		body, err = readerFromPayload(me.payload)
 		if err != nil {
 			return err
 		}
