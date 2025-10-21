@@ -120,6 +120,10 @@ type DiffCustomizer interface {
 	CustomizeDiff(ctx context.Context, rd *schema.ResourceDiff, i any) error
 }
 
+type TimeoutProvider interface {
+	Timeouts() *schema.ResourceTimeout
+}
+
 func (me *Generic) Resource() *schema.Resource {
 	stngs := me.Descriptor.NewSettings()
 	sch := VisitSchemaMap(stngs.Schema())
@@ -146,6 +150,9 @@ func (me *Generic) Resource() *schema.Resource {
 		if dc, ok := stngs.(DiffCustomizer); ok {
 			resRes.CustomizeDiff = dc.CustomizeDiff
 		}
+		if tp, ok := stngs.(TimeoutProvider); ok {
+			resRes.Timeouts = tp.Timeouts()
+		}
 		return resRes
 	}
 
@@ -161,6 +168,9 @@ func (me *Generic) Resource() *schema.Resource {
 	}
 	if dc, ok := stngs.(DiffCustomizer); ok {
 		resRes.CustomizeDiff = dc.CustomizeDiff
+	}
+	if tp, ok := stngs.(TimeoutProvider); ok {
+		resRes.Timeouts = tp.Timeouts()
 	}
 	return resRes
 }

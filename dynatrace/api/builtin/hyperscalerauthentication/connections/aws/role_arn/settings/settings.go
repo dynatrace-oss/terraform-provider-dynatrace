@@ -18,15 +18,27 @@
 package role_arn
 
 import (
+	"time"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+const (
+	DefaultCreateTimeout = 20 * time.Minute
 )
 
 type Settings struct {
 	Name            string
 	AWSConnectionID string
 	RoleARN         string `json:"roleArn"` // The ARN of the AWS role that should be assumed
+}
+
+func (me *Settings) Timeouts() *schema.ResourceTimeout {
+	return &schema.ResourceTimeout{
+		Create: schema.DefaultTimeout(DefaultCreateTimeout),
+	}
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
