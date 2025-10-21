@@ -177,7 +177,16 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 	var credentials *rest.Credentials
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
-	if credentials, err = config.Credentials(configResult, config.CredValExport); err != nil {
+
+	dwValidationStrategy := config.CredValExport
+	for key, _ := range resArgs {
+		if strings.Contains(key, "iam") {
+			dwValidationStrategy = config.CredValExportIAM
+			break
+		}
+	}
+
+	if credentials, err = config.Credentials(configResult, dwValidationStrategy); err != nil {
 		return nil, err
 	}
 
