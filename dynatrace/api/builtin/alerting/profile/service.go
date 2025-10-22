@@ -29,7 +29,7 @@ import (
 )
 
 const SchemaID = "builtin:alerting.profile"
-const SchemaVersion = "8.6.1"
+const SchemaVersion = "8.6.2"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*profile.Profile] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})

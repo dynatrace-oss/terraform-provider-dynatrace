@@ -193,7 +193,7 @@
 					"maxObjects": 1,
 					"metadata": {
 						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
-						"maturity": "IN_DEVELOPMENT"
+						"maturity": "GENERAL_AVAILABILITY"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -204,7 +204,7 @@
 			},
 			"summaryPattern": "",
 			"type": "object",
-			"version": "0.0.2",
+			"version": "0.0.3",
 			"versionInfo": ""
 		},
 		"oneagentJavascriptTag": {
@@ -219,7 +219,7 @@
 					"maxObjects": 1,
 					"metadata": {
 						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
-						"maturity": "IN_DEVELOPMENT"
+						"maturity": "GENERAL_AVAILABILITY"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -230,7 +230,7 @@
 			},
 			"summaryPattern": "",
 			"type": "object",
-			"version": "0.0.1",
+			"version": "0.0.2",
 			"versionInfo": ""
 		},
 		"oneagentJavascriptTagSRI": {
@@ -245,7 +245,7 @@
 					"maxObjects": 1,
 					"metadata": {
 						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
-						"maturity": "IN_DEVELOPMENT"
+						"maturity": "GENERAL_AVAILABILITY"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -256,9 +256,9 @@
 			},
 			"summaryPattern": "",
 			"type": "object",
-			"version": "0.0.1",
+			"version": "0.0.2",
 			"versionInfo": ""
 		}
 	},
-	"version": "0.1.3"
+	"version": "1"
 }
