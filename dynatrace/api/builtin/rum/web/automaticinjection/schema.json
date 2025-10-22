@@ -211,7 +211,7 @@
 					"maxObjects": 1,
 					"metadata": {
 						"featureFlag": "com.compuware.apm.webuiff.rum-injection-async_defer.riad.feature",
-						"maturity": "EARLY_ADOPTER"
+						"maturity": "GENERAL_AVAILABILITY"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -260,5 +260,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.3"
+	"version": "1.2.4"
 }
