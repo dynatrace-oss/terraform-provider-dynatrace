@@ -2,6 +2,13 @@
 	"allowedScopes": [
 		"HTTP_CHECK"
 	],
+	"constraints": [
+		{
+			"customValidatorId": "synthetic-monitor-count-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Set cookies to store state information or instruct the server not to send certain kinds of information.",
 	"displayName": "Cookies",
 	"documentation": "",
@@ -97,6 +104,7 @@
 						{
 							"customMessage": "This cookie is not allowed",
 							"customValidatorId": "cookie-name-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -155,5 +163,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

@@ -3,6 +3,13 @@
 		"MULTIPROTOCOL_MONITOR",
 		"environment"
 	],
+	"constraints": [
+		{
+			"customValidatorId": "synthetic-monitor-count-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Dynatrace can generate problems for both global outages and/or local outages based on the availability of either all configured locations or only individual locations over consecutive runs.",
 	"displayName": "Outage handling",
 	"documentation": "",
@@ -139,5 +146,5 @@
 	],
 	"schemaId": "builtin:synthetic.multiprotocol.outage-handling",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }

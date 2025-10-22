@@ -2,6 +2,13 @@
 	"allowedScopes": [
 		"HTTP_CHECK"
 	],
+	"constraints": [
+		{
+			"customValidatorId": "synthetic-monitor-count-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Dynatrace generates a new problem if this synthetic monitor exceeds any of the performance thresholds below in 3 of the 5 most recent executions at a given location, unless there is an open maintenance window for the synthetic monitor. Multiple locations with 3 such violations can be included in a problem. The problem is closed if no performance threshold is violated in the 5 most recent executions at each of the previously affected locations.",
 	"displayName": "Performance thresholds",
 	"documentation": "",
@@ -118,5 +125,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6.1"
+	"version": "1.6.2"
 }
