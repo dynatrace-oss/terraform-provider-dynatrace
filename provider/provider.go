@@ -66,6 +66,7 @@ import (
 	v2alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/v2alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/activegatetokens"
@@ -678,6 +679,26 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_usersessions_routing":          resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineUsersessionsRouting).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
+	}
+	if featureflags.OpenPipelinePipelineGroups.Enabled() {
+		pipelineGroups := map[string]*schema.Resource{
+			"dynatrace_openpipeline_v2_bizevents_pipelinegroups":       resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineBizeventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_davis_events_pipelinegroups":    resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineDavisEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_davis_problems_pipelinegroups":  resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineDavisProblemsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_events_pipelinegroups":          resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_events_sdlc_pipelinegroups":     resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineEventsSdlcPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_events_security_pipelinegroups": resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineEventsSecurityPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_logs_pipelinegroups":            resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineLogsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_metrics_pipelinegroups":         resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineMetricsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_security_events_pipelinegroups": resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineSecurityEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_spans_pipelinegroups":           resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineSpansPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_system_events_pipelinegroups":   resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineSystemEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_user_events_pipelinegroups":     resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineUserEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
+		}
+		for k, v := range pipelineGroups {
+			prv.ResourcesMap[k] = v
+		}
 	}
 
 	incubator(prv)
