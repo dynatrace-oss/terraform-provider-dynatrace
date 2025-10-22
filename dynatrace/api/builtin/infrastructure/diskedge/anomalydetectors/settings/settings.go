@@ -26,7 +26,7 @@ type Settings struct {
 	Alerts                 Alerts                     `json:"alerts,omitempty"`                 // Alerts
 	DiskNameFilters        []string                   `json:"diskNameFilters,omitempty"`        // Disk will be included in this policy if **any** of the filters match
 	Enabled                bool                       `json:"enabled"`                          // This setting is enabled (`true`) or disabled (`false`)
-	EventProperties        MetadataItems              `json:"eventProperties,omitempty"`        // Set of additional key-value properties to be attached to the triggered event.
+	EventProperties        MetadataItems              `json:"eventProperties,omitempty"`        // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+)
 	HostMetadataConditions HostMetadataConditionTypes `json:"hostMetadataConditions,omitempty"` // The policy will be enabled if **all** conditions are met
 	OperatingSystem        []EoperatingSystem         `json:"operatingSystem,omitempty"`        // Select the operating systems on which policy should be applied
 	PolicyName             string                     `json:"policyName"`                       // Policy name
@@ -64,7 +64,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"event_properties": {
 			Type:        schema.TypeList,
-			Description: "Set of additional key-value properties to be attached to the triggered event.",
+			Description: "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+)",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
 			MinItems:    1,

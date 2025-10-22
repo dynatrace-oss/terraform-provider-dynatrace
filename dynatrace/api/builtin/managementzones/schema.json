@@ -1414,6 +1414,7 @@
 		},
 		{
 			"customMessage": "Management zone with this name already exists. Please provide a different one.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -1477,7 +1478,6 @@
 									"KUBERNETES_SERVICE_NAME",
 									"HOST_AZURE_WEB_APPLICATION_HOST_NAMES",
 									"HOST_AZURE_WEB_APPLICATION_SITE_NAMES",
-									"HOST_DETECTED_NAME",
 									"HOST_NAME",
 									"HOST_OS_VERSION",
 									"HOST_BOSH_NAME",
@@ -2590,12 +2590,12 @@
 						}
 					],
 					"default": "",
-					"description": "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+					"description": "Learn more about the [Entity selector](https://dt-url.net/apientityselector).",
 					"displayName": "Entity selector",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"placeholder": "type(\"host\"),entityName.startsWith(\"HOST\")"
+						"placeholder": "type(\"HOST\"),entityName.startsWith(\"Server\")"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -2628,5 +2628,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.12"
+	"version": "1.0.13"
 }

@@ -31,7 +31,7 @@ type Settings struct {
 	DetectionConditionsLinux   LinuxDetectionConditions   `json:"detectionConditionsLinux,omitempty"`   // Detection rules
 	DetectionConditionsWindows WindowsDetectionConditions `json:"detectionConditionsWindows,omitempty"` // Detection rules
 	Enabled                    bool                       `json:"enabled"`                              // This setting is enabled (`true`) or disabled (`false`)
-	Metadata                   MetadataItems              `json:"metadata,omitempty"`                   // Set of additional key-value properties to be attached to the triggered event.
+	Metadata                   MetadataItems              `json:"metadata,omitempty"`                   // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).
 	Monitoring                 bool                       `json:"monitoring"`                           // Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.
 	Name                       string                     `json:"name"`                                 // Rule name
 	NotInstalledAlerting       *bool                      `json:"notInstalledAlerting,omitempty"`       // By default, Dynatrace does not alert if the service is not installed. Toggle the switch to enable or disable this feature
@@ -77,7 +77,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"metadata": {
 			Type:        schema.TypeList,
-			Description: "Set of additional key-value properties to be attached to the triggered event.",
+			Description: "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).",
 			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
 			MinItems:    1,

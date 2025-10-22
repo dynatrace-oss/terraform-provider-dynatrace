@@ -24,7 +24,7 @@ import (
 
 type Settings struct {
 	Enabled          bool                `json:"enabled"`            // This setting is enabled (`true`) or disabled (`false`)
-	Metadata         MetadataItems       `json:"metadata,omitempty"` // Set of additional key-value properties to be attached to the triggered event.
+	Metadata         MetadataItems       `json:"metadata,omitempty"` // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).
 	Name             string              `json:"name"`               // Monitored rule name
 	Rules            DetectionConditions `json:"rules,omitempty"`    // Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.
 	Scope            *string             `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
@@ -42,7 +42,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"metadata": {
 			Type:        schema.TypeList,
-			Description: "Set of additional key-value properties to be attached to the triggered event.",
+			Description: "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
 			MinItems:    1,
