@@ -26,8 +26,8 @@ type Settings struct {
 	Interface_saturation_threshold float64 `json:"interface.saturation.threshold,omitempty"` // (Required v305+) The threshold at which a network device interface is deemed to be saturated.
 	Show_monitoring_candidates     bool    `json:"show.monitoring.candidates"`               // When set to true, the app will display monitoring candidates in the Hosts table
 	Show_standalone_hosts          bool    `json:"show.standalone.hosts"`                    // When set to true, the app will display app only hosts in the Hosts table
-	Invex_dql_query_limit          int     `json:"invex.dql.query.limit,omitempty"`          // Limit the number of results returned from Grail for Data center, Host, and Network device entities.
-	Invex_dql_sort_limit           int     `json:"invex.dql.sort.limit,omitempty"`           // Limit for server-side sorting in Data center, Host, and Network device inventories. Sorting is disabled when the row count exceeds the configured threshold.
+	Invex_dql_query_limit          int     `json:"invex.dql.query.limit,omitempty"`          // Limit the number of results returned from Grail for Host, Network device, and Extensions entities.
+	Invex_dql_sort_limit           int     `json:"invex.dql.sort.limit,omitempty"`           // Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.
 }
 
 func (me *Settings) Name() string {
@@ -53,13 +53,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"invex_dql_query_limit": {
 			Type:        schema.TypeInt,
-			Description: "Limit the number of results returned from Grail for Data center, Host, and Network device entities.",
+			Description: "Limit the number of results returned from Grail for Host, Network device, and Extensions entities.",
 			Optional:    true,
 			Default:     25000,
 		},
 		"invex_dql_sort_limit": {
 			Type:        schema.TypeInt,
-			Description: "Limit for server-side sorting in Data center, Host, and Network device inventories. Sorting is disabled when the row count exceeds the configured threshold.",
+			Description: "Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.",
 			Optional:    true,
 			Default:     25000,
 		},

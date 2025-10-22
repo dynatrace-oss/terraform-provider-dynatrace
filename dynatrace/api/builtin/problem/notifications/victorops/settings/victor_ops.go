@@ -29,7 +29,7 @@ type VictorOps struct {
 	Name      string `json:"-"`
 	ProfileID string `json:"-"`
 
-	APIKey     string `json:"apiKey"`     // The API key for the target VictorOps account.\n\nReceive your VictorOps API key by navigating to: Settings -> Integrations -> Rest Endpoint -> Dynatrace within your VictorOps account
+	APIKey     string `json:"apiKey"`     // The API key for the target Splunk On-Call account.\n\nReceive your Splunk On-Call API key by navigating to: Settings -> Integrations -> Rest Endpoint -> Dynatrace within your VictorOps account
 	RoutingKey string `json:"routingKey"` // The routing key, defining the group to be notified
 	Message    string `json:"message"`    // The content of the message. Type '{' for placeholder suggestions
 }
@@ -66,7 +66,7 @@ func (me *VictorOps) Schema() map[string]*schema.Schema {
 
 		"api_key": {
 			Type:        schema.TypeString,
-			Description: "The API key for the target VictorOps account",
+			Description: "The API key for the target Splunk On-Call account",
 			Sensitive:   true,
 			Optional:    true,
 		},

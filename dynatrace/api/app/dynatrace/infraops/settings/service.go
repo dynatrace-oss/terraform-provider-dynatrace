@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.4.1"
+const SchemaVersion = "1.4.2"
 const SchemaID = "app:dynatrace.infraops:settings"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*infraopssettings.Settings] {

@@ -52,7 +52,7 @@ type Rule struct {
 	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule,omitempty"`
 	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`
 	Enabled        bool                         `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
-	EntitySelector *string                      `json:"entitySelector,omitempty"` // The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
+	EntitySelector *string                      `json:"entitySelector,omitempty"` // Learn more about the [Entity selector](https://dt-url.net/apientityselector).
 	Type           RuleType                     `json:"type"`                     // Possible Values: `DIMENSION`, `ME`, `SELECTOR`
 }
 
@@ -81,7 +81,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"entity_selector": {
 			Type:             schema.TypeString,
-			Description:      "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+			Description:      "Learn more about the [Entity selector](https://dt-url.net/apientityselector).",
 			Optional:         true, // precondition
 			DiffSuppressFunc: hcl.SuppressEOT,
 			StateFunc: func(i any) string {

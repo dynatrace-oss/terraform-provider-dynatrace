@@ -70,7 +70,7 @@
 					"value": "PAGER_DUTY"
 				},
 				{
-					"displayName": "VictorOps",
+					"displayName": "Splunk On-Call",
 					"icon": "victorops",
 					"value": "VICTOROPS"
 				},
@@ -1523,7 +1523,7 @@
 						}
 					],
 					"default": "",
-					"description": "The API key for the target VictorOps account.\n\nReceive your VictorOps API key by navigating to: Settings -\u003e Integrations -\u003e Rest Endpoint -\u003e Dynatrace within your VictorOps account.",
+					"description": "The API key for the target Splunk On-Call account.\n\nReceive your Splunk On-Call API key by navigating to: Settings -\u003e Integrations -\u003e Rest Endpoint -\u003e Dynatrace.",
 					"displayName": "API key",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1963,5 +1963,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.7.1"
+	"version": "1.7.2"
 }

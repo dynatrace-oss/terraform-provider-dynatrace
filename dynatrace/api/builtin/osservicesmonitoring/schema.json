@@ -210,7 +210,7 @@
 			"type": "boolean"
 		},
 		"metadata": {
-			"description": "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).",
+			"description": "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).",
 			"displayName": "Properties",
 			"documentation": "",
 			"items": {
@@ -826,5 +826,5 @@
 			]
 		}
 	},
-	"version": "1.3.12"
+	"version": "1.3.13"
 }
