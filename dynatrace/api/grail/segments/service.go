@@ -24,6 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+
 	segmentsapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 
@@ -67,8 +68,9 @@ func (me *service) SchemaID() string {
 }
 
 type SegmentStub struct {
-	UID  string `json:"uid"`
-	Name string `json:"name"`
+	UID         string `json:"uid"`
+	Name        string `json:"name"`
+	IsReadyMade bool   `json:"isReadyMade"`
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
@@ -89,6 +91,10 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, segment := range segments {
+		// Ready-made segments are unmodifiable, so we skip them in the listing
+		if segment.IsReadyMade {
+			continue
+		}
 		stubs = append(stubs, &api.Stub{ID: segment.UID, Name: segment.Name})
 	}
 
