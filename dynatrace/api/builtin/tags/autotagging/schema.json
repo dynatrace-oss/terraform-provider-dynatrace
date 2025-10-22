@@ -1320,6 +1320,7 @@
 		},
 		{
 			"customMessage": "Tag name must be unique",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"name"
@@ -1382,7 +1383,6 @@
 									"KUBERNETES_SERVICE_NAME",
 									"HOST_AZURE_WEB_APPLICATION_HOST_NAMES",
 									"HOST_AZURE_WEB_APPLICATION_SITE_NAMES",
-									"HOST_DETECTED_NAME",
 									"HOST_NAME",
 									"HOST_OS_VERSION",
 									"HOST_BOSH_NAME",
@@ -2321,12 +2321,12 @@
 						}
 					],
 					"default": "",
-					"description": "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+					"description": "Learn more about the [Entity selector](https://dt-url.net/apientityselector).",
 					"displayName": "Entity selector",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"placeholder": "type(host),entityName.startsWith(HOST)"
+						"placeholder": "type(\"HOST\"),entityName.startsWith(\"Server\")"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -2374,7 +2374,7 @@
 					},
 					"description": "",
 					"displayName": "Optional tag value",
-					"documentation": "Type '{' for placeholder suggestions",
+					"documentation": "Type '{' for placeholder suggestions.\n\nPlaceholders containing ' /' must be enclosed in quotation marks.\n\nFor example: {\"placeholder/etc\"}",
 					"maxObjects": 1,
 					"metadata": {
 						"placeholder": "Tag value",
@@ -2404,5 +2404,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.17"
+	"version": "1.0.18"
 }
