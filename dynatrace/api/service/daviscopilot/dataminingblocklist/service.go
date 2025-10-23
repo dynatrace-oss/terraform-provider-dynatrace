@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.1"
+const SchemaVersion = "0.3"
 const SchemaID = "service:davis.copilot.datamining-blocklist"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*dataminingblocklist.Settings] {

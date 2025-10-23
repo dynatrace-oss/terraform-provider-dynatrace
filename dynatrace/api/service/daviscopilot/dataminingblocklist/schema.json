@@ -2,8 +2,8 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Davis CoPilot is Dynatrace's generative AI which boosts productivity, helps with onboarding, and allows you to explore data through natural language. Learn more about [Davis CoPilot](https://dt-url.net/0l02iww \"Davis CoPilot\").",
-	"displayName": "Davis CoPilot",
+	"description": "Dynatrace Generative AI boosts productivity, helps with onboarding, and allows you to explore data through natural language. Learn more about [Dynatrace Generative AI](https://dt-url.net/0l02iww \"Dynatrace Generative AI\").",
+	"displayName": "Generative AI",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -28,7 +28,7 @@
 	"multiObject": false,
 	"properties": {
 		"blocklistEntries": {
-			"description": "You can exclude specific data buckets and tables from the Davis CoPilot semantic index. Learn more about [configuring data access](https://dt-url.net/lc62i1q \"Davis CoPilot data access\").",
+			"description": "You can exclude specific data buckets and tables from the semantic index. Learn more about [configuring data access](https://dt-url.net/lc62i1q \"Dynatrace Generative AI data access\").",
 			"displayName": "Configure data access",
 			"documentation": "",
 			"items": {
@@ -55,8 +55,8 @@
 		},
 		"enableCopilot": {
 			"default": false,
-			"description": "Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Davis CoPilot permissions\") to the relevant user groups.",
-			"displayName": "Enable Davis CoPilot",
+			"description": "Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.",
+			"displayName": "Enable generative AI",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -65,8 +65,8 @@
 		},
 		"enableDocumentSuggestion": {
 			"default": false,
-			"description": "You can enable document suggestions to allow Davis CoPilot to find similarities between Davis Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Davis CoPilot document suggestions\").",
-			"displayName": "Enable document suggestions based on vector similarity",
+			"description": "By enabling document suggestions, Dynatrace AI can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").",
+			"displayName": "Enable document suggestions",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -80,7 +80,7 @@
 		},
 		"enableTenantAwareDataMining": {
 			"default": false,
-			"description": "You can enrich Davis CoPilot with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Davis CoPilot periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Davis CoPilot environment aware queries\").",
+			"description": "You can enrich Dynatrace Generative AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace AI periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").",
 			"displayName": "Enable environment-aware queries",
 			"documentation": "",
 			"maxObjects": 1,
@@ -143,5 +143,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.2"
+	"version": "0.3"
 }
