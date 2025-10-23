@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.15"
+const SchemaVersion = "1.0.17"
 const SchemaID = "builtin:logmonitoring.timestamp-configuration"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*timestampconfiguration.Settings] {
