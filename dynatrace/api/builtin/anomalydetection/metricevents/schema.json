@@ -249,6 +249,10 @@
 				{
 					"displayName": "Marked for termination",
 					"value": "MARKED_FOR_TERMINATION"
+				},
+				{
+					"displayName": "Warning",
+					"value": "WARNING"
 				}
 			],
 			"type": "enum"
@@ -1343,5 +1347,5 @@
 			]
 		}
 	},
-	"version": "1.0.18"
+	"version": "1.0.19"
 }
