@@ -1585,6 +1585,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.WebAppCustomProperties: NewResourceDescriptor(
 		capturecustomproperties.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
+		Dependencies.ID(ResourceTypes.MobileApplication),
 	),
 	ResourceTypes.WebAppJavascriptFilename: NewResourceDescriptor(rumjavascriptfilename.Service),
 	ResourceTypes.ServiceSplittingRules: NewResourceDescriptor(

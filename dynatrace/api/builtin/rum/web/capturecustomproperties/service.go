@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.2"
+const SchemaVersion = "0.3"
 const SchemaID = "builtin:rum.web.capture-custom-properties"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*capturecustomproperties.Settings] {
