@@ -233,6 +233,15 @@
 			"nullable": false,
 			"type": "set"
 		},
+		"skip-indented-lines": {
+			"description": "Don't parse timestamps in lines starting with white character",
+			"displayName": "Skip indented lines",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
+		},
 		"timezone": {
 			"constraints": [
 				{
@@ -264,6 +273,7 @@
 	},
 	"schemaConstraints": [
 		{
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"config-item-title"
@@ -411,7 +421,7 @@
 					"propertyRef": "timezone"
 				},
 				{
-					"displayName": "Timestamp Search Limit",
+					"displayName": "Timestamp search limit",
 					"id": "dateSearchLimit",
 					"propertyRef": "date-search-limit"
 				},
@@ -426,5 +436,5 @@
 			}
 		}
 	},
-	"version": "1.0.15"
+	"version": "1.0.17"
 }
