@@ -159,6 +159,41 @@
 			"displayName": "sessionReplay",
 			"documentation": "",
 			"properties": {
+				"costAndTrafficControl": {
+					"constraints": [
+						{
+							"customMessage": "Percentage should be between 1 and 100.",
+							"maximum": 100,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"description": "Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.",
+					"displayName": "Cost and traffic control",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.mrumff.full-session-replay.feature",
+						"maturity": "GENERAL_AVAILABILITY"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "percentage",
+					"type": "integer"
+				},
+				"fullSessionReplay": {
+					"description": "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
+					"displayName": "Enable Session Replay Classic",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"featureFlag": "com.compuware.mrumff.full-session-replay.feature",
+						"maturity": "GENERAL_AVAILABILITY"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"onCrash": {
 					"default": true,
 					"description": "Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
@@ -176,5 +211,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.4.3"
+	"version": "2.4.4"
 }
