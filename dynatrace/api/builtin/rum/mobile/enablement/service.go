@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.4.3"
+const SchemaVersion = "2.4.4"
 const SchemaID = "builtin:rum.mobile.enablement"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*enablement.Settings] {
