@@ -45,35 +45,62 @@ func (me *ThresholdEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type ThresholdEntry struct {
-	Event     string  `json:"event"`     // Synthetic event
-	Threshold float64 `json:"threshold"` // Threshold (in seconds)
+	DealertingSamples int     `json:"dealertingSamples"` // Number of most recent non-violating executions that closes the problem
+	Event             string  `json:"event"`             // Synthetic event
+	Samples           int     `json:"samples"`           // Number of executions in analyzed sliding window (sliding window size)
+	Threshold         float64 `json:"threshold"`         // Threshold (in seconds)
+	ViolatingSamples  int     `json:"violatingSamples"`  // Number of violating executions in analyzed sliding window
 }
 
 func (me *ThresholdEntry) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"dealerting_samples": {
+			Type:        schema.TypeInt,
+			Description: "Number of most recent non-violating executions that closes the problem",
+			Optional:    true,
+			Default:     5,
+		},
 		"event": {
 			Type:        schema.TypeString,
 			Description: "Synthetic event",
 			Required:    true,
+		},
+		"samples": {
+			Type:        schema.TypeInt,
+			Description: "Number of executions in analyzed sliding window (sliding window size)",
+			Optional:    true,
+			Default:     5,
 		},
 		"threshold": {
 			Type:        schema.TypeFloat,
 			Description: "Threshold (in seconds)",
 			Required:    true,
 		},
+		"violating_samples": {
+			Type:        schema.TypeInt,
+			Description: "Number of violating executions in analyzed sliding window",
+			Optional:    true,
+			Default:     3,
+		},
 	}
 }
 
 func (me *ThresholdEntry) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"event":     me.Event,
-		"threshold": me.Threshold,
+		"dealerting_samples": me.DealertingSamples,
+		"event":              me.Event,
+		"samples":            me.Samples,
+		"threshold":          me.Threshold,
+		"violating_samples":  me.ViolatingSamples,
 	})
 }
 
 func (me *ThresholdEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"event":     &me.Event,
-		"threshold": &me.Threshold,
+		"dealerting_samples": &me.DealertingSamples,
+		"event":              &me.Event,
+		"samples":            &me.Samples,
+		"threshold":          &me.Threshold,
+		"violating_samples":  &me.ViolatingSamples,
 	})
 }
