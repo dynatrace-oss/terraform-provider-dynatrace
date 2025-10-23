@@ -51,6 +51,10 @@
 				{
 					"displayName": "Marked for termination",
 					"value": "MARKED_FOR_TERMINATION"
+				},
+				{
+					"displayName": "Warning",
+					"value": "WARNING"
 				}
 			],
 			"type": "enum"
@@ -140,6 +144,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Log event summary with the specified name already exists.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"summary"
@@ -327,5 +332,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.2.4"
+	"version": "3.2.5"
 }
