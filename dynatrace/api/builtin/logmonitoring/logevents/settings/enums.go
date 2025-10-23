@@ -30,6 +30,7 @@ var EventTypeEnums = struct {
 	MarkedForTermination EventTypeEnum
 	Resource             EventTypeEnum
 	Slowdown             EventTypeEnum
+	Warning              EventTypeEnum
 }{
 	"AVAILABILITY",
 	"CUSTOM_ALERT",
@@ -41,4 +42,5 @@ var EventTypeEnums = struct {
 	"MARKED_FOR_TERMINATION",
 	"RESOURCE",
 	"SLOWDOWN",
+	"WARNING",
 }
