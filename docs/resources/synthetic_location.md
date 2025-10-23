@@ -66,6 +66,7 @@ resource "dynatrace_synthetic_location" "#name#" {
 
 * `STANDARD`: The location is deployed on Windows or Linux.
 * `KUBERNETES`: The location is deployed on Kubernetes
+- `fips_mode` (String) Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`
 - `location_node_outage_delay_in_minutes` (Number) Alert if the location or node outage lasts longer than *X* minutes. 
 
  Only applicable when **availability_location_outage** or **availability_node_outage** is set to `true`
