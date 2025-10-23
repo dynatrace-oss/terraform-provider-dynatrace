@@ -978,7 +978,7 @@ func (me ResourceType) GetFolderName(override string) string {
 
 func (me ResourceType) GetChildren() []ResourceType {
 	res := []ResourceType{}
-	for k, v := range AllResources() {
+	for k, v := range AllResources {
 		if v.Parent != nil && (string(*v.Parent) == string(me)) {
 			res = append(res, k)
 		}
@@ -990,7 +990,7 @@ func (me ResourceType) GetParent() ResourceType {
 	if !me.IsChildResource() {
 		return ""
 	}
-	for k, v := range AllResources() {
+	for k, v := range AllResources {
 		if string(k) == string(me) {
 			return *v.Parent
 		}
@@ -999,7 +999,7 @@ func (me ResourceType) GetParent() ResourceType {
 }
 
 func (me ResourceType) IsChildResource() bool {
-	for k, v := range AllResources() {
+	for k, v := range AllResources {
 		if string(k) == string(me) {
 			return v.Parent != nil
 		}

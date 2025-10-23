@@ -179,7 +179,7 @@ func (me *Environment) ProcessChildParentGroups() {
 	me.ChildParentGroups = map[ResourceType]ResourceType{}
 	me.IsParentMap = map[ResourceType]bool{}
 
-	for resType, resource := range AllResources() {
+	for resType, resource := range AllResources {
 		if resource.Parent != nil {
 			me.ChildParentGroups[resType] = *resource.Parent
 			me.ChildParentGroups[*resource.Parent] = *resource.Parent
@@ -191,7 +191,7 @@ func (me *Environment) ProcessChildParentGroups() {
 func (me *Environment) ProcessHasDependenciesTo() {
 	me.HasDependenciesTo = map[ResourceType]bool{}
 
-	for _, resource := range AllResources() {
+	for _, resource := range AllResources {
 		for _, dep := range resource.Dependencies {
 			resSource := dep.ResourceType()
 			if resSource == "" {

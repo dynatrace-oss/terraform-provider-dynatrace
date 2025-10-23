@@ -680,6 +680,9 @@ func Provider() *schema.Provider {
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
+	for resourceType, descriptor := range export.GetConditionalResources() {
+		prv.ResourcesMap[string(resourceType)] = resources.NewGenericWithGivenDescriptor(descriptor, resourceType, true).Resource()
+	}
 
 	incubator(prv)
 	return prv

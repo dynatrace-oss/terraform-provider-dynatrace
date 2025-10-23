@@ -38,22 +38,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
-	descriptor := export.AllResources()[resourceType]
+func NewGenericWithGivenDescriptor(descriptor export.ResourceDescriptor, resourceType export.ResourceType, printViolationPath bool, credVal ...int) *Generic {
 	cv := CredValDefault
 	if len(credVal) > 0 {
 		cv = credVal[0]
 	}
-	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv}
+	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv, AlwaysPrintViolationPath: printViolationPath}
+}
+
+func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
+	return NewGenericWithGivenDescriptor(export.AllResources[resourceType], resourceType, false, credVal...)
 }
 
 func NewGenericWithAlwaysPrintingViolationPath(resourceType export.ResourceType, credVal ...int) *Generic {
-	descriptor := export.AllResources()[resourceType]
-	cv := CredValDefault
-	if len(credVal) > 0 {
-		cv = credVal[0]
-	}
-	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv, AlwaysPrintViolationPath: true}
+	return NewGenericWithGivenDescriptor(export.AllResources[resourceType], resourceType, true, credVal...)
 }
 
 type Computer interface {

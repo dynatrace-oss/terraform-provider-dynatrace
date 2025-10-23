@@ -18,6 +18,7 @@
 package export
 
 import (
+	"maps"
 	"os"
 	"reflect"
 	"strings"
@@ -27,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	featureflags2 "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -528,7 +530,7 @@ func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) 
 // in order to replace hardcoded IDs in there.
 // `Dependencies.WeakID` takes care of that.
 func AddInsertAfterWeakIDDependencies() {
-	for resType, descriptor := range AllResources() {
+	for resType, descriptor := range AllResources {
 		schemaID := descriptor.Service(&rest.Credentials{}).SchemaID()
 		if !ContainsInsertAfterAttribute(descriptor.protoType, schemaID) {
 			continue
@@ -1772,10 +1774,19 @@ var defaultResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
 }
 
-func AllResources() map[ResourceType]ResourceDescriptor {
+var AllResources = GetAllResources()
+
+func GetAllResources() map[ResourceType]ResourceDescriptor {
 	res := make(map[ResourceType]ResourceDescriptor)
-	for k, v := range defaultResources {
-		res[k] = v
+	maps.Copy(res, defaultResources)
+	maps.Copy(res, GetConditionalResources())
+	return res
+}
+
+func GetConditionalResources() map[ResourceType]ResourceDescriptor {
+	res := make(map[ResourceType]ResourceDescriptor)
+	if featureflags2.OpenPipelinePipelineGroups.Enabled() {
+		// Merge OpenPipeline Pipeline Groups resources
 	}
 	return res
 }
@@ -1974,7 +1985,7 @@ func GetExcludeListedResources() []ResourceType {
 }
 
 func Service(credentials *rest.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
-	return AllResources()[resourceType].Service(credentials)
+	return AllResources[resourceType].Service(credentials)
 }
 
 // func DSService(credentials *rest.Credentials, dataSourceType DataSourceType) settings.RService[settings.Settings] {

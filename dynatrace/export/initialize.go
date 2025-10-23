@@ -57,7 +57,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 	cache.Enable()
 	resArgs := map[string][]string{}
 	if flags.Exclude {
-		for resourceType := range AllResources() {
+		for resourceType := range AllResources {
 			excludeListed := false
 			for _, excludeListedResourceType := range GetExcludeListedResources() {
 				if resourceType == excludeListedResourceType {
@@ -112,7 +112,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 		for _, idx := range effectiveTailArgs {
 			if idx == "*" {
-				for resourceType := range AllResources() {
+				for resourceType := range AllResources {
 					excludeListed := false
 					for _, excludeListedResourceType := range GetExcludeListedResources() {
 						if resourceType == excludeListedResourceType {
@@ -151,7 +151,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 
 		if len(resArgs) == 0 {
-			for resourceType := range AllResources() {
+			for resourceType := range AllResources {
 				excludeListed := false
 				for _, excludeListedResourceType := range GetExcludeListedResources() {
 					if resourceType == excludeListedResourceType {
@@ -191,7 +191,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 	if requestingOnlyChildResources {
-		for _, v := range AllResources() {
+		for _, v := range AllResources {
 			v.Parent = nil
 		}
 	}
@@ -245,7 +245,7 @@ func ToParent(keyVal string) string {
 	res2 := ""
 	parts := strings.Split(keyVal, "=")
 	keyVal = parts[0]
-	for resName := range AllResources() {
+	for resName := range AllResources {
 		if keyVal == string(resName) {
 			for resName.IsChildResource() {
 				resName = resName.GetParent()
@@ -267,7 +267,7 @@ func ValidateResource(keyVal string) (string, string) {
 	res2 := ""
 	parts := strings.Split(keyVal, "=")
 	keyVal = parts[0]
-	for resName := range AllResources() {
+	for resName := range AllResources {
 		if keyVal == string(resName) {
 			res1 = string(resName)
 			if len(parts) > 1 {
