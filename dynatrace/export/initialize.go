@@ -180,7 +180,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 	dwValidationStrategy := config.CredValExport
 	for key, _ := range resArgs {
-		if strings.Contains(key, "iam") {
+		if strings.Contains(key, "_iam_") {
 			dwValidationStrategy = config.CredValExportIAM
 			break
 		}
