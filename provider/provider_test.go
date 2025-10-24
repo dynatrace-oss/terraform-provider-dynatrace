@@ -26,13 +26,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIAMClientID(t *testing.T) {
 	if len(os.Getenv("TF_ACC")) > 0 {
 		return
 	}
-	assert := Assert{t}
 	provider := provider.Provider()
 
 	for _, envVarName := range []string{
@@ -41,19 +42,14 @@ func TestIAMClientID(t *testing.T) {
 	} {
 		t.Run(envVarName, func(t *testing.T) {
 			iam_client_id := uuid.NewString()
-			os.Setenv(envVarName, iam_client_id)
-			defer os.Unsetenv(envVarName)
+			t.Setenv(envVarName, iam_client_id)
 
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(iam_client_id, credentials.IAM.ClientID, "credentials.IAM.ClientID") {
-				return
-			}
-			if !assert.Equal(iam_client_id, credentials.OAuth.ClientID, "credentials.Automation.ClientID") {
-				return
-			}
+			require.Equal(t, iam_client_id, credentials.IAM.ClientID)
+			assert.Equal(t, iam_client_id, credentials.OAuth.ClientID)
 		})
 	}
 }
@@ -62,7 +58,6 @@ func TestIAMClientSecret(t *testing.T) {
 	if len(os.Getenv("TF_ACC")) > 0 {
 		return
 	}
-	assert := Assert{t}
 	provider := provider.Provider()
 
 	for _, envVarName := range []string{
@@ -71,19 +66,14 @@ func TestIAMClientSecret(t *testing.T) {
 	} {
 		t.Run(envVarName, func(t *testing.T) {
 			iam_client_secret := uuid.NewString()
-			os.Setenv(envVarName, iam_client_secret)
-			defer os.Unsetenv(envVarName)
+			t.Setenv(envVarName, iam_client_secret)
 
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(iam_client_secret, credentials.IAM.ClientSecret, "credentials.IAM.ClientSecret") {
-				return
-			}
-			if !assert.Equal(iam_client_secret, credentials.OAuth.ClientSecret, "credentials.Automation.ClientSecret") {
-				return
-			}
+			require.Equal(t, iam_client_secret, credentials.IAM.ClientSecret)
+			assert.Equal(t, iam_client_secret, credentials.OAuth.ClientSecret)
 		})
 	}
 }
@@ -91,7 +81,6 @@ func TestSSOTokenURL(t *testing.T) {
 	if len(os.Getenv("TF_ACC")) > 0 {
 		return
 	}
-	assert := Assert{t}
 	provider := provider.Provider()
 
 	for _, envURL := range []string{
@@ -105,22 +94,15 @@ func TestSSOTokenURL(t *testing.T) {
 		"https://foo.apps.dynatrace.com/ ",
 	} {
 		t.Run(envURL, func(t *testing.T) {
-			os.Setenv("DYNATRACE_ENV_URL", envURL)
-			defer os.Unsetenv("DYNATRACE_ENV_URL")
+			t.Setenv("DYNATRACE_ENV_URL", envURL)
 
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.ProdTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
-				return
-			}
-			if !assert.Equal(rest.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
-				return
-			}
-			if !assert.Equal(rest.ProdTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
-				return
-			}
+			require.Equal(t, rest.ProdTokenURL, credentials.IAM.TokenURL)
+			require.Equal(t, rest.ProdIAMEndpointURL, credentials.IAM.EndpointURL)
+			assert.Equal(t, rest.ProdTokenURL, credentials.OAuth.TokenURL)
 		})
 	}
 	for _, envURL := range []string{
@@ -134,22 +116,15 @@ func TestSSOTokenURL(t *testing.T) {
 		"https://foo.sprint.apps.dynatracelabs.com/ ",
 	} {
 		t.Run(envURL, func(t *testing.T) {
-			os.Setenv("DYNATRACE_ENV_URL", envURL)
-			defer os.Unsetenv("DYNATRACE_ENV_URL")
+			t.Setenv("DYNATRACE_ENV_URL", envURL)
 
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.SprintTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
-				return
-			}
-			if !assert.Equal(rest.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
-				return
-			}
-			if !assert.Equal(rest.SprintTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
-				return
-			}
+			require.Equal(t, rest.SprintTokenURL, credentials.IAM.TokenURL)
+			require.Equal(t, rest.SprintIAMEndpointURL, credentials.IAM.EndpointURL)
+			assert.Equal(t, rest.SprintTokenURL, credentials.OAuth.TokenURL)
 		})
 	}
 	for _, envURL := range []string{
@@ -163,22 +138,15 @@ func TestSSOTokenURL(t *testing.T) {
 		"https://foo.dev.apps.dynatracelabs.com/ ",
 	} {
 		t.Run(envURL, func(t *testing.T) {
-			os.Setenv("DYNATRACE_ENV_URL", envURL)
-			defer os.Unsetenv("DYNATRACE_ENV_URL")
+			t.Setenv("DYNATRACE_ENV_URL", envURL)
 
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.DevTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
-				return
-			}
-			if !assert.Equal(rest.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
-				return
-			}
-			if !assert.Equal(rest.DevTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
-				return
-			}
+			require.Equal(t, rest.DevTokenURL, credentials.IAM.TokenURL)
+			require.Equal(t, rest.DevIAMEndpointURL, credentials.IAM.EndpointURL)
+			assert.Equal(t, rest.DevTokenURL, credentials.OAuth.TokenURL)
 		})
 	}
 }
@@ -187,28 +155,4 @@ func createCredentials(getter config.Getter) *rest.Credentials {
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), getter)
 	creds, _ := config.Credentials(configResult, config.CredValNone)
 	return creds
-}
-
-type Assert struct {
-	t *testing.T
-}
-
-func (a Assert) Bool(expected bool, message string) bool {
-	a.t.Helper()
-	if !expected {
-		a.t.Error(message)
-		a.t.Fail()
-		return false
-	}
-	return true
-}
-
-func (a Assert) Equal(expected any, actual any, key string) bool {
-	a.t.Helper()
-	if expected != actual {
-		a.t.Errorf("value '%v' of '%s' differs from expected value '%v'", actual, key, expected)
-		a.t.Fail()
-		return false
-	}
-	return true
 }

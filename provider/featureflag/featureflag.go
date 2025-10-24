@@ -1,0 +1,57 @@
+/*
+ * @license
+ * Copyright 2025 Dynatrace LLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package featureflags
+
+import (
+	"os"
+	"strconv"
+	"strings"
+)
+
+var (
+	OpenPipelinePipelineGroups = FeatureFlag{"FEAT_OPENPIPELINE_PIPELINE_GROUP", false}
+)
+
+// FeatureFlag represents a command line switch to turn certain features
+// ON or OFF. Values are read from environment variables defined by
+// the feature flag. The feature flag can have default value which is used
+// when the resp. environment variable does not exist
+
+type FeatureFlag struct {
+	Name         string
+	DefaultValue bool
+}
+
+func (ff FeatureFlag) String() string {
+	return ff.Name
+}
+
+// Enabled look up between known temporary and permanent flags and evaluates it.
+// Feature flags are considered to be "enabled" if their resp. environment variable
+// is set to 1, t, T, TRUE, true or True.
+// Feature flags are considered to be "disabled" if their resp. environment variable
+// is set to 0, f, F, FALSE, false or False.
+func (ff FeatureFlag) Enabled() bool {
+	if val, ok := os.LookupEnv(ff.Name); ok {
+		value, err := strconv.ParseBool(strings.ToLower(val))
+		if err != nil {
+			return ff.DefaultValue
+		}
+		return value
+	}
+	return ff.DefaultValue
+}

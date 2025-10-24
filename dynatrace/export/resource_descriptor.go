@@ -18,6 +18,7 @@
 package export
 
 import (
+	"maps"
 	"os"
 	"reflect"
 	"strings"
@@ -27,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	featureflags2 "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/featureflag"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -540,7 +542,7 @@ func AddInsertAfterWeakIDDependencies() {
 	}
 }
 
-var AllResources = map[ResourceType]ResourceDescriptor{
+var defaultResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Alerting: NewResourceDescriptor(
 		alerting.Service,
 		Dependencies.LegacyID(ResourceTypes.ManagementZoneV2),
@@ -1770,6 +1772,23 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
+}
+
+var AllResources = GetAllResources()
+
+func GetAllResources() map[ResourceType]ResourceDescriptor {
+	res := make(map[ResourceType]ResourceDescriptor)
+	maps.Copy(res, defaultResources)
+	maps.Copy(res, GetConditionalResources())
+	return res
+}
+
+func GetConditionalResources() map[ResourceType]ResourceDescriptor {
+	res := make(map[ResourceType]ResourceDescriptor)
+	if featureflags2.OpenPipelinePipelineGroups.Enabled() {
+		// Merge OpenPipeline Pipeline Groups resources
+	}
+	return res
 }
 
 type ResourceExclusion struct {
