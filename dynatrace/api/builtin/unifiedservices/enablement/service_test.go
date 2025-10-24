@@ -24,5 +24,6 @@ import (
 )
 
 func TestAccUnifiedServicesEnablement(t *testing.T) {
+	t.Skip() // deprecated schema
 	api.TestAcc(t)
 }

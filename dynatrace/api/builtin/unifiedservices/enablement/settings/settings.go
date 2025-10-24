@@ -36,6 +36,10 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 func (me *Settings) Name() string {
 	return "environment"
 }
