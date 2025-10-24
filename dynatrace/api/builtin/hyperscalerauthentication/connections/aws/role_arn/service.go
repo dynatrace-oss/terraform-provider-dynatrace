@@ -19,6 +19,9 @@ package role_arn
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws"
@@ -27,8 +30,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
+const (
+	timeoutDeadlineBuffer = time.Minute
+)
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 const SchemaVersion = "0.0.15"
 
@@ -68,33 +75,88 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub, error) {
-	if err := me.Update(ctx, v.AWSConnectionID, v); err != nil {
-		return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
-		// return nil, err
-	}
-	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
-}
-
-func (me *service) Update(ctx context.Context, id string, v *role_arn.Settings) error {
-	// we're not allowed to update with an empty roleARN
-	// But we want to avoid errors to get thrown back
-	if v.RoleARN == "" {
-		return nil
-	}
-
 	connValue := awsconnection_settings.Settings{}
 	if err := me.connService.Get(ctx, v.AWSConnectionID, &connValue); err != nil {
-		return err
+		return nil, err
 	}
 	if connValue.AWSRoleBasedAuthentication != nil {
 		connValue.AWSRoleBasedAuthentication.RoleARN = v.RoleARN
 	} else if connValue.AWSWebIdentity != nil {
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
-	return me.connService.Update(ctx, id, &connValue)
+
+	ctxRetry, cancel, retryTimeout, err := computeRetryContext(ctx, timeoutDeadlineBuffer, role_arn.DefaultCreateTimeout)
+	if err != nil {
+		return nil, err
+	}
+	defer cancel()
+
+	if err = retry.RetryContext(ctxRetry, retryTimeout, func() *retry.RetryError {
+		return classifyRetryError(me.connService.Update(ctxRetry, v.AWSConnectionID, &connValue))
+	}); err != nil {
+		return nil, err
+	}
+
+	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+// computeRetryContext computes a safe retry timeout based on the incoming ctx deadline.
+// - timeoutDeadlineBuffer: amount of time to reserve for finalization (e.g. 1 minute).
+// - defaultTimeout: fallback when caller didn't provide a deadline.
+// Returns the derived ctx (with timeout), its cancel func, the retryTimeout, or an error
+// if the caller's deadline already expired.
+func computeRetryContext(ctx context.Context, timeoutDeadlineBuffer time.Duration, defaultTimeout time.Duration) (context.Context, context.CancelFunc, time.Duration, error) {
+	if dl, ok := ctx.Deadline(); ok {
+		remaining := time.Until(dl)
+		if remaining <= 0 {
+			return nil, nil, 0, context.DeadlineExceeded
+		}
+		var retryTimeout time.Duration
+		if remaining > timeoutDeadlineBuffer {
+			retryTimeout = remaining - timeoutDeadlineBuffer
+		} else {
+			retryTimeout = remaining
+		}
+		ctxRetry, cancel := context.WithTimeout(ctx, retryTimeout)
+		return ctxRetry, cancel, retryTimeout, nil
+	}
+	// no deadline: use conservative default
+	ctxRetry, cancel := context.WithTimeout(ctx, defaultTimeout)
+	return ctxRetry, cancel, defaultTimeout, nil
+}
+
+// classifyRetryError encapsulates which errors should be retried.
+// - 400 and 404 are considered retryable due to eventual consistency.
+// - other 4xx are non-retryable.
+// - 5xx and non-HTTP (network) errors are retryable.
+func classifyRetryError(err error) *retry.RetryError {
+	if err == nil {
+		return nil
+	}
+
+	var restError rest.Error
+	if errors.As(err, &restError) {
+		code := restError.Code
+		// Retry on specific client errors that can be transient (eventual consistency).
+		if code == 400 || code == 404 {
+			return retry.RetryableError(fmt.Errorf("IAM role not yet usable (HTTP %d): %w", code, err))
+		}
+		// Treat other 4xx as non-retryable client errors.
+		if code >= 400 && code < 500 {
+			return retry.NonRetryableError(fmt.Errorf("IAM role unusable (HTTP %d): %w", code, err))
+		}
+		// 5xx and others -> retryable
+		return retry.RetryableError(fmt.Errorf("IAM role not yet usable (HTTP %d): %w", code, err))
+	}
+	// Non-HTTP errors (network, timeouts, context) -> retryable
+	return retry.RetryableError(fmt.Errorf("IAM role not yet usable: %w", err))
+}
+
+func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings) error {
+	return errors.New("update not supported: This resource is immutable after creation. Changes require replacement")
+}
+
+func (me *service) Delete(_ context.Context, _ string) error {
 	return nil
 	// Doesn't work right now - even updating to an empty roleARN errors out
 	// return me.Update(ctx, id, &role_arn.Settings{AWSConnectionID: id, RoleARN: ""})
