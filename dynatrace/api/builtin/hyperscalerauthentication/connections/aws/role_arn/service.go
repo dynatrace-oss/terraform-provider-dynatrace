@@ -85,10 +85,11 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
 
-	ctxRetry, cancel, retryTimeout, err := computeRetryContext(ctx, timeoutDeadlineBuffer, role_arn.DefaultCreateTimeout)
+	retryTimeout, err := computeRetryTimeout(ctx, timeoutDeadlineBuffer, role_arn.DefaultCreateTimeout)
 	if err != nil {
 		return nil, err
 	}
+	ctxRetry, cancel := context.WithTimeout(ctx, retryTimeout)
 	defer cancel()
 
 	if err = retry.RetryContext(ctxRetry, retryTimeout, func() *retry.RetryError {
@@ -100,29 +101,20 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 }
 
-// computeRetryContext computes a safe retry timeout based on the incoming ctx deadline.
+// computeRetryTimeout computes a safe retry timeout based on the incoming ctx deadline.
 // - timeoutDeadlineBuffer: amount of time to reserve for finalization (e.g. 1 minute).
 // - defaultTimeout: fallback when caller didn't provide a deadline.
-// Returns the derived ctx (with timeout), its cancel func, the retryTimeout, or an error
-// if the caller's deadline already expired.
-func computeRetryContext(ctx context.Context, timeoutDeadlineBuffer time.Duration, defaultTimeout time.Duration) (context.Context, context.CancelFunc, time.Duration, error) {
+// Returns the derived timeout, or an error if the caller's deadline already expired (taking the buffer into account as well).
+func computeRetryTimeout(ctx context.Context, timeoutDeadlineBuffer time.Duration, defaultTimeout time.Duration) (time.Duration, error) {
 	if dl, ok := ctx.Deadline(); ok {
-		remaining := time.Until(dl)
+		remaining := time.Until(dl) - timeoutDeadlineBuffer
 		if remaining <= 0 {
-			return nil, nil, 0, context.DeadlineExceeded
+			return 0, context.DeadlineExceeded
 		}
-		var retryTimeout time.Duration
-		if remaining > timeoutDeadlineBuffer {
-			retryTimeout = remaining - timeoutDeadlineBuffer
-		} else {
-			retryTimeout = remaining
-		}
-		ctxRetry, cancel := context.WithTimeout(ctx, retryTimeout)
-		return ctxRetry, cancel, retryTimeout, nil
+		return remaining, nil
 	}
 	// no deadline: use conservative default
-	ctxRetry, cancel := context.WithTimeout(ctx, defaultTimeout)
-	return ctxRetry, cancel, defaultTimeout, nil
+	return defaultTimeout, nil
 }
 
 // classifyRetryError encapsulates which errors should be retried.
