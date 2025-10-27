@@ -20,9 +20,51 @@ package pipelines_test
 import (
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelines/settings"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestOpenPipelineEventsSdlcPipelines(t *testing.T) {
 	api.TestAcc(t)
+}
+
+func TestOpenPipelineEventsSdlcPipelinesUnmarshal(t *testing.T) {
+	entries := new(pipelines.FieldExtractionEntries)
+	validEntries := []*pipelines.FieldExtractionEntry{
+		{
+			DefaultValue:         testing2.ToPointer("value"),
+			DestinationFieldName: nil,
+			SourceFieldName:      "",
+		},
+		{
+			DefaultValue:         nil,
+			DestinationFieldName: testing2.ToPointer("value"),
+			SourceFieldName:      "",
+		},
+		{
+			DefaultValue:         nil,
+			DestinationFieldName: nil,
+			SourceFieldName:      "value",
+		},
+		{
+			DefaultValue:         testing2.ToPointer("value1"),
+			DestinationFieldName: testing2.ToPointer("value2"),
+			SourceFieldName:      "value3",
+		},
+	}
+	validWithEmpty := pipelines.FieldExtractionEntries{
+		{
+			DefaultValue:         nil,
+			DestinationFieldName: nil,
+			SourceFieldName:      "",
+		},
+	}
+	validWithEmpty = append(validWithEmpty, validEntries...)
+	err := entries.UnmarshalHCL(testing2.MockDecoder{Elements: map[string]any{"dimension": validWithEmpty}})
+	require.NoError(t, err)
+	assert.Len(t, *entries, len(validEntries))
+	assert.ElementsMatch(t, *entries, validEntries)
 }
