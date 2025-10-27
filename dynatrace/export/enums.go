@@ -529,6 +529,19 @@ var ResourceTypes = struct {
 	AutomationApproval                      ResourceType
 	AzureConnection                         ResourceType
 	AzureConnectionAuthentication           ResourceType
+	//OpenpipelineBizeventsPipelinegroups      ResourceType
+	//OpenpipelineDavisEventsPipelinegroups    ResourceType
+	//OpenpipelineDavisProblemsPipelinegroups  ResourceType
+	//OpenpipelineEventsPipelinegroups         ResourceType
+	//OpenpipelineEventsSdlcPipelinegroups     ResourceType
+	//OpenpipelineEventsSecurityPipelinegroups ResourceType
+	//OpenpipelineLogsPipelinegroups           ResourceType
+	//OpenpipelineMetricsPipelinegroups        ResourceType
+	//OpenpipelineSecurityEventsPipelinegroups ResourceType
+	//OpenpipelineSpansPipelinegroups          ResourceType
+	//OpenpipelineSystemEventsPipelinegroups   ResourceType
+	//OpenpipelineUserEventsPipelinegroups     ResourceType
+	//OpenpipelineUsersessionsPipelinegroups   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -937,6 +950,19 @@ var ResourceTypes = struct {
 	"dynatrace_automation_approval",
 	"dynatrace_azure_connection",
 	"dynatrace_azure_connection_authentication",
+	//"dynatrace_openpipeline_v2_bizevents_pipelinegroups",
+	//"dynatrace_openpipeline_v2_davis_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_davis_problems_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_sdlc_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_security_pipelinegroups",
+	//"dynatrace_openpipeline_v2_logs_pipelinegroups",
+	//"dynatrace_openpipeline_v2_metrics_pipelinegroups",
+	//"dynatrace_openpipeline_v2_security_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_spans_pipelinegroups",
+	//"dynatrace_openpipeline_v2_system_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_user_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
