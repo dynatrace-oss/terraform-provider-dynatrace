@@ -6,7 +6,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestOpenPipelineUserSessionPipelineGroups(t *testing.T) {
-	t.Skip("Pipeline groups are disabled")
+func TestOpenPipelineEventsSecurityPipelineGroups(t *testing.T) {
+	t.Skip("Feature not enabled")
+
 	api.TestAcc(t)
 }
