@@ -20,8 +20,7 @@ func approx(d1, d2 time.Duration) bool {
 
 func TestComputeRetryContext_NoDeadline(t *testing.T) {
 	ctx := context.Background()
-	_, cancel, retryTimeout, _ := computeRetryContext(ctx, time.Minute, 2*time.Minute)
-	defer cancel()
+	retryTimeout, _ := computeRetryTimeout(ctx, time.Minute, 2*time.Minute)
 
 	assert.Equal(t, 2*time.Minute, retryTimeout)
 }
@@ -33,8 +32,7 @@ func TestComputeRetryContext_WithDeadline_Plenty(t *testing.T) {
 	ctxWithDL, cancelParent := context.WithDeadline(parent, deadline)
 	defer cancelParent()
 
-	_, cancel, retryTimeout, _ := computeRetryContext(ctxWithDL, time.Minute, 2*time.Minute)
-	defer cancel()
+	retryTimeout, _ := computeRetryTimeout(ctxWithDL, time.Minute, 2*time.Minute)
 
 	// expect ~4 minutes
 	expected := 4 * time.Minute
@@ -45,7 +43,7 @@ func TestComputeRetryContext_ExpiredDeadline(t *testing.T) {
 	ctxWithExpiredDL, cancel := context.WithDeadline(context.Background(), time.Now().Add(-time.Second))
 	defer cancel()
 
-	_, _, _, err := computeRetryContext(ctxWithExpiredDL, time.Minute, 2*time.Minute)
+	_, err := computeRetryTimeout(ctxWithExpiredDL, time.Minute, 2*time.Minute)
 
 	assert.ErrorIs(t, err, context.DeadlineExceeded)
 }
