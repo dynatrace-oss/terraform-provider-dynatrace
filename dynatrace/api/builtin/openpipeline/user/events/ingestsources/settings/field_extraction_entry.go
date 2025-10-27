@@ -41,7 +41,19 @@ func (me FieldExtractionEntries) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("field_extraction_entry", me)
+	if err := decoder.DecodeSlice("field_extraction_entry", me); err != nil {
+		return err
+	}
+	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
+	// Only known workaround is to ignore these blocks
+	newEntries := FieldExtractionEntries{}
+	for _, entry := range *me {
+		if entry.SourceFieldName != "" || entry.DestinationFieldName != nil || entry.DefaultValue != nil {
+			newEntries = append(newEntries, entry)
+		}
+	}
+	*me = newEntries
+	return nil
 }
 
 type FieldExtractionEntry struct {
