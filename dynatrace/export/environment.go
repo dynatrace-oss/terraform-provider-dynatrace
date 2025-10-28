@@ -1014,6 +1014,14 @@ func (me *Environment) WriteMainFile() error {
 				writeClosingMainSection(mainFile)
 			}
 		}
+		if me.Flags.WithImportBlocks {
+			for id, res := range module.Resources {
+				mainFile.WriteString(fmt.Sprintf(`import {
+				id = "%s"
+				to = module.%s.%s.%s
+				}`, id, module.Type.Trim(), res.Type, res.UniqueName) + "\n\n")
+			}
+		}
 	}
 	return nil
 }

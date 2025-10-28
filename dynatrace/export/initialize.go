@@ -228,6 +228,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 	skipTerraformInit := flag.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
+	withImportBlocks := flag.Bool("import", false, "add import blocks to the generated terraform configuration")
 
 	flag.Parse()
 
@@ -245,6 +246,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
+		WithImportBlocks:    *withImportBlocks,
 	}, flag.Args()
 }
 
@@ -299,4 +301,5 @@ type Flags struct {
 	DataSources         bool
 	SkipTerraformInit   bool
 	Include             bool
+	WithImportBlocks    bool
 }
