@@ -14,6 +14,20 @@ description: |-
 
 -> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
+## Conflicts
+~> **Warning** If this resource is used in combination with `dynatrace_iam_permission`, there is a potential for conflicts when both resources attempt to manage group permissions.
+It is recommended to manage group permissions with the `dynatrace_iam_permission` resource.
+To avoid conflicts when using the `dynatrace_iam_permission` resource, ensure to add the following lifecycle block to the `dynatrace_iam_group` resource:
+```terraform
+resource "dynatrace_iam_group" "Restricted" {
+    name = "Restricted"
+
+    lifecycle {
+      ignore_changes = [permissions]
+    }
+}
+```
+
 ## Dynatrace Documentation
 
 - Dynatrace IAM - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions
