@@ -428,19 +428,19 @@ import (
 	openpipelineusersessionsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/ingestsources"
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
-	//openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
-	//openpipelinedaviseventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelinegroups"
-	//openpipelinedavisproblemspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelinegroups"
-	//openpipelineeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelinegroups"
-	//openpipelineeventssdlcpipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelinegroups"
-	//openpipelineeventssecuritypipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelinegroups"
-	//openpipelinelogspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelinegroups"
-	//openpipelinemetricspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelinegroups"
-	//openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
-	//openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
-	//openpipelinesystemeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelinegroups"
-	//openpipelineusereventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelinegroups"
-	//openpipelineusersessionspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelinegroups"
+	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
+	openpipelinedaviseventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelinegroups"
+	openpipelinedavisproblemspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelinegroups"
+	openpipelineeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelinegroups"
+	openpipelineeventssdlcpipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelinegroups"
+	openpipelineeventssecuritypipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelinegroups"
+	openpipelinelogspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelinegroups"
+	openpipelinemetricspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelinegroups"
+	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
+	openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
+	openpipelinesystemeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelinegroups"
+	openpipelineusereventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelinegroups"
+	openpipelineusersessionspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelinegroups"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -1649,6 +1649,20 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.MSTeamsConnection),
 		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
 
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelinegroups),
+
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
 	ResourceTypes.FailureDetectionRuleSets: NewResourceDescriptor(
@@ -1669,6 +1683,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinebizeventsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
 	),
+	ResourceTypes.OpenpipelineBizeventsPipelinegroups: NewResourceDescriptor(
+		openpipelinebizeventspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
+	),
 	ResourceTypes.OpenpipelineBizeventsPipelines: NewResourceDescriptor(openpipelinebizeventspipelines.Service),
 	ResourceTypes.OpenpipelineBizeventsRouting: NewResourceDescriptor(
 		openpipelinebizeventsrouting.Service,
@@ -1676,6 +1694,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineDavisEventsIngestsources: NewResourceDescriptor(
 		openpipelinedaviseventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineDavisEventsPipelinegroups: NewResourceDescriptor(
+		openpipelinedaviseventspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineDavisEventsPipelines: NewResourceDescriptor(openpipelinedaviseventspipelines.Service),
@@ -1687,6 +1709,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinedavisproblemsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelines),
 	),
+	ResourceTypes.OpenpipelineDavisProblemsPipelinegroups: NewResourceDescriptor(
+		openpipelinedavisproblemspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelines),
+	),
 	ResourceTypes.OpenpipelineDavisProblemsPipelines: NewResourceDescriptor(openpipelinedavisproblemspipelines.Service),
 	ResourceTypes.OpenpipelineDavisProblemsRouting: NewResourceDescriptor(
 		openpipelinedavisproblemsrouting.Service,
@@ -1694,6 +1720,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineEventsIngestsources: NewResourceDescriptor(
 		openpipelineeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsPipelinegroups: NewResourceDescriptor(
+		openpipelineeventspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineEventsPipelines: NewResourceDescriptor(openpipelineeventspipelines.Service),
@@ -1705,6 +1735,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineeventssdlcingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelines),
 	),
+	ResourceTypes.OpenpipelineEventsSdlcPipelinegroups: NewResourceDescriptor(
+		openpipelineeventssdlcpipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelines),
+	),
 	ResourceTypes.OpenpipelineEventsSdlcPipelines: NewResourceDescriptor(openpipelineeventssdlcpipelines.Service),
 	ResourceTypes.OpenpipelineEventsSdlcRouting: NewResourceDescriptor(
 		openpipelineeventssdlcrouting.Service,
@@ -1712,6 +1746,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineEventsSecurityIngestsources: NewResourceDescriptor(
 		openpipelineeventssecurityingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelines),
+	),
+	ResourceTypes.OpenpipelineEventsSecurityPipelinegroups: NewResourceDescriptor(
+		openpipelineeventssecuritypipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelines),
 	),
 	ResourceTypes.OpenpipelineEventsSecurityPipelines: NewResourceDescriptor(openpipelineeventssecuritypipelines.Service),
@@ -1723,6 +1761,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinelogsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelines),
 	),
+	ResourceTypes.OpenpipelineLogsPipelinegroups: NewResourceDescriptor(
+		openpipelinelogspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelines),
+	),
 	ResourceTypes.OpenpipelineLogsPipelines: NewResourceDescriptor(openpipelinelogspipelines.Service),
 	ResourceTypes.OpenpipelineLogsRouting: NewResourceDescriptor(
 		openpipelinelogsrouting.Service,
@@ -1730,6 +1772,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineMetricsIngestsources: NewResourceDescriptor(
 		openpipelinemetricsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
+	),
+	ResourceTypes.OpenpipelineMetricsPipelinegroups: NewResourceDescriptor(
+		openpipelinemetricspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
 	),
 	ResourceTypes.OpenpipelineMetricsPipelines: NewResourceDescriptor(openpipelinemetricspipelines.Service),
@@ -1741,6 +1787,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinesecurityeventsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
 	),
+	ResourceTypes.OpenpipelineSecurityEventsPipelinegroups: NewResourceDescriptor(
+		openpipelinesecurityeventspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
 	ResourceTypes.OpenpipelineSecurityEventsPipelines: NewResourceDescriptor(openpipelinesecurityeventspipelines.Service),
 	ResourceTypes.OpenpipelineSecurityEventsRouting: NewResourceDescriptor(
 		openpipelinesecurityeventsrouting.Service,
@@ -1748,6 +1798,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineSpansIngestsources: NewResourceDescriptor(
 		openpipelinespansingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
+	),
+	ResourceTypes.OpenpipelineSpansPipelinegroups: NewResourceDescriptor(
+		openpipelinespanspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
 	),
 	ResourceTypes.OpenpipelineSpansPipelines: NewResourceDescriptor(openpipelinespanspipelines.Service),
@@ -1759,6 +1813,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinesystemeventsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelines),
 	),
+	ResourceTypes.OpenpipelineSystemEventsPipelinegroups: NewResourceDescriptor(
+		openpipelinesystemeventspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelines),
+	),
 	ResourceTypes.OpenpipelineSystemEventsPipelines: NewResourceDescriptor(openpipelinesystemeventspipelines.Service),
 	ResourceTypes.OpenpipelineSystemEventsRouting: NewResourceDescriptor(
 		openpipelinesystemeventsrouting.Service,
@@ -1766,6 +1824,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.OpenpipelineUserEventsIngestsources: NewResourceDescriptor(
 		openpipelineusereventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineUserEventsPipelinegroups: NewResourceDescriptor(
+		openpipelineusereventspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineUserEventsPipelines: NewResourceDescriptor(openpipelineusereventspipelines.Service),
@@ -1777,25 +1839,16 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusersessionsingestsources.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
+	ResourceTypes.OpenpipelineUsersessionsPipelinegroups: NewResourceDescriptor(
+		openpipelineusersessionspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
+	),
 	ResourceTypes.OpenpipelineUsersessionsPipelines: NewResourceDescriptor(openpipelineusersessionspipelines.Service),
 	ResourceTypes.OpenpipelineUsersessionsRouting: NewResourceDescriptor(
 		openpipelineusersessionsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
-	//ResourceTypes.OpenpipelineBizeventsPipelinegroups:      NewResourceDescriptor(openpipelinebizeventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineDavisEventsPipelinegroups:    NewResourceDescriptor(openpipelinedaviseventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineDavisProblemsPipelinegroups:  NewResourceDescriptor(openpipelinedavisproblemspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineEventsPipelinegroups:         NewResourceDescriptor(openpipelineeventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineEventsSdlcPipelinegroups:     NewResourceDescriptor(openpipelineeventssdlcpipelinegroups.Service),
-	//ResourceTypes.OpenpipelineEventsSecurityPipelinegroups: NewResourceDescriptor(openpipelineeventssecuritypipelinegroups.Service),
-	//ResourceTypes.OpenpipelineLogsPipelinegroups:           NewResourceDescriptor(openpipelinelogspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineMetricsPipelinegroups:        NewResourceDescriptor(openpipelinemetricspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineSecurityEventsPipelinegroups: NewResourceDescriptor(openpipelinesecurityeventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineSpansPipelinegroups:          NewResourceDescriptor(openpipelinespanspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineSystemEventsPipelinegroups:   NewResourceDescriptor(openpipelinesystemeventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineUserEventsPipelinegroups:     NewResourceDescriptor(openpipelineusereventspipelinegroups.Service),
-	//ResourceTypes.OpenpipelineUsersessionsPipelinegroups:   NewResourceDescriptor(openpipelineusersessionspipelinegroups.Service),
 }
 
 type ResourceExclusion struct {
