@@ -225,7 +225,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 		for _, keyUserAction := range kuaList.Values {
 			stubs = append(stubs, &api.Stub{
 				ID:       keyUserAction.MEIdentifier,
-				Name:     fmt.Sprintf("KeyUserAction " + keyUserAction.Name + " for " + appStub.Name),
+				Name:     "KeyUserAction " + keyUserAction.Name + " for " + appStub.Name,
 				ParentID: &appStub.ID,
 			})
 		}
