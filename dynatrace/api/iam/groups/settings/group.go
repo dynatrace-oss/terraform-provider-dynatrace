@@ -30,11 +30,12 @@ func (me *Group) Schema() map[string]*schema.Schema {
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"permissions": {
-			Type:     schema.TypeList,
-			Optional: true,
-			MinItems: 1,
-			MaxItems: 1,
-			Elem:     &schema.Resource{Schema: new(Permissions).Schema()},
+			Type:       schema.TypeList,
+			Deprecated: "Assigning permissions directly when creating a group is deprecated. Use the resource `dynatrace_iam_permission` instead.",
+			Optional:   true,
+			MinItems:   1,
+			MaxItems:   1,
+			Elem:       &schema.Resource{Schema: new(Permissions).Schema()},
 		},
 	}
 }
