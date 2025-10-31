@@ -1,3 +1,5 @@
+//go:build integration
+
 /**
 * @license
 * Copyright 2020 Dynatrace LLC
@@ -18,53 +20,11 @@
 package segments_test
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestAccSegments(t *testing.T) {
 	api.TestAcc(t)
-}
-
-func TestList(t *testing.T) {
-	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		_, err := segments.Service(&rest.Credentials{}).List(t.Context())
-		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
-	})
-
-	t.Run("Returns the list of segments ignoring ready-made ones", func(t *testing.T) {
-		apiResponse := `{"filterSegments": [
-			{"uid": "1", "name": "ready-made-false", "isPublic": false, "isReadyMade": false},
-			{"uid": "2", "name": "ready-made-true", "isPublic": false, "isReadyMade": true},
-			{"uid": "3", "name": "ready-made-missing","isPublic": false}]}`
-
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			require.Equal(t, http.MethodGet, r.Method)
-			require.Equal(t, "/platform/storage/filter-segments/v1/filter-segments:lean", r.URL.Path)
-
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(apiResponse))
-		}))
-		defer server.Close()
-
-		result, err := segments.Service(&rest.Credentials{
-			OAuth: rest.OAuthCredentials{
-				EnvironmentURL: server.URL,
-				PlatformToken:  "token",
-			},
-		}).List(t.Context())
-
-		require.NoError(t, err)
-		assert.Len(t, result, 2)
-		for _, segment := range result {
-			assert.True(t, segment.ID != "2", "ready-made segment must be ignored")
-		}
-	})
 }

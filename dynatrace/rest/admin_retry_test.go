@@ -1,3 +1,5 @@
+//go:build unit
+
 package rest_test
 
 import (

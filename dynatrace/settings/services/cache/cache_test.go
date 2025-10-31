@@ -1,3 +1,5 @@
+//go:build unit
+
 package cache_test
 
 import (

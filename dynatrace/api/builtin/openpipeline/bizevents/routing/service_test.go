@@ -1,3 +1,5 @@
+//go:build integration
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
