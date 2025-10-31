@@ -2,6 +2,13 @@
 	"allowedScopes": [
 		"SYNTHETIC_TEST"
 	],
+	"constraints": [
+		{
+			"customValidatorId": "synthetic-monitor-count-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Dynatrace generates a new problem if this synthetic monitor exceeds any of the 'Total duration' performance thresholds below in 3 of the 5 most recent executions at a given location, unless there is an open maintenance window for the synthetic monitor. Multiple locations with 3 such violations can be included in a problem. The problem is closed if no performance threshold is violated in the 5 most recent executions at each of the previously affected locations.",
 	"displayName": "Performance thresholds",
 	"documentation": "",
@@ -54,10 +61,33 @@
 	"schemaId": "builtin:synthetic.browser.performance-thresholds",
 	"types": {
 		"ThresholdEntry": {
+			"constraints": [
+				{
+					"customValidatorId": "performance_samples_validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
 			"description": "",
 			"displayName": "Performance thresholds",
 			"documentation": "",
 			"properties": {
+				"dealertingSamples": {
+					"constraints": [
+						{
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Number of most recent non-violating executions that closes the problem",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
 				"event": {
 					"constraints": [
 						{
@@ -95,6 +125,23 @@
 					"subType": "datasource",
 					"type": "text"
 				},
+				"samples": {
+					"constraints": [
+						{
+							"maximum": 10,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 5,
+					"description": "",
+					"displayName": "Number of executions in analyzed sliding window (sliding window size)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
 				"threshold": {
 					"constraints": [
 						{
@@ -110,6 +157,22 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "float"
+				},
+				"violatingSamples": {
+					"constraints": [
+						{
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 3,
+					"description": "",
+					"displayName": "Number of violating executions in analyzed sliding window",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
 				}
 			},
 			"summaryPattern": "{event} with a threshold of {threshold} s",
@@ -118,5 +181,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6.1"
+	"version": "1.7.4"
 }

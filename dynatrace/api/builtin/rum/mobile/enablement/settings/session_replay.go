@@ -23,14 +23,26 @@ import (
 )
 
 type SessionReplay struct {
-	OnCrash bool `json:"onCrash"` // Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+	CostAndTrafficControl *int  `json:"costAndTrafficControl,omitempty"` // Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
+	FullSessionReplay     *bool `json:"fullSessionReplay,omitempty"`     // Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+	OnCrash               bool  `json:"onCrash"`                         // Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
 }
 
 func (me *SessionReplay) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"on_crash": {
+		"cost_and_traffic_control": {
+			Type:        schema.TypeInt,
+			Description: "Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.",
+			Optional:    true, // nullable
+		},
+		"full_session_replay": {
 			Type:        schema.TypeBool,
 			Description: "Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).",
+			Optional:    true, // nullable
+		},
+		"on_crash": {
+			Type:        schema.TypeBool,
+			Description: "Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).",
 			Required:    true,
 		},
 	}
@@ -38,12 +50,16 @@ func (me *SessionReplay) Schema() map[string]*schema.Schema {
 
 func (me *SessionReplay) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"on_crash": me.OnCrash,
+		"cost_and_traffic_control": me.CostAndTrafficControl,
+		"full_session_replay":      me.FullSessionReplay,
+		"on_crash":                 me.OnCrash,
 	})
 }
 
 func (me *SessionReplay) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"on_crash": &me.OnCrash,
+		"cost_and_traffic_control": &me.CostAndTrafficControl,
+		"full_session_replay":      &me.FullSessionReplay,
+		"on_crash":                 &me.OnCrash,
 	})
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.1"
+const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:synthetic.http.cookies"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*cookies.Settings] {

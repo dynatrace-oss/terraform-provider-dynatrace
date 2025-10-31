@@ -49,7 +49,7 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 type Rule struct {
 	AttributeRule      *AutoTagAttributeRule `json:"attributeRule,omitempty"`
 	Enabled            bool                  `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
-	EntitySelector     *string               `json:"entitySelector,omitempty"` // The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
+	EntitySelector     *string               `json:"entitySelector,omitempty"` // Learn more about the [Entity selector](https://dt-url.net/apientityselector).
 	Type               RuleType              `json:"type"`                     // Possible Values: `ME`, `SELECTOR`
 	ValueFormat        *string               `json:"valueFormat,omitempty"`    // Type '{' for placeholder suggestions
 	ValueNormalization Normalization         `json:"valueNormalization"`       // Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`
@@ -72,7 +72,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"entity_selector": {
 			Type:        schema.TypeString,
-			Description: "The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
+			Description: "Learn more about the [Entity selector](https://dt-url.net/apientityselector).",
 			Optional:    true, // precondition
 		},
 		"type": {

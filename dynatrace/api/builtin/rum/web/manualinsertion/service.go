@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.1.3"
+const SchemaVersion = "1"
 const SchemaID = "builtin:rum.web.manual-insertion"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*manualinsertion.Settings] {
