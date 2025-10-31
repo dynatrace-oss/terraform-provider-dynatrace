@@ -938,11 +938,6 @@ func (erec *Condition) UnmarshalHCL(decoder hcl.Decoder) error {
 		if err := erec.ComparisonInfo.UnmarshalHCL(hcl.NewDecoder(decoder, "entity_id_comparison", 0)); err != nil {
 			return err
 		}
-	} else if _, ok := decoder.GetOk("entity_id_comparison.#"); ok {
-		erec.ComparisonInfo = new(comparison.EntityID)
-		if err := erec.ComparisonInfo.UnmarshalHCL(hcl.NewDecoder(decoder, "entity_id_comparison", 0)); err != nil {
-			return err
-		}
 	} else if _, ok := decoder.GetOk("host_tech.#"); ok {
 		erec.ComparisonInfo = new(comparison.SimpleHostTech)
 		if err := erec.ComparisonInfo.UnmarshalHCL(hcl.NewDecoder(decoder, "host_tech", 0)); err != nil {
