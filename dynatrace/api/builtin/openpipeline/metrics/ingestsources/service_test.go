@@ -1,3 +1,5 @@
+//go:build integration
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -20,53 +22,11 @@ package ingestsources_test
 import (
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/ingestsources/settings"
-	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestOpenPipelineMetricsIngestSources(t *testing.T) {
 	t.Skip("Custom ingest sources not allowed")
 
 	api.TestAcc(t)
-}
-
-func TestOpenPipelineMetricsIngestSourcesUnmarshal(t *testing.T) {
-	entries := new(ingestsources.FieldExtractionEntries)
-	validEntries := []*ingestsources.FieldExtractionEntry{
-		{
-			DefaultValue:         testing2.ToPointer("value"),
-			DestinationFieldName: nil,
-			SourceFieldName:      "",
-		},
-		{
-			DefaultValue:         nil,
-			DestinationFieldName: testing2.ToPointer("value"),
-			SourceFieldName:      "",
-		},
-		{
-			DefaultValue:         nil,
-			DestinationFieldName: nil,
-			SourceFieldName:      "value",
-		},
-		{
-			DefaultValue:         testing2.ToPointer("value1"),
-			DestinationFieldName: testing2.ToPointer("value2"),
-			SourceFieldName:      "value3",
-		},
-	}
-	validWithEmpty := ingestsources.FieldExtractionEntries{
-		{
-			DefaultValue:         nil,
-			DestinationFieldName: nil,
-			SourceFieldName:      "",
-		},
-	}
-	validWithEmpty = append(validWithEmpty, validEntries...)
-	err := entries.UnmarshalHCL(testing2.MockDecoder{Elements: map[string]any{"dimension": validWithEmpty}})
-	require.NoError(t, err)
-	assert.Len(t, *entries, len(validEntries))
-	assert.ElementsMatch(t, *entries, validEntries)
 }

@@ -1,3 +1,5 @@
+//go:build unit
+
 package role_arn
 
 import (
