@@ -46,7 +46,6 @@ func (me *JSONDashboardBase) Schema() map[string]*schema.Schema {
 
 func (me *JSONDashboardBase) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{"contents": me.Contents})
-	return nil
 }
 
 func (me *JSONDashboardBase) UnmarshalHCL(decoder hcl.Decoder) error {
