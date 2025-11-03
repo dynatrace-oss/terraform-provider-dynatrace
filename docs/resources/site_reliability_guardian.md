@@ -28,7 +28,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_site_reliability_guardian" "#name#" {
-  name = "Test"
+  name = "#name#"
   tags = [ "stage:staging" ]
   event_kind = "BIZ_EVENT"
   objectives {
