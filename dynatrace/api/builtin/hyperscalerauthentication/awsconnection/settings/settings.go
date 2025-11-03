@@ -30,6 +30,10 @@ type Settings struct {
 	WebIdentity *WebIdentity `json:"webIdentity,omitempty"`
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource is deprecated. Please use the `dynatrace_aws_connection` and `dynatrace_aws_role_arn` resources instead."
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
