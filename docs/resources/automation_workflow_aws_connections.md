@@ -1,12 +1,16 @@
 ---
 layout: ""
 page_title: dynatrace_automation_workflow_aws_connections Resource - terraform-provider-dynatrace"
-subcategory: "Connections"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_automation_workflow_aws_connections` covers configuration for AWS connections for Workflows app
 ---
 
 # dynatrace_automation_workflow_aws_connections (Resource)
+
+~> **Warning** This resource is deprecated and will be removed in a future release.
+We recommend using the `dynatrace_aws_connection` and `dynatrace_aws_role_arn` resources to manage AWS connections.
+
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
