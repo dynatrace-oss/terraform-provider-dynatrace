@@ -43,7 +43,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"rules_maintained_externally": {
 			Type:        schema.TypeBool,
-			Description: "If `true` this resource will not ",
+			Description: "If `true` the specified rules are ignored with the assumption that they're maintained externally or via `dynatrace_autotag_rules`",
 			Optional:    true,
 			Default:     false,
 		},
