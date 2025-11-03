@@ -40,8 +40,7 @@ func (amm *AWSMonitoredMetric) Schema() map[string]*schema.Schema {
 		"statistic": {
 			Type:        schema.TypeString,
 			Description: "Possible values are `AVERAGE`, `AVG_MIN_MAX`, `MAXIMUM`, `MINIMUM`, `SAMPLE_COUNT` and `SUM`",
-			Optional:    true,
-			Default:     "AVERAGE",
+			Required:    true,
 		},
 		"dimensions": {
 			Type:        schema.TypeList,
