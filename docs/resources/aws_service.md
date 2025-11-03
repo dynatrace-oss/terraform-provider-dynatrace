@@ -104,8 +104,5 @@ Required:
 
 - `dimensions` (List of String) a list of metric's dimensions names
 - `name` (String) the name of the metric of the supporting service
-
-Optional:
-
 - `statistic` (String) Possible values are `AVERAGE`, `AVG_MIN_MAX`, `MAXIMUM`, `MINIMUM`, `SAMPLE_COUNT` and `SUM`
  
