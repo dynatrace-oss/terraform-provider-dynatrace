@@ -2,7 +2,7 @@
 resource "dynatrace_ownership_teams" "#name#" {
   name        = "#name#"
   description = "Created by Terraform"
-  identifier  = "Terraform"
+  identifier  = "Terraform_#name#"
   additional_information {
     additional_information {
       key   = "HashiCorp"
