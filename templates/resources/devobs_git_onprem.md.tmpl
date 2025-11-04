@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_devobs_git_onprem Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_devobs_git_onprem Resource - terraform-provider-dynatrace"
 subcategory: "Developer Observability"
 description: |-
   The resource `dynatrace_devobs_git_onprem` covers configuration for Developer Observability git on-premise servers

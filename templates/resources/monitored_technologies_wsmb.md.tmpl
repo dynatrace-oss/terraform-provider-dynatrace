@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_monitored_technologies_wsmb Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_monitored_technologies_wsmb Resource - terraform-provider-dynatrace"
 subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_wsmb` covers configuration to enable/disable IBM Integration Bus | IBM App Connect Enterprise monitoring

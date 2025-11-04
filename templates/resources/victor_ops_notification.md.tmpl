@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_victor_ops_notification Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_victor_ops_notification Resource - terraform-provider-dynatrace"
 subcategory: "Notifications"
 description: |-
   The resource `dynatrace_victor_ops_notification` covers configuration problem notifications sent to VictorOps

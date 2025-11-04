@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_cloudfoundry_credentials Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_cloudfoundry_credentials Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_cloudfoundry_credentials` covers configuration for Cloud Foundry credentials

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_aix_extension Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_aix_extension Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_aix_extension` covers configuration for AIX kernel extension

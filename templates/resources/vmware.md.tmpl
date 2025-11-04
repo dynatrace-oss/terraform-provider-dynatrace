@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_vmware Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_vmware Resource - terraform-provider-dynatrace"
 subcategory: "Virtualization"
 description: |-
   The resource `dynatrace_vmware` covers configuration for VMware

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_web_app_resource_cleanup Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_web_app_resource_cleanup Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_resource_cleanup` covers configuration for resource URL cleanup rules for real user monitoring

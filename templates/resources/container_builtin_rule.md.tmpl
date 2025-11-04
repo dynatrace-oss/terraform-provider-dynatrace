@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_container_builtin_rule Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_container_builtin_rule Resource - terraform-provider-dynatrace"
 subcategory: "Containers"
 description: |-
   The resource `dynatrace_container_builtin_rule` covers configuration for builtin monitoring rules for containers

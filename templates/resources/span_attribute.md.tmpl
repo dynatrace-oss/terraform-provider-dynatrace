@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_span_attribute Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_span_attribute Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_span_attribute` covers configuration for span attributes

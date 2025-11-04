@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_infraops_app_feature_flags Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_infraops_app_feature_flags Resource - terraform-provider-dynatrace"
 subcategory: "AppEngine"
 description: |-
   The resource `dynatrace_infraops_app_feature_flags` covers configuration for infrastructure and operations app feature flags

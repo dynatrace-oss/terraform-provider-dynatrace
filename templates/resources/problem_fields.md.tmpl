@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_problem_fields Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_problem_fields Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_problem_fields` covers configuration for problem fields

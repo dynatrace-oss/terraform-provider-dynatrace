@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_kubernetes_enrichment Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_kubernetes_enrichment Resource - terraform-provider-dynatrace"
 subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_kubernetes_enrichment` covers configuration for generic metadata enrichment rules for Kubernetes

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_service_naming Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_service_naming Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_service_naming` covers configuration for service naming

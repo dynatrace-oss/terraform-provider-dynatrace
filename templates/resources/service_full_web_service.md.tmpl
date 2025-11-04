@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_service_full_web_service Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_service_full_web_service Resource - terraform-provider-dynatrace"
 subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_service_full_web_service` covers service detection rules for full web services

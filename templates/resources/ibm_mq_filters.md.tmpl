@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_ibm_mq_filters Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_ibm_mq_filters Resource - terraform-provider-dynatrace"
 subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_ibm_mq_filters` covers configuration for IBM MQ filters

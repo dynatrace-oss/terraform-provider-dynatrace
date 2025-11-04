@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_browser_monitor_outage Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_browser_monitor_outage Resource - terraform-provider-dynatrace"
 subcategory: "Browser Monitors"
 description: |-
   The resource `dynatrace_browser_monitor_outage` covers configuration for browser monitor outage handling

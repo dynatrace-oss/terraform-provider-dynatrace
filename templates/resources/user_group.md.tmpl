@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_user_group Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_user_group Resource - terraform-provider-dynatrace"
 subcategory: "IAM"
 description: |-
   The resource `dynatrace_user_group` covers configuration for user groups

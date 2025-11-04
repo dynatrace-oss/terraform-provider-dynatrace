@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_metrics Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_metrics Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_metrics` covers configuration for log metrics

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_rum_overload_prevention Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_rum_overload_prevention Resource - terraform-provider-dynatrace"
 subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_overload_prevention` covers configuration for real user monitoring overload prevention

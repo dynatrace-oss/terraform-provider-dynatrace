@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_business_events_capturing_variants Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_business_events_capturing_variants Resource - terraform-provider-dynatrace"
 subcategory: "Business Events"
 description: |-
   The resource `dynatrace_business_events_capturing_variants` covers configuration for OneAgent business event capturing variants

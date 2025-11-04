@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_servicenow_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_servicenow_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_servicenow_connection` covers configuration for ServiceNow connections

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_report Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_report Resource - terraform-provider-dynatrace"
 subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_report` covers configuration for dashboard reports

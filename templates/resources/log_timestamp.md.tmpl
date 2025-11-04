@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_timestamp Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_timestamp Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_timestamp` covers configuration for log timestamp/splitting patterns

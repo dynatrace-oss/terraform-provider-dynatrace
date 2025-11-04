@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_hub_extension_active_version Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_hub_extension_active_version Resource - terraform-provider-dynatrace"
 subcategory: "Extensions"
 description: |-
   The resource `dynatrace_hub_extension_active_version` covers activating a specific version of an Extension

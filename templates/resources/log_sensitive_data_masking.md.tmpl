@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_sensitive_data_masking Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_sensitive_data_masking Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_sensitive_data_masking` covers configuration for [Sensitive Data Masking for Logs](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring/log-monitoring-configuration/sensitive-data-masking) ([Log Monitoring Classic](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-monitoring))

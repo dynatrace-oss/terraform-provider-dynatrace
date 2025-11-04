@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_msteams_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_msteams_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_msteams_connection` covers configuration for Microsoft Teams connections

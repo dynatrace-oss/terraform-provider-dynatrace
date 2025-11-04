@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_geolocation Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_geolocation Resource - terraform-provider-dynatrace"
 subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_geolocation` covers configuration for geolocation settings

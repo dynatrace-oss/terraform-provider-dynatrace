@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_managed_backup Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_managed_backup Resource - terraform-provider-dynatrace"
 subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_managed_backup` covers configuration for cluster backup

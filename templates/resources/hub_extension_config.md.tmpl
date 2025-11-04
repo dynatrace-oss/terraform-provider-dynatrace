@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_hub_extension_config Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_hub_extension_config Resource - terraform-provider-dynatrace"
 subcategory: "Extensions"
 description: |-
   The resource `dynatrace_hub_extension_config` covers installing Extensions from the Dynatrace Hub and configuring Monitoring Settings

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_jenkins_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_jenkins_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_jenkins_connection` covers configuration for Jenkins connections

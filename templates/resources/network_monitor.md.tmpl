@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_network_monitor Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_network_monitor Resource - terraform-provider-dynatrace"
 subcategory: "Network Availability Monitors"
 description: |-
   The resource `dynatrace_network_monitor` covers configuration for network availability monitors

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_network_traffic Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_network_traffic Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_network_traffic` covers configuration for excluding network traffic from host monitoring

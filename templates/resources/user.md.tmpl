@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_user Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_user Resource - terraform-provider-dynatrace"
 subcategory: "IAM"
 description: |-
   The resource `dynatrace_user` covers configuration for users

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_host_anomalies_v2 Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_host_anomalies_v2 Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_host_anomalies_v2` covers configuration for host anomaly detection
