@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_custom_source Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_custom_source Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_custom_source` covers configuration for custom log sources

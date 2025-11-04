@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_slo_v2 Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_slo_v2 Resource - terraform-provider-dynatrace"
 subcategory: "Service-level Objective"
 description: |-
   The resource `dynatrace_slo_v2` covers configuration for service-level objectives

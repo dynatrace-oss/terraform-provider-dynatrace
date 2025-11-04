@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_monitored_technologies_iis Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_monitored_technologies_iis Resource - terraform-provider-dynatrace"
 subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_iis` covers configuration to enable/disable IIS monitoring

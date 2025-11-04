@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_aws_anomalies Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_aws_anomalies Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_aws_anomalies` covers configuration for AWS anomaly detection

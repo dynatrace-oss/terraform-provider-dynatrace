@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_pagerduty_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_pagerduty_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_pagerduty_connection` covers configuration for PagerDuty connections

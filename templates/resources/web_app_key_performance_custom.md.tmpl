@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_web_app_key_performance_custom Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_web_app_key_performance_custom Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_key_performance_custom` covers apdex threshold configuration for custom actions

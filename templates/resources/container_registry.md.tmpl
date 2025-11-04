@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_container_registry Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_container_registry Resource - terraform-provider-dynatrace"
 subcategory: "Containers"
 description: |-
   The resource `dynatrace_container_registry` covers configuration for the URL of the public/private repository hosting container images

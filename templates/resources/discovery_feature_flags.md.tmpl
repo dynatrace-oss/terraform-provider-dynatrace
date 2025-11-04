@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_discovery_feature_flags Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_discovery_feature_flags Resource - terraform-provider-dynatrace"
 subcategory: "AppEngine"
 description: |-
   The resource `dynatrace_discovery_feature_flags` covers configuration for Discovery and Coverage app feature flags

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_url_based_sampling Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_url_based_sampling Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_url_based_sampling` covers configuration for URL-based sampling

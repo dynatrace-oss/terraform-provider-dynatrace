@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_span_capture_rule Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_span_capture_rule Resource - terraform-provider-dynatrace"
 subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_capture_rule` covers configuration for span capture rules

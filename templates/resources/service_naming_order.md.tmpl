@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_service_naming_order Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_service_naming_order Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_service_naming_order` covers defining the order of rules defined for service naming

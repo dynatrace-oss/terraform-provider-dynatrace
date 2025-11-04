@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_credentials Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_credentials Resource - terraform-provider-dynatrace"
 subcategory: "Credentials"
 description: |-
   The resource `dynatrace_credentials` covers configuration for credentials

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_xmatters_notification Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_xmatters_notification Resource - terraform-provider-dynatrace"
 subcategory: "Notifications"
 description: |-
   The resource `dynatrace_xmatters_notification` covers configuration problem notifications sent via xMatters

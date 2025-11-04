@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_mainframe_transaction_monitoring Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_mainframe_transaction_monitoring Resource - terraform-provider-dynatrace"
 subcategory: "Mainframe"
 description: |-
   The resource `dynatrace_mainframe_transaction_monitoring` covers additional monitoring settings for CICS and IMS transactions

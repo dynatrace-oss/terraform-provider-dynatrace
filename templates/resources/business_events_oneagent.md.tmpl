@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_business_events_oneagent Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_business_events_oneagent Resource - terraform-provider-dynatrace"
 subcategory: "Business Events"
 description: |-
   The resource `dynatrace_business_events_oneagent` covers configuration for OneAgent business events based on incoming HTTP requests

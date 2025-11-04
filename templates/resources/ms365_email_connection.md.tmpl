@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_ms365_email_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_ms365_email_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_ms365_email_connection` covers configuration for Microsoft 365 email connections

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_network_zones Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_network_zones Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_network_zones` covers configuration for network zones

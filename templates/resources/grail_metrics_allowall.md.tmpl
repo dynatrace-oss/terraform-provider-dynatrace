@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_grail_metrics_allowall Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_grail_metrics_allowall Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_grail_metrics_allowall` covers configuration to allow all custom metric ingestion to Grail

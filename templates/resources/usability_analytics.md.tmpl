@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_usability_analytics Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_usability_analytics Resource - terraform-provider-dynatrace"
 subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_usability_analytics` covers detection of usability issues within your application. User action types that commonly reflect user frustration include dead clicks, rage clicks, rage rotates, and page refreshes

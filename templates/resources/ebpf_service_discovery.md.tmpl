@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_ebpf_service_discovery Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_ebpf_service_discovery Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_ebpf_service_discovery` covers configuration for enabling discovery of active services on the network

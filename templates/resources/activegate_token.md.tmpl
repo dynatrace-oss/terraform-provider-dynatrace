@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_activegate_token Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_activegate_token Resource - terraform-provider-dynatrace"
 subcategory: "Access Tokens"
 description: |-
   The resource `dynatrace_activegate_token` covers configuration for ActiveGate network security

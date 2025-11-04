@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_davis_copilot Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_davis_copilot Resource - terraform-provider-dynatrace"
 subcategory: "Service Settings"
 description: |-
   The resource `dynatrace_davis_copilot` covers configuration for Davis CoPilot

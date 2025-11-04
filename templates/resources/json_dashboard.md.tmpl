@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_json_dashboard Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_json_dashboard Resource - terraform-provider-dynatrace"
 subcategory: "Dashboards"
 description: |-
   The resource `dynatrace_json_dashboard` covers configuration for dashboards in JSON format

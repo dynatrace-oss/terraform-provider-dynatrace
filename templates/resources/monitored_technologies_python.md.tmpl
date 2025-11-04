@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_monitored_technologies_python Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_monitored_technologies_python Resource - terraform-provider-dynatrace"
 subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_python` covers configuration to enable/disable Python monitoring

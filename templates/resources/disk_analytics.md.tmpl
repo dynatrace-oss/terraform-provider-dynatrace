@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_disk_analytics Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_disk_analytics Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_disk_analytics` covers configuration for Disk Analytics extension

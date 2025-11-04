@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_request_attribute Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_request_attribute Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_request_attribute` covers configuration for request attributes

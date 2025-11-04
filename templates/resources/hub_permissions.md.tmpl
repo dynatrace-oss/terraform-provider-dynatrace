@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_hub_permissions Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_hub_permissions Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_hub_permissions` covers configuration for hub permissions

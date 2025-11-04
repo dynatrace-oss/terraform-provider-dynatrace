@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_agent_feature_flags Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_agent_feature_flags Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_agent_feature_flags` covers configuration for log agent feature flags

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_k8s_monitoring Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_k8s_monitoring Resource - terraform-provider-dynatrace"
 subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_k8s_monitoring` covers configuration for Kubernetes monitoring settings

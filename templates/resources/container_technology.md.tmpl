@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_container_technology Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_container_technology Resource - terraform-provider-dynatrace"
 subcategory: "Containers"
 description: |-
   The resource `dynatrace_container_technology` covers configuration for container monitoring

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_security_context Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_security_context Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_security_context` covers configuration for log security context rules

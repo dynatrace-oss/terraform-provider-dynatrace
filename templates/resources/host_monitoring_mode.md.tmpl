@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_host_monitoring_mode Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_host_monitoring_mode Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_monitoring_mode` covers configuration for host monitoring mode
