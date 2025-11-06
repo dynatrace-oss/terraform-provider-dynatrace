@@ -13,12 +13,4 @@ resource "dynatrace_openpipeline_v2_bizevents_routing" "routing" {
 resource "dynatrace_openpipeline_v2_bizevents_pipelines" "pipeline" {
   display_name = "Minimal pipeline"
   custom_id = "pipeline_Minimal_pipeline_1234_tf_#name#"
-  processing {}
-  davis {}
-  metric_extraction {}
-  security_context {}
-  cost_allocation {}
-  product_allocation {}
-  storage {}
-  data_extraction {}
 }

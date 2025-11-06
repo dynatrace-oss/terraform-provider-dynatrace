@@ -181,12 +181,6 @@ resource "dynatrace_openpipeline_v2_usersessions_pipelines" "max-pipeline" {
       }
     }
   }
-  cost_allocation {
-
-  }
-  product_allocation {
-
-  }
   storage {
     processors {
       processor {
@@ -201,5 +195,4 @@ resource "dynatrace_openpipeline_v2_usersessions_pipelines" "max-pipeline" {
       }
     }
   }
-  data_extraction {}
 }

@@ -181,12 +181,6 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
       }
     }
   }
-  cost_allocation {
-
-  }
-  product_allocation {
-
-  }
   storage {
     processors {
       processor {
@@ -201,5 +195,36 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
       }
     }
   }
-  data_extraction {}
+  data_extraction {
+    processors {
+      processor {
+        description = "SDLC Event Processor"
+        enabled     = true
+        id          = "std_processor_Software_Lifecycle_Event_Processor"
+        type        = "sdlcEvent"
+        matcher     = "true"
+        sdlc_event {
+          event_category {
+            type = "constant"
+            constant = "my-category"
+          }
+          event_provider {
+            type = "constant"
+            constant = "my-provider"
+          }
+          event_status {
+            type = "constant"
+            constant = "my-status"
+          }
+          event_type {
+            type = "constant"
+            constant = "my-type"
+          }
+          field_extraction {
+            type = "includeAll"
+          }
+        }
+      }
+    }
+  }
 }

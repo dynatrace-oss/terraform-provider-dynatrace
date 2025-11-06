@@ -66,12 +66,6 @@ resource "dynatrace_openpipeline_v2_davis_problems_pipelines" "max-pipeline" {
       }
     }
   }
-  davis {
-    # davis is not supported for davis.problems pipelines
-  }
-  metric_extraction {
-    # metric_extraction is not supported for davis.problems pipelines
-  }
   security_context {
     processors {
       processor {
@@ -104,12 +98,6 @@ resource "dynatrace_openpipeline_v2_davis_problems_pipelines" "max-pipeline" {
       }
     }
   }
-  cost_allocation {
-
-  }
-  product_allocation {
-
-  }
   storage {
     processors {
       processor {
@@ -124,5 +112,4 @@ resource "dynatrace_openpipeline_v2_davis_problems_pipelines" "max-pipeline" {
       }
     }
   }
-  data_extraction {}
 }
