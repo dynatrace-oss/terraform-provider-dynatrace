@@ -11,6 +11,7 @@ terraform-provider-dynatrace.log
 .terraform/
 .terraform.lock.hcl
 __providers__.tf
+terraform.tfstate*
 download.cmd
 build/*
 playground/*
