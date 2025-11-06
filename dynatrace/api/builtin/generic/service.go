@@ -24,7 +24,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	generic "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic/settings"
@@ -173,10 +172,6 @@ func (me *service) Update(ctx context.Context, id string, v *generic.Settings) e
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return me.delete(ctx, id, 0)
-}
-
-func (me *service) delete(ctx context.Context, id string, numRetries int) error {
 	response, err := me.Client(ctx, "").Delete(ctx, id)
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
@@ -185,13 +180,6 @@ func (me *service) delete(ctx context.Context, id string, numRetries int) error 
 		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
 	}
 
-	if err != nil && strings.Contains(err.Error(), "Internal Server Error occurred") {
-		if numRetries == 10 {
-			return err
-		}
-		time.Sleep(6 * time.Second)
-		return me.delete(ctx, id, numRetries+1)
-	}
 	return err
 
 }
