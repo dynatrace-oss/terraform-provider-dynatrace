@@ -103,15 +103,17 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 	for _, schemaID := range schemaIDs {
 		response, err := me.Client(ctx, schemaID).List(ctx)
+		if err != nil {
+			return nil, err
+		}
+
 		if response.StatusCode != 200 {
 			if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 				return nil, err
 			}
 			return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 		}
-		if err != nil {
-			return nil, err
-		}
+
 		for _, item := range response.Items {
 			stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
 		}
@@ -138,7 +140,12 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
+
 	response, err := me.Client(ctx, v.SchemaID).Create(ctx, scope, []byte(v.Value))
+	if err != nil {
+		return nil, err
+	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
@@ -148,9 +155,6 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
-	if err != nil {
-		return nil, err
-	}
 
 	stub := &api.Stub{ID: response.ID, Name: response.ID}
 	return stub, nil
@@ -158,6 +162,10 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 
 func (me *service) Update(ctx context.Context, id string, v *generic.Settings) error {
 	response, err := me.Client(ctx, "").Update(ctx, id, []byte(v.Value))
+	if err != nil {
+		return err
+	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -168,20 +176,23 @@ func (me *service) Update(ctx context.Context, id string, v *generic.Settings) e
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
 
-	return err
+	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	response, err := me.Client(ctx, "").Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
 		}
-		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
+		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
 	}
 
-	return err
-
+	return nil
 }
 
 func (me *service) SchemaID() string {
