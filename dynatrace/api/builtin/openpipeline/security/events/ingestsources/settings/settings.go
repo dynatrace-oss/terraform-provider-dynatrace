@@ -74,7 +74,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"source_type": {
 			Type:        schema.TypeString,
 			Description: "Source Type. Possible Values: `extension`, `http`",
-			Required:    true,
+			Optional:    true,
+			Default:     "http",
 		},
 		"static_routing": {
 			Type:        schema.TypeList,
