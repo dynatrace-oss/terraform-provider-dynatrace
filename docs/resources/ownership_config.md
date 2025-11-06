@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_ownership_config Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_ownership_config Resource - terraform-provider-dynatrace"
 subcategory: "Ownership"
 description: |-
   The resource `dynatrace_ownership_config` covers configuration for ownership

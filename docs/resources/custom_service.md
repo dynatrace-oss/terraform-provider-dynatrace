@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_custom_service Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_custom_service Resource - terraform-provider-dynatrace"
 subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_custom_service` covers configuration for custom services

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_calculated_synthetic_metric Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_calculated_synthetic_metric Resource - terraform-provider-dynatrace"
 subcategory: "Synthetic"
 description: |-
   The resource `dynatrace_calculated_synthetic_metric` covers configuration for calculated synthetic metrics

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_rum_provider_breakdown Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_rum_provider_breakdown Resource - terraform-provider-dynatrace"
 subcategory: "Real User Monitoring"
 description: |-
   The resource `dynatrace_rum_provider_breakdown` covers configuration for provider breakdown rules for real user monitoring

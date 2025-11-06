@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_disk_edge_anomaly_detectors Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_disk_edge_anomaly_detectors Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_disk_edge_anomaly_detectors` covers configuration for disk edge anomaly detection

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_management_zone Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_management_zone Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_management_zone` covers configuration for management zones

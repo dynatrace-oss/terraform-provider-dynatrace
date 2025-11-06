@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_automation_workflow_jira Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_automation_workflow_jira Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_automation_workflow_jira` covers configuration for Jira for Workflows app

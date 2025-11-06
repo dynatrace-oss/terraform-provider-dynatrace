@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attack_alerting Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attack_alerting Resource - terraform-provider-dynatrace"
 subcategory: "Application Security"
 description: |-
   The resource `dynatrace_attack_alerting` covers configuration for attack alerting profiles

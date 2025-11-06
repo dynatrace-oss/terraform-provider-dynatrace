@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_kubernetes_app Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_kubernetes_app Resource - terraform-provider-dynatrace"
 subcategory: "Cloud Platforms"
 description: |-
   The resource `dynatrace_kubernetes_app` covers configuration to enable the new Kubernetes app

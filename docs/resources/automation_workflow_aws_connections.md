@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_automation_workflow_aws_connections Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_automation_workflow_aws_connections Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_automation_workflow_aws_connections` covers configuration for AWS connections for Workflows app

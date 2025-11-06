@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_davis_anomaly_detectors Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_davis_anomaly_detectors Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_davis_anomaly_detectors` covers configuration for Davis anomaly detectors

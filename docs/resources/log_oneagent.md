@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_log_oneagent Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_log_oneagent Resource - terraform-provider-dynatrace"
 subcategory: "Log Monitoring"
 description: |-
   The resource `dynatrace_log_oneagent` covers configuration for OneAgent settings for Log Monitoring

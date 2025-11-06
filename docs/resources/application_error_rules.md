@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_application_error_rules Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_application_error_rules Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_application_error_rules` covers configuration for application error rules

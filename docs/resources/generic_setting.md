@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_generic_setting Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_generic_setting Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_generic_setting` covers configuration for Schemas contributed by Custom Platform Apps

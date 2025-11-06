@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_notification Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_notification Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_notification` covers configuration for notifications

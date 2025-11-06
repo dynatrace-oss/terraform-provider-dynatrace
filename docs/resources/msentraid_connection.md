@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_msentraid_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_msentraid_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_msentraid_connection` covers configuration for Microsoft Entra ID connections

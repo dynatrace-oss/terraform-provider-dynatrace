@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_settings_permissions Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_settings_permissions Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_settings_permissions` covers access configurations for Settings 2.0 objects

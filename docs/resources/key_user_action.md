@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_key_user_action Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_key_user_action Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_key_user_action` covers configuration of Key User Actions for web applications

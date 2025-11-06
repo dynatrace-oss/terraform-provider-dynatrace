@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_synthetic_availability Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_synthetic_availability Resource - terraform-provider-dynatrace"
 subcategory: "Synthetic"
 description: |-
   Dynatrace offers the possibility to configure maintenance windows. By default maintenance windows only affect problem detection and alerting. You can change this behavior and calculate availability including/excluding maintenance window periods

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_endpoint_detection_rules_optin` covers configuration for endpoint detection rules opt-in

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_disk_anomaly_rules Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_disk_anomaly_rules Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_disk_anomaly_rules` covers configuration for disk anomaly detection rules 

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_pg_alerting Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_pg_alerting Resource - terraform-provider-dynatrace"
 subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_pg_alerting` covers configuration for process group availability monitoring

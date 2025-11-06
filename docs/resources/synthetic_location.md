@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_synthetic_location Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_synthetic_location Resource - terraform-provider-dynatrace"
 subcategory: "Synthetic"
 description: |-
   The resource `dynatrace_synthetic_location` covers configuration of private synthetic locations

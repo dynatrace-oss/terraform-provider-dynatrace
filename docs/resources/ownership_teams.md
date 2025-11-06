@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_ownership_teams Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_ownership_teams Resource - terraform-provider-dynatrace"
 subcategory: "Ownership"
 description: |-
   The resource `dynatrace_ownership_teams` covers configuration for ownership teams

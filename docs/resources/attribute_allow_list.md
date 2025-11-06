@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attribute_allow_list Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attribute_allow_list Resource - terraform-provider-dynatrace"
 subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_attribute_allow_list` covers configuration for OpenTracing and OpenTelemetry attribute allow-list

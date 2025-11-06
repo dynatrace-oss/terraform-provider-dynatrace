@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_dashboard Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_dashboard Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_dashboard` covers configuration for dashboards

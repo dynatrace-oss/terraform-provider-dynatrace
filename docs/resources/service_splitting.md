@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_service_splitting` covers configuration for service splitting

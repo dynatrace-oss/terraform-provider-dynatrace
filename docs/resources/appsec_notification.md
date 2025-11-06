@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_appsec_notification Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_appsec_notification Resource - terraform-provider-dynatrace"
 subcategory: "Application Security"
 description: |-
   The resource `dynatrace_appsec_notification` covers configuration for security notifications

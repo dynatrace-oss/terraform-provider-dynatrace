@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Automation"
 description: |-
   The resource `dynatrace_automation_approval` covers configuration for automation workflow approval

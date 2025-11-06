@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_span_events Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_span_events Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_span_events` covers configuration for span events

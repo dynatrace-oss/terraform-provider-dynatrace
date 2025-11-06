@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attack_settings Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attack_settings Resource - terraform-provider-dynatrace"
 subcategory: "Application Security"
 description: |-
   The resource `dynatrace_attack_settings` covers configuration for application protection: general settings 

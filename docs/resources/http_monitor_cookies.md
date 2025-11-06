@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_http_monitor_cookies Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_http_monitor_cookies Resource - terraform-provider-dynatrace"
 subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor_cookies` covers configuration for HTTP monitor cookies

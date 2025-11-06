@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_app_ip_address_exclusion` covers configuration for web application IP address exclusions

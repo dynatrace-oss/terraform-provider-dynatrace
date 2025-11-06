@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_service_anomalies Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_service_anomalies Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_service_anomalies` covers configuration for service anomaly detection

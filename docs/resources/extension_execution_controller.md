@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_extension_execution_controller Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_extension_execution_controller Resource - terraform-provider-dynatrace"
 subcategory: "Extensions"
 description: |-
   The resource `dynatrace_extension_execution_controller` covers Extension Execution Controller configuration for OneAgent deployment

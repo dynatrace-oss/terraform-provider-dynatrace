@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_custom_device Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_custom_device Resource - terraform-provider-dynatrace"
 subcategory: "Monitored Entities"
 description: |-
   The resource `dynatrace_custom_device` covers configuration for custom devices.

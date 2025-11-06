@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_database_anomalies_v2 Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_database_anomalies_v2 Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_database_anomalies_v2` covers configuration for database anomaly detection

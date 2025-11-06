@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_resource_attributes Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_resource_attributes Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_resource_attributes` covers configuration for resource attributes

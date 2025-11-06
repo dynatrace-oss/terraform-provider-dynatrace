@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_github_connection Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_github_connection Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_github_connection` covers configuration for GitHub connections

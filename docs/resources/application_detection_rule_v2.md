@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_application_detection_rule_v2 Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_application_detection_rule_v2 Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_application_detection_rule_v2` covers configuration for application detection rule

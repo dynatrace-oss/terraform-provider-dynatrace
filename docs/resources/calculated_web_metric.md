@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_calculated_web_metric Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_calculated_web_metric Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_calculated_web_metric` covers configuration for calculated web app metrics

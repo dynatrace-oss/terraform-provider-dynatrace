@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_process_group_detection_flags Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_process_group_detection_flags Resource - terraform-provider-dynatrace"
 subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_process_group_detection_flags` covers configuration to enable or disable built-in process group detection rules

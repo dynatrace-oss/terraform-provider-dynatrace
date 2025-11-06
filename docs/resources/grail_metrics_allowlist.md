@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_grail_metrics_allowlist Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_grail_metrics_allowlist Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_grail_metrics_allowlist` covers allow list configuration of custom metric ingestion to Grail

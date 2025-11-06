@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: calculated_mobile_metric Resource - terraform-provider-dynatrace"
+page_title: "calculated_mobile_metric Resource - terraform-provider-dynatrace"
 subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `calculated_mobile_metric` covers configuration for calculated mobile/custom app metrics

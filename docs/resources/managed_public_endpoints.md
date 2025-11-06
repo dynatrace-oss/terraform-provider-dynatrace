@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_managed_public_endpoints Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_managed_public_endpoints Resource - terraform-provider-dynatrace"
 subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_managed_public_endpoints` covers configuration for cluster public endpoints
