@@ -23,16 +23,18 @@ import (
 )
 
 type Settings struct {
-	CostAllocation    *Stage `json:"costAllocation"`    // Cost allocation stage
-	CustomID          string `json:"customId"`          // Custom pipeline id
-	DataExtraction    *Stage `json:"dataExtraction"`    // Data extraction stage
-	Davis             *Stage `json:"davis"`             // Davis event extraction stage
-	DisplayName       string `json:"displayName"`       // Display name
-	MetricExtraction  *Stage `json:"metricExtraction"`  // Metrics extraction stage
-	Processing        *Stage `json:"processing"`        // Processing stage
-	ProductAllocation *Stage `json:"productAllocation"` // Product allocation stage
-	SecurityContext   *Stage `json:"securityContext"`   // Security context stage
-	Storage           *Stage `json:"storage"`           // Storage stage
+	CostAllocation           *Stage `json:"costAllocation,omitempty"`           // Cost allocation stage
+	CustomID                 string `json:"customId"`                           // Custom pipeline id
+	DataExtraction           *Stage `json:"dataExtraction,omitempty"`           // Data extraction stage
+	Davis                    *Stage `json:"davis,omitempty"`                    // Davis event extraction stage
+	DisplayName              string `json:"displayName"`                        // Display name
+	MetricExtraction         *Stage `json:"metricExtraction,omitempty"`         // Metrics extraction stage
+	Processing               *Stage `json:"processing,omitempty"`               // Processing stage
+	ProductAllocation        *Stage `json:"productAllocation,omitempty"`        // Product allocation stage
+	SecurityContext          *Stage `json:"securityContext,omitempty"`          // Security context stage
+	SmartscapeEdgeExtraction *Stage `json:"smartscapeEdgeExtraction,omitempty"` // Smartscape edge extraction stage
+	SmartscapeNodeExtraction *Stage `json:"smartscapeNodeExtraction,omitempty"` // Smartscape node extraction stage
+	Storage                  *Stage `json:"storage,omitempty"`                  // Storage stage
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -40,7 +42,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"cost_allocation": {
 			Type:        schema.TypeList,
 			Description: "Cost allocation stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -53,7 +55,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"data_extraction": {
 			Type:        schema.TypeList,
 			Description: "Data extraction stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -61,7 +63,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"davis": {
 			Type:        schema.TypeList,
 			Description: "Davis event extraction stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -74,7 +76,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"metric_extraction": {
 			Type:        schema.TypeList,
 			Description: "Metrics extraction stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -82,7 +84,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"processing": {
 			Type:        schema.TypeList,
 			Description: "Processing stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -90,7 +92,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"product_allocation": {
 			Type:        schema.TypeList,
 			Description: "Product allocation stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -98,7 +100,23 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"security_context": {
 			Type:        schema.TypeList,
 			Description: "Security context stage",
-			Required:    true,
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"smartscape_edge_extraction": {
+			Type:        schema.TypeList,
+			Description: "Smartscape edge extraction stage",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"smartscape_node_extraction": {
+			Type:        schema.TypeList,
+			Description: "Smartscape node extraction stage",
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -106,7 +124,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"storage": {
 			Type:        schema.TypeList,
 			Description: "Storage stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -116,30 +134,34 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"cost_allocation":    me.CostAllocation,
-		"custom_id":          me.CustomID,
-		"data_extraction":    me.DataExtraction,
-		"davis":              me.Davis,
-		"display_name":       me.DisplayName,
-		"metric_extraction":  me.MetricExtraction,
-		"processing":         me.Processing,
-		"product_allocation": me.ProductAllocation,
-		"security_context":   me.SecurityContext,
-		"storage":            me.Storage,
+		"cost_allocation":            me.CostAllocation,
+		"custom_id":                  me.CustomID,
+		"data_extraction":            me.DataExtraction,
+		"davis":                      me.Davis,
+		"display_name":               me.DisplayName,
+		"metric_extraction":          me.MetricExtraction,
+		"processing":                 me.Processing,
+		"product_allocation":         me.ProductAllocation,
+		"security_context":           me.SecurityContext,
+		"smartscape_edge_extraction": me.SmartscapeEdgeExtraction,
+		"smartscape_node_extraction": me.SmartscapeNodeExtraction,
+		"storage":                    me.Storage,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"cost_allocation":    &me.CostAllocation,
-		"custom_id":          &me.CustomID,
-		"data_extraction":    &me.DataExtraction,
-		"davis":              &me.Davis,
-		"display_name":       &me.DisplayName,
-		"metric_extraction":  &me.MetricExtraction,
-		"processing":         &me.Processing,
-		"product_allocation": &me.ProductAllocation,
-		"security_context":   &me.SecurityContext,
-		"storage":            &me.Storage,
+		"cost_allocation":            &me.CostAllocation,
+		"custom_id":                  &me.CustomID,
+		"data_extraction":            &me.DataExtraction,
+		"davis":                      &me.Davis,
+		"display_name":               &me.DisplayName,
+		"metric_extraction":          &me.MetricExtraction,
+		"processing":                 &me.Processing,
+		"product_allocation":         &me.ProductAllocation,
+		"security_context":           &me.SecurityContext,
+		"smartscape_edge_extraction": &me.SmartscapeEdgeExtraction,
+		"smartscape_node_extraction": &me.SmartscapeNodeExtraction,
+		"storage":                    &me.Storage,
 	})
 }
