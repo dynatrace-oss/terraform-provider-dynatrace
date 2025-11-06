@@ -23,17 +23,17 @@ import (
 )
 
 type SamplingAwareCounterMetricAttributes struct {
-	Aggregation *Aggregation           `json:"aggregation,omitempty"` // Possible Values: `disabled`, `enabled`.
+	Aggregation *Aggregation           `json:"aggregation,omitempty"` // Possible Values: `disabled`, `enabled`
 	Dimensions  FieldExtractionEntries `json:"dimensions,omitempty"`  // List of dimensions
 	MetricKey   string                 `json:"metricKey"`             // Metric key
-	Sampling    *Sampling              `json:"sampling,omitempty"`    // Possible Values: `disabled`, `enabled`.
+	Sampling    *Sampling              `json:"sampling,omitempty"`    // Possible Values: `disabled`, `enabled`
 }
 
 func (me *SamplingAwareCounterMetricAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aggregation": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`.",
+			Description: "Possible Values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 		"dimensions": {
@@ -51,7 +51,7 @@ func (me *SamplingAwareCounterMetricAttributes) Schema() map[string]*schema.Sche
 		},
 		"sampling": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`.",
+			Description: "Possible Values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 	}

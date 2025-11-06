@@ -70,6 +70,22 @@
 			],
 			"type": "enum"
 		},
+		"IngestSourceType": {
+			"description": "",
+			"displayName": "Ingest Source Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "HTTP based ingest source",
+					"value": "http"
+				},
+				{
+					"displayName": "Extension based ingest source",
+					"value": "extension"
+				}
+			],
+			"type": "enum"
+		},
 		"Measurement": {
 			"description": "",
 			"displayName": "measurement",
@@ -164,12 +180,20 @@
 					"value": "samplingAwareValueMetric"
 				},
 				{
+					"displayName": "samplingAwareHistogramMetric",
+					"value": "samplingAwareHistogramMetric"
+				},
+				{
 					"displayName": "davis",
 					"value": "davis"
 				},
 				{
 					"displayName": "bizevent",
 					"value": "bizevent"
+				},
+				{
+					"displayName": "sdlcEvent",
+					"value": "sdlcEvent"
 				},
 				{
 					"displayName": "azureLogForwarding",
@@ -186,6 +210,14 @@
 				{
 					"displayName": "productAllocation",
 					"value": "productAllocation"
+				},
+				{
+					"displayName": "smartscapeNode",
+					"value": "smartscapeNode"
+				},
+				{
+					"displayName": "smartscapeEdge",
+					"value": "smartscapeEdge"
 				}
 			],
 			"type": "enum"
@@ -278,6 +310,11 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"expectedValue": "http",
+				"property": "sourceType",
+				"type": "EQUALS"
+			},
 			"type": "text"
 		},
 		"processing": {
@@ -286,9 +323,51 @@
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
-			"nullable": false,
+			"nullable": true,
 			"type": {
 				"$ref": "#/types/Stage"
+			}
+		},
+		"source": {
+			"constraints": [
+				{
+					"type": "NOT_EMPTY"
+				},
+				{
+					"maxLength": 100,
+					"minLength": 3,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-'), dots ('.') and colons (':')",
+					"pattern": "^[:.A-Za-z0-9_\\-]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "extension",
+			"description": "",
+			"displayName": "Source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "extension",
+				"property": "sourceType",
+				"type": "EQUALS"
+			},
+			"type": "text"
+		},
+		"sourceType": {
+			"default": "http",
+			"description": "",
+			"displayName": "Source Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/IngestSourceType"
 			}
 		},
 		"staticRouting": {
@@ -308,13 +387,18 @@
 			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
-				"pathSegment"
+				"pathSegment",
+				"source",
+				"sourceType"
 			]
 		},
 		{
 			"byteLimit": 31457280,
 			"type": "BYTE_SIZE_LIMIT"
 		}
+	],
+	"schemaGroups": [
+		"group:openpipeline.all.ingest-sources"
 	],
 	"schemaId": "builtin:openpipeline.spans.ingest-sources",
 	"types": {
@@ -1054,6 +1138,22 @@
 			"displayName": "HistogramMetricAttributes",
 			"documentation": "",
 			"properties": {
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
 				"dimensions": {
 					"description": "",
 					"displayName": "List of dimensions",
@@ -1457,6 +1557,22 @@
 						"$ref": "#/types/SamplingAwareCounterMetricAttributes"
 					}
 				},
+				"samplingAwareHistogramMetric": {
+					"description": "",
+					"displayName": "Sampling aware histogram metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "samplingAwareHistogramMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SamplingAwareHistogramMetricAttributes"
+					}
+				},
 				"samplingAwareValueMetric": {
 					"description": "",
 					"displayName": "Sampling aware value metric processor attributes",
@@ -1471,6 +1587,22 @@
 					},
 					"type": {
 						"$ref": "#/types/SamplingAwareValueMetricAttributes"
+					}
+				},
+				"sdlcEvent": {
+					"description": "",
+					"displayName": "SdlcEvent extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "sdlcEvent",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SdlcEventAttributes"
 					}
 				},
 				"securityContext": {
@@ -1503,6 +1635,38 @@
 					},
 					"type": {
 						"$ref": "#/types/SecurityEventAttributes"
+					}
+				},
+				"smartscapeEdge": {
+					"description": "",
+					"displayName": "Smartscape edge extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "smartscapeEdge",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SmartscapeEdgeAttributes"
+					}
+				},
+				"smartscapeNode": {
+					"description": "",
+					"displayName": "Smartscape node extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "smartscapeNode",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SmartscapeNodeAttributes"
 					}
 				},
 				"technology": {
@@ -1667,9 +1831,9 @@
 			"version": "0",
 			"versionInfo": ""
 		},
-		"SamplingAwareValueMetricAttributes": {
+		"SamplingAwareHistogramMetricAttributes": {
 			"description": "",
-			"displayName": "SamplingAwareValueMetricAttributes",
+			"displayName": "SamplingAwareHistogramMetricAttributes",
 			"documentation": "",
 			"properties": {
 				"aggregation": {
@@ -1697,6 +1861,14 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
 					"type": "text"
 				},
 				"dimensions": {
@@ -1724,7 +1896,6 @@
 						},
 						{
 							"maxLength": 100,
-							"minLength": 1,
 							"type": "LENGTH"
 						},
 						{
@@ -1738,12 +1909,21 @@
 							"type": "PATTERN"
 						}
 					],
+					"default": "fieldName",
 					"description": "",
 					"displayName": "Field with metric value",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
-					"nullable": true,
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
 					"type": "text"
 				},
 				"measurement": {
@@ -1814,6 +1994,235 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"SamplingAwareValueMetricAttributes": {
+			"description": "",
+			"displayName": "SamplingAwareValueMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"aggregation": {
+					"description": "",
+					"displayName": "Aggregation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Aggregation"
+					}
+				},
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"field": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'span_id'",
+							"pattern": "^(?!span_id$).+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'trace_id'",
+							"pattern": "^(?!trace_id$).+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "fieldName",
+					"description": "",
+					"displayName": "Field with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"measurement": {
+					"default": "field",
+					"description": "",
+					"displayName": "Measurement",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Measurement"
+					}
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?i)(?!dt\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sampling": {
+					"description": "",
+					"displayName": "Sampling",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Sampling"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SdlcEventAttributes": {
+			"description": "",
+			"displayName": "SdlcEventAttributes",
+			"documentation": "",
+			"properties": {
+				"eventCategory": {
+					"description": "",
+					"displayName": "Event category",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventProvider": {
+					"description": "",
+					"displayName": "Event provider",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventStatus": {
+					"description": "",
+					"displayName": "Event status",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventType": {
+					"description": "",
+					"displayName": "Event type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"fieldExtraction": {
+					"description": "",
+					"displayName": "Field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FieldExtraction"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"SecurityContextAttributes": {
 			"description": "",
 			"displayName": "SecurityContextAttributes",
@@ -1854,6 +2263,453 @@
 				}
 			},
 			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeEdgeAttributes": {
+			"description": "",
+			"displayName": "SmartscapeEdgeAttributes",
+			"documentation": "",
+			"properties": {
+				"edgeType": {
+					"constraints": [
+						{
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
+							"pattern": "^[a-z][a-z0-9._]{0,31}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Edge type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sourceIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sourceType": {
+					"constraints": [
+						{
+							"customMessage": "Source type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetType": {
+					"constraints": [
+						{
+							"customMessage": "Target type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeFieldExtractionEntry": {
+			"description": "",
+			"displayName": "SmartscapeFieldExtractionEntry",
+			"documentation": "",
+			"properties": {
+				"fieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 32,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"referencedFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Referenced field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{fieldName} - {referencedFieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeIdComponentsEntry": {
+			"description": "",
+			"displayName": "SmartscapeIdComponentsEntry",
+			"documentation": "",
+			"properties": {
+				"idComponent": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "ID component",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"referencedFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Referenced field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{idComponent} - {referencedFieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeNodeAttributes": {
+			"description": "",
+			"displayName": "SmartscapeNodeAttributes",
+			"documentation": "",
+			"properties": {
+				"extractNode": {
+					"default": false,
+					"description": "",
+					"displayName": "Extract node",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fieldsToExtract": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"fieldName",
+								"referencedFieldName"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "Fields to extract",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeFieldExtractionEntry"
+						}
+					},
+					"maxObjects": 32,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				},
+				"idComponents": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"idComponent",
+								"referencedFieldName"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "ID components",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeIdComponentsEntry"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"nodeIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Node ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"nodeName": {
+					"description": "",
+					"displayName": "Node name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"nodeType": {
+					"constraints": [
+						{
+							"customMessage": "Node type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Node type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"staticEdgesToExtract": {
+					"description": "",
+					"displayName": "Static edges to extract",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeStaticEdgeExtractionEntry"
+						}
+					},
+					"maxObjects": 16,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeStaticEdgeExtractionEntry": {
+			"description": "",
+			"displayName": "SmartscapeStaticEdgeExtractionEntry",
+			"documentation": "",
+			"properties": {
+				"edgeType": {
+					"constraints": [
+						{
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
+							"pattern": "^[a-z][a-z0-9._]{0,31}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Edge type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetType": {
+					"constraints": [
+						{
+							"customMessage": "Target type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{edgeType} - {targetType} - {targetIdFieldName}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -2166,5 +3022,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6"
+	"version": "1.21"
 }

@@ -18,31 +18,34 @@
 package pipelines
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type SamplingAwareValueMetricAttributes struct {
-	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible Values: `disabled`, `enabled`.
+	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible Values: `disabled`, `enabled`
 	DefaultValue *string                `json:"defaultValue,omitempty"` // Default value with metric value
 	Dimensions   FieldExtractionEntries `json:"dimensions,omitempty"`   // List of dimensions
 	Field        *string                `json:"field,omitempty"`        // Field with metric value
-	Measurement  Measurement            `json:"measurement"`            // Possible Values: `duration`, `field`.
+	Measurement  Measurement            `json:"measurement"`            // Possible Values: `duration`, `field`
 	MetricKey    string                 `json:"metricKey"`              // Metric key
-	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible Values: `disabled`, `enabled`.
+	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible Values: `disabled`, `enabled`
 }
 
 func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aggregation": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`.",
+			Description: "Possible Values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 		"default_value": {
 			Type:        schema.TypeString,
 			Description: "Default value with metric value",
-			Optional:    true, // nullable
+			Optional:    true, // nullable & precondition
 		},
 		"dimensions": {
 			Type:        schema.TypeList,
@@ -55,11 +58,11 @@ func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema
 		"field": {
 			Type:        schema.TypeString,
 			Description: "Field with metric value",
-			Optional:    true, // nullable
+			Optional:    true, // precondition
 		},
 		"measurement": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `duration`, `field`.",
+			Description: "Possible Values: `duration`, `field`",
 			Required:    true,
 		},
 		"metric_key": {
@@ -69,7 +72,7 @@ func (me *SamplingAwareValueMetricAttributes) Schema() map[string]*schema.Schema
 		},
 		"sampling": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`.",
+			Description: "Possible Values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 	}
@@ -85,6 +88,16 @@ func (me *SamplingAwareValueMetricAttributes) MarshalHCL(properties hcl.Properti
 		"metric_key":    me.MetricKey,
 		"sampling":      me.Sampling,
 	})
+}
+
+func (me *SamplingAwareValueMetricAttributes) HandlePreconditions() error {
+	if (me.Field == nil) && (string(me.Measurement) != "duration") {
+		me.Field = opt.NewString("")
+	}
+	if (me.DefaultValue == nil) && (string(me.Measurement) != "duration") {
+		return fmt.Errorf("'default_value' must be specified if 'measurement' is set to '%v'", me.Measurement)
+	}
+	return nil
 }
 
 func (me *SamplingAwareValueMetricAttributes) UnmarshalHCL(decoder hcl.Decoder) error {

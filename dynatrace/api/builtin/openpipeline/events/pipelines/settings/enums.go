@@ -64,26 +64,30 @@ var Measurements = struct {
 type ProcessorType string
 
 var ProcessorTypes = struct {
-	Azurelogforwarding         ProcessorType
-	Bizevent                   ProcessorType
-	Bucketassignment           ProcessorType
-	Costallocation             ProcessorType
-	Countermetric              ProcessorType
-	Davis                      ProcessorType
-	Dql                        ProcessorType
-	Drop                       ProcessorType
-	Fieldsadd                  ProcessorType
-	Fieldsremove               ProcessorType
-	Fieldsrename               ProcessorType
-	Histogrammetric            ProcessorType
-	Nostorage                  ProcessorType
-	Productallocation          ProcessorType
-	Samplingawarecountermetric ProcessorType
-	Samplingawarevaluemetric   ProcessorType
-	Securitycontext            ProcessorType
-	Securityevent              ProcessorType
-	Technology                 ProcessorType
-	Valuemetric                ProcessorType
+	Azurelogforwarding           ProcessorType
+	Bizevent                     ProcessorType
+	Bucketassignment             ProcessorType
+	Costallocation               ProcessorType
+	Countermetric                ProcessorType
+	Davis                        ProcessorType
+	Dql                          ProcessorType
+	Drop                         ProcessorType
+	Fieldsadd                    ProcessorType
+	Fieldsremove                 ProcessorType
+	Fieldsrename                 ProcessorType
+	Histogrammetric              ProcessorType
+	Nostorage                    ProcessorType
+	Productallocation            ProcessorType
+	Samplingawarecountermetric   ProcessorType
+	Samplingawarehistogrammetric ProcessorType
+	Samplingawarevaluemetric     ProcessorType
+	Sdlcevent                    ProcessorType
+	Securitycontext              ProcessorType
+	Securityevent                ProcessorType
+	Smartscapeedge               ProcessorType
+	Smartscapenode               ProcessorType
+	Technology                   ProcessorType
+	Valuemetric                  ProcessorType
 }{
 	"azureLogForwarding",
 	"bizevent",
@@ -100,9 +104,13 @@ var ProcessorTypes = struct {
 	"noStorage",
 	"productAllocation",
 	"samplingAwareCounterMetric",
+	"samplingAwareHistogramMetric",
 	"samplingAwareValueMetric",
+	"sdlcEvent",
 	"securityContext",
 	"securityEvent",
+	"smartscapeEdge",
+	"smartscapeNode",
 	"technology",
 	"valueMetric",
 }

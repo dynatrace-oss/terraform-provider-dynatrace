@@ -61,6 +61,9 @@
 			"type": "list"
 		}
 	},
+	"schemaGroups": [
+		"group:openpipeline.all.routing"
+	],
 	"schemaId": "builtin:openpipeline.bizevents.routing",
 	"types": {
 		"RoutingEntry": {
@@ -178,5 +181,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.6"
+	"version": "1.21"
 }

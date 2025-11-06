@@ -18,17 +18,22 @@
 package ingestsources
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Settings struct {
-	DefaultBucket *string        `json:"defaultBucket,omitempty"` // Default Bucket
-	DisplayName   string         `json:"displayName"`             // Endpoint display name
-	Enabled       bool           `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
-	PathSegment   string         `json:"pathSegment"`             // Endpoint segment
-	Processing    *Stage         `json:"processing"`              // Processing stage
-	StaticRouting *StaticRouting `json:"staticRouting,omitempty"` // Static routing of endpoint
+	DefaultBucket *string          `json:"defaultBucket,omitempty"` // Default Bucket
+	DisplayName   string           `json:"displayName"`             // Endpoint display name
+	Enabled       bool             `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
+	PathSegment   *string          `json:"pathSegment,omitempty"`   // Endpoint segment
+	Processing    *Stage           `json:"processing,omitempty"`    // Processing stage
+	Source        *string          `json:"source,omitempty"`        // Source
+	SourceType    IngestSourceType `json:"sourceType"`              // Source Type. Possible Values: `extension`, `http`
+	StaticRouting *StaticRouting   `json:"staticRouting,omitempty"` // Static routing of endpoint
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -51,15 +56,25 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"path_segment": {
 			Type:        schema.TypeString,
 			Description: "Endpoint segment",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 		"processing": {
 			Type:        schema.TypeList,
 			Description: "Processing stage",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
+		},
+		"source": {
+			Type:        schema.TypeString,
+			Description: "Source",
+			Optional:    true, // precondition
+		},
+		"source_type": {
+			Type:        schema.TypeString,
+			Description: "Source Type. Possible Values: `extension`, `http`",
+			Required:    true,
 		},
 		"static_routing": {
 			Type:        schema.TypeList,
@@ -79,8 +94,20 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"enabled":        me.Enabled,
 		"path_segment":   me.PathSegment,
 		"processing":     me.Processing,
+		"source":         me.Source,
+		"source_type":    me.SourceType,
 		"static_routing": me.StaticRouting,
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	if (me.PathSegment == nil) && (string(me.SourceType) == "http") {
+		me.PathSegment = opt.NewString("")
+	}
+	if (me.Source == nil) && (string(me.SourceType) == "extension") {
+		return fmt.Errorf("'source' must be specified if 'source_type' is set to '%v'", me.SourceType)
+	}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -90,6 +117,8 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":        &me.Enabled,
 		"path_segment":   &me.PathSegment,
 		"processing":     &me.Processing,
+		"source":         &me.Source,
+		"source_type":    &me.SourceType,
 		"static_routing": &me.StaticRouting,
 	})
 }

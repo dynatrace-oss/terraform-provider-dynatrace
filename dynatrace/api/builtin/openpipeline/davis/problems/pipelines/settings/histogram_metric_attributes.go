@@ -23,13 +23,19 @@ import (
 )
 
 type HistogramMetricAttributes struct {
-	Dimensions FieldExtractionEntries `json:"dimensions,omitempty"` // List of dimensions
-	Field      string                 `json:"field"`                // Field with metric value
-	MetricKey  string                 `json:"metricKey"`            // Metric key
+	DefaultValue *string                `json:"defaultValue,omitempty"` // Default value with metric value
+	Dimensions   FieldExtractionEntries `json:"dimensions,omitempty"`   // List of dimensions
+	Field        string                 `json:"field"`                  // Field with metric value
+	MetricKey    string                 `json:"metricKey"`              // Metric key
 }
 
 func (me *HistogramMetricAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"default_value": {
+			Type:        schema.TypeString,
+			Description: "Default value with metric value",
+			Optional:    true, // nullable
+		},
 		"dimensions": {
 			Type:        schema.TypeList,
 			Description: "List of dimensions",
@@ -53,16 +59,18 @@ func (me *HistogramMetricAttributes) Schema() map[string]*schema.Schema {
 
 func (me *HistogramMetricAttributes) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"dimensions": me.Dimensions,
-		"field":      me.Field,
-		"metric_key": me.MetricKey,
+		"default_value": me.DefaultValue,
+		"dimensions":    me.Dimensions,
+		"field":         me.Field,
+		"metric_key":    me.MetricKey,
 	})
 }
 
 func (me *HistogramMetricAttributes) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"dimensions": &me.Dimensions,
-		"field":      &me.Field,
-		"metric_key": &me.MetricKey,
+		"default_value": &me.DefaultValue,
+		"dimensions":    &me.Dimensions,
+		"field":         &me.Field,
+		"metric_key":    &me.MetricKey,
 	})
 }

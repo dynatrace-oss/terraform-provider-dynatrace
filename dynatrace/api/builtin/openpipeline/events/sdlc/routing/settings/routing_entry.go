@@ -53,7 +53,7 @@ type RoutingEntry struct {
 	Enabled           bool         `json:"enabled"`              // This setting is enabled (`true`) or disabled (`false`)
 	Matcher           string       `json:"matcher"`              // Query which determines whether the record should be routed to the target pipeline of this rule.
 	PipelineID        *string      `json:"pipelineId,omitempty"` // Pipeline ID
-	PipelineType      PipelineType `json:"pipelineType"`         // Pipeline Type. Possible Values: `builtin`, `custom`.
+	PipelineType      PipelineType `json:"pipelineType"`         // Pipeline Type. Possible Values: `builtin`, `custom`
 }
 
 func (me *RoutingEntry) Schema() map[string]*schema.Schema {
@@ -85,7 +85,7 @@ func (me *RoutingEntry) Schema() map[string]*schema.Schema {
 		},
 		"pipeline_type": {
 			Type:        schema.TypeString,
-			Description: "Pipeline Type. Possible Values: `builtin`, `custom`.",
+			Description: "Pipeline Type. Possible Values: `builtin`, `custom`",
 			Required:    true,
 		},
 	}

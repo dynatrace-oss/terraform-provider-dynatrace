@@ -49,30 +49,34 @@ func (me *Processors) UnmarshalHCL(decoder hcl.Decoder) error {
 
 // Processor. Processor definition
 type Processor struct {
-	AzureLogForwarding         *AzureLogForwardingAttributes         `json:"azureLogForwarding,omitempty"` // Azure log forwarding processor attributes
-	Bizevent                   *BizeventAttributes                   `json:"bizevent,omitempty"`           // Bizevent extraction processor attributes
-	BucketAssignment           *BucketAssignmentAttributes           `json:"bucketAssignment,omitempty"`   // Bucket assignment processor attributes
-	CostAllocation             *CostAllocationAttributes             `json:"costAllocation,omitempty"`     // Cost allocation processor attributes
-	CounterMetric              *CounterMetricAttributes              `json:"counterMetric,omitempty"`      // Counter metric processor attributes
-	Davis                      *DavisAttributes                      `json:"davis,omitempty"`              // Davis event extraction processor attributes
-	Description                string                                `json:"description"`
-	Dql                        *DqlAttributes                        `json:"dql,omitempty"`                        // DQL processor attributes
-	Enabled                    bool                                  `json:"enabled"`                              // This setting is enabled (`true`) or disabled (`false`)
-	FieldsAdd                  *FieldsAddAttributes                  `json:"fieldsAdd,omitempty"`                  // Fields add processor attributes
-	FieldsRemove               *FieldsRemoveAttributes               `json:"fieldsRemove,omitempty"`               // Fields remove processor attributes
-	FieldsRename               *FieldsRenameAttributes               `json:"fieldsRename,omitempty"`               // Fields rename processor attributes
-	HistogramMetric            *HistogramMetricAttributes            `json:"histogramMetric,omitempty"`            // Histogram metric processor attributes
-	ID                         string                                `json:"id"`                                   // Processor identifier
-	Matcher                    *string                               `json:"matcher,omitempty"`                    // [See our documentation](https://dt-url.net/bp234rv)
-	ProductAllocation          *ProductAllocationAttributes          `json:"productAllocation,omitempty"`          // Product allocation processor attributes
-	SampleData                 *string                               `json:"sampleData,omitempty"`                 // Sample data
-	SamplingAwareCounterMetric *SamplingAwareCounterMetricAttributes `json:"samplingAwareCounterMetric,omitempty"` // Sampling-aware counter metric processor attributes
-	SamplingAwareValueMetric   *SamplingAwareValueMetricAttributes   `json:"samplingAwareValueMetric,omitempty"`   // Sampling aware value metric processor attributes
-	SecurityContext            *SecurityContextAttributes            `json:"securityContext,omitempty"`            // Security context processor attributes
-	SecurityEvent              *SecurityEventAttributes              `json:"securityEvent,omitempty"`              // Security event extraction processor attributes
-	Technology                 *TechnologyAttributes                 `json:"technology,omitempty"`                 // Technology processor attributes
-	Type                       ProcessorType                         `json:"type"`                                 // Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareValueMetric`, `securityContext`, `securityEvent`, `technology`, `valueMetric`.
-	ValueMetric                *ValueMetricAttributes                `json:"valueMetric,omitempty"`                // Value metric processor attributes
+	AzureLogForwarding           *AzureLogForwardingAttributes           `json:"azureLogForwarding,omitempty"` // Azure log forwarding processor attributes
+	Bizevent                     *BizeventAttributes                     `json:"bizevent,omitempty"`           // Bizevent extraction processor attributes
+	BucketAssignment             *BucketAssignmentAttributes             `json:"bucketAssignment,omitempty"`   // Bucket assignment processor attributes
+	CostAllocation               *CostAllocationAttributes               `json:"costAllocation,omitempty"`     // Cost allocation processor attributes
+	CounterMetric                *CounterMetricAttributes                `json:"counterMetric,omitempty"`      // Counter metric processor attributes
+	Davis                        *DavisAttributes                        `json:"davis,omitempty"`              // Davis event extraction processor attributes
+	Description                  string                                  `json:"description"`
+	Dql                          *DqlAttributes                          `json:"dql,omitempty"`                          // DQL processor attributes
+	Enabled                      bool                                    `json:"enabled"`                                // This setting is enabled (`true`) or disabled (`false`)
+	FieldsAdd                    *FieldsAddAttributes                    `json:"fieldsAdd,omitempty"`                    // Fields add processor attributes
+	FieldsRemove                 *FieldsRemoveAttributes                 `json:"fieldsRemove,omitempty"`                 // Fields remove processor attributes
+	FieldsRename                 *FieldsRenameAttributes                 `json:"fieldsRename,omitempty"`                 // Fields rename processor attributes
+	HistogramMetric              *HistogramMetricAttributes              `json:"histogramMetric,omitempty"`              // Histogram metric processor attributes
+	ID                           string                                  `json:"id"`                                     // Processor identifier
+	Matcher                      *string                                 `json:"matcher,omitempty"`                      // [See our documentation](https://dt-url.net/bp234rv)
+	ProductAllocation            *ProductAllocationAttributes            `json:"productAllocation,omitempty"`            // Product allocation processor attributes
+	SampleData                   *string                                 `json:"sampleData,omitempty"`                   // Sample data
+	SamplingAwareCounterMetric   *SamplingAwareCounterMetricAttributes   `json:"samplingAwareCounterMetric,omitempty"`   // Sampling-aware counter metric processor attributes
+	SamplingAwareHistogramMetric *SamplingAwareHistogramMetricAttributes `json:"samplingAwareHistogramMetric,omitempty"` // Sampling aware histogram metric processor attributes
+	SamplingAwareValueMetric     *SamplingAwareValueMetricAttributes     `json:"samplingAwareValueMetric,omitempty"`     // Sampling aware value metric processor attributes
+	SdlcEvent                    *SdlcEventAttributes                    `json:"sdlcEvent,omitempty"`                    // SdlcEvent extraction processor attributes
+	SecurityContext              *SecurityContextAttributes              `json:"securityContext,omitempty"`              // Security context processor attributes
+	SecurityEvent                *SecurityEventAttributes                `json:"securityEvent,omitempty"`                // Security event extraction processor attributes
+	SmartscapeEdge               *SmartscapeEdgeAttributes               `json:"smartscapeEdge,omitempty"`               // Smartscape edge extraction processor attributes
+	SmartscapeNode               *SmartscapeNodeAttributes               `json:"smartscapeNode,omitempty"`               // Smartscape node extraction processor attributes
+	Technology                   *TechnologyAttributes                   `json:"technology,omitempty"`                   // Technology processor attributes
+	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+	ValueMetric                  *ValueMetricAttributes                  `json:"valueMetric,omitempty"`                  // Value metric processor attributes
 }
 
 func (me *Processor) Schema() map[string]*schema.Schema {
@@ -206,11 +210,27 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"sampling_aware_histogram_metric": {
+			Type:        schema.TypeList,
+			Description: "Sampling aware histogram metric processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(SamplingAwareHistogramMetricAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"sampling_aware_value_metric": {
 			Type:        schema.TypeList,
 			Description: "Sampling aware value metric processor attributes",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(SamplingAwareValueMetricAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"sdlc_event": {
+			Type:        schema.TypeList,
+			Description: "SdlcEvent extraction processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(SdlcEventAttributes).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -230,6 +250,22 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"smartscape_edge": {
+			Type:        schema.TypeList,
+			Description: "Smartscape edge extraction processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(SmartscapeEdgeAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"smartscape_node": {
+			Type:        schema.TypeList,
+			Description: "Smartscape node extraction processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(SmartscapeNodeAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"technology": {
 			Type:        schema.TypeList,
 			Description: "Technology processor attributes",
@@ -240,7 +276,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareValueMetric`, `securityContext`, `securityEvent`, `technology`, `valueMetric`.",
+			Description: "Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
 			Required:    true,
 		},
 		"value_metric": {
@@ -256,30 +292,34 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 
 func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"azure_log_forwarding":          me.AzureLogForwarding,
-		"bizevent":                      me.Bizevent,
-		"bucket_assignment":             me.BucketAssignment,
-		"cost_allocation":               me.CostAllocation,
-		"counter_metric":                me.CounterMetric,
-		"davis":                         me.Davis,
-		"description":                   me.Description,
-		"dql":                           me.Dql,
-		"enabled":                       me.Enabled,
-		"fields_add":                    me.FieldsAdd,
-		"fields_remove":                 me.FieldsRemove,
-		"fields_rename":                 me.FieldsRename,
-		"histogram_metric":              me.HistogramMetric,
-		"id":                            me.ID,
-		"matcher":                       me.Matcher,
-		"product_allocation":            me.ProductAllocation,
-		"sample_data":                   me.SampleData,
-		"sampling_aware_counter_metric": me.SamplingAwareCounterMetric,
-		"sampling_aware_value_metric":   me.SamplingAwareValueMetric,
-		"security_context":              me.SecurityContext,
-		"security_event":                me.SecurityEvent,
-		"technology":                    me.Technology,
-		"type":                          me.Type,
-		"value_metric":                  me.ValueMetric,
+		"azure_log_forwarding":            me.AzureLogForwarding,
+		"bizevent":                        me.Bizevent,
+		"bucket_assignment":               me.BucketAssignment,
+		"cost_allocation":                 me.CostAllocation,
+		"counter_metric":                  me.CounterMetric,
+		"davis":                           me.Davis,
+		"description":                     me.Description,
+		"dql":                             me.Dql,
+		"enabled":                         me.Enabled,
+		"fields_add":                      me.FieldsAdd,
+		"fields_remove":                   me.FieldsRemove,
+		"fields_rename":                   me.FieldsRename,
+		"histogram_metric":                me.HistogramMetric,
+		"id":                              me.ID,
+		"matcher":                         me.Matcher,
+		"product_allocation":              me.ProductAllocation,
+		"sample_data":                     me.SampleData,
+		"sampling_aware_counter_metric":   me.SamplingAwareCounterMetric,
+		"sampling_aware_histogram_metric": me.SamplingAwareHistogramMetric,
+		"sampling_aware_value_metric":     me.SamplingAwareValueMetric,
+		"sdlc_event":                      me.SdlcEvent,
+		"security_context":                me.SecurityContext,
+		"security_event":                  me.SecurityEvent,
+		"smartscape_edge":                 me.SmartscapeEdge,
+		"smartscape_node":                 me.SmartscapeNode,
+		"technology":                      me.Technology,
+		"type":                            me.Type,
+		"value_metric":                    me.ValueMetric,
 	})
 }
 
@@ -365,11 +405,23 @@ func (me *Processor) HandlePreconditions() error {
 	if (me.SamplingAwareCounterMetric != nil) && (string(me.Type) != "samplingAwareCounterMetric") {
 		return fmt.Errorf("'sampling_aware_counter_metric' must not be specified if 'type' is set to '%v'", me.Type)
 	}
+	if (me.SamplingAwareHistogramMetric == nil) && (string(me.Type) == "samplingAwareHistogramMetric") {
+		return fmt.Errorf("'sampling_aware_histogram_metric' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SamplingAwareHistogramMetric != nil) && (string(me.Type) != "samplingAwareHistogramMetric") {
+		return fmt.Errorf("'sampling_aware_histogram_metric' must not be specified if 'type' is set to '%v'", me.Type)
+	}
 	if (me.SamplingAwareValueMetric == nil) && (string(me.Type) == "samplingAwareValueMetric") {
 		return fmt.Errorf("'sampling_aware_value_metric' must be specified if 'type' is set to '%v'", me.Type)
 	}
 	if (me.SamplingAwareValueMetric != nil) && (string(me.Type) != "samplingAwareValueMetric") {
 		return fmt.Errorf("'sampling_aware_value_metric' must not be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SdlcEvent == nil) && (string(me.Type) == "sdlcEvent") {
+		return fmt.Errorf("'sdlc_event' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SdlcEvent != nil) && (string(me.Type) != "sdlcEvent") {
+		return fmt.Errorf("'sdlc_event' must not be specified if 'type' is set to '%v'", me.Type)
 	}
 	if (me.SecurityContext == nil) && (string(me.Type) == "securityContext") {
 		return fmt.Errorf("'security_context' must be specified if 'type' is set to '%v'", me.Type)
@@ -382,6 +434,18 @@ func (me *Processor) HandlePreconditions() error {
 	}
 	if (me.SecurityEvent != nil) && (string(me.Type) != "securityEvent") {
 		return fmt.Errorf("'security_event' must not be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SmartscapeEdge == nil) && (string(me.Type) == "smartscapeEdge") {
+		return fmt.Errorf("'smartscape_edge' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SmartscapeEdge != nil) && (string(me.Type) != "smartscapeEdge") {
+		return fmt.Errorf("'smartscape_edge' must not be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SmartscapeNode == nil) && (string(me.Type) == "smartscapeNode") {
+		return fmt.Errorf("'smartscape_node' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.SmartscapeNode != nil) && (string(me.Type) != "smartscapeNode") {
+		return fmt.Errorf("'smartscape_node' must not be specified if 'type' is set to '%v'", me.Type)
 	}
 	if (me.Technology == nil) && (string(me.Type) == "technology") {
 		return fmt.Errorf("'technology' must be specified if 'type' is set to '%v'", me.Type)
@@ -400,29 +464,33 @@ func (me *Processor) HandlePreconditions() error {
 
 func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"azure_log_forwarding":          &me.AzureLogForwarding,
-		"bizevent":                      &me.Bizevent,
-		"bucket_assignment":             &me.BucketAssignment,
-		"cost_allocation":               &me.CostAllocation,
-		"counter_metric":                &me.CounterMetric,
-		"davis":                         &me.Davis,
-		"description":                   &me.Description,
-		"dql":                           &me.Dql,
-		"enabled":                       &me.Enabled,
-		"fields_add":                    &me.FieldsAdd,
-		"fields_remove":                 &me.FieldsRemove,
-		"fields_rename":                 &me.FieldsRename,
-		"histogram_metric":              &me.HistogramMetric,
-		"id":                            &me.ID,
-		"matcher":                       &me.Matcher,
-		"product_allocation":            &me.ProductAllocation,
-		"sample_data":                   &me.SampleData,
-		"sampling_aware_counter_metric": &me.SamplingAwareCounterMetric,
-		"sampling_aware_value_metric":   &me.SamplingAwareValueMetric,
-		"security_context":              &me.SecurityContext,
-		"security_event":                &me.SecurityEvent,
-		"technology":                    &me.Technology,
-		"type":                          &me.Type,
-		"value_metric":                  &me.ValueMetric,
+		"azure_log_forwarding":            &me.AzureLogForwarding,
+		"bizevent":                        &me.Bizevent,
+		"bucket_assignment":               &me.BucketAssignment,
+		"cost_allocation":                 &me.CostAllocation,
+		"counter_metric":                  &me.CounterMetric,
+		"davis":                           &me.Davis,
+		"description":                     &me.Description,
+		"dql":                             &me.Dql,
+		"enabled":                         &me.Enabled,
+		"fields_add":                      &me.FieldsAdd,
+		"fields_remove":                   &me.FieldsRemove,
+		"fields_rename":                   &me.FieldsRename,
+		"histogram_metric":                &me.HistogramMetric,
+		"id":                              &me.ID,
+		"matcher":                         &me.Matcher,
+		"product_allocation":              &me.ProductAllocation,
+		"sample_data":                     &me.SampleData,
+		"sampling_aware_counter_metric":   &me.SamplingAwareCounterMetric,
+		"sampling_aware_histogram_metric": &me.SamplingAwareHistogramMetric,
+		"sampling_aware_value_metric":     &me.SamplingAwareValueMetric,
+		"sdlc_event":                      &me.SdlcEvent,
+		"security_context":                &me.SecurityContext,
+		"security_event":                  &me.SecurityEvent,
+		"smartscape_edge":                 &me.SmartscapeEdge,
+		"smartscape_node":                 &me.SmartscapeNode,
+		"technology":                      &me.Technology,
+		"type":                            &me.Type,
+		"value_metric":                    &me.ValueMetric,
 	})
 }
