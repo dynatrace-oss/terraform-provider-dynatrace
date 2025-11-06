@@ -191,9 +191,6 @@ func (me *service) delete(ctx context.Context, id string, numRetries int) error 
 		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
 	}
 
-	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
-		return nil
-	}
 	if err != nil && strings.Contains(err.Error(), "Internal Server Error occurred") {
 		if numRetries == 10 {
 			return err

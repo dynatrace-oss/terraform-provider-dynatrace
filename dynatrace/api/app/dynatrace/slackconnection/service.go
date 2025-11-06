@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	slackconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection/settings"
@@ -96,10 +95,6 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			return err
 		}
 		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
-	}
-
-	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
-		return nil
 	}
 
 	return err
