@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_automation_workflow_k8s_connections Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_automation_workflow_k8s_connections Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_automation_workflow_k8s_connections` covers configuration for Kubernetes Automation for Workflows app

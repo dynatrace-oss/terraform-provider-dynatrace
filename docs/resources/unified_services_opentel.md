@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_unified_services_opentel Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_unified_services_opentel Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_unified_services_opentel` allows to enable/disable unified services for OpenTelemetry

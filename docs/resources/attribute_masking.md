@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attribute_masking Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attribute_masking Resource - terraform-provider-dynatrace"
 subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_attribute_masking` covers configuration for OpenTracing and OpenTelemetry attribute masking

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_default_launchpad Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_default_launchpad Resource - terraform-provider-dynatrace"
 subcategory: "Documents"
 description: |-
   The resource `dynatrace_default_launchpad` covers configuration to set default Launchpads by user group

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_update_windows Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_update_windows Resource - terraform-provider-dynatrace"
 subcategory: "Updates"
 description: |-
   The resource `dynatrace_update_windows` covers configuration for maintenance windows for OneAgent updates

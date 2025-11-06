@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attack_rules Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attack_rules Resource - terraform-provider-dynatrace"
 subcategory: "Application Security"
 description: |-
   The resource `dynatrace_attack_rules` covers configuration for application protection: monitoring rules

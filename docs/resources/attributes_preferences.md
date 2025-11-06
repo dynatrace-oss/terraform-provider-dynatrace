@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_attributes_preferences Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_attributes_preferences Resource - terraform-provider-dynatrace"
 subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_attributes_preferences` covers configuration for OpenTracing and OpenTelemetry attribute preferences

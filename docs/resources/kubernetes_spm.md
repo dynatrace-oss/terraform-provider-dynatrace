@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_kubernetes_spm Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_kubernetes_spm Resource - terraform-provider-dynatrace"
 subcategory: "Application Security"
 description: |-
   The resource `dynatrace_kubernetes_spm` covers configuration for Kubernetes security posture management

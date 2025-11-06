@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_golden_state Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_golden_state Resource - terraform-provider-dynatrace"
 subcategory: "Incubator"
 description: |-
   The resource `dynatrace_golden_state` allows for identifying configuration within a Dynatrace environment that isn't managed by Terraform

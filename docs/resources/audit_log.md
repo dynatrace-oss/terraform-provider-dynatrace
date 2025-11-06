@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_audit_log Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_audit_log Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_audit_log` covers configuration for audit log

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_api_token Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_api_token Resource - terraform-provider-dynatrace"
 subcategory: "Access Tokens"
 description: |-
   The resource `dynatrace_api_token` covers configuration for API tokens

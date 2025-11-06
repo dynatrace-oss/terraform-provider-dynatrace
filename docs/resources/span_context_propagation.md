@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_span_context_propagation Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_span_context_propagation Resource - terraform-provider-dynatrace"
 subcategory: "OpenTelemetry & OpenTracing"
 description: |-
   The resource `dynatrace_span_context_propagation` covers configuration for span context propagation

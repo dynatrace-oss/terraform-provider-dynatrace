@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_limit_outbound_connections Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_limit_outbound_connections Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_limit_outbound_connections` covers configuration for limiting outbound connections running in the Dynatrace JavaScript runtime

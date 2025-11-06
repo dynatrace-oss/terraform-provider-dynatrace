@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_host_naming_order Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_host_naming_order Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_naming_order` covers defining the order of rules defined for host naming

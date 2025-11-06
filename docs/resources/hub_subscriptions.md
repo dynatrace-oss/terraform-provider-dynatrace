@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_hub_subscriptions Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_hub_subscriptions Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_hub_subscriptions` covers configuration for hub subscriptions

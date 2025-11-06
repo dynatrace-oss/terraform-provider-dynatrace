@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_mobile_app_key_performance Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_mobile_app_key_performance Resource - terraform-provider-dynatrace"
 subcategory: "Mobile & Custom Applications"
 description: |-
   The resource `dynatrace_mobile_app_key_performance` covers apdex threshold configuration for mobile/custom applications

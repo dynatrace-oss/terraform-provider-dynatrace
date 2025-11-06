@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Grail"
 description: |-
   The resource `dynatrace_segment` covers configuration of segments to logically structure and conveniently filter observability data across apps on the Dynatrace platform

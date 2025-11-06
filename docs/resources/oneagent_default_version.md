@@ -1,7 +1,11 @@
 ---
 layout: ""
-page_title: dynatrace_oneagent_default_version Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_oneagent_default_version Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
     The resource `dynatrace_oneagent_default_version` just exists for backwards compatibility. The settings it addresses are no longer configurable. The resource `dynatrace_oneagent_updates` covers this functionality now.
 ---
+
+# dynatrace_oneagent_default_version (Resource)
+
+!> This resource API endpoint has been deprecated.

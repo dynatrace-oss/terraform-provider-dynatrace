@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_security_context Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_security_context Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_security_context` covers configuration for security context settings

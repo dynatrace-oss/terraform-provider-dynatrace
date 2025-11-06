@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_devobs_agent_optin Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_devobs_agent_optin Resource - terraform-provider-dynatrace"
 subcategory: "Developer Observability"
 description: |-
   The resource `dynatrace_devobs_agent_optin` covers configuration for Developer Observability agent opt-in

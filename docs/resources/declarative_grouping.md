@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_declarative_grouping Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_declarative_grouping Resource - terraform-provider-dynatrace"
 subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_declarative_grouping` covers configuration for declarative process grouping

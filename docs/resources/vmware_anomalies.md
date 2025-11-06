@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_vmware_anomalies Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_vmware_anomalies Resource - terraform-provider-dynatrace"
 subcategory: "Anomaly Detection"
 description: |-
   The resource `dynatrace_vmware_anomalies` covers configuration for VMware anomaly detection

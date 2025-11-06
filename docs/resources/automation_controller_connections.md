@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_automation_controller_connections Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_automation_controller_connections Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_automation_controller_connections` covers configuration for Red Hat Ansible automation controller connections

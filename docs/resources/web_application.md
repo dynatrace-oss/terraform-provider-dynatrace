@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_web_application Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_web_application Resource - terraform-provider-dynatrace"
 subcategory: "Web Applications"
 description: |-
   The resource `dynatrace_web_application` covers configuration for web applications

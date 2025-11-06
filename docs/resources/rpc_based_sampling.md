@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title:  Resource - terraform-provider-dynatrace"
+page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_rpc_based_sampling` covers configuration for trace sampling for RPC requests

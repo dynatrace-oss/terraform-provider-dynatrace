@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_maintenance Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_maintenance Resource - terraform-provider-dynatrace"
 subcategory: "Alerting"
 description: |-
   The resource `dynatrace_maintenance` covers configuration for maintenance windows

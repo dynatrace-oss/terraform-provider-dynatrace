@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_nettracer Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_nettracer Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_nettracer` covers configuration for NetTracer traffic

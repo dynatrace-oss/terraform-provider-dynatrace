@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_oneagent_default_mode Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_oneagent_default_mode Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_oneagent_default_mode` covers configuration for OneAgent default mode

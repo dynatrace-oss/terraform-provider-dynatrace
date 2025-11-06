@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_monitored_technologies_apache Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_monitored_technologies_apache Resource - terraform-provider-dynatrace"
 subcategory: "Monitored Technologies"
 description: |-
   The resource `dynatrace_monitored_technologies_apache` covers configuration to enable/disable Apache HTTP Server monitoring

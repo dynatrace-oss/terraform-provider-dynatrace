@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_automation_workflow_slack Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_automation_workflow_slack Resource - terraform-provider-dynatrace"
 subcategory: "Connections"
 description: |-
   The resource `dynatrace_automation_workflow_slack` covers configuration for Slack for Workflows app

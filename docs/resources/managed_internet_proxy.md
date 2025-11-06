@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_managed_internet_proxy Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_managed_internet_proxy Resource - terraform-provider-dynatrace"
 subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_managed_internet_proxy` covers configuration for cluster proxy

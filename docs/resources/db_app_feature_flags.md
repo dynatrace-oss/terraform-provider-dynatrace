@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_db_app_feature_flags Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_db_app_feature_flags Resource - terraform-provider-dynatrace"
 subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_db_app_feature_flags` covers configuration for database app feature flags

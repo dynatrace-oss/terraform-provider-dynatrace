@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_oneagent_side_masking Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_oneagent_side_masking Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_oneagent_side_masking` covers configuration for OneAgent data masking

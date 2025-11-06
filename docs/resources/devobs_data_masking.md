@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_devobs_data_masking Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_devobs_data_masking Resource - terraform-provider-dynatrace"
 subcategory: "Developer Observability"
 description: |-
   The resource `dynatrace_devobs_data_masking` covers configuration for Developer Observability sensitive data masking

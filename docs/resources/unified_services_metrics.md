@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_unified_services_metrics Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_unified_services_metrics Resource - terraform-provider-dynatrace"
 subcategory: "Service Detection"
 description: |-
   The resource `dynatrace_unified_services_metrics` allows to enable/disable endpoint metrics for Unified services

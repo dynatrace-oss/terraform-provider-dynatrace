@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_problem_record_propagation_rules Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_problem_record_propagation_rules Resource - terraform-provider-dynatrace"
 subcategory: "Platform"
 description: |-
   The resource `dynatrace_problem_record_propagation_rules` covers configuration for problem record propagation rules

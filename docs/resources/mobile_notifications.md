@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_mobile_notifications Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_mobile_notifications Resource - terraform-provider-dynatrace"
 subcategory: "Notifications"
 description: |-
   The resource `dynatrace_mobile_notifications` covers configuration problem notifications sent via Web Hook

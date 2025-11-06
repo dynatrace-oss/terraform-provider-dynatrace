@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_event_driven_ansible_connections Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_event_driven_ansible_connections Resource - terraform-provider-dynatrace"
 subcategory: "AppEngine"
 description: |-
   The resource `dynatrace_event_driven_ansible_connections` covers configuration for Red Hat event-driven Ansible connections

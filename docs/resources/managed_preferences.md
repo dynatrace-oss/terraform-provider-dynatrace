@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_managed_preferences Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_managed_preferences Resource - terraform-provider-dynatrace"
 subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_managed_preferences` covers configuration for cluster preferences

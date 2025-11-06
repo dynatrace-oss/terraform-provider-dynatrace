@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_app_monitoring Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_app_monitoring Resource - terraform-provider-dynatrace"
 subcategory: "Environment Settings"
 description: |-
   The resource `dynatrace_app_monitoring` covers configuration for Dynatrace app monitoring

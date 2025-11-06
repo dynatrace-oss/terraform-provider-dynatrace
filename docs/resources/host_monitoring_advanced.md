@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_host_monitoring_advanced Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_host_monitoring_advanced Resource - terraform-provider-dynatrace"
 subcategory: "Host Monitoring"
 description: |-
   The resource `dynatrace_host_monitoring_advanced` covers advanced configuration for host monitoring

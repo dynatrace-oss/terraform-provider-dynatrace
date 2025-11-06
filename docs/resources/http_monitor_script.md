@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_http_monitor_script Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_http_monitor_script Resource - terraform-provider-dynatrace"
 subcategory: "HTTP Monitors"
 description: |-
   The resource `dynatrace_http_monitor_script` covers configuration for HTTP monitor scripts

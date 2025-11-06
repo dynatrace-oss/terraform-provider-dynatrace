@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_business_events_security_context Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_business_events_security_context Resource - terraform-provider-dynatrace"
 subcategory: "Business Events"
 description: |-
   The resource `dynatrace_business_events_security_context` covers configuration for business security context

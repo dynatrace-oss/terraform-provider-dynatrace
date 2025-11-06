@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_histogram_metrics Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_histogram_metrics Resource - terraform-provider-dynatrace"
 subcategory: "Metrics"
 description: |-
   The resource `dynatrace_histogram_metrics` covers configuration for histogram data ingestion

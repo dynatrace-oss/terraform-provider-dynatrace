@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_managed_remote_access Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_managed_remote_access Resource - terraform-provider-dynatrace"
 subcategory: "Cluster Management"
 description: |-
   The resource `dynatrace_managed_remote_access` covers configuration for remote access requests

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_token_settings Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_token_settings Resource - terraform-provider-dynatrace"
 subcategory: "Access Tokens"
 description: |-
   The resource `dynatrace_token_settings` covers configuration for access token settings

@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_calculated_service_metric Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_calculated_service_metric Resource - terraform-provider-dynatrace"
 subcategory: "Service Monitoring"
 description: |-
   The resource `dynatrace_calculated_service_metric` covers configuration for calculated service metrics

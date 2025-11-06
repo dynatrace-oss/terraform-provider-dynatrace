@@ -1,6 +1,6 @@
 ---
 layout: ""
-page_title: dynatrace_processgroup_naming_order Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_processgroup_naming_order Resource - terraform-provider-dynatrace"
 subcategory: "Process Group Monitoring"
 description: |-
   The resource `dynatrace_processgroup_naming_order` covers defining the order of rules defined for process group naming
