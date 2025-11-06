@@ -66,12 +66,6 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
       }
     }
   }
-  davis {
-    # davis is not supported for metrics pipelines
-  }
-  metric_extraction {
-    # metric_extraction is not supported for metrics pipelines
-  }
   security_context {
     processors {
       processor {
@@ -104,14 +98,4 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
       }
     }
   }
-  cost_allocation {
-
-  }
-  product_allocation {
-
-  }
-  storage {
-    # storage is not supported for metrics pipelines
-  }
-  data_extraction {}
 }

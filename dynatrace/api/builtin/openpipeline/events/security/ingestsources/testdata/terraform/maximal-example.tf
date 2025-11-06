@@ -2,6 +2,7 @@ resource "dynatrace_openpipeline_v2_events_security_ingestsources" "maximal-sour
   enabled = true
   display_name = "max-ingestsource"
   path_segment = "processor.ingestsource.path.max.tf.#name#"
+  source_type = "http"
   static_routing {
     pipeline_type = "builtin"
     builtin_pipeline_id = "default"

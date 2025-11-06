@@ -1,9 +1,6 @@
 resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
   custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
-  processing {
-    # processing is not available for system_events pipelines
-  }
   davis {
     processors {
       processor {
@@ -87,17 +84,4 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
       }
     }
   }
-  security_context {
-    # security_context is not available for system_events pipelines
-  }
-  cost_allocation {
-
-  }
-  product_allocation {
-
-  }
-  storage {
-    # storage is not supported for system_events pipelines
-  }
-  data_extraction {}
 }

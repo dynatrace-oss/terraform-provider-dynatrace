@@ -2,11 +2,10 @@ resource "dynatrace_openpipeline_v2_system_events_ingestsources" "ingest-source"
   enabled = true
   display_name = "ingest-source"
   path_segment = "ingestsource.path.tf.#name#"
+  source_type = "http"
   static_routing {
     pipeline_type = "custom"
     pipeline_id = dynatrace_openpipeline_v2_system_events_pipelines.pipeline.id
-  }
-  processing {
   }
 }
 

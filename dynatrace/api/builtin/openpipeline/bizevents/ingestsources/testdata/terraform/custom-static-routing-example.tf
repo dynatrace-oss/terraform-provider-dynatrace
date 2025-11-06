@@ -6,19 +6,10 @@ resource "dynatrace_openpipeline_v2_bizevents_ingestsources" "ingest-source" {
     pipeline_type = "custom"
     pipeline_id = dynatrace_openpipeline_v2_bizevents_pipelines.pipeline.id
   }
-  processing {
-  }
+  source_type = "http"
 }
 
 resource "dynatrace_openpipeline_v2_bizevents_pipelines" "pipeline" {
   display_name = "Pipeline"
   custom_id = "pipeline_1234_tf_#name#"
-  processing {}
-  davis {}
-  metric_extraction {}
-  security_context {}
-  cost_allocation {}
-  product_allocation {}
-  storage {}
-  data_extraction {}
 }
