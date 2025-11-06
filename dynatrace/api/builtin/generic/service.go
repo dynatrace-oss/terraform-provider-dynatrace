@@ -114,13 +114,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 			return nil, err
 		}
 		for _, item := range response.Items {
-			newItem := new(generic.Settings)
-			newItem.Value = string(item.Value)
-			newItem.Scope = item.Scope
-			newItem.SchemaID = schemaID
-			newItem.Scope = item.Scope
 			stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
-
 		}
 	}
 	return stubs, nil
