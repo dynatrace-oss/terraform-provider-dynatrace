@@ -47,21 +47,22 @@ func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Cli
 }
 
 func (me *service) Create(ctx context.Context, v *slackconnection.Settings) (*api.Stub, error) {
-	scope := "environment"
 	data, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 
+	scope := "environment"
 	response, err := me.Client(ctx, SchemaID).Create(ctx, scope, data)
+	if err != nil {
+		return nil, err
+	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
 		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-	if err != nil {
-		return nil, err
 	}
 
 	stub := &api.Stub{ID: response.ID, Name: response.ID}
@@ -73,7 +74,12 @@ func (me *service) Update(ctx context.Context, id string, v *slackconnection.Set
 	if err != nil {
 		return err
 	}
+
 	response, err := me.Client(ctx, "").Update(ctx, id, data)
+	if err != nil {
+		return err
+	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
@@ -81,7 +87,7 @@ func (me *service) Update(ctx context.Context, id string, v *slackconnection.Set
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
 
-	return err
+	return nil
 }
 
 func (me *service) Validate(v *slackconnection.Settings) error {
@@ -90,14 +96,19 @@ func (me *service) Validate(v *slackconnection.Settings) error {
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	response, err := me.Client(ctx, "").Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+
 	if response.StatusCode != 204 {
 		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
 		}
-		err = fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
+		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
+
 	}
 
-	return err
+	return nil
 }
 
 type SettingsObject struct {
@@ -108,20 +119,19 @@ type SettingsObject struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *slackconnection.Settings) error {
-	var err error
-	var response settings20.Response
-	var settingsObject SettingsObject
-
-	response, err = me.Client(ctx, "").Get(ctx, id)
+	response, err := me.Client(ctx, "").Get(ctx, id)
 	if err != nil {
 		return err
 	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return err
 		}
 		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
+
+	var settingsObject SettingsObject
 	if err := json.Unmarshal(response.Data, &settingsObject); err != nil {
 		return err
 	}
@@ -133,17 +143,19 @@ func (me *service) Get(ctx context.Context, id string, v *slackconnection.Settin
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	var stubs api.Stubs
 	response, err := me.Client(ctx, SchemaID).List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	if response.StatusCode != 200 {
 		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
 			return nil, err
 		}
 		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
 	}
-	if err != nil {
-		return nil, err
-	}
+
+	var stubs api.Stubs
 	for _, item := range response.Items {
 		stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
 
