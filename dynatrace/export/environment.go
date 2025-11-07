@@ -46,7 +46,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
 
@@ -1014,7 +1013,7 @@ func (me *Environment) WriteMainFile() error {
 				writeClosingMainSection(mainFile)
 			}
 		}
-		if me.Flags.WithImportBlocks {
+		if me.Flags.ImportState {
 			for id, res := range module.Resources {
 				mainFile.WriteString(fmt.Sprintf(`import {
 				id = "%s"
@@ -1035,17 +1034,6 @@ func writeClosingMainSection(mainFile *os.File) {
 	mainFile.WriteString("}\n\n")
 }
 
-func (me *Environment) ExecuteImport() error {
-	if me.Flags.ImportStateV2 {
-		fmt.Println("Importing Resources into Terraform State ...")
-		err := me.executeImportV2()
-		fmt.Println("Imported Resources into Terraform State ...")
-		return err
-	}
-
-	return nil
-}
-
 type state struct {
 	Version           int         `json:"version"`
 	Terraform_version string      `json:"terraform_version"`
@@ -1054,105 +1042,6 @@ type state struct {
 	Outputs           interface{} `json:"outputs"`
 	Resources         resources   `json:"resources"`
 	CheckResults      interface{} `json:"check_results"`
-}
-
-func (me *Environment) executeImportV2() error {
-	fs := afero.NewOsFs()
-
-	state := state{
-		Version:           4,
-		Terraform_version: "1.4.5",
-		Serial:            0,
-		Lineage:           uuid.NewString(),
-		Outputs:           nil,
-		Resources:         resources{},
-		CheckResults:      nil,
-	}
-
-	for _, module := range me.Modules {
-		resList, err := module.ExecuteImportV2(fs)
-		if err != nil {
-			return err
-		}
-		state.Resources = append(state.Resources, resList...)
-	}
-
-	me.importPrevResources(&state)
-
-	bytes, err := json.MarshalIndent(state, "", "  ")
-	if err != nil {
-		return err
-	}
-	filename := fmt.Sprint(filepath.Join(me.OutputFolder, "terraform.tfstate"))
-	err = afero.WriteFile(fs, filename, bytes, 0664)
-	if err != nil {
-		return err
-	}
-
-	if NO_REFRESH_ON_IMPORT {
-		fmt.Println("NO_REFRESH_ON_IMPORT set to true")
-	} else {
-		me.executeTF(genPlanCmd())
-		me.executeTF(genApplyCmd())
-	}
-
-	return nil
-}
-
-func (me *Environment) importPrevResources(state *state) {
-	if PREV_STATE_ON {
-		for _, statePrev := range me.PrevStateMapCommon.resources {
-			if statePrev.Used {
-				continue
-			}
-
-			module, found := me.Modules[ResourceType(statePrev.Resource.Type)]
-			if found {
-				// pass
-			} else {
-				fmt.Println("ERROR: [importPrevResources] Could not find Module: ", statePrev.Resource.Type)
-				continue
-			}
-
-			isWritten := module.namer.SetNameWritten(statePrev.Resource.Name)
-			if isWritten {
-				continue
-			}
-			fmt.Println("[importPrevResources] Post-Writing resource: ", statePrev.Resource.Name, statePrev.Resource.Type)
-			state.Resources = append(state.Resources, statePrev.Resource)
-		}
-	}
-}
-
-func genPlanCmd() *exec.Cmd {
-	fmt.Println("Refreshing State - Plan ...")
-	exePath, _ := exec.LookPath("terraform")
-
-	return exec.Command(
-		exePath,
-		"plan",
-		"-lock=false",
-		"-parallelism=50",
-		"-refresh-only",
-		"-no-color",
-		"-out=terraform.plan",
-	)
-}
-
-func genApplyCmd() *exec.Cmd {
-	fmt.Println("Refreshing State - Apply ...")
-	exePath, _ := exec.LookPath("terraform")
-
-	return exec.Command(
-		exePath,
-		"apply",
-		"-lock=false",
-		"-parallelism=50",
-		"-refresh-only",
-		"-no-color",
-		"-auto-approve",
-		"terraform.plan",
-	)
 }
 
 func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
@@ -1200,12 +1089,6 @@ func (me *Environment) FinishExport() error {
 	} else {
 		err := me.RunTerraformInit()
 		if err != nil {
-			return err
-		}
-	}
-
-	if me.Flags.ImportStateV2 {
-		if err := me.ExecuteImport(); err != nil {
 			return err
 		}
 	}

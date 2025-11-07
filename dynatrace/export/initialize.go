@@ -224,15 +224,11 @@ func createFlags() (flags Flags, tailArgs []string) {
 	linkArg := flag.Bool("link", false, "enable hard links for .requires_attention and .flawed")
 	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
 	flat := flag.Bool("flat", false, "prevent creating a module structure")
-	importStateV2 := flag.Bool("import-state-v2", false, "deprecated - use `import-state`")
-	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
+	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources with import blocks. Requires Terraform >= 1.5.0")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 	skipTerraformInit := flag.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
-	withImportBlocks := flag.Bool("import", false, "add import blocks to the generated terraform configuration")
 
 	flag.Parse()
-
-	importStateFlag := (importState != nil && *importState == true) || (importStateV2 != nil && *importStateV2 == true)
 
 	return Flags{
 		FollowReferences:    *refArg,
@@ -242,11 +238,10 @@ func createFlags() (flags Flags, tailArgs []string) {
 		FlagHardLinks:       *linkArg,
 		FlagPreviewOnly:     *preview,
 		Flat:                *flat,
-		ImportStateV2:       importStateFlag,
+		ImportState:         *importState,
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
-		WithImportBlocks:    *withImportBlocks,
 	}, flag.Args()
 }
 
@@ -296,10 +291,9 @@ type Flags struct {
 	FlagHardLinks       bool
 	FlagPreviewOnly     bool
 	Flat                bool
-	ImportStateV2       bool
+	ImportState         bool
 	Exclude             bool
 	DataSources         bool
 	SkipTerraformInit   bool
 	Include             bool
-	WithImportBlocks    bool
 }

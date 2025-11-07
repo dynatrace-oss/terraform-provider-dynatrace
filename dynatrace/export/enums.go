@@ -1068,11 +1068,9 @@ var ModuleStati = struct {
 	Discovered ModuleStatus
 	Downloaded ModuleStatus
 	Erronous   ModuleStatus
-	Imported   ModuleStatus
 }{
 	"Untouched",
 	"Discovered",
 	"Downloaded",
 	"Erronous",
-	"Imported",
 }

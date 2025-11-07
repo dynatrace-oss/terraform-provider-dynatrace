@@ -38,19 +38,17 @@ type UniqueNamer interface {
 	Name(string) string
 	Replace(ReplaceFunc) UniqueNamer
 	BlockName(string)
-	SetNameWritten(string) bool
 }
 
 func NewUniqueNamer() UniqueNamer {
-	return &nameCounter{m: map[string]int{}, mFull: map[string]bool{}, mWritten: map[string]bool{}, mutex: new(sync.Mutex)}
+	return &nameCounter{m: map[string]int{}, mFull: map[string]bool{}, mutex: new(sync.Mutex)}
 }
 
 type nameCounter struct {
-	m        map[string]int
-	mFull    map[string]bool
-	mWritten map[string]bool
-	replace  ReplaceFunc
-	mutex    *sync.Mutex
+	m       map[string]int
+	mFull   map[string]bool
+	replace ReplaceFunc
+	mutex   *sync.Mutex
 }
 
 func (me *nameCounter) Replace(replace ReplaceFunc) UniqueNamer {
@@ -105,16 +103,5 @@ func (me *nameCounter) BlockName(name string) {
 	defer me.mutex.Unlock()
 
 	me.mFull[strings.ToLower(name)] = true
-
-}
-
-func (me *nameCounter) SetNameWritten(name string) bool {
-	me.mutex.Lock()
-	defer me.mutex.Unlock()
-
-	isWritten := me.mWritten[strings.ToLower(name)]
-	me.mWritten[strings.ToLower(name)] = true
-
-	return isWritten
 
 }

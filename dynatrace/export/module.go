@@ -35,7 +35,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
-	"github.com/spf13/afero"
 )
 
 type Module struct {
@@ -1449,69 +1448,6 @@ type instance struct {
 }
 type attrs struct {
 	Id string `json:"id"`
-}
-
-func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
-	if !me.Environment.Flags.ImportStateV2 {
-		return nil, nil
-	}
-	if me.StatusIsOneOf(ModuleStati.Imported, ModuleStati.Erronous, ModuleStati.Untouched) {
-		return nil, nil
-	}
-
-	resList = make(resources, 0, len(me.Resources))
-
-	for _, res := range me.Resources {
-		if !res.GetStatus().IsOneOf(ResourceStati.PostProcessed) {
-			continue
-		}
-
-		isWrittenAlready := me.namer.SetNameWritten(res.UniqueName)
-
-		if isWrittenAlready {
-			fmt.Println("ERROR: [ExecuteImportV2] Duplicate UniqueName for ", string(me.Type), res.UniqueName, res.ID)
-			continue
-
-		}
-
-		providerSource := os.Getenv("DYNATRACE_PROVIDER_SOURCE")
-		if len(providerSource) == 0 {
-			providerSource = `provider["registry.terraform.io/dynatrace-oss/dynatrace"]`
-		} else {
-			providerSource = fmt.Sprintf(`provider["%s"]`, providerSource)
-		}
-
-		moduleValue := fmt.Sprintf("module.%s", me.Type.Trim())
-		if me.GetDescriptor().Parent != nil {
-			moduleValue = fmt.Sprintf("module.%s", me.GetDescriptor().Parent.Trim())
-		}
-		if res.SplitId > 0 {
-			moduleValue = fmt.Sprintf("%s_%d", moduleValue, res.SplitId)
-		}
-
-		resList = append(resList, resource{
-			Module: moduleValue,
-			Mode:   "managed",
-			Type:   string(me.Type),
-			Name:   res.UniqueName,
-			// Provider: `provider["dynatrace.com/com/dynatrace"]`,
-			Provider: providerSource,
-			Instances: []instance{
-				{
-					Attributes: attrs{
-						Id: res.ID,
-					},
-					SchemaVersion:       0,
-					SensitiveAttributes: make([]any, 0),
-					Private:             "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
-				},
-			},
-		})
-	}
-
-	me.SetStatus(ModuleStati.Imported)
-
-	return resList, nil
 }
 
 func hide(v any) {}
