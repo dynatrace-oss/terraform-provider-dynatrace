@@ -49,6 +49,7 @@ import (
 var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
+var DYNATRACE_HTTP_OAUTH_PREFERENCE = os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE")
 
 // var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
 var JSON_DASHBOARD_BASE_PLUS = true
@@ -1161,6 +1162,11 @@ func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
 		// "TF_LOG_PROVIDER=INFO",
 		"DYNATRACE_ENV_URL=" + me.Credentials.URL,
 		"DYNATRACE_API_TOKEN=" + me.Credentials.Token,
+		"DYNATRACE_PLATFORM_TOKEN=" + me.Credentials.OAuth.PlatformToken,
+		"DT_CLIENT_ID=" + me.Credentials.OAuth.ClientID,
+		"DT_CLIENT_SECRET=" + me.Credentials.OAuth.ClientSecret,
+		"DT_TOKEN_URL=" + me.Credentials.OAuth.TokenURL,
+		"DYNATRACE_HTTP_OAUTH_PREFERENCE=" + DYNATRACE_HTTP_OAUTH_PREFERENCE,
 		"DT_CACHE_FOLDER=" + cacheFolder,
 		"CACHE_OFFLINE_MODE=true",
 		"DT_CACHE_DELETE_ON_LAUNCH=false",
