@@ -66,9 +66,6 @@ func (me *SnippetFormat) HandlePreconditions() error {
 	if (me.CodeSnippetType != nil) && (string(me.SnippetFormat) != "Code Snippet") {
 		return fmt.Errorf("'code_snippet_type' must not be specified if 'snippet_format' is set to '%v'", me.SnippetFormat)
 	}
-	if (me.ScriptExecutionAttribute == nil) && (slices.Contains([]string{"OneAgent JavaScript Tag", "OneAgent JavaScript Tag with SRI"}, string(me.SnippetFormat))) {
-		return fmt.Errorf("'script_execution_attribute' must be specified if 'snippet_format' is set to '%v'", me.SnippetFormat)
-	}
 	if (me.ScriptExecutionAttribute != nil) && (!slices.Contains([]string{"OneAgent JavaScript Tag", "OneAgent JavaScript Tag with SRI"}, string(me.SnippetFormat))) {
 		return fmt.Errorf("'script_execution_attribute' must not be specified if 'snippet_format' is set to '%v'", me.SnippetFormat)
 	}

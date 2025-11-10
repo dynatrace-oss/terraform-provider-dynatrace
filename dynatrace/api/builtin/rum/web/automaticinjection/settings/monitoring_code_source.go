@@ -52,8 +52,8 @@ func (me *MonitoringCodeSource) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MonitoringCodeSource) HandlePreconditions() error {
-	if (me.MonitoringCodePath == nil) && (string(me.CodeSource) == "OneAgent") {
-		return fmt.Errorf("'monitoring_code_path' must be specified if 'code_source' is set to '%v'", me.CodeSource)
+	if (me.MonitoringCodePath != nil) && (string(me.CodeSource) != "OneAgent") {
+		return fmt.Errorf("'monitoring_code_path' must not be specified if 'code_source' is set to '%v'", me.CodeSource)
 	}
 	return nil
 }
