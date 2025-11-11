@@ -43,7 +43,7 @@ type service struct {
 
 func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Client {
 	tokenClient, _ := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
-	oauthClient, _ := rest.CreateClassicOAuthBasedClient(ctx, me.credentials)
+	oauthClient := rest.CreateClassicOAuthBasedClient(ctx, me.credentials)
 	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
 }
 

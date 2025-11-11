@@ -109,11 +109,15 @@ var classicClientCache = map[string]*rest.Client{}
 
 var classicClientCacheMutex sync.Mutex
 
-func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials) (*rest.Client, error) {
+func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials) *rest.Client {
 	var parsedURL *url.URL
 	parsedURL, err := url.Parse(credentials.URL)
 	if err != nil {
-		return nil, err
+		return nil
+	}
+
+	if credentials.OAuth.ClientID == "" || credentials.OAuth.ClientSecret == "" {
+		return nil
 	}
 
 	logging.InstallRoundTripper()
@@ -131,8 +135,7 @@ func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials
 	)
 
 	oauthClient.SetHeader("User-Agent", version.UserAgent())
-	oauthClient.SetHeader("Authorization", "Api-Token "+credentials.Token)
-	return oauthClient, nil
+	return oauthClient
 }
 
 func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
