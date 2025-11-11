@@ -139,6 +139,11 @@ func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials
 }
 
 func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
+	if classicURL == "" {
+		// sanity check - this should not be empty anymore at this point
+		return nil, NoClassicURLDefinedErr
+	}
+
 	classicClientCacheMutex.Lock()
 	defer classicClientCacheMutex.Unlock()
 
@@ -153,10 +158,13 @@ func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, erro
 	factory = factory.WithHTTPListener(logging.HTTPListener("classic "))
 
 	client, err := factory.CreateClassicClient()
+	if err != nil {
+		return nil, err
+	}
 
 	classicClientCache[classicURL] = client
 
-	return client, err
+	return client, nil
 }
 
 func (me *classic_request) Finish(optionalTarget ...any) error {
@@ -168,10 +176,6 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	PreRequest()
 
 	classicURL := request(*me).evalClassicURL()
-	if len(classicURL) == 0 {
-		// sanity check - this should not be empty anymore at this point
-		return NoClassicURLDefinedErr
-	}
 
 	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
