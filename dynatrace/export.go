@@ -25,6 +25,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"golang.org/x/exp/slices"
 )
 
 func Export(args []string, cfgGetter config.Getter) bool {
@@ -36,36 +37,33 @@ func Export(args []string, cfgGetter config.Getter) bool {
 		return false
 	}
 
-	if len(args) > 2 {
-		if strings.TrimSpace(args[2]) == "-list-exclusions" {
-			if len(args) > 3 {
-				fmt.Println("-list-exclusions cannot be combined with other flags\nUsage: terraform-provider-dynatrace -export -list-exclusions")
-				return true
-			}
-
-			for _, group := range export.GetExcludeListedResourceGroups() {
-				fmt.Println(group.Reason)
-				// Calculate the maximum length of the name field
-				maxNameLength := 0
-				for _, exclusion := range group.Exclusions {
-					if len(exclusion.ResourceType) > maxNameLength {
-						maxNameLength = len(exclusion.ResourceType)
-					}
-				}
-
-				for _, exclusion := range group.Exclusions {
-					if len(exclusion.Reason) == 0 {
-						fmt.Printf("  %s\n", exclusion.ResourceType)
-					} else {
-						fmt.Printf("  %-*s  ... %s\n", maxNameLength, exclusion.ResourceType, exclusion.Reason)
-					}
-				}
-				fmt.Println()
-			}
+	if slices.ContainsFunc(args, func(arg string) bool { return strings.TrimSpace(arg) == "-list-exclusions" }) {
+		if len(args) > 3 {
+			fmt.Println("-list-exclusions cannot be combined with other flags\nUsage: terraform-provider-dynatrace -export -list-exclusions")
 			return true
 		}
-	}
 
+		for _, group := range export.GetExcludeListedResourceGroups() {
+			fmt.Println(group.Reason)
+			// Calculate the maximum length of the name field
+			maxNameLength := 0
+			for _, exclusion := range group.Exclusions {
+				if len(exclusion.ResourceType) > maxNameLength {
+					maxNameLength = len(exclusion.ResourceType)
+				}
+			}
+
+			for _, exclusion := range group.Exclusions {
+				if len(exclusion.Reason) == 0 {
+					fmt.Printf("  %s\n", exclusion.ResourceType)
+				} else {
+					fmt.Printf("  %-*s  ... %s\n", maxNameLength, exclusion.ResourceType, exclusion.Reason)
+				}
+			}
+			fmt.Println()
+		}
+		return true
+	}
 	// defer export.CleanUp.Finish()
 	if err := runExport(cfgGetter); err != nil {
 		fmt.Println(err.Error())
