@@ -38,6 +38,11 @@ func Export(args []string, cfgGetter config.Getter) bool {
 
 	if len(args) > 2 {
 		if strings.TrimSpace(args[2]) == "-list-exclusions" {
+			if len(args) > 3 {
+				fmt.Println("-list-exclusions cannot be combined with other flags\nUsage: terraform-provider-dynatrace -export -list-exclusions")
+				return true
+			}
+
 			for _, group := range export.GetExcludeListedResourceGroups() {
 				fmt.Println(group.Reason)
 				// Calculate the maximum length of the name field
