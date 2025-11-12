@@ -72,5 +72,10 @@ Optional:
 
 Required:
 
-- `on_crash` (Boolean) Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+- `on_crash` (Boolean) Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+
+Optional:
+
+- `cost_and_traffic_control` (Number) Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
+- `full_session_replay` (Boolean) Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
  

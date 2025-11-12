@@ -54,7 +54,7 @@ resource "dynatrace_process_availability" "#name#" {
 ### Optional
 
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
-- `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--metadata))
+- `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+). (see [below for nested schema](#nestedblock--metadata))
 - `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
 - `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied.
 - `rules` (Block List, Max: 1) Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--rules))

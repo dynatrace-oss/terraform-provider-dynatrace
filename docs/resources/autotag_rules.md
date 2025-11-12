@@ -83,7 +83,7 @@ Required:
 Optional:
 
 - `attribute_rule` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--rules--rule--attribute_rule))
-- `entity_selector` (String) The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
+- `entity_selector` (String) Learn more about the [Entity selector](https://dt-url.net/apientityselector).
 - `value_format` (String) Optional tag value
 
 <a id="nestedblock--rules--rule--attribute_rule"></a>

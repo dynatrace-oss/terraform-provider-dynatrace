@@ -44,12 +44,13 @@ resource "dynatrace_davis_copilot" "#name#" {
 
 ### Required
 
-- `enable_copilot` (Boolean) Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn "Davis CoPilot permissions") to the relevant user groups.
+- `enable_copilot` (Boolean) Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn "Dynatrace Generative AI permissions") to the relevant user groups.
 
 ### Optional
 
-- `blocklist_entries` (Block List, Max: 1) You can exclude specific data buckets and tables from the Davis CoPilot semantic index. Learn more about [configuring data access](https://dt-url.net/lc62i1q "Davis CoPilot data access"). (see [below for nested schema](#nestedblock--blocklist_entries))
-- `enable_tenant_aware_data_mining` (Boolean) You can enrich Davis CoPilot with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Davis CoPilot periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 "Davis CoPilot environment aware queries").
+- `blocklist_entries` (Block List, Max: 1) You can exclude specific data buckets and tables from the semantic index. Learn more about [configuring data access](https://dt-url.net/lc62i1q "Dynatrace Generative AI data access"). (see [below for nested schema](#nestedblock--blocklist_entries))
+- `enable_document_suggestion` (Boolean) By enabling document suggestions, Dynatrace AI can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo "Dynatrace AI document suggestions").
+- `enable_tenant_aware_data_mining` (Boolean) You can enrich Dynatrace Generative AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace AI periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 "Dynatrace Generative AI environment aware queries").
 
 ### Read-Only
 

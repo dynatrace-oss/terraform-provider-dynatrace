@@ -52,7 +52,7 @@ resource "dynatrace_alerting" "Default" {
 
 ### Optional
 
-- `api_key` (String, Sensitive) The API key for the target VictorOps account
+- `api_key` (String, Sensitive) The API key for the target Splunk On-Call account
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only
