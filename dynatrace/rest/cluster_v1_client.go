@@ -27,9 +27,10 @@ import (
 
 	restlogging "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
+	"github.com/google/uuid"
+
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
-	"github.com/google/uuid"
 )
 
 func ClusterV1Client(credentials *Credentials) Client {
@@ -93,13 +94,13 @@ func clusterV1Client(baseURL string, apiToken string) (*rest.Client, error) {
 		return client, nil
 	}
 
-	factory := clients.Factory()
-	factory = factory.WithUserAgent(version.UserAgent())
-	factory = factory.WithClassicURL(baseURL)
-	factory = factory.WithAccessToken(apiToken)
-	factory = factory.WithHTTPListener(restlogging.HTTPListener("clustv1 "))
-
-	client, err := factory.CreateClassicClient()
+	client, err := clients.Factory().
+		WithUserAgent(version.UserAgent()).
+		WithClassicURL(baseURL).
+		WithAccessToken(apiToken).
+		WithRetryOptions(defaultRetryOptions).
+		WithHTTPListener(restlogging.HTTPListener("clustv1 ")).
+		CreateClassicClient()
 
 	if client != nil && err == nil {
 		clusterV1ClientCache[baseURL] = client
