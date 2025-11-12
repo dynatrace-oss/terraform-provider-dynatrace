@@ -1148,7 +1148,6 @@ func genApplyCmd() *exec.Cmd {
 }
 
 func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
-
 	var outb, errb bytes.Buffer
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb
@@ -1157,16 +1156,16 @@ func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
 	if cacheFolder, err = filepath.Abs(cache.GetCacheFolder()); err != nil {
 		return err
 	}
-	cmd.Env = []string{
-		// "TF_LOG_PROVIDER=INFO",
-		"DYNATRACE_ENV_URL=" + me.Credentials.URL,
-		"DYNATRACE_API_TOKEN=" + me.Credentials.Token,
-		"DT_CACHE_FOLDER=" + cacheFolder,
+
+	// pass all existing environment variables but set or overwrite some specifc ones when executing terraform commands
+	cmd.Env = append(os.Environ(),
+		"DT_CACHE_FOLDER="+cacheFolder,
 		"CACHE_OFFLINE_MODE=true",
 		"DT_CACHE_DELETE_ON_LAUNCH=false",
 		"DT_NO_CACHE_CLEANUP=true",
 		"DT_TERRAFORM_IMPORT=true",
-	}
+	)
+
 	cmd.Start()
 	if err := cmd.Wait(); err != nil {
 		fmt.Println("out:", outb.String())
