@@ -58,6 +58,7 @@ resource "dynatrace_log_timestamp" "#name#" {
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `matchers` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--matchers))
 - `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `skip_indented_lines` (Boolean) Don't parse timestamps in lines starting with white character
 
 ### Read-Only
 

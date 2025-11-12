@@ -72,7 +72,7 @@ resource "dynatrace_disk_edge_anomaly_detectors" "#name#" {
 
 - `alerts` (Block List, Max: 1) Alerts (see [below for nested schema](#nestedblock--alerts))
 - `disk_name_filters` (Set of String) Disk will be included in this policy if **any** of the filters match
-- `event_properties` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_properties))
+- `event_properties` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+) (see [below for nested schema](#nestedblock--event_properties))
 - `host_metadata_conditions` (Block List, Max: 1) The policy will be enabled if **all** conditions are met (see [below for nested schema](#nestedblock--host_metadata_conditions))
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `operating_system` (Set of String) Select the operating systems on which policy should be applied

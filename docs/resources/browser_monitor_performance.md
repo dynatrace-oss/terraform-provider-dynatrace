@@ -69,4 +69,10 @@ Required:
 
 - `event` (String) Synthetic event
 - `threshold` (Number) Threshold (in seconds)
+
+Optional:
+
+- `dealerting_samples` (Number) Number of most recent non-violating executions that closes the problem
+- `samples` (Number) Number of executions in analyzed sliding window (sliding window size)
+- `violating_samples` (Number) Number of violating executions in analyzed sliding window
  

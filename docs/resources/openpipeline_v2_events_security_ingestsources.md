@@ -44,6 +44,7 @@ resource "dynatrace_openpipeline_v2_events_security_ingestsources" "maximal-sour
   enabled = true
   display_name = "max-ingestsource"
   path_segment = "processor.ingestsource.path.max.tf.#name#"
+  source_type = "http"
   static_routing {
     pipeline_type = "builtin"
     builtin_pipeline_id = "default"
@@ -124,12 +125,14 @@ resource "dynatrace_openpipeline_v2_events_security_ingestsources" "maximal-sour
 
 - `display_name` (String) Endpoint display name
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `path_segment` (String) Endpoint segment
-- `processing` (Block List, Min: 1, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
 
 ### Optional
 
 - `default_bucket` (String) Default Bucket
+- `path_segment` (String) Endpoint segment
+- `processing` (Block List, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
+- `source` (String) Source
+- `source_type` (String) Source Type. Possible Values: `extension`, `http`
 - `static_routing` (Block List, Max: 1) Static routing of endpoint (see [below for nested schema](#nestedblock--static_routing))
 
 ### Read-Only
@@ -158,7 +161,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareValueMetric`, `securityContext`, `securityEvent`, `technology`, `valueMetric`.
+- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -177,9 +180,13 @@ Optional:
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
 - `sampling_aware_counter_metric` (Block List, Max: 1) Sampling-aware counter metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_counter_metric))
+- `sampling_aware_histogram_metric` (Block List, Max: 1) Sampling aware histogram metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_histogram_metric))
 - `sampling_aware_value_metric` (Block List, Max: 1) Sampling aware value metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_value_metric))
+- `sdlc_event` (Block List, Max: 1) SdlcEvent extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event))
 - `security_context` (Block List, Max: 1) Security context processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--security_context))
 - `security_event` (Block List, Max: 1) Security event extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--security_event))
+- `smartscape_edge` (Block List, Max: 1) Smartscape edge extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_edge))
+- `smartscape_node` (Block List, Max: 1) Smartscape node extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node))
 - `technology` (Block List, Max: 1) Technology processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--technology))
 - `value_metric` (Block List, Max: 1) Value metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--value_metric))
 
@@ -196,7 +203,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`.
+- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -243,7 +250,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -269,7 +276,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`.
+- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -303,7 +310,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -345,7 +352,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -501,6 +508,7 @@ Required:
 
 Optional:
 
+- `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--histogram_metric--dimensions))
 
 <a id="nestedblock--processing--processors--processor--histogram_metric--dimensions"></a>
@@ -537,7 +545,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -568,9 +576,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`.
+- `aggregation` (String) Possible Values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`.
+- `sampling` (String) Possible Values: `disabled`, `enabled`
 
 <a id="nestedblock--processing--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -594,21 +602,59 @@ Optional:
 
 
 
+<a id="nestedblock--processing--processors--processor--sampling_aware_histogram_metric"></a>
+### Nested Schema for `processing.processors.processor.sampling_aware_histogram_metric`
+
+Required:
+
+- `measurement` (String) Possible Values: `duration`, `field`
+- `metric_key` (String) Metric key
+
+Optional:
+
+- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `default_value` (String) Default value with metric value
+- `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions))
+- `field` (String) Field with metric value
+- `sampling` (String) Possible Values: `disabled`, `enabled`
+
+<a id="nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
+### Nested Schema for `processing.processors.processor.sampling_aware_histogram_metric.dimensions`
+
+Required:
+
+- `dimension` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions--dimension))
+
+<a id="nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
+### Nested Schema for `processing.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+- `destination_field_name` (String) Destination field name
+
+
+
+
 <a id="nestedblock--processing--processors--processor--sampling_aware_value_metric"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_value_metric`
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`.
+- `measurement` (String) Possible Values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`.
+- `aggregation` (String) Possible Values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`.
+- `sampling` (String) Possible Values: `disabled`, `enabled`
 
 <a id="nestedblock--processing--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_value_metric.dimensions`
@@ -632,6 +678,159 @@ Optional:
 
 
 
+<a id="nestedblock--processing--processors--processor--sdlc_event"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event`
+
+Required:
+
+- `event_category` (Block List, Min: 1, Max: 1) Event category (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_category))
+- `event_provider` (Block List, Min: 1, Max: 1) Event provider (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_provider))
+- `event_status` (Block List, Min: 1, Max: 1) Event status (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_status))
+- `field_extraction` (Block List, Min: 1, Max: 1) Field extraction (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--field_extraction))
+
+Optional:
+
+- `event_type` (Block List, Max: 1) Event type (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type))
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_category"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_category`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_category--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_category--field"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_category.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_provider"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_provider`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_provider--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_provider--field"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_provider.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_status"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_status`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_status--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_status--field"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_status.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--field_extraction"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.field_extraction`
+
+Required:
+
+- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+
+Optional:
+
+- `exclude` (Set of String) Fields
+- `include` (Block List, Max: 1) Fields (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--field_extraction--include))
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--field_extraction--include"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.field_extraction.include`
+
+Required:
+
+- `dimension` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--field_extraction--include--dimension))
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.field_extraction.include.dimension`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+- `destination_field_name` (String) Destination field name
+
+
+
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_type"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_type`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_type--field"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_type.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+
 <a id="nestedblock--processing--processors--processor--security_context"></a>
 ### Nested Schema for `processing.processors.processor.security_context`
 
@@ -644,7 +843,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`.
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -678,7 +877,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`.
+- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -704,6 +903,113 @@ Optional:
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
 
+
+
+
+
+<a id="nestedblock--processing--processors--processor--smartscape_edge"></a>
+### Nested Schema for `processing.processors.processor.smartscape_edge`
+
+Required:
+
+- `edge_type` (String) Edge type
+- `source_id_field_name` (String) Source ID field name
+- `source_type` (String) Source type
+- `target_id_field_name` (String) Target ID field name
+- `target_type` (String) Target type
+
+
+<a id="nestedblock--processing--processors--processor--smartscape_node"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node`
+
+Required:
+
+- `extract_node` (Boolean) Extract node
+- `id_components` (Block List, Min: 1, Max: 1) ID components (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--id_components))
+- `node_id_field_name` (String) Node ID field name
+- `node_type` (String) Node type
+
+Optional:
+
+- `fields_to_extract` (Block List, Max: 1) Fields to extract (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--fields_to_extract))
+- `node_name` (Block List, Max: 1) Node name (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--node_name))
+- `static_edges_to_extract` (Block List, Max: 1) Static edges to extract (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--static_edges_to_extract))
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--id_components"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.id_components`
+
+Required:
+
+- `id_component` (Block List, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--id_components--id_component))
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--id_components--id_component"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.id_components.id_component`
+
+Required:
+
+- `id_component` (String) ID component
+- `referenced_field_name` (String) Referenced field name
+
+
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--fields_to_extract"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.fields_to_extract`
+
+Required:
+
+- `smartscape_field_extraction_entry` (Block List, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--fields_to_extract--smartscape_field_extraction_entry))
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--fields_to_extract--smartscape_field_extraction_entry"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.fields_to_extract.smartscape_field_extraction_entry`
+
+Required:
+
+- `field_name` (String) Field name
+- `referenced_field_name` (String) Referenced field name
+
+
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--node_name"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.node_name`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--node_name--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--node_name--field"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.node_name.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--static_edges_to_extract"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.static_edges_to_extract`
+
+Required:
+
+- `smartscape_static_edge_extraction_entry` (Block List, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node--static_edges_to_extract--smartscape_static_edge_extraction_entry))
+
+<a id="nestedblock--processing--processors--processor--smartscape_node--static_edges_to_extract--smartscape_static_edge_extraction_entry"></a>
+### Nested Schema for `processing.processors.processor.smartscape_node.static_edges_to_extract.smartscape_static_edge_extraction_entry`
+
+Required:
+
+- `edge_type` (String) Edge type
+- `target_id_field_name` (String) Target ID field name
+- `target_type` (String) Target type
 
 
 
@@ -763,7 +1069,7 @@ Optional:
 
 Required:
 
-- `pipeline_type` (String) Pipeline Type. Possible Values: `builtin`, `custom`.
+- `pipeline_type` (String) Pipeline Type. Possible Values: `builtin`, `custom`
 
 Optional:
 
