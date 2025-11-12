@@ -132,6 +132,7 @@ func CreateClassicOAuthBasedClient(ctx context.Context, credentials *Credentials
 				TokenURL:     credentials.OAuth.TokenURL,
 				AuthStyle:    oauth2.AuthStyleInParams}),
 		crest.WithHTTPListener(logging.HTTPListener("platform")),
+		crest.WithRetryOptions(defaultRetryOptions),
 	)
 
 	oauthClient.SetHeader("User-Agent", version.UserAgent())
@@ -151,13 +152,14 @@ func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, erro
 		return client, nil
 	}
 
-	factory := clients.Factory()
-	factory = factory.WithUserAgent(version.UserAgent())
-	factory = factory.WithClassicURL(classicURL)
-	factory = factory.WithAccessToken(apiToken)
-	factory = factory.WithHTTPListener(logging.HTTPListener("classic"))
+	client, err := clients.Factory().
+		WithUserAgent(version.UserAgent()).
+		WithClassicURL(classicURL).
+		WithAccessToken(apiToken).
+		WithHTTPListener(logging.HTTPListener("classic")).
+		WithRetryOptions(defaultRetryOptions).
+		CreateClassicClient()
 
-	client, err := factory.CreateClassicClient()
 	if err != nil {
 		return nil, err
 	}

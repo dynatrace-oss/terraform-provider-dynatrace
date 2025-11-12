@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -65,7 +64,7 @@ func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Crede
 	opts := []rest.Option{
 		rest.WithHTTPListener(logging.HTTPListener("platform")),
 		rest.WithRateLimiter(),
-		rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}),
+		rest.WithRetryOptions(defaultRetryOptions),
 	}
 
 	return configureCommonRestClient(rest.NewClient(parsedURL, httpClient, opts...))
@@ -80,7 +79,7 @@ func CreatePlatformTokenClient(u string, credentials *Credentials) (*rest.Client
 	opts := []rest.Option{
 		rest.WithHTTPListener(logging.HTTPListener("plat/tok")),
 		rest.WithRateLimiter(),
-		rest.WithRetryOptions(&rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequests}),
+		rest.WithRetryOptions(defaultRetryOptions),
 	}
 
 	return configureCommonRestClient(rest.NewClient(parsedURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken), opts...))
