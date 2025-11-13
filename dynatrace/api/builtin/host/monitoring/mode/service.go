@@ -44,7 +44,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings]
 	return &service{
 		service:     settings20.Service[*mode.Settings](credentials, SchemaID, SchemaVersion),
 		credentials: credentials,
-		client:      rest.HybridClient(credentials),
+		client:      rest.APITokenClient(credentials),
 	}
 }
 

@@ -30,7 +30,7 @@ import (
 const SchemaID = "v1:synthetic:monitors:browser"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*browser.SyntheticMonitor] {
-	return settings.NewHybridService(credentials, SchemaID, &settings.ServiceOptions[*browser.SyntheticMonitor]{
+	return settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*browser.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=BROWSER"),
 		CreateURL:      func(v *browser.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },

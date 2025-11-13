@@ -35,7 +35,7 @@ import (
 const SchemaID = "v2:environment:entity"
 
 func Service(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &service{client: rest.HybridClient(credentials)}
+	return &service{client: rest.APITokenClient(credentials)}
 }
 
 type service struct {
@@ -55,7 +55,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func DataSourceService(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &dataSourceService{client: rest.HybridClient(credentials)}
+	return &dataSourceService{client: rest.APITokenClient(credentials)}
 }
 
 type dataSourceService struct {
