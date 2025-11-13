@@ -468,15 +468,7 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			return diag.FromErr(err)
 		}
 	}
-	if err != nil {
-		if restError, ok := err.(rest.Error); ok {
-			if restError.Code == 404 {
-				d.SetId("")
-				return diag.Diagnostics{}
-			}
-		}
-		return diag.FromErr(err)
-	}
+
 	return me.ReadForSettings(ctx, d, m, sttngs)
 }
 
