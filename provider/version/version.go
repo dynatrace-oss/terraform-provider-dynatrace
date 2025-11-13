@@ -24,7 +24,8 @@ import "fmt"
 var (
 	// Version is a string representing the current version of the Dynatrace Terraform provider.
 	// This should be in `major.minor.patch` format, with prereleases having an optional suffix introduced by a dash, for example, `1.2.0-beta`.
-	Version = "(unknown-version)"
+	// The value ~>1.0 should allow the latest 1.x version during development.
+	Version = "~>1.0"
 
 	// OperatingSystem is a string representing the operating system the provider was built for.
 	OperatingSystem = "(unknown-os)"
