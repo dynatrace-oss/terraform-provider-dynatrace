@@ -458,15 +458,10 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, tfConfig)
 			}
 			err = service.Get(ctx, d.Id(), sttngs)
-		} else {
-			if restError, ok := err.(rest.Error); ok {
-				if restError.Code == 404 {
-					d.SetId("")
-					return diag.Diagnostics{}
-				}
-			}
-			return diag.FromErr(err)
 		}
+
+		d.SetId("")
+		return diag.FromErr(api.NewAPIError("GET", err))
 	}
 
 	return me.ReadForSettings(ctx, d, m, sttngs)
