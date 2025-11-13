@@ -19,22 +19,8 @@ import (
 )
 
 var eligiblePlatformRequests = map[string]string{
-	"/api/v2/settings/objects":   "/platform/classic/environment-api/v2/settings/objects",
-	"/api/v2/settings/schemas":   "/platform/classic/environment-api/v2/settings/schemas",
-	"/api/v2/networkZones":       "/platform/classic/environment-api/v2/networkZones",
-	"/api/v2/entities":           "/platform/classic/environment-api/v2/entities",
-	"/api/v2/entityTypes":        "/platform/classic/environment-api/v2/entityTypes",
-	"/api/v2/tags":               "/platform/classic/environment-api/v2/tags",
-	"/api/v2/slo":                "/platform/classic/environment-api/v2/slo",
-	"/api/v2/extensions":         "/platform/classic/environment-api/v2/extensions",
-	"/api/v2/apiTokens":          "/platform/classic/environment-api/v2/apiTokens",
-	"/api/v2/credentials":        "/platform/classic/environment-api/v2/credentials",
-	"/api/v2/synthetic/monitors": "/platform/classic/environment-api/v2/synthetic/monitors",
-	"/api/v2/activeGateTokens":   "/platform/classic/environment-api/v2/activeGateTokens",
-
-	"/api/v1/synthetic/monitors": "/platform/classic/environment-api/v1/synthetic/monitors",
-	"/api/v1/deployment":         "/platform/classic/environment-api/v1/deployment",
-	"/api/v1/synthetic/nodes":    "/platform/classic/environment-api/v1/synthetic/nodes",
+	"/api/v2/settings/objects": "/platform/classic/environment-api/v2/settings/objects",
+	"/api/v2/settings/schemas": "/platform/classic/environment-api/v2/settings/schemas",
 }
 
 type platform_request request

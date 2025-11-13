@@ -36,7 +36,7 @@ var mu sync.Mutex
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credentials] {
 	return &service{
-		service: settings.NewHybridService(
+		service: settings.NewAPITokenService(
 			credentials,
 			SchemaID,
 			settings.DefaultServiceOptions[*vault.Credentials](BasePath).

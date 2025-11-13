@@ -175,7 +175,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 
 	slo := new(sloGet)
 
-	client := rest.HybridClient(me.credentials)
+	client := rest.APITokenClient(me.credentials)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
 	if err := req.Finish(slo); err != nil {
 		return err
