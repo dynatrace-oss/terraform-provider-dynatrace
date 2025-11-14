@@ -9,8 +9,8 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache/tar"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 )
 
 func hide(v any) {}
@@ -44,7 +44,6 @@ func TestTarFolder(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	assert := assert.New(t)
 	for k, v := range testdata {
 		if t.Failed() {
 			break
@@ -54,9 +53,9 @@ func TestTarFolder(t *testing.T) {
 			t.Error(err)
 			return
 		}
-		assert.Equals(k, stub.ID)
-		assert.Equals(k, stub.Name)
-		assert.Equals(v, string(data))
+		assert.Equal(t, k, stub.ID)
+		assert.Equal(t, k, stub.Name)
+		assert.Equal(t, v, string(data))
 	}
 	if err := folder.Delete("eins"); err != nil {
 		t.Error(err)
