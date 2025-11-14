@@ -1639,7 +1639,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.MSTeamsConnection),
 		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
 		Dependencies.ID(ResourceTypes.AWSConnection),
-		Dependencies.ID(ResourceTypes.HyperscalerauthenticationConnectionsAzure),
+		Dependencies.ID(ResourceTypes.AzureConnection),
 
 		// OpenPipeline resources
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsIngestsources),
@@ -1802,8 +1802,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusersessionsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
-	ResourceTypes.AutomationApproval:                        NewResourceDescriptor(approval.Service),
-	ResourceTypes.HyperscalerauthenticationConnectionsAzure: NewResourceDescriptor(hyperscalerauthenticationconnectionsazure.Service),
+	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
+	ResourceTypes.AzureConnection:    NewResourceDescriptor(hyperscalerauthenticationconnectionsazure.Service),
 }
 
 type ResourceExclusion struct {
