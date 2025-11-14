@@ -428,6 +428,8 @@ import (
 	openpipelineusersessionsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/ingestsources"
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
+
+	hyperscalerauthenticationconnectionsazure "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
@@ -1637,6 +1639,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.MSTeamsConnection),
 		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
 		Dependencies.ID(ResourceTypes.AWSConnection),
+		Dependencies.ID(ResourceTypes.HyperscalerauthenticationConnectionsAzure),
 
 		// OpenPipeline resources
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsIngestsources),
@@ -1799,7 +1802,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusersessionsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
-	ResourceTypes.AutomationApproval: NewResourceDescriptor(approval.Service),
+	ResourceTypes.AutomationApproval:                        NewResourceDescriptor(approval.Service),
+	ResourceTypes.HyperscalerauthenticationConnectionsAzure: NewResourceDescriptor(hyperscalerauthenticationconnectionsazure.Service),
 }
 
 type ResourceExclusion struct {
