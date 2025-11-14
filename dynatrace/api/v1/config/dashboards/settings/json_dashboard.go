@@ -21,10 +21,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 	"sort"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/assert"
 	"golang.org/x/exp/slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -323,7 +323,7 @@ func (me *JSONDashboard) Equals(other any) (string, bool) {
 		json.Unmarshal([]byte(me.Contents), &ma)
 		mb := map[string]any{}
 		json.Unmarshal([]byte(o.Contents), &mb)
-		return assert.Equals(ma, mb)
+		return "", reflect.DeepEqual(ma, mb)
 	}
 	return "expected: JSONDashboard", false
 }
