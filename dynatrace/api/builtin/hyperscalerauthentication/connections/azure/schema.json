@@ -1,0 +1,341 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "hyperscaler-authentication.hyperscaler-authentication:8080/internal/settings-validation/v0.1/validate-container/azureConfiguration",
+			"skipAsyncValidation": true,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Connections to Azure for Dynatrace integrations",
+	"displayName": "Connections to Azure environments",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"ConsumersOfClientSecret": {
+			"description": "Dynatrace integrations that can use this connection",
+			"displayName": "Consumers",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "(Deprecated) Data Acquisition",
+					"value": "DA"
+				},
+				{
+					"displayName": "Data Acquisition",
+					"value": "SVC:com.dynatrace.da"
+				},
+				{
+					"displayName": "None",
+					"value": "NONE"
+				}
+			],
+			"type": "enum"
+		},
+		"ConsumersOfFederatedIdentityCredential": {
+			"description": "Dynatrace integrations that can use this connection",
+			"displayName": "Consumers",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "(Deprecated) Data Acquisition",
+					"value": "DA"
+				},
+				{
+					"displayName": "Data Acquisition",
+					"value": "SVC:com.dynatrace.da"
+				},
+				{
+					"displayName": "Microsoft Azure Connector",
+					"value": "APP:dynatrace.microsoft.azure.connector"
+				},
+				{
+					"displayName": "OpenPipeline",
+					"value": "SVC:com.dynatrace.openpipeline"
+				},
+				{
+					"displayName": "None",
+					"value": "NONE"
+				}
+			],
+			"type": "enum"
+		},
+		"Type": {
+			"description": "",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Client Secret",
+					"value": "clientSecret"
+				},
+				{
+					"displayName": "Federated Identity Credential (OpenID Connect)",
+					"value": "federatedIdentityCredential"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "EARLY_ADOPTER",
+	"maxObjects": 100,
+	"metadata": {
+		"$ref": "#/types/Metadata"
+	},
+	"multiObject": true,
+	"ordered": false,
+	"ownerBasedAccessControl": true,
+	"properties": {
+		"clientSecret": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "clientSecret",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/ClientSecretConfig"
+			}
+		},
+		"federatedIdentityCredential": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "federatedIdentityCredential",
+				"property": "type",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/FederatedIdentityCredential"
+			}
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customMessage": "The symbol : is not allowed the name",
+					"pattern": "^[^:]+$",
+					"type": "PATTERN"
+				}
+			],
+			"default": "",
+			"description": "The name of the connection",
+			"displayName": "Name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": "text"
+		},
+		"type": {
+			"default": "federatedIdentityCredential",
+			"description": "Azure Authentication mechanism to be used by the connection",
+			"displayName": "Connection Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customMessage": "There is another connection defined under this name.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
+	"schemaId": "builtin:hyperscaler-authentication.connections.azure",
+	"types": {
+		"ClientSecretConfig": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"applicationId": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid Application (client) ID",
+							"pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "Application (client) ID of your app registered in Microsoft Azure App registrations",
+					"displayName": "Application (client) ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"clientSecret": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "Client secret of your app registered in Microsoft Azure App registrations",
+					"displayName": "Client secret",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "secret"
+				},
+				"consumers": {
+					"default": [
+						"SVC:com.dynatrace.da"
+					],
+					"description": "Dynatrace integrations that can use this connection",
+					"displayName": "Consumers",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/ConsumersOfClientSecret"
+						}
+					},
+					"maxObjects": 1,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"directoryId": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid Directory (tenant) ID",
+							"pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "Directory (tenant) ID of Microsoft Entra ID",
+					"displayName": "Directory (tenant) ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"searchPattern": "",
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FederatedIdentityCredential": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"applicationId": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid Application (client) ID",
+							"pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$",
+							"type": "PATTERN"
+						}
+					],
+					"description": "Application (client) ID of your app registered in Microsoft Azure App registrations",
+					"displayName": "Application (client) ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"consumers": {
+					"default": [
+						"SVC:com.dynatrace.da"
+					],
+					"description": "Consumers that can use the connection",
+					"displayName": "Consumers",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/ConsumersOfFederatedIdentityCredential"
+						}
+					},
+					"maxObjects": 1,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"directoryId": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Not a valid Directory (tenant) ID",
+							"pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$",
+							"type": "PATTERN"
+						}
+					],
+					"description": "Directory (tenant) ID of Microsoft Entra ID",
+					"displayName": "Directory (tenant) ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"searchPattern": "",
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "0.0.10"
+}
