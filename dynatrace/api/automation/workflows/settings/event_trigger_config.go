@@ -19,7 +19,7 @@ package workflows
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -122,7 +122,7 @@ func (me *EventTriggerConfig) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if len(m.Type) == 0 {
-		return fmt.Errorf(string(data) + " doesn't contain a property `type`")
+		return errors.New(string(data) + " doesn't contain a property `type`")
 	}
 
 	switch m.Type {

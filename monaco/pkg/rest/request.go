@@ -19,13 +19,12 @@ package rest
 import (
 	"bytes"
 	"context"
-	"math/rand"
-	"os"
-
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -158,7 +157,7 @@ func executeRequest(ctx context.Context, client *http.Client, request *http.Requ
 	response, err := executeWithRateLimiter(func() (Response, error) {
 		resp, err := client.Do(request)
 		if err != nil {
-			log.Printf("[DEBUG] HTTP Request failed with Error: " + err.Error())
+			log.Print("[DEBUG] HTTP Request failed with Error: " + err.Error())
 			return Response{}, err
 		}
 		defer func() {
