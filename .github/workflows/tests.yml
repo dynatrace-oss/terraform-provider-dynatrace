@@ -22,8 +22,33 @@ jobs:
         run: go test -tags=unit -v ./...
 
   integration-tests:
-    name: Integration Tests
+    name: Integration Tests - ${{ matrix.config.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # several tests are split into chunks with about 20 tests
+        # A dynamic matrix can't be used because there is a limit of 256 entries
+        config:
+          - { name: "app", path: "./dynatrace/api/app/..." }
+          - { name: "automation", path: "./dynatrace/api/automation/..." }
+          - { name: "cluster", path: "./dynatrace/api/cluster/..." }
+          - { name: "documents", path: "./dynatrace/api/documents/..." }
+          - { name: "grail", path: "./dynatrace/api/grail/..." }
+          - { name: "iam", path: "./dynatrace/api/iam/..." }
+          - { name: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
+          - { name: "platform", path: "./dynatrace/api/platform/..." }
+          - { name: "service", path: "./dynatrace/api/service/..." }
+          - { name: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "v1 (a-d)", path: "$(go list ./dynatrace/api/v1/... | grep -E '^.+/dynatrace/api/v1/[a-d][^/]*/?')" }
+          - { name: "v1 (e-z)", path: "$(go list ./dynatrace/api/v1/... | grep -E '^.+/dynatrace/api/v1/[e-z][^/]*/?')" }
+          - { name: "v2", path: "./dynatrace/api/v2/..." }
+          - { name: "builtin (a-b)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[a-b][^/]*/?')" }
+          - { name: "builtin (c-e)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[c-e][^/]*/?')" }
+          - { name: "builtin (f-m)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[f-m][^/]*/?')" }
+          - { name: "builtin (n-o)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[n-o][^/]*/?')" }
+          - { name: "builtin (p-s)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[p-s][^/]*/?')" }
+          - { name: "builtin (t-z)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[t-z][^/]*/?')" }
     steps:
       - name: Set up Go
         uses: actions/setup-go@19bb51245e9c80abacb2e91cc42b33fa478b8639 # 4.2.1
@@ -37,7 +62,7 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Run Integration Tests
+      - name: Run Integration Tests - ${{ matrix.config.name }}
         if: success() || failure()
         env:
           GOPROXY: "https://proxy.golang.org"
@@ -50,4 +75,4 @@ jobs:
           DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
-        run: go test -tags=integration -v -p 1 ./... # limit parallel executions to prevent EOF errors
+        run: go test -tags=integration -v -p 1 ${{ matrix.config.path }}
