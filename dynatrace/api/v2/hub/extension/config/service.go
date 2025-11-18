@@ -93,6 +93,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 
 	injectScope(response.Scope, v)
 	v.Name = name
+	v.Scope = response.Scope
 
 	// Try to replace placeholders only if stateConfig and response.Value are valid
 	if stateConfig != nil && response.Value != nil {
@@ -299,6 +300,9 @@ func injectScope(scope string, v *extension_config.Settings) {
 }
 
 func extractScope(v *extension_config.Settings) string {
+	if v.Scope != "" {
+		return v.Scope
+	}
 	if len(v.ActiveGateGroup) > 0 {
 		return fmt.Sprintf("ag_group-%s", v.ActiveGateGroup)
 	}

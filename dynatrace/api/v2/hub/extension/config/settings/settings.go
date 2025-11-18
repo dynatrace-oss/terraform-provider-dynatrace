@@ -31,6 +31,7 @@ import (
 
 type Settings struct {
 	Name            string `json:"-"`
+	Scope           string `json:"-"`
 	Value           string `json:"-"`
 	Host            string `json:"-"`
 	HostGroup       string `json:"-"`
@@ -47,6 +48,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The fully qualified name of the extension, such as `com.dynatrace.extension.jmx-liberty-cp`. You can query for these names using the data source `dynatrace_hub_items`",
 			ForceNew:    true,
 			Required:    true,
+		},
+		"scope": {
+			Type:        schema.TypeString,
+			Description: "The scope this monitoring configuration will be defined for",
+			ForceNew:    true,
+			Optional:    true,
+			Computed:    true,
 		},
 		"host": {
 			Type:          schema.TypeString,
@@ -187,6 +195,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":              me.Name,
 		"value":             me.Value,
+		"scope":             me.Scope,
 		"host":              me.Host,
 		"host_group":        me.HostGroup,
 		"active_gate_group": me.ActiveGateGroup,
@@ -198,6 +207,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"name":              &me.Name,
 		"value":             &me.Value,
+		"scope":             &me.Scope,
 		"host":              &me.Host,
 		"host_group":        &me.HostGroup,
 		"active_gate_group": &me.ActiveGateGroup,
