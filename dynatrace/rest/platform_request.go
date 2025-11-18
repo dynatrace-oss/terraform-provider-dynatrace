@@ -9,9 +9,11 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
@@ -49,6 +51,16 @@ func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
 	return restClient, nil
 }
 
+func setHttpClientContext(ctx context.Context) context.Context {
+	return context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConns:        100,
+			MaxIdleConnsPerHost: 100,
+			IdleConnTimeout:     90 * time.Second,
+		},
+	})
+}
+
 func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Credentials) (*rest.Client, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
@@ -59,6 +71,7 @@ func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Crede
 		ClientSecret: credentials.OAuth.ClientSecret,
 		TokenURL:     evalTokenURL(parsedURL.String()),
 	}
+	ctx = setHttpClientContext(ctx)
 	httpClient := auth.NewOAuthClient(ctx, &oauthConfig)
 
 	opts := []rest.Option{
