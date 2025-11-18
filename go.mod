@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/dlclark/regexp2 v1.11.4
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251009114407-8d3182906541
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251118114810-a3507b71530a
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/go-hclog v1.6.3
@@ -19,7 +19,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/zclconf/go-cty v1.15.1
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67
-	golang.org/x/oauth2 v0.32.0
+	golang.org/x/oauth2 v0.33.0
 	golang.org/x/sync v0.12.0
 )
 

@@ -50,5 +50,4 @@ jobs:
           DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
-          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DYNATRACE_PLATFORM_TOKEN }}
         run: go test -tags=integration -v ./...
