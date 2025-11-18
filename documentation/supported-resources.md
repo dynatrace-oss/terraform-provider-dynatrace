@@ -389,3 +389,4 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_platform_slo                 | /platform/slo/v1/slos                                                       | slo:slos:read, slo:slos:write                                                                                                                             |
 | dynatrace_segment                      | /platform/storage/filter-segments/v1/filter-segments                        | storage:filter-segments:read, storage:filter-segments:write, storage:filter-segments:share, storage:filter-segments:delete, storage:filter-segments:admin |
 | dynatrace_azure_connection | /api/v2/settings/objects (schema: builtin:hyperscaler-authentication.connections.azure) | settings.read, settings.write |
+| dynatrace_azure_connection_authentication | /api/v2/settings/objects (schema: builtin:hyperscaler-authentication.connections.azure) | settings.read, settings.write |

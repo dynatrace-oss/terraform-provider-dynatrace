@@ -19,6 +19,7 @@ package azure
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -30,6 +31,8 @@ type Settings struct {
 	Name                        string                       `json:"name"` // The name of the connection
 	Type                        Type                         `json:"type"` // Azure Authentication mechanism to be used by the connection. Possible Values: `clientSecret`, `federatedIdentityCredential`
 }
+
+const DefaultTimeout = 2 * time.Minute
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -53,12 +56,20 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The name of the connection",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"type": {
 			Type:        schema.TypeString,
 			Description: "Azure Authentication mechanism to be used by the connection. Possible Values: `clientSecret`, `federatedIdentityCredential`",
 			Required:    true,
 		},
+	}
+}
+
+func (me *Settings) Timeouts() *schema.ResourceTimeout {
+	return &schema.ResourceTimeout{
+		Create: schema.DefaultTimeout(DefaultTimeout),
+		Update: schema.DefaultTimeout(DefaultTimeout),
 	}
 }
 

@@ -30,37 +30,24 @@ type FederatedIdentityCredential struct {
 
 func (me *FederatedIdentityCredential) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"application_id": {
-			Type:        schema.TypeString,
-			Description: "Application (client) ID of your app registered in Microsoft Azure App registrations",
-			Optional:    true, // nullable
-		},
 		"consumers": {
 			Type:        schema.TypeList,
 			Description: "Consumers that can use the connection. Possible Values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
-		},
-		"directory_id": {
-			Type:        schema.TypeString,
-			Description: "Directory (tenant) ID of Microsoft Entra ID",
-			Optional:    true, // nullable
+			ForceNew:    true,
 		},
 	}
 }
 
 func (me *FederatedIdentityCredential) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"application_id": me.ApplicationID,
-		"consumers":      me.Consumers,
-		"directory_id":   me.DirectoryID,
+		"consumers": me.Consumers,
 	})
 }
 
 func (me *FederatedIdentityCredential) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"application_id": &me.ApplicationID,
-		"consumers":      &me.Consumers,
-		"directory_id":   &me.DirectoryID,
+		"consumers": &me.Consumers,
 	})
 }

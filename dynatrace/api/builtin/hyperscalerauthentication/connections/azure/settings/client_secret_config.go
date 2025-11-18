@@ -35,6 +35,7 @@ func (me *ClientSecretConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Application (client) ID of your app registered in Microsoft Azure App registrations",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"client_secret": {
 			Type:        schema.TypeString,
@@ -47,11 +48,13 @@ func (me *ClientSecretConfig) Schema() map[string]*schema.Schema {
 			Description: "Dynatrace integrations that can use this connection. Possible Values: `DA`, `NONE`, `SVC:com.dynatrace.da`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
+			ForceNew:    true,
 		},
 		"directory_id": {
 			Type:        schema.TypeString,
 			Description: "Directory (tenant) ID of Microsoft Entra ID",
 			Required:    true,
+			ForceNew:    true,
 		},
 	}
 }

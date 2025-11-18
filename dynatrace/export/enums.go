@@ -559,6 +559,7 @@ var ResourceTypes = struct {
 	OpenpipelineUsersessionsRouting         ResourceType
 	AutomationApproval                      ResourceType
 	AzureConnection                         ResourceType
+	AzureConnectionAuthentication           ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -965,6 +966,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_usersessions_routing",
 	"dynatrace_automation_approval",
 	"dynatrace_azure_connection",
+	"dynatrace_azure_connection_authentication",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
