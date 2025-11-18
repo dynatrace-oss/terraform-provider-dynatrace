@@ -1,0 +1,185 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Contains configuration of a pipeline group",
+	"displayName": "Pipeline Groups configuration",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"StageType": {
+			"description": "",
+			"displayName": "StageType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Processing",
+					"value": "processing"
+				},
+				{
+					"displayName": "Security context",
+					"value": "securityContext"
+				},
+				{
+					"displayName": "Cost Allocation",
+					"value": "costAllocation"
+				},
+				{
+					"displayName": "Product Allocation",
+					"value": "productAllocation"
+				},
+				{
+					"displayName": "Storage",
+					"value": "storage"
+				},
+				{
+					"displayName": "Smartscape Node Extraction",
+					"value": "smartscapeNodeExtraction"
+				},
+				{
+					"displayName": "Smartscape Edge Extraction",
+					"value": "smartscapeEdgeExtraction"
+				},
+				{
+					"displayName": "Metric Extraction",
+					"value": "metricExtraction"
+				},
+				{
+					"displayName": "Davis",
+					"value": "davis"
+				},
+				{
+					"displayName": "Data Extraction",
+					"value": "dataExtraction"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"ownerBasedAccessControl": true,
+	"properties": {
+		"displayName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Display name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"includedPipelines": {
+			"description": "",
+			"displayName": "Included Pipelines",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/PipelineGroup"
+				}
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"targetedPipelines": {
+			"description": "",
+			"displayName": "Pipelines wrapped by this group",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Pipeline ID",
+				"documentation": "",
+				"referencedType": "builtin:openpipeline.metrics.pipelines",
+				"type": "setting"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"flattenCollections": true,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"targetedPipelines"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:openpipeline.all.pipeline-groups"
+	],
+	"schemaId": "builtin:openpipeline.metrics.pipeline-groups",
+	"types": {
+		"PipelineGroup": {
+			"description": "",
+			"displayName": "PipelineGroup",
+			"documentation": "",
+			"properties": {
+				"enabledStages": {
+					"description": "",
+					"displayName": "Enabled Stages",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/StageType"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"isTargetPipelinePlaceholder": {
+					"default": false,
+					"description": "",
+					"displayName": "Placeholder for the wrapped Pipeline",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"pipelineId": {
+					"description": "",
+					"displayName": "Pipeline ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"referencedType": "builtin:openpipeline.metrics.pipelines",
+					"type": "setting"
+				}
+			},
+			"summaryPattern": "{isTargetPipelinePlaceholder}-{pipelineId}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.21"
+}

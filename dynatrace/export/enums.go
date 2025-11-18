@@ -558,6 +558,19 @@ var ResourceTypes = struct {
 	OpenpipelineUsersessionsPipelines       ResourceType
 	OpenpipelineUsersessionsRouting         ResourceType
 	AutomationApproval                      ResourceType
+	//OpenpipelineBizeventsPipelinegroups      ResourceType
+	//OpenpipelineDavisEventsPipelinegroups    ResourceType
+	//OpenpipelineDavisProblemsPipelinegroups  ResourceType
+	//OpenpipelineEventsPipelinegroups         ResourceType
+	//OpenpipelineEventsSdlcPipelinegroups     ResourceType
+	//OpenpipelineEventsSecurityPipelinegroups ResourceType
+	//OpenpipelineLogsPipelinegroups           ResourceType
+	//OpenpipelineMetricsPipelinegroups        ResourceType
+	//OpenpipelineSecurityEventsPipelinegroups ResourceType
+	//OpenpipelineSpansPipelinegroups          ResourceType
+	//OpenpipelineSystemEventsPipelinegroups   ResourceType
+	//OpenpipelineUserEventsPipelinegroups     ResourceType
+	//OpenpipelineUsersessionsPipelinegroups   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -963,6 +976,19 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_usersessions_pipelines",
 	"dynatrace_openpipeline_v2_usersessions_routing",
 	"dynatrace_automation_approval",
+	//"dynatrace_openpipeline_v2_bizevents_pipelinegroups",
+	//"dynatrace_openpipeline_v2_davis_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_davis_problems_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_sdlc_pipelinegroups",
+	//"dynatrace_openpipeline_v2_events_security_pipelinegroups",
+	//"dynatrace_openpipeline_v2_logs_pipelinegroups",
+	//"dynatrace_openpipeline_v2_metrics_pipelinegroups",
+	//"dynatrace_openpipeline_v2_security_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_spans_pipelinegroups",
+	//"dynatrace_openpipeline_v2_system_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_user_events_pipelinegroups",
+	//"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
