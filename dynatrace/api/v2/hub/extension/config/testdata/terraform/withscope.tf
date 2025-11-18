@@ -1,5 +1,6 @@
 resource "dynatrace_hub_extension_config" "com_dynatrace_extension_jmx-weblogic-cp" {
   name = "com.dynatrace.extension.jmx-weblogic-cp"
+  scope = "environment"
     value = jsonencode(
     {
       "activationContext": "LOCAL",
