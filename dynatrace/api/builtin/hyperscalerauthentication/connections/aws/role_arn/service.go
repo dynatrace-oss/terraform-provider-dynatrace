@@ -20,7 +20,6 @@ package role_arn
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -33,9 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
-const (
-	timeoutDeadlineBuffer = time.Minute
-)
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 const SchemaVersion = "0.0.15"
 
@@ -85,15 +81,13 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
 
-	retryTimeout, err := computeRetryTimeout(ctx, timeoutDeadlineBuffer, role_arn.DefaultCreateTimeout)
+	retryTimeout, err := computeRetryTimeout(ctx, role_arn.DefaultCreateTimeout)
 	if err != nil {
 		return nil, err
 	}
-	ctxRetry, cancel := context.WithTimeout(ctx, retryTimeout)
-	defer cancel()
 
-	if err = retry.RetryContext(ctxRetry, retryTimeout, func() *retry.RetryError {
-		return classifyRetryError(me.connService.Update(ctxRetry, v.AWSConnectionID, &connValue))
+	if err = retry.RetryContext(ctx, retryTimeout, func() *retry.RetryError {
+		return classifyRetryError(me.connService.Update(ctx, v.AWSConnectionID, &connValue))
 	}); err != nil {
 		return nil, err
 	}
@@ -102,12 +96,11 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 }
 
 // computeRetryTimeout computes a safe retry timeout based on the incoming ctx deadline.
-// - timeoutDeadlineBuffer: amount of time to reserve for finalization (e.g. 1 minute).
 // - defaultTimeout: fallback when caller didn't provide a deadline.
-// Returns the derived timeout, or an error if the caller's deadline already expired (taking the buffer into account as well).
-func computeRetryTimeout(ctx context.Context, timeoutDeadlineBuffer time.Duration, defaultTimeout time.Duration) (time.Duration, error) {
+// Returns the derived timeout, or an error if the caller's deadline already expired
+func computeRetryTimeout(ctx context.Context, defaultTimeout time.Duration) (time.Duration, error) {
 	if dl, ok := ctx.Deadline(); ok {
-		remaining := time.Until(dl) - timeoutDeadlineBuffer
+		remaining := time.Until(dl)
 		if remaining <= 0 {
 			return 0, context.DeadlineExceeded
 		}
@@ -119,8 +112,8 @@ func computeRetryTimeout(ctx context.Context, timeoutDeadlineBuffer time.Duratio
 
 // classifyRetryError encapsulates which errors should be retried.
 // - 400 and 404 are considered retryable due to eventual consistency.
-// - other 4xx are non-retryable.
-// - 5xx and non-HTTP (network) errors are retryable.
+// - other 4xx are non-retryable, and non-HTTP (network) errors are non-retryable.
+// - 5xx are retryable.
 func classifyRetryError(err error) *retry.RetryError {
 	if err == nil {
 		return nil
@@ -131,17 +124,17 @@ func classifyRetryError(err error) *retry.RetryError {
 		code := restError.Code
 		// Retry on specific client errors that can be transient (eventual consistency).
 		if code == 400 || code == 404 {
-			return retry.RetryableError(fmt.Errorf("IAM role not yet usable (HTTP %d): %w", code, err))
+			return retry.RetryableError(err)
 		}
 		// Treat other 4xx as non-retryable client errors.
 		if code >= 400 && code < 500 {
-			return retry.NonRetryableError(fmt.Errorf("IAM role unusable (HTTP %d): %w", code, err))
+			return retry.NonRetryableError(err)
 		}
 		// 5xx and others -> retryable
-		return retry.RetryableError(fmt.Errorf("IAM role not yet usable (HTTP %d): %w", code, err))
+		return retry.RetryableError(err)
 	}
-	// Non-HTTP errors (network, timeouts, context) -> retryable
-	return retry.RetryableError(fmt.Errorf("IAM role not yet usable: %w", err))
+	// Non-HTTP errors (network, timeouts, context) -> non-retryable
+	return retry.NonRetryableError(err)
 }
 
 func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings) error {
