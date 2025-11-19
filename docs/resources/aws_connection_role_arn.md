@@ -18,6 +18,18 @@ Ensure you configure both resources together for a valid AWS connection.
 An example of how to set up both resources can be found in the [Resource Example Usage](#resource-example-usage) section below.
 
 ## Limitations
+If you are creating the `dynatrace_aws_connection_role_arn` and the `aws_iam_role` it is referencing in the same invocation
+of `terraform apply`, be aware that due to eventual consistency in AWS, the creation of the `aws_iam_role` might not be fully propagated
+when the `dynatrace_aws_connection_role_arn` resource is being created. To mitigate this, we retry the creation of the `dynatrace_aws_connection_role_arn` resource
+with a default timeout of 2 minutes.
+This is also the timeout used by [terraform-provider-aws](https://github.com/hashicorp/terraform-provider-aws/blob/546cd5a106a10516fcb8465459f2abd1b37b6036/internal/service/iam/consts.go#L16) when waiting for IAM changes to propagate.
+If you desire a different timeout, you can adjust it using the `timeouts` block in the `dynatrace_aws_connection_role_arn` resource as shown in the example below.
+
+The following is an example of the error you might encounter due to this limitation:
+```
+Unable to assume role with web identity. (AccessDenied) Not authorized to perform sts:AssumeRoleWithWebIdentity (Service: Sts, Status Code: 403, Request ID: 00000000-1111-2222-3333-555555555555) (SDK Attempt Count: 1), RequestId 00000000-1111-2222-3333-555555555555
+```
+
 ~> **Warning** If a resource is created using an API token or without setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` (when both are used), the settings object's owner will remain empty.
 
 An empty owner implies:
@@ -88,6 +100,10 @@ resource "aws_iam_role" "example_role" {
 resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
   aws_connection_id = dynatrace_aws_connection.test-aws-connection.id
   role_arn          = aws_iam_role.example_role.arn
+
+  timeouts {
+    create = "15s"
+  }
 }
 ```
 

@@ -39,4 +39,8 @@ resource "aws_iam_role" "example_role" {
 resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
   aws_connection_id = dynatrace_aws_connection.test-aws-connection.id
   role_arn          = aws_iam_role.example_role.arn
+
+  timeouts {
+    create = "15s"
+  }
 }
