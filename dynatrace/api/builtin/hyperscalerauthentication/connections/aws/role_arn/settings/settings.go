@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	DefaultCreateTimeout = 20 * time.Minute
+	DefaultCreateTimeout = 2 * time.Minute
 )
 
 type Settings struct {
