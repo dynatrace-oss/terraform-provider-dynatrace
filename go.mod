@@ -8,7 +8,7 @@ require (
 	github.com/dlclark/regexp2 v1.11.5
 	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251009114407-8d3182906541
 	github.com/google/uuid v1.6.0
-	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
+	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/hcl/v2 v2.24.0
 	github.com/hashicorp/terraform-plugin-docs v0.24.0
