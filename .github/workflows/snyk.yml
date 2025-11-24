@@ -16,6 +16,6 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/golang@b98d498629f1c368650224d6d212bf7dfa89e4bf # v0.4.0
+      uses: snyk/actions/golang@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
