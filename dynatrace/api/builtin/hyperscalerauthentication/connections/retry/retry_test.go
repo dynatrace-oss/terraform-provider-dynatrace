@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -15,9 +17,7 @@
 * limitations under the License.
  */
 
-//go:build unit
-
-package role_arn
+package retry_test
 
 import (
 	"context"
@@ -25,48 +25,46 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/retry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/stretchr/testify/assert"
 )
 
-func approx(d1, d2 time.Duration) bool {
-	delta := d1 - d2
-	if delta < 0 {
-		delta = -delta
-	}
-	return delta <= 200*time.Millisecond
-}
-
-func TestComputeRetryContext_NoDeadline(t *testing.T) {
+// TestDurationUntilDeadlineOrDefault_NoDeadline tests that DurationUntilDeadlineOrDefault returns the default timeout when the context has no deadline.
+func TestDurationUntilDeadlineOrDefault_NoDeadline(t *testing.T) {
+	defaultTimeout := 2 * time.Minute
 	ctx := context.Background()
-	retryTimeout, _ := computeRetryTimeout(ctx, 2*time.Minute)
 
-	assert.Equal(t, 2*time.Minute, retryTimeout)
+	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctx, defaultTimeout)
+	assert.Equal(t, defaultTimeout, retryTimeout)
 }
 
-func TestComputeRetryContext_WithDeadline_Plenty(t *testing.T) {
+// TestDurationUntilDeadlineOrDefault_WithDeadline_Plenty tests that DurationUntilDeadlineOrDefault returns the remaining duration when the context has a deadline set well in the future.
+func TestDurationUntilDeadlineOrDefault_WithDeadline_Plenty(t *testing.T) {
 	// caller provides 5 minutes; retryTimeout should be ~5 minutes
 	parent := context.Background()
 	deadline := time.Now().Add(5 * time.Minute)
 	ctxWithDL, cancelParent := context.WithDeadline(parent, deadline)
 	defer cancelParent()
 
-	retryTimeout, _ := computeRetryTimeout(ctxWithDL, 2*time.Minute)
+	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctxWithDL, 2*time.Minute)
 
 	// expect ~5 minutes
 	expected := 5 * time.Minute
-	assert.True(t, approx(expected, retryTimeout), "expected approximately %v, got %v", expected, retryTimeout)
+	assert.InDelta(t, expected.Milliseconds(), retryTimeout.Milliseconds(), 200, "expected approximately %v, got %v", expected, retryTimeout)
+
 }
 
-func TestComputeRetryContext_ExpiredDeadline(t *testing.T) {
+// TestDurationUntilDeadlineOrDefault_ExpiredDeadline tests that wDurationUntilDeadlineOrDefault returns zero when the context has an expired deadline.
+func TestDurationUntilDeadlineOrDefault_ExpiredDeadline(t *testing.T) {
 	ctxWithExpiredDL, cancel := context.WithDeadline(context.Background(), time.Now().Add(-time.Second))
 	defer cancel()
 
-	_, err := computeRetryTimeout(ctxWithExpiredDL, 2*time.Minute)
-
-	assert.ErrorIs(t, err, context.DeadlineExceeded)
+	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctxWithExpiredDL, 2*time.Minute)
+	assert.Zero(t, retryTimeout, "expected zero retry timeout for expired deadline")
 }
 
+// TestClassifyRetryError tests that the ClassifyRetryError function correctly identifies retryable errors.
 func TestClassifyRetryError(t *testing.T) {
 	tests := []struct {
 		err         error
@@ -81,7 +79,7 @@ func TestClassifyRetryError(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.err.Error(), func(t *testing.T) {
-			retryError := classifyRetryError(tc.err)
+			retryError := retry.ClassifyRetryError(tc.err)
 			assert.Equal(t, tc.isRetryable, retryError.Retryable)
 		})
 	}
