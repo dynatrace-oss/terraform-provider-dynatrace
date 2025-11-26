@@ -156,5 +156,5 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: |
-            -Dsonar.projectVersion=${{steps.get_latest_tag.outputs.GIT_TAG}}
+          args: >
+            "-Dsonar.projectVersion=${{steps.get_latest_tag.outputs.GIT_TAG}}"
