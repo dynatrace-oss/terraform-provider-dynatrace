@@ -12,18 +12,18 @@ on:
       - '**'
 jobs:
   unit-tests:
-    name: Unit Tests
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # 6.1.0
-        with:
-          go-version: '1.22'
-
-      - name: Check out source code
+      - name: ⬇️ Check out code into the Go module directory
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
 
-      - name: Install gotestsum
+      - name: 🛠️ Set up Go 1.x
+        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # 6.1.0
+        with:
+          go-version-file: ./go.mod
+
+      - name: 📊 Install gotestsum
         run: go install gotest.tools/gotestsum@3f7ff0ec4aeb6f95f5d67c998b71f272aa8a8b41 #v1.12.1
 
       - name: Run Unit Tests
@@ -50,7 +50,7 @@ jobs:
       - name: 🛠️ Set up Go 1.x
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c #v6.1.0
         with:
-          go-version-file: go.mod
+          go-version-file: ./go.mod
 
       - name: 🔎 golangci-lint
         uses: golangci/golangci-lint-action@e7fa5ac41e1cf5b7d48e45e42232ce7ada589601 #v9.1.0
@@ -94,13 +94,13 @@ jobs:
           - { name: "builtin (p-s)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[p-s][^/]*/?')" }
           - { name: "builtin (t-z)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[t-z][^/]*/?')" }
     steps:
-      - name: Set up Go
+      - name: ⬇️ Check out code into the Go module directory
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
+
+      - name: 🛠️ Set up Go 1.x
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # 6.1.0
         with:
-          go-version: '1.22'
-
-      - name: Check out source code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
+          go-version-file: ./go.mod
 
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
@@ -122,7 +122,7 @@ jobs:
         run: go test -tags=integration -v -p 1 ${{ matrix.config.path }}
 
   sonar_scan:
-    name: Report lint and test coverage
+    name: SonarQube lint and test coverage
     if: ${{ always() }} # always runs after lint and test have completed, regardless of whether they were successful
     needs: [ unit-tests, lint ]
     permissions:
