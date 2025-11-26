@@ -75,9 +75,15 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 	if err := me.connService.Get(ctx, v.AWSConnectionID, &connValue); err != nil {
 		return nil, err
 	}
-	if connValue.AWSRoleBasedAuthentication != nil {
+	if connValue.Type == awsconnection_settings.Types.AWSRoleBasedAuthentication && connValue.AWSRoleBasedAuthentication != nil {
+		if connValue.AWSRoleBasedAuthentication.RoleARN != "" && connValue.AWSRoleBasedAuthentication.RoleARN != v.RoleARN {
+			return nil, errors.New("AWS Role ARN is already set for the specified AWS Connection")
+		}
 		connValue.AWSRoleBasedAuthentication.RoleARN = v.RoleARN
-	} else if connValue.AWSWebIdentity != nil {
+	} else if connValue.Type == awsconnection_settings.Types.AWSWebIdentity && connValue.AWSWebIdentity != nil {
+		if connValue.AWSWebIdentity.RoleARN != "" && connValue.AWSWebIdentity.RoleARN != v.RoleARN {
+			return nil, errors.New("AWS Role ARN is already set for the specified AWS Connection")
+		}
 		connValue.AWSWebIdentity.RoleARN = v.RoleARN
 	}
 
