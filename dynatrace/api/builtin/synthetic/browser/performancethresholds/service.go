@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.7.4"
+const SchemaVersion = "1.8.1"
 const SchemaID = "builtin:synthetic.browser.performance-thresholds"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*performancethresholds.Settings] {
