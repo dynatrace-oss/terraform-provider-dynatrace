@@ -14,6 +14,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -147,6 +148,12 @@
 						{
 							"minimum": 0,
 							"type": "RANGE"
+						},
+						{
+							"customMessage": "Threshold must be greater than 0.",
+							"customValidatorId": "greater-than-zero-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": 10,
@@ -181,5 +188,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.7.4"
+	"version": "1.8.1"
 }
