@@ -109,6 +109,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -212,6 +213,17 @@
 				"$ref": "#/types/EntryBoundary"
 			}
 		},
+		"json-configuration": {
+			"description": "",
+			"displayName": "Detect JSON format",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/JSONConfiguration"
+			}
+		},
 		"matchers": {
 			"description": "",
 			"displayName": "",
@@ -306,6 +318,26 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"JSONConfiguration": {
+			"description": "",
+			"displayName": "JSONConfiguration",
+			"documentation": "",
+			"properties": {
+				"formatDetection": {
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -429,6 +461,11 @@
 					"displayName": "Entry boundary",
 					"id": "entryBoundary",
 					"propertyRef": "entry-boundary/pattern"
+				},
+				{
+					"displayName": "JSON Configuration",
+					"id": "jsonConf",
+					"propertyRef": "json-configuration/formatDetection"
 				}
 			],
 			"emptyState": {
@@ -436,5 +473,5 @@
 			}
 		}
 	},
-	"version": "1.0.17"
+	"version": "1.0.18"
 }

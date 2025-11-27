@@ -22,28 +22,28 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type EntryBoundary struct {
-	Pattern *string `json:"pattern,omitempty"`
+type JSONConfiguration struct {
+	FormatDetection *bool `json:"formatDetection,omitempty"`
 }
 
-func (me *EntryBoundary) Schema() map[string]*schema.Schema {
+func (me *JSONConfiguration) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"pattern": {
-			Type:        schema.TypeString,
+		"format_detection": {
+			Type:        schema.TypeBool,
 			Description: "no documentation available",
 			Optional:    true, // nullable
 		},
 	}
 }
 
-func (me *EntryBoundary) MarshalHCL(properties hcl.Properties) error {
+func (me *JSONConfiguration) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"pattern": me.Pattern,
+		"format_detection": me.FormatDetection,
 	})
 }
 
-func (me *EntryBoundary) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *JSONConfiguration) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"pattern": &me.Pattern,
+		"format_detection": &me.FormatDetection,
 	})
 }
