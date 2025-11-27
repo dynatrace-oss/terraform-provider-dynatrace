@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,16 +23,17 @@ import (
 )
 
 type Settings struct {
-	Config_item_title   string         `json:"config-item-title"`           // Name
-	Date_search_limit   *int           `json:"date-search-limit,omitempty"` // Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
-	Date_time_pattern   string         `json:"date-time-pattern"`           // Date-time pattern
-	Enabled             bool           `json:"enabled"`                     // This setting is enabled (`true`) or disabled (`false`)
-	Entry_boundary      *EntryBoundary `json:"entry-boundary,omitempty"`    // Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.
-	Matchers            Matchers       `json:"matchers,omitempty"`
-	Scope               *string        `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	Skip_indented_lines *bool          `json:"skip-indented-lines,omitempty"` // Don't parse timestamps in lines starting with white character
-	Timezone            string         `json:"timezone"`                      // Timezone
-	InsertAfter         string         `json:"-"`
+	Config_item_title   string             `json:"config-item-title"`            // Name
+	Date_search_limit   *int               `json:"date-search-limit,omitempty"`  // Defines the number of characters in every log line (starting from the first character in the line) where the timestamp is searched.
+	Date_time_pattern   string             `json:"date-time-pattern"`            // Date-time pattern
+	Enabled             bool               `json:"enabled"`                      // This setting is enabled (`true`) or disabled (`false`)
+	Entry_boundary      *EntryBoundary     `json:"entry-boundary,omitempty"`     // Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.
+	Json_configuration  *JSONConfiguration `json:"json-configuration,omitempty"` // Detect JSON format
+	Matchers            Matchers           `json:"matchers,omitempty"`
+	Scope               *string            `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Skip_indented_lines *bool              `json:"skip-indented-lines,omitempty"` // Don't parse timestamps in lines starting with white character
+	Timezone            string             `json:"timezone"`                      // Timezone
+	InsertAfter         string             `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -66,6 +67,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Optional field. Enter a fragment of the line text that starts the entry. No support for wildcards - the text is treated literally.",
 			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(EntryBoundary).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"json_configuration": {
+			Type:        schema.TypeList,
+			Description: "Detect JSON format",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(JSONConfiguration).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -109,6 +118,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"date_time_pattern":   me.Date_time_pattern,
 		"enabled":             me.Enabled,
 		"entry_boundary":      me.Entry_boundary,
+		"json_configuration":  me.Json_configuration,
 		"matchers":            me.Matchers,
 		"scope":               me.Scope,
 		"skip_indented_lines": me.Skip_indented_lines,
@@ -124,6 +134,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"date_time_pattern":   &me.Date_time_pattern,
 		"enabled":             &me.Enabled,
 		"entry_boundary":      &me.Entry_boundary,
+		"json_configuration":  &me.Json_configuration,
 		"matchers":            &me.Matchers,
 		"scope":               &me.Scope,
 		"skip_indented_lines": &me.Skip_indented_lines,
