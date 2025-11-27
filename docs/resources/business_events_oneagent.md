@@ -129,7 +129,7 @@ Optional:
 
 Required:
 
-- `source_type` (String) Possible Values: `Constant_string`, `Request_body`, `Request_headers`, `Request_method`, `Request_parameters`, `Request_path`, `Request_url`, `Response_body`, `Response_headers`, `Response_statusCode`
+- `source_type` (String) Data source. Possible Values: `constant.string`, `request.body`, `request.headers`, `request.method`, `request.parameters`, `request.path`, `request.url`, `response.body`, `response.headers`, `response.statusCode`
 
 Optional:
 
@@ -142,7 +142,7 @@ Optional:
 
 Required:
 
-- `source_type` (String) Possible Values: `Constant_string`, `Request_body`, `Request_headers`, `Request_method`, `Request_parameters`, `Request_path`, `Request_url`, `Response_body`, `Response_headers`, `Response_statusCode`
+- `source_type` (String) Data source. Possible Values: `constant.string`, `request.body`, `request.headers`, `request.method`, `request.parameters`, `request.path`, `request.url`, `response.body`, `response.headers`, `response.statusCode`
 
 Optional:
 
@@ -155,7 +155,7 @@ Optional:
 
 Required:
 
-- `source_type` (String) Possible Values: `Constant_string`, `Request_body`, `Request_headers`, `Request_method`, `Request_parameters`, `Request_path`, `Request_url`, `Response_body`, `Response_headers`, `Response_statusCode`
+- `source_type` (String) Data source. Possible Values: `constant.string`, `request.body`, `request.headers`, `request.method`, `request.parameters`, `request.path`, `request.url`, `response.body`, `response.headers`, `response.statusCode`
 
 Optional:
 
@@ -183,7 +183,7 @@ Required:
 
 Required:
 
-- `source_type` (String) Possible Values: `Constant_string`, `Request_body`, `Request_headers`, `Request_method`, `Request_parameters`, `Request_path`, `Request_url`, `Response_body`, `Response_headers`, `Response_statusCode`
+- `source_type` (String) Data source. Possible Values: `constant.string`, `request.body`, `request.headers`, `request.method`, `request.parameters`, `request.path`, `request.url`, `response.body`, `response.headers`, `response.statusCode`
 
 Optional:
 
@@ -207,7 +207,7 @@ Required:
 Required:
 
 - `source` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--triggers--trigger--source))
-- `type` (String) Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`
+- `type` (String) Operator. Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`
 
 Optional:
 
@@ -219,7 +219,7 @@ Optional:
 
 Required:
 
-- `data_source` (String) Possible Values: `Request_body`, `Request_headers`, `Request_method`, `Request_parameters`, `Request_path`, `Request_url`, `Response_body`, `Response_headers`, `Response_statusCode`
+- `data_source` (String) Data source. Possible Values: `request.body`, `request.headers`, `request.method`, `request.parameters`, `request.path`, `request.url`, `response.body`, `response.headers`, `response.statusCode`
 
 Optional:
 
