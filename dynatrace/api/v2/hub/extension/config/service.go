@@ -201,9 +201,7 @@ func (me *service) ensureInstalled(ctx context.Context, name string, version str
 	if strings.HasPrefix(name, "custom:") {
 		request := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200)
 		request.SetHeader("Accept", "application/json; charset=utf-8")
-		if err := request.Finish(); err != nil {
-			return err
-		}
+		return request.Finish()
 	}
 	response := struct {
 		Name    string `json:"extensionName"`
