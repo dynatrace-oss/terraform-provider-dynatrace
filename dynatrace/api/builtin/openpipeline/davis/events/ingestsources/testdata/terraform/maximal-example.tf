@@ -8,6 +8,12 @@ resource "dynatrace_openpipeline_v2_davis_events_ingestsources" "maximal-source"
     builtin_pipeline_id = "default"
   }
   default_bucket = "default_events"
+  metadata_list {
+    metadata {
+      entry_key = "environment"
+      entry_value = "production"
+    }
+  }
   processing {
     processors {
       processor {
