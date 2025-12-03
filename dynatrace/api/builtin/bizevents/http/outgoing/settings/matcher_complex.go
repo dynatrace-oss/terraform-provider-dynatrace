@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ func (me *MatcherComplexes) UnmarshalHCL(decoder hcl.Decoder) error {
 type MatcherComplex struct {
 	CaseSensitive *bool              `json:"caseSensitive,omitempty"` // Case sensitive
 	Source        *DataSourceComplex `json:"source"`
-	Type          ComparisonEnum     `json:"type"` // Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`
+	Type          ComparisonEnum     `json:"type"` // Operator. Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`
 	Value         *string            `json:"value,omitempty"`
 }
 
@@ -73,7 +73,7 @@ func (me *MatcherComplex) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`",
+			Description: "Operator. Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `EXISTS`, `N_CONTAINS`, `N_ENDS_WITH`, `N_EQUALS`, `N_EXISTS`, `N_STARTS_WITH`, `STARTS_WITH`",
 			Required:    true,
 		},
 		"value": {
@@ -99,6 +99,9 @@ func (me *MatcherComplex) HandlePreconditions() error {
 	}
 	if (me.Value == nil) && (!slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type))) {
 		return fmt.Errorf("'value' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.Value != nil) && (slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type))) {
+		return fmt.Errorf("'value' must not be specified if 'type' is set to '%v'", me.Type)
 	}
 	return nil
 }

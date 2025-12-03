@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ type Settings struct {
 	Event       *EventComplex    `json:"event"`           // Event meta data
 	RuleName    string           `json:"ruleName"`        // Rule name
 	Scope       *string          `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	Triggers    MatcherComplexes `json:"triggers"`        // Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.
+	Triggers    MatcherComplexes `json:"triggers"`        // Define conditions to trigger business events from outgoing web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.
 	InsertAfter string           `json:"-"`
 }
 
@@ -63,7 +63,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"triggers": {
 			Type:        schema.TypeList,
-			Description: "Define conditions to trigger business events from incoming web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
+			Description: "Define conditions to trigger business events from outgoing web requests. Triggers are connected by AND logic per capture rule. If you set multiple trigger rules, all of them need to be fulfilled to capture a business event.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(MatcherComplexes).Schema()},
 			MinItems:    1,
