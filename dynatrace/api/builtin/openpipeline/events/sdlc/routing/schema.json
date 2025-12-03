@@ -31,6 +31,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -181,5 +182,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.21"
+	"version": "1.26.1"
 }
