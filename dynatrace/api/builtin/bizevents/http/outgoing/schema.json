@@ -150,6 +150,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add new capture rule",
@@ -472,6 +473,15 @@
 					}
 				},
 				"data": {
+					"constraints": [
+						{
+							"customMessage": "Event data field name must be unique.",
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"name"
+							]
+						}
+					],
 					"description": "Additional attributes for the business event.",
 					"displayName": "Event data",
 					"documentation": "",
@@ -727,5 +737,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
