@@ -29,6 +29,7 @@ type Settings struct {
 	DefaultBucket *string          `json:"defaultBucket,omitempty"` // Default Bucket
 	DisplayName   string           `json:"displayName"`             // Endpoint display name
 	Enabled       bool             `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
+	MetadataList  MetadataEntries  `json:"metadataList,omitempty"`  // Ingest source metadata list
 	PathSegment   *string          `json:"pathSegment,omitempty"`   // Endpoint segment
 	Processing    *Stage           `json:"processing,omitempty"`    // Processing stage
 	Source        *string          `json:"source,omitempty"`        // Source
@@ -52,6 +53,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"metadata_list": {
+			Type:        schema.TypeList,
+			Description: "Ingest source metadata list",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(MetadataEntries).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"path_segment": {
 			Type:        schema.TypeString,
@@ -93,6 +102,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"default_bucket": me.DefaultBucket,
 		"display_name":   me.DisplayName,
 		"enabled":        me.Enabled,
+		"metadata_list":  me.MetadataList,
 		"path_segment":   me.PathSegment,
 		"processing":     me.Processing,
 		"source":         me.Source,
@@ -108,6 +118,9 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.Source == nil) && (string(me.SourceType) == "extension") {
 		return fmt.Errorf("'source' must be specified if 'source_type' is set to '%v'", me.SourceType)
 	}
+	if (me.Source != nil) && (string(me.SourceType) != "extension") {
+		return fmt.Errorf("'source' must not be specified if 'source_type' is set to '%v'", me.SourceType)
+	}
 	return nil
 }
 
@@ -116,6 +129,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"default_bucket": &me.DefaultBucket,
 		"display_name":   &me.DisplayName,
 		"enabled":        &me.Enabled,
+		"metadata_list":  &me.MetadataList,
 		"path_segment":   &me.PathSegment,
 		"processing":     &me.Processing,
 		"source":         &me.Source,
