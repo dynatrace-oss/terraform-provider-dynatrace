@@ -6,13 +6,14 @@
 		{
 			"customValidatorId": "ppx-management-service.ppx-management-service:8080/internal/settings-validation/v0.1/validate-container/pipeline-container-validator",
 			"skipAsyncValidation": false,
+			"timeout": 10,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"deletionConstraints": [
 		{
 			"schemaIds": [
-				"builtin:openpipeline.events.sdlc.compositions",
+				"builtin:openpipeline.events.sdlc.pipeline-groups",
 				"builtin:openpipeline.events.sdlc.routing",
 				"builtin:openpipeline.events.sdlc.ingest-sources"
 			],
@@ -217,6 +218,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"multiObject": true,
 	"ordered": false,
@@ -299,6 +301,32 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "text"
+		},
+		"metadataList": {
+			"constraints": [
+				{
+					"type": "UNIQUE",
+					"uniqueProperties": [
+						"entryKey"
+					]
+				}
+			],
+			"description": "",
+			"displayName": "Pipeline metadata list",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/MetadataEntry"
+				}
+			},
+			"maxObjects": 32,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
 		},
 		"metricExtraction": {
 			"description": "",
@@ -1237,6 +1265,53 @@
 				}
 			},
 			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"MetadataEntry": {
+			"description": "",
+			"displayName": "MetadataEntry",
+			"documentation": "",
+			"properties": {
+				"entryKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"minLength": 3,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Metadata entry key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"entryValue": {
+					"constraints": [
+						{
+							"maxLength": 1024,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Metadata entry value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{entryKey} - {entryValue}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -2956,5 +3031,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.21"
+	"version": "1.26.1"
 }
