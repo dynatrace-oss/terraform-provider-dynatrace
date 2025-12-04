@@ -50,6 +50,12 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
     builtin_pipeline_id = "default"
   }
   default_bucket = "default_events"
+  metadata_list {
+    metadata {
+      entry_key = "environment"
+      entry_value = "production"
+    }
+  }
   processing {
     processors {
       processor {
@@ -129,6 +135,7 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
 ### Optional
 
 - `default_bucket` (String) Default Bucket
+- `metadata_list` (Block List, Max: 1) Ingest source metadata list (see [below for nested schema](#nestedblock--metadata_list))
 - `path_segment` (String) Endpoint segment
 - `processing` (Block List, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
 - `source` (String) Source
@@ -138,6 +145,26 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--metadata_list"></a>
+### Nested Schema for `metadata_list`
+
+Required:
+
+- `metadata` (Block List, Min: 1) (see [below for nested schema](#nestedblock--metadata_list--metadata))
+
+<a id="nestedblock--metadata_list--metadata"></a>
+### Nested Schema for `metadata_list.metadata`
+
+Required:
+
+- `entry_key` (String) Metadata entry key
+
+Optional:
+
+- `entry_value` (String) Metadata entry value
+
+
 
 <a id="nestedblock--processing"></a>
 ### Nested Schema for `processing`
