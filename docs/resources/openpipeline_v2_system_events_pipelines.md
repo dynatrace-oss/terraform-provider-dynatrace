@@ -43,6 +43,12 @@ The full documentation of the export feature is available [here](https://dt-url.
 resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
   custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  metadata_list {
+    metadata {
+      entry_key = "environment"
+      entry_value = "production"
+    }
+  }
   davis {
     processors {
       processor {
@@ -142,6 +148,7 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
 - `cost_allocation` (Block List, Max: 1) Cost allocation stage (see [below for nested schema](#nestedblock--cost_allocation))
 - `data_extraction` (Block List, Max: 1) Data extraction stage (see [below for nested schema](#nestedblock--data_extraction))
 - `davis` (Block List, Max: 1) Davis event extraction stage (see [below for nested schema](#nestedblock--davis))
+- `metadata_list` (Block List, Max: 1) Pipeline metadata list (see [below for nested schema](#nestedblock--metadata_list))
 - `metric_extraction` (Block List, Max: 1) Metrics extraction stage (see [below for nested schema](#nestedblock--metric_extraction))
 - `processing` (Block List, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
 - `product_allocation` (Block List, Max: 1) Product allocation stage (see [below for nested schema](#nestedblock--product_allocation))
@@ -2926,6 +2933,26 @@ Optional:
 
 
 
+
+
+
+<a id="nestedblock--metadata_list"></a>
+### Nested Schema for `metadata_list`
+
+Required:
+
+- `metadata` (Block List, Min: 1) (see [below for nested schema](#nestedblock--metadata_list--metadata))
+
+<a id="nestedblock--metadata_list--metadata"></a>
+### Nested Schema for `metadata_list.metadata`
+
+Required:
+
+- `entry_key` (String) Metadata entry key
+
+Optional:
+
+- `entry_value` (String) Metadata entry value
 
 
 
