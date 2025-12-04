@@ -109,6 +109,9 @@ func (me *RoutingEntry) HandlePreconditions() error {
 	if (me.BuiltinPipelineID == nil) && (string(me.PipelineType) == "builtin") {
 		return fmt.Errorf("'builtin_pipeline_id' must be specified if 'pipeline_type' is set to '%v'", me.PipelineType)
 	}
+	if (me.BuiltinPipelineID != nil) && (string(me.PipelineType) != "builtin") {
+		return fmt.Errorf("'builtin_pipeline_id' must not be specified if 'pipeline_type' is set to '%v'", me.PipelineType)
+	}
 	return nil
 }
 

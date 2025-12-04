@@ -1,6 +1,12 @@
 resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
   custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  metadata_list {
+    metadata {
+      entry_key = "environment"
+      entry_value = "production"
+    }
+  }
   davis {
     processors {
       processor {
