@@ -94,8 +94,8 @@ func (me *SamplingAwareHistogramMetricAttributes) HandlePreconditions() error {
 	if (me.Field == nil) && (string(me.Measurement) != "duration") {
 		me.Field = opt.NewString("")
 	}
-	if (me.DefaultValue == nil) && (string(me.Measurement) != "duration") {
-		return fmt.Errorf("'default_value' must be specified if 'measurement' is set to '%v'", me.Measurement)
+	if (me.DefaultValue != nil) && (string(me.Measurement) == "duration") {
+		return fmt.Errorf("'default_value' must not be specified if 'measurement' is set to '%v'", me.Measurement)
 	}
 	return nil
 }
